@@ -878,14 +878,10 @@ Non-Intrusive containers exist when a flat container can operate without such he
 /* For example: */
 
 CCC_Flat_priority_queue flat_priority_queue
-    = CCC_flat_priority_queue_initialize(
-    (int[40]){},
-    int,
+    = CCC_flat_priority_queue_with_compound_literal(
     CCC_LESSER,
     int_cmp,
-    NULL,
-    NULL,
-    40
+    (int[40]){}
 );
 ```
 
@@ -919,19 +915,17 @@ As was mentioned in the previous section, all containers can be forbidden from a
 ```c
 CCC_Flat_priority_queue flat_priority_queue
     = CCC_flat_priority_queue_initialize(
-    (int[40]){},
-    int,
     CCC_LES,
     int_cmp,
-    NULL,
-    NULL,
-    40
+    (int[40]){}
 );
 ```
 
-For flat containers, fixed capacity is straightforward. Once space runs out, further insertion functions will fail and report that failure in different ways depending on the function used. If other behavior occurs when space runs out, such as ring Buffer behavior for the flat double ended queue, it will be documented in the header of that container.
+This reduces the need for the user to implement boilerplate allocator interfaces and the guarantees of the container are more clear and direct. If the user does not provide an allocator function there is no way for the container to allocate, re-size, or free memory by default.
 
-For non-flat containers that can't assume they are stored contiguously in memory, the initialization looks like this when allocation is prohibited.
+For flat containers, fixed capacity is straightforward. Once space runs out, further insertion functions will fail and report that failure in different ways depending on the function used. If other behavior occurs when space runs out, such as ring buffer behavior for the flat double ended queue, it will be documented in the header of that container.
+
+For intrusive containers that can't assume they are stored contiguously in memory, the initialization looks like this when allocation is prohibited.
 
 ```c
 struct Id_val
@@ -980,15 +974,11 @@ struct Val
     int val;
 };
 flat_hash_map_declare_fixed(Val_fixed_map, struct Val, 64);
-static Flat_hash_map static_fh = flat_hash_map_initialize(
-    &(static Val_fixed_map){},
-    struct Val,
+static Flat_hash_map static_fh = flat_hash_map_with_compound_literal(
     key,
     flat_hash_map_int_to_u64,
     flat_hash_map_id_cmp,
-    NULL,
-    NULL,
-    flat_hash_map_fixed_capacity(val_fixed_map)
+    (static Val_fixed_map){}
 );
 ```
 
@@ -1018,7 +1008,7 @@ All other containers provide default initialization macros that can be used at c
 ```c
 #define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
 static Flat_doubled_ended_queue ring_buffer
-    = flat_doubled_ended_queue_initialize((static int[4096]){}, int, NULL, NULL, 4096);
+    = flat_doubled_ended_queue_with_compound_literal(0, (static int[4096]){});
 ```
 
 In all the preceding examples initializing at compile time simplifies the code, eliminates the need for initialization functions, and ensures that all containers are ready to operate when execution begins. Using compound literal initialization also helps create better ownership of memory for each container, eliminating named references to a container's memory that could be accessed by mistake.
