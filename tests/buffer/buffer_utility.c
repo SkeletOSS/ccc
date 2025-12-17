@@ -8,13 +8,13 @@
 #include "ccc/types.h"
 
 static inline void
-swap(void *const temp, void *const a, void *const b, size_t const absize)
+swap(void *const temp, void *const a, void *const b, size_t const ab_size)
 {
     if (a != b)
     {
-        (void)memcpy(temp, a, absize);
-        (void)memcpy(a, b, absize);
-        (void)memcpy(b, temp, absize);
+        (void)memcpy(temp, a, ab_size);
+        (void)memcpy(a, b, ab_size);
+        (void)memcpy(b, temp, ab_size);
     }
 }
 
@@ -57,21 +57,21 @@ this is meant to test the Buffer container, it uses iterators only to swap and
 sort data. This is a fun way to test that part of the Buffer interface for
 correctness and turns out to be pretty nice and clean. */
 static void
-sort_rec(Buffer *const b, CCC_Type_comparator *const fn, void *const temp,
+sort_rec(Buffer *const b, CCC_Type_comparator *const compare, void *const temp,
          void *lo, void *hi)
 {
     while (lo < hi)
     {
-        void const *const pivot_i = partition(b, fn, temp, lo, hi);
+        void const *const pivot_i = partition(b, compare, temp, lo, hi);
         if ((char const *)pivot_i - (char const *)lo
             < (char const *)hi - (char const *)pivot_i)
         {
-            sort_rec(b, fn, temp, lo, buffer_reverse_next(b, pivot_i));
+            sort_rec(b, compare, temp, lo, buffer_reverse_next(b, pivot_i));
             lo = buffer_next(b, pivot_i);
         }
         else
         {
-            sort_rec(b, fn, temp, buffer_next(b, pivot_i), hi);
+            sort_rec(b, compare, temp, buffer_next(b, pivot_i), hi);
             hi = buffer_reverse_next(b, pivot_i);
         }
     }
@@ -83,15 +83,15 @@ sort_rec(Buffer *const b, CCC_Type_comparator *const fn, void *const temp,
 stack space. This implementation does not try to be hyper efficient. In fact, we
 test out using iterators here rather than indices. */
 CCC_Result
-sort(CCC_Buffer *const b, CCC_Type_comparator *const fn, void *const swap)
+sort(CCC_Buffer *const b, CCC_Type_comparator *const compare, void *const swap)
 {
-    if (!b || !fn || !swap)
+    if (!b || !compare || !swap)
     {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     if (buffer_count(b).count)
     {
-        sort_rec(b, fn, swap, buffer_begin(b), buffer_reverse_begin(b));
+        sort_rec(b, compare, swap, buffer_begin(b), buffer_reverse_begin(b));
     }
     return CCC_RESULT_OK;
 }

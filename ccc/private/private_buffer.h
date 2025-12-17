@@ -58,13 +58,13 @@ struct CCC_Buffer
 can specify that the Buffer has some count of elements from index
 `[0, capacity - 1)` at initialization time. The Buffer assumes these elements
 are contiguous. */
-#define CCC_private_buffer_initialize(private_data, private_type_name,         \
-                                      private_allocate, private_context_data,  \
-                                      private_capacity, ...)                   \
+#define CCC_private_buffer_initialize(private_type_name, private_allocate,     \
+                                      private_context_data, private_capacity,  \
+                                      private_count, private_data...)          \
     {                                                                          \
         .data = (private_data),                                                \
         .sizeof_type = sizeof(private_type_name),                              \
-        .count = CCC_private_buf_optional_size(__VA_ARGS__),                   \
+        .count = (private_count),                                              \
         .capacity = (private_capacity),                                        \
         .allocate = (private_allocate),                                        \
         .context = (private_context_data),                                     \
@@ -80,8 +80,8 @@ initialization in one convenient step for user. */
             *private_buffer_initializer_list                                   \
             = private_compound_literal_array;                                  \
         struct CCC_Buffer private_buf = CCC_private_buffer_initialize(         \
-            NULL, typeof(*private_buffer_initializer_list), private_allocate,  \
-            private_context_data, 0);                                          \
+            typeof(*private_buffer_initializer_list), private_allocate,        \
+            private_context_data, 0, 0, NULL);                                 \
         size_t const private_n = sizeof(private_compound_literal_array)        \
                                / sizeof(*private_buffer_initializer_list);     \
         size_t const private_cap = private_optional_capacity;                  \
@@ -106,8 +106,8 @@ of memory in one step. */
                                          private_capacity)                     \
     (__extension__({                                                           \
         struct CCC_Buffer private_buf = CCC_private_buffer_initialize(         \
-            NULL, private_type_name, private_allocate, private_context_data,   \
-            0);                                                                \
+            private_type_name, private_allocate, private_context_data, 0, 0,   \
+            NULL);                                                             \
         (void)CCC_buffer_reserve(&private_buf, (private_capacity),             \
                                  private_allocate);                            \
         private_buf;                                                           \

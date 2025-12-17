@@ -66,8 +66,8 @@ check_static_begin(fill_n, CCC_Array_adaptive_map *const array_adaptive_map,
 check_static_begin(array_adaptive_map_test_validate)
 {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
     CCC_Handle hndl
         = swap_handle(&array_adaptive_map, &(struct Val){.id = -1, .val = -1});
     check(validate(&array_adaptive_map), true);
@@ -87,8 +87,8 @@ check_static_begin(array_adaptive_map_test_validate)
 check_static_begin(array_adaptive_map_test_insert)
 {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
     int size = 30;
     CCC_Handle hndl
         = swap_handle(&array_adaptive_map, &(struct Val){.id = -1, .val = -1});
@@ -143,8 +143,8 @@ check_static_begin(array_adaptive_map_test_insert)
 check_static_begin(array_adaptive_map_test_remove_key_value)
 {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
     int size = 30;
     CCC_Handle hndl = CCC_remove_key_value(&array_adaptive_map,
                                            &(struct Val){.id = -1, .val = -1});
@@ -208,8 +208,8 @@ check_static_begin(array_adaptive_map_test_remove_key_value)
 check_static_begin(array_adaptive_map_test_try_insert)
 {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
     int size = 30;
     CCC_Handle hndl
         = try_insert(&array_adaptive_map, &(struct Val){.id = -1, .val = -1});
@@ -263,8 +263,8 @@ check_static_begin(array_adaptive_map_test_try_insert)
 check_static_begin(array_adaptive_map_test_try_insert_with)
 {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
     int size = 30;
     CCC_Handle *hndl
         = array_adaptive_map_try_insert_with(&array_adaptive_map, -1, val(-1));
@@ -319,8 +319,8 @@ check_static_begin(array_adaptive_map_test_try_insert_with)
 check_static_begin(array_adaptive_map_test_insert_or_assign)
 {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
     int size = 30;
     CCC_Handle hndl = insert_or_assign(&array_adaptive_map,
                                        &(struct Val){.id = -1, .val = -1});
@@ -379,8 +379,8 @@ check_static_begin(array_adaptive_map_test_insert_or_assign)
 check_static_begin(array_adaptive_map_test_insert_or_assign_with)
 {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
     int size = 30;
     CCC_Handle *hndl = array_adaptive_map_insert_or_assign_with(
         &array_adaptive_map, -1, val(-1));
@@ -439,8 +439,8 @@ check_static_begin(array_adaptive_map_test_insert_or_assign_with)
 check_static_begin(array_adaptive_map_test_array_and_modify)
 {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
     int size = 30;
     CCC_Array_adaptive_map_handle *hndl
         = handle_wrap(&array_adaptive_map, &(int){-1});
@@ -509,8 +509,8 @@ check_static_begin(array_adaptive_map_test_array_and_modify)
 check_static_begin(array_adaptive_map_test_array_and_modify_context)
 {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
     int size = 30;
     int context = 1;
     CCC_Array_adaptive_map_handle *hndl
@@ -577,8 +577,8 @@ check_static_begin(array_adaptive_map_test_array_and_modify_context)
 check_static_begin(array_adaptive_map_test_array_and_modify_with)
 {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
     int size = 30;
     CCC_Array_adaptive_map_handle *hndl
         = handle_wrap(&array_adaptive_map, &(int){-1});
@@ -644,8 +644,8 @@ check_static_begin(array_adaptive_map_test_array_and_modify_with)
 check_static_begin(array_adaptive_map_test_or_insert)
 {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
     int size = 30;
     struct Val *v = array_adaptive_map_at(
         &array_adaptive_map,
@@ -710,8 +710,8 @@ check_static_begin(array_adaptive_map_test_or_insert)
 check_static_begin(array_adaptive_map_test_or_insert_with)
 {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
     int size = 30;
     struct Val *v = array_adaptive_map_at(
         &array_adaptive_map,
@@ -780,8 +780,8 @@ check_static_begin(array_adaptive_map_test_or_insert_with)
 check_static_begin(array_adaptive_map_test_insert_handle)
 {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
     int size = 30;
     struct Val *v = array_adaptive_map_at(
         &array_adaptive_map,
@@ -848,8 +848,8 @@ check_static_begin(array_adaptive_map_test_insert_handle)
 check_static_begin(array_adaptive_map_test_insert_array_with)
 {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
     int size = 30;
     struct Val *v = array_adaptive_map_at(
         &array_adaptive_map,
@@ -918,8 +918,8 @@ check_static_begin(array_adaptive_map_test_insert_array_with)
 check_static_begin(array_adaptive_map_test_remove_handle)
 {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
     int size = 30;
     struct Val *v = array_adaptive_map_at(
         &array_adaptive_map,

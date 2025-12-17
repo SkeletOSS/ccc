@@ -19,9 +19,9 @@ check_static_begin(flat_priority_queue_test_insert_iterate_pop)
     size_t const num_nodes = 1000;
     struct Val vals[1000 + 1];
     CCC_Flat_priority_queue flat_priority_queue
-        = CCC_flat_priority_queue_initialize(vals, struct Val, CCC_ORDER_LESSER,
-                                             val_order, NULL, NULL,
-                                             (sizeof(vals) / sizeof(vals[0])));
+        = CCC_flat_priority_queue_initialize(
+            struct Val, CCC_ORDER_LESSER, val_order, NULL, NULL,
+            (sizeof(vals) / sizeof(vals[0])), vals);
     for (size_t i = 0; i < num_nodes; ++i)
     {
         /* Force duplicates. */
@@ -50,9 +50,9 @@ check_static_begin(flat_priority_queue_test_priority_removal)
     size_t const num_nodes = 1000;
     struct Val vals[1000 + 1];
     CCC_Flat_priority_queue flat_priority_queue
-        = CCC_flat_priority_queue_initialize(vals, struct Val, CCC_ORDER_LESSER,
-                                             val_order, NULL, NULL,
-                                             (sizeof(vals) / sizeof(vals[0])));
+        = CCC_flat_priority_queue_initialize(
+            struct Val, CCC_ORDER_LESSER, val_order, NULL, NULL,
+            (sizeof(vals) / sizeof(vals[0])), vals);
     for (size_t i = 0; i < num_nodes; ++i)
     {
         /* Force duplicates. */
@@ -87,9 +87,9 @@ check_static_begin(flat_priority_queue_test_priority_update)
     size_t const num_nodes = 1000;
     struct Val vals[1000 + 1];
     CCC_Flat_priority_queue flat_priority_queue
-        = CCC_flat_priority_queue_initialize(vals, struct Val, CCC_ORDER_LESSER,
-                                             val_order, NULL, NULL,
-                                             (sizeof(vals) / sizeof(vals[0])));
+        = CCC_flat_priority_queue_initialize(
+            struct Val, CCC_ORDER_LESSER, val_order, NULL, NULL,
+            (sizeof(vals) / sizeof(vals[0])), vals);
     for (size_t i = 0; i < num_nodes; ++i)
     {
         /* Force duplicates. */
@@ -129,9 +129,9 @@ check_static_begin(flat_priority_queue_test_priority_update_with)
     size_t const num_nodes = 1000;
     struct Val vals[1000 + 1];
     CCC_Flat_priority_queue flat_priority_queue
-        = CCC_flat_priority_queue_initialize(vals, struct Val, CCC_ORDER_LESSER,
-                                             val_order, NULL, NULL,
-                                             (sizeof(vals) / sizeof(vals[0])));
+        = CCC_flat_priority_queue_initialize(
+            struct Val, CCC_ORDER_LESSER, val_order, NULL, NULL,
+            (sizeof(vals) / sizeof(vals[0])), vals);
     for (size_t i = 0; i < num_nodes; ++i)
     {
         /* Force duplicates. */

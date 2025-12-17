@@ -353,8 +353,8 @@ static struct Huffman_tree
 build_encoding_tree(FILE *const f)
 {
     struct Huffman_tree ret = {
-        .bump_arena
-        = buffer_initialize(NULL, struct Huffman_node, std_allocate, NULL, 0),
+        .bump_arena = buffer_initialize(struct Huffman_node, std_allocate, NULL,
+                                        0, 0, NULL),
         .root = 0,
     };
     Flat_priority_queue priority_queue = build_encoding_priority_queue(f, &ret);
@@ -396,9 +396,9 @@ the caller's responsibility to free the priority queue memory when ready. */
 static Flat_priority_queue
 build_encoding_priority_queue(FILE *const f, struct Huffman_tree *const tree)
 {
-    Flat_hash_map frequencies = flat_hash_map_initialize(
-        NULL, struct Character_frequency, ch, hash_char, char_order,
-        std_allocate, NULL, 0);
+    Flat_hash_map frequencies
+        = flat_hash_map_initialize(struct Character_frequency, ch, hash_char,
+                                   char_order, std_allocate, NULL, 0, NULL);
     foreach_filechar(f, c, {
         struct Character_frequency *const ins = flat_hash_map_or_insert_with(
             flat_hash_map_and_modify_with(entry_wrap(&frequencies, c),
@@ -443,10 +443,10 @@ build_encoding_priority_queue(FILE *const f, struct Huffman_tree *const tree)
     /* Now we steal the buffer's memory and heapify the data in O(N) time rather
        than pushing each element. */
     return flat_priority_queue_heapify_initialize(
-        begin(&flat_priority_queue_storage), struct Flat_priority_queue_node,
-        CCC_ORDER_LESSER, order_freqs, std_allocate, NULL,
-        capacity(&flat_priority_queue_storage).count,
-        count(&flat_priority_queue_storage).count);
+        struct Flat_priority_queue_node, CCC_ORDER_LESSER, order_freqs,
+        std_allocate, NULL, capacity(&flat_priority_queue_storage).count,
+        count(&flat_priority_queue_storage).count,
+        begin(&flat_priority_queue_storage));
 }
 
 /** Returns the bit queue representing the bit path to every character in the
@@ -456,7 +456,7 @@ static struct Bit_queue
 build_encoding_bitq(FILE *const f, struct Huffman_tree *const tree)
 {
     struct Bit_queue ret = {
-        .bs = bitset_initialize(NULL, std_allocate, NULL, 0),
+        .bs = bitset_initialize(std_allocate, NULL, 0, 0, NULL),
     };
     /* By memoizing known bit sequences we can save significant time by not
        performing a DFS over the tree. This is especially helpful for large
@@ -546,7 +546,7 @@ compress_tree(struct Huffman_tree *const tree)
 {
     struct Compressed_huffman_tree ret = {
         .tree_paths = {
-            .bs = bitset_initialize(NULL, std_allocate, NULL, 0),
+            .bs = bitset_initialize( std_allocate, NULL, 0, 0, NULL),
         },
         .arena = string_arena_create(START_STRING_ARENA_CAP),
     };
@@ -753,12 +753,12 @@ read_from_file(SV_String_view const unzip)
     printf("Unzip %s (%zu bytes).\n", SV_begin(unzip), file_size(cccz));
     struct Huffman_encoding ret = {
         .file_bits = {
-            .bs = bitset_initialize(NULL, std_allocate, NULL, 0),
+            .bs = bitset_initialize(std_allocate, NULL, 0, 0, NULL),
         },
         .blueprint = {
             .arena = string_arena_create(START_STRING_ARENA_CAP),
             .tree_paths = {
-                .bs = bitset_initialize(NULL, std_allocate, NULL, 0),
+                .bs = bitset_initialize( std_allocate, NULL, 0, 0, NULL),
             },
         },
     };

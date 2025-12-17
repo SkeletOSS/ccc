@@ -14,8 +14,8 @@
 check_static_begin(array_adaptive_map_test_empty)
 {
     Array_adaptive_map s
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
     check(is_empty(&s), true);
     check_end();
 }
@@ -33,11 +33,11 @@ check_static_begin(array_adaptive_map_test_with_literal)
 check_static_begin(array_adaptive_map_test_copy_no_allocate)
 {
     Array_adaptive_map source
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
     Array_adaptive_map destination
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
     (void)swap_handle(&source, &(struct Val){.id = 0});
     (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1});
     (void)swap_handle(&source, &(struct Val){.id = 2, .val = 2});
@@ -65,11 +65,11 @@ check_static_begin(array_adaptive_map_test_copy_no_allocate)
 check_static_begin(array_adaptive_map_test_copy_no_allocate_fail)
 {
     Array_adaptive_map source = array_adaptive_map_initialize(
-        &(Standard_fixed_map){}, struct Val, id, id_order, NULL, NULL,
-        STANDARD_FIXED_CAP);
+        struct Val, id, id_order, NULL, NULL, STANDARD_FIXED_CAP,
+        &(Standard_fixed_map){});
     Array_adaptive_map destination
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
     (void)swap_handle(&source, &(struct Val){.id = 0});
     (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1});
     (void)swap_handle(&source, &(struct Val){.id = 2, .val = 2});
@@ -88,8 +88,8 @@ check_static_begin(array_adaptive_map_test_copy_allocate)
         struct Val, id, id_order, stack_allocator_allocate, &allocator,
         SMALL_FIXED_CAP - 1);
     Array_adaptive_map destination = array_adaptive_map_initialize(
-        NULL, struct Val, id, id_order, stack_allocator_allocate, &allocator,
-        0);
+        struct Val, id, id_order, stack_allocator_allocate, &allocator, 0,
+        NULL);
     (void)swap_handle(&source, &(struct Val){.id = 0});
     (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1});
     (void)swap_handle(&source, &(struct Val){.id = 2, .val = 2});
@@ -126,7 +126,7 @@ check_static_begin(array_adaptive_map_test_copy_allocate_fail)
         struct Val, id, id_order, stack_allocator_allocate, &allocator,
         SMALL_FIXED_CAP - 1);
     Array_adaptive_map destination = array_adaptive_map_initialize(
-        NULL, struct Val, id, id_order, NULL, NULL, 0);
+        struct Val, id, id_order, NULL, NULL, 0, NULL);
     (void)swap_handle(&source, &(struct Val){.id = 0});
     (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1});
     (void)swap_handle(&source, &(struct Val){.id = 2, .val = 2});

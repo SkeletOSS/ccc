@@ -102,8 +102,9 @@ check_static_begin(flat_priority_queue_test_insert_shuffle_grow)
     size_t const size = 50;
     int const prime = 53;
     CCC_Flat_priority_queue flat_priority_queue
-        = CCC_flat_priority_queue_initialize(NULL, struct Val, CCC_ORDER_LESSER,
-                                             val_order, std_allocate, NULL, 0);
+        = CCC_flat_priority_queue_initialize(struct Val, CCC_ORDER_LESSER,
+                                             val_order, std_allocate, NULL, 0,
+                                             NULL);
     check(insert_shuffled(&flat_priority_queue, size, prime), CHECK_PASS);
 
     struct Val const *min = front(&flat_priority_queue);

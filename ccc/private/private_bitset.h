@@ -93,12 +93,12 @@ optional. The optional size param defaults equal to capacity if not provided.
 This covers most common cases--fixed size bit set, 0 sized dynamic bit set--and
 when the user wants a fixed size dynamic bit set they provide 0 as size
 argument. */
-#define CCC_private_bitset_initialize(private_bitblock_pointer,                \
-                                      private_allocate, private_context,       \
-                                      private_cap, ...)                        \
+#define CCC_private_bitset_initialize(private_allocate, private_context,       \
+                                      private_cap, private_count,              \
+                                      private_bitblock_pointer)                \
     {                                                                          \
         .blocks = (private_bitblock_pointer),                                  \
-        .count = CCC_private_bitset_optional_size((private_cap), __VA_ARGS__), \
+        .count = (private_count),                                              \
         .capacity = (private_cap),                                             \
         .allocate = (private_allocate),                                        \
         .context = (private_context),                                          \
@@ -112,8 +112,8 @@ CCC_private_bitset_with_capacity_fn(CCC_Allocator *const private_allocate,
                                     size_t const private_cap,
                                     size_t const private_count)
 {
-    struct CCC_Bitset b = CCC_private_bitset_initialize(NULL, private_allocate,
-                                                        private_context, 0);
+    struct CCC_Bitset b = CCC_private_bitset_initialize(
+        private_allocate, private_context, 0, 0, NULL);
     if (CCC_private_bitset_reserve(&b, private_cap, private_allocate)
         == CCC_RESULT_OK)
     {
@@ -129,7 +129,7 @@ to inline function for bit set construction. */
                                 private_on_char, private_string, ...)          \
     (__extension__({                                                           \
         struct CCC_Bitset private_bitset = CCC_private_bitset_initialize(      \
-            NULL, private_allocate, private_context, 0);                       \
+            private_allocate, private_context, 0, 0, NULL);                    \
         size_t const private_cap                                               \
             = CCC_private_bitset_optional_size((private_count), __VA_ARGS__);  \
         size_t private_index = (private_start_index);                          \
@@ -158,7 +158,7 @@ to inline function for bit set construction. */
                                          private_cap, ...)                     \
     (__extension__({                                                           \
         struct CCC_Bitset private_bitset = CCC_private_bitset_initialize(      \
-            NULL, private_allocate, private_context, 0);                       \
+            private_allocate, private_context, 0, 0, NULL);                    \
         size_t const private_count                                             \
             = CCC_private_bitset_optional_size((private_cap), __VA_ARGS__);    \
         if (CCC_private_bitset_reserve(&private_bitset, private_cap,           \

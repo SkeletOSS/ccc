@@ -145,15 +145,11 @@ interface. */
     CCC_private_bitset_blocks(bit_cap, optional_storage_duration)
 
 /** @brief Initialize the bit set with memory and allocation permissions.
-@param[in] bitblock_pointer the pointer to existing blocks or NULL.
 @param[in] allocate the allocation function for a dynamic bit set or NULL.
 @param[in] context context data needed for allocation of the bit set.
 @param[in] cap the number of bits that will be stored in this bit set.
-@param[in] optional_count an optional starting size <= capacity. This value
-defaults to the same value as capacity which is appropriate for most cases. For
-any case where this is not desirable, set the size manually (for example, a
-fixed size bit set that is pushed to dynamically would have a non-zero capacity
-and 0 size).
+@param[in] count the starting count. Set equal to cap for non-dynamic bit set.
+@param[in] bitblock_pointer the pointer to existing blocks or NULL.
 @return the initialized bit set on the right hand side of an equality operator
 @warning the user must use the CCC_bitset_blocks macro to help determine the
 size of the bitblock array if a fixed size bitblock array is provided at compile
@@ -165,27 +161,27 @@ A fixed size bit set with size equal to capacity.
 
 ```
 #define BITSET_USING_NAMESPACE_CCC
-Bitset bitset = bitset_initialize(bitset_blocks(9), NULL, NULL, 9);
+Bitset bitset = bitset_initialize(NULL, NULL, 9, 9, bitset_blocks(9));
 ```
 A fixed size bit set with dynamic push and pop.
 
 ```
 #define BITSET_USING_NAMESPACE_CCC
-Bitset bitset = bitset_initialize(bitset_blocks(9), NULL, NULL, 9, 0);
+Bitset bitset = bitset_initialize(NULL, NULL, 9, 0, bitset_blocks(9));
 ```
 
 A dynamic bit set initialization.
 
 ```
 #define BITSET_USING_NAMESPACE_CCC
-Bitset bitset = bitset_initialize(NULL, std_allocate, NULL, 0);
+Bitset bitset = bitset_initialize(std_allocate, NULL, 0, 0, NULL);
 ```
 
 See types.h for more on allocation functions. */
-#define CCC_bitset_initialize(bitblock_pointer, allocate, context, cap,        \
-                              optional_count...)                               \
-    CCC_private_bitset_initialize(bitblock_pointer, allocate, context, cap,    \
-                                  optional_count)
+#define CCC_bitset_initialize(allocate, context, cap, count,                   \
+                              bitblock_pointer...)                             \
+    CCC_private_bitset_initialize(allocate, context, cap, count,               \
+                                  bitblock_pointer)
 
 /** @brief Initialize the bit set with a custom input string.
 @param[in] allocate the allocation function for the dynamic bit set.

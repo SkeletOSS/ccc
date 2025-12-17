@@ -144,14 +144,14 @@ struct Val
 };
 CCC_flat_hash_map_declare_fixed(Small_fixed_map, struct Val, 64);
 static Flat_hash_map static_map = flat_hash_map_initialize(
-    &(static Small_fixed_map){},
     struct Val,
     key,
     Flat_hash_map_int_to_u64,
     flat_hash_map_id_order,
     NULL,
     NULL,
-    flat_hash_map_fixed_capacity(Small_fixed_map)
+    flat_hash_map_fixed_capacity(Small_fixed_map),
+    &(static Small_fixed_map){}
 );
 ```
 
@@ -167,14 +167,14 @@ CCC_flat_hash_map_declare_fixed(Small_fixed_map, struct Val, 64);
 int main(void)
 {
     Flat_hash_map static_map = flat_hash_map_initialize(
-        &(Small_fixed_map){},
         struct Val,
         key,
         flat_hash_map_int_to_u64,
         flat_hash_map_id_order,
         NULL,
         NULL,
-        flat_hash_map_fixed_capacity(Small_fixed_map)
+        flat_hash_map_fixed_capacity(Small_fixed_map),
+        &(Small_fixed_map){}
     );
     return 0;
 }
@@ -200,7 +200,6 @@ restrictions. */
     CCC_private_flat_hash_map_fixed_capacity(fixed_map_type_name)
 
 /** @brief Initialize a map of types at compile time or runtime.
-@param[in] map_pointer a pointer to a fixed map allocation or NULL.
 @param[in] type_name the name of the user defined type stored in the map.
 @param[in] key_field the field of the struct used for key storage.
 @param[in] hash the CCC_Key_hasher function provided by the user.
@@ -209,6 +208,7 @@ restrictions. */
 resizing is allowed.
 @param[in] context_data context data that is needed for hashing or comparison.
 @param[in] capacity the capacity of a fixed size map or 0.
+@param[in] map_pointer a pointer to a fixed map allocation or NULL.
 @return the flat hash map directly initialized on the right hand side of the
 equality operator (i.e. CCC_Flat_hash_map map =
 CCC_flat_hash_map_initialize(...);)
@@ -226,14 +226,14 @@ struct Val
 };
 flat_hash_map_declare_fixed(Small_fixed_map, struct Val, 64);
 static Flat_hash_map static_map = flat_hash_map_initialize(
-    &(static Small_fixed_map){},
     struct Val,
     key,
     flat_hash_map_int_to_u64,
     flat_hash_map_key_order,
     NULL,
     NULL,
-    flat_hash_map_fixed_capacity(Small_fixed_map)
+    flat_hash_map_fixed_capacity(Small_fixed_map),
+    &(static Small_fixed_map){}
 );
 ```
 
@@ -248,25 +248,25 @@ struct Val
     int val;
 };
 static Flat_hash_map static_map = flat_hash_map_initialize(
-    NULL,
     struct Val,
     key,
     flat_hash_map_int_to_u64,
     flat_hash_map_key_order,
     std_allocate,
     NULL,
-    0
+    0,
+    NULL
 );
 ```
 
 Initialization at runtime is also possible. Stack-based or dynamic maps are
 identical to the provided examples. Omit `static` in a runtime context. */
-#define CCC_flat_hash_map_initialize(map_pointer, type_name, key_field, hash,  \
-                                     compare, allocate, context_data,          \
-                                     capacity)                                 \
-    CCC_private_flat_hash_map_initialize(map_pointer, type_name, key_field,    \
-                                         hash, compare, allocate,              \
-                                         context_data, capacity)
+#define CCC_flat_hash_map_initialize(type_name, key_field, hash, compare,      \
+                                     allocate, context_data, capacity,         \
+                                     map_pointer)                              \
+    CCC_private_flat_hash_map_initialize(type_name, key_field, hash, compare,  \
+                                         allocate, context_data, capacity,     \
+                                         map_pointer)
 
 /** @brief Initialize a dynamic map at runtime from an initializer list.
 @param[in] key_field the field of the struct used for key storage.
@@ -491,25 +491,25 @@ struct Val
 };
 flat_hash_map_declare_fixed(Small_fixed_map, struct Val, 64);
 Flat_hash_map source = flat_hash_map_initialize(
-    &(static Small_fixed_map){},
     struct Val,
     key,
     flat_hash_map_int_to_u64,
     flat_hash_map_key_order,
     NULL,
     NULL,
-    CCC_flat_hash_map_fixed_capacity(Small_fixed_map)
+    CCC_flat_hash_map_fixed_capacity(Small_fixed_map),
+    &(static Small_fixed_map){}
 );
 insert_rand_vals(&source);
 Flat_hash_map destination = flat_hash_map_initialize(
-    &(static Small_fixed_map){},
     struct Val,
     key,
     flat_hash_map_int_to_u64,
     flat_hash_map_key_order,
     NULL,
     NULL,
-    CCC_flat_hash_map_fixed_capacity(Small_fixed_map)
+    CCC_flat_hash_map_fixed_capacity(Small_fixed_map),
+    &(static Small_fixed_map){}
 );
 CCC_Result res = flat_hash_map_copy(&destination, &source, NULL);
 ```
@@ -525,25 +525,25 @@ struct Val
     int val;
 };
 Flat_hash_map source = flat_hash_map_initialize(
-    NULL,
     struct Val,
     key,
     flat_hash_map_int_to_u64,
     flat_hash_map_key_order,
     std_allocate,
     NULL,
-    0
+    0,
+    NULL
 );
 insert_rand_vals(&source);
 Flat_hash_map destination = flat_hash_map_initialize(
-    NULL,
     struct Val,
     key,
     flat_hash_map_int_to_u64,
     flat_hash_map_key_order,
     std_allocate,
     NULL,
-    0
+    0,
+    NULL
 );
 CCC_Result res = flat_hash_map_copy(&destination, &source, std_allocate);
 ```
@@ -561,25 +561,25 @@ struct Val
     int val;
 };
 Flat_hash_map source = flat_hash_map_initialize(
-    NULL,
     struct Val,
     key,
     flat_hash_map_int_to_u64,
     flat_hash_map_key_order,
     std_allocate,
     NULL,
-    0
+    0,
+    NULL
 );
 insert_rand_vals(&source);
 Flat_hash_map destination = flat_hash_map_initialize(
-    NULL,
     struct Val,
     key,
     flat_hash_map_int_to_u64,
     flat_hash_map_key_order,
     NULL,
     NULL,
-    0
+    0,
+    NULL
 );
 CCC_Result res = flat_hash_map_copy(&destination, &source, std_allocate);
 ```

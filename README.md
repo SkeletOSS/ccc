@@ -75,7 +75,9 @@ validate_sudoku_box(int const board[9][9], Bitset *const row_check,
                     Bitset *const col_check, size_t const row_start,
                     size_t const col_start)
 {
-    Bitset box_check = bitset_initialize(bitset_blocks(DIGITS), NULL, NULL, DIGITS);
+    Bitset box_check = bitset_initialize(
+        NULL, NULL, DIGITS, DIGITS, bitset_blocks(DIGITS)
+    );
     CCC_Tribool was_on = CCC_FALSE;
     for (size_t r = row_start; r < row_start + BOX_SIZE; ++r)
     {
@@ -114,10 +116,12 @@ validate_sudoku_box(int const board[9][9], Bitset *const row_check,
 static CCC_Tribool
 is_valid_sudoku(int const board[9][9])
 {
-    Bitset row_check
-        = bitset_initialize(bitset_blocks(ROWS * DIGITS), NULL, NULL, ROWS * DIGITS);
-    Bitset col_check
-        = bitset_initialize(bitset_blocks(ROWS * DIGITS), NULL, NULL, COLS * DIGITS);
+    Bitset row_check = bitset_with_compound_literal(
+        ROWS * DIGITS, bitset_blocks(ROWS * DIGITS)
+    );
+    Bitset col_check = bitset_with_compound_literal(
+        COLS * DIGITS, bitset_blocks(COLS * DIGITS)
+    );
     for (size_t row = 0; row < ROWS; row += BOX_SIZE)
     {
         for (size_t col = 0; col < COLS; col += BOX_SIZE)
@@ -260,7 +264,7 @@ int
 main(void)
 {
     /* stack array, no allocation permission, no context data, capacity 2 */
-    Flat_doubled_ended_queue q = flat_doubled_ended_queue_initialize((int[2]){}, int, NULL, NULL, 2);
+    Flat_doubled_ended_queue q = flat_doubled_ended_queue_initialize(int, NULL, NULL, 2, (int[2]){});
     (void)push_back(&q, &(int){3});
     (void)push_front(&q, &(int){2});
     (void)push_back(&q, &(int){1}); /* Overwrite 2. */
@@ -329,14 +333,14 @@ int
 main(void)
 {
     CCC_Flat_hash_map fh = flat_hash_map_initialize(
-        &(Standard_fixed_map){},
         struct Key_val,
         key,
         flat_hash_map_int_to_u64,
         flat_hash_map_id_cmp,
         NULL,
         NULL,
-        STANDARD_FIXED_CAP
+        STANDARD_FIXED_CAP,
+        &(Standard_fixed_map){}
     );
     /* Longest sequence is 1,2,3,4,5,6,7,8,9,10 of length 10. */
     int const nums[] = {
@@ -419,8 +423,8 @@ main(void)
     {
         HCAP = sizeof(heap) / sizeof(*heap),
     };
-    Flat_priority_queue priority_queue = flat_priority_queue_heapify_initialize(heap, int, CCC_LES, int_cmp, NULL,
-                                              NULL, HCAP, HCAP);
+    Flat_priority_queue priority_queue = flat_priority_queue_heapify_initialize(int, CCC_LES, int_cmp, NULL,
+                                              NULL, HCAP, HCAP, heap);
     Buffer const b = flat_priority_queue_heapsort(&priority_queue, &(int){0});
     int const *prev = begin(&b);
     assert(prev != NULL);
@@ -475,13 +479,13 @@ main(void)
        named elem, key field named key, no allocation permission, key comparison
        function, no context data. */
     Array_adaptive_map s = array_adaptive_map_initialize(
-        &(Key_val_fixed_map){},
         struct Key_val,
         key,
         Key_val_cmp,
         NULL,
         NULL,
-        array_adaptive_map_fixed_capacity(Key_val_fixed_map)
+        array_adaptive_map_fixed_capacity(Key_val_fixed_map),
+        &(Key_val_fixed_map){}
     );
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
@@ -554,13 +558,13 @@ main(void)
     /* stack array, user defined type, key field named key, no allocation
        permission, key comparison function, no context data. */
     Array_tree_map s = array_tree_map_initialize(
-        &(Key_val_fixed_map){},
         struct Val,
         key,
         hrmap_key_cmp,
         NULL,
         NULL,
-        array_tree_map_fixed_capacity(Key_val_fixed_map)
+        array_tree_map_fixed_capacity(Key_val_fixed_map),
+        &(Key_val_fixed_map){}
     );
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
@@ -872,8 +876,8 @@ void *CCC_priority_queue_push(CCC_Priority_queue *priority_queue, CCC_Priority_q
 Non-Intrusive containers exist when a flat container can operate without such help from the user. The `Flat_priority_queue` is a good example of this. When initializing we give it the following information.
 
 ```c
-#define CCC_flat_priority_queue_initialize(data_pointer, cmp_order, cmp_fn, allocate, context_data, capacity) \
-    CCC_impl_flat_priority_queue_initialize(data_pointer, cmp_order, cmp_fn, allocate, context_data, capacity)
+#define CCC_flat_priority_queue_initialize(cmp_order, cmp_fn, allocate, context_data, capacity, data_pointer) \
+    CCC_impl_flat_priority_queue_initialize(cmp_order, cmp_fn, allocate, context_data, capacity, data_pointer)
 
 /* For example: */
 
@@ -890,13 +894,13 @@ Here a small min priority queue of integers with a maximum capacity of 40 has be
 ```c
 CCC_Flat_priority_queue flat_priority_queue
     = CCC_flat_priority_queue_initialize(
-    NULL,
     int,
     CCC_LESSER,
     int_cmp,
     std_allocate,
     NULL,
-    0
+    0,
+    NULL
 );
 ```
 
@@ -914,7 +918,7 @@ As was mentioned in the previous section, all containers can be forbidden from a
 
 ```c
 CCC_Flat_priority_queue flat_priority_queue
-    = CCC_flat_priority_queue_initialize(
+    = CCC_flat_priority_queue_with_compound_literal(
     CCC_LES,
     int_cmp,
     (int[40]){}
@@ -992,14 +996,14 @@ struct Val
     int val;
 };
 static Flat_hash_map static_fh = flat_hash_map_initialize(
-    NULL,
     struct Val,
     key,
     flat_hash_map_int_to_u64,
     flat_hash_map_id_cmp,
     std_allocate,
     NULL,
-    0
+    0,
+    NULL
 );
 ```
 

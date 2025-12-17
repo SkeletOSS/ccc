@@ -364,7 +364,7 @@ static Buffer
 copy_frequencies(Array_adaptive_map const *const map)
 {
     check(!is_empty(map));
-    Buffer freqs = buffer_initialize(NULL, Word, std_allocate, NULL, 0);
+    Buffer freqs = buffer_initialize(Word, std_allocate, NULL, 0, 0, NULL);
     CCC_Result const r = buffer_reserve(&freqs, count(map).count, std_allocate);
     check(r == CCC_RESULT_OK);
     size_t const cap = capacity(&freqs).count;
@@ -387,8 +387,8 @@ print_n(CCC_Array_adaptive_map *const map, CCC_Order const ord,
     check(!buffer_is_empty(&freqs));
     Flat_priority_queue flat_priority_queue
         = flat_priority_queue_heapify_initialize(
-            begin(&freqs), Word, ord, order_words, NULL, a,
-            capacity(&freqs).count, count(&freqs).count);
+            Word, ord, order_words, NULL, a, capacity(&freqs).count,
+            count(&freqs).count, begin(&freqs));
     check(count(&flat_priority_queue).count == count(&freqs).count);
     if (!n)
     {
@@ -423,7 +423,7 @@ create_frequency_map(struct String_arena *const a, FILE *const f)
     size_t len = 0;
     ptrdiff_t read = 0;
     Array_adaptive_map array_adaptive_map = array_adaptive_map_initialize(
-        NULL, Word, ofs, order_string_keys, std_allocate, a, 0);
+        Word, ofs, order_string_keys, std_allocate, a, 0, NULL);
     while ((read = getline(&linepointer, &len, f)) > 0)
     {
         SV_String_view const line = {.s = linepointer, .len = read - 1};

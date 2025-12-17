@@ -29,8 +29,8 @@ array_adaptive_map_modplus(CCC_Type_context const t)
 check_static_begin(array_adaptive_map_test_insert)
 {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
 
     /* Nothing was there before so nothing is in the handle. */
     CCC_Handle *hndl = swap_handle_wrap(&array_adaptive_map,
@@ -43,8 +43,8 @@ check_static_begin(array_adaptive_map_test_insert)
 check_static_begin(array_adaptive_map_test_insert_macros)
 {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
 
     struct Val const *ins = array_adaptive_map_at(
         &array_adaptive_map, CCC_array_adaptive_map_or_insert_with(
@@ -104,8 +104,8 @@ check_static_begin(array_adaptive_map_test_insert_macros)
 check_static_begin(array_adaptive_map_test_insert_overwrite)
 {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
 
     struct Val q = {.id = 137, .val = 99};
     CCC_Handle hndl = swap_handle(&array_adaptive_map, &q);
@@ -139,8 +139,8 @@ check_static_begin(array_adaptive_map_test_insert_overwrite)
 check_static_begin(array_adaptive_map_test_insert_then_bad_ideas)
 {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
     struct Val q = {.id = 137, .val = 99};
     CCC_Handle hndl = swap_handle(&array_adaptive_map, &q);
     check(occupied(&hndl), false);
@@ -171,8 +171,8 @@ check_static_begin(array_adaptive_map_test_array_api_functional)
 {
     /* Over allocate size now because we don't want to worry about resizing. */
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_initialize(
-        &(Standard_fixed_map){}, struct Val, id, id_order, NULL, NULL,
-        STANDARD_FIXED_CAP);
+        struct Val, id, id_order, NULL, NULL, STANDARD_FIXED_CAP,
+        &(Standard_fixed_map){});
     size_t const size = 200;
 
     /* Test handle or insert with for all even values. Default should be
@@ -238,8 +238,8 @@ check_static_begin(array_adaptive_map_test_insert_via_handle)
 {
     /* Over allocate size now because we don't want to worry about resizing. */
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_initialize(
-        &(Standard_fixed_map){}, struct Val, id, id_order, NULL, NULL,
-        STANDARD_FIXED_CAP);
+        struct Val, id, id_order, NULL, NULL, STANDARD_FIXED_CAP,
+        &(Standard_fixed_map){});
     size_t const size = 200;
 
     /* Test handle or insert with for all even values. Default should be
@@ -286,8 +286,8 @@ check_static_begin(array_adaptive_map_test_insert_via_array_macros)
 {
     /* Over allocate size now because we don't want to worry about resizing. */
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_initialize(
-        &(Standard_fixed_map){}, struct Val, id, id_order, NULL, NULL,
-        STANDARD_FIXED_CAP);
+        struct Val, id, id_order, NULL, NULL, STANDARD_FIXED_CAP,
+        &(Standard_fixed_map){});
     size_t const size = 200;
 
     /* Test handle or insert with for all even values. Default should be
@@ -331,8 +331,8 @@ check_static_begin(array_adaptive_map_test_array_api_macros)
 {
     /* Over allocate size now because we don't want to worry about resizing. */
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_initialize(
-        &(Standard_fixed_map){}, struct Val, id, id_order, NULL, NULL,
-        STANDARD_FIXED_CAP);
+        struct Val, id, id_order, NULL, NULL, STANDARD_FIXED_CAP,
+        &(Standard_fixed_map){});
     int const size = 200;
 
     /* Test handle or insert with for all even values. Default should be
@@ -394,8 +394,8 @@ check_static_begin(array_adaptive_map_test_array_api_macros)
 check_static_begin(array_adaptive_map_test_two_sum)
 {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
     int const addends[10] = {1, 3, -980, 6, 7, 13, 44, 32, 995, -1};
     int const target = 15;
     int solution_indices[2] = {-1, -1};
@@ -422,7 +422,7 @@ check_static_begin(array_adaptive_map_test_two_sum)
 check_static_begin(array_adaptive_map_test_resize)
 {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_initialize(
-        NULL, struct Val, id, id_order, std_allocate, NULL, 0);
+        struct Val, id, id_order, std_allocate, NULL, 0, NULL);
     int const to_insert = 1000;
     int const larger_prime = 1009;
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
@@ -498,7 +498,7 @@ check_static_begin(array_adaptive_map_test_reserve)
 check_static_begin(array_adaptive_map_test_resize_macros)
 {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_initialize(
-        NULL, struct Val, id, id_order, std_allocate, NULL, 0);
+        struct Val, id, id_order, std_allocate, NULL, 0, NULL);
     int const to_insert = 1000;
     int const larger_prime = 1009;
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
@@ -545,7 +545,7 @@ check_static_begin(array_adaptive_map_test_resize_macros)
 check_static_begin(array_adaptive_map_test_resize_from_null)
 {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_initialize(
-        NULL, struct Val, id, id_order, std_allocate, NULL, 0);
+        struct Val, id, id_order, std_allocate, NULL, 0, NULL);
     int const to_insert = 1000;
     int const larger_prime = 1009;
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
@@ -578,7 +578,7 @@ check_static_begin(array_adaptive_map_test_resize_from_null)
 check_static_begin(array_adaptive_map_test_resize_from_null_macros)
 {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_initialize(
-        NULL, struct Val, id, id_order, std_allocate, NULL, 0);
+        struct Val, id, id_order, std_allocate, NULL, 0, NULL);
     int const to_insert = 1000;
     int const larger_prime = 1009;
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
@@ -626,8 +626,8 @@ check_static_begin(array_adaptive_map_test_insert_limit)
 {
     int const size = SMALL_FIXED_CAP;
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
 
     int const larger_prime = 103;
     int last_index = 0;
@@ -697,8 +697,8 @@ check_static_begin(array_adaptive_map_test_insert_and_find)
 {
     int const size = SMALL_FIXED_CAP;
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
 
     for (int i = 0; i < size; i += 2)
     {
@@ -734,8 +734,8 @@ check_static_begin(array_adaptive_map_test_insert_shuffle)
 {
     size_t const size = SMALL_FIXED_CAP - 1;
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                        id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
     check(size > 1, true);
     int const prime = 67;
     check(insert_shuffled(&array_adaptive_map, size, prime), CHECK_PASS);
@@ -752,8 +752,8 @@ check_static_begin(array_adaptive_map_test_insert_weak_srand)
 {
     int const num_nodes = STANDARD_FIXED_CAP - 1;
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_initialize(
-        &(Standard_fixed_map){}, struct Val, id, id_order, NULL, NULL,
-        STANDARD_FIXED_CAP);
+        struct Val, id, id_order, NULL, NULL, STANDARD_FIXED_CAP,
+        &(Standard_fixed_map){});
     srand(time(NULL)); /* NOLINT */
     for (int i = 0; i < num_nodes; ++i)
     {
