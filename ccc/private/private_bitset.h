@@ -72,8 +72,9 @@ of bits. Assumes the given capacity is greater than 0. Classic div round up. */
 the macro is used. However, the optional parameter supports storage duration
 specifiers which is a feature of C23. Not all compilers support this yet. */
 #define CCC_private_bitset_blocks(private_bit_cap, ...)                        \
-    (__VA_OPT__(__VA_ARGS__) typeof(*(struct CCC_Bitset){}.blocks)             \
-         [CCC_private_bitset_block_count(private_bit_cap)])                    \
+    (__VA_OPT__(__VA_ARGS__) typeof (                                          \
+        *(struct CCC_Bitset){}                                                 \
+             .blocks)[CCC_private_bitset_block_count(private_bit_cap)])        \
     {}
 
 /** @internal NOLINTNEXTLINE */
