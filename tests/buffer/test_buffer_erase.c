@@ -13,7 +13,7 @@
 
 check_static_begin(buffer_test_push_pop_fixed)
 {
-    Buffer b = buffer_initialize((int[8]){}, int, NULL, NULL, 8);
+    Buffer b = buffer_initialize(int, NULL, NULL, 8, 0, (int[8]){});
     int const push[8] = {7, 6, 5, 4, 3, 2, 1, 0};
     size_t count = 0;
     for (size_t i = 0; i < sizeof(push) / sizeof(*push); ++i)
@@ -40,7 +40,7 @@ check_static_begin(buffer_test_push_pop_fixed)
 
 check_static_begin(buffer_test_push_resize_pop)
 {
-    Buffer b = buffer_initialize(NULL, int, std_allocate, NULL, 0);
+    Buffer b = buffer_initialize(int, std_allocate, NULL, 0, 0, NULL);
     size_t const cap = 32;
     int *const many = malloc(sizeof(int) * cap);
     iota(many, cap, 0);
@@ -78,15 +78,14 @@ check_static_begin(buffer_test_daily_temperatures)
         TMPCAP = 8,
     };
     Buffer const temps
-        = buffer_initialize(((int[TMPCAP]){73, 74, 75, 71, 69, 72, 76, 73}),
-                            int, NULL, NULL, TMPCAP, TMPCAP);
-    Buffer const correct
-        = buffer_initialize(((int[TMPCAP]){1, 1, 4, 2, 1, 1, 0, 0}), int, NULL,
-                            NULL, TMPCAP, TMPCAP);
+        = buffer_initialize(int, NULL, NULL, TMPCAP, TMPCAP,
+                            (int[TMPCAP]){73, 74, 75, 71, 69, 72, 76, 73});
+    Buffer const correct = buffer_initialize(
+        int, NULL, NULL, TMPCAP, TMPCAP, (int[TMPCAP]){1, 1, 4, 2, 1, 1, 0, 0});
     Buffer res
-        = buffer_initialize((int[TMPCAP]){}, int, NULL, NULL, TMPCAP, TMPCAP);
+        = buffer_initialize(int, NULL, NULL, TMPCAP, TMPCAP, (int[TMPCAP]){});
     Buffer idx_stack
-        = buffer_initialize((int[TMPCAP]){}, int, NULL, NULL, TMPCAP);
+        = buffer_initialize(int, NULL, NULL, TMPCAP, 0, (int[TMPCAP]){});
     for (int i = 0, end = (int)buffer_count(&temps).count; i < end; ++i)
     {
         while (!buffer_is_empty(&idx_stack)
@@ -127,13 +126,13 @@ check_static_begin(buffer_test_car_fleet)
     {
         CARCAP = 5,
     };
-    Buffer positions = buffer_initialize(((int[CARCAP]){10, 8, 0, 5, 3}), int,
-                                         NULL, NULL, CARCAP, CARCAP);
-    Buffer const speeds = buffer_initialize(((int[CARCAP]){2, 4, 1, 1, 3}), int,
-                                            NULL, NULL, CARCAP, CARCAP);
+    Buffer positions = buffer_initialize(int, NULL, NULL, CARCAP, CARCAP,
+                                         (int[CARCAP]){10, 8, 0, 5, 3});
+    Buffer const speeds = buffer_initialize(int, NULL, NULL, CARCAP, CARCAP,
+                                            (int[CARCAP]){2, 4, 1, 1, 3});
     int const correct_fleet_count = 3;
-    Buffer car_idx = buffer_initialize((int[CARCAP]){}, int, NULL, &positions,
-                                       CARCAP, CARCAP);
+    Buffer car_idx = buffer_initialize(int, NULL, &positions, CARCAP, CARCAP,
+                                       (int[CARCAP]){});
     iota(buffer_begin(&car_idx), CARCAP, 0);
     sort(&car_idx, order_car_idx, &(int){0});
     int target = 12;
@@ -164,12 +163,12 @@ check_static_begin(buffer_test_largest_rectangle_in_histogram)
     {
         HCAP = 6,
     };
-    Buffer const heights = buffer_initialize(((int[HCAP]){2, 1, 5, 6, 2, 3}),
-                                             int, NULL, NULL, HCAP, HCAP);
+    Buffer const heights = buffer_initialize(int, NULL, NULL, HCAP, HCAP,
+                                             (int[HCAP]){2, 1, 5, 6, 2, 3});
     int const correct_max_rectangle = 10;
     int max_rectangle = 0;
     Buffer bar_indices
-        = buffer_initialize((int[HCAP]){}, int, NULL, NULL, HCAP);
+        = buffer_initialize(int, NULL, NULL, HCAP, 0, (int[HCAP]){});
     for (int i = 0, end = buffer_count(&heights).count; i <= end; ++i)
     {
         while (!buffer_is_empty(&bar_indices)
@@ -199,8 +198,8 @@ check_static_begin(buffer_test_erase)
     {
         BECAP = 8,
     };
-    Buffer b = buffer_initialize(((int[BECAP]){0, 1, 2, 3, 4, 5, 6, 7}), int,
-                                 NULL, NULL, BECAP, BECAP);
+    Buffer b = buffer_initialize(int, NULL, NULL, BECAP, BECAP,
+                                 (int[BECAP]){0, 1, 2, 3, 4, 5, 6, 7});
     check(buffer_count(&b).count, BECAP);
     CCC_Result r = buffer_erase(&b, 4);
     check(r, CCC_RESULT_OK);

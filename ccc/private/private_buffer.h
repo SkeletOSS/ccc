@@ -80,8 +80,8 @@ initialization in one convenient step for user. */
             *private_buffer_initializer_list                                   \
             = private_compound_literal_array;                                  \
         struct CCC_Buffer private_buf = CCC_private_buffer_initialize(         \
-            NULL, typeof(*private_buffer_initializer_list), private_allocate,  \
-            private_context_data, 0);                                          \
+            typeof(*private_buffer_initializer_list), private_allocate,        \
+            private_context_data, 0, 0, NULL);                                 \
         size_t const private_n = sizeof(private_compound_literal_array)        \
                                / sizeof(*private_buffer_initializer_list);     \
         size_t const private_cap = private_optional_capacity;                  \

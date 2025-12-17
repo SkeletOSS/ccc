@@ -65,8 +65,8 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
     private_context_data, private_capacity, private_data_pointer)              \
     {                                                                          \
         .buffer = CCC_buffer_initialize(                                       \
-            private_data_pointer, private_type_name, private_allocate,         \
-            private_context_data, private_capacity),                           \
+            private_type_name, private_allocate, private_context_data,         \
+            private_capacity, 0, private_data_pointer),                        \
         .order = (private_order),                                              \
         .compare = (private_compare),                                          \
     }

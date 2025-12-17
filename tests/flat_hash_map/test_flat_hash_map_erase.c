@@ -15,8 +15,8 @@
 check_static_begin(flat_hash_map_test_erase)
 {
     CCC_Flat_hash_map fh = flat_hash_map_initialize(
-        &(Small_fixed_map){}, struct Val, key, flat_hash_map_int_zero,
-        flat_hash_map_id_order, NULL, NULL, SMALL_FIXED_CAP);
+        struct Val, key, flat_hash_map_int_zero, flat_hash_map_id_order, NULL,
+        NULL, SMALL_FIXED_CAP, &(Small_fixed_map){});
     struct Val query = {.key = 137, .val = 99};
     /* Nothing was there before so nothing is in the entry. */
     CCC_Entry ent = swap_entry(&fh, &query);
@@ -45,8 +45,8 @@ check_static_begin(flat_hash_map_test_erase)
 check_static_begin(flat_hash_map_test_shuffle_insert_erase)
 {
     CCC_Flat_hash_map h = flat_hash_map_initialize(
-        NULL, struct Val, key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
-        std_allocate, NULL, 0);
+        struct Val, key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
+        std_allocate, NULL, 0, NULL);
     int const to_insert = 100;
     int const larger_prime = 101;
     for (int i = 0, shuffle = larger_prime % to_insert; i < to_insert;
@@ -90,8 +90,8 @@ check_static_begin(flat_hash_map_test_shuffle_insert_erase)
 check_static_begin(flat_hash_map_test_shuffle_erase_fixed)
 {
     CCC_Flat_hash_map h = flat_hash_map_initialize(
-        &(Standard_fixed_map){}, struct Val, key, flat_hash_map_int_to_u64,
-        flat_hash_map_id_order, NULL, NULL, STANDARD_FIXED_CAP);
+        struct Val, key, flat_hash_map_int_to_u64, flat_hash_map_id_order, NULL,
+        NULL, STANDARD_FIXED_CAP, &(Standard_fixed_map){});
     int to_insert[STANDARD_FIXED_CAP];
     iota(to_insert, STANDARD_FIXED_CAP, 0);
     rand_shuffle(sizeof(int), to_insert, STANDARD_FIXED_CAP, &(int){0});
@@ -165,9 +165,9 @@ check_static_begin(flat_hash_map_test_shuffle_erase_reserved)
     /* The map will be given dynamically reserved space but no ability to
        resize. All algorithms should function normally and in place rehashing
        should take effect. */
-    CCC_Flat_hash_map h = flat_hash_map_initialize(
-        NULL, struct Val, key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
-        NULL, NULL, 0);
+    CCC_Flat_hash_map h
+        = flat_hash_map_initialize(struct Val, key, flat_hash_map_int_to_u64,
+                                   flat_hash_map_id_order, NULL, NULL, 0, NULL);
     int const test_amount = 896;
     CCC_Result const res_check
         = CCC_flat_hash_map_reserve(&h, test_amount, std_allocate);
@@ -246,8 +246,8 @@ check_static_begin(flat_hash_map_test_shuffle_erase_reserved)
 check_static_begin(flat_hash_map_test_shuffle_erase_dynamic)
 {
     CCC_Flat_hash_map h = flat_hash_map_initialize(
-        NULL, struct Val, key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
-        std_allocate, NULL, 0);
+        struct Val, key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
+        std_allocate, NULL, 0, NULL);
     int to_insert[1024];
     iota(to_insert, 1024, 0);
     rand_shuffle(sizeof(int), to_insert, 1024, &(int){0});

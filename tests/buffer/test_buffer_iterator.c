@@ -11,8 +11,8 @@
 
 check_static_begin(buffer_test_iterator_forward)
 {
-    Buffer const b = buffer_initialize(((int[6]){1, 2, 3, 4, 5, 6}), int, NULL,
-                                       NULL, 6, 6);
+    Buffer const b
+        = buffer_initialize(int, NULL, NULL, 6, 6, (int[6]){1, 2, 3, 4, 5, 6});
     size_t count = 0;
     int prev = 0;
     for (int const *i = buffer_begin(&b); i != buffer_end(&b);
@@ -28,8 +28,8 @@ check_static_begin(buffer_test_iterator_forward)
 
 check_static_begin(buffer_test_iterator_reverse)
 {
-    Buffer const b = buffer_initialize(((int[6]){1, 2, 3, 4, 5, 6}), int, NULL,
-                                       NULL, 6, 6);
+    Buffer const b
+        = buffer_initialize(int, NULL, NULL, 6, 6, (int[6]){1, 2, 3, 4, 5, 6});
     size_t count = 0;
     int prev = 7;
     for (int const *i = buffer_reverse_begin(&b); i != buffer_reverse_end(&b);
@@ -45,8 +45,8 @@ check_static_begin(buffer_test_iterator_reverse)
 
 check_static_begin(buffer_test_reverse_buf)
 {
-    Buffer b = buffer_initialize(((int[6]){1, 2, 3, 4, 5, 6}), int, NULL, NULL,
-                                 6, 6);
+    Buffer b
+        = buffer_initialize(int, NULL, NULL, 6, 6, (int[6]){1, 2, 3, 4, 5, 6});
     int prev = 0;
     for (int const *i = buffer_begin(&b); i != buffer_end(&b);
          i = buffer_next(&b, i))
@@ -82,8 +82,8 @@ check_static_begin(buffer_test_trap_rainwater_two_pointers)
         HCAP = 12,
     };
     Buffer const heights
-        = buffer_initialize(((int[HCAP]){0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1}),
-                            int, NULL, NULL, HCAP, HCAP);
+        = buffer_initialize(int, NULL, NULL, HCAP, HCAP,
+                            (int[HCAP]){0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1});
     int const correct_trapped = 6;
     int trapped = 0;
     check(buffer_is_empty(&heights), CCC_FALSE);

@@ -13,7 +13,7 @@
 check_static_begin(flat_double_ended_queue_test_insert_three)
 {
     Flat_double_ended_queue q
-        = flat_double_ended_queue_initialize((int[3]){}, int, NULL, NULL, 3);
+        = flat_double_ended_queue_initialize(int, NULL, NULL, 3, 0, (int[3]){});
     check(create_queue(&q, 3, (int[3]){0, 1, 2}), CHECK_PASS);
     check(count(&q).count, 3);
     check_end();
@@ -22,7 +22,7 @@ check_static_begin(flat_double_ended_queue_test_insert_three)
 check_static_begin(flat_double_ended_queue_test_insert_overwrite)
 {
     Flat_double_ended_queue q
-        = flat_double_ended_queue_initialize((int[2]){}, int, NULL, NULL, 2);
+        = flat_double_ended_queue_initialize(int, NULL, NULL, 2, 0, (int[2]){});
     (void)CCC_flat_double_ended_queue_push_back(&q, &(int){3});
     check(*(int *)CCC_flat_double_ended_queue_back(&q), 3);
     (void)CCC_flat_double_ended_queue_push_front(&q, &(int){2});
@@ -42,7 +42,7 @@ check_static_begin(flat_double_ended_queue_test_insert_overwrite)
 check_static_begin(flat_double_ended_queue_test_insert_overwrite_three)
 {
     Flat_double_ended_queue q
-        = flat_double_ended_queue_initialize((int[3]){}, int, NULL, NULL, 3);
+        = flat_double_ended_queue_initialize(int, NULL, NULL, 3, 0, (int[3]){});
     check(create_queue(&q, 3, (int[3]){0, 1, 2}), CHECK_PASS);
     check(count(&q).count, 3);
     (void)flat_double_ended_queue_push_back_range(&q, 3, (int[3]){3, 4, 5});
@@ -90,7 +90,7 @@ check_static_begin(flat_double_ended_queue_test_insert_overwrite_three)
 check_static_begin(flat_double_ended_queue_test_push_back_ranges)
 {
     Flat_double_ended_queue q
-        = flat_double_ended_queue_initialize((int[6]){}, int, NULL, NULL, 6);
+        = flat_double_ended_queue_initialize(int, NULL, NULL, 6, 0, (int[6]){});
     check(create_queue(&q, 3, (int[3]){0, 1, 2}), CHECK_PASS);
     check(check_order(&q, 3, (int[3]){0, 1, 2}), CHECK_PASS);
     (void)flat_double_ended_queue_push_back_range(&q, 2, (int[2]){3, 4});
@@ -115,7 +115,7 @@ check_static_begin(flat_double_ended_queue_test_push_back_ranges)
 check_static_begin(flat_double_ended_queue_test_push_front_ranges)
 {
     Flat_double_ended_queue q
-        = flat_double_ended_queue_initialize((int[6]){}, int, NULL, NULL, 6);
+        = flat_double_ended_queue_initialize(int, NULL, NULL, 6, 0, (int[6]){});
     check(create_queue(&q, 3, (int[3]){0, 1, 2}), CHECK_PASS);
     check(check_order(&q, 3, (int[3]){0, 1, 2}), CHECK_PASS);
     (void)flat_double_ended_queue_push_front_range(&q, 2, (int[2]){3, 4});
@@ -140,7 +140,7 @@ check_static_begin(flat_double_ended_queue_test_push_front_ranges)
 check_static_begin(flat_double_ended_queue_test_insert_ranges)
 {
     Flat_double_ended_queue q = flat_double_ended_queue_initialize(
-        ((int[6]){0, 1, 2}), int, NULL, NULL, 6, 3);
+        int, NULL, NULL, 6, 3, ((int[6]){0, 1, 2}));
     check(check_order(&q, 3, (int[3]){0, 1, 2}), CHECK_PASS);
     (void)flat_double_ended_queue_insert_range(
         &q, flat_double_ended_queue_at(&q, 1), 2, (int[2]){3, 4});
@@ -168,7 +168,7 @@ check_static_begin(flat_double_ended_queue_test_insert_ranges)
 check_static_begin(flat_double_ended_queue_test_insert_ranges_reserve)
 {
     Flat_double_ended_queue q
-        = flat_double_ended_queue_initialize(NULL, int, NULL, NULL, 0);
+        = flat_double_ended_queue_initialize(int, NULL, NULL, 0, 0, NULL);
     CCC_Result const r = flat_double_ended_queue_reserve(&q, 6, std_allocate);
     check(r, CCC_RESULT_OK);
     (void)flat_double_ended_queue_push_back_range(&q, 3, (int[3]){0, 1, 2});

@@ -88,8 +88,8 @@ check_static_begin(array_adaptive_map_test_copy_allocate)
         struct Val, id, id_order, stack_allocator_allocate, &allocator,
         SMALL_FIXED_CAP - 1);
     Array_adaptive_map destination = array_adaptive_map_initialize(
-        NULL, struct Val, id, id_order, stack_allocator_allocate, &allocator,
-        0);
+        struct Val, id, id_order, stack_allocator_allocate, &allocator, 0,
+        NULL);
     (void)swap_handle(&source, &(struct Val){.id = 0});
     (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1});
     (void)swap_handle(&source, &(struct Val){.id = 2, .val = 2});

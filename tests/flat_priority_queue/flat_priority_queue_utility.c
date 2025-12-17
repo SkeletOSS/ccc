@@ -70,8 +70,9 @@ check_begin(inorder_fill, int vals[const], size_t const size,
         return CHECK_FAIL;
     }
     CCC_Flat_priority_queue flat_priority_queue_cpy
-        = CCC_flat_priority_queue_initialize(NULL, struct Val, CCC_ORDER_LESSER,
-                                             val_order, std_allocate, NULL, 0);
+        = CCC_flat_priority_queue_initialize(struct Val, CCC_ORDER_LESSER,
+                                             val_order, std_allocate, NULL, 0,
+                                             NULL);
     CCC_Result const r = flat_priority_queue_copy(
         &flat_priority_queue_cpy, flat_priority_queue, std_allocate);
     check(r, CCC_RESULT_OK);

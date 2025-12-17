@@ -108,16 +108,7 @@ check_static_begin(flat_double_ended_queue_test_init_from)
 {
     struct Stack_allocator allocator = stack_allocator_initialize(int, 8);
     CCC_Flat_double_ended_queue queue = CCC_flat_double_ended_queue_from(
-        stack_allocator_allocate, &allocator, 8,
-        (int[7]){
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-        });
+        stack_allocator_allocate, &allocator, 8, (int[7]){1, 2, 3, 4, 5, 6, 7});
     int elem = 1;
     for (int const *i = CCC_flat_double_ended_queue_begin(&queue);
          i != CCC_flat_double_ended_queue_end(&queue);

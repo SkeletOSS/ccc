@@ -25,8 +25,8 @@ modw(CCC_Type_context const u)
 }
 
 static CCC_Flat_hash_map static_fh = flat_hash_map_initialize(
-    &(Small_fixed_map){}, struct Val, key, flat_hash_map_int_to_u64,
-    flat_hash_map_id_order, NULL, NULL, SMALL_FIXED_CAP);
+    struct Val, key, flat_hash_map_int_to_u64, flat_hash_map_id_order, NULL,
+    NULL, SMALL_FIXED_CAP, &(Small_fixed_map){});
 
 check_static_begin(flat_hash_map_test_static_initialize)
 {
@@ -119,8 +119,8 @@ check_static_begin(flat_hash_map_test_copy_no_allocate)
         key, flat_hash_map_int_zero, flat_hash_map_id_order,
         (Small_fixed_map){});
     Flat_hash_map destination = flat_hash_map_initialize(
-        &(Standard_fixed_map){}, struct Val, key, flat_hash_map_int_zero,
-        flat_hash_map_id_order, NULL, NULL, STANDARD_FIXED_CAP);
+        struct Val, key, flat_hash_map_int_zero, flat_hash_map_id_order, NULL,
+        NULL, STANDARD_FIXED_CAP, &(Standard_fixed_map){});
     (void)swap_entry(&source, &(struct Val){.key = 0});
     (void)swap_entry(&source, &(struct Val){.key = 1, .val = 1});
     (void)swap_entry(&source, &(struct Val){.key = 2, .val = 2});
@@ -163,8 +163,8 @@ check_static_begin(flat_hash_map_test_copy_no_allocate_fail)
 check_static_begin(flat_hash_map_test_copy_allocate)
 {
     Flat_hash_map destination = flat_hash_map_initialize(
-        NULL, struct Val, key, flat_hash_map_int_zero, flat_hash_map_id_order,
-        std_allocate, NULL, 0);
+        struct Val, key, flat_hash_map_int_zero, flat_hash_map_id_order,
+        std_allocate, NULL, 0, NULL);
     Flat_hash_map source
         = flat_hash_map_from(key, flat_hash_map_int_zero,
                              flat_hash_map_id_order, std_allocate, NULL, 0,
@@ -197,11 +197,11 @@ check_static_begin(flat_hash_map_test_copy_allocate)
 check_static_begin(flat_hash_map_test_copy_allocate_fail)
 {
     Flat_hash_map source = flat_hash_map_initialize(
-        NULL, struct Val, key, flat_hash_map_int_zero, flat_hash_map_id_order,
-        std_allocate, NULL, 0);
+        struct Val, key, flat_hash_map_int_zero, flat_hash_map_id_order,
+        std_allocate, NULL, 0, NULL);
     Flat_hash_map destination = flat_hash_map_initialize(
-        NULL, struct Val, key, flat_hash_map_int_zero, flat_hash_map_id_order,
-        std_allocate, NULL, 0);
+        struct Val, key, flat_hash_map_int_zero, flat_hash_map_id_order,
+        std_allocate, NULL, 0, NULL);
     (void)swap_entry(&source, &(struct Val){.key = 0});
     (void)swap_entry(&source, &(struct Val){.key = 1, .val = 1});
     (void)swap_entry(&source, &(struct Val){.key = 2, .val = 2});
@@ -215,8 +215,8 @@ check_static_begin(flat_hash_map_test_copy_allocate_fail)
 check_static_begin(flat_hash_map_test_empty)
 {
     Flat_hash_map fh = flat_hash_map_initialize(
-        &(Small_fixed_map){}, struct Val, key, flat_hash_map_int_zero,
-        flat_hash_map_id_order, NULL, NULL, SMALL_FIXED_CAP);
+        struct Val, key, flat_hash_map_int_zero, flat_hash_map_id_order, NULL,
+        NULL, SMALL_FIXED_CAP, &(Small_fixed_map){});
     check(is_empty(&fh), true);
     check_end();
 }

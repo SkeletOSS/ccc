@@ -364,7 +364,7 @@ static Buffer
 copy_frequencies(Array_adaptive_map const *const map)
 {
     check(!is_empty(map));
-    Buffer freqs = buffer_initialize(NULL, Word, std_allocate, NULL, 0);
+    Buffer freqs = buffer_initialize(Word, std_allocate, NULL, 0, 0, NULL);
     CCC_Result const r = buffer_reserve(&freqs, count(map).count, std_allocate);
     check(r == CCC_RESULT_OK);
     size_t const cap = capacity(&freqs).count;
