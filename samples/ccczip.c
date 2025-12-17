@@ -396,9 +396,9 @@ the caller's responsibility to free the priority queue memory when ready. */
 static Flat_priority_queue
 build_encoding_priority_queue(FILE *const f, struct Huffman_tree *const tree)
 {
-    Flat_hash_map frequencies = flat_hash_map_initialize(
-        NULL, struct Character_frequency, ch, hash_char, char_order,
-        std_allocate, NULL, 0);
+    Flat_hash_map frequencies
+        = flat_hash_map_initialize(struct Character_frequency, ch, hash_char,
+                                   char_order, std_allocate, NULL, 0, NULL);
     foreach_filechar(f, c, {
         struct Character_frequency *const ins = flat_hash_map_or_insert_with(
             flat_hash_map_and_modify_with(entry_wrap(&frequencies, c),
@@ -443,10 +443,10 @@ build_encoding_priority_queue(FILE *const f, struct Huffman_tree *const tree)
     /* Now we steal the buffer's memory and heapify the data in O(N) time rather
        than pushing each element. */
     return flat_priority_queue_heapify_initialize(
-        begin(&flat_priority_queue_storage), struct Flat_priority_queue_node,
-        CCC_ORDER_LESSER, order_freqs, std_allocate, NULL,
-        capacity(&flat_priority_queue_storage).count,
-        count(&flat_priority_queue_storage).count);
+        struct Flat_priority_queue_node, CCC_ORDER_LESSER, order_freqs,
+        std_allocate, NULL, capacity(&flat_priority_queue_storage).count,
+        count(&flat_priority_queue_storage).count,
+        begin(&flat_priority_queue_storage));
 }
 
 /** Returns the bit queue representing the bit path to every character in the

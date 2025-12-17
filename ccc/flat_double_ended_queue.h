@@ -67,21 +67,19 @@ Initialize and create containers with memory, callbacks, and permissions. */
 /**@{*/
 
 /** @brief Initialize the queue with memory and allocation permission.
-@param[in] data_pointer a pointer to existing memory or ((T *)NULL).
 @param[in] type_name the name of the user type.
 @param[in] allocate the allocator function, if allocation is allowed.
 @param[in] context_data any context data needed for element destruction.
 @param[in] capacity the number of contiguous elements at data_pointer
-@param[in] optional_size an optional initial size between 1 and capacity.
+@param[in] count the starting size of the flat doubled ended queue.
+@param[in] data_pointer a pointer to existing memory or NULL.
 @return the queue on the right hand side of an equality
 operator at runtime or compiletime (e.g. CCC_Flat_double_ended_queue q =
 CCC_flat_double_ended_queue_initialize(...);) */
-#define CCC_flat_double_ended_queue_initialize(data_pointer, type_name,        \
-                                               allocate, context_data,         \
-                                               capacity, optional_size...)     \
-    CCC_private_flat_double_ended_queue_initialize(data_pointer, type_name,    \
-                                                   allocate, context_data,     \
-                                                   capacity, optional_size)
+#define CCC_flat_double_ended_queue_initialize(                                \
+    type_name, allocate, context_data, capacity, count, data_pointer...)       \
+    CCC_private_flat_double_ended_queue_initialize(                            \
+        type_name, allocate, context_data, capacity, count, data_pointer)
 
 /** @brief Initialize a Flat_double_ended_queue from a compound literal array
 initializer.
@@ -220,20 +218,20 @@ Manual memory management with no allocation function provided.
 ```
 #define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
 Flat_double_ended_queue source = flat_double_ended_queue_initialize(
-    (int[10]){},
     int,
     NULL,
     NULL,
-    10
+    10,
+    (int[10]){}
 );
 int *new_data
     = malloc(sizeof(int) * flat_double_ended_queue_capacity(&source).count);
 Flat_double_ended_queue destination = flat_double_ended_queue_initialize(
-    new_data,
     int,
     NULL,
     NULL,
-    flat_double_ended_queue_capacity(&source).count
+    flat_double_ended_queue_capacity(&source).count,
+    new_data
 );
 CCC_Result res = flat_double_ended_queue_copy(&destination, &source, NULL);
 ```
@@ -244,11 +242,11 @@ capacity. Here is memory management handed over to the copy function.
 ```
 #define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
 Flat_double_ended_queue source = flat_double_ended_queue_initialize(
-    NULL,
     int,
     std_allocate,
     NULL,
-    0
+    0,
+    NULL
 );
 (void)CCC_flat_double_ended_queue_push_back_range(
     &source,
@@ -256,11 +254,11 @@ Flat_double_ended_queue source = flat_double_ended_queue_initialize(
     (int[5]){0,1,2,3,4}
 );
 Flat_double_ended_queue destination = flat_double_ended_queue_initialize(
-    NULL,
     int,
     std_allocate,
     NULL,
-    0
+    0,
+    NULL
 );
 CCC_Result res = flat_double_ended_queue_copy(
     &destination,
@@ -277,11 +275,11 @@ as a fixed size queue (ring buffer).
 ```
 #define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
 Flat_double_ended_queue source = flat_double_ended_queue_initialize(
-    NULL,
     int,
     std_allocate,
     NULL,
-    0
+    0,
+    NULL
 );
 (void)CCC_flat_double_ended_queue_push_back_range(
     &source,
@@ -289,11 +287,11 @@ Flat_double_ended_queue source = flat_double_ended_queue_initialize(
     (int[5]){0,1,2,3,4}
 );
 Flat_double_ended_queue destination = flat_double_ended_queue_initialize(
-    NULL,
     int,
     NULL,
     NULL,
-    0
+    0,
+    NULL
 );
 CCC_Result res = flat_double_ended_queue_copy(
     &destination,

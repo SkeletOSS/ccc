@@ -80,12 +80,12 @@ Initialize the container with memory, callbacks, and permissions. */
 
 /** @brief Initialize a contiguous Buffer of user a specified type, allocation
 policy, capacity, and optional starting size.
-@param[in] data_pointer the pointer to existing memory or NULL.
 @param[in] type_name the name of the user type in the buffer.
 @param[in] allocate CCC_Allocator or NULL if no allocation is permitted.
 @param[in] context_data any context data needed for managing Buffer memory.
 @param[in] capacity the capacity of memory at data_pointer.
-@param[in] optional_count optional starting size of the Buffer <= capacity.
+@param[in] count optional starting size of the Buffer <= capacity.
+@param[in] data_pointer the pointer to existing memory or NULL.
 @return the initialized buffer. Directly assign to Buffer on the right hand
 side of the equality operator (e.g. CCC_Buffer b = CCC_buffer_initialize(...);).
 
@@ -95,17 +95,17 @@ store in the buffer.
 
 ```
 #define BUFFER_USING_NAMESPACE_CCC
-static Buffer stack = buffer_initialize(&(static int[4096]){}, int, NULL, NULL,
-4096);
+static Buffer stack = buffer_initialize(int, NULL, NULL, 4096,
+&(static int[4096]){});
 ```
 
 Initialize a fixed Buffer with some elements occupied.
 
 ```
 #define BUFFER_USING_NAMESPACE_CCC
-static Buffer stack
-    = buffer_initialize(&(static int[4096]){0, 1, 2, 3}, int, NULL, NULL, 4096,
-4);
+static Buffer stack = buffer_initialize(
+    int, NULL, NULL, 4096, 4, &(static int[4096]){0, 1, 2, 3}
+);
 ```
 
 This initializer determines memory control for the lifetime of the buffer. If
@@ -114,10 +114,10 @@ provide an allocation function. If a dynamic Buffer is preferred, provide the
 allocation function as defined by the signature in types.h. If resizing is
 desired on memory that has already been allocated, ensure allocation has
 occurred with the provided allocation function. */
-#define CCC_buffer_initialize(data_pointer, type_name, allocate, context_data, \
-                              capacity, optional_count...)                     \
-    CCC_private_buffer_initialize(data_pointer, type_name, allocate,           \
-                                  context_data, capacity, optional_count)
+#define CCC_buffer_initialize(type_name, allocate, context_data, capacity,     \
+                              count, data_pointer...)                          \
+    CCC_private_buffer_initialize(type_name, allocate, context_data, capacity, \
+                                  count, data_pointer)
 
 /** @brief Initialize a Buffer from a compound literal array initializer.
 @param[in] allocate CCC_Allocator or NULL if no allocation is permitted.

@@ -13,7 +13,7 @@ check_static_begin(flat_double_ended_queue_test_construct)
 {
     int vals[2];
     Flat_double_ended_queue q = flat_double_ended_queue_initialize(
-        vals, int, NULL, NULL, sizeof(vals) / sizeof(int));
+        int, NULL, NULL, sizeof(vals) / sizeof(int), 0, vals);
     check(is_empty(&q), true);
     check_end();
 }
@@ -21,9 +21,9 @@ check_static_begin(flat_double_ended_queue_test_construct)
 check_static_begin(flat_double_ended_queue_test_copy_no_allocate)
 {
     Flat_double_ended_queue q1 = flat_double_ended_queue_initialize(
-        ((int[3]){0, 1, 2}), int, NULL, NULL, 3, 3);
+        int, NULL, NULL, 3, 3, (int[3]){0, 1, 2});
     Flat_double_ended_queue q2 = CCC_flat_double_ended_queue_initialize(
-        ((int[5]){}), int, NULL, NULL, 5);
+        int, NULL, NULL, 5, 0, ((int[5]){}));
     check(count(&q1).count, 3);
     check(*(int *)front(&q1), 0);
     check(is_empty(&q2), true);
@@ -45,9 +45,9 @@ check_static_begin(flat_double_ended_queue_test_copy_no_allocate)
 check_static_begin(flat_double_ended_queue_test_copy_no_allocate_fail)
 {
     Flat_double_ended_queue q1 = flat_double_ended_queue_initialize(
-        ((int[3]){0, 1, 2}), int, NULL, NULL, 3, 3);
+        int, NULL, NULL, 3, 3, (int[3]){0, 1, 2});
     Flat_double_ended_queue q2 = CCC_flat_double_ended_queue_initialize(
-        ((int[2]){}), int, NULL, NULL, 2);
+        int, NULL, NULL, 2, 0, (int[2]){});
     check(count(&q1).count, 3);
     check(*(int *)front(&q1), 0);
     check(is_empty(&q2), true);
@@ -62,7 +62,7 @@ check_static_begin(flat_double_ended_queue_test_copy_allocate)
     Flat_double_ended_queue q1 = flat_double_ended_queue_with_capacity(
         int, stack_allocator_allocate, &allocator, 8);
     Flat_double_ended_queue q2 = CCC_flat_double_ended_queue_initialize(
-        NULL, int, NULL, &allocator, 0);
+        int, NULL, &allocator, 0, 0, NULL);
     CCC_Result res = flat_double_ended_queue_push_back_range(
         &q1, 5, (int[5]){0, 1, 2, 3, 4});
     check(res, CCC_RESULT_OK);
@@ -93,7 +93,7 @@ check_static_begin(flat_double_ended_queue_test_copy_allocate_fail)
     Flat_double_ended_queue q1 = flat_double_ended_queue_with_capacity(
         int, stack_allocator_allocate, &allocator, 8);
     Flat_double_ended_queue q2 = CCC_flat_double_ended_queue_initialize(
-        NULL, int, NULL, &allocator, 0);
+        int, NULL, &allocator, 0, 0, NULL);
     CCC_Result res = flat_double_ended_queue_push_back_range(
         &q1, 5, (int[5]){0, 1, 2, 3, 4});
     check(res, CCC_RESULT_OK);

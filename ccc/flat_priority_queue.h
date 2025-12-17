@@ -86,7 +86,6 @@ Initialize the container with memory, callbacks, and permissions. */
 /**@{*/
 
 /** @brief Initialize a priority_queue as a min or max heap.
-@param[in] data_pointer a pointer to an array of user types or NULL.
 @param[in] type_name the name of the user type.
 @param[in] order CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max
 heap, respectively.
@@ -94,17 +93,17 @@ heap, respectively.
 @param[in] allocate the allocation function or NULL if no allocation.
 @param[in] context_data any context data needed for destruction of elements.
 @param[in] capacity the capacity of contiguous elements at data_pointer.
+@param[in] data_pointer a pointer to an array of user types or NULL.
 @return the initialized priority queue on the right hand side of an equality
 operator. (i.e. CCC_Flat_priority_queue q =
 CCC_flat_priority_queue_initialize(...);). */
 #define CCC_flat_priority_queue_initialize(                                    \
-    data_pointer, type_name, order, compare, allocate, context_data, capacity) \
-    CCC_private_flat_priority_queue_initialize(data_pointer, type_name, order, \
-                                               compare, allocate,              \
-                                               context_data, capacity)
+    type_name, order, compare, allocate, context_data, capacity, data_pointer) \
+    CCC_private_flat_priority_queue_initialize(type_name, order, compare,      \
+                                               allocate, context_data,         \
+                                               capacity, data_pointer)
 
 /** @brief Partial order an array of elements as a min or max heap. O(N).
-@param[in] data_pointer a pointer to an array of user types or NULL.
 @param[in] type_name the name of the user type.
 @param[in] order CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max
 heap, respectively.
@@ -113,15 +112,16 @@ heap, respectively.
 @param[in] context_data any context data needed for destruction of elements.
 @param[in] capacity the capacity of contiguous elements at data_pointer.
 @param[in] size the size <= capacity.
+@param[in] data_pointer a pointer to an array of user types or NULL.
 @return the initialized priority queue on the right hand side of an equality
 operator. (i.e. CCC_Flat_priority_queue q =
 CCC_flat_priority_queue_heapify_initialize(...);). */
 #define CCC_flat_priority_queue_heapify_initialize(                            \
-    data_pointer, type_name, order, compare, allocate, context_data, capacity, \
-    size)                                                                      \
+    type_name, order, compare, allocate, context_data, capacity, size,         \
+    data_pointer)                                                              \
     CCC_private_flat_priority_queue_heapify_initialize(                        \
-        data_pointer, type_name, order, compare, allocate, context_data,       \
-        capacity, size)
+        type_name, order, compare, allocate, context_data, capacity, size,     \
+        data_pointer)
 
 /** @brief Partial order a compound literal array of elements as a min or max
 heap. O(N).
@@ -279,23 +279,23 @@ Manual memory management with no allocation function provided.
 ```
 #define FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC
 Flat_priority_queue source = flat_priority_queue_initialize(
-    (int[10]){},
     int,
     CCC_ORDER_LESSER,
     int_order,
     NULL,
     NULL,
-    10
+    10,
+    (int[10]){}
 );
 push_rand_ints(&source);
 Flat_priority_queue destination = flat_priority_queue_initialize(
-    (int[11]){},
     int,
     CCC_ORDER_LESSER,
     int_order,
     NULL,
     NULL,
-    11
+    11,
+    (int[11]){}
 );
 CCC_Result res = flat_priority_queue_copy(&destination, &source, NULL);
 ```
@@ -306,23 +306,23 @@ capacity. Here is memory management handed over to the copy function.
 ```
 #define FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC
 Flat_priority_queue source = flat_priority_queue_initialize(
-    NULL,
     int,
     CCC_ORDER_LESSER,
     int_order,
     std_allocate,
     NULL,
-    0
+    0,
+    NULL
 );
 push_rand_ints(&source);
 Flat_priority_queue destination = flat_priority_queue_initialize(
-    NULL,
     int,
     CCC_ORDER_LESSER,
     int_order,
     std_allocate,
     NULL,
-    0
+    0,
+    NULL
 );
 CCC_Result res = flat_priority_queue_copy(&destination, &source, std_allocate);
 ```
@@ -335,23 +335,23 @@ as a fixed size flat_priority_queue.
 ```
 #define FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC
 Flat_priority_queue source = flat_priority_queue_initialize(
-    NULL,
     int,
     CCC_ORDER_LESSER,
     int_order,
     std_allocate,
     NULL,
-    0
+    0,
+    NULL
 );
 push_rand_ints(&source);
 Flat_priority_queue destination = flat_priority_queue_initialize(
-    NULL,
     int,
     CCC_ORDER_LESSER,
     int_order,
     NULL,
     NULL,
-    0
+    0,
+    NULL
 );
 CCC_Result res = flat_priority_queue_copy(&destination, &source, std_allocate);
 ```

@@ -14,8 +14,8 @@
 check_static_begin(array_tree_map_test_empty)
 {
     Array_tree_map s
-        = array_tree_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                    id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_tree_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                    SMALL_FIXED_CAP, &(Small_fixed_map){});
     check(is_empty(&s), true);
     check_end();
 }
@@ -32,11 +32,11 @@ check_static_begin(array_tree_map_test_with_literal)
 check_static_begin(array_tree_map_test_copy_no_allocate)
 {
     Array_tree_map source
-        = array_tree_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                    id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_tree_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                    SMALL_FIXED_CAP, &(Small_fixed_map){});
     Array_tree_map destination
-        = array_tree_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                    id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_tree_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                    SMALL_FIXED_CAP, &(Small_fixed_map){});
     (void)swap_handle(&source, &(struct Val){.id = 0});
     (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1});
     (void)swap_handle(&source, &(struct Val){.id = 2, .val = 2});
@@ -63,12 +63,12 @@ check_static_begin(array_tree_map_test_copy_no_allocate)
 
 check_static_begin(array_tree_map_test_copy_no_allocate_fail)
 {
-    Array_tree_map source
-        = array_tree_map_initialize(&(Standard_fixed_map){}, struct Val, id,
-                                    id_order, NULL, NULL, STANDARD_FIXED_CAP);
+    Array_tree_map source = array_tree_map_initialize(
+        struct Val, id, id_order, NULL, NULL, STANDARD_FIXED_CAP,
+        &(Standard_fixed_map){});
     Array_tree_map destination
-        = array_tree_map_initialize(&(Small_fixed_map){}, struct Val, id,
-                                    id_order, NULL, NULL, SMALL_FIXED_CAP);
+        = array_tree_map_initialize(struct Val, id, id_order, NULL, NULL,
+                                    SMALL_FIXED_CAP, &(Small_fixed_map){});
     (void)swap_handle(&source, &(struct Val){.id = 0});
     (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1});
     (void)swap_handle(&source, &(struct Val){.id = 2, .val = 2});
@@ -86,9 +86,9 @@ check_static_begin(array_tree_map_test_copy_allocate)
     Array_tree_map source = array_tree_map_with_capacity(
         struct Val, id, id_order, stack_allocator_allocate, &allocator,
         SMALL_FIXED_CAP - 1);
-    Array_tree_map destination
-        = array_tree_map_initialize(NULL, struct Val, id, id_order,
-                                    stack_allocator_allocate, &allocator, 0);
+    Array_tree_map destination = array_tree_map_initialize(
+        struct Val, id, id_order, stack_allocator_allocate, &allocator, 0,
+        NULL);
     (void)swap_handle(&source, &(struct Val){.id = 0});
     (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1});
     (void)swap_handle(&source, &(struct Val){.id = 2, .val = 2});
@@ -124,9 +124,9 @@ check_static_begin(array_tree_map_test_copy_allocate_fail)
     Array_tree_map source = array_tree_map_with_capacity(
         struct Val, id, id_order, stack_allocator_allocate, &allocator,
         SMALL_FIXED_CAP - 1);
-    Array_tree_map destination
-        = array_tree_map_initialize(NULL, struct Val, id, id_order,
-                                    stack_allocator_allocate, &allocator, 0);
+    Array_tree_map destination = array_tree_map_initialize(
+        struct Val, id, id_order, stack_allocator_allocate, &allocator, 0,
+        NULL);
     (void)swap_handle(&source, &(struct Val){.id = 0});
     (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1});
     (void)swap_handle(&source, &(struct Val){.id = 2, .val = 2});

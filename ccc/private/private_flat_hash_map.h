@@ -274,9 +274,9 @@ because we can't initialize the tag array at compile time. By setting the tag
 field to NULL we will be able to tell if our map is initialized whether it is
 fixed size and has data or is dynamic and has not yet been given allocation. */
 #define CCC_private_flat_hash_map_initialize(                                  \
-    private_fixed_map_pointer, private_type_name, private_key_field,           \
-    private_hash, private_key_compare, private_allocate, private_context_data, \
-    private_capacity)                                                          \
+    private_type_name, private_key_field, private_hash, private_key_compare,   \
+    private_allocate, private_context_data, private_capacity,                  \
+    private_fixed_map_pointer)                                                 \
     {                                                                          \
         .data = (private_fixed_map_pointer),                                   \
         .tag = NULL,                                                           \
@@ -304,9 +304,9 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
             = private_array_compound_literal;                                  \
         struct CCC_Flat_hash_map private_map                                   \
             = CCC_private_flat_hash_map_initialize(                            \
-                NULL, typeof(*private_flat_hash_map_initializer_list),         \
+                typeof(*private_flat_hash_map_initializer_list),               \
                 private_key_field, private_hash, private_key_compare,          \
-                private_allocate, private_context_data, 0);                    \
+                private_allocate, private_context_data, 0, NULL);              \
         size_t const private_n                                                 \
             = sizeof(private_array_compound_literal)                           \
             / sizeof(*private_flat_hash_map_initializer_list);                 \
@@ -345,9 +345,9 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
     (__extension__({                                                           \
         struct CCC_Flat_hash_map private_map                                   \
             = CCC_private_flat_hash_map_initialize(                            \
-                NULL, private_type_name, private_key_field, private_hash,      \
+                private_type_name, private_key_field, private_hash,            \
                 private_key_compare, private_allocate, private_context_data,   \
-                0);                                                            \
+                0, NULL);                                                      \
         (void)CCC_flat_hash_map_reserve(&private_map, private_cap,             \
                                         private_allocate);                     \
         private_map;                                                           \

@@ -234,9 +234,9 @@ lazily initialized upon the first runtime opportunity. This allows the initial
 memory provided to the data pointer to come from any source at compile or
 runtime. */
 #define CCC_private_array_tree_map_initialize(                                 \
-    private_memory_pointer, private_type_name, private_key_field,              \
-    private_key_compare, private_allocate, private_context_data,               \
-    private_capacity)                                                          \
+    private_type_name, private_key_field, private_key_compare,                 \
+    private_allocate, private_context_data, private_capacity,                  \
+    private_memory_pointer)                                                    \
     {                                                                          \
         .data = (private_memory_pointer),                                      \
         .nodes = NULL,                                                         \
@@ -263,9 +263,9 @@ runtime. */
             = private_array_compound_literal;                                  \
         struct CCC_Array_tree_map private_array_tree_map                       \
             = CCC_private_array_tree_map_initialize(                           \
-                NULL, typeof(*private_array_tree_map_initializer_list),        \
+                typeof(*private_array_tree_map_initializer_list),              \
                 private_key_field, private_key_compare, private_allocate,      \
-                private_context_data, 0);                                      \
+                private_context_data, 0, NULL);                                \
         size_t const private_array_tree_n                                      \
             = sizeof(private_array_compound_literal)                           \
             / sizeof(*private_array_tree_map_initializer_list);                \
@@ -314,9 +314,8 @@ runtime. */
     (__extension__({                                                           \
         struct CCC_Array_tree_map private_array_tree_map                       \
             = CCC_private_array_tree_map_initialize(                           \
-                NULL, private_type_name, private_key_field,                    \
-                private_key_compare, private_allocate, private_context_data,   \
-                0);                                                            \
+                private_type_name, private_key_field, private_key_compare,     \
+                private_allocate, private_context_data, 0, NULL);              \
         (void)CCC_array_tree_map_reserve(&private_array_tree_map, private_cap, \
                                          private_allocate);                    \
         private_array_tree_map;                                                \

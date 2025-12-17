@@ -54,12 +54,12 @@ void *CCC_private_flat_double_ended_queue_allocate_back(
 
 /** @internal */
 #define CCC_private_flat_double_ended_queue_initialize(                        \
-    private_data_pointer, private_type_name, private_allocate,                 \
-    private_context_data, private_capacity, optional_size...)                  \
+    private_type_name, private_allocate, private_context_data,                 \
+    private_capacity, private_count, private_data_pointer...)                  \
     {                                                                          \
         .buffer = CCC_buffer_initialize(                                       \
-            private_data_pointer, private_type_name, private_allocate,         \
-            private_context_data, private_capacity, optional_size),            \
+            private_type_name, private_allocate, private_context_data,         \
+            private_capacity, private_count, private_data_pointer),            \
         .front = 0,                                                            \
     }
 
