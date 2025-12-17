@@ -8,7 +8,7 @@ var array__adaptive__map_8h =
     [ "CCC_array_adaptive_map_fixed_capacity", "array__adaptive__map_8h.html#a89e80f373bb1e9b7f5893fc79b4791ab", null ],
     [ "CCC_array_adaptive_map_from", "array__adaptive__map_8h.html#af70d531a34998ec0218121458ef38aae", null ],
     [ "CCC_array_adaptive_map_handle_wrap", "array__adaptive__map_8h.html#a1746c2db663f3408059b8a025b6cfb96", null ],
-    [ "CCC_array_adaptive_map_initialize", "array__adaptive__map_8h.html#afb4c870e8ae161237fbe9fb16f1dc325", null ],
+    [ "CCC_array_adaptive_map_initialize", "array__adaptive__map_8h.html#aafdecc8542fb2ef69c34a77c89ee8de1", null ],
     [ "CCC_array_adaptive_map_insert_array_with", "array__adaptive__map_8h.html#a6f15a63d7c037f810617791c38e9d4d4", null ],
     [ "CCC_array_adaptive_map_insert_or_assign_with", "array__adaptive__map_8h.html#a778a7ef33e0baa380904d704e3137a1b", null ],
     [ "CCC_array_adaptive_map_or_insert_with", "array__adaptive__map_8h.html#a4b1ea6b149b2e49f2cf6484e747e40f6", null ],

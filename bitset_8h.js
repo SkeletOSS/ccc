@@ -4,7 +4,7 @@ var bitset_8h =
     [ "CCC_bitset_block_count", "bitset_8h.html#a8d2f30efc17a3bf86e36bee6adf94f5b", null ],
     [ "CCC_bitset_blocks", "bitset_8h.html#a872da66828891cfed4872081d7f3a83f", null ],
     [ "CCC_bitset_from", "bitset_8h.html#a492bd828d24d634c201c573ff373d732", null ],
-    [ "CCC_bitset_initialize", "bitset_8h.html#a9fb5907bb970fe865b8cba478308a95c", null ],
+    [ "CCC_bitset_initialize", "bitset_8h.html#aa4c81aa7a9bd7bb0a98ee5f8a198bd66", null ],
     [ "CCC_bitset_with_capacity", "bitset_8h.html#aeabf8c741a270d166c51a5eaa31d45b1", null ],
     [ "CCC_bitset_with_compound_literal", "bitset_8h.html#abc1aaa3bf1fa56eb68eb6ed821c8f1e6", null ],
     [ "CCC_bitset_with_context_compound_literal", "bitset_8h.html#abb4597e5558b2c24d7f95847e5b5eb7b", null ],

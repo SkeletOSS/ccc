@@ -139,9 +139,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Initialization Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Initialize the container with memory, callbacks, and permissions. </p>
 </td></tr>
-<tr class="memitem:ac3e1da3a4a6c2e2f47da32769cf6bd74"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#ac3e1da3a4a6c2e2f47da32769cf6bd74">CCC_buffer_initialize</a>(data_pointer,  type_name,  allocate,  context_data,  capacity,  optional_count...)</td></tr>
-<tr class="memdesc:ac3e1da3a4a6c2e2f47da32769cf6bd74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a contiguous Buffer of user a specified type, allocation policy, capacity, and optional starting size.  <br /></td></tr>
-<tr class="separator:ac3e1da3a4a6c2e2f47da32769cf6bd74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42d1035574b12e853a8b1769b4007d17"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a42d1035574b12e853a8b1769b4007d17">CCC_buffer_initialize</a>(type_name,  allocate,  context_data,  capacity,  count,  data_pointer...)</td></tr>
+<tr class="memdesc:a42d1035574b12e853a8b1769b4007d17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a contiguous Buffer of user a specified type, allocation policy, capacity, and optional starting size.  <br /></td></tr>
+<tr class="separator:a42d1035574b12e853a8b1769b4007d17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adfb78598277e9204689fda554bc892fa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#adfb78598277e9204689fda554bc892fa">CCC_buffer_from</a>(allocate,  context_data,  optional_capacity,  compound_literal_array...)</td></tr>
 <tr class="memdesc:adfb78598277e9204689fda554bc892fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a Buffer from a compound literal array initializer.  <br /></td></tr>
 <tr class="separator:adfb78598277e9204689fda554bc892fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -547,7 +547,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">    );</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>Only dynamic buffers may be initialized this way. For static or stack based initialization of fixed buffers with contents known at compile time, see the <a class="el" href="buffer_8h.html#ac3e1da3a4a6c2e2f47da32769cf6bd74" title="Initialize a contiguous Buffer of user a specified type, allocation policy, capacity,...">CCC_buffer_initialize()</a> macro. </p>
+</div><!-- fragment --><p>Only dynamic buffers may be initialized this way. For static or stack based initialization of fixed buffers with contents known at compile time, see the <a class="el" href="buffer_8h.html#a42d1035574b12e853a8b1769b4007d17" title="Initialize a contiguous Buffer of user a specified type, allocation policy, capacity,...">CCC_buffer_initialize()</a> macro. </p>
 
 </div>
 </div>
@@ -589,8 +589,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="ac3e1da3a4a6c2e2f47da32769cf6bd74" name="ac3e1da3a4a6c2e2f47da32769cf6bd74"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac3e1da3a4a6c2e2f47da32769cf6bd74">&#9670;&#160;</a></span>CCC_buffer_initialize</h2>
+<a id="a42d1035574b12e853a8b1769b4007d17" name="a42d1035574b12e853a8b1769b4007d17"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42d1035574b12e853a8b1769b4007d17">&#9670;&#160;</a></span>CCC_buffer_initialize</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -598,12 +598,6 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td class="memname">#define CCC_buffer_initialize</td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">data_pointer, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">type_name, </td>
         </tr>
@@ -629,7 +623,13 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">optional_count...&#160;</td>
+          <td class="paramname">count, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">data_pointer...&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -638,31 +638,32 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_buffer_initialize(data_pointer, type_name, allocate,           \</div>
-<div class="line">                                  context_data, capacity, optional_count)</div>
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_buffer_initialize(type_name, allocate, context_data, capacity, \</div>
+<div class="line">                                  count, data_pointer)</div>
 </div><!-- fragment -->
 <p>Initialize a contiguous Buffer of user a specified type, allocation policy, capacity, and optional starting size. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">data_pointer</td><td>the pointer to existing memory or NULL. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the name of the user type in the buffer. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>CCC_Allocator or NULL if no allocation is permitted. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">context_data</td><td>any context data needed for managing Buffer memory. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">capacity</td><td>the capacity of memory at data_pointer. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">optional_count</td><td>optional starting size of the Buffer &lt;= capacity. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>optional starting size of the Buffer &lt;= capacity. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">data_pointer</td><td>the pointer to existing memory or NULL. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> b = <a class="el" href="buffer_8h.html#ac3e1da3a4a6c2e2f47da32769cf6bd74" title="Initialize a contiguous Buffer of user a specified type, allocation policy, capacity,...">CCC_buffer_initialize(...)</a>;).</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> b = <a class="el" href="buffer_8h.html#a42d1035574b12e853a8b1769b4007d17" title="Initialize a contiguous Buffer of user a specified type, allocation policy, capacity,...">CCC_buffer_initialize(...)</a>;).</dd></dl>
 <p>Initialization of a Buffer can occur at compile time or run time depending on the arguments. The memory pointer should be of the same type one intends to store in the buffer.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keyword">static</span> Buffer stack = buffer_initialize(&amp;(<span class="keyword">static</span> <span class="keywordtype">int</span>[4096]){}, int, NULL, NULL,</div>
-<div class="line">4096);</div>
+<div class="line"><span class="keyword">static</span> Buffer stack = buffer_initialize(</div>
+<div class="line">    <span class="keywordtype">int</span>, NULL, NULL, 4096, 0, &amp;(<span class="keyword">static</span> <span class="keywordtype">int</span>[4096]){}</div>
+<div class="line">);</div>
 </div><!-- fragment --><p>Initialize a fixed Buffer with some elements occupied.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keyword">static</span> Buffer stack</div>
-<div class="line">    = buffer_initialize(&amp;(<span class="keyword">static</span> <span class="keywordtype">int</span>[4096]){0, 1, 2, 3}, int, NULL, NULL, 4096,</div>
-<div class="line">4);</div>
+<div class="line"><span class="keyword">static</span> Buffer stack = buffer_initialize(</div>
+<div class="line">    <span class="keywordtype">int</span>, NULL, NULL, 4096, 4, &amp;(<span class="keyword">static</span> <span class="keywordtype">int</span>[4096]){0, 1, 2, 3}</div>
+<div class="line">);</div>
 </div><!-- fragment --><p>This initializer determines memory control for the lifetime of the buffer. If the Buffer points to memory of a predetermined and fixed capacity do not provide an allocation function. If a dynamic Buffer is preferred, provide the allocation function as defined by the signature in <a class="el" href="types_8h.html" title="The C Container Collection Fundamental Types.">types.h</a>. If resizing is desired on memory that has already been allocated, ensure allocation has occurred with the provided allocation function. </p>
 
 </div>
@@ -726,7 +727,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">    Buffer b = buffer_from(std_allocate, NULL, 4096);</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>Only dynamic buffers may be initialized this way. For static or stack based initialization of fixed buffers with contents known at compile time, see the <a class="el" href="buffer_8h.html#ac3e1da3a4a6c2e2f47da32769cf6bd74" title="Initialize a contiguous Buffer of user a specified type, allocation policy, capacity,...">CCC_buffer_initialize()</a> macro. </p>
+</div><!-- fragment --><p>Only dynamic buffers may be initialized this way. For static or stack based initialization of fixed buffers with contents known at compile time, see the <a class="el" href="buffer_8h.html#a42d1035574b12e853a8b1769b4007d17" title="Initialize a contiguous Buffer of user a specified type, allocation policy, capacity,...">CCC_buffer_initialize()</a> macro. </p>
 
 </div>
 </div>

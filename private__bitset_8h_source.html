@@ -145,12 +145,12 @@ $(document).ready(function(){initNavTree('private__bitset_8h_source.html',''); i
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="preprocessor">    __VA_OPT__(CCC_private_bitset_non_)                                        \</span></div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="preprocessor">    ##CCC_private_bitset_default_size(private_cap, __VA_ARGS__)</span></div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="preprocessor">#define CCC_private_bitset_initialize(private_bitblock_pointer,                \</span></div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="preprocessor">                                      private_allocate, private_context,       \</span></div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="preprocessor">                                      private_cap, ...)                        \</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="preprocessor">#define CCC_private_bitset_initialize(private_allocate, private_context,       \</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="preprocessor">                                      private_cap, private_count,              \</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="preprocessor">                                      private_bitblock_pointer)                \</span></div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="preprocessor">    {                                                                          \</span></div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="preprocessor">        .blocks = (private_bitblock_pointer),                                  \</span></div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="preprocessor">        .count = CCC_private_bitset_optional_size((private_cap), __VA_ARGS__), \</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="preprocessor">        .count = (private_count),                                              \</span></div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="preprocessor">        .capacity = (private_cap),                                             \</span></div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="preprocessor">        .allocate = (private_allocate),                                        \</span></div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="preprocessor">        .context = (private_context),                                          \</span></div>
@@ -162,8 +162,8 @@ $(document).ready(function(){initNavTree('private__bitset_8h_source.html',''); i
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>                                    <span class="keywordtype">size_t</span> <span class="keyword">const</span> private_cap,</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>                                    <span class="keywordtype">size_t</span> <span class="keyword">const</span> private_count)</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>{</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keyword">struct </span><a class="code hl_struct" href="structCCC__Bitset.html">CCC_Bitset</a> b = CCC_private_bitset_initialize(NULL, private_allocate,</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                                                        private_context, 0);</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keyword">struct </span><a class="code hl_struct" href="structCCC__Bitset.html">CCC_Bitset</a> b = CCC_private_bitset_initialize(</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        private_allocate, private_context, 0, 0, NULL);</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    <span class="keywordflow">if</span> (CCC_private_bitset_reserve(&amp;b, private_cap, private_allocate)</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        == <a class="code hl_enumvalue" href="types_8h.html#aa1ded61d294b114942f11e711b331dcfafbd97cad5eb71401d7341ce5039ceb55">CCC_RESULT_OK</a>)</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    {</div>
@@ -177,7 +177,7 @@ $(document).ready(function(){initNavTree('private__bitset_8h_source.html',''); i
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span><span class="preprocessor">                                private_on_char, private_string, ...)          \</span></div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="preprocessor">    (__extension__({                                                           \</span></div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="preprocessor">        struct CCC_Bitset private_bitset = CCC_private_bitset_initialize(      \</span></div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><span class="preprocessor">            NULL, private_allocate, private_context, 0);                       \</span></div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><span class="preprocessor">            private_allocate, private_context, 0, 0, NULL);                    \</span></div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span><span class="preprocessor">        size_t const private_cap                                               \</span></div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span><span class="preprocessor">            = CCC_private_bitset_optional_size((private_count), __VA_ARGS__);  \</span></div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span><span class="preprocessor">        size_t private_index = (private_start_index);                          \</span></div>
@@ -205,7 +205,7 @@ $(document).ready(function(){initNavTree('private__bitset_8h_source.html',''); i
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span><span class="preprocessor">                                         private_cap, ...)                     \</span></div>
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span><span class="preprocessor">    (__extension__({                                                           \</span></div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span><span class="preprocessor">        struct CCC_Bitset private_bitset = CCC_private_bitset_initialize(      \</span></div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span><span class="preprocessor">            NULL, private_allocate, private_context, 0);                       \</span></div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span><span class="preprocessor">            private_allocate, private_context, 0, 0, NULL);                    \</span></div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span><span class="preprocessor">        size_t const private_count                                             \</span></div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span><span class="preprocessor">            = CCC_private_bitset_optional_size((private_cap), __VA_ARGS__);    \</span></div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span><span class="preprocessor">        if (CCC_private_bitset_reserve(&amp;private_bitset, private_cap,           \</span></div>

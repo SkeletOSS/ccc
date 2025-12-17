@@ -6,7 +6,7 @@ var buffer_8h =
     [ "CCC_buffer_emplace_back", "buffer_8h.html#a81346fc5d7ca38637c67bb0377188662", null ],
     [ "CCC_buffer_from", "buffer_8h.html#adfb78598277e9204689fda554bc892fa", null ],
     [ "CCC_buffer_front_as", "buffer_8h.html#a4a986ae56f2d1ac5114433cb2e95b8fb", null ],
-    [ "CCC_buffer_initialize", "buffer_8h.html#ac3e1da3a4a6c2e2f47da32769cf6bd74", null ],
+    [ "CCC_buffer_initialize", "buffer_8h.html#a42d1035574b12e853a8b1769b4007d17", null ],
     [ "CCC_buffer_with_capacity", "buffer_8h.html#af2226fb14031e86b6e43864058a176b1", null ],
     [ "CCC_buffer_with_compound_literal", "buffer_8h.html#a9ccfcf4af060e2069d711f7933925fa8", null ],
     [ "CCC_buffer_with_context_compound_literal", "buffer_8h.html#a93ecd88b73c7b78721aaee93c1983647", null ],

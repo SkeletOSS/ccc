@@ -8,7 +8,7 @@ var array__tree__map_8h =
     [ "CCC_array_tree_map_fixed_capacity", "array__tree__map_8h.html#aa4aae906f1cadcf47b40768875a2b8dc", null ],
     [ "CCC_array_tree_map_from", "array__tree__map_8h.html#a1767b017bc2c70658bc6b369a197425e", null ],
     [ "CCC_array_tree_map_handle_wrap", "array__tree__map_8h.html#a4b1d7885cf410b23c2e0c02ebd507270", null ],
-    [ "CCC_array_tree_map_initialize", "array__tree__map_8h.html#a4c19084416572b888637775bf089e424", null ],
+    [ "CCC_array_tree_map_initialize", "array__tree__map_8h.html#a22fcb72f7549af3c1f0e9812bc2408c5", null ],
     [ "CCC_array_tree_map_insert_array_with", "array__tree__map_8h.html#a2f964a66662a9fc4b885d3de1cbf3dbc", null ],
     [ "CCC_array_tree_map_insert_or_assign_with", "array__tree__map_8h.html#aa4a3dc7f4a389b68446d191b04f02c32", null ],
     [ "CCC_array_tree_map_or_insert_with", "array__tree__map_8h.html#a1bdc8e6e3e463d2dc1239c8a9bbffdf4", null ],

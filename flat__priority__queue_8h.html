@@ -141,12 +141,12 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Initialization Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Initialize the container with memory, callbacks, and permissions. </p>
 </td></tr>
-<tr class="memitem:a5b6f187d231a3dc5e4b3f4f796672cbb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__priority__queue_8h.html#a5b6f187d231a3dc5e4b3f4f796672cbb">CCC_flat_priority_queue_initialize</a>( data_pointer,  type_name,  order,  compare,  allocate,  context_data,  capacity)</td></tr>
-<tr class="memdesc:a5b6f187d231a3dc5e4b3f4f796672cbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a priority_queue as a min or max heap.  <br /></td></tr>
-<tr class="separator:a5b6f187d231a3dc5e4b3f4f796672cbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84db2cb05a38b7f8ef6ed1da460a00bc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__priority__queue_8h.html#a84db2cb05a38b7f8ef6ed1da460a00bc">CCC_flat_priority_queue_heapify_initialize</a>( data_pointer,  type_name,  order,  compare,  allocate,  context_data,  capacity,  size)</td></tr>
-<tr class="memdesc:a84db2cb05a38b7f8ef6ed1da460a00bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Partial order an array of elements as a min or max heap. O(N).  <br /></td></tr>
-<tr class="separator:a84db2cb05a38b7f8ef6ed1da460a00bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae61e77d2bf6e6700ba534e1c36e6b1ce"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__priority__queue_8h.html#ae61e77d2bf6e6700ba534e1c36e6b1ce">CCC_flat_priority_queue_initialize</a>( type_name,  order,  compare,  allocate,  context_data,  capacity,  data_pointer)</td></tr>
+<tr class="memdesc:ae61e77d2bf6e6700ba534e1c36e6b1ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a priority_queue as a min or max heap.  <br /></td></tr>
+<tr class="separator:ae61e77d2bf6e6700ba534e1c36e6b1ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1563ea7b9f827b7a0604d2ee1643ec46"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__priority__queue_8h.html#a1563ea7b9f827b7a0604d2ee1643ec46">CCC_flat_priority_queue_heapify_initialize</a>( type_name,  order,  compare,  allocate,  context_data,  capacity,  size,  data_pointer)</td></tr>
+<tr class="memdesc:a1563ea7b9f827b7a0604d2ee1643ec46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Partial order an array of elements as a min or max heap. O(N).  <br /></td></tr>
+<tr class="separator:a1563ea7b9f827b7a0604d2ee1643ec46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6d758b15819b2486f9ad75016277807"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__priority__queue_8h.html#ad6d758b15819b2486f9ad75016277807">CCC_flat_priority_queue_from</a>(order,  compare,  allocate,  context_data,  optional_capacity,  compound_literal_array...)</td></tr>
 <tr class="memdesc:ad6d758b15819b2486f9ad75016277807"><td class="mdescLeft">&#160;</td><td class="mdescRight">Partial order a compound literal array of elements as a min or max heap. O(N).  <br /></td></tr>
 <tr class="separator:ad6d758b15819b2486f9ad75016277807"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -445,12 +445,12 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">    );</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>Only dynamic priority queues may be initialized this way. For static or stack based initialization of fixed buffers with contents known at compile time, see the <a class="el" href="flat__priority__queue_8h.html#a5b6f187d231a3dc5e4b3f4f796672cbb" title="Initialize a priority_queue as a min or max heap.">CCC_flat_priority_queue_initialize()</a> macro. </p>
+</div><!-- fragment --><p>Only dynamic priority queues may be initialized this way. For static or stack based initialization of fixed buffers with contents known at compile time, see the <a class="el" href="flat__priority__queue_8h.html#ae61e77d2bf6e6700ba534e1c36e6b1ce" title="Initialize a priority_queue as a min or max heap.">CCC_flat_priority_queue_initialize()</a> macro. </p>
 
 </div>
 </div>
-<a id="a84db2cb05a38b7f8ef6ed1da460a00bc" name="a84db2cb05a38b7f8ef6ed1da460a00bc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a84db2cb05a38b7f8ef6ed1da460a00bc">&#9670;&#160;</a></span>CCC_flat_priority_queue_heapify_initialize</h2>
+<a id="a1563ea7b9f827b7a0604d2ee1643ec46" name="a1563ea7b9f827b7a0604d2ee1643ec46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1563ea7b9f827b7a0604d2ee1643ec46">&#9670;&#160;</a></span>CCC_flat_priority_queue_heapify_initialize</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -458,12 +458,6 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td class="memname">#define CCC_flat_priority_queue_heapify_initialize</td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">data_pointer, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">type_name, </td>
         </tr>
@@ -501,7 +495,13 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">size&#160;</td>
+          <td class="paramname">size, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">data_pointer&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -511,13 +511,12 @@ This graph shows which files directly or indirectly include this file:</div>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    CCC_private_flat_priority_queue_heapify_initialize(                        \</div>
-<div class="line">        data_pointer, type_name, order, compare, allocate, context_data,       \</div>
-<div class="line">        capacity, size)</div>
+<div class="line">        type_name, order, compare, allocate, context_data, capacity, size,     \</div>
+<div class="line">        data_pointer)</div>
 </div><!-- fragment -->
 <p>Partial order an array of elements as a min or max heap. O(N). </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">data_pointer</td><td>a pointer to an array of user types or NULL. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the name of the user type. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">order</td><td>CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max heap, respectively. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the user defined comparison function for user types. </td></tr>
@@ -525,10 +524,11 @@ This graph shows which files directly or indirectly include this file:</div>
     <tr><td class="paramdir">[in]</td><td class="paramname">context_data</td><td>any context data needed for destruction of elements. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">capacity</td><td>the capacity of contiguous elements at data_pointer. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">size</td><td>the size &lt;= capacity. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">data_pointer</td><td>a pointer to an array of user types or NULL. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the initialized priority queue on the right hand side of an equality operator. (i.e. <a class="el" href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a> q = <a class="el" href="flat__priority__queue_8h.html#a84db2cb05a38b7f8ef6ed1da460a00bc" title="Partial order an array of elements as a min or max heap. O(N).">CCC_flat_priority_queue_heapify_initialize(...)</a>;). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the initialized priority queue on the right hand side of an equality operator. (i.e. <a class="el" href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a> q = <a class="el" href="flat__priority__queue_8h.html#a1563ea7b9f827b7a0604d2ee1643ec46" title="Partial order an array of elements as a min or max heap. O(N).">CCC_flat_priority_queue_heapify_initialize(...)</a>;). </dd></dl>
 
 </div>
 </div>
@@ -585,8 +585,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a5b6f187d231a3dc5e4b3f4f796672cbb" name="a5b6f187d231a3dc5e4b3f4f796672cbb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5b6f187d231a3dc5e4b3f4f796672cbb">&#9670;&#160;</a></span>CCC_flat_priority_queue_initialize</h2>
+<a id="ae61e77d2bf6e6700ba534e1c36e6b1ce" name="ae61e77d2bf6e6700ba534e1c36e6b1ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae61e77d2bf6e6700ba534e1c36e6b1ce">&#9670;&#160;</a></span>CCC_flat_priority_queue_initialize</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -594,12 +594,6 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td class="memname">#define CCC_flat_priority_queue_initialize</td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">data_pointer, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">type_name, </td>
         </tr>
@@ -631,7 +625,13 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">capacity&#160;</td>
+          <td class="paramname">capacity, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">data_pointer&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -640,24 +640,24 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_flat_priority_queue_initialize(data_pointer, type_name, order, \</div>
-<div class="line">                                               compare, allocate,              \</div>
-<div class="line">                                               context_data, capacity)</div>
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_flat_priority_queue_initialize(type_name, order, compare,      \</div>
+<div class="line">                                               allocate, context_data,         \</div>
+<div class="line">                                               capacity, data_pointer)</div>
 </div><!-- fragment -->
 <p>Initialize a priority_queue as a min or max heap. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">data_pointer</td><td>a pointer to an array of user types or NULL. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the name of the user type. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">order</td><td>CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max heap, respectively. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the user defined comarison function for user types. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the allocation function or NULL if no allocation. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">context_data</td><td>any context data needed for destruction of elements. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">capacity</td><td>the capacity of contiguous elements at data_pointer. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">data_pointer</td><td>a pointer to an array of user types or NULL. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the initialized priority queue on the right hand side of an equality operator. (i.e. <a class="el" href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a> q = <a class="el" href="flat__priority__queue_8h.html#a5b6f187d231a3dc5e4b3f4f796672cbb" title="Initialize a priority_queue as a min or max heap.">CCC_flat_priority_queue_initialize(...)</a>;). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the initialized priority queue on the right hand side of an equality operator. (i.e. <a class="el" href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a> q = <a class="el" href="flat__priority__queue_8h.html#ae61e77d2bf6e6700ba534e1c36e6b1ce" title="Initialize a priority_queue as a min or max heap.">CCC_flat_priority_queue_initialize(...)</a>;). </dd></dl>
 
 </div>
 </div>
@@ -794,7 +794,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">    );</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>Only dynamic Flat_priority_queues may be initialized this way. For static or stack based initialization of fixed flat_priority_queues with contents known at compile time, see the <a class="el" href="flat__priority__queue_8h.html#a5b6f187d231a3dc5e4b3f4f796672cbb" title="Initialize a priority_queue as a min or max heap.">CCC_flat_priority_queue_initialize()</a> macro. </p>
+</div><!-- fragment --><p>Only dynamic Flat_priority_queues may be initialized this way. For static or stack based initialization of fixed flat_priority_queues with contents known at compile time, see the <a class="el" href="flat__priority__queue_8h.html#ae61e77d2bf6e6700ba534e1c36e6b1ce" title="Initialize a priority_queue as a min or max heap.">CCC_flat_priority_queue_initialize()</a> macro. </p>
 
 </div>
 </div>
@@ -1122,68 +1122,68 @@ This graph shows which files directly or indirectly include this file:</div>
 <p>Manual memory management with no allocation function provided.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC</span></div>
 <div class="line">Flat_priority_queue source = flat_priority_queue_initialize(</div>
-<div class="line">    (<span class="keywordtype">int</span>[10]){},</div>
-<div class="line">    int,</div>
+<div class="line">    <span class="keywordtype">int</span>,</div>
 <div class="line">    <a class="code hl_enumvalue" href="types_8h.html#a5e471ae63519e1044855e361826fc355a7d1c8b7831377b5625db94ca6eb5c323">CCC_ORDER_LESSER</a>,</div>
 <div class="line">    int_order,</div>
 <div class="line">    NULL,</div>
 <div class="line">    NULL,</div>
-<div class="line">    10</div>
+<div class="line">    10,</div>
+<div class="line">    (<span class="keywordtype">int</span>[10]){}</div>
 <div class="line">);</div>
 <div class="line">push_rand_ints(&amp;source);</div>
 <div class="line">Flat_priority_queue destination = flat_priority_queue_initialize(</div>
-<div class="line">    (<span class="keywordtype">int</span>[11]){},</div>
-<div class="line">    int,</div>
+<div class="line">    <span class="keywordtype">int</span>,</div>
 <div class="line">    <a class="code hl_enumvalue" href="types_8h.html#a5e471ae63519e1044855e361826fc355a7d1c8b7831377b5625db94ca6eb5c323">CCC_ORDER_LESSER</a>,</div>
 <div class="line">    int_order,</div>
 <div class="line">    NULL,</div>
 <div class="line">    NULL,</div>
-<div class="line">    11</div>
+<div class="line">    11,</div>
+<div class="line">    (<span class="keywordtype">int</span>[11]){}</div>
 <div class="line">);</div>
 <div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res = flat_priority_queue_copy(&amp;destination, &amp;source, NULL);</div>
 <div class="ttc" id="atypes_8h_html_aa1ded61d294b114942f11e711b331dcf"><div class="ttname"><a href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a></div><div class="ttdeci">CCC_Result</div><div class="ttdoc">A result of actions on containers.</div><div class="ttdef"><b>Definition:</b> types.h:148</div></div>
 </div><!-- fragment --><p>The above requires destination capacity be greater than or equal to source capacity. Here is memory management handed over to the copy function.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC</span></div>
 <div class="line">Flat_priority_queue source = flat_priority_queue_initialize(</div>
-<div class="line">    NULL,</div>
 <div class="line">    <span class="keywordtype">int</span>,</div>
 <div class="line">    <a class="code hl_enumvalue" href="types_8h.html#a5e471ae63519e1044855e361826fc355a7d1c8b7831377b5625db94ca6eb5c323">CCC_ORDER_LESSER</a>,</div>
 <div class="line">    int_order,</div>
 <div class="line">    std_allocate,</div>
 <div class="line">    NULL,</div>
-<div class="line">    0</div>
+<div class="line">    0,</div>
+<div class="line">    NULL</div>
 <div class="line">);</div>
 <div class="line">push_rand_ints(&amp;source);</div>
 <div class="line">Flat_priority_queue destination = flat_priority_queue_initialize(</div>
-<div class="line">    NULL,</div>
 <div class="line">    <span class="keywordtype">int</span>,</div>
 <div class="line">    <a class="code hl_enumvalue" href="types_8h.html#a5e471ae63519e1044855e361826fc355a7d1c8b7831377b5625db94ca6eb5c323">CCC_ORDER_LESSER</a>,</div>
 <div class="line">    int_order,</div>
 <div class="line">    std_allocate,</div>
 <div class="line">    NULL,</div>
-<div class="line">    0</div>
+<div class="line">    0,</div>
+<div class="line">    NULL</div>
 <div class="line">);</div>
 <div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res = flat_priority_queue_copy(&amp;destination, &amp;source, std_allocate);</div>
 </div><!-- fragment --><p>The above allows destination to have a capacity less than that of the source as long as copy has been provided an allocation function to resize destination. Note that this would still work if copying to a destination that the user wants as a fixed size flat_priority_queue.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC</span></div>
 <div class="line">Flat_priority_queue source = flat_priority_queue_initialize(</div>
-<div class="line">    NULL,</div>
 <div class="line">    <span class="keywordtype">int</span>,</div>
 <div class="line">    <a class="code hl_enumvalue" href="types_8h.html#a5e471ae63519e1044855e361826fc355a7d1c8b7831377b5625db94ca6eb5c323">CCC_ORDER_LESSER</a>,</div>
 <div class="line">    int_order,</div>
 <div class="line">    std_allocate,</div>
 <div class="line">    NULL,</div>
-<div class="line">    0</div>
+<div class="line">    0,</div>
+<div class="line">    NULL</div>
 <div class="line">);</div>
 <div class="line">push_rand_ints(&amp;source);</div>
 <div class="line">Flat_priority_queue destination = flat_priority_queue_initialize(</div>
-<div class="line">    NULL,</div>
 <div class="line">    <span class="keywordtype">int</span>,</div>
 <div class="line">    <a class="code hl_enumvalue" href="types_8h.html#a5e471ae63519e1044855e361826fc355a7d1c8b7831377b5625db94ca6eb5c323">CCC_ORDER_LESSER</a>,</div>
 <div class="line">    int_order,</div>
 <div class="line">    NULL,</div>
 <div class="line">    NULL,</div>
-<div class="line">    0</div>
+<div class="line">    0,</div>
+<div class="line">    NULL</div>
 <div class="line">);</div>
 <div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res = flat_priority_queue_copy(&amp;destination, &amp;source, std_allocate);</div>
 </div><!-- fragment --><p>The above sets up destination with fixed size while source is a dynamic flat_priority_queue. Because an allocation function is provided, the destination is resized once for the copy and retains its fixed size after the copy is complete. This would require the user to manually free the underlying Buffer at destination eventually if this method is used. Usually it is better to allocate the memory explicitly before the copy if copying between ring buffers.</p>

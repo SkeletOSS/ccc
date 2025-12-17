@@ -135,9 +135,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Initialization Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Initialize and create containers with memory, callbacks, and permissions. </p>
 </td></tr>
-<tr class="memitem:a9dbaedc50b61db379f5926f50bcdb09c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__double__ended__queue_8h.html#a9dbaedc50b61db379f5926f50bcdb09c">CCC_flat_double_ended_queue_initialize</a>(data_pointer,  type_name,  allocate,  context_data,  capacity,  optional_size...)</td></tr>
-<tr class="memdesc:a9dbaedc50b61db379f5926f50bcdb09c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the queue with memory and allocation permission.  <br /></td></tr>
-<tr class="separator:a9dbaedc50b61db379f5926f50bcdb09c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3213ce89ce6198f2b780824f21582f92"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__double__ended__queue_8h.html#a3213ce89ce6198f2b780824f21582f92">CCC_flat_double_ended_queue_initialize</a>( type_name,  allocate,  context_data,  capacity,  count,  data_pointer...)</td></tr>
+<tr class="memdesc:a3213ce89ce6198f2b780824f21582f92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the queue with memory and allocation permission.  <br /></td></tr>
+<tr class="separator:a3213ce89ce6198f2b780824f21582f92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa872dd1e7f6dadfc13045874c4d3c282"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__double__ended__queue_8h.html#aa872dd1e7f6dadfc13045874c4d3c282">CCC_flat_double_ended_queue_from</a>( allocate,  context_data,  optional_capacity,  compound_literal_array...)</td></tr>
 <tr class="memdesc:aa872dd1e7f6dadfc13045874c4d3c282"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a Flat_double_ended_queue from a compound literal array initializer.  <br /></td></tr>
 <tr class="separator:aa872dd1e7f6dadfc13045874c4d3c282"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -401,17 +401,17 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line"><span class="keywordtype">int</span></div>
 <div class="line">main(<span class="keywordtype">void</span>)</div>
 <div class="line">{</div>
-<div class="line">    Flat_double_ended_queue f</div>
-<div class="line">        = flat_double_ended_queue_from(std_allocate, NULL, 4096,</div>
-<div class="line">            (<span class="keywordtype">int</span>[]){ 0, 1, 2, 3 });</div>
+<div class="line">    Flat_double_ended_queue f = flat_double_ended_queue_from(</div>
+<div class="line">        std_allocate, NULL, 4096, (<span class="keywordtype">int</span>[]){ 0, 1, 2, 3 }</div>
+<div class="line">    );</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>Only dynamic flat_double_ended_queues may be initialized this way. For static or stack based initialization of fixed flat_double_ended_queues with contents known at compile time, see the <a class="el" href="flat__double__ended__queue_8h.html#a9dbaedc50b61db379f5926f50bcdb09c" title="Initialize the queue with memory and allocation permission.">CCC_flat_double_ended_queue_initialize()</a> macro. </p>
+</div><!-- fragment --><p>Only dynamic flat_double_ended_queues may be initialized this way. For static or stack based initialization of fixed flat_double_ended_queues with contents known at compile time, see the <a class="el" href="flat__double__ended__queue_8h.html#a3213ce89ce6198f2b780824f21582f92" title="Initialize the queue with memory and allocation permission.">CCC_flat_double_ended_queue_initialize()</a> macro. </p>
 
 </div>
 </div>
-<a id="a9dbaedc50b61db379f5926f50bcdb09c" name="a9dbaedc50b61db379f5926f50bcdb09c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9dbaedc50b61db379f5926f50bcdb09c">&#9670;&#160;</a></span>CCC_flat_double_ended_queue_initialize</h2>
+<a id="a3213ce89ce6198f2b780824f21582f92" name="a3213ce89ce6198f2b780824f21582f92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3213ce89ce6198f2b780824f21582f92">&#9670;&#160;</a></span>CCC_flat_double_ended_queue_initialize</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -419,12 +419,6 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td class="memname">#define CCC_flat_double_ended_queue_initialize</td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">data_pointer, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">type_name, </td>
         </tr>
@@ -450,7 +444,13 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">optional_size...&#160;</td>
+          <td class="paramname">count, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">data_pointer...&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -459,23 +459,22 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_flat_double_ended_queue_initialize(data_pointer, type_name,    \</div>
-<div class="line">                                                   allocate, context_data,     \</div>
-<div class="line">                                                   capacity, optional_size)</div>
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_flat_double_ended_queue_initialize(                            \</div>
+<div class="line">        type_name, allocate, context_data, capacity, count, data_pointer)</div>
 </div><!-- fragment -->
 <p>Initialize the queue with memory and allocation permission. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">data_pointer</td><td>a pointer to existing memory or ((T *)NULL). </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the name of the user type. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the allocator function, if allocation is allowed. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">context_data</td><td>any context data needed for element destruction. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">capacity</td><td>the number of contiguous elements at data_pointer </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">optional_size</td><td>an optional initial size between 1 and capacity. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>the starting size of the flat doubled ended queue. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">data_pointer</td><td>a pointer to existing memory or NULL. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the queue on the right hand side of an equality operator at runtime or compiletime (e.g. <a class="el" href="structCCC__Flat__double__ended__queue.html">CCC_Flat_double_ended_queue</a> q = <a class="el" href="flat__double__ended__queue_8h.html#a9dbaedc50b61db379f5926f50bcdb09c" title="Initialize the queue with memory and allocation permission.">CCC_flat_double_ended_queue_initialize(...)</a>;) </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the queue on the right hand side of an equality operator at runtime or compiletime (e.g. <a class="el" href="structCCC__Flat__double__ended__queue.html">CCC_Flat_double_ended_queue</a> q = <a class="el" href="flat__double__ended__queue_8h.html#a3213ce89ce6198f2b780824f21582f92" title="Initialize the queue with memory and allocation permission.">CCC_flat_double_ended_queue_initialize(...)</a>;) </dd></dl>
 
 </div>
 </div>
@@ -539,7 +538,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">        = flat_double_ended_queue_from(std_allocate, NULL, 4096);</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>Only dynamic flat_double_ended_queues may be initialized this way. For static or stack based initialization of fixed flat_double_ended_queues with contents known at compile time, see the <a class="el" href="flat__double__ended__queue_8h.html#a9dbaedc50b61db379f5926f50bcdb09c" title="Initialize the queue with memory and allocation permission.">CCC_flat_double_ended_queue_initialize()</a> macro. </p>
+</div><!-- fragment --><p>Only dynamic flat_double_ended_queues may be initialized this way. For static or stack based initialization of fixed flat_double_ended_queues with contents known at compile time, see the <a class="el" href="flat__double__ended__queue_8h.html#a3213ce89ce6198f2b780824f21582f92" title="Initialize the queue with memory and allocation permission.">CCC_flat_double_ended_queue_initialize()</a> macro. </p>
 
 </div>
 </div>
@@ -936,31 +935,34 @@ This graph shows which files directly or indirectly include this file:</div>
 <p>Manual memory management with no allocation function provided.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC</span></div>
 <div class="line">Flat_double_ended_queue source = flat_double_ended_queue_initialize(</div>
-<div class="line">    (<span class="keywordtype">int</span>[10]){},</div>
-<div class="line">    int,</div>
+<div class="line">    <span class="keywordtype">int</span>,</div>
 <div class="line">    NULL,</div>
 <div class="line">    NULL,</div>
-<div class="line">    10</div>
+<div class="line">    10,</div>
+<div class="line">    0,</div>
+<div class="line">    (<span class="keywordtype">int</span>[10]){}</div>
 <div class="line">);</div>
 <div class="line"><span class="keywordtype">int</span> *new_data</div>
 <div class="line">    = malloc(<span class="keyword">sizeof</span>(<span class="keywordtype">int</span>) * flat_double_ended_queue_capacity(&amp;source).count);</div>
 <div class="line">Flat_double_ended_queue destination = flat_double_ended_queue_initialize(</div>
-<div class="line">    new_data,</div>
 <div class="line">    <span class="keywordtype">int</span>,</div>
 <div class="line">    NULL,</div>
 <div class="line">    NULL,</div>
-<div class="line">    flat_double_ended_queue_capacity(&amp;source).count</div>
+<div class="line">    flat_double_ended_queue_capacity(&amp;source).count,</div>
+<div class="line">    0,</div>
+<div class="line">    new_data</div>
 <div class="line">);</div>
 <div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res = flat_double_ended_queue_copy(&amp;destination, &amp;source, NULL);</div>
 <div class="ttc" id="atypes_8h_html_aa1ded61d294b114942f11e711b331dcf"><div class="ttname"><a href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a></div><div class="ttdeci">CCC_Result</div><div class="ttdoc">A result of actions on containers.</div><div class="ttdef"><b>Definition:</b> types.h:148</div></div>
 </div><!-- fragment --><p>The above requires destination capacity be greater than or equal to source capacity. Here is memory management handed over to the copy function.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC</span></div>
 <div class="line">Flat_double_ended_queue source = flat_double_ended_queue_initialize(</div>
-<div class="line">    NULL,</div>
 <div class="line">    <span class="keywordtype">int</span>,</div>
 <div class="line">    std_allocate,</div>
 <div class="line">    NULL,</div>
-<div class="line">    0</div>
+<div class="line">    0,</div>
+<div class="line">    0,</div>
+<div class="line">    NULL</div>
 <div class="line">);</div>
 <div class="line">(void)<a class="code hl_function" href="flat__double__ended__queue_8h.html#a20277e235f60691783a0a1b33d3c4c90">CCC_flat_double_ended_queue_push_back_range</a>(</div>
 <div class="line">    &amp;source,</div>
@@ -968,11 +970,12 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">    (<span class="keywordtype">int</span>[5]){0,1,2,3,4}</div>
 <div class="line">);</div>
 <div class="line">Flat_double_ended_queue destination = flat_double_ended_queue_initialize(</div>
-<div class="line">    NULL,</div>
 <div class="line">    <span class="keywordtype">int</span>,</div>
 <div class="line">    std_allocate,</div>
 <div class="line">    NULL,</div>
-<div class="line">    0</div>
+<div class="line">    0,</div>
+<div class="line">    0,</div>
+<div class="line">    NULL</div>
 <div class="line">);</div>
 <div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res = flat_double_ended_queue_copy(</div>
 <div class="line">    &amp;destination,</div>
@@ -983,11 +986,12 @@ This graph shows which files directly or indirectly include this file:</div>
 </div><!-- fragment --><p>The above allows destination to have a capacity less than that of the source as long as copy has been provided an allocation function to resize destination. Note that this would still work if copying to a destination that the user wants as a fixed size queue (ring buffer).</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC</span></div>
 <div class="line">Flat_double_ended_queue source = flat_double_ended_queue_initialize(</div>
-<div class="line">    NULL,</div>
 <div class="line">    <span class="keywordtype">int</span>,</div>
 <div class="line">    std_allocate,</div>
 <div class="line">    NULL,</div>
-<div class="line">    0</div>
+<div class="line">    0,</div>
+<div class="line">    0,</div>
+<div class="line">    NULL</div>
 <div class="line">);</div>
 <div class="line">(void)<a class="code hl_function" href="flat__double__ended__queue_8h.html#a20277e235f60691783a0a1b33d3c4c90">CCC_flat_double_ended_queue_push_back_range</a>(</div>
 <div class="line">    &amp;source,</div>
@@ -995,11 +999,12 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">    (<span class="keywordtype">int</span>[5]){0,1,2,3,4}</div>
 <div class="line">);</div>
 <div class="line">Flat_double_ended_queue destination = flat_double_ended_queue_initialize(</div>
-<div class="line">    NULL,</div>
 <div class="line">    <span class="keywordtype">int</span>,</div>
 <div class="line">    NULL,</div>
 <div class="line">    NULL,</div>
-<div class="line">    0</div>
+<div class="line">    0,</div>
+<div class="line">    0,</div>
+<div class="line">    NULL</div>
 <div class="line">);</div>
 <div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res = flat_double_ended_queue_copy(</div>
 <div class="line">    &amp;destination,</div>

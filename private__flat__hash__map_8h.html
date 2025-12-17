@@ -149,8 +149,8 @@ Macros</h2></td></tr>
 <tr class="separator:aeed93aa14b4505bf9143afd248826211"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb4ac419bacd4c7cf728b5a56b99214a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__flat__hash__map_8h.html#acb4ac419bacd4c7cf728b5a56b99214a">CCC_private_flat_hash_map_fixed_capacity</a>(fixed_map_type_name)&#160;&#160;&#160;    (sizeof((fixed_map_type_name){}.tag) - <a class="el" href="private__flat__hash__map_8h.html#ad75883004f3959ffc98ae1b4ff009199">CCC_FLAT_HASH_MAP_GROUP_COUNT</a>)</td></tr>
 <tr class="separator:acb4ac419bacd4c7cf728b5a56b99214a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0ab2a47b824372a9509d90a899f1971"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__flat__hash__map_8h.html#aa0ab2a47b824372a9509d90a899f1971">CCC_private_flat_hash_map_initialize</a>( private_fixed_map_pointer,  private_type_name,  private_key_field,  private_hash,  private_key_compare,  private_allocate,  private_context_data,  private_capacity)</td></tr>
-<tr class="separator:aa0ab2a47b824372a9509d90a899f1971"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a806c1fd49a407acedf3b355649db8bfe"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__flat__hash__map_8h.html#a806c1fd49a407acedf3b355649db8bfe">CCC_private_flat_hash_map_initialize</a>( private_type_name,  private_key_field,  private_hash,  private_key_compare,  private_allocate,  private_context_data,  private_capacity,  private_fixed_map_pointer)</td></tr>
+<tr class="separator:a806c1fd49a407acedf3b355649db8bfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaaed8a23b1f4548ee47392c0dd3727db"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__flat__hash__map_8h.html#aaaed8a23b1f4548ee47392c0dd3727db">CCC_private_flat_hash_map_from</a>( private_key_field,  private_hash,  private_key_compare,  private_allocate,  private_context_data,  private_optional_cap,  private_array_compound_literal...)</td></tr>
 <tr class="separator:aaaed8a23b1f4548ee47392c0dd3727db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3f2de88ddc0d59eae946c6ec3996d54"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__flat__hash__map_8h.html#ab3f2de88ddc0d59eae946c6ec3996d54">CCC_private_flat_hash_map_with_capacity</a>( private_type_name,  private_key_field,  private_hash,  private_key_compare,  private_allocate,  private_context_data,  private_cap)</td></tr>
@@ -392,8 +392,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aa0ab2a47b824372a9509d90a899f1971" name="aa0ab2a47b824372a9509d90a899f1971"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa0ab2a47b824372a9509d90a899f1971">&#9670;&#160;</a></span>CCC_private_flat_hash_map_initialize</h2>
+<a id="a806c1fd49a407acedf3b355649db8bfe" name="a806c1fd49a407acedf3b355649db8bfe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a806c1fd49a407acedf3b355649db8bfe">&#9670;&#160;</a></span>CCC_private_flat_hash_map_initialize</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -401,12 +401,6 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">#define CCC_private_flat_hash_map_initialize</td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">private_fixed_map_pointer, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">private_type_name, </td>
         </tr>
@@ -444,7 +438,13 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">private_capacity&#160;</td>
+          <td class="paramname">private_capacity, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_fixed_map_pointer&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -712,16 +712,16 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    (__extension__({                                                           \</div>
 <div class="line">        <span class="keyword">struct </span><a class="code hl_struct" href="structCCC__Flat__hash__map.html">CCC_Flat_hash_map</a> private_map                                   \</div>
-<div class="line">            = <a class="code hl_define" href="private__flat__hash__map_8h.html#aa0ab2a47b824372a9509d90a899f1971">CCC_private_flat_hash_map_initialize</a>(                            \</div>
-<div class="line">                NULL, private_type_name, private_key_field, private_hash,      \</div>
+<div class="line">            = <a class="code hl_define" href="private__flat__hash__map_8h.html#a806c1fd49a407acedf3b355649db8bfe">CCC_private_flat_hash_map_initialize</a>(                            \</div>
+<div class="line">                private_type_name, private_key_field, private_hash,            \</div>
 <div class="line">                private_key_compare, private_allocate, private_context_data,   \</div>
-<div class="line">                0);                                                            \</div>
+<div class="line">                0, NULL);                                                      \</div>
 <div class="line">        (void)<a class="code hl_function" href="flat__hash__map_8h.html#abde2c0903a9cb74a55ae6e22b58d0c80">CCC_flat_hash_map_reserve</a>(&amp;private_map, private_cap,             \</div>
 <div class="line">                                        private_allocate);                     \</div>
 <div class="line">        private_map;                                                           \</div>
 <div class="line">    }))</div>
 <div class="ttc" id="aflat__hash__map_8h_html_abde2c0903a9cb74a55ae6e22b58d0c80"><div class="ttname"><a href="flat__hash__map_8h.html#abde2c0903a9cb74a55ae6e22b58d0c80">CCC_flat_hash_map_reserve</a></div><div class="ttdeci">CCC_Result CCC_flat_hash_map_reserve(CCC_Flat_hash_map *map, size_t to_add, CCC_Allocator *allocate)</div><div class="ttdoc">Reserve space required to add a specified number of elements to the map. If the current capacity is s...</div></div>
-<div class="ttc" id="aprivate__flat__hash__map_8h_html_aa0ab2a47b824372a9509d90a899f1971"><div class="ttname"><a href="private__flat__hash__map_8h.html#aa0ab2a47b824372a9509d90a899f1971">CCC_private_flat_hash_map_initialize</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_initialize( private_fixed_map_pointer, private_type_name, private_key_field, private_hash, private_key_compare, private_allocate, private_context_data, private_capacity)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:276</div></div>
+<div class="ttc" id="aprivate__flat__hash__map_8h_html_a806c1fd49a407acedf3b355649db8bfe"><div class="ttname"><a href="private__flat__hash__map_8h.html#a806c1fd49a407acedf3b355649db8bfe">CCC_private_flat_hash_map_initialize</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_initialize( private_type_name, private_key_field, private_hash, private_key_compare, private_allocate, private_context_data, private_capacity, private_fixed_map_pointer)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:276</div></div>
 <div class="ttc" id="astructCCC__Flat__hash__map_html"><div class="ttname"><a href="structCCC__Flat__hash__map.html">CCC_Flat_hash_map</a></div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:142</div></div>
 </div><!-- fragment --><p>Initializes the flat hash map with the specified capacity. </p>
 
