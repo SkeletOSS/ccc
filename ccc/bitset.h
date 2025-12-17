@@ -161,20 +161,20 @@ A fixed size bit set with size equal to capacity.
 
 ```
 #define BITSET_USING_NAMESPACE_CCC
-Bitset bitset = bitset_initialize(bitset_blocks(9), NULL, NULL, 9);
+Bitset bitset = bitset_initialize(NULL, NULL, 9, 9, bitset_blocks(9));
 ```
 A fixed size bit set with dynamic push and pop.
 
 ```
 #define BITSET_USING_NAMESPACE_CCC
-Bitset bitset = bitset_initialize(bitset_blocks(9), NULL, NULL, 9, 0);
+Bitset bitset = bitset_initialize(NULL, NULL, 9, 0, bitset_blocks(9));
 ```
 
 A dynamic bit set initialization.
 
 ```
 #define BITSET_USING_NAMESPACE_CCC
-Bitset bitset = bitset_initialize(NULL, std_allocate, NULL, 0);
+Bitset bitset = bitset_initialize(std_allocate, NULL, 0, 0, NULL);
 ```
 
 See types.h for more on allocation functions. */

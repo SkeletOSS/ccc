@@ -95,8 +95,9 @@ store in the buffer.
 
 ```
 #define BUFFER_USING_NAMESPACE_CCC
-static Buffer stack = buffer_initialize(int, NULL, NULL, 4096,
-&(static int[4096]){});
+static Buffer stack = buffer_initialize(
+    int, NULL, NULL, 4096, 0, &(static int[4096]){}
+);
 ```
 
 Initialize a fixed Buffer with some elements occupied.

@@ -121,9 +121,9 @@ capacity.
 int
 main(void)
 {
-    Flat_double_ended_queue f
-        = flat_double_ended_queue_from(std_allocate, NULL, 4096,
-            (int[]){ 0, 1, 2, 3 });
+    Flat_double_ended_queue f = flat_double_ended_queue_from(
+        std_allocate, NULL, 4096, (int[]){ 0, 1, 2, 3 }
+    );
     return 0;
 }
 ```
@@ -222,6 +222,7 @@ Flat_double_ended_queue source = flat_double_ended_queue_initialize(
     NULL,
     NULL,
     10,
+    0,
     (int[10]){}
 );
 int *new_data
@@ -231,6 +232,7 @@ Flat_double_ended_queue destination = flat_double_ended_queue_initialize(
     NULL,
     NULL,
     flat_double_ended_queue_capacity(&source).count,
+    0,
     new_data
 );
 CCC_Result res = flat_double_ended_queue_copy(&destination, &source, NULL);
@@ -246,6 +248,7 @@ Flat_double_ended_queue source = flat_double_ended_queue_initialize(
     std_allocate,
     NULL,
     0,
+    0,
     NULL
 );
 (void)CCC_flat_double_ended_queue_push_back_range(
@@ -257,6 +260,7 @@ Flat_double_ended_queue destination = flat_double_ended_queue_initialize(
     int,
     std_allocate,
     NULL,
+    0,
     0,
     NULL
 );
@@ -279,6 +283,7 @@ Flat_double_ended_queue source = flat_double_ended_queue_initialize(
     std_allocate,
     NULL,
     0,
+    0,
     NULL
 );
 (void)CCC_flat_double_ended_queue_push_back_range(
@@ -290,6 +295,7 @@ Flat_double_ended_queue destination = flat_double_ended_queue_initialize(
     int,
     NULL,
     NULL,
+    0,
     0,
     NULL
 );
