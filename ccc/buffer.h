@@ -186,7 +186,7 @@ Initialize a dynamic buffer.
 int
 main(void)
 {
-    Buffer b = buffer_from(std_allocate, NULL, 4096);
+    Buffer b = buffer_with_capacity(int, std_allocate, NULL, 4096);
     return 0;
 }
 ```
