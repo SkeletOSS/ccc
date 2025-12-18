@@ -724,7 +724,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line"><span class="keywordtype">int</span></div>
 <div class="line">main(<span class="keywordtype">void</span>)</div>
 <div class="line">{</div>
-<div class="line">    Buffer b = buffer_from(std_allocate, NULL, 4096);</div>
+<div class="line">    Buffer b = buffer_with_capacity(<span class="keywordtype">int</span>, std_allocate, NULL, 4096);</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
 </div><!-- fragment --><p>Only dynamic buffers may be initialized this way. For static or stack based initialization of fixed buffers with contents known at compile time, see the <a class="el" href="buffer_8h.html#a42d1035574b12e853a8b1769b4007d17" title="Initialize a contiguous Buffer of user a specified type, allocation policy, capacity,...">CCC_buffer_initialize()</a> macro. </p>
