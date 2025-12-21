@@ -67,11 +67,13 @@ index. This allows the implementation to follow the theorist's ideal.
 
 Here is the layout in one contiguous array.
 
+```
 (D = Data Array, N = Nodes Array, P = Parity Bit Array, _N = Capacity - 1)
 
 ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
 │D_0│D_1│...│D_N│N_0│N_1│...│N_N│P_0│P_1│...│P_N│
 └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+```
 
 Consider how this layout saves space. Here is a more traditional approach.
 

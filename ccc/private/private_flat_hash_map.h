@@ -108,6 +108,7 @@ map is allowed to allocate it will take care of aligning pointers appropriately.
 In the fixed size case we rely on the user defining a fixed size type. In either
 case the arrays are in one contiguous allocation but split as follows:
 
+```
 (N == capacity - 1) Where capacity is a power of 2. (G == group size - 1).
 
 ┌───┬───┬───┬───┬────┬───┬───┬───┬───┬───┬───┬───┬───┐
@@ -120,6 +121,7 @@ case the arrays are in one contiguous allocation but split as follows:
 │rehashing.   │ │Possible pad  │ │erase and inserts. This means R_G is never│
 │Size = 1 data│ │bytes between.│ │needed but duplicated for branchless ops. │
 └─────────────┘ └──────────────┘ └──────────────────────────────────────────┘
+```
 
 This is a different layout than Rust's Hashbrown table. Instead of a shared
 base address of the data and tag arrays with padding at the start of the data

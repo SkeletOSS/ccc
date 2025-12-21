@@ -55,11 +55,13 @@ nodes in the WAVL tree.
 
 Here is the layout in one contiguous array.
 
+```
 (D = Data Array, N = Nodes Array, _N = Capacity - 1)
 
 ┌───┬───┬───┬───┬───┬───┬───┬───┐
 │D_0│D_1│...│D_N│N_0│N_1│...│N_N│
 └───┴───┴───┴───┴───┴───┴───┴───┘
+```
 
 This layout costs us in consulting both the data and nodes array during the
 top down splay operation. However, the benefit of space saving and no wasted
