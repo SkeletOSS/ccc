@@ -106,9 +106,8 @@ static struct Lru_cache lru_cache = {
     .cap = CAP,
     .l = doubly_linked_list_initialize(struct Key_val, list_node, order_by_key,
                                        std_allocate, NULL),
-    .fh = flat_hash_map_initialize(struct Val, key, flat_hash_map_int_to_u64,
-                                   lru_lookup_order, NULL, NULL,
-                                   SMALL_FIXED_CAP, &(Small_fixed_map){}),
+    .fh = flat_hash_map_with_compound_literal(
+        key, flat_hash_map_int_to_u64, lru_lookup_order, (Small_fixed_map){}),
 };
 
 check_static_begin(lru_put, struct Lru_cache *const lru, int const key,

@@ -24,9 +24,8 @@ modw(CCC_Type_context const u)
     v->val = *((int *)u.context);
 }
 
-static CCC_Flat_hash_map static_fh = flat_hash_map_initialize(
-    struct Val, key, flat_hash_map_int_to_u64, flat_hash_map_id_order, NULL,
-    NULL, SMALL_FIXED_CAP, &(Small_fixed_map){});
+static CCC_Flat_hash_map static_fh = flat_hash_map_with_compound_literal(
+    key, flat_hash_map_int_to_u64, flat_hash_map_id_order, (Small_fixed_map){});
 
 check_static_begin(flat_hash_map_test_static_initialize)
 {
