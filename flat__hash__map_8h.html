@@ -444,17 +444,13 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">    <span class="keywordtype">int</span> val;</div>
 <div class="line">};</div>
 <div class="line"><a class="code hl_define" href="flat__hash__map_8h.html#ac0d42fc4658620cffb6598b6b2792846">CCC_flat_hash_map_declare_fixed</a>(Small_fixed_map, <span class="keyword">struct</span> Val, 64);</div>
-<div class="line"><span class="keyword">static</span> Flat_hash_map static_map = flat_hash_map_initialize(</div>
-<div class="line">    <span class="keyword">struct</span> Val,</div>
+<div class="line"><span class="keyword">static</span> Flat_hash_map static_map = flat_hash_map_with_compound_literal(</div>
 <div class="line">    key,</div>
 <div class="line">    Flat_hash_map_int_to_u64,</div>
 <div class="line">    flat_hash_map_id_order,</div>
-<div class="line">    NULL,</div>
-<div class="line">    NULL,</div>
-<div class="line">    flat_hash_map_fixed_capacity(Small_fixed_map),</div>
-<div class="line">    &amp;(<span class="keyword">static</span> Small_fixed_map){}</div>
+<div class="line">    (<span class="keyword">static</span> Small_fixed_map){}</div>
 <div class="line">);</div>
-<div class="ttc" id="aflat__hash__map_8h_html_ac0d42fc4658620cffb6598b6b2792846"><div class="ttname"><a href="flat__hash__map_8h.html#ac0d42fc4658620cffb6598b6b2792846">CCC_flat_hash_map_declare_fixed</a></div><div class="ttdeci">#define CCC_flat_hash_map_declare_fixed(fixed_map_type_name, type_name, capacity)</div><div class="ttdoc">Declare a fixed size map type for use in the stack, heap, or data segment. Does not return a value.</div><div class="ttdef"><b>Definition:</b> flat_hash_map.h:190</div></div>
+<div class="ttc" id="aflat__hash__map_8h_html_ac0d42fc4658620cffb6598b6b2792846"><div class="ttname"><a href="flat__hash__map_8h.html#ac0d42fc4658620cffb6598b6b2792846">CCC_flat_hash_map_declare_fixed</a></div><div class="ttdeci">#define CCC_flat_hash_map_declare_fixed(fixed_map_type_name, type_name, capacity)</div><div class="ttdoc">Declare a fixed size map type for use in the stack, heap, or data segment. Does not return a value.</div><div class="ttdef"><b>Definition:</b> flat_hash_map.h:182</div></div>
 </div><!-- fragment --><p>Similarly, a fixed size map can be used on the stack.</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>Val</div>
 <div class="line">{</div>
@@ -464,15 +460,11 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line"><a class="code hl_define" href="flat__hash__map_8h.html#ac0d42fc4658620cffb6598b6b2792846">CCC_flat_hash_map_declare_fixed</a>(Small_fixed_map, <span class="keyword">struct</span> Val, 64);</div>
 <div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">void</span>)</div>
 <div class="line">{</div>
-<div class="line">    Flat_hash_map static_map = flat_hash_map_initialize(</div>
-<div class="line">        <span class="keyword">struct</span> Val,</div>
+<div class="line">    Flat_hash_map static_map = flat_hash_map_with_compound_literal(</div>
 <div class="line">        key,</div>
 <div class="line">        flat_hash_map_int_to_u64,</div>
 <div class="line">        flat_hash_map_id_order,</div>
-<div class="line">        NULL,</div>
-<div class="line">        NULL,</div>
-<div class="line">        flat_hash_map_fixed_capacity(Small_fixed_map),</div>
-<div class="line">        &amp;(Small_fixed_map){}</div>
+<div class="line">        (Small_fixed_map){}</div>
 <div class="line">    );</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
@@ -1838,7 +1830,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <div class="line">    &amp;(<span class="keyword">static</span> Small_fixed_map){}</div>
 <div class="line">);</div>
 <div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res = flat_hash_map_copy(&amp;destination, &amp;source, NULL);</div>
-<div class="ttc" id="aflat__hash__map_8h_html_a3dac035c65b826f4f9ac3b269c395ba2"><div class="ttname"><a href="flat__hash__map_8h.html#a3dac035c65b826f4f9ac3b269c395ba2">CCC_flat_hash_map_fixed_capacity</a></div><div class="ttdeci">#define CCC_flat_hash_map_fixed_capacity(fixed_map_type_name)</div><div class="ttdoc">Obtain the capacity previously chosen for the fixed size map type.</div><div class="ttdef"><b>Definition:</b> flat_hash_map.h:199</div></div>
+<div class="ttc" id="aflat__hash__map_8h_html_a3dac035c65b826f4f9ac3b269c395ba2"><div class="ttname"><a href="flat__hash__map_8h.html#a3dac035c65b826f4f9ac3b269c395ba2">CCC_flat_hash_map_fixed_capacity</a></div><div class="ttdeci">#define CCC_flat_hash_map_fixed_capacity(fixed_map_type_name)</div><div class="ttdoc">Obtain the capacity previously chosen for the fixed size map type.</div><div class="ttdef"><b>Definition:</b> flat_hash_map.h:191</div></div>
 <div class="ttc" id="atypes_8h_html_aa1ded61d294b114942f11e711b331dcf"><div class="ttname"><a href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a></div><div class="ttdeci">CCC_Result</div><div class="ttdoc">A result of actions on containers.</div><div class="ttdef"><b>Definition:</b> types.h:148</div></div>
 </div><!-- fragment --><p>The above requires destination capacity be greater than or equal to source capacity. Here is memory management handed over to the copy function.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define FLAT_HASH_MAP_USING_NAMESPACE_CCC</span></div>

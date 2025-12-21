@@ -494,16 +494,12 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">    <span class="keywordtype">int</span> val;</div>
 <div class="line">};</div>
 <div class="line"><a class="code hl_define" href="array__adaptive__map_8h.html#aa5cd7d6e3b43cc6934c045378e3e3875">CCC_array_adaptive_map_declare_fixed</a>(Small_fixed_map, <span class="keyword">struct</span> Val, 64);</div>
-<div class="line"><span class="keyword">static</span> Array_adaptive_map static_map = array_adaptive_map_initialize(</div>
-<div class="line">    <span class="keyword">struct</span> Val,</div>
+<div class="line"><span class="keyword">static</span> Array_adaptive_map static_map = array_adaptive_map_with_compound_literal(</div>
 <div class="line">    key,</div>
 <div class="line">    array_adaptive_map_key_order,</div>
-<div class="line">    NULL,</div>
-<div class="line">    NULL,</div>
-<div class="line">    array_adaptive_map_fixed_capacity(Small_fixed_map),</div>
-<div class="line">    &amp;(<span class="keyword">static</span> Small_fixed_map){}</div>
+<div class="line">    (<span class="keyword">static</span> Small_fixed_map){}</div>
 <div class="line">);</div>
-<div class="ttc" id="aarray__adaptive__map_8h_html_aa5cd7d6e3b43cc6934c045378e3e3875"><div class="ttname"><a href="array__adaptive__map_8h.html#aa5cd7d6e3b43cc6934c045378e3e3875">CCC_array_adaptive_map_declare_fixed</a></div><div class="ttdeci">#define CCC_array_adaptive_map_declare_fixed(fixed_map_type_name, type_name, capacity)</div><div class="ttdoc">Declare a fixed size map type for use in the stack, heap, or data segment. Does not return a value.</div><div class="ttdef"><b>Definition:</b> array_adaptive_map.h:152</div></div>
+<div class="ttc" id="aarray__adaptive__map_8h_html_aa5cd7d6e3b43cc6934c045378e3e3875"><div class="ttname"><a href="array__adaptive__map_8h.html#aa5cd7d6e3b43cc6934c045378e3e3875">CCC_array_adaptive_map_declare_fixed</a></div><div class="ttdeci">#define CCC_array_adaptive_map_declare_fixed(fixed_map_type_name, type_name, capacity)</div><div class="ttdoc">Declare a fixed size map type for use in the stack, heap, or data segment. Does not return a value.</div><div class="ttdef"><b>Definition:</b> array_adaptive_map.h:144</div></div>
 </div><!-- fragment --><p>Similarly, a fixed size map can be used on the stack.</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>Val</div>
 <div class="line">{</div>
@@ -513,14 +509,10 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line"><a class="code hl_define" href="array__adaptive__map_8h.html#aa5cd7d6e3b43cc6934c045378e3e3875">CCC_array_adaptive_map_declare_fixed</a>(Small_fixed_map, <span class="keyword">struct</span> Val, 64);</div>
 <div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">void</span>)</div>
 <div class="line">{</div>
-<div class="line">    Array_adaptive_map map = array_adaptive_map_initialize(</div>
-<div class="line">        <span class="keyword">struct</span> Val,</div>
+<div class="line">    Array_adaptive_map map = array_adaptive_map_with_compound_literal(</div>
 <div class="line">        key,</div>
 <div class="line">        array_adaptive_map_key_order,</div>
-<div class="line">        NULL,</div>
-<div class="line">        NULL,</div>
-<div class="line">        array_adaptive_map_fixed_capacity(Small_fixed_map),</div>
-<div class="line">        &amp;(Small_fixed_map){}</div>
+<div class="line">        (Small_fixed_map){}</div>
 <div class="line">    );</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>

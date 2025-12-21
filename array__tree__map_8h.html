@@ -496,36 +496,27 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">    <span class="keywordtype">int</span> key;</div>
 <div class="line">    <span class="keywordtype">int</span> val;</div>
 <div class="line">};</div>
-<div class="line"><a class="code hl_define" href="array__tree__map_8h.html#a889e90409ac17a1052715f28eadac38e">CCC_array_tree_map_declare_fixed</a>(Small_fixed_map, <span class="keyword">struct</span> Val,</div>
-<div class="line">64); <span class="keyword">static</span> map static_map =</div>
-<div class="line">array_tree_map_initialize(</div>
-<div class="line">    <span class="keyword">struct</span> Val,</div>
+<div class="line"><a class="code hl_define" href="array__tree__map_8h.html#a889e90409ac17a1052715f28eadac38e">CCC_array_tree_map_declare_fixed</a>(Small_fixed_map, <span class="keyword">struct</span> Val, 64);</div>
+<div class="line"><span class="keyword">static</span> map static_map = array_tree_map_with_compound_literal(</div>
 <div class="line">    key,</div>
 <div class="line">    array_tree_map_key_order,</div>
-<div class="line">    NULL,</div>
-<div class="line">    NULL,</div>
-<div class="line">    array_tree_map_fixed_capacity(Small_fixed_map),</div>
-<div class="line">    &amp;(<span class="keyword">static</span> Small_fixed_map){}</div>
+<div class="line">    (<span class="keyword">static</span> Small_fixed_map){}</div>
 <div class="line">);</div>
-<div class="ttc" id="aarray__tree__map_8h_html_a889e90409ac17a1052715f28eadac38e"><div class="ttname"><a href="array__tree__map_8h.html#a889e90409ac17a1052715f28eadac38e">CCC_array_tree_map_declare_fixed</a></div><div class="ttdeci">#define CCC_array_tree_map_declare_fixed(fixed_map_type_name, type_name, capacity)</div><div class="ttdoc">Declare a fixed size map type for use in the stack, heap, or data segment. Does not return a value.</div><div class="ttdef"><b>Definition:</b> array_tree_map.h:160</div></div>
+<div class="ttc" id="aarray__tree__map_8h_html_a889e90409ac17a1052715f28eadac38e"><div class="ttname"><a href="array__tree__map_8h.html#a889e90409ac17a1052715f28eadac38e">CCC_array_tree_map_declare_fixed</a></div><div class="ttdeci">#define CCC_array_tree_map_declare_fixed(fixed_map_type_name, type_name, capacity)</div><div class="ttdoc">Declare a fixed size map type for use in the stack, heap, or data segment. Does not return a value.</div><div class="ttdef"><b>Definition:</b> array_tree_map.h:151</div></div>
 </div><!-- fragment --><p>Similarly, a fixed size map can be used on the stack.</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>Val</div>
 <div class="line">{</div>
 <div class="line">    <span class="keywordtype">int</span> key;</div>
 <div class="line">    <span class="keywordtype">int</span> val;</div>
 <div class="line">};</div>
-<div class="line"><a class="code hl_define" href="array__tree__map_8h.html#a889e90409ac17a1052715f28eadac38e">CCC_array_tree_map_declare_fixed</a>(Small_fixed_map, <span class="keyword">struct</span> Val,</div>
-<div class="line">64); <span class="keywordtype">int</span> main(<span class="keywordtype">void</span>)</div>
+<div class="line"><a class="code hl_define" href="array__tree__map_8h.html#a889e90409ac17a1052715f28eadac38e">CCC_array_tree_map_declare_fixed</a>(Small_fixed_map, <span class="keyword">struct</span> Val, 64);</div>
+<div class="line"><span class="keywordtype">int</span></div>
+<div class="line">main(<span class="keywordtype">void</span>)</div>
 <div class="line">{</div>
-<div class="line">    map static_map =</div>
-<div class="line">array_tree_map_initialize(</div>
-<div class="line">        <span class="keyword">struct</span> Val,</div>
+<div class="line">    map static_map = array_tree_map_with_compound_literal(</div>
 <div class="line">        key,</div>
 <div class="line">        array_tree_map_key_order,</div>
-<div class="line">        NULL,</div>
-<div class="line">        NULL,</div>
-<div class="line">        array_tree_map_fixed_capacity(Small_fixed_map),</div>
-<div class="line">        &amp;(Small_fixed_map){}</div>
+<div class="line">        (Small_fixed_map){}</div>
 <div class="line">    );</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
