@@ -143,15 +143,11 @@ struct Val
     int val;
 };
 CCC_flat_hash_map_declare_fixed(Small_fixed_map, struct Val, 64);
-static Flat_hash_map static_map = flat_hash_map_initialize(
-    struct Val,
+static Flat_hash_map static_map = flat_hash_map_with_compound_literal(
     key,
     Flat_hash_map_int_to_u64,
     flat_hash_map_id_order,
-    NULL,
-    NULL,
-    flat_hash_map_fixed_capacity(Small_fixed_map),
-    &(static Small_fixed_map){}
+    (static Small_fixed_map){}
 );
 ```
 
@@ -166,15 +162,11 @@ struct Val
 CCC_flat_hash_map_declare_fixed(Small_fixed_map, struct Val, 64);
 int main(void)
 {
-    Flat_hash_map static_map = flat_hash_map_initialize(
-        struct Val,
+    Flat_hash_map static_map = flat_hash_map_with_compound_literal(
         key,
         flat_hash_map_int_to_u64,
         flat_hash_map_id_order,
-        NULL,
-        NULL,
-        flat_hash_map_fixed_capacity(Small_fixed_map),
-        &(Small_fixed_map){}
+        (Small_fixed_map){}
     );
     return 0;
 }

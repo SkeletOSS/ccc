@@ -105,14 +105,10 @@ struct Val
     int val;
 };
 CCC_array_adaptive_map_declare_fixed(Small_fixed_map, struct Val, 64);
-static Array_adaptive_map static_map = array_adaptive_map_initialize(
-    struct Val,
+static Array_adaptive_map static_map = array_adaptive_map_with_compound_literal(
     key,
     array_adaptive_map_key_order,
-    NULL,
-    NULL,
-    array_adaptive_map_fixed_capacity(Small_fixed_map),
-    &(static Small_fixed_map){}
+    (static Small_fixed_map){}
 );
 ```
 
@@ -127,14 +123,10 @@ struct Val
 CCC_array_adaptive_map_declare_fixed(Small_fixed_map, struct Val, 64);
 int main(void)
 {
-    Array_adaptive_map map = array_adaptive_map_initialize(
-        struct Val,
+    Array_adaptive_map map = array_adaptive_map_with_compound_literal(
         key,
         array_adaptive_map_key_order,
-        NULL,
-        NULL,
-        array_adaptive_map_fixed_capacity(Small_fixed_map),
-        &(Small_fixed_map){}
+        (Small_fixed_map){}
     );
     return 0;
 }

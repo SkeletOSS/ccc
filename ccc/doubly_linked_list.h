@@ -83,10 +83,9 @@ for comparison, printing, or destructors.
 element.
 @param[in] type_intruder_field name of the Doubly_linked_list element in the
 containing type.
-@param[in] compare the CCC_Type_comparator used to compare list
-elements.
-@param[in] context_data any context data that will be needed for
-comparison, printing, or destruction of elements.
+@param[in] compare the CCC_Type_comparator used to compare list elements.
+@param[in] context_data any context data that will be needed for comparison,
+printing, or destruction of elements.
 @param[in] allocate the optional allocation function or NULL.
 @return the initialized list. Assign to the list directly on the right hand
 side of an equality operator. Initialization can occur at runtime or compile

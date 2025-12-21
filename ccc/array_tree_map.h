@@ -110,16 +110,11 @@ struct Val
     int key;
     int val;
 };
-CCC_array_tree_map_declare_fixed(Small_fixed_map, struct Val,
-64); static map static_map =
-array_tree_map_initialize(
-    struct Val,
+CCC_array_tree_map_declare_fixed(Small_fixed_map, struct Val, 64);
+static map static_map = array_tree_map_with_compound_literal(
     key,
     array_tree_map_key_order,
-    NULL,
-    NULL,
-    array_tree_map_fixed_capacity(Small_fixed_map),
-    &(static Small_fixed_map){}
+    (static Small_fixed_map){}
 );
 ```
 
@@ -131,18 +126,14 @@ struct Val
     int key;
     int val;
 };
-CCC_array_tree_map_declare_fixed(Small_fixed_map, struct Val,
-64); int main(void)
+CCC_array_tree_map_declare_fixed(Small_fixed_map, struct Val, 64);
+int
+main(void)
 {
-    map static_map =
-array_tree_map_initialize(
-        struct Val,
+    map static_map = array_tree_map_with_compound_literal(
         key,
         array_tree_map_key_order,
-        NULL,
-        NULL,
-        array_tree_map_fixed_capacity(Small_fixed_map),
-        &(Small_fixed_map){}
+        (Small_fixed_map){}
     );
     return 0;
 }
