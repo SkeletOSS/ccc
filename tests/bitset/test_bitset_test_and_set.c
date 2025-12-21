@@ -56,7 +56,7 @@ check_static_begin(bitset_test_set_all)
 
 check_static_begin(bitset_test_set_range)
 {
-    Bitset bs = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset bs = bitset_with_compound_literal(512, bitset_blocks(512));
     /* Start with a full range and reduce from the end. */
     for (size_t i = 0; i < 512; ++i)
     {
@@ -123,7 +123,7 @@ check_static_begin(bitset_test_reset_all)
 
 check_static_begin(bitset_test_reset_range)
 {
-    Bitset bs = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset bs = bitset_with_compound_literal(512, bitset_blocks(512));
     /* Start with a full range and reduce from the end. */
     for (size_t i = 0; i < 512; ++i)
     {
@@ -202,7 +202,7 @@ check_static_begin(bitset_test_flip_all)
 
 check_static_begin(bitset_test_flip_range)
 {
-    Bitset bs = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset bs = bitset_with_compound_literal(512, bitset_blocks(512));
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     size_t const orignal_popcount = bitset_popcount(&bs).count;
     /* Start with a full range and reduce from the end. */
@@ -243,7 +243,7 @@ check_static_begin(bitset_test_flip_range)
 
 check_static_begin(bitset_test_any)
 {
-    Bitset bs = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset bs = bitset_with_compound_literal(512, bitset_blocks(512));
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     size_t const cap = bitset_capacity(&bs).count;
     /* Start with a full range and reduce by moving start forward. */
@@ -266,7 +266,7 @@ check_static_begin(bitset_test_any)
 
 check_static_begin(bitset_test_none)
 {
-    Bitset bs = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset bs = bitset_with_compound_literal(512, bitset_blocks(512));
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     size_t const cap = bitset_capacity(&bs).count;
     /* Start with a full range and reduce by moving start forward. */
@@ -289,7 +289,7 @@ check_static_begin(bitset_test_none)
 
 check_static_begin(bitset_test_all)
 {
-    Bitset bs = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset bs = bitset_with_compound_literal(512, bitset_blocks(512));
     size_t const cap = bitset_capacity(&bs).count;
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(bitset_all(&bs), CCC_TRUE);
@@ -315,7 +315,7 @@ check_static_begin(bitset_test_all)
 
 check_static_begin(bitset_test_first_trailing_one)
 {
-    Bitset bs = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset bs = bitset_with_compound_literal(512, bitset_blocks(512));
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     /* Start with an almost full range and reduce by moving start forward. */
     for (size_t i = 0, end = 512; i < end - 1; ++i)
@@ -332,7 +332,7 @@ check_static_begin(bitset_test_first_trailing_one)
 
 check_static_begin(bitset_test_first_trailing_ones)
 {
-    Bitset bs = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset bs = bitset_with_compound_literal(512, bitset_blocks(512));
     size_t window = BITSET_BLOCK_BITS;
     /* Slide a group of int size as a window across the set. */
     for (size_t i = 0; i < (512 - window - 1); ++i)
@@ -403,7 +403,7 @@ check_static_begin(bitset_test_first_trailing_ones)
 
 check_static_begin(bitset_test_first_trailing_ones_fail)
 {
-    Bitset bs = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset bs = bitset_with_compound_literal(512, bitset_blocks(512));
     size_t const end = bitset_block_count(512);
     size_t const first_half = BITSET_BLOCK_BITS / 2;
     size_t const second_half = first_half - 1;
@@ -448,7 +448,7 @@ check_static_begin(bitset_test_first_trailing_ones_fail)
 
 check_static_begin(bitset_test_first_trailing_zero)
 {
-    Bitset bs = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset bs = bitset_with_compound_literal(512, bitset_blocks(512));
     /* Start with an almost full range and reduce by moving start forward. */
     for (size_t i = 0, end = 512; i < end - 1; ++i)
     {
@@ -464,7 +464,7 @@ check_static_begin(bitset_test_first_trailing_zero)
 
 check_static_begin(bitset_test_first_trailing_zeros)
 {
-    Bitset bs = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset bs = bitset_with_compound_literal(512, bitset_blocks(512));
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     size_t window = BITSET_BLOCK_BITS;
     /* Slide a group of int size as a window across the set. */
@@ -539,7 +539,7 @@ check_static_begin(bitset_test_first_trailing_zeros)
 
 check_static_begin(bitset_test_first_trailing_zeros_fail)
 {
-    Bitset bs = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset bs = bitset_with_compound_literal(512, bitset_blocks(512));
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     size_t const end = bitset_block_count(512);
     size_t const first_half = BITSET_BLOCK_BITS / 2;
@@ -585,7 +585,7 @@ check_static_begin(bitset_test_first_trailing_zeros_fail)
 
 check_static_begin(bitset_test_first_leading_one)
 {
-    Bitset bs = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset bs = bitset_with_compound_literal(512, bitset_blocks(512));
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     /* Start with an almost full range and reduce by moving start backwards. */
     for (size_t i = 512; i-- > 1;)
@@ -604,7 +604,7 @@ check_static_begin(bitset_test_first_leading_one)
 
 check_static_begin(bitset_test_first_leading_one_range)
 {
-    Bitset bs = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset bs = bitset_with_compound_literal(512, bitset_blocks(512));
     size_t const bit_of_interest = 4;
     check(bitset_set(&bs, bit_of_interest, CCC_TRUE), CCC_FALSE);
     for (size_t i = 0; i < bit_of_interest; ++i)
@@ -633,7 +633,7 @@ check_static_begin(bitset_test_first_leading_one_range)
 
 check_static_begin(bitset_test_first_leading_ones)
 {
-    Bitset bs = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset bs = bitset_with_compound_literal(512, bitset_blocks(512));
     size_t window = BITSET_BLOCK_BITS;
     /* Slide a group of int size as a window across the set. */
     for (size_t i = 511; i > window + 1; --i)
@@ -713,7 +713,7 @@ check_static_begin(bitset_test_first_leading_ones)
 
 check_static_begin(bitset_test_first_leading_ones_fail)
 {
-    Bitset bs = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset bs = bitset_with_compound_literal(512, bitset_blocks(512));
     size_t const first_half = BITSET_BLOCK_BITS / 2;
     size_t const second_half = first_half - 1;
     /* We are going to search for a group of 17 which we will be very close
@@ -759,7 +759,7 @@ check_static_begin(bitset_test_first_leading_ones_fail)
 
 check_static_begin(bitset_test_first_leading_zero)
 {
-    Bitset bs = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset bs = bitset_with_compound_literal(512, bitset_blocks(512));
     /* Start with an almost full range and reduce by moving start backwards. */
     for (size_t i = 512; i-- > 1;)
     {
@@ -807,7 +807,7 @@ check_static_begin(bitset_test_first_leading_zero_range)
 
 check_static_begin(bitset_test_first_leading_zeros)
 {
-    Bitset bs = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset bs = bitset_with_compound_literal(512, bitset_blocks(512));
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     size_t window = BITSET_BLOCK_BITS;
     /* Slide a group of int size as a window across the set. */
@@ -891,7 +891,7 @@ check_static_begin(bitset_test_first_leading_zeros)
 
 check_static_begin(bitset_test_first_leading_zeros_fail)
 {
-    Bitset bs = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset bs = bitset_with_compound_literal(512, bitset_blocks(512));
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     size_t const first_half = BITSET_BLOCK_BITS / 2;
     size_t const second_half = first_half - 1;
@@ -939,9 +939,8 @@ check_static_begin(bitset_test_first_leading_zeros_fail)
 
 check_static_begin(bitset_test_or_same_size)
 {
-    Bitset source = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
-    Bitset destination
-        = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset source = bitset_with_compound_literal(512, bitset_blocks(512));
+    Bitset destination = bitset_with_compound_literal(512, bitset_blocks(512));
     size_t const size = 512;
     for (size_t i = 0; i < size; i += 2)
     {
@@ -960,10 +959,9 @@ check_static_begin(bitset_test_or_same_size)
 
 check_static_begin(bitset_test_or_diff_size)
 {
-    Bitset destination
-        = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset destination = bitset_with_compound_literal(512, bitset_blocks(512));
     /* Make it slightly harder by not ending on a perfect block boundary. */
-    Bitset source = bitset_initialize(NULL, NULL, 244, 244, bitset_blocks(244));
+    Bitset source = bitset_with_compound_literal(244, bitset_blocks(244));
     check(bitset_set_all(&source, CCC_TRUE), CCC_RESULT_OK);
     check(bitset_popcount(&source).count, 244);
     check(bitset_popcount(&destination).count, 0);
@@ -974,9 +972,8 @@ check_static_begin(bitset_test_or_diff_size)
 
 check_static_begin(bitset_test_and_same_size)
 {
-    Bitset source = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
-    Bitset destination
-        = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset source = bitset_with_compound_literal(512, bitset_blocks(512));
+    Bitset destination = bitset_with_compound_literal(512, bitset_blocks(512));
     size_t const size = 512;
     for (size_t i = 0; i < size; i += 2)
     {
@@ -995,10 +992,9 @@ check_static_begin(bitset_test_and_same_size)
 
 check_static_begin(bitset_test_and_diff_size)
 {
-    Bitset destination
-        = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset destination = bitset_with_compound_literal(512, bitset_blocks(512));
     /* Make it slightly harder by not ending on a perfect block boundary. */
-    Bitset source = bitset_initialize(NULL, NULL, 244, 244, bitset_blocks(244));
+    Bitset source = bitset_with_compound_literal(244, bitset_blocks(244));
     check(bitset_set_all(&destination, CCC_TRUE), CCC_RESULT_OK);
     check(bitset_set_all(&source, CCC_TRUE), CCC_RESULT_OK);
     check(bitset_popcount(&destination).count, 512);
@@ -1011,9 +1007,8 @@ check_static_begin(bitset_test_and_diff_size)
 
 check_static_begin(bitset_test_xor_same_size)
 {
-    Bitset source = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
-    Bitset destination
-        = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset source = bitset_with_compound_literal(512, bitset_blocks(512));
+    Bitset destination = bitset_with_compound_literal(512, bitset_blocks(512));
     size_t const size = 512;
     for (size_t i = 0; i < size; i += 2)
     {
@@ -1032,10 +1027,9 @@ check_static_begin(bitset_test_xor_same_size)
 
 check_static_begin(bitset_test_xor_diff_size)
 {
-    Bitset destination
-        = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset destination = bitset_with_compound_literal(512, bitset_blocks(512));
     /* Make it slightly harder by not ending on a perfect block boundary. */
-    Bitset source = bitset_initialize(NULL, NULL, 244, 244, bitset_blocks(244));
+    Bitset source = bitset_with_compound_literal(244, bitset_blocks(244));
     check(bitset_set_all(&destination, CCC_TRUE), CCC_RESULT_OK);
     check(bitset_set_all(&source, CCC_TRUE), CCC_RESULT_OK);
     check(bitset_popcount(&destination).count, 512);
@@ -1048,7 +1042,7 @@ check_static_begin(bitset_test_xor_diff_size)
 
 check_static_begin(bitset_test_shift_left)
 {
-    Bitset bs = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset bs = bitset_with_compound_literal(512, bitset_blocks(512));
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(bitset_popcount(&bs).count, 512);
     check(bitset_shift_left(&bs, 512), CCC_RESULT_OK);
@@ -1073,7 +1067,7 @@ check_static_begin(bitset_test_shift_left)
 
 check_static_begin(bitset_test_shift_left_edgecase)
 {
-    Bitset bs = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset bs = bitset_with_compound_literal(512, bitset_blocks(512));
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(bitset_popcount(&bs).count, 512);
     check(bitset_shift_left(&bs, 510), CCC_RESULT_OK);
@@ -1093,7 +1087,7 @@ check_static_begin(bitset_test_shift_left_edgecase_small)
 
 check_static_begin(bitset_test_shift_right)
 {
-    Bitset bs = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset bs = bitset_with_compound_literal(512, bitset_blocks(512));
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(bitset_popcount(&bs).count, 512);
     check(bitset_shift_right(&bs, 512), CCC_RESULT_OK);
@@ -1120,7 +1114,7 @@ check_static_begin(bitset_test_shift_right)
 
 check_static_begin(bitset_test_shift_right_edgecase)
 {
-    Bitset bs = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
+    Bitset bs = bitset_with_compound_literal(512, bitset_blocks(512));
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(bitset_popcount(&bs).count, 512);
     check(bitset_shift_right(&bs, 510), CCC_RESULT_OK);
@@ -1140,11 +1134,9 @@ check_static_begin(bitset_test_shift_right_edgecase_small)
 
 check_static_begin(bitset_test_subset)
 {
-    Bitset set = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
-    Bitset subset1
-        = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
-    Bitset subset2
-        = bitset_initialize(NULL, NULL, 244, 244, bitset_blocks(244));
+    Bitset set = bitset_with_compound_literal(512, bitset_blocks(512));
+    Bitset subset1 = bitset_with_compound_literal(512, bitset_blocks(512));
+    Bitset subset2 = bitset_with_compound_literal(244, bitset_blocks(244));
     for (size_t i = 0; i < 512; i += 2)
     {
         check(bitset_set(&set, i, CCC_TRUE), CCC_FALSE);
@@ -1161,11 +1153,9 @@ check_static_begin(bitset_test_subset)
 
 check_static_begin(bitset_test_proper_subset)
 {
-    Bitset set = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
-    Bitset subset1
-        = bitset_initialize(NULL, NULL, 512, 512, bitset_blocks(512));
-    Bitset subset2
-        = bitset_initialize(NULL, NULL, 244, 244, bitset_blocks(244));
+    Bitset set = bitset_with_compound_literal(512, bitset_blocks(512));
+    Bitset subset1 = bitset_with_compound_literal(512, bitset_blocks(512));
+    Bitset subset2 = bitset_with_compound_literal(244, bitset_blocks(244));
     for (size_t i = 0; i < 512; i += 2)
     {
         check(bitset_set(&set, i, CCC_TRUE), CCC_FALSE);
@@ -1188,7 +1178,7 @@ validate_sudoku_box(int board[9][9], Bitset *const row_check,
                     Bitset *const col_check, size_t const row_start,
                     size_t const col_start)
 {
-    Bitset box_check = bitset_initialize(NULL, NULL, 9, 9, bitset_blocks(9));
+    Bitset box_check = bitset_with_compound_literal(9, bitset_blocks(9));
     CCC_Tribool was_on = CCC_FALSE;
     for (size_t r = row_start; r < row_start + 3; ++r)
     {
@@ -1254,10 +1244,10 @@ check_static_begin(bitset_test_valid_sudoku)
     ,{0,0,0, 4,1,9, 0,0,5}
     ,{0,0,0, 0,8,0, 0,7,9}};
     /* clang-format on */
-    Bitset row_check = bitset_initialize(NULL, NULL, 9L * 9L, 9L * 9L,
-                                         bitset_blocks(9L * 9L));
-    Bitset col_check = bitset_initialize(NULL, NULL, 9L * 9L, 9L * 9L,
-                                         bitset_blocks(9L * 9L));
+    Bitset row_check
+        = bitset_with_compound_literal(9L * 9L, bitset_blocks(9L * 9L));
+    Bitset col_check
+        = bitset_with_compound_literal(9L * 9L, bitset_blocks(9L * 9L));
     size_t const box_step = 3;
     for (size_t row = 0; row < 9; row += box_step)
     {
@@ -1287,10 +1277,10 @@ check_static_begin(bitset_test_invalid_sudoku)
     ,{0,0,0, 4,1,9, 0,0,5}
     ,{0,0,0, 0,8,0, 0,7,9}};
     /* clang-format on */
-    Bitset row_check = bitset_initialize(NULL, NULL, 9L * 9L, 9L * 9L,
-                                         bitset_blocks(9L * 9L));
-    Bitset col_check = bitset_initialize(NULL, NULL, 9L * 9L, 9L * 9L,
-                                         bitset_blocks(9L * 9L));
+    Bitset row_check
+        = bitset_with_compound_literal(9L * 9L, bitset_blocks(9L * 9L));
+    Bitset col_check
+        = bitset_with_compound_literal(9L * 9L, bitset_blocks(9L * 9L));
     size_t const box_step = 3;
     CCC_Tribool pass = CCC_TRUE;
     for (size_t row = 0; row < 9; row += box_step)
