@@ -109,7 +109,7 @@ Collaboration diagram for CCC_Array_adaptive_map:</div>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A handle ordered map is a modified struct of arrays layout with the modification being that we may have the arrays as pointer offsets in a contiguous allocation if the user desires a dynamic map.</p>
 <p>The user data array comes first allowing the user to store any type they wish in the container contiguously with no intrusive element padding, saving space.</p>
-<p>The nodes array is next. These nodes track the indices of the child and parent nodes in the WAVL tree.</p>
+<p>The nodes array is next. These nodes track the indices of the child and parent nodes in the tree.</p>
 <p>Here is the layout in one contiguous array.</p>
 <div class="fragment"><div class="line">(D = Data Array, N = Nodes Array, _N = Capacity - 1)</div>
 <div class="line"> </div>
@@ -275,7 +275,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The contiguous array of WAVL tree meta data. </p>
+<p>The contiguous array of tree meta data. </p>
 
 </div>
 </div>
