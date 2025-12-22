@@ -108,19 +108,22 @@ In contrast the current struct of arrays design lays out data as follows.
 
 ```
   (64 ints * 4 bytes per int)
++ (4 bytes sentinel int)
 + (4 bytes padding)
 + (64 nodes * 24 bytes per node)
++ (24 bytes sentinel node)
 + (64 bits)
++ (1 sentinel bit)
 + (B padding bits in last word)
 --------------------------------
-= 1860 + B padding bits in last word (in this case 0)
+= 1888 + (B + 1) padding bits in last word (in this case 1)
 ```
 
-That means there are only `4 bytes + B bits` wasted, 4 bytes of padding between
-the end of the user type array and the start of the nodes array and the unused
-bits at the end of the parity bit array. This also means it important to
-consider the alignment differences that may occur between the user type and the
-node type.
+That means there are only `32 bytes + (B + 1) bits` wasted, a 4 byte sentinel
+integer, 4 bytes of padding between the end of the user type array and the start
+of the nodes array, a 24 byte sentinel node, a sentinel bit, and the unused bits
+at the end of the parity bit array. This also means it important to consider the
+alignment differences that may occur between the user type and the node type.
 
 This layout comes at the cost of consulting multiple arrays for many operations.
 However, once user data has been inserted or removed the tree fix up operations

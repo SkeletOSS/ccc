@@ -181,7 +181,8 @@ enum : typeof((struct CCC_Flat_hash_map_tag){}.v)
 /*=======================   Data Alignment Test   ===========================*/
 
 /** @internal A macro version of the runtime alignment operations we perform
-for calculating bytes. This way we can use in static asserts. */
+for calculating bytes. This way we can use in static asserts. We also need to
+ensure our runtime alignment calculations match compiler's `alignas` macro. */
 #define comptime_roundup(bytes_to_round)                                       \
     (((bytes_to_round) + GROUP_COUNT - 1) & ~(GROUP_COUNT - 1))
 
@@ -206,50 +207,17 @@ struct Fixed_map_test_type
 some memory layout assumptions. This should be sufficient and the assumptions
 will hold if the user happens to allocate a fixed size map on the stack. */
 static struct Fixed_map_test_type const data_tag_layout_test;
-/** The size of the user data and tags should be what we expect. No hidden
-padding should violate our mental model of the bytes occupied by contiguous user
-data and metadata tags. We don't care about padding after the tag array which
-may very well exist. The continuity from the base of the user data to the start
-of the tags array is the most important aspect for fixed size maps.
-
-Over index the tag array to get the end address for pointer differences. The
-0th element in an array at the start of a struct is guaranteed to start at the
-first byte of the struct with no padding BEFORE this first element. */
-static_assert(
-    (char const *)&data_tag_layout_test.tag[2]
-            - (char const *)&data_tag_layout_test.data[0]
-        == (comptime_roundup((sizeof(data_tag_layout_test.data)))
-            + (sizeof(struct CCC_Flat_hash_map_tag) * 2)),
-    "The size in bytes of the contiguous user data to tag array must be what "
-    "we would expect with no padding that will interfere with pointer "
-    "arithmetic.");
-/** We must ensure that the tags array starts at the exact next byte boundary
-after the user data type. This is required due to how we access tags and user
-data via indexing. Data is accessed with pointer subtraction from the tags
-array. The tags array 0th element is the shared base for both arrays.
-
-Data has decreasing indices and tags have ascending indices. Here we index too
-far for our type with padding to ensure the next assertion will hold when we
-index from the shared tags base address and subtract to find user data. */
+static_assert((char const *)&data_tag_layout_test.tag[2]
+                      - (char const *)&data_tag_layout_test.data[0]
+                  == (comptime_roundup((sizeof(data_tag_layout_test.data)))
+                      + (sizeof(struct CCC_Flat_hash_map_tag) * 2)),
+              "Calculating the size in bytes of the struct manually must match "
+              "the bytes added by a compiler alignas directive.");
 static_assert((char const *)&data_tag_layout_test.data
                       + comptime_roundup((sizeof(data_tag_layout_test.data)))
                   == (char const *)&data_tag_layout_test.tag,
-              "The start of the tag array must align perfectly with the next "
-              "byte past the final user data element.");
-/** Same as the above test but this is how the location of the tag array would
-be found in normal runtime code. */
-static_assert(
-    (char const *)&data_tag_layout_test.tag
-        == (char const *)&data_tag_layout_test.data
-               + comptime_roundup((sizeof(data_tag_layout_test.data))),
-    "Manual pointer arithmetic from the base of data array to find "
-    "tag array should result in correct location.");
-/** We only want to align the tag array to the correct byte boundary otherwise
-we could be aligning all the user data elements to a larger alignment than
-needed, wasting space. This makes other code slightly more complicated but it
-is better for space usage and aligned performance. We must be careful to account
-for the padding between the end of the data array and the base for pointer
-arithmetic and difference calculations. */
+              "We calculate the correct position of the tag array considering "
+              "it may get extra padding at start for alignment by group size.");
 static_assert((offsetof(struct Fixed_map_test_type, tag) % GROUP_COUNT) == 0,
               "The tag array starts at an aligned group size byte boundary "
               "within the struct.");
@@ -1800,7 +1768,7 @@ Assumes the mask is non-zero. */
 static inline size_t
 mask_to_data_bytes(size_t const sizeof_type, size_t const mask)
 {
-    /* Add two because there is always a bonus user data type at the 0th index
+    /* Add two because there is always a bonus user data type at the last index
        of the data array for swapping purposes. */
     return roundup(sizeof_type * (mask + 2));
 }

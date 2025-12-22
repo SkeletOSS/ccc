@@ -51,7 +51,7 @@ The user data array comes first allowing the user to store any type they wish
 in the container contiguously with no intrusive element padding, saving space.
 
 The nodes array is next. These nodes track the indices of the child and parent
-nodes in the WAVL tree.
+nodes in the tree.
 
 Here is the layout in one contiguous array.
 
@@ -72,7 +72,7 @@ struct CCC_Array_adaptive_map
 {
     /** @internal The contiguous array of user data. */
     void *data;
-    /** @internal The contiguous array of WAVL tree meta data. */
+    /** @internal The contiguous array of tree meta data. */
     struct CCC_Array_adaptive_map_node *nodes;
     /** @internal The current capacity. */
     size_t capacity;
