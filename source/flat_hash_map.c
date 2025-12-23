@@ -489,7 +489,7 @@ CCC_Flat_hash_map_entry *
 CCC_flat_hash_map_and_modify(CCC_Flat_hash_map_entry *const entry,
                              CCC_Type_modifier *const modify)
 {
-    if (entry && modify && (entry->private.status & CCC_ENTRY_OCCUPIED) != 0)
+    if (entry && modify && ((entry->private.status & CCC_ENTRY_OCCUPIED) != 0))
     {
         modify((CCC_Type_context){
             .type = data_at(entry->private.map, entry->private.index),
@@ -504,7 +504,7 @@ CCC_flat_hash_map_and_modify_context(CCC_Flat_hash_map_entry *const entry,
                                      CCC_Type_modifier *const modify,
                                      void *const context)
 {
-    if (entry && modify && (entry->private.status & CCC_ENTRY_OCCUPIED) != 0)
+    if (entry && modify && ((entry->private.status & CCC_ENTRY_OCCUPIED) != 0))
     {
         modify((CCC_Type_context){
             .type = data_at(entry->private.map, entry->private.index),
