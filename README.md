@@ -75,9 +75,8 @@ validate_sudoku_box(int const board[9][9], Bitset *const row_check,
                     Bitset *const col_check, size_t const row_start,
                     size_t const col_start)
 {
-    Bitset box_check = bitset_initialize(
-        NULL, NULL, DIGITS, DIGITS, bitset_blocks(DIGITS)
-    );
+    Bitset box_check
+        = bitset_with_compound_literal(DIGITS, bitset_blocks(DIGITS));
     CCC_Tribool was_on = CCC_FALSE;
     for (size_t r = row_start; r < row_start + BOX_SIZE; ++r)
     {
@@ -173,9 +172,9 @@ maxint(int const a, int const b)
 int
 main(void)
 {
-    Buffer const heights
-        = buffer_initialize(((int[HCAP]){0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1}), int, NULL,
-                   NULL, HCAP, HCAP);
+    Buffer const heights = buffer_with_compound_literal(
+        HCAP, (int[HCAP]){0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1}
+    );
     int const correct_trapped = 6;
     int trapped = 0;
     int lpeak = *buffer_front_as(&heights, int);
@@ -264,7 +263,8 @@ int
 main(void)
 {
     /* stack array, no allocation permission, no context data, capacity 2 */
-    Flat_doubled_ended_queue q = flat_doubled_ended_queue_initialize(int, NULL, NULL, 2, (int[2]){});
+    Flat_doubled_ended_queue q
+        = flat_doubled_ended_queue_with_compound_literal(2, (int[2]){});
     (void)push_back(&q, &(int){3});
     (void)push_front(&q, &(int){2});
     (void)push_back(&q, &(int){1}); /* Overwrite 2. */
@@ -332,15 +332,11 @@ enum : size_t
 int
 main(void)
 {
-    CCC_Flat_hash_map fh = flat_hash_map_initialize(
-        struct Key_val,
+    CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
         key,
         flat_hash_map_int_to_u64,
         flat_hash_map_id_cmp,
-        NULL,
-        NULL,
-        STANDARD_FIXED_CAP,
-        &(Standard_fixed_map){}
+        (Standard_fixed_map){}
     );
     /* Longest sequence is 1,2,3,4,5,6,7,8,9,10 of length 10. */
     int const nums[] = {
@@ -423,8 +419,9 @@ main(void)
     {
         HCAP = sizeof(heap) / sizeof(*heap),
     };
-    Flat_priority_queue priority_queue = flat_priority_queue_heapify_initialize(int, CCC_LES, int_cmp, NULL,
-                                              NULL, HCAP, HCAP, heap);
+    Flat_priority_queue priority_queue
+        = flat_priority_queue_heapify_initialize(int, CCC_LES, int_cmp, NULL,
+                                                 NULL, HCAP, HCAP, heap);
     Buffer const b = flat_priority_queue_heapsort(&priority_queue, &(int){0});
     int const *prev = begin(&b);
     assert(prev != NULL);
@@ -478,14 +475,10 @@ main(void)
     /* stack array of 25 elements with one slot for sentinel, intrusive field
        named elem, key field named key, no allocation permission, key comparison
        function, no context data. */
-    Array_adaptive_map s = array_adaptive_map_initialize(
-        struct Key_val,
+    Array_adaptive_map s = array_adaptive_map_with_compound_literal(
         key,
         Key_val_cmp,
-        NULL,
-        NULL,
-        array_adaptive_map_fixed_capacity(Key_val_fixed_map),
-        &(Key_val_fixed_map){}
+        (Key_val_fixed_map){}
     );
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
@@ -557,14 +550,10 @@ main(void)
 {
     /* stack array, user defined type, key field named key, no allocation
        permission, key comparison function, no context data. */
-    Array_tree_map s = array_tree_map_initialize(
-        struct Val,
+    Array_tree_map s = array_tree_map_with_compound_literal(
         key,
         hrmap_key_cmp,
-        NULL,
-        NULL,
-        array_tree_map_fixed_capacity(Key_val_fixed_map),
-        &(Key_val_fixed_map){}
+        (Key_val_fixed_map){}
     );
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
