@@ -865,11 +865,6 @@ void *CCC_priority_queue_push(CCC_Priority_queue *priority_queue, CCC_Priority_q
 Non-Intrusive containers exist when a flat container can operate without such help from the user. The `Flat_priority_queue` is a good example of this. When initializing we give it the following information.
 
 ```c
-#define CCC_flat_priority_queue_initialize(cmp_order, cmp_fn, allocate, context_data, capacity, data_pointer) \
-    CCC_impl_flat_priority_queue_initialize(cmp_order, cmp_fn, allocate, context_data, capacity, data_pointer)
-
-/* For example: */
-
 CCC_Flat_priority_queue flat_priority_queue
     = CCC_flat_priority_queue_with_compound_literal(
     CCC_LESSER,
