@@ -687,7 +687,7 @@ min(struct CCC_Adaptive_map const *t)
 }
 
 static struct CCC_Adaptive_map_node const *
-next(struct CCC_Adaptive_map const *const t,
+next(struct CCC_Adaptive_map const *const t [[maybe_unused]],
      struct CCC_Adaptive_map_node const *n, enum Link const traversal)
 {
     if (!n)

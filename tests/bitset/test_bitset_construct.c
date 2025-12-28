@@ -3,8 +3,8 @@
 #include "ccc/bitset.h"
 #include "ccc/types.h"
 #include "checkers.h"
+#include "str_view/str_view.h"
 #include "utility/stack_allocator.h"
-#include "utility/string_view/string_view.h"
 
 typedef typeof(*(CCC_Bitset){}.blocks) Bitblocks;
 
@@ -129,7 +129,7 @@ check_static_begin(bitset_test_copy_allocate)
 
 check_static_begin(bitset_test_init_from)
 {
-    SV_String_view input = SV("110110");
+    SV_Str_view input = SV_from("110110");
     struct Stack_allocator allocator
         = stack_allocator_initialize(Bitblocks, to_blocks(32));
     CCC_Bitset b = CCC_bitset_from(stack_allocator_allocate, &allocator, 0,
@@ -144,7 +144,7 @@ check_static_begin(bitset_test_init_from)
 
 check_static_begin(bitset_test_init_from_cap)
 {
-    SV_String_view input = SV("110110");
+    SV_Str_view input = SV_from("110110");
     struct Stack_allocator allocator
         = stack_allocator_initialize(Bitblocks, to_blocks(32));
     CCC_Bitset b = CCC_bitset_from(stack_allocator_allocate, &allocator, 0,
@@ -164,7 +164,7 @@ check_static_begin(bitset_test_init_from_cap)
 
 check_static_begin(bitset_test_init_from_fail)
 {
-    SV_String_view input = SV("110110");
+    SV_Str_view input = SV_from("110110");
     /* Forgot allocation function. */
     CCC_Bitset b
         = CCC_bitset_from(NULL, NULL, 0, SV_len(input), '1', SV_begin(input));
@@ -178,7 +178,7 @@ check_static_begin(bitset_test_init_from_fail)
 
 check_static_begin(bitset_test_init_from_cap_fail)
 {
-    SV_String_view input = SV("110110");
+    SV_Str_view input = SV_from("110110");
     /* Forgot allocation function. */
     CCC_Bitset b = CCC_bitset_from(NULL, NULL, 0, SV_len(input), '1',
                                    SV_begin(input), 99);

@@ -38,10 +38,10 @@ Enter 'q' to quit. */
 #include "ccc/priority_queue.h"
 #include "ccc/traits.h"
 #include "ccc/types.h"
+#include "str_view/str_view.h"
 #include "utility/allocate.h"
 #include "utility/cli.h"
 #include "utility/random.h"
-#include "utility/string_view/string_view.h"
 
 #define CYN "\033[38;5;14m"
 #define RED "\033[38;5;9m"
@@ -241,10 +241,10 @@ enum : Cell
     DIGIT_MASK = 0xF00,
 };
 
-static SV_String_view const prompt_message
-    = SV("Enter two vertices to find the shortest path between them (i.e. "
-         "A-Z). Enter q to quit:");
-static SV_String_view const quit_cmd = SV("q");
+static SV_Str_view const prompt_message
+    = SV_from("Enter two vertices to find the shortest path between them (i.e. "
+              "A-Z). Enter q to quit:");
+static SV_Str_view const quit_cmd = SV_from("q");
 
 /*==========================   Prototypes  ================================= */
 
@@ -302,10 +302,10 @@ static int paint_shortest_path(struct Graph *, struct Cost const *,
 static void encode_digits(struct Graph const *, struct Digit_encoding *);
 static enum Label_orientation get_direction(struct Point const *,
                                             struct Point const *);
-static struct Int_conversion parse_digits(SV_String_view, int lower_bound,
+static struct Int_conversion parse_digits(SV_Str_view, int lower_bound,
                                           int upper_bound,
                                           char const *err_message);
-static struct Path_request parse_path_request(struct Graph *, SV_String_view);
+static struct Path_request parse_path_request(struct Graph *, SV_Str_view);
 static void help(void);
 
 static Order order_priority_queue_costs(Type_comparator_context);
@@ -314,6 +314,7 @@ static uint64_t hash_parent_cells(Key_context point_struct);
 static uint64_t hash_64_bits(uint64_t);
 
 static unsigned count_digits(uintmax_t n);
+static void print_str_view(FILE *, SV_Str_view);
 
 /*======================  Main Arg Handling  ===============================*/
 
@@ -333,36 +334,36 @@ main(int argc, char **argv)
     };
     for (int i = 1; i < argc; ++i)
     {
-        SV_String_view const arg = SV_sv(argv[i]);
-        if (SV_starts_with(arg, SV("-r=")))
+        SV_Str_view const arg = SV_from_terminated(argv[i]);
+        if (SV_starts_with(arg, SV_from("-r=")))
         {
             struct Int_conversion const row_arg
                 = parse_digits(arg, ROW_COL_MIN, INT_MAX,
                                "rows_below required minimum or negative\n");
             graph.rows = row_arg.conversion;
         }
-        else if (SV_starts_with(arg, SV("-c=")))
+        else if (SV_starts_with(arg, SV_from("-c=")))
         {
             struct Int_conversion const col_arg
                 = parse_digits(arg, ROW_COL_MIN, INT_MAX,
                                "cols below required minimum or negative.\n");
             graph.cols = col_arg.conversion;
         }
-        else if (SV_starts_with(arg, SV("-v=")))
+        else if (SV_starts_with(arg, SV_from("-v=")))
         {
             struct Int_conversion const vert_arg
                 = parse_digits(arg, 1, MAX_VERTICES,
                                "vertices outside of valid range (1-26).\n");
             graph.vertices = vert_arg.conversion;
         }
-        else if (SV_starts_with(arg, SV("-s=")))
+        else if (SV_starts_with(arg, SV_from("-s=")))
         {
             struct Int_conversion const vert_arg = parse_digits(
                 arg, 0, MAX_SPEED,
                 "animation speed outside of valid range (1-7).\n");
             graph.speed.tv_nsec = speeds[vert_arg.conversion];
         }
-        else if (SV_starts_with(arg, SV("-h")))
+        else if (SV_starts_with(arg, SV_from("-h")))
         {
             help();
         }
@@ -706,12 +707,12 @@ find_shortest_paths(struct Graph *const graph)
         {
             (void)fprintf(stdout, "Total Cost: %d\n", total_cost);
         }
-        SV_print(stdout, prompt_message);
+        print_str_view(stdout, prompt_message);
         ssize_t read = 0;
         while ((read = getline(&linepointer, &len, stdin)) > 0)
         {
             struct Path_request pr = parse_path_request(
-                graph, (SV_String_view){.s = linepointer, .len = read - 1});
+                graph, (SV_Str_view){.str = linepointer, .len = read - 1});
             if (pr.source == 'q')
             {
                 free(linepointer);
@@ -1175,7 +1176,7 @@ hash_64_bits(uint64_t x)
    parsing cannot be completed an empty path request with the null terminator is
    returned. */
 static struct Path_request
-parse_path_request(struct Graph *const g, SV_String_view const r)
+parse_path_request(struct Graph *const g, SV_Str_view const r)
 {
     if (SV_contains(r, quit_cmd))
     {
@@ -1196,16 +1197,16 @@ parse_path_request(struct Graph *const g, SV_String_view const r)
 }
 
 static struct Int_conversion
-parse_digits(SV_String_view arg, int const lower_bound, int const upper_bound,
+parse_digits(SV_Str_view arg, int const lower_bound, int const upper_bound,
              char const *const err_message)
 {
-    size_t const eql = SV_rfind(arg, SV_npos(arg), SV("="));
+    size_t const eql = SV_reverse_find(arg, SV_npos(arg), SV_from("="));
     if (eql == SV_npos(arg))
     {
         return (struct Int_conversion){.status = CONV_ER};
     }
     arg = SV_substr(arg, eql + 1, ULLONG_MAX);
-    if (SV_empty(arg))
+    if (SV_is_empty(arg))
     {
         (void)fprintf(stderr, "please specify element to convert.\n");
         return (struct Int_conversion){.status = CONV_ER};
@@ -1231,6 +1232,15 @@ count_digits(uintmax_t n)
         ++res;
     }
     return res;
+}
+
+static void
+print_str_view(FILE *const f, SV_Str_view const sv)
+{
+    if (!SV_is_empty(sv))
+    {
+        (void)fwrite(SV_begin(sv), sizeof(char), SV_len(sv), f);
+    }
 }
 
 static void

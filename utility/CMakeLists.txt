@@ -6,15 +6,12 @@ project("ccc utility"
 )
 add_custom_target(utility)
 
-add_library(string_view string_view/string_view.h string_view/string_view.c)
-add_dependencies(utility string_view)
-
 add_library(random random.h random.c)
 add_dependencies(utility random)
 
 add_library(cli cli.h cli.c)
 target_link_libraries(cli PUBLIC
-  string_view
+  str_view::str_view
 )
 add_dependencies(utility cli)
 

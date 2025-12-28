@@ -35,6 +35,19 @@ if (EXISTS "${PROJECT_SOURCE_DIR}/tests" AND EXISTS "${PROJECT_SOURCE_DIR}/sampl
     include(tools/scanners.cmake)
 endif()
 
+# If we are in our own repository build environment, not a release, then we
+# will bring in the str_view dependency for our samples and testing.
+if (EXISTS "${PROJECT_SOURCE_DIR}/tests" OR EXISTS "${PROJECT_SOURCE_DIR}/samples" OR EXISTS "${PROJECT_SOURCE_DIR}/utility")
+    include(FetchContent)
+    FetchContent_Declare(
+      str_view
+      URL https://github.com/skeletoss/str_view/releases/download/v0.7.0/str_view-v0.7.0.zip
+      DOWNLOAD_EXTRACT_TIMESTAMP FALSE
+    )
+    FetchContent_MakeAvailable(str_view)
+    target_compile_options(str_view PRIVATE "-w")
+endif()
+
 if (NOT CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     message(STATUS "This project has a top-level one called [${CMAKE_PROJECT_NAME}]")
 else()

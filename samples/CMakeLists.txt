@@ -11,7 +11,7 @@ add_executable(maze maze.c)
 target_link_libraries(maze PRIVATE
   cli
   random
-  string_view
+  str_view::str_view
   ccc
   allocate
 )
@@ -21,7 +21,7 @@ add_executable(graph graph.c)
 target_link_libraries(graph PRIVATE
   cli
   random
-  string_view
+  str_view::str_view
   ccc
   allocate
 )
@@ -30,7 +30,7 @@ add_dependencies(samples graph)
 add_executable(words words.c)
 target_link_libraries(words PRIVATE
   cli
-  string_view
+  str_view::str_view
   ccc
   allocate
   string_arena
@@ -40,7 +40,7 @@ add_dependencies(samples words)
 add_executable(ccczip ccczip.c)
 target_link_libraries(ccczip PRIVATE
   cli
-  string_view
+  str_view::str_view
   ccc
   allocate
   string_arena

@@ -782,8 +782,8 @@ find(struct CCC_Tree_map const *const map, void const *const key)
 }
 
 static struct CCC_Tree_map_node *
-next(struct CCC_Tree_map const *const map, struct CCC_Tree_map_node const *n,
-     enum Link const traversal)
+next(struct CCC_Tree_map const *const map [[maybe_unused]],
+     struct CCC_Tree_map_node const *n, enum Link const traversal)
 {
     if (!n)
     {
@@ -829,7 +829,8 @@ equal_range(struct CCC_Tree_map const *const map, void const *const begin_key,
 }
 
 static inline void
-init_node(struct CCC_Tree_map *const map, struct CCC_Tree_map_node *const e)
+init_node(struct CCC_Tree_map *const map [[maybe_unused]],
+          struct CCC_Tree_map_node *const e)
 {
     assert(e != NULL);
     assert(map != NULL);
