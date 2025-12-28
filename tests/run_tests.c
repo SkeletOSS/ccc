@@ -53,24 +53,24 @@ See checkers.h for the testing framework all tests agree to use. */
 #include <sys/wait.h>
 #include <unistd.h>
 
-#include "../utility/string_view/string_view.h"
 #include "checkers.h"
+#include "str_view/str_view.h"
 
 struct Path_bin
 {
-    SV_String_view path;
-    SV_String_view bin;
+    SV_Str_view path;
+    SV_Str_view bin;
 };
 
-static SV_String_view const test_prefix = SV("test_");
+static SV_Str_view const test_prefix = SV_from("test_");
 static char const *const pass_mark = "⬤";
 static char const *const fail_mark = "X";
 static char const *const err_message = "Test process was unexpectedly killed.";
 
-static enum Check_result run(SV_String_view);
+static enum Check_result run(SV_Str_view);
 static enum Check_result run_test_process(struct Path_bin);
-static DIR *open_test_dir(SV_String_view);
-static bool fill_path(char *, SV_String_view, SV_String_view);
+static DIR *open_test_dir(SV_Str_view);
+static bool fill_path(char *, SV_Str_view, SV_Str_view);
 
 /** Logs errors to stderr. Change stream as needed. */
 #define logerr(format_string...) (void)fprintf(stderr, format_string)
@@ -84,11 +84,11 @@ main(int argc, char **argv)
     {
         return 0;
     }
-    SV_String_view arg_view = SV_sv(argv[1]);
+    SV_Str_view arg_view = SV_from_terminated(argv[1]);
     return check_run(run(arg_view));
 }
 
-check_static_begin(run, SV_String_view const tests_dir)
+check_static_begin(run, SV_Str_view const tests_dir)
 {
     DIR *dir_pointer = open_test_dir(tests_dir);
     check(dir_pointer != NULL, true);
@@ -98,7 +98,7 @@ check_static_begin(run, SV_String_view const tests_dir)
     struct dirent const *d;
     while ((d = readdir(dir_pointer)))
     {
-        SV_String_view const entry = SV_sv(d->d_name);
+        SV_Str_view const entry = SV_from_terminated(d->d_name);
         if (!SV_starts_with(entry, test_prefix))
         {
             continue;
@@ -106,8 +106,8 @@ check_static_begin(run, SV_String_view const tests_dir)
         check(fill_path(absolute_path, tests_dir, entry), true);
         printf("%s(%s%s", CHECK_CYAN, SV_begin(entry), CHECK_NONE);
         (void)fflush(stdout);
-        enum Check_result const res
-            = run_test_process((struct Path_bin){SV_sv(absolute_path), entry});
+        enum Check_result const res = run_test_process(
+            (struct Path_bin){SV_from_terminated(absolute_path), entry});
         switch (res)
         {
             case CHECK_ERROR:
@@ -136,7 +136,8 @@ check_static_begin(run, SV_String_view const tests_dir)
 
 check_static_begin(run_test_process, struct Path_bin pb)
 {
-    check_error(SV_empty(pb.path), false, { logerr("No test provided.\n"); });
+    check_error(SV_is_empty(pb.path), false,
+                { logerr("No test provided.\n"); });
     pid_t const test_proc = fork();
     if (test_proc == 0)
     {
@@ -166,9 +167,9 @@ check_static_begin(run_test_process, struct Path_bin pb)
 }
 
 static DIR *
-open_test_dir(SV_String_view tests_folder)
+open_test_dir(SV_Str_view tests_folder)
 {
-    if (SV_empty(tests_folder) || SV_len(tests_folder) > FILESYS_MAX_PATH)
+    if (SV_is_empty(tests_folder) || SV_len(tests_folder) > FILESYS_MAX_PATH)
     {
         logerr("Invalid input to path to test executables %s\n",
                SV_begin(tests_folder));
@@ -184,10 +185,10 @@ open_test_dir(SV_String_view tests_folder)
 }
 
 static bool
-fill_path(char *path_buf, SV_String_view tests_dir, SV_String_view entry)
+fill_path(char *path_buf, SV_Str_view tests_dir, SV_Str_view entry)
 {
     size_t const dir_bytes = SV_fill(FILESYS_MAX_PATH, path_buf, tests_dir);
-    if (FILESYS_MAX_PATH - dir_bytes < SV_size(entry))
+    if (FILESYS_MAX_PATH - dir_bytes < SV_bytes(entry))
     {
         logerr("Relative path exceeds FILESYS_MAX_PATH?\n%s", path_buf);
         return false;

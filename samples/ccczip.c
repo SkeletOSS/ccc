@@ -33,9 +33,9 @@ algorithms use a wide range of data structures. */
 #include "ccc/flat_priority_queue.h"
 #include "ccc/traits.h"
 #include "ccc/types.h"
+#include "str_view/str_view.h"
 #include "utility/allocate.h"
 #include "utility/string_arena.h"
-#include "utility/string_view/string_view.h"
 
 /*===========================   Type Declarations  ==========================*/
 
@@ -173,16 +173,16 @@ struct Huffman_encoding
 /** Files the user wants zipped or unzipped. */
 struct Zip_actions
 {
-    SV_String_view zip;
-    SV_String_view unzip;
+    SV_Str_view zip;
+    SV_Str_view unzip;
 };
 
-static SV_String_view const output_dir = SV("samples/output/");
-static SV_String_view const cccz_suffix = SV(".cccz");
+static SV_Str_view const output_dir = SV_from("samples/output/");
+static SV_Str_view const cccz_suffix = SV_from(".cccz");
 
 /*===========================      Prototypes      ==========================*/
 
-static void zip_file(SV_String_view to_compress);
+static void zip_file(SV_Str_view to_compress);
 static Flat_priority_queue build_encoding_priority_queue(FILE *f,
                                                          struct Huffman_tree *);
 static void bitq_push_back(struct Bit_queue *, CCC_Tribool);
@@ -208,7 +208,7 @@ static void print_inner_tree(struct Huffman_tree const *tree, size_t node,
 static void print_node(struct Huffman_tree const *tree, size_t node);
 static bool is_leaf(struct Huffman_tree const *tree, size_t node);
 static void print_bitq(struct Bit_queue const *bq);
-static void unzip_file(SV_String_view unzip);
+static void unzip_file(SV_Str_view unzip);
 static struct Huffman_tree
 reconstruct_tree(struct Compressed_huffman_tree *blueprint);
 static void reconstruct_text(FILE *f, struct Huffman_tree const *,
@@ -219,10 +219,10 @@ static size_t branch_index(struct Huffman_tree const *t, size_t node,
 static size_t parent_index(struct Huffman_tree const *t, size_t node);
 static char char_index(struct Huffman_tree const *t, size_t node);
 static struct Huffman_node *node_at(struct Huffman_tree const *t, size_t node);
-static void write_to_file(SV_String_view original_filepath,
+static void write_to_file(SV_Str_view original_filepath,
                           size_t original_filesize, struct Huffman_encoding *);
 static void write_bitq(FILE *cccz, struct Bit_queue *bq);
-static struct Huffman_encoding read_from_file(SV_String_view unzip);
+static struct Huffman_encoding read_from_file(SV_Str_view unzip);
 static size_t readbytes(FILE *f, void *base, size_t to_read);
 static size_t writebytes(FILE *f, void const *base, size_t to_write);
 static void fill_bitq(FILE *f, struct Bit_queue *bq, size_t expected_bits);
@@ -257,7 +257,7 @@ Do not return early or use goto out of this macro or memory will be leaked. */
         ptrdiff_t read = 0;                                                    \
         while ((read = getline(&linepointer, &len, f)) > 0)                    \
         {                                                                      \
-            SV_String_view const line = {.s = linepointer, .len = read};       \
+            SV_Str_view const line = {.str = linepointer, .len = read};        \
             for (char const *char_iterator_name = SV_begin(line);              \
                  char_iterator_name != SV_end(line);                           \
                  char_iterator_name = SV_next(char_iterator_name))             \
@@ -281,32 +281,32 @@ main(int argc, char **argv)
     struct Zip_actions todo = {};
     for (int arg = 1; arg < argc; ++arg)
     {
-        SV_String_view const sv_arg = SV_sv(argv[arg]);
-        if (SV_starts_with(sv_arg, SV("-h")))
+        SV_Str_view const sv_arg = SV_from_terminated(argv[arg]);
+        if (SV_starts_with(sv_arg, SV_from("-h")))
         {
             print_help();
             return 0;
         }
-        if (SV_starts_with(sv_arg, SV("-c=")))
+        if (SV_starts_with(sv_arg, SV_from("-c=")))
         {
-            SV_String_view const raw_file = SV_substr(
-                sv_arg, SV_find(sv_arg, 0, SV("=")) + 1, SV_len(sv_arg));
-            check(!SV_empty(raw_file));
+            SV_Str_view const raw_file = SV_substr(
+                sv_arg, SV_find(sv_arg, 0, SV_from("=")) + 1, SV_len(sv_arg));
+            check(!SV_is_empty(raw_file));
             todo.zip = raw_file;
         }
-        else if (SV_starts_with(sv_arg, SV("-d=")))
+        else if (SV_starts_with(sv_arg, SV_from("-d=")))
         {
-            SV_String_view const raw_file = SV_substr(
-                sv_arg, SV_find(sv_arg, 0, SV("=")) + 1, SV_len(sv_arg));
-            check(!SV_empty(raw_file));
+            SV_Str_view const raw_file = SV_substr(
+                sv_arg, SV_find(sv_arg, 0, SV_from("=")) + 1, SV_len(sv_arg));
+            check(!SV_is_empty(raw_file));
             todo.unzip = raw_file;
         }
     }
-    if (!SV_empty(todo.zip))
+    if (!SV_is_empty(todo.zip))
     {
         zip_file(todo.zip);
     }
-    if (!SV_empty(todo.unzip))
+    if (!SV_is_empty(todo.unzip))
     {
         unzip_file(todo.unzip);
     }
@@ -318,7 +318,7 @@ main(int argc, char **argv)
 /** Zips the requested file via Huffman Encoding into the output directory. The
 compressed file has a header that can be used to reconstruct the data. */
 void
-zip_file(SV_String_view const to_compress)
+zip_file(SV_Str_view const to_compress)
 {
     FILE *const f = fopen(SV_begin(to_compress), "r");
     check(f, printf("%s", strerror(errno)););
@@ -593,27 +593,26 @@ compress_tree(struct Huffman_tree *const tree)
 /** Writes all encoded information to a file with the help of a header for
 later file reconstruction. */
 static void
-write_to_file(SV_String_view const original_filepath,
+write_to_file(SV_Str_view const original_filepath,
               size_t const original_filesize,
               struct Huffman_encoding *const header)
 {
     /* We write all new files to output directory so create the new path. */
     char path_to_cccz[FILESYS_MAX_PATH];
-    size_t const dir_delim
-        = SV_rfind(original_filepath, SV_len(original_filepath), SV("/"));
-    SV_String_view const raw_file
-        = dir_delim == SV_npos(original_filepath)
-            ? original_filepath
-            : SV_substr(original_filepath, dir_delim + 1,
-                        SV_len(original_filepath));
+    size_t const dir_delim = SV_reverse_find(
+        original_filepath, SV_len(original_filepath), SV_from("/"));
+    SV_Str_view const raw_file = dir_delim == SV_npos(original_filepath)
+                                   ? original_filepath
+                                   : SV_substr(original_filepath, dir_delim + 1,
+                                               SV_len(original_filepath));
     size_t const total_bytes
-        = SV_size(output_dir) + SV_size(raw_file) + SV_size(cccz_suffix);
+        = SV_bytes(output_dir) + SV_bytes(raw_file) + SV_bytes(cccz_suffix);
     check(total_bytes < FILESYS_MAX_PATH);
     size_t const path_bytes
-        = SV_fill(SV_size(output_dir), path_to_cccz, output_dir);
-    size_t const file_bytes
-        = SV_fill(SV_size(raw_file), path_to_cccz + (path_bytes - 1), raw_file);
-    (void)SV_fill(SV_size(cccz_suffix),
+        = SV_fill(SV_bytes(output_dir), path_to_cccz, output_dir);
+    size_t const file_bytes = SV_fill(
+        SV_bytes(raw_file), path_to_cccz + (path_bytes - 1), raw_file);
+    (void)SV_fill(SV_bytes(cccz_suffix),
                   path_to_cccz + (path_bytes - 1) + (file_bytes - 1),
                   cccz_suffix);
 
@@ -703,7 +702,7 @@ writebytes(FILE *const f, void const *const base, size_t const to_write)
 is reconstructed and a copy of the original text is written to the output
 directory as a new file with the same name. */
 static void
-unzip_file(SV_String_view unzip)
+unzip_file(SV_Str_view unzip)
 {
     /* First we verify the compressed file is correct before creating new. */
     struct Huffman_encoding he = read_from_file(unzip);
@@ -714,15 +713,16 @@ unzip_file(SV_String_view unzip)
     CCC_Tribool has_suf = SV_ends_with(unzip, cccz_suffix);
     check(has_suf);
     unzip = SV_remove_suffix(unzip, SV_len(cccz_suffix));
-    size_t const dir_delim = SV_rfind(unzip, SV_len(unzip), SV("/"));
-    SV_String_view const raw_file
+    size_t const dir_delim
+        = SV_reverse_find(unzip, SV_len(unzip), SV_from("/"));
+    SV_Str_view const raw_file
         = dir_delim == SV_npos(unzip)
             ? unzip
             : SV_substr(unzip, dir_delim + 1, SV_len(unzip));
-    size_t const total_bytes = SV_size(output_dir) + SV_size(raw_file);
+    size_t const total_bytes = SV_bytes(output_dir) + SV_bytes(raw_file);
     check(total_bytes < FILESYS_MAX_PATH);
-    size_t const prefix = SV_fill(SV_size(output_dir), path, output_dir);
-    (void)SV_fill(SV_size(raw_file), path + (prefix - 1), raw_file);
+    size_t const prefix = SV_fill(SV_bytes(output_dir), path, output_dir);
+    (void)SV_fill(SV_bytes(raw_file), path + (prefix - 1), raw_file);
 
     /* Checks are good and path is set this will be a fresh copy. */
     FILE *const copy_of_original = fopen(path, "w");
@@ -744,9 +744,9 @@ unzip_file(SV_String_view unzip)
 file. Once complete this function returns all information needed to reconstruct
 the tree and write out a copy of the original file to the output directory. */
 static struct Huffman_encoding
-read_from_file(SV_String_view const unzip)
+read_from_file(SV_Str_view const unzip)
 {
-    CCC_Tribool has_suffix = SV_ends_with(unzip, SV(".cccz"));
+    CCC_Tribool has_suffix = SV_ends_with(unzip, SV_from(".cccz"));
     check(has_suffix);
     FILE *const cccz = fopen(SV_begin(unzip), "r");
     check(cccz, (void)fprintf(stderr, "%s", strerror(errno)););

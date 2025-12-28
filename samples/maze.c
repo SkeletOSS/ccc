@@ -31,10 +31,10 @@ Example:
 #include "ccc/flat_priority_queue.h"
 #include "ccc/traits.h"
 #include "ccc/types.h"
+#include "str_view/str_view.h"
 #include "utility/allocate.h"
 #include "utility/cli.h"
 #include "utility/random.h"
-#include "utility/string_view/string_view.h"
 
 /*=======================   Maze Helper Types   =============================*/
 
@@ -116,13 +116,13 @@ enum : uint16_t
     CACHE_BIT = 0b0001000000000000,
 };
 
-SV_String_view const row_flag = SV("-r=");
-SV_String_view const col_flag = SV("-c=");
-SV_String_view const speed_flag = SV("-s=");
-SV_String_view const help_flag = SV("-h");
-SV_String_view const escape = SV("\033[");
-SV_String_view const semi_colon = SV(";");
-SV_String_view const cursor_pos_specifier = SV("f");
+SV_Str_view const row_flag = SV_from("-r=");
+SV_Str_view const col_flag = SV_from("-c=");
+SV_Str_view const speed_flag = SV_from("-s=");
+SV_Str_view const help_flag = SV_from("-h");
+SV_Str_view const escape = SV_from("\033[");
+SV_Str_view const semi_colon = SV_from(";");
+SV_Str_view const cursor_pos_specifier = SV_from("f");
 
 /*==========================   Prototypes  ================================= */
 
@@ -154,7 +154,7 @@ static bool can_build_new_square(struct Maze const *, int r, int c);
 static void help(void);
 static struct Point rand_point(struct Maze const *);
 static Order order_prim_cells(Type_comparator_context);
-static struct Int_conversion parse_digits(SV_String_view);
+static struct Int_conversion parse_digits(SV_Str_view);
 static CCC_Order prim_cell_order(Key_comparator_context);
 static uint64_t prim_cell_hash_fn(Key_context);
 static uint64_t hash_64_bits(uint64_t);
@@ -176,7 +176,7 @@ main(int argc, char **argv)
     };
     for (int i = 1; i < argc; ++i)
     {
-        SV_String_view const arg = SV_sv(argv[i]);
+        SV_Str_view const arg = SV_from_terminated(argv[i]);
         if (SV_starts_with(arg, row_flag))
         {
             struct Int_conversion const row_arg = parse_digits(arg);
@@ -563,15 +563,15 @@ can_build_new_square(struct Maze const *const maze, int const r, int const c)
 /*===========================    Misc    ====================================*/
 
 static struct Int_conversion
-parse_digits(SV_String_view arg)
+parse_digits(SV_Str_view arg)
 {
-    size_t const eql = SV_rfind(arg, SV_npos(arg), SV("="));
+    size_t const eql = SV_reverse_find(arg, SV_npos(arg), SV_from("="));
     if (eql == SV_npos(arg))
     {
         return (struct Int_conversion){.status = CONV_ER};
     }
     arg = SV_substr(arg, eql, ULLONG_MAX);
-    if (SV_empty(arg))
+    if (SV_is_empty(arg))
     {
         (void)fprintf(stderr, "please specify element to convert.\n");
         return (struct Int_conversion){.status = CONV_ER};

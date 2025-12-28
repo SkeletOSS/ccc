@@ -32,10 +32,10 @@ Please specify a command as follows:
 #include "ccc/flat_priority_queue.h"
 #include "ccc/traits.h"
 #include "ccc/types.h"
+#include "str_view/str_view.h"
 #include "utility/allocate.h"
 #include "utility/cli.h"
 #include "utility/string_arena.h"
-#include "utility/string_view/string_view.h"
 
 enum Action_type
 {
@@ -54,17 +54,17 @@ typedef struct
 
 struct Action_pack
 {
-    SV_String_view file;
+    SV_Str_view file;
     enum Action_type type;
     union
     {
         int n;
-        SV_String_view w;
+        SV_Str_view w;
     };
     union
     {
         void (*freq_fn)(FILE *file, int n);
-        void (*find_fn)(FILE *file, SV_String_view w);
+        void (*find_fn)(FILE *file, SV_Str_view w);
     };
 };
 
@@ -80,26 +80,26 @@ enum : int
     ALL_FREQUENCIES = 0,
 };
 
-static SV_String_view const space = SV(" ");
-static SV_String_view const directions
-    = SV("\nPlease specify a command as follows:\n"
-         "./build/[debug/]bin/words [flag] -f=[path/to/file]\n"
-         "[flag]:\n"
-         "-f=[/path/to/file]\n"
-         "-c\n"
-         "\treports the words by count in descending order.\n"
-         "-rc\n"
-         "\treports words by count in ascending order.\n"
-         "-top=N\n"
-         "\treports the top N words by frequency.\n"
-         "-last=N\n"
-         "\treports the last N words by frequency\n"
-         "-alph=N\n"
-         "\treports the first N words alphabetically with counts.\n"
-         "-ralph=N\n"
-         "\treports the last N words alphabetically with counts.\n"
-         "-find=[WORD]\n"
-         "\treports the count of the specified word.\n");
+static SV_Str_view const space = SV_from(" ");
+static SV_Str_view const directions
+    = SV_from("\nPlease specify a command as follows:\n"
+              "./build/[debug/]bin/words [flag] -f=[path/to/file]\n"
+              "[flag]:\n"
+              "-f=[/path/to/file]\n"
+              "-c\n"
+              "\treports the words by count in descending order.\n"
+              "-rc\n"
+              "\treports words by count in ascending order.\n"
+              "-top=N\n"
+              "\treports the top N words by frequency.\n"
+              "-last=N\n"
+              "\treports the last N words by frequency\n"
+              "-alph=N\n"
+              "\treports the first N words alphabetically with counts.\n"
+              "-ralph=N\n"
+              "\treports the last N words alphabetically with counts.\n"
+              "-find=[WORD]\n"
+              "\treports the count of the specified word.\n");
 
 /*=======================   Prototypes     ==================================*/
 
@@ -118,7 +118,7 @@ static SV_String_view const directions
     }                                                                          \
     while (0)
 
-static void print_found(FILE *file, SV_String_view w);
+static void print_found(FILE *file, SV_Str_view w);
 static void print_top_n(FILE *file, int n);
 static void print_last_n(FILE *file, int n);
 static void print_alpha_n(FILE *file, int n);
@@ -126,11 +126,10 @@ static void print_ralpha_n(FILE *file, int n);
 static Buffer copy_frequencies(Array_adaptive_map const *map);
 static void print_n(Array_adaptive_map *, CCC_Order, struct String_arena *,
                     int n);
-static struct Int_conversion parse_n_ranks(SV_String_view arg);
+static struct Int_conversion parse_n_ranks(SV_Str_view arg);
 
 /* String Helper Functions */
-static struct String_offset clean_word(struct String_arena *,
-                                       SV_String_view wv);
+static struct String_offset clean_word(struct String_arena *, SV_Str_view wv);
 
 /* Container Functions */
 static Array_adaptive_map create_frequency_map(struct String_arena *, FILE *);
@@ -138,16 +137,17 @@ static Order order_string_keys(Key_comparator_context);
 static Order order_words(Type_comparator_context);
 
 /* Misc. Functions */
-static FILE *open_file(SV_String_view file);
+static FILE *open_file(SV_Str_view file);
+static void print_str_view(FILE *f, SV_Str_view sv);
 
 /*=======================     Main         ==================================*/
 
 int
 main(int argc, char *argv[])
 {
-    if (argc == 2 && SV_starts_with(SV_sv(argv[1]), SV("-h")))
+    if (argc == 2 && SV_starts_with(SV_from_terminated(argv[1]), SV_from("-h")))
     {
-        SV_print(stdout, directions);
+        print_str_view(stdout, directions);
         return 0;
     }
     if (argc < 3)
@@ -157,20 +157,20 @@ main(int argc, char *argv[])
     struct Action_pack exe = {};
     for (int arg = 1; arg < argc; ++arg)
     {
-        SV_String_view const sv_arg = SV_sv(argv[arg]);
-        if (SV_starts_with(sv_arg, SV("-c")))
+        SV_Str_view const sv_arg = SV_from_terminated(argv[arg]);
+        if (SV_starts_with(sv_arg, SV_from("-c")))
         {
             exe.type = COUNT;
             exe.freq_fn = print_top_n;
             exe.n = ALL_FREQUENCIES;
         }
-        else if (SV_starts_with(sv_arg, SV("-rc")))
+        else if (SV_starts_with(sv_arg, SV_from("-rc")))
         {
             exe.type = COUNT;
             exe.freq_fn = print_last_n;
             exe.n = ALL_FREQUENCIES;
         }
-        else if (SV_starts_with(sv_arg, SV("-top=")))
+        else if (SV_starts_with(sv_arg, SV_from("-top=")))
         {
             exe.type = COUNT;
             exe.freq_fn = print_top_n;
@@ -179,7 +179,7 @@ main(int argc, char *argv[])
                   logerr("cannot convert -top= flag to int"););
             exe.n = c.conversion;
         }
-        else if (SV_starts_with(sv_arg, SV("-last=")))
+        else if (SV_starts_with(sv_arg, SV_from("-last=")))
         {
             exe.type = COUNT;
             exe.freq_fn = print_last_n;
@@ -188,7 +188,7 @@ main(int argc, char *argv[])
                   logerr("cannot convert -last= flat to int"););
             exe.n = c.conversion;
         }
-        else if (SV_starts_with(sv_arg, SV("-alph=")))
+        else if (SV_starts_with(sv_arg, SV_from("-alph=")))
         {
             exe.type = COUNT;
             exe.freq_fn = print_alpha_n;
@@ -197,7 +197,7 @@ main(int argc, char *argv[])
                   logerr("cannot convert -alph= flag to int"););
             exe.n = c.conversion;
         }
-        else if (SV_starts_with(sv_arg, SV("-ralph=")))
+        else if (SV_starts_with(sv_arg, SV_from("-ralph=")))
         {
             exe.type = COUNT;
             exe.freq_fn = print_ralpha_n;
@@ -206,26 +206,26 @@ main(int argc, char *argv[])
                   logerr("cannot convert -ralph= flat to int"););
             exe.n = c.conversion;
         }
-        else if (SV_starts_with(sv_arg, SV("-find=")))
+        else if (SV_starts_with(sv_arg, SV_from("-find=")))
         {
-            SV_String_view const raw_word = SV_substr(
-                sv_arg, SV_find(sv_arg, 0, SV("=")) + 1, SV_len(sv_arg));
-            check(!SV_empty(raw_word),
+            SV_Str_view const raw_word = SV_substr(
+                sv_arg, SV_find(sv_arg, 0, SV_from("=")) + 1, SV_len(sv_arg));
+            check(!SV_is_empty(raw_word),
                   logerr("-find= flag has invalid entry"););
             exe.type = FIND;
             exe.find_fn = print_found;
             exe.w = raw_word;
         }
-        else if (SV_starts_with(sv_arg, SV("-f=")))
+        else if (SV_starts_with(sv_arg, SV_from("-f=")))
         {
-            SV_String_view const raw_file = SV_substr(
-                sv_arg, SV_find(sv_arg, 0, SV("=")) + 1, SV_len(sv_arg));
-            check(!SV_empty(raw_file), logerr("file string is empty"););
+            SV_Str_view const raw_file = SV_substr(
+                sv_arg, SV_find(sv_arg, 0, SV_from("=")) + 1, SV_len(sv_arg));
+            check(!SV_is_empty(raw_file), logerr("file string is empty"););
             exe.file = raw_file;
         }
-        else if (SV_starts_with(sv_arg, SV("-h")))
+        else if (SV_starts_with(sv_arg, SV_from("-h")))
         {
-            SV_print(stdout, directions);
+            print_str_view(stdout, directions);
             return 0;
         }
         else
@@ -240,9 +240,9 @@ main(int argc, char *argv[])
     FILE *const f = open_file(exe.file);
     if (!f)
     {
-        if (exe.file.s)
+        if (SV_begin(exe.file))
         {
-            logerr("error opening: %s\n", exe.file.s);
+            logerr("error opening: %s\n", SV_begin(exe.file));
         }
         (void)fclose(f);
         return 1;
@@ -251,7 +251,7 @@ main(int argc, char *argv[])
     {
         exe.freq_fn(f, exe.n);
     }
-    else if (exe.type == FIND && exe.w.s)
+    else if (exe.type == FIND && SV_begin(exe.w))
     {
         exe.find_fn(f, exe.w);
     }
@@ -268,7 +268,7 @@ main(int argc, char *argv[])
 /*=======================   Static Impl    ==================================*/
 
 static void
-print_found(FILE *const f, SV_String_view w)
+print_found(FILE *const f, SV_Str_view w)
 {
     struct String_arena a = string_arena_create(ARENA_START_CAP);
     check(a.arena);
@@ -426,10 +426,10 @@ create_frequency_map(struct String_arena *const a, FILE *const f)
         Word, ofs, order_string_keys, std_allocate, a, 0, NULL);
     while ((read = getline(&linepointer, &len, f)) > 0)
     {
-        SV_String_view const line = {.s = linepointer, .len = read - 1};
-        for (SV_String_view word_view = SV_begin_tok(line, space);
-             !SV_end_tok(line, word_view);
-             word_view = SV_next_tok(line, word_view, space))
+        SV_Str_view const line = {.str = linepointer, .len = read - 1};
+        for (SV_Str_view word_view = SV_token_begin(line, space);
+             !SV_token_end(line, word_view);
+             word_view = SV_token_next(line, word_view, space))
         {
             struct String_offset const cw = clean_word(a, word_view);
             if (!cw.error)
@@ -449,7 +449,7 @@ create_frequency_map(struct String_arena *const a, FILE *const f)
 }
 
 static struct String_offset
-clean_word(struct String_arena *const a, SV_String_view wv)
+clean_word(struct String_arena *const a, SV_Str_view wv)
 {
     /* It is hard to know how many characters will make it to a cleaned word
        and one pass is ideal so arena api allows push back on last alloc. */
@@ -524,15 +524,15 @@ order_words(Type_comparator_context const c)
 /*=======================   CLI Helpers    ==================================*/
 
 static struct Int_conversion
-parse_n_ranks(SV_String_view arg)
+parse_n_ranks(SV_Str_view arg)
 {
-    size_t const eql = SV_rfind(arg, SV_npos(arg), SV("="));
+    size_t const eql = SV_reverse_find(arg, SV_npos(arg), SV_from("="));
     if (eql == SV_npos(arg))
     {
         return (struct Int_conversion){.status = CONV_ER};
     }
     arg = SV_substr(arg, eql + 1, ULLONG_MAX);
-    if (SV_empty(arg))
+    if (SV_is_empty(arg))
     {
         (void)fprintf(stderr, "please specify word frequency range.\n");
         return (struct Int_conversion){.status = CONV_ER};
@@ -540,10 +540,19 @@ parse_n_ranks(SV_String_view arg)
     return convert_to_int(SV_begin(arg));
 }
 
-static FILE *
-open_file(SV_String_view file)
+static void
+print_str_view(FILE *const f, SV_Str_view const sv)
 {
-    if (SV_empty(file))
+    if (!SV_is_empty(sv))
+    {
+        (void)fwrite(SV_begin(sv), sizeof(char), SV_len(sv), f);
+    }
+}
+
+static FILE *
+open_file(SV_Str_view file)
+{
+    if (SV_is_empty(file))
     {
         return NULL;
     }
