@@ -171,7 +171,7 @@ struct Huffman_encoding
 };
 
 /** Files the user wants zipped or unzipped. */
-struct Ccczip_actions
+struct Zip_actions
 {
     SV_String_view zip;
     SV_String_view unzip;
@@ -278,7 +278,7 @@ main(int argc, char **argv)
     {
         return 0;
     }
-    struct Ccczip_actions todo = {};
+    struct Zip_actions todo = {};
     for (int arg = 1; arg < argc; ++arg)
     {
         SV_String_view const sv_arg = SV_sv(argv[arg]);
