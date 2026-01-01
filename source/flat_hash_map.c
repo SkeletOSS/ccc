@@ -1999,8 +1999,9 @@ static inline struct Match_mask
 match_leading_full(struct Group const g, size_t const start_tag)
 {
     assert(start_tag < GROUP_COUNT);
-    return (struct Match_mask){(~match_empty_deleted(g).v)
-                               & (MATCH_MASK_0TH_TAG_OFF << start_tag)};
+    return (struct Match_mask){
+        (~match_empty_deleted(g).v) & (MATCH_MASK_0TH_TAG_OFF << start_tag),
+    };
 }
 
 /*=========================  Group Implementations   ========================*/
