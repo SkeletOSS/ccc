@@ -877,7 +877,7 @@ CCC_Result
 CCC_flat_hash_map_reserve(CCC_Flat_hash_map *const map, size_t const to_add,
                           CCC_Allocator *const allocate)
 {
-    if (unlikely(!map || !to_add || !allocate))
+    if (unlikely(!map || !to_add || !allocate || !to_add))
     {
         return CCC_RESULT_ARGUMENT_ERROR;
     }

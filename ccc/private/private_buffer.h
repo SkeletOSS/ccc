@@ -46,14 +46,6 @@ struct CCC_Buffer
     void *context;
 };
 
-/** @internal */
-#define CCC_private_buf_non_CCC_private_buf_default_size(...) __VA_ARGS__
-/** @internal */
-#define CCC_private_buf_default_size(...) 0
-/** @internal */
-#define CCC_private_buf_optional_size(...)                                     \
-    __VA_OPT__(CCC_private_buf_non_)##CCC_private_buf_default_size(__VA_ARGS__)
-
 /** @internal Initializes the Buffer with a default size of 0. However the user
 can specify that the Buffer has some count of elements from index
 `[0, capacity - 1)` at initialization time. The Buffer assumes these elements
@@ -175,4 +167,4 @@ of memory in one step. */
 
 /* NOLINTEND(readability-identifier-naming) */
 
-#endif /* CCC_PRIVATE_BUF_H */
+#endif /* CCC_PRIVATE_BUFFER_H */
