@@ -360,7 +360,7 @@ CCC_flat_double_ended_queue_reserve(CCC_Flat_double_ended_queue *const queue,
                                     size_t const to_add,
                                     CCC_Allocator *const allocate)
 {
-    if (!queue || !allocate)
+    if (!queue || !allocate || !to_add)
     {
         return CCC_RESULT_ARGUMENT_ERROR;
     }

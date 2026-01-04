@@ -1029,7 +1029,7 @@ CCC_Result
 CCC_bitset_reserve(CCC_Bitset *const bitset, size_t const to_add,
                    CCC_Allocator *const allocate)
 {
-    if (!bitset || !allocate)
+    if (!bitset || !allocate || !to_add)
     {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
