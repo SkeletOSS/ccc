@@ -60,7 +60,7 @@ CCC_Result
 CCC_buffer_reserve(CCC_Buffer *const buffer, size_t const to_add,
                    CCC_Allocator *const allocate)
 {
-    if (!buffer || !allocate)
+    if (!buffer || !allocate || !to_add)
     {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
