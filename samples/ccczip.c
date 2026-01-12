@@ -182,51 +182,48 @@ static SV_Str_view const cccz_suffix = SV_from(".cccz");
 
 /*===========================      Prototypes      ==========================*/
 
-static void zip_file(SV_Str_view to_compress);
-static Flat_priority_queue build_encoding_priority_queue(FILE *f,
+static void zip_file(SV_Str_view);
+static Flat_priority_queue build_encoding_priority_queue(FILE *,
                                                          struct Huffman_tree *);
 static void bitq_push_back(struct Bit_queue *, CCC_Tribool);
-static CCC_Tribool bitq_pop_back(struct Bit_queue *bq);
+static CCC_Tribool bitq_pop_back(struct Bit_queue *);
 static CCC_Tribool bitq_pop_front(struct Bit_queue *);
-static CCC_Tribool bitq_test(struct Bit_queue const *, size_t i);
-static size_t bitq_count(struct Bit_queue const *bq);
+static CCC_Tribool bitq_test(struct Bit_queue const *, size_t);
+static size_t bitq_count(struct Bit_queue const *);
 static void bitq_clear_and_free(struct Bit_queue *);
-static CCC_Result bitq_reserve(struct Bit_queue *, size_t to_add);
-static uint64_t hash_char(CCC_Key_context to_hash);
+static CCC_Result bitq_reserve(struct Bit_queue *, size_t);
+static uint64_t hash_char(CCC_Key_context);
 static CCC_Order char_order(CCC_Key_comparator_context);
-static CCC_Order order_freqs(CCC_Type_comparator_context order);
-static CCC_Order path_memo_order(CCC_Key_comparator_context order);
-static void memoize_path(struct Huffman_tree *tree, Flat_hash_map *fh,
-                         struct Bit_queue *, char c);
-static struct Bit_queue build_encoding_bitq(FILE *f, struct Huffman_tree *tree);
-static struct Huffman_tree build_encoding_tree(FILE *f);
-static struct Compressed_huffman_tree compress_tree(struct Huffman_tree *tree);
+static CCC_Order order_freqs(CCC_Type_comparator_context);
+static CCC_Order path_memo_order(CCC_Key_comparator_context);
+static void memoize_path(struct Huffman_tree *, Flat_hash_map *,
+                         struct Bit_queue *, char);
+static struct Bit_queue build_encoding_bitq(FILE *, struct Huffman_tree *);
+static struct Huffman_tree build_encoding_tree(FILE *);
+static struct Compressed_huffman_tree compress_tree(struct Huffman_tree *);
 static void free_encode_tree(struct Huffman_tree *);
-static void print_tree(struct Huffman_tree const *tree, size_t node);
-static void print_inner_tree(struct Huffman_tree const *tree, size_t node,
-                             enum Print_branch, char const *prefix);
-static void print_node(struct Huffman_tree const *tree, size_t node);
-static bool is_leaf(struct Huffman_tree const *tree, size_t node);
-static void print_bitq(struct Bit_queue const *bq);
-static void unzip_file(SV_Str_view unzip);
-static struct Huffman_tree
-reconstruct_tree(struct Compressed_huffman_tree *blueprint);
-static void reconstruct_text(FILE *f, struct Huffman_tree const *,
+static void print_tree(struct Huffman_tree const *, size_t);
+static void print_inner_tree(struct Huffman_tree const *, size_t,
+                             enum Print_branch, char const *);
+static void print_node(struct Huffman_tree const *, size_t);
+static bool is_leaf(struct Huffman_tree const *, size_t);
+static void print_bitq(struct Bit_queue const *);
+static void unzip_file(SV_Str_view);
+static struct Huffman_tree reconstruct_tree(struct Compressed_huffman_tree *);
+static void reconstruct_text(FILE *, struct Huffman_tree const *,
                              struct Bit_queue *);
 static void print_help(void);
-static size_t branch_index(struct Huffman_tree const *t, size_t node,
-                           uint8_t dir);
-static size_t parent_index(struct Huffman_tree const *t, size_t node);
-static char char_index(struct Huffman_tree const *t, size_t node);
-static struct Huffman_node *node_at(struct Huffman_tree const *t, size_t node);
-static void write_to_file(SV_Str_view original_filepath,
-                          size_t original_filesize, struct Huffman_encoding *);
-static void write_bitq(FILE *cccz, struct Bit_queue *bq);
-static struct Huffman_encoding read_from_file(SV_Str_view unzip);
-static size_t readbytes(FILE *f, void *base, size_t to_read);
-static size_t writebytes(FILE *f, void const *base, size_t to_write);
-static void fill_bitq(FILE *f, struct Bit_queue *bq, size_t expected_bits);
-static size_t file_size(FILE *f);
+static size_t branch_index(struct Huffman_tree const *, size_t, uint8_t);
+static size_t parent_index(struct Huffman_tree const *, size_t);
+static char char_index(struct Huffman_tree const *, size_t);
+static struct Huffman_node *node_at(struct Huffman_tree const *, size_t);
+static void write_to_file(SV_Str_view, size_t, struct Huffman_encoding *);
+static void write_bitq(FILE *, struct Bit_queue *);
+static struct Huffman_encoding read_from_file(SV_Str_view);
+static size_t readbytes(FILE *, void *, size_t);
+static size_t writebytes(FILE *, void const *, size_t);
+static void fill_bitq(FILE *, struct Bit_queue *, size_t);
+static size_t file_size(FILE *);
 
 /** Asserts even in release mode. Run code in the second argument if needed. */
 #define check(cond, ...)                                                       \

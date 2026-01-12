@@ -264,27 +264,24 @@ static SV_Str_view const quit_cmd = SV_from("q");
 static void build_graph(struct Graph *);
 static void find_shortest_paths(struct Graph *);
 static bool found_destination(struct Graph *, struct Vertex *);
-static void edge_construct(struct Graph *g, Flat_hash_map *parent_map,
-                           struct Vertex *source, struct Vertex *destination);
-static int dijkstra_shortest_path(struct Graph *, char source,
-                                  char destination);
-static void paint_edge(struct Graph *, char, char, char const *edge_color);
+static void edge_construct(struct Graph *, Flat_hash_map *, struct Vertex *,
+                           struct Vertex *);
+static int dijkstra_shortest_path(struct Graph *, char, char);
+static void paint_edge(struct Graph *, char, char, char const *);
 static void add_edge_cost_label(struct Graph *, struct Vertex *,
                                 struct Edge const *);
-static Cell make_edge(char source, char destination);
-static void flush_at(struct Graph const *g, int r, int c,
-                     char const *edge_color);
-
+static Cell make_edge(char, char);
+static void flush_at(struct Graph const *, int, int, char const *);
 static struct Point random_vertex_placement(struct Graph const *);
-static bool is_valid_vertex_pos(struct Graph const *, int r, int c);
-static Cell *grid_at_mut(struct Graph const *, int r, int c);
-static Cell grid_at(struct Graph const *, int r, int c);
+static bool is_valid_vertex_pos(struct Graph const *, int, int);
+static Cell *grid_at_mut(struct Graph const *, int, int);
+static Cell grid_at(struct Graph const *, int, int);
 static uint16_t sort_vertices(char, char);
 static int vertex_degree(struct Vertex const *);
 static void build_path_outline(struct Graph *);
-static void build_path_cell(struct Graph *, int r, int c, Cell);
-static void clear_and_flush_graph(struct Graph const *, char const *edge_color);
-static void print_cell(Cell, char const *edge_color);
+static void build_path_cell(struct Graph *, int, int, Cell);
+static void clear_and_flush_graph(struct Graph const *, char const *);
+static void print_cell(Cell, char const *);
 static char get_cell_vertex_title(Cell);
 static bool has_edge_with(struct Vertex const *, char);
 static bool add_edge(struct Vertex *, struct Edge const *);
@@ -293,27 +290,21 @@ static bool is_valid_edge_cell(Cell, Cell);
 static void clear_paint(struct Graph *);
 static bool is_vertex(Cell);
 static bool is_path_cell(Cell);
-static struct Vertex *vertex_at(struct Graph const *g, char name);
-static struct Cost *map_priority_queue_at(struct Cost const *dj_arr,
-                                          char vertex);
+static struct Vertex *vertex_at(struct Graph const *, char);
+static struct Cost *map_priority_queue_at(struct Cost const *, char);
 static int paint_shortest_path(struct Graph *, struct Cost const *,
                                struct Cost const *);
-
 static void encode_digits(struct Graph const *, struct Digit_encoding *);
 static enum Label_orientation get_direction(struct Point const *,
                                             struct Point const *);
-static struct Int_conversion parse_digits(SV_Str_view, int lower_bound,
-                                          int upper_bound,
-                                          char const *err_message);
+static struct Int_conversion parse_digits(SV_Str_view, int, int, char const *);
 static struct Path_request parse_path_request(struct Graph *, SV_Str_view);
 static void help(void);
-
 static Order order_priority_queue_costs(Type_comparator_context);
 static CCC_Order order_parent_cells(Key_comparator_context);
-static uint64_t hash_parent_cells(Key_context point_struct);
+static uint64_t hash_parent_cells(Key_context);
 static uint64_t hash_64_bits(uint64_t);
-
-static unsigned count_digits(uintmax_t n);
+static unsigned count_digits(uintmax_t);
 static void print_str_view(FILE *, SV_Str_view);
 
 /*======================  Main Arg Handling  ===============================*/

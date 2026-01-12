@@ -118,27 +118,21 @@ static SV_Str_view const directions
     }                                                                          \
     while (0)
 
-static void print_found(FILE *file, SV_Str_view w);
-static void print_top_n(FILE *file, int n);
-static void print_last_n(FILE *file, int n);
-static void print_alpha_n(FILE *file, int n);
-static void print_ralpha_n(FILE *file, int n);
-static Buffer copy_frequencies(Array_adaptive_map const *map);
+static void print_found(FILE *, SV_Str_view);
+static void print_top_n(FILE *, int);
+static void print_last_n(FILE *, int);
+static void print_alpha_n(FILE *, int);
+static void print_ralpha_n(FILE *, int);
+static Buffer copy_frequencies(Array_adaptive_map const *);
 static void print_n(Array_adaptive_map *, CCC_Order, struct String_arena *,
-                    int n);
-static struct Int_conversion parse_n_ranks(SV_Str_view arg);
-
-/* String Helper Functions */
-static struct String_offset clean_word(struct String_arena *, SV_Str_view wv);
-
-/* Container Functions */
+                    int);
+static struct Int_conversion parse_n_ranks(SV_Str_view);
+static struct String_offset clean_word(struct String_arena *, SV_Str_view);
 static Array_adaptive_map create_frequency_map(struct String_arena *, FILE *);
 static Order order_string_keys(Key_comparator_context);
 static Order order_words(Type_comparator_context);
-
-/* Misc. Functions */
-static FILE *open_file(SV_Str_view file);
-static void print_str_view(FILE *f, SV_Str_view sv);
+static FILE *open_file(SV_Str_view);
+static void print_str_view(FILE *, SV_Str_view);
 
 /*=======================     Main         ==================================*/
 

@@ -141,16 +141,16 @@ SV_Str_view const cursor_pos_specifier = SV_from("f");
 
 static void animate_maze(struct Maze *);
 static void fill_maze_with_walls(struct Maze *);
-static void build_wall(struct Maze *, int r, int c);
-static void print_square(struct Maze const *, int r, int c);
-static uint16_t *maze_at_wrap(struct Maze const *, int r, int c);
-static uint16_t maze_at(struct Maze const *, int r, int c);
+static void build_wall(struct Maze *, int, int);
+static void print_square(struct Maze const *, int, int);
+static uint16_t *maze_at_wrap(struct Maze const *, int, int);
+static uint16_t maze_at(struct Maze const *, int, int);
 static void clear_and_flush_maze(struct Maze const *);
 static void carve_path_walls_animated(struct Maze *, struct Point, int);
 static void join_squares_animated(struct Maze *, struct Point, struct Point,
                                   int);
-static void flush_cursor_maze_coordinate(struct Maze const *, int r, int c);
-static bool can_build_new_square(struct Maze const *, int r, int c);
+static void flush_cursor_maze_coordinate(struct Maze const *, int, int);
+static bool can_build_new_square(struct Maze const *, int, int);
 static void help(void);
 static struct Point rand_point(struct Maze const *);
 static Order order_prim_cells(Type_comparator_context);
