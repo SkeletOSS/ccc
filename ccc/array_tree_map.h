@@ -16,9 +16,9 @@ limitations under the License.
 /** @file
 @brief The Array Tree Map Interface
 
-A tree map offers insertion, removal, and searching with a strict bound of
-`O(log(N))` time. This map is suitable for realtime applications if resizing can
-be well controlled. Insert operations may cause resizing if allocation is
+An array tree map offers insertion, removal, and searching with a strict bound
+of `O(log(N))` time. This map is suitable for realtime applications if resizing
+can be well controlled. Insert operations may cause resizing if allocation is
 allowed. Searching is a thread-safe read-only operation. Balancing modifications
 only occur upon insertion or removal.
 
