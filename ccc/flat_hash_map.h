@@ -1154,75 +1154,88 @@ CCC_flat_hash_map_validate(CCC_Flat_hash_map const *map);
 #ifdef FLAT_HASH_MAP_USING_NAMESPACE_CCC
 typedef CCC_Flat_hash_map Flat_hash_map;
 typedef CCC_Flat_hash_map_entry Flat_hash_map_entry;
-#    define flat_hash_map_declare_fixed(args...)                               \
-        CCC_flat_hash_map_declare_fixed(args)
-#    define flat_hash_map_fixed_capacity(args...)                              \
-        CCC_flat_hash_map_fixed_capacity(args)
-#    define flat_hash_map_reserve(args...) CCC_flat_hash_map_reserve(args)
-#    define flat_hash_map_initialize(args...) CCC_flat_hash_map_initialize(args)
-#    define flat_hash_map_from(args...) CCC_flat_hash_map_from(args)
-#    define flat_hash_map_with_capacity(args...)                               \
-        CCC_flat_hash_map_with_capacity(args)
-#    define flat_hash_map_with_compound_literal(args...)                       \
-        CCC_flat_hash_map_with_compound_literal(args)
-#    define flat_hash_map_with_context_compound_literal(args...)               \
-        CCC_flat_hash_map_with_context_compound_literal(args)
-#    define flat_hash_map_copy(args...) CCC_flat_hash_map_copy(args)
-#    define flat_hash_map_and_modify_with(args...)                             \
-        CCC_flat_hash_map_and_modify_with(args)
-#    define flat_hash_map_or_insert_with(args...)                              \
-        CCC_flat_hash_map_or_insert_with(args)
-#    define flat_hash_map_insert_entry_with(args...)                           \
-        CCC_flat_hash_map_insert_entry_with(args)
-#    define flat_hash_map_try_insert_with(args...)                             \
-        CCC_flat_hash_map_try_insert_with(args)
-#    define flat_hash_map_insert_or_assign_with(args...)                       \
-        CCC_flat_hash_map_insert_or_assign_with(args)
-#    define flat_hash_map_contains(args...) CCC_flat_hash_map_contains(args)
-#    define flat_hash_map_get_key_value(args...)                               \
-        CCC_flat_hash_map_get_key_value(args)
-#    define flat_hash_map_remove_key_value_wrap(args...)                       \
-        CCC_flat_hash_map_remove_key_value_wrap(args)
-#    define flat_hash_map_swap_entry_wrap(args...)                             \
-        CCC_flat_hash_map_swap_entry_wrap(args)
-#    define flat_hash_map_try_insert_wrap(args...)                             \
-        CCC_flat_hash_map_try_insert_wrap(args)
-#    define flat_hash_map_insert_or_assign_wrap(args...)                       \
-        CCC_flat_hash_map_insert_or_assign_wrap(args)
-#    define flat_hash_map_remove_entry_wrap(args...)                           \
-        CCC_flat_hash_map_remove_entry_wrap(args)
-#    define flat_hash_map_remove_key_value(args...)                            \
-        CCC_flat_hash_map_remove_key_value(args)
-#    define flat_hash_map_swap_entry(args...) CCC_flat_hash_map_swap_entry(args)
-#    define flat_hash_map_try_insert(args...) CCC_flat_hash_map_try_insert(args)
-#    define flat_hash_map_insert_or_assign(args...)                            \
-        CCC_flat_hash_map_insert_or_assign(args)
-#    define flat_hash_map_remove_entry(args...)                                \
-        CCC_flat_hash_map_remove_entry(args)
-#    define flat_hash_map_entry_wrap(args...) CCC_flat_hash_map_entry_wrap(args)
-#    define flat_hash_map_entry(args...) CCC_flat_hash_map_entry(args)
-#    define flat_hash_map_and_modify(args...) CCC_flat_hash_map_and_modify(args)
-#    define flat_hash_map_and_modify_context(args...)                          \
-        CCC_flat_hash_map_and_modify_context(args)
-#    define flat_hash_map_or_insert(args...) CCC_flat_hash_map_or_insert(args)
-#    define flat_hash_map_insert_entry(args...)                                \
-        CCC_flat_hash_map_insert_entry(args)
-#    define flat_hash_map_unwrap(args...) CCC_flat_hash_map_unwrap(args)
-#    define flat_hash_map_occupied(args...) CCC_flat_hash_map_occupied(args)
-#    define flat_hash_map_insert_error(args...)                                \
-        CCC_flat_hash_map_insert_error(args)
-#    define flat_hash_map_begin(args...) CCC_flat_hash_map_begin(args)
-#    define flat_hash_map_next(args...) CCC_flat_hash_map_next(args)
-#    define flat_hash_map_end(args...) CCC_flat_hash_map_end(args)
-#    define flat_hash_map_is_empty(args...) CCC_flat_hash_map_is_empty(args)
-#    define flat_hash_map_count(args...) CCC_flat_hash_map_count(args)
-#    define flat_hash_map_clear(args...) CCC_flat_hash_map_clear(args)
-#    define flat_hash_map_clear_and_free(args...)                              \
-        CCC_flat_hash_map_clear_and_free(args)
-#    define flat_hash_map_clear_and_free_reserve(args...)                      \
-        CCC_flat_hash_map_clear_and_free_reserve(args)
-#    define flat_hash_map_capacity(args...) CCC_flat_hash_map_capacity(args)
-#    define flat_hash_map_validate(args...) CCC_flat_hash_map_validate(args)
+#    define flat_hash_map_declare_fixed(arguments...)                          \
+        CCC_flat_hash_map_declare_fixed(arguments)
+#    define flat_hash_map_fixed_capacity(arguments...)                         \
+        CCC_flat_hash_map_fixed_capacity(arguments)
+#    define flat_hash_map_reserve(arguments...)                                \
+        CCC_flat_hash_map_reserve(arguments)
+#    define flat_hash_map_initialize(arguments...)                             \
+        CCC_flat_hash_map_initialize(arguments)
+#    define flat_hash_map_from(arguments...) CCC_flat_hash_map_from(arguments)
+#    define flat_hash_map_with_capacity(arguments...)                          \
+        CCC_flat_hash_map_with_capacity(arguments)
+#    define flat_hash_map_with_compound_literal(arguments...)                  \
+        CCC_flat_hash_map_with_compound_literal(arguments)
+#    define flat_hash_map_with_context_compound_literal(arguments...)          \
+        CCC_flat_hash_map_with_context_compound_literal(arguments)
+#    define flat_hash_map_copy(arguments...) CCC_flat_hash_map_copy(arguments)
+#    define flat_hash_map_and_modify_with(arguments...)                        \
+        CCC_flat_hash_map_and_modify_with(arguments)
+#    define flat_hash_map_or_insert_with(arguments...)                         \
+        CCC_flat_hash_map_or_insert_with(arguments)
+#    define flat_hash_map_insert_entry_with(arguments...)                      \
+        CCC_flat_hash_map_insert_entry_with(arguments)
+#    define flat_hash_map_try_insert_with(arguments...)                        \
+        CCC_flat_hash_map_try_insert_with(arguments)
+#    define flat_hash_map_insert_or_assign_with(arguments...)                  \
+        CCC_flat_hash_map_insert_or_assign_with(arguments)
+#    define flat_hash_map_contains(arguments...)                               \
+        CCC_flat_hash_map_contains(arguments)
+#    define flat_hash_map_get_key_value(arguments...)                          \
+        CCC_flat_hash_map_get_key_value(arguments)
+#    define flat_hash_map_remove_key_value_wrap(arguments...)                  \
+        CCC_flat_hash_map_remove_key_value_wrap(arguments)
+#    define flat_hash_map_swap_entry_wrap(arguments...)                        \
+        CCC_flat_hash_map_swap_entry_wrap(arguments)
+#    define flat_hash_map_try_insert_wrap(arguments...)                        \
+        CCC_flat_hash_map_try_insert_wrap(arguments)
+#    define flat_hash_map_insert_or_assign_wrap(arguments...)                  \
+        CCC_flat_hash_map_insert_or_assign_wrap(arguments)
+#    define flat_hash_map_remove_entry_wrap(arguments...)                      \
+        CCC_flat_hash_map_remove_entry_wrap(arguments)
+#    define flat_hash_map_remove_key_value(arguments...)                       \
+        CCC_flat_hash_map_remove_key_value(arguments)
+#    define flat_hash_map_swap_entry(arguments...)                             \
+        CCC_flat_hash_map_swap_entry(arguments)
+#    define flat_hash_map_try_insert(arguments...)                             \
+        CCC_flat_hash_map_try_insert(arguments)
+#    define flat_hash_map_insert_or_assign(arguments...)                       \
+        CCC_flat_hash_map_insert_or_assign(arguments)
+#    define flat_hash_map_remove_entry(arguments...)                           \
+        CCC_flat_hash_map_remove_entry(arguments)
+#    define flat_hash_map_entry_wrap(arguments...)                             \
+        CCC_flat_hash_map_entry_wrap(arguments)
+#    define flat_hash_map_entry(arguments...) CCC_flat_hash_map_entry(arguments)
+#    define flat_hash_map_and_modify(arguments...)                             \
+        CCC_flat_hash_map_and_modify(arguments)
+#    define flat_hash_map_and_modify_context(arguments...)                     \
+        CCC_flat_hash_map_and_modify_context(arguments)
+#    define flat_hash_map_or_insert(arguments...)                              \
+        CCC_flat_hash_map_or_insert(arguments)
+#    define flat_hash_map_insert_entry(arguments...)                           \
+        CCC_flat_hash_map_insert_entry(arguments)
+#    define flat_hash_map_unwrap(arguments...)                                 \
+        CCC_flat_hash_map_unwrap(arguments)
+#    define flat_hash_map_occupied(arguments...)                               \
+        CCC_flat_hash_map_occupied(arguments)
+#    define flat_hash_map_insert_error(arguments...)                           \
+        CCC_flat_hash_map_insert_error(arguments)
+#    define flat_hash_map_begin(arguments...) CCC_flat_hash_map_begin(arguments)
+#    define flat_hash_map_next(arguments...) CCC_flat_hash_map_next(arguments)
+#    define flat_hash_map_end(arguments...) CCC_flat_hash_map_end(arguments)
+#    define flat_hash_map_is_empty(arguments...)                               \
+        CCC_flat_hash_map_is_empty(arguments)
+#    define flat_hash_map_count(arguments...) CCC_flat_hash_map_count(arguments)
+#    define flat_hash_map_clear(arguments...) CCC_flat_hash_map_clear(arguments)
+#    define flat_hash_map_clear_and_free(arguments...)                         \
+        CCC_flat_hash_map_clear_and_free(arguments)
+#    define flat_hash_map_clear_and_free_reserve(arguments...)                 \
+        CCC_flat_hash_map_clear_and_free_reserve(arguments)
+#    define flat_hash_map_capacity(arguments...)                               \
+        CCC_flat_hash_map_capacity(arguments)
+#    define flat_hash_map_validate(arguments...)                               \
+        CCC_flat_hash_map_validate(arguments)
 #endif
 
 #endif /* CCC_FLAT_HASH_MAP_H */

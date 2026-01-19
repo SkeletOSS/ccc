@@ -726,50 +726,61 @@ NULL. */
 typedef CCC_Tree_map_node Tree_map_node;
 typedef CCC_Tree_map Tree_map;
 typedef CCC_Tree_map_entry Tree_map_entry;
-#    define tree_map_initialize(args...) CCC_tree_map_initialize(args)
-#    define tree_map_from(args...) CCC_tree_map_from(args)
-#    define tree_map_and_modify_with(args...) CCC_tree_map_and_modify_with(args)
-#    define tree_map_or_insert_with(args...) CCC_tree_map_or_insert_with(args)
-#    define tree_map_insert_entry_with(args...)                                \
-        CCC_tree_map_insert_entry_with(args)
-#    define tree_map_try_insert_with(args...) CCC_tree_map_try_insert_with(args)
-#    define tree_map_insert_or_assign(args...)                                 \
-        CCC_tree_map_insert_or_assign(args)
-#    define tree_map_insert_or_assign_wrap(args...)                            \
-        CCC_tree_map_insert_or_assign_wrap(args)
-#    define tree_map_insert_or_assign_with(args...)                            \
-        CCC_tree_map_insert_or_assign_with(args)
-#    define tree_map_swap_entry_wrap(args...) CCC_tree_map_swap_entry_wrap(args)
-#    define tree_map_remove_key_value_wrap(args...)                            \
-        CCC_tree_map_remove_key_value_wrap(args)
-#    define tree_map_remove_entry_wrap(args...)                                \
-        CCC_tree_map_remove_entry_wrap(args)
-#    define tree_map_entry_wrap(args...) CCC_tree_map_entry_wrap(args)
-#    define tree_map_and_modify_wrap(args...) CCC_tree_map_and_modify_wrap(args)
-#    define tree_map_and_modify_context_wrap(args...)                          \
-        CCC_tree_map_and_modify_context_wrap(args)
-#    define tree_map_contains(args...) CCC_tree_map_contains(args)
-#    define tree_map_get_key_value(args...) CCC_tree_map_get_key_value(args)
-#    define tree_map_get_mut(args...) CCC_tree_map_get_mut(args)
-#    define tree_map_swap_entry(args...) CCC_tree_map_swap_entry(args)
-#    define tree_map_remove_key_value(args...)                                 \
-        CCC_tree_map_remove_key_value(args)
-#    define tree_map_entry(args...) CCC_tree_map_entry(args)
-#    define tree_map_remove_entry(args...) CCC_tree_map_remove_entry(args)
-#    define tree_map_or_insert(args...) CCC_tree_map_or_insert(args)
-#    define tree_map_insert_entry(args...) CCC_tree_map_insert_entry(args)
-#    define tree_map_unwrap(args...) CCC_tree_map_unwrap(args)
-#    define tree_map_unwrap_mut(args...) CCC_tree_map_unwrap_mut(args)
-#    define tree_map_begin(args...) CCC_tree_map_begin(args)
-#    define tree_map_next(args...) CCC_tree_map_next(args)
-#    define tree_map_reverse_begin(args...) CCC_tree_map_reverse_begin(args)
-#    define tree_map_reverse_next(args...) CCC_tree_map_reverse_next(args)
-#    define tree_map_end(args...) CCC_tree_map_end(args)
-#    define tree_map_reverse_end(args...) CCC_tree_map_reverse_end(args)
-#    define tree_map_count(args...) CCC_tree_map_count(args)
-#    define tree_map_is_empty(args...) CCC_tree_map_is_empty(args)
-#    define tree_map_clear(args...) CCC_tree_map_clear(args)
-#    define tree_map_validate(args...) CCC_tree_map_validate(args)
+#    define tree_map_initialize(arguments...) CCC_tree_map_initialize(arguments)
+#    define tree_map_from(arguments...) CCC_tree_map_from(arguments)
+#    define tree_map_and_modify_with(arguments...)                             \
+        CCC_tree_map_and_modify_with(arguments)
+#    define tree_map_or_insert_with(arguments...)                              \
+        CCC_tree_map_or_insert_with(arguments)
+#    define tree_map_insert_entry_with(arguments...)                           \
+        CCC_tree_map_insert_entry_with(arguments)
+#    define tree_map_try_insert_with(arguments...)                             \
+        CCC_tree_map_try_insert_with(arguments)
+#    define tree_map_insert_or_assign(arguments...)                            \
+        CCC_tree_map_insert_or_assign(arguments)
+#    define tree_map_insert_or_assign_wrap(arguments...)                       \
+        CCC_tree_map_insert_or_assign_wrap(arguments)
+#    define tree_map_insert_or_assign_with(arguments...)                       \
+        CCC_tree_map_insert_or_assign_with(arguments)
+#    define tree_map_swap_entry_wrap(arguments...)                             \
+        CCC_tree_map_swap_entry_wrap(arguments)
+#    define tree_map_remove_key_value_wrap(arguments...)                       \
+        CCC_tree_map_remove_key_value_wrap(arguments)
+#    define tree_map_remove_entry_wrap(arguments...)                           \
+        CCC_tree_map_remove_entry_wrap(arguments)
+#    define tree_map_entry_wrap(arguments...) CCC_tree_map_entry_wrap(arguments)
+#    define tree_map_and_modify_wrap(arguments...)                             \
+        CCC_tree_map_and_modify_wrap(arguments)
+#    define tree_map_and_modify_context_wrap(arguments...)                     \
+        CCC_tree_map_and_modify_context_wrap(arguments)
+#    define tree_map_contains(arguments...) CCC_tree_map_contains(arguments)
+#    define tree_map_get_key_value(arguments...)                               \
+        CCC_tree_map_get_key_value(arguments)
+#    define tree_map_get_mut(arguments...) CCC_tree_map_get_mut(arguments)
+#    define tree_map_swap_entry(arguments...) CCC_tree_map_swap_entry(arguments)
+#    define tree_map_remove_key_value(arguments...)                            \
+        CCC_tree_map_remove_key_value(arguments)
+#    define tree_map_entry(arguments...) CCC_tree_map_entry(arguments)
+#    define tree_map_remove_entry(arguments...)                                \
+        CCC_tree_map_remove_entry(arguments)
+#    define tree_map_or_insert(arguments...) CCC_tree_map_or_insert(arguments)
+#    define tree_map_insert_entry(arguments...)                                \
+        CCC_tree_map_insert_entry(arguments)
+#    define tree_map_unwrap(arguments...) CCC_tree_map_unwrap(arguments)
+#    define tree_map_unwrap_mut(arguments...) CCC_tree_map_unwrap_mut(arguments)
+#    define tree_map_begin(arguments...) CCC_tree_map_begin(arguments)
+#    define tree_map_next(arguments...) CCC_tree_map_next(arguments)
+#    define tree_map_reverse_begin(arguments...)                               \
+        CCC_tree_map_reverse_begin(arguments)
+#    define tree_map_reverse_next(arguments...)                                \
+        CCC_tree_map_reverse_next(arguments)
+#    define tree_map_end(arguments...) CCC_tree_map_end(arguments)
+#    define tree_map_reverse_end(arguments...)                                 \
+        CCC_tree_map_reverse_end(arguments)
+#    define tree_map_count(arguments...) CCC_tree_map_count(arguments)
+#    define tree_map_is_empty(arguments...) CCC_tree_map_is_empty(arguments)
+#    define tree_map_clear(arguments...) CCC_tree_map_clear(arguments)
+#    define tree_map_validate(arguments...) CCC_tree_map_validate(arguments)
 #endif
 
 #endif /* CCC_TREE_MAP_H */

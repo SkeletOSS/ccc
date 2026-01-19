@@ -1155,95 +1155,104 @@ CCC_array_adaptive_map_validate(CCC_Array_adaptive_map const *map);
 #ifdef ARRAY_ADAPTIVE_MAP_USING_NAMESPACE_CCC
 typedef CCC_Array_adaptive_map Array_adaptive_map;
 typedef CCC_Array_adaptive_map_handle Array_adaptive_map_handle;
-#    define array_adaptive_map_declare_fixed(args...)                          \
-        CCC_array_adaptive_map_declare_fixed(args)
-#    define array_adaptive_map_fixed_capacity(args...)                         \
-        CCC_array_adaptive_map_fixed_capacity(args)
-#    define array_adaptive_map_initialize(args...)                             \
-        CCC_array_adaptive_map_initialize(args)
-#    define array_adaptive_map_from(args...) CCC_array_adaptive_map_from(args)
-#    define array_adaptive_map_with_capacity(args...)                          \
-        CCC_array_adaptive_map_with_capacity(args)
-#    define array_adaptive_map_with_compound_literal(args...)                  \
-        CCC_array_adaptive_map_with_compound_literal(args)
-#    define array_adaptive_map_with_context_compound_literal(args...)          \
-        CCC_array_adaptive_map_with_context_compound_literal(args)
-#    define array_adaptive_map_at(args...) CCC_array_adaptive_map_at(args)
-#    define array_adaptive_map_as(args...) CCC_array_adaptive_map_as(args)
-#    define array_adaptive_map_and_modify_with(args...)                        \
-        CCC_array_adaptive_map_and_modify_with(args)
-#    define array_adaptive_map_or_insert_with(args...)                         \
-        CCC_array_adaptive_map_or_insert_with(args)
-#    define array_adaptive_map_insert_array_with(args...)                      \
-        CCC_array_adaptive_map_insert_array_with(args)
-#    define array_adaptive_map_try_insert_with(args...)                        \
-        CCC_array_adaptive_map_try_insert_with(args)
-#    define array_adaptive_map_insert_or_assign_with(args...)                  \
-        CCC_array_adaptive_map_insert_or_assign_with(args)
-#    define array_adaptive_map_copy(args...) CCC_array_adaptive_map_copy(args)
-#    define array_adaptive_map_reserve(args...)                                \
-        CCC_array_adaptive_map_reserve(args)
-#    define array_adaptive_map_contains(args...)                               \
-        CCC_array_adaptive_map_contains(args)
-#    define array_adaptive_map_get_key_value(args...)                          \
-        CCC_array_adaptive_map_get_key_value(args)
-#    define array_adaptive_map_swap_handle_wrap(args...)                       \
-        CCC_array_adaptive_map_swap_handle_wrap(args)
-#    define array_adaptive_map_try_insert_wrap(args...)                        \
-        CCC_array_adaptive_map_try_insert_wrap(args)
-#    define array_adaptive_map_remove_key_value_wrap(args...)                  \
-        CCC_array_adaptive_map_remove_key_value_wrap(args)
-#    define array_adaptive_map_remove_handle_wrap(args...)                     \
-        CCC_array_adaptive_map_remove_handle_wrap(args)
-#    define array_adaptive_map_swap_handle(args...)                            \
-        CCC_array_adaptive_map_swap_handle(args)
-#    define array_adaptive_map_try_insert(args...)                             \
-        CCC_array_adaptive_map_try_insert(args)
-#    define array_adaptive_map_insert_or_assign(args...)                       \
-        CCC_array_adaptive_map_insert_or_assign(args)
-#    define array_adaptive_map_remove_key_value(args...)                       \
-        CCC_array_adaptive_map_remove_key_value(args)
-#    define array_adaptive_map_remove_handle(args...)                          \
-        CCC_array_adaptive_map_remove_handle(args)
-#    define array_adaptive_map_handle_wrap(args...)                            \
-        CCC_array_adaptive_map_handle_wrap(args)
-#    define array_adaptive_map_handle(args...)                                 \
-        CCC_array_adaptive_map_handle(args)
-#    define array_adaptive_map_and_modify(args...)                             \
-        CCC_array_adaptive_map_and_modify(args)
-#    define array_adaptive_map_and_modify_context(args...)                     \
-        CCC_array_adaptive_map_and_modify_context(args)
-#    define array_adaptive_map_or_insert(args...)                              \
-        CCC_array_adaptive_map_or_insert(args)
-#    define array_adaptive_map_insert_handle(args...)                          \
-        CCC_array_adaptive_map_insert_handle(args)
-#    define array_adaptive_map_unwrap(args...)                                 \
-        CCC_array_adaptive_map_unwrap(args)
-#    define array_adaptive_map_insert_error(args...)                           \
-        CCC_array_adaptive_map_insert_error(args)
-#    define array_adaptive_map_occupied(args...)                               \
-        CCC_array_adaptive_map_occupied(args)
-#    define array_adaptive_map_clear(args...) CCC_array_adaptive_map_clear(args)
-#    define array_adaptive_map_clear_and_free(args...)                         \
-        CCC_array_adaptive_map_clear_and_free(args)
-#    define array_adaptive_map_clear_and_free_reserve(args...)                 \
-        CCC_array_adaptive_map_clear_and_free_reserve(args)
-#    define array_adaptive_map_begin(args...) CCC_array_adaptive_map_begin(args)
-#    define array_adaptive_map_reverse_begin(args...)                          \
-        CCC_array_adaptive_map_reverse_begin(args)
-#    define array_adaptive_map_end(args...) CCC_array_adaptive_map_end(args)
-#    define array_adaptive_map_reverse_end(args...)                            \
-        CCC_array_adaptive_map_reverse_end(args)
-#    define array_adaptive_map_next(args...) CCC_array_adaptive_map_next(args)
-#    define array_adaptive_map_reverse_next(args...)                           \
-        CCC_array_adaptive_map_reverse_next(args)
-#    define array_adaptive_map_count(args...) CCC_array_adaptive_map_count(args)
-#    define array_adaptive_map_capacity(args...)                               \
-        CCC_array_adaptive_map_capacity(args)
-#    define array_adaptive_map_is_empty(args...)                               \
-        CCC_array_adaptive_map_is_empty(args)
-#    define array_adaptive_map_validate(args...)                               \
-        CCC_array_adaptive_map_validate(args)
+#    define array_adaptive_map_declare_fixed(arguments...)                     \
+        CCC_array_adaptive_map_declare_fixed(arguments)
+#    define array_adaptive_map_fixed_capacity(arguments...)                    \
+        CCC_array_adaptive_map_fixed_capacity(arguments)
+#    define array_adaptive_map_initialize(arguments...)                        \
+        CCC_array_adaptive_map_initialize(arguments)
+#    define array_adaptive_map_from(arguments...)                              \
+        CCC_array_adaptive_map_from(arguments)
+#    define array_adaptive_map_with_capacity(arguments...)                     \
+        CCC_array_adaptive_map_with_capacity(arguments)
+#    define array_adaptive_map_with_compound_literal(arguments...)             \
+        CCC_array_adaptive_map_with_compound_literal(arguments)
+#    define array_adaptive_map_with_context_compound_literal(arguments...)     \
+        CCC_array_adaptive_map_with_context_compound_literal(arguments)
+#    define array_adaptive_map_at(arguments...)                                \
+        CCC_array_adaptive_map_at(arguments)
+#    define array_adaptive_map_as(arguments...)                                \
+        CCC_array_adaptive_map_as(arguments)
+#    define array_adaptive_map_and_modify_with(arguments...)                   \
+        CCC_array_adaptive_map_and_modify_with(arguments)
+#    define array_adaptive_map_or_insert_with(arguments...)                    \
+        CCC_array_adaptive_map_or_insert_with(arguments)
+#    define array_adaptive_map_insert_array_with(arguments...)                 \
+        CCC_array_adaptive_map_insert_array_with(arguments)
+#    define array_adaptive_map_try_insert_with(arguments...)                   \
+        CCC_array_adaptive_map_try_insert_with(arguments)
+#    define array_adaptive_map_insert_or_assign_with(arguments...)             \
+        CCC_array_adaptive_map_insert_or_assign_with(arguments)
+#    define array_adaptive_map_copy(arguments...)                              \
+        CCC_array_adaptive_map_copy(arguments)
+#    define array_adaptive_map_reserve(arguments...)                           \
+        CCC_array_adaptive_map_reserve(arguments)
+#    define array_adaptive_map_contains(arguments...)                          \
+        CCC_array_adaptive_map_contains(arguments)
+#    define array_adaptive_map_get_key_value(arguments...)                     \
+        CCC_array_adaptive_map_get_key_value(arguments)
+#    define array_adaptive_map_swap_handle_wrap(arguments...)                  \
+        CCC_array_adaptive_map_swap_handle_wrap(arguments)
+#    define array_adaptive_map_try_insert_wrap(arguments...)                   \
+        CCC_array_adaptive_map_try_insert_wrap(arguments)
+#    define array_adaptive_map_remove_key_value_wrap(arguments...)             \
+        CCC_array_adaptive_map_remove_key_value_wrap(arguments)
+#    define array_adaptive_map_remove_handle_wrap(arguments...)                \
+        CCC_array_adaptive_map_remove_handle_wrap(arguments)
+#    define array_adaptive_map_swap_handle(arguments...)                       \
+        CCC_array_adaptive_map_swap_handle(arguments)
+#    define array_adaptive_map_try_insert(arguments...)                        \
+        CCC_array_adaptive_map_try_insert(arguments)
+#    define array_adaptive_map_insert_or_assign(arguments...)                  \
+        CCC_array_adaptive_map_insert_or_assign(arguments)
+#    define array_adaptive_map_remove_key_value(arguments...)                  \
+        CCC_array_adaptive_map_remove_key_value(arguments)
+#    define array_adaptive_map_remove_handle(arguments...)                     \
+        CCC_array_adaptive_map_remove_handle(arguments)
+#    define array_adaptive_map_handle_wrap(arguments...)                       \
+        CCC_array_adaptive_map_handle_wrap(arguments)
+#    define array_adaptive_map_handle(arguments...)                            \
+        CCC_array_adaptive_map_handle(arguments)
+#    define array_adaptive_map_and_modify(arguments...)                        \
+        CCC_array_adaptive_map_and_modify(arguments)
+#    define array_adaptive_map_and_modify_context(arguments...)                \
+        CCC_array_adaptive_map_and_modify_context(arguments)
+#    define array_adaptive_map_or_insert(arguments...)                         \
+        CCC_array_adaptive_map_or_insert(arguments)
+#    define array_adaptive_map_insert_handle(arguments...)                     \
+        CCC_array_adaptive_map_insert_handle(arguments)
+#    define array_adaptive_map_unwrap(arguments...)                            \
+        CCC_array_adaptive_map_unwrap(arguments)
+#    define array_adaptive_map_insert_error(arguments...)                      \
+        CCC_array_adaptive_map_insert_error(arguments)
+#    define array_adaptive_map_occupied(arguments...)                          \
+        CCC_array_adaptive_map_occupied(arguments)
+#    define array_adaptive_map_clear(arguments...)                             \
+        CCC_array_adaptive_map_clear(arguments)
+#    define array_adaptive_map_clear_and_free(arguments...)                    \
+        CCC_array_adaptive_map_clear_and_free(arguments)
+#    define array_adaptive_map_clear_and_free_reserve(arguments...)            \
+        CCC_array_adaptive_map_clear_and_free_reserve(arguments)
+#    define array_adaptive_map_begin(arguments...)                             \
+        CCC_array_adaptive_map_begin(arguments)
+#    define array_adaptive_map_reverse_begin(arguments...)                     \
+        CCC_array_adaptive_map_reverse_begin(arguments)
+#    define array_adaptive_map_end(arguments...)                               \
+        CCC_array_adaptive_map_end(arguments)
+#    define array_adaptive_map_reverse_end(arguments...)                       \
+        CCC_array_adaptive_map_reverse_end(arguments)
+#    define array_adaptive_map_next(arguments...)                              \
+        CCC_array_adaptive_map_next(arguments)
+#    define array_adaptive_map_reverse_next(arguments...)                      \
+        CCC_array_adaptive_map_reverse_next(arguments)
+#    define array_adaptive_map_count(arguments...)                             \
+        CCC_array_adaptive_map_count(arguments)
+#    define array_adaptive_map_capacity(arguments...)                          \
+        CCC_array_adaptive_map_capacity(arguments)
+#    define array_adaptive_map_is_empty(arguments...)                          \
+        CCC_array_adaptive_map_is_empty(arguments)
+#    define array_adaptive_map_validate(arguments...)                          \
+        CCC_array_adaptive_map_validate(arguments)
 #endif /* ARRAY_ADAPTIVE_MAP_USING_NAMESPACE_CCC */
 
 #endif /* CCC_ARRAY_ADAPTIVE_MAP_H */

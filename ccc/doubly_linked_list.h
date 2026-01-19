@@ -461,56 +461,66 @@ clashes exist prior to name shortening. */
 #ifdef DOUBLY_LINKED_LIST_USING_NAMESPACE_CCC
 typedef CCC_Doubly_linked_list_node Doubly_linked_list_node;
 typedef CCC_Doubly_linked_list Doubly_linked_list;
-#    define doubly_linked_list_initialize(args...)                             \
-        CCC_doubly_linked_list_initialize(args)
-#    define doubly_linked_list_from(args...) CCC_doubly_linked_list_from(args)
-#    define doubly_linked_list_emplace_back(args...)                           \
-        CCC_doubly_linked_list_emplace_back(args)
-#    define doubly_linked_list_emplace_front(args...)                          \
-        CCC_doubly_linked_list_emplace_front(args)
-#    define doubly_linked_list_push_front(args...)                             \
-        CCC_doubly_linked_list_push_front(args)
-#    define doubly_linked_list_push_back(args...)                              \
-        CCC_doubly_linked_list_push_back(args)
-#    define doubly_linked_list_front(args...) CCC_doubly_linked_list_front(args)
-#    define doubly_linked_list_back(args...) CCC_doubly_linked_list_back(args)
-#    define doubly_linked_list_pop_front(args...)                              \
-        CCC_doubly_linked_list_pop_front(args)
-#    define doubly_linked_list_pop_back(args...)                               \
-        CCC_doubly_linked_list_pop_back(args)
-#    define doubly_linked_list_extract(args...)                                \
-        CCC_doubly_linked_list_extract(args)
-#    define doubly_linked_list_extract_range(args...)                          \
-        CCC_doubly_linked_list_extract_range(args)
-#    define doubly_linked_list_erase(args...) CCC_doubly_linked_list_erase(args)
-#    define doubly_linked_list_erase_range(args...)                            \
-        CCC_doubly_linked_list_erase_range(args)
-#    define doubly_linked_list_splice(args...)                                 \
-        CCC_doubly_linked_list_splice(args)
-#    define doubly_linked_list_splice_range(args...)                           \
-        CCC_doubly_linked_list_splice_range(args)
-#    define doubly_linked_list_sort(args...) CCC_doubly_linked_list_sort(args)
-#    define doubly_linked_list_insert_sorted(args...)                          \
-        CCC_doubly_linked_list_insert_sorted(args)
-#    define doubly_linked_list_is_sorted(args...)                              \
-        CCC_doubly_linked_list_is_sorted(args)
-#    define doubly_linked_list_begin(args...) CCC_doubly_linked_list_begin(args)
-#    define doubly_linked_list_next(args...) CCC_doubly_linked_list_next(args)
-#    define doubly_linked_list_reverse_begin(args...)                          \
-        CCC_doubly_linked_list_reverse_begin(args)
-#    define doubly_linked_list_reverse_next(args...)                           \
-        CCC_doubly_linked_list_reverse_next(args)
-#    define doubly_linked_list_end(args...) CCC_doubly_linked_list_end(args)
-#    define doubly_linked_list_reverse_end(args...)                            \
-        CCC_doubly_linked_list_reverse_end(args)
-#    define doubly_linked_list_node_begin(args...)                             \
-        CCC_doubly_linked_list_node_begin(args)
-#    define doubly_linked_list_count(args...) CCC_doubly_linked_list_count(args)
-#    define doubly_linked_list_is_empty(args...)                               \
-        CCC_doubly_linked_list_is_empty(args)
-#    define doubly_linked_list_clear(args...) CCC_doubly_linked_list_clear(args)
-#    define doubly_linked_list_validate(args...)                               \
-        CCC_doubly_linked_list_validate(args)
+#    define doubly_linked_list_initialize(arguments...)                        \
+        CCC_doubly_linked_list_initialize(arguments)
+#    define doubly_linked_list_from(arguments...)                              \
+        CCC_doubly_linked_list_from(arguments)
+#    define doubly_linked_list_emplace_back(arguments...)                      \
+        CCC_doubly_linked_list_emplace_back(arguments)
+#    define doubly_linked_list_emplace_front(arguments...)                     \
+        CCC_doubly_linked_list_emplace_front(arguments)
+#    define doubly_linked_list_push_front(arguments...)                        \
+        CCC_doubly_linked_list_push_front(arguments)
+#    define doubly_linked_list_push_back(arguments...)                         \
+        CCC_doubly_linked_list_push_back(arguments)
+#    define doubly_linked_list_front(arguments...)                             \
+        CCC_doubly_linked_list_front(arguments)
+#    define doubly_linked_list_back(arguments...)                              \
+        CCC_doubly_linked_list_back(arguments)
+#    define doubly_linked_list_pop_front(arguments...)                         \
+        CCC_doubly_linked_list_pop_front(arguments)
+#    define doubly_linked_list_pop_back(arguments...)                          \
+        CCC_doubly_linked_list_pop_back(arguments)
+#    define doubly_linked_list_extract(arguments...)                           \
+        CCC_doubly_linked_list_extract(arguments)
+#    define doubly_linked_list_extract_range(arguments...)                     \
+        CCC_doubly_linked_list_extract_range(arguments)
+#    define doubly_linked_list_erase(arguments...)                             \
+        CCC_doubly_linked_list_erase(arguments)
+#    define doubly_linked_list_erase_range(arguments...)                       \
+        CCC_doubly_linked_list_erase_range(arguments)
+#    define doubly_linked_list_splice(arguments...)                            \
+        CCC_doubly_linked_list_splice(arguments)
+#    define doubly_linked_list_splice_range(arguments...)                      \
+        CCC_doubly_linked_list_splice_range(arguments)
+#    define doubly_linked_list_sort(arguments...)                              \
+        CCC_doubly_linked_list_sort(arguments)
+#    define doubly_linked_list_insert_sorted(arguments...)                     \
+        CCC_doubly_linked_list_insert_sorted(arguments)
+#    define doubly_linked_list_is_sorted(arguments...)                         \
+        CCC_doubly_linked_list_is_sorted(arguments)
+#    define doubly_linked_list_begin(arguments...)                             \
+        CCC_doubly_linked_list_begin(arguments)
+#    define doubly_linked_list_next(arguments...)                              \
+        CCC_doubly_linked_list_next(arguments)
+#    define doubly_linked_list_reverse_begin(arguments...)                     \
+        CCC_doubly_linked_list_reverse_begin(arguments)
+#    define doubly_linked_list_reverse_next(arguments...)                      \
+        CCC_doubly_linked_list_reverse_next(arguments)
+#    define doubly_linked_list_end(arguments...)                               \
+        CCC_doubly_linked_list_end(arguments)
+#    define doubly_linked_list_reverse_end(arguments...)                       \
+        CCC_doubly_linked_list_reverse_end(arguments)
+#    define doubly_linked_list_node_begin(arguments...)                        \
+        CCC_doubly_linked_list_node_begin(arguments)
+#    define doubly_linked_list_count(arguments...)                             \
+        CCC_doubly_linked_list_count(arguments)
+#    define doubly_linked_list_is_empty(arguments...)                          \
+        CCC_doubly_linked_list_is_empty(arguments)
+#    define doubly_linked_list_clear(arguments...)                             \
+        CCC_doubly_linked_list_clear(arguments)
+#    define doubly_linked_list_validate(arguments...)                          \
+        CCC_doubly_linked_list_validate(arguments)
 #endif /* DOUBLY_LINKED_LIST_USING_NAMESPACE_CCC */
 
 #endif /* CCC_LIST_H */

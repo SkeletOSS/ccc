@@ -686,64 +686,64 @@ flat_double_ended_queue container. Ensure no namespace collisions occur before
 name shortening. */
 #ifdef FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
 typedef CCC_Flat_double_ended_queue Flat_double_ended_queue;
-#    define flat_double_ended_queue_initialize(args...)                        \
-        CCC_flat_double_ended_queue_initialize(args)
-#    define flat_double_ended_queue_from(args...)                              \
-        CCC_flat_double_ended_queue_from(args)
-#    define flat_double_ended_queue_with_capacity(args...)                     \
-        CCC_flat_double_ended_queue_with_capacity(args)
-#    define flat_double_ended_queue_copy(args...)                              \
-        CCC_flat_double_ended_queue_copy(args)
-#    define flat_double_ended_queue_reserve(args...)                           \
-        CCC_flat_double_ended_queue_reserve(args)
-#    define flat_double_ended_queue_emplace(args...)                           \
-        CCC_flat_double_ended_queue_emplace(args)
-#    define flat_double_ended_queue_push_back(args...)                         \
-        CCC_flat_double_ended_queue_push_back(args)
-#    define flat_double_ended_queue_push_back_range(args...)                   \
-        CCC_flat_double_ended_queue_push_back_range(args)
-#    define flat_double_ended_queue_push_front(args...)                        \
-        CCC_flat_double_ended_queue_push_front(args)
-#    define flat_double_ended_queue_push_front_range(args...)                  \
-        CCC_flat_double_ended_queue_push_front_range(args)
-#    define flat_double_ended_queue_insert_range(args...)                      \
-        CCC_flat_double_ended_queue_insert_range(args)
-#    define flat_double_ended_queue_pop_front(args...)                         \
-        CCC_flat_double_ended_queue_pop_front(args)
-#    define flat_double_ended_queue_pop_back(args...)                          \
-        CCC_flat_double_ended_queue_pop_back(args)
-#    define flat_double_ended_queue_front(args...)                             \
-        CCC_flat_double_ended_queue_front(args)
-#    define flat_double_ended_queue_back(args...)                              \
-        CCC_flat_double_ended_queue_back(args)
-#    define flat_double_ended_queue_is_empty(args...)                          \
-        CCC_flat_double_ended_queue_is_empty(args)
-#    define flat_double_ended_queue_count(args...)                             \
-        CCC_flat_double_ended_queue_count(args)
-#    define flat_double_ended_queue_clear(args...)                             \
-        CCC_flat_double_ended_queue_clear(args)
-#    define flat_double_ended_queue_clear_and_free(args...)                    \
-        CCC_flat_double_ended_queue_clear_and_free(args)
-#    define flat_double_ended_queue_clear_and_free_reserve(args...)            \
-        CCC_flat_double_ended_queue_clear_and_free_reserve(args)
-#    define flat_double_ended_queue_at(args...)                                \
-        CCC_flat_double_ended_queue_at(args)
-#    define flat_double_ended_queue_data(args...)                              \
-        CCC_flat_double_ended_queue_data(args)
-#    define flat_double_ended_queue_begin(args...)                             \
-        CCC_flat_double_ended_queue_begin(args)
-#    define flat_double_ended_queue_reverse_begin(args...)                     \
-        CCC_flat_double_ended_queue_reverse_begin(args)
-#    define flat_double_ended_queue_next(args...)                              \
-        CCC_flat_double_ended_queue_next(args)
-#    define flat_double_ended_queue_reverse_next(args...)                      \
-        CCC_flat_double_ended_queue_reverse_next(args)
-#    define flat_double_ended_queue_end(args...)                               \
-        CCC_flat_double_ended_queue_end(args)
-#    define flat_double_ended_queue_reverse_end(args...)                       \
-        CCC_flat_double_ended_queue_reverse_end(args)
-#    define flat_double_ended_queue_validate(args...)                          \
-        CCC_flat_double_ended_queue_validate(args)
+#    define flat_double_ended_queue_initialize(arguments...)                   \
+        CCC_flat_double_ended_queue_initialize(arguments)
+#    define flat_double_ended_queue_from(arguments...)                         \
+        CCC_flat_double_ended_queue_from(arguments)
+#    define flat_double_ended_queue_with_capacity(arguments...)                \
+        CCC_flat_double_ended_queue_with_capacity(arguments)
+#    define flat_double_ended_queue_copy(arguments...)                         \
+        CCC_flat_double_ended_queue_copy(arguments)
+#    define flat_double_ended_queue_reserve(arguments...)                      \
+        CCC_flat_double_ended_queue_reserve(arguments)
+#    define flat_double_ended_queue_emplace(arguments...)                      \
+        CCC_flat_double_ended_queue_emplace(arguments)
+#    define flat_double_ended_queue_push_back(arguments...)                    \
+        CCC_flat_double_ended_queue_push_back(arguments)
+#    define flat_double_ended_queue_push_back_range(arguments...)              \
+        CCC_flat_double_ended_queue_push_back_range(arguments)
+#    define flat_double_ended_queue_push_front(arguments...)                   \
+        CCC_flat_double_ended_queue_push_front(arguments)
+#    define flat_double_ended_queue_push_front_range(arguments...)             \
+        CCC_flat_double_ended_queue_push_front_range(arguments)
+#    define flat_double_ended_queue_insert_range(arguments...)                 \
+        CCC_flat_double_ended_queue_insert_range(arguments)
+#    define flat_double_ended_queue_pop_front(arguments...)                    \
+        CCC_flat_double_ended_queue_pop_front(arguments)
+#    define flat_double_ended_queue_pop_back(arguments...)                     \
+        CCC_flat_double_ended_queue_pop_back(arguments)
+#    define flat_double_ended_queue_front(arguments...)                        \
+        CCC_flat_double_ended_queue_front(arguments)
+#    define flat_double_ended_queue_back(arguments...)                         \
+        CCC_flat_double_ended_queue_back(arguments)
+#    define flat_double_ended_queue_is_empty(arguments...)                     \
+        CCC_flat_double_ended_queue_is_empty(arguments)
+#    define flat_double_ended_queue_count(arguments...)                        \
+        CCC_flat_double_ended_queue_count(arguments)
+#    define flat_double_ended_queue_clear(arguments...)                        \
+        CCC_flat_double_ended_queue_clear(arguments)
+#    define flat_double_ended_queue_clear_and_free(arguments...)               \
+        CCC_flat_double_ended_queue_clear_and_free(arguments)
+#    define flat_double_ended_queue_clear_and_free_reserve(arguments...)       \
+        CCC_flat_double_ended_queue_clear_and_free_reserve(arguments)
+#    define flat_double_ended_queue_at(arguments...)                           \
+        CCC_flat_double_ended_queue_at(arguments)
+#    define flat_double_ended_queue_data(arguments...)                         \
+        CCC_flat_double_ended_queue_data(arguments)
+#    define flat_double_ended_queue_begin(arguments...)                        \
+        CCC_flat_double_ended_queue_begin(arguments)
+#    define flat_double_ended_queue_reverse_begin(arguments...)                \
+        CCC_flat_double_ended_queue_reverse_begin(arguments)
+#    define flat_double_ended_queue_next(arguments...)                         \
+        CCC_flat_double_ended_queue_next(arguments)
+#    define flat_double_ended_queue_reverse_next(arguments...)                 \
+        CCC_flat_double_ended_queue_reverse_next(arguments)
+#    define flat_double_ended_queue_end(arguments...)                          \
+        CCC_flat_double_ended_queue_end(arguments)
+#    define flat_double_ended_queue_reverse_end(arguments...)                  \
+        CCC_flat_double_ended_queue_reverse_end(arguments)
+#    define flat_double_ended_queue_validate(arguments...)                     \
+        CCC_flat_double_ended_queue_validate(arguments)
 #endif /* FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC */
 
 #endif /* CCC_FLAT_DOUBLE_ENDED_QUEUE_H */

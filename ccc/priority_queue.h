@@ -355,7 +355,7 @@ Deallocate the container. */
 /** @brief Removes all elements from the priority_queue, freeing if needed.
 @param[in] priority_queue a pointer to the priority queue.
 @param[in] destroy the destructor function or NULL if not needed.
-@return ok if the clear was successful or an input error for NULL args.
+@return ok if the clear was successful or an input error for NULL arguments.
 
 Note that if allocation is allowed the container will free the user type
 wrapping each element in the priority_queue. Therefore, the user should not free
@@ -414,28 +414,39 @@ priority queue container. Check for collisions before name shortening. */
 #ifdef PRIORITY_QUEUE_USING_NAMESPACE_CCC
 typedef CCC_Priority_queue_node priority_queue_node;
 typedef CCC_Priority_queue Priority_queue;
-#    define priority_queue_initialize(args...)                                 \
-        CCC_priority_queue_initialize(args)
-#    define priority_queue_from(args...) CCC_priority_queue_from(args)
-#    define priority_queue_front(args...) CCC_priority_queue_front(args)
-#    define priority_queue_push(args...) CCC_priority_queue_push(args)
-#    define priority_queue_emplace(args...) CCC_priority_queue_emplace(args)
-#    define priority_queue_pop(args...) CCC_priority_queue_pop(args)
-#    define priority_queue_extract(args...) CCC_priority_queue_extract(args)
-#    define priority_queue_is_empty(args...) CCC_priority_queue_is_empty(args)
-#    define priority_queue_count(args...) CCC_priority_queue_count(args)
-#    define priority_queue_update(args...) CCC_priority_queue_update(args)
-#    define priority_queue_increase(args...) CCC_priority_queue_increase(args)
-#    define priority_queue_decrease(args...) CCC_priority_queue_decrease(args)
-#    define priority_queue_update_with(args...)                                \
-        CCC_priority_queue_update_with(args)
-#    define priority_queue_increase_with(args...)                              \
-        CCC_priority_queue_increase_with(args)
-#    define priority_queue_decrease_with(args...)                              \
-        CCC_priority_queue_decrease_with(args)
-#    define priority_queue_order(args...) CCC_priority_queue_order(args)
-#    define priority_queue_clear(args...) CCC_priority_queue_clear(args)
-#    define priority_queue_validate(args...) CCC_priority_queue_validate(args)
+#    define priority_queue_initialize(arguments...)                            \
+        CCC_priority_queue_initialize(arguments)
+#    define priority_queue_from(arguments...) CCC_priority_queue_from(arguments)
+#    define priority_queue_front(arguments...)                                 \
+        CCC_priority_queue_front(arguments)
+#    define priority_queue_push(arguments...) CCC_priority_queue_push(arguments)
+#    define priority_queue_emplace(arguments...)                               \
+        CCC_priority_queue_emplace(arguments)
+#    define priority_queue_pop(arguments...) CCC_priority_queue_pop(arguments)
+#    define priority_queue_extract(arguments...)                               \
+        CCC_priority_queue_extract(arguments)
+#    define priority_queue_is_empty(arguments...)                              \
+        CCC_priority_queue_is_empty(arguments)
+#    define priority_queue_count(arguments...)                                 \
+        CCC_priority_queue_count(arguments)
+#    define priority_queue_update(arguments...)                                \
+        CCC_priority_queue_update(arguments)
+#    define priority_queue_increase(arguments...)                              \
+        CCC_priority_queue_increase(arguments)
+#    define priority_queue_decrease(arguments...)                              \
+        CCC_priority_queue_decrease(arguments)
+#    define priority_queue_update_with(arguments...)                           \
+        CCC_priority_queue_update_with(arguments)
+#    define priority_queue_increase_with(arguments...)                         \
+        CCC_priority_queue_increase_with(arguments)
+#    define priority_queue_decrease_with(arguments...)                         \
+        CCC_priority_queue_decrease_with(arguments)
+#    define priority_queue_order(arguments...)                                 \
+        CCC_priority_queue_order(arguments)
+#    define priority_queue_clear(arguments...)                                 \
+        CCC_priority_queue_clear(arguments)
+#    define priority_queue_validate(arguments...)                              \
+        CCC_priority_queue_validate(arguments)
 #endif /* PRIORITY_QUEUE_USING_NAMESPACE_CCC */
 
 #endif /* CCC_PRIORITY_QUEUE_H */

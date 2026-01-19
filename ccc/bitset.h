@@ -1035,87 +1035,93 @@ container. Check for namespace clashes before name shortening. */
 #ifdef BITSET_USING_NAMESPACE_CCC
 typedef CCC_Bitset Bitset;
 #    define BITSET_BLOCK_BITS CCC_BITSET_BLOCK_BITS
-#    define bitset_block_count(args...) CCC_bitset_block_count(args)
-#    define bitset_block_bytes(args...) CCC_bitset_block_bytes(args)
-#    define bitset_blocks(args...) CCC_bitset_blocks(args)
-#    define bitset_initialize(args...) CCC_bitset_initialize(args)
-#    define bitset_from(args...) CCC_bitset_from(args)
-#    define bitset_with_capacity(args...) CCC_bitset_with_capacity(args)
-#    define bitset_with_compound_literal(args...)                              \
-        CCC_bitset_with_compound_literal(args)
-#    define bitset_with_context_compound_literal(args...)                      \
-        CCC_bitset_with_context_compound_literal(args)
-#    define bitset_copy(args...) CCC_bitset_copy(args)
-#    define bitset_reserve(args...) CCC_bitset_reserve(args)
-#    define bitset_test(args...) CCC_bitset_test(args)
-#    define bitset_set(args...) CCC_bitset_set(args)
-#    define bitset_set_all(args...) CCC_bitset_set_all(args)
-#    define bitset_set_range(args...) CCC_bitset_set_range(args)
-#    define bitset_reset(args...) CCC_bitset_reset(args)
-#    define bitset_reset_all(args...) CCC_bitset_reset_all(args)
-#    define bitset_reset_range(args...) CCC_bitset_reset_range(args)
-#    define bitset_flip(args...) CCC_bitset_flip(args)
-#    define bitset_flip_all(args...) CCC_bitset_flip_all(args)
-#    define bitset_flip_range(args...) CCC_bitset_flip_range(args)
-#    define bitset_any(args...) CCC_bitset_any(args)
-#    define bitset_any_range(args...) CCC_bitset_any_range(args)
-#    define bitset_none(args...) CCC_bitset_none(args)
-#    define bitset_none_range(args...) CCC_bitset_none_range(args)
-#    define bitset_all(args...) CCC_bitset_all(args)
-#    define bitset_all_range(args...) CCC_bitset_all_range(args)
-#    define bitset_first_trailing_one(args...)                                 \
-        CCC_bitset_first_trailing_one(args)
-#    define bitset_first_trailing_one_range(args...)                           \
-        CCC_bitset_first_trailing_one_range(args)
-#    define bitset_first_trailing_ones(args...)                                \
-        CCC_bitset_first_trailing_ones(args)
-#    define bitset_first_trailing_ones_range(args...)                          \
-        CCC_bitset_first_trailing_ones_range(args)
-#    define bitset_first_trailing_zero(args...)                                \
-        CCC_bitset_first_trailing_zero(args)
-#    define bitset_first_trailing_zero_range(args...)                          \
-        CCC_bitset_first_trailing_zero_range(args)
-#    define bitset_first_trailing_zeros(args...)                               \
-        CCC_bitset_first_trailing_zeros(args)
-#    define bitset_first_trailing_zeros_range(args...)                         \
-        CCC_bitset_first_trailing_zeros_range(args)
-#    define bitset_first_leading_one(args...) CCC_bitset_first_leading_one(args)
-#    define bitset_first_leading_one_range(args...)                            \
-        CCC_bitset_first_leading_one_range(args)
-#    define bitset_first_leading_ones(args...)                                 \
-        CCC_bitset_first_leading_ones(args)
-#    define bitset_first_leading_ones_range(args...)                           \
-        CCC_bitset_first_leading_ones_range(args)
-#    define bitset_first_leading_zero(args...)                                 \
-        CCC_bitset_first_leading_zero(args)
-#    define bitset_first_leading_zero_range(args...)                           \
-        CCC_bitset_first_leading_zero_range(args)
-#    define bitset_first_leading_zeros(args...)                                \
-        CCC_bitset_first_leading_zeros(args)
-#    define bitset_first_leading_zeros_range(args...)                          \
-        CCC_bitset_first_leading_zeros_range(args)
-#    define bitset_or(args...) CCC_bitset_or(args)
-#    define bitset_and(args...) CCC_bitset_and(args)
-#    define bitset_xor(args...) CCC_bitset_xor(args)
-#    define bitset_shift_left(args...) CCC_bitset_shift_left(args)
-#    define bitset_shift_right(args...) CCC_bitset_shift_right(args)
-#    define bitset_is_equal(args...) CCC_bitset_is_equal(args)
-#    define bitset_is_proper_subset(args...) CCC_bitset_is_proper_subset(args)
-#    define bitset_is_subset(args...) CCC_bitset_is_subset(args)
-#    define bitset_data(args...) CCC_bitset_data(args)
-#    define bitset_capacity(args...) CCC_bitset_capacity(args)
-#    define bitset_blocks_capacity(args...) CCC_bitset_blocks_capacity(args)
-#    define bitset_count(args...) CCC_bitset_count(args)
-#    define bitset_blocks_count(args...) CCC_bitset_blocks_count(args)
-#    define bitset_is_empty(args...) CCC_bitset_is_empty(args)
-#    define bitset_popcount(args...) CCC_bitset_popcount(args)
-#    define bitset_popcount_range(args...) CCC_bitset_popcount_range(args)
-#    define bitset_clear(args...) CCC_bitset_clear(args)
-#    define bitset_clear_and_free(args...) CCC_bitset_clear_and_free(args)
-#    define bitset_clear_and_free_reserve(args...)                             \
-        CCC_bitset_clear_and_free_reserve(args)
-#    define bitset_push_back(args...) CCC_bitset_push_back(args)
-#    define bitset_pop_back(args...) CCC_bitset_pop_back(args)
+#    define bitset_block_count(arguments...) CCC_bitset_block_count(arguments)
+#    define bitset_block_bytes(arguments...) CCC_bitset_block_bytes(arguments)
+#    define bitset_blocks(arguments...) CCC_bitset_blocks(arguments)
+#    define bitset_initialize(arguments...) CCC_bitset_initialize(arguments)
+#    define bitset_from(arguments...) CCC_bitset_from(arguments)
+#    define bitset_with_capacity(arguments...)                                 \
+        CCC_bitset_with_capacity(arguments)
+#    define bitset_with_compound_literal(arguments...)                         \
+        CCC_bitset_with_compound_literal(arguments)
+#    define bitset_with_context_compound_literal(arguments...)                 \
+        CCC_bitset_with_context_compound_literal(arguments)
+#    define bitset_copy(arguments...) CCC_bitset_copy(arguments)
+#    define bitset_reserve(arguments...) CCC_bitset_reserve(arguments)
+#    define bitset_test(arguments...) CCC_bitset_test(arguments)
+#    define bitset_set(arguments...) CCC_bitset_set(arguments)
+#    define bitset_set_all(arguments...) CCC_bitset_set_all(arguments)
+#    define bitset_set_range(arguments...) CCC_bitset_set_range(arguments)
+#    define bitset_reset(arguments...) CCC_bitset_reset(arguments)
+#    define bitset_reset_all(arguments...) CCC_bitset_reset_all(arguments)
+#    define bitset_reset_range(arguments...) CCC_bitset_reset_range(arguments)
+#    define bitset_flip(arguments...) CCC_bitset_flip(arguments)
+#    define bitset_flip_all(arguments...) CCC_bitset_flip_all(arguments)
+#    define bitset_flip_range(arguments...) CCC_bitset_flip_range(arguments)
+#    define bitset_any(arguments...) CCC_bitset_any(arguments)
+#    define bitset_any_range(arguments...) CCC_bitset_any_range(arguments)
+#    define bitset_none(arguments...) CCC_bitset_none(arguments)
+#    define bitset_none_range(arguments...) CCC_bitset_none_range(arguments)
+#    define bitset_all(arguments...) CCC_bitset_all(arguments)
+#    define bitset_all_range(arguments...) CCC_bitset_all_range(arguments)
+#    define bitset_first_trailing_one(arguments...)                            \
+        CCC_bitset_first_trailing_one(arguments)
+#    define bitset_first_trailing_one_range(arguments...)                      \
+        CCC_bitset_first_trailing_one_range(arguments)
+#    define bitset_first_trailing_ones(arguments...)                           \
+        CCC_bitset_first_trailing_ones(arguments)
+#    define bitset_first_trailing_ones_range(arguments...)                     \
+        CCC_bitset_first_trailing_ones_range(arguments)
+#    define bitset_first_trailing_zero(arguments...)                           \
+        CCC_bitset_first_trailing_zero(arguments)
+#    define bitset_first_trailing_zero_range(arguments...)                     \
+        CCC_bitset_first_trailing_zero_range(arguments)
+#    define bitset_first_trailing_zeros(arguments...)                          \
+        CCC_bitset_first_trailing_zeros(arguments)
+#    define bitset_first_trailing_zeros_range(arguments...)                    \
+        CCC_bitset_first_trailing_zeros_range(arguments)
+#    define bitset_first_leading_one(arguments...)                             \
+        CCC_bitset_first_leading_one(arguments)
+#    define bitset_first_leading_one_range(arguments...)                       \
+        CCC_bitset_first_leading_one_range(arguments)
+#    define bitset_first_leading_ones(arguments...)                            \
+        CCC_bitset_first_leading_ones(arguments)
+#    define bitset_first_leading_ones_range(arguments...)                      \
+        CCC_bitset_first_leading_ones_range(arguments)
+#    define bitset_first_leading_zero(arguments...)                            \
+        CCC_bitset_first_leading_zero(arguments)
+#    define bitset_first_leading_zero_range(arguments...)                      \
+        CCC_bitset_first_leading_zero_range(arguments)
+#    define bitset_first_leading_zeros(arguments...)                           \
+        CCC_bitset_first_leading_zeros(arguments)
+#    define bitset_first_leading_zeros_range(arguments...)                     \
+        CCC_bitset_first_leading_zeros_range(arguments)
+#    define bitset_or(arguments...) CCC_bitset_or(arguments)
+#    define bitset_and(arguments...) CCC_bitset_and(arguments)
+#    define bitset_xor(arguments...) CCC_bitset_xor(arguments)
+#    define bitset_shift_left(arguments...) CCC_bitset_shift_left(arguments)
+#    define bitset_shift_right(arguments...) CCC_bitset_shift_right(arguments)
+#    define bitset_is_equal(arguments...) CCC_bitset_is_equal(arguments)
+#    define bitset_is_proper_subset(arguments...)                              \
+        CCC_bitset_is_proper_subset(arguments)
+#    define bitset_is_subset(arguments...) CCC_bitset_is_subset(arguments)
+#    define bitset_data(arguments...) CCC_bitset_data(arguments)
+#    define bitset_capacity(arguments...) CCC_bitset_capacity(arguments)
+#    define bitset_blocks_capacity(arguments...)                               \
+        CCC_bitset_blocks_capacity(arguments)
+#    define bitset_count(arguments...) CCC_bitset_count(arguments)
+#    define bitset_blocks_count(arguments...) CCC_bitset_blocks_count(arguments)
+#    define bitset_is_empty(arguments...) CCC_bitset_is_empty(arguments)
+#    define bitset_popcount(arguments...) CCC_bitset_popcount(arguments)
+#    define bitset_popcount_range(arguments...)                                \
+        CCC_bitset_popcount_range(arguments)
+#    define bitset_clear(arguments...) CCC_bitset_clear(arguments)
+#    define bitset_clear_and_free(arguments...)                                \
+        CCC_bitset_clear_and_free(arguments)
+#    define bitset_clear_and_free_reserve(arguments...)                        \
+        CCC_bitset_clear_and_free_reserve(arguments)
+#    define bitset_push_back(arguments...) CCC_bitset_push_back(arguments)
+#    define bitset_pop_back(arguments...) CCC_bitset_pop_back(arguments)
 #endif /* BITSET_USING_NAMESPACE_CCC */
 
 #endif /* CCC_BITSET_H */

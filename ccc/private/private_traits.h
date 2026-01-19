@@ -34,12 +34,12 @@ limitations under the License.
 
 /*====================     Entry/Handle Interface   =========================*/
 
-#define CCC_private_swap_entry(container_pointer, swap_args...)                \
+#define CCC_private_swap_entry(container_pointer, swap_arguments...)           \
     _Generic((container_pointer),                                              \
         CCC_Flat_hash_map *: CCC_flat_hash_map_swap_entry,                     \
         CCC_Adaptive_map *: CCC_adaptive_map_swap_entry,                       \
         CCC_Tree_map *: CCC_tree_map_swap_entry)((container_pointer),          \
-                                                 swap_args)
+                                                 swap_arguments)
 
 #define CCC_private_swap_entry_wrap(container_pointer,                         \
                                     key_val_container_array_pointer...)        \
@@ -50,11 +50,11 @@ limitations under the License.
             .private                                                           \
     }
 
-#define CCC_private_swap_handle(container_pointer, swap_args...)               \
+#define CCC_private_swap_handle(container_pointer, swap_arguments...)          \
     _Generic((container_pointer),                                              \
         CCC_Array_adaptive_map *: CCC_array_adaptive_map_swap_handle,          \
         CCC_Array_tree_map *: CCC_array_tree_map_swap_handle)(                 \
-        (container_pointer), swap_args)
+        (container_pointer), swap_arguments)
 
 #define CCC_private_swap_handle_wrap(container_pointer,                        \
                                      key_val_container_array_pointer...)       \
@@ -65,80 +65,81 @@ limitations under the License.
             .private                                                           \
     }
 
-#define CCC_private_try_insert(container_pointer, try_insert_args...)          \
+#define CCC_private_try_insert(container_pointer, try_insert_arguments...)     \
     _Generic((container_pointer),                                              \
         CCC_Array_adaptive_map *: CCC_array_adaptive_map_try_insert,           \
         CCC_Array_tree_map *: CCC_array_tree_map_try_insert,                   \
         CCC_Flat_hash_map *: CCC_flat_hash_map_try_insert,                     \
         CCC_Adaptive_map *: CCC_adaptive_map_try_insert,                       \
         CCC_Tree_map *: CCC_tree_map_try_insert)((container_pointer),          \
-                                                 try_insert_args)
+                                                 try_insert_arguments)
 
-#define CCC_private_try_insert_wrap(container_pointer, try_insert_args...)     \
+#define CCC_private_try_insert_wrap(container_pointer,                         \
+                                    try_insert_arguments...)                   \
     _Generic((container_pointer),                                              \
         CCC_Array_adaptive_map *: &(                                           \
                  CCC_Handle){CCC_array_adaptive_map_try_insert(                \
                                  (CCC_Array_adaptive_map *)container_pointer,  \
-                                 try_insert_args)                              \
+                                 try_insert_arguments)                         \
                                  .private},                                    \
         CCC_Array_tree_map *: &(                                               \
                  CCC_Handle){CCC_array_tree_map_try_insert(                    \
                                  (CCC_Array_tree_map *)container_pointer,      \
-                                 try_insert_args)                              \
+                                 try_insert_arguments)                         \
                                  .private},                                    \
         CCC_Flat_hash_map *: &(                                                \
                  CCC_Entry){CCC_flat_hash_map_try_insert(                      \
                                 (CCC_Flat_hash_map *)container_pointer,        \
-                                try_insert_args)                               \
+                                try_insert_arguments)                          \
                                 .private},                                     \
         CCC_Adaptive_map *: &(                                                 \
                  CCC_Entry){CCC_adaptive_map_try_insert(                       \
                                 (CCC_Adaptive_map *)container_pointer,         \
-                                (CCC_Adaptive_map_node *)try_insert_args)      \
+                                (CCC_Adaptive_map_node *)try_insert_arguments) \
                                 .private},                                     \
         CCC_Tree_map *: &(CCC_Entry){                                          \
             CCC_tree_map_try_insert((CCC_Tree_map *)container_pointer,         \
-                                    (CCC_Tree_map_node *)try_insert_args)      \
+                                    (CCC_Tree_map_node *)try_insert_arguments) \
                 .private})
 
 #define CCC_private_insert_or_assign(container_pointer,                        \
-                                     insert_or_assign_args...)                 \
+                                     insert_or_assign_arguments...)            \
     _Generic((container_pointer),                                              \
         CCC_Array_adaptive_map *: CCC_array_adaptive_map_insert_or_assign,     \
         CCC_Array_tree_map *: CCC_array_tree_map_insert_or_assign,             \
         CCC_Flat_hash_map *: CCC_flat_hash_map_insert_or_assign,               \
         CCC_Adaptive_map *: CCC_adaptive_map_insert_or_assign,                 \
-        CCC_Tree_map *: CCC_tree_map_insert_or_assign)((container_pointer),    \
-                                                       insert_or_assign_args)
+        CCC_Tree_map *: CCC_tree_map_insert_or_assign)(                        \
+        (container_pointer), insert_or_assign_arguments)
 
 #define CCC_private_insert_or_assign_wrap(container_pointer,                   \
-                                          insert_or_assign_args...)            \
+                                          insert_or_assign_arguments...)       \
     _Generic((container_pointer),                                              \
         CCC_Array_adaptive_map *: &(                                           \
                  CCC_Handle){CCC_array_adaptive_map_insert_or_assign(          \
                                  (CCC_Array_adaptive_map *)container_pointer,  \
-                                 insert_or_assign_args)                        \
+                                 insert_or_assign_arguments)                   \
                                  .private},                                    \
         CCC_Array_tree_map *: &(                                               \
                  CCC_Handle){CCC_array_tree_map_insert_or_assign(              \
                                  (CCC_Array_tree_map *)container_pointer,      \
-                                 insert_or_assign_args)                        \
+                                 insert_or_assign_arguments)                   \
                                  .private},                                    \
         CCC_Flat_hash_map *: &(                                                \
                  CCC_Entry){CCC_flat_hash_map_insert_or_assign(                \
                                 (CCC_Flat_hash_map *)container_pointer,        \
-                                insert_or_assign_args)                         \
+                                insert_or_assign_arguments)                    \
                                 .private},                                     \
         CCC_Adaptive_map *: &(                                                 \
                  CCC_Entry){CCC_adaptive_map_insert_or_assign(                 \
                                 (CCC_Adaptive_map *)container_pointer,         \
                                 (CCC_Adaptive_map_node *)                      \
-                                    insert_or_assign_args)                     \
+                                    insert_or_assign_arguments)                \
                                 .private},                                     \
         CCC_Tree_map *: &(CCC_Entry){                                          \
             CCC_tree_map_insert_or_assign(                                     \
                 (CCC_Tree_map *)container_pointer,                             \
-                (CCC_Tree_map_node *)insert_or_assign_args)                    \
+                (CCC_Tree_map_node *)insert_or_assign_arguments)               \
                 .private})
 
 #define CCC_private_remove_key_value(container_pointer,                        \
@@ -499,23 +500,23 @@ limitations under the License.
 
 /*================       Priority Queue Update Interface =====================*/
 
-#define CCC_private_update(container_pointer, update_args...)                  \
+#define CCC_private_update(container_pointer, update_arguments...)             \
     _Generic((container_pointer),                                              \
         CCC_Flat_priority_queue *: CCC_flat_priority_queue_update,             \
         CCC_Priority_queue *: CCC_priority_queue_update)((container_pointer),  \
-                                                         update_args)
+                                                         update_arguments)
 
-#define CCC_private_increase(container_pointer, increase_args...)              \
+#define CCC_private_increase(container_pointer, increase_arguments...)         \
     _Generic((container_pointer),                                              \
         CCC_Flat_priority_queue *: CCC_flat_priority_queue_increase,           \
         CCC_Priority_queue *: CCC_priority_queue_increase)(                    \
-        (container_pointer), increase_args)
+        (container_pointer), increase_arguments)
 
-#define CCC_private_decrease(container_pointer, decrease_args...)              \
+#define CCC_private_decrease(container_pointer, decrease_arguments...)         \
     _Generic((container_pointer),                                              \
         CCC_Flat_priority_queue *: CCC_flat_priority_queue_decrease,           \
         CCC_Priority_queue *: CCC_priority_queue_decrease)(                    \
-        (container_pointer), decrease_args)
+        (container_pointer), decrease_arguments)
 
 #define CCC_private_extract(container_pointer, container_array_pointer...)     \
     _Generic((container_pointer),                                              \
@@ -802,21 +803,21 @@ the appropriate range from the selections. */
         CCC_Handle_range_reverse const *: CCC_array_range_reverse_end)(        \
         (range_reverse_pointer))
 
-#define CCC_private_splice(container_pointer, splice_args...)                  \
+#define CCC_private_splice(container_pointer, splice_arguments...)             \
     _Generic((container_pointer),                                              \
         CCC_Singly_linked_list *: CCC_singly_linked_list_splice,               \
         CCC_Singly_linked_list const *: CCC_singly_linked_list_splice,         \
         CCC_Doubly_linked_list *: CCC_doubly_linked_list_splice,               \
         CCC_Doubly_linked_list const *: CCC_doubly_linked_list_splice)(        \
-        (container_pointer), splice_args)
+        (container_pointer), splice_arguments)
 
-#define CCC_private_splice_range(container_pointer, splice_range_args...)      \
+#define CCC_private_splice_range(container_pointer, splice_range_arguments...) \
     _Generic((container_pointer),                                              \
         CCC_Singly_linked_list *: CCC_singly_linked_list_splice_range,         \
         CCC_Singly_linked_list const *: CCC_singly_linked_list_splice_range,   \
         CCC_Doubly_linked_list *: CCC_doubly_linked_list_splice_range,         \
         CCC_Doubly_linked_list const *: CCC_doubly_linked_list_splice_range)(  \
-        (container_pointer), splice_range_args)
+        (container_pointer), splice_range_arguments)
 
 /*===================         Memory Management       =======================*/
 
@@ -872,7 +873,7 @@ the appropriate range from the selections. */
         (container_pointer)__VA_OPT__(, __VA_ARGS__))
 
 #define CCC_private_clear_and_free_reserve(container_pointer,                  \
-                                           destructor_and_free_args...)        \
+                                           destructor_and_free_arguments...)   \
     _Generic((container_pointer),                                              \
         CCC_Bitset *: CCC_bitset_clear_and_free_reserve,                       \
         CCC_Buffer *: CCC_buffer_clear_and_free_reserve,                       \
@@ -884,7 +885,7 @@ the appropriate range from the selections. */
         CCC_Flat_double_ended_queue                                            \
             *: CCC_flat_double_ended_queue_clear_and_free_reserve,             \
         CCC_Array_tree_map *: CCC_array_tree_map_clear_and_free_reserve)(      \
-        (container_pointer), destructor_and_free_args)
+        (container_pointer), destructor_and_free_arguments)
 
 /*===================    Standard Getters Interface   =======================*/
 

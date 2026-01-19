@@ -1084,9 +1084,9 @@ Rust has solid interfaces for associative containers, largely due to the Entry I
 
 - `CCC_Entry(container_pointer, key_pointer...)` - Obtains an entry, a view into an Occupied or Vacant user type stored in the container.
 - `CCC_and_modify(entry_pointer, mod_fn)` - Modify an occupied entry with a callback.
-- `CCC_and_modify_context(entry_pointer, mod_fn, context_args)` - Modify an Occupied entry with a callback that requires context data.
-- `CCC_or_insert(entry_pointer, or_insert_args)` - Insert a default key value if Vacant or return the Occupied entry.
-- `CCC_insert_entry(entry_pointer, insert_entry_args)` - Invariantly insert a new key value, overwriting an Occupied entry if needed.
+- `CCC_and_modify_context(entry_pointer, mod_fn, context_arguments)` - Modify an Occupied entry with a callback that requires context data.
+- `CCC_or_insert(entry_pointer, or_insert_arguments)` - Insert a default key value if Vacant or return the Occupied entry.
+- `CCC_insert_entry(entry_pointer, insert_entry_arguments)` - Invariantly insert a new key value, overwriting an Occupied entry if needed.
 - `CCC_remove_entry(entry_pointer)` - Remove an Occupied entry from the container or do nothing.
 
 Other Rust Interface functions like `get_key_value`, `insert`, and `remove` are included and can provide information about previous values stored in the container.
@@ -1113,8 +1113,8 @@ This is possible because of the details discussed in the previous section. Conta
 
 Some C++ associative container interfaces have also been adapted to the Entry Interface.
 
-- `CCC_try_insert(container_pointer, try_insert_args)` - Inserts a new element if none was present and reports if a previous entry existed.
-- `CCC_insert_or_assign(container_pointer, insert_or_assign_args)` - Inserts a new element invariantly and reports if a previous entry existed.
+- `CCC_try_insert(container_pointer, try_insert_arguments)` - Inserts a new element if none was present and reports if a previous entry existed.
+- `CCC_insert_or_assign(container_pointer, insert_or_assign_arguments)` - Inserts a new element invariantly and reports if a previous entry existed.
 
 Many other containers fall back to C++ style interfaces when it makes sense to do so.
 
@@ -1175,7 +1175,7 @@ The same insertion with the "with" variant.
 static inline struct Val
 val(int val_arg)
 {
-    return (struct Val){.val = val_args};
+    return (struct Val){.val = val_arguments};
 }
 
 CCC_Entry *e = adaptive_map_try_insert_with(&om, 3, val(1));

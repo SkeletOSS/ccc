@@ -399,45 +399,54 @@ linked list container. Check for namespace clashes before name shortening. */
 #ifdef SINGLY_LINKED_LIST_USING_NAMESPACE_CCC
 typedef CCC_Singly_linked_list_node singly_linked_list_node;
 typedef CCC_Singly_linked_list Singly_linked_list;
-#    define singly_linked_list_initialize(args...)                             \
-        CCC_singly_linked_list_initialize(args)
-#    define singly_linked_list_from(args...) CCC_singly_linked_list_from(args)
-#    define singly_linked_list_emplace_front(args...)                          \
-        CCC_singly_linked_list_emplace_front(args)
-#    define singly_linked_list_push_front(args...)                             \
-        CCC_singly_linked_list_push_front(args)
-#    define singly_linked_list_front(args...) CCC_singly_linked_list_front(args)
-#    define singly_linked_list_pop_front(args...)                              \
-        CCC_singly_linked_list_pop_front(args)
-#    define singly_linked_list_splice(args...)                                 \
-        CCC_singly_linked_list_splice(args)
-#    define singly_linked_list_splice_range(args...)                           \
-        CCC_singly_linked_list_splice_range(args)
-#    define singly_linked_list_extract(args...)                                \
-        CCC_singly_linked_list_extract(args)
-#    define singly_linked_list_extract_range(args...)                          \
-        CCC_singly_linked_list_extract_range(args)
-#    define singly_linked_list_erase(args...) CCC_singly_linked_list_erase(args)
-#    define singly_linked_list_erase_range(args...)                            \
-        CCC_singly_linked_list_erase_range(args)
-#    define singly_linked_list_sort(args...) CCC_singly_linked_list_sort(args)
-#    define singly_linked_list_insert_sorted(args...)                          \
-        CCC_singly_linked_list_insert_sorted(args)
-#    define singly_linked_list_is_sorted(args...)                              \
-        CCC_singly_linked_list_is_sorted(args)
-#    define singly_linked_list_begin(args...) CCC_singly_linked_list_begin(args)
-#    define singly_linked_list_node_begin(args...)                             \
-        CCC_singly_linked_list_node_begin(args)
-#    define singly_linked_list_node_before_begin(args...)                      \
-        CCC_singly_linked_list_node_before_begin(args)
-#    define singly_linked_list_end(args...) CCC_singly_linked_list_end(args)
-#    define singly_linked_list_next(args...) CCC_singly_linked_list_next(args)
-#    define singly_linked_list_count(args...) CCC_singly_linked_list_count(args)
-#    define singly_linked_list_is_empty(args...)                               \
-        CCC_singly_linked_list_is_empty(args)
-#    define singly_linked_list_validate(args...)                               \
-        CCC_singly_linked_list_validate(args)
-#    define singly_linked_list_clear(args...) CCC_singly_linked_list_clear(args)
+#    define singly_linked_list_initialize(arguments...)                        \
+        CCC_singly_linked_list_initialize(arguments)
+#    define singly_linked_list_from(arguments...)                              \
+        CCC_singly_linked_list_from(arguments)
+#    define singly_linked_list_emplace_front(arguments...)                     \
+        CCC_singly_linked_list_emplace_front(arguments)
+#    define singly_linked_list_push_front(arguments...)                        \
+        CCC_singly_linked_list_push_front(arguments)
+#    define singly_linked_list_front(arguments...)                             \
+        CCC_singly_linked_list_front(arguments)
+#    define singly_linked_list_pop_front(arguments...)                         \
+        CCC_singly_linked_list_pop_front(arguments)
+#    define singly_linked_list_splice(arguments...)                            \
+        CCC_singly_linked_list_splice(arguments)
+#    define singly_linked_list_splice_range(arguments...)                      \
+        CCC_singly_linked_list_splice_range(arguments)
+#    define singly_linked_list_extract(arguments...)                           \
+        CCC_singly_linked_list_extract(arguments)
+#    define singly_linked_list_extract_range(arguments...)                     \
+        CCC_singly_linked_list_extract_range(arguments)
+#    define singly_linked_list_erase(arguments...)                             \
+        CCC_singly_linked_list_erase(arguments)
+#    define singly_linked_list_erase_range(arguments...)                       \
+        CCC_singly_linked_list_erase_range(arguments)
+#    define singly_linked_list_sort(arguments...)                              \
+        CCC_singly_linked_list_sort(arguments)
+#    define singly_linked_list_insert_sorted(arguments...)                     \
+        CCC_singly_linked_list_insert_sorted(arguments)
+#    define singly_linked_list_is_sorted(arguments...)                         \
+        CCC_singly_linked_list_is_sorted(arguments)
+#    define singly_linked_list_begin(arguments...)                             \
+        CCC_singly_linked_list_begin(arguments)
+#    define singly_linked_list_node_begin(arguments...)                        \
+        CCC_singly_linked_list_node_begin(arguments)
+#    define singly_linked_list_node_before_begin(arguments...)                 \
+        CCC_singly_linked_list_node_before_begin(arguments)
+#    define singly_linked_list_end(arguments...)                               \
+        CCC_singly_linked_list_end(arguments)
+#    define singly_linked_list_next(arguments...)                              \
+        CCC_singly_linked_list_next(arguments)
+#    define singly_linked_list_count(arguments...)                             \
+        CCC_singly_linked_list_count(arguments)
+#    define singly_linked_list_is_empty(arguments...)                          \
+        CCC_singly_linked_list_is_empty(arguments)
+#    define singly_linked_list_validate(arguments...)                          \
+        CCC_singly_linked_list_validate(arguments)
+#    define singly_linked_list_clear(arguments...)                             \
+        CCC_singly_linked_list_clear(arguments)
 #endif /* SINGLY_LINKED_LIST_USING_NAMESPACE_CCC */
 
 #endif /* CCC_FORWARD_LIST_H */
