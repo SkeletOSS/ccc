@@ -646,7 +646,7 @@ N) increase/decrease key. </p>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>ok if the clear was successful or an input error for NULL args.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>ok if the clear was successful or an input error for NULL arguments.</dd></dl>
 <p>Note that if allocation is allowed the container will free the user type wrapping each element in the priority_queue. Therefore, the user should not free in the destructor function. Only perform context cleanup operations if needed.</p>
 <p>If allocation is not allowed, the user may free their stored types in the destructor function if they wish to do so. The container simply removes all the elements from the priority_queue, calling destroy on each user type_intruder if provided, and sets the size to zero. </p>
 

@@ -308,78 +308,91 @@ $(document).ready(function(){initNavTree('flat__hash__map_8h_source.html',''); i
 <div class="line"><a id="l01154" name="l01154"></a><span class="lineno"> 1154</span><span class="preprocessor">#ifdef FLAT_HASH_MAP_USING_NAMESPACE_CCC</span></div>
 <div class="line"><a id="l01155" name="l01155"></a><span class="lineno"> 1155</span><span class="keyword">typedef</span> <a class="code hl_struct" href="structCCC__Flat__hash__map.html">CCC_Flat_hash_map</a> Flat_hash_map;</div>
 <div class="line"><a id="l01156" name="l01156"></a><span class="lineno"> 1156</span><span class="keyword">typedef</span> <a class="code hl_struct" href="structCCC__Flat__hash__map__entry.html">CCC_Flat_hash_map_entry</a> Flat_hash_map_entry;</div>
-<div class="line"><a id="l01157" name="l01157"></a><span class="lineno"> 1157</span><span class="preprocessor">#    define flat_hash_map_declare_fixed(args...)                               \</span></div>
-<div class="line"><a id="l01158" name="l01158"></a><span class="lineno"> 1158</span><span class="preprocessor">        CCC_flat_hash_map_declare_fixed(args)</span></div>
-<div class="line"><a id="l01159" name="l01159"></a><span class="lineno"> 1159</span><span class="preprocessor">#    define flat_hash_map_fixed_capacity(args...)                              \</span></div>
-<div class="line"><a id="l01160" name="l01160"></a><span class="lineno"> 1160</span><span class="preprocessor">        CCC_flat_hash_map_fixed_capacity(args)</span></div>
-<div class="line"><a id="l01161" name="l01161"></a><span class="lineno"> 1161</span><span class="preprocessor">#    define flat_hash_map_reserve(args...) CCC_flat_hash_map_reserve(args)</span></div>
-<div class="line"><a id="l01162" name="l01162"></a><span class="lineno"> 1162</span><span class="preprocessor">#    define flat_hash_map_initialize(args...) CCC_flat_hash_map_initialize(args)</span></div>
-<div class="line"><a id="l01163" name="l01163"></a><span class="lineno"> 1163</span><span class="preprocessor">#    define flat_hash_map_from(args...) CCC_flat_hash_map_from(args)</span></div>
-<div class="line"><a id="l01164" name="l01164"></a><span class="lineno"> 1164</span><span class="preprocessor">#    define flat_hash_map_with_capacity(args...)                               \</span></div>
-<div class="line"><a id="l01165" name="l01165"></a><span class="lineno"> 1165</span><span class="preprocessor">        CCC_flat_hash_map_with_capacity(args)</span></div>
-<div class="line"><a id="l01166" name="l01166"></a><span class="lineno"> 1166</span><span class="preprocessor">#    define flat_hash_map_with_compound_literal(args...)                       \</span></div>
-<div class="line"><a id="l01167" name="l01167"></a><span class="lineno"> 1167</span><span class="preprocessor">        CCC_flat_hash_map_with_compound_literal(args)</span></div>
-<div class="line"><a id="l01168" name="l01168"></a><span class="lineno"> 1168</span><span class="preprocessor">#    define flat_hash_map_with_context_compound_literal(args...)               \</span></div>
-<div class="line"><a id="l01169" name="l01169"></a><span class="lineno"> 1169</span><span class="preprocessor">        CCC_flat_hash_map_with_context_compound_literal(args)</span></div>
-<div class="line"><a id="l01170" name="l01170"></a><span class="lineno"> 1170</span><span class="preprocessor">#    define flat_hash_map_copy(args...) CCC_flat_hash_map_copy(args)</span></div>
-<div class="line"><a id="l01171" name="l01171"></a><span class="lineno"> 1171</span><span class="preprocessor">#    define flat_hash_map_and_modify_with(args...)                             \</span></div>
-<div class="line"><a id="l01172" name="l01172"></a><span class="lineno"> 1172</span><span class="preprocessor">        CCC_flat_hash_map_and_modify_with(args)</span></div>
-<div class="line"><a id="l01173" name="l01173"></a><span class="lineno"> 1173</span><span class="preprocessor">#    define flat_hash_map_or_insert_with(args...)                              \</span></div>
-<div class="line"><a id="l01174" name="l01174"></a><span class="lineno"> 1174</span><span class="preprocessor">        CCC_flat_hash_map_or_insert_with(args)</span></div>
-<div class="line"><a id="l01175" name="l01175"></a><span class="lineno"> 1175</span><span class="preprocessor">#    define flat_hash_map_insert_entry_with(args...)                           \</span></div>
-<div class="line"><a id="l01176" name="l01176"></a><span class="lineno"> 1176</span><span class="preprocessor">        CCC_flat_hash_map_insert_entry_with(args)</span></div>
-<div class="line"><a id="l01177" name="l01177"></a><span class="lineno"> 1177</span><span class="preprocessor">#    define flat_hash_map_try_insert_with(args...)                             \</span></div>
-<div class="line"><a id="l01178" name="l01178"></a><span class="lineno"> 1178</span><span class="preprocessor">        CCC_flat_hash_map_try_insert_with(args)</span></div>
-<div class="line"><a id="l01179" name="l01179"></a><span class="lineno"> 1179</span><span class="preprocessor">#    define flat_hash_map_insert_or_assign_with(args...)                       \</span></div>
-<div class="line"><a id="l01180" name="l01180"></a><span class="lineno"> 1180</span><span class="preprocessor">        CCC_flat_hash_map_insert_or_assign_with(args)</span></div>
-<div class="line"><a id="l01181" name="l01181"></a><span class="lineno"> 1181</span><span class="preprocessor">#    define flat_hash_map_contains(args...) CCC_flat_hash_map_contains(args)</span></div>
-<div class="line"><a id="l01182" name="l01182"></a><span class="lineno"> 1182</span><span class="preprocessor">#    define flat_hash_map_get_key_value(args...)                               \</span></div>
-<div class="line"><a id="l01183" name="l01183"></a><span class="lineno"> 1183</span><span class="preprocessor">        CCC_flat_hash_map_get_key_value(args)</span></div>
-<div class="line"><a id="l01184" name="l01184"></a><span class="lineno"> 1184</span><span class="preprocessor">#    define flat_hash_map_remove_key_value_wrap(args...)                       \</span></div>
-<div class="line"><a id="l01185" name="l01185"></a><span class="lineno"> 1185</span><span class="preprocessor">        CCC_flat_hash_map_remove_key_value_wrap(args)</span></div>
-<div class="line"><a id="l01186" name="l01186"></a><span class="lineno"> 1186</span><span class="preprocessor">#    define flat_hash_map_swap_entry_wrap(args...)                             \</span></div>
-<div class="line"><a id="l01187" name="l01187"></a><span class="lineno"> 1187</span><span class="preprocessor">        CCC_flat_hash_map_swap_entry_wrap(args)</span></div>
-<div class="line"><a id="l01188" name="l01188"></a><span class="lineno"> 1188</span><span class="preprocessor">#    define flat_hash_map_try_insert_wrap(args...)                             \</span></div>
-<div class="line"><a id="l01189" name="l01189"></a><span class="lineno"> 1189</span><span class="preprocessor">        CCC_flat_hash_map_try_insert_wrap(args)</span></div>
-<div class="line"><a id="l01190" name="l01190"></a><span class="lineno"> 1190</span><span class="preprocessor">#    define flat_hash_map_insert_or_assign_wrap(args...)                       \</span></div>
-<div class="line"><a id="l01191" name="l01191"></a><span class="lineno"> 1191</span><span class="preprocessor">        CCC_flat_hash_map_insert_or_assign_wrap(args)</span></div>
-<div class="line"><a id="l01192" name="l01192"></a><span class="lineno"> 1192</span><span class="preprocessor">#    define flat_hash_map_remove_entry_wrap(args...)                           \</span></div>
-<div class="line"><a id="l01193" name="l01193"></a><span class="lineno"> 1193</span><span class="preprocessor">        CCC_flat_hash_map_remove_entry_wrap(args)</span></div>
-<div class="line"><a id="l01194" name="l01194"></a><span class="lineno"> 1194</span><span class="preprocessor">#    define flat_hash_map_remove_key_value(args...)                            \</span></div>
-<div class="line"><a id="l01195" name="l01195"></a><span class="lineno"> 1195</span><span class="preprocessor">        CCC_flat_hash_map_remove_key_value(args)</span></div>
-<div class="line"><a id="l01196" name="l01196"></a><span class="lineno"> 1196</span><span class="preprocessor">#    define flat_hash_map_swap_entry(args...) CCC_flat_hash_map_swap_entry(args)</span></div>
-<div class="line"><a id="l01197" name="l01197"></a><span class="lineno"> 1197</span><span class="preprocessor">#    define flat_hash_map_try_insert(args...) CCC_flat_hash_map_try_insert(args)</span></div>
-<div class="line"><a id="l01198" name="l01198"></a><span class="lineno"> 1198</span><span class="preprocessor">#    define flat_hash_map_insert_or_assign(args...)                            \</span></div>
-<div class="line"><a id="l01199" name="l01199"></a><span class="lineno"> 1199</span><span class="preprocessor">        CCC_flat_hash_map_insert_or_assign(args)</span></div>
-<div class="line"><a id="l01200" name="l01200"></a><span class="lineno"> 1200</span><span class="preprocessor">#    define flat_hash_map_remove_entry(args...)                                \</span></div>
-<div class="line"><a id="l01201" name="l01201"></a><span class="lineno"> 1201</span><span class="preprocessor">        CCC_flat_hash_map_remove_entry(args)</span></div>
-<div class="line"><a id="l01202" name="l01202"></a><span class="lineno"> 1202</span><span class="preprocessor">#    define flat_hash_map_entry_wrap(args...) CCC_flat_hash_map_entry_wrap(args)</span></div>
-<div class="line"><a id="l01203" name="l01203"></a><span class="lineno"> 1203</span><span class="preprocessor">#    define flat_hash_map_entry(args...) CCC_flat_hash_map_entry(args)</span></div>
-<div class="line"><a id="l01204" name="l01204"></a><span class="lineno"> 1204</span><span class="preprocessor">#    define flat_hash_map_and_modify(args...) CCC_flat_hash_map_and_modify(args)</span></div>
-<div class="line"><a id="l01205" name="l01205"></a><span class="lineno"> 1205</span><span class="preprocessor">#    define flat_hash_map_and_modify_context(args...)                          \</span></div>
-<div class="line"><a id="l01206" name="l01206"></a><span class="lineno"> 1206</span><span class="preprocessor">        CCC_flat_hash_map_and_modify_context(args)</span></div>
-<div class="line"><a id="l01207" name="l01207"></a><span class="lineno"> 1207</span><span class="preprocessor">#    define flat_hash_map_or_insert(args...) CCC_flat_hash_map_or_insert(args)</span></div>
-<div class="line"><a id="l01208" name="l01208"></a><span class="lineno"> 1208</span><span class="preprocessor">#    define flat_hash_map_insert_entry(args...)                                \</span></div>
-<div class="line"><a id="l01209" name="l01209"></a><span class="lineno"> 1209</span><span class="preprocessor">        CCC_flat_hash_map_insert_entry(args)</span></div>
-<div class="line"><a id="l01210" name="l01210"></a><span class="lineno"> 1210</span><span class="preprocessor">#    define flat_hash_map_unwrap(args...) CCC_flat_hash_map_unwrap(args)</span></div>
-<div class="line"><a id="l01211" name="l01211"></a><span class="lineno"> 1211</span><span class="preprocessor">#    define flat_hash_map_occupied(args...) CCC_flat_hash_map_occupied(args)</span></div>
-<div class="line"><a id="l01212" name="l01212"></a><span class="lineno"> 1212</span><span class="preprocessor">#    define flat_hash_map_insert_error(args...)                                \</span></div>
-<div class="line"><a id="l01213" name="l01213"></a><span class="lineno"> 1213</span><span class="preprocessor">        CCC_flat_hash_map_insert_error(args)</span></div>
-<div class="line"><a id="l01214" name="l01214"></a><span class="lineno"> 1214</span><span class="preprocessor">#    define flat_hash_map_begin(args...) CCC_flat_hash_map_begin(args)</span></div>
-<div class="line"><a id="l01215" name="l01215"></a><span class="lineno"> 1215</span><span class="preprocessor">#    define flat_hash_map_next(args...) CCC_flat_hash_map_next(args)</span></div>
-<div class="line"><a id="l01216" name="l01216"></a><span class="lineno"> 1216</span><span class="preprocessor">#    define flat_hash_map_end(args...) CCC_flat_hash_map_end(args)</span></div>
-<div class="line"><a id="l01217" name="l01217"></a><span class="lineno"> 1217</span><span class="preprocessor">#    define flat_hash_map_is_empty(args...) CCC_flat_hash_map_is_empty(args)</span></div>
-<div class="line"><a id="l01218" name="l01218"></a><span class="lineno"> 1218</span><span class="preprocessor">#    define flat_hash_map_count(args...) CCC_flat_hash_map_count(args)</span></div>
-<div class="line"><a id="l01219" name="l01219"></a><span class="lineno"> 1219</span><span class="preprocessor">#    define flat_hash_map_clear(args...) CCC_flat_hash_map_clear(args)</span></div>
-<div class="line"><a id="l01220" name="l01220"></a><span class="lineno"> 1220</span><span class="preprocessor">#    define flat_hash_map_clear_and_free(args...)                              \</span></div>
-<div class="line"><a id="l01221" name="l01221"></a><span class="lineno"> 1221</span><span class="preprocessor">        CCC_flat_hash_map_clear_and_free(args)</span></div>
-<div class="line"><a id="l01222" name="l01222"></a><span class="lineno"> 1222</span><span class="preprocessor">#    define flat_hash_map_clear_and_free_reserve(args...)                      \</span></div>
-<div class="line"><a id="l01223" name="l01223"></a><span class="lineno"> 1223</span><span class="preprocessor">        CCC_flat_hash_map_clear_and_free_reserve(args)</span></div>
-<div class="line"><a id="l01224" name="l01224"></a><span class="lineno"> 1224</span><span class="preprocessor">#    define flat_hash_map_capacity(args...) CCC_flat_hash_map_capacity(args)</span></div>
-<div class="line"><a id="l01225" name="l01225"></a><span class="lineno"> 1225</span><span class="preprocessor">#    define flat_hash_map_validate(args...) CCC_flat_hash_map_validate(args)</span></div>
-<div class="line"><a id="l01226" name="l01226"></a><span class="lineno"> 1226</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l01227" name="l01227"></a><span class="lineno"> 1227</span> </div>
-<div class="line"><a id="l01228" name="l01228"></a><span class="lineno"> 1228</span><span class="preprocessor">#endif </span><span class="comment">/* CCC_FLAT_HASH_MAP_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l01157" name="l01157"></a><span class="lineno"> 1157</span><span class="preprocessor">#    define flat_hash_map_declare_fixed(arguments...)                          \</span></div>
+<div class="line"><a id="l01158" name="l01158"></a><span class="lineno"> 1158</span><span class="preprocessor">        CCC_flat_hash_map_declare_fixed(arguments)</span></div>
+<div class="line"><a id="l01159" name="l01159"></a><span class="lineno"> 1159</span><span class="preprocessor">#    define flat_hash_map_fixed_capacity(arguments...)                         \</span></div>
+<div class="line"><a id="l01160" name="l01160"></a><span class="lineno"> 1160</span><span class="preprocessor">        CCC_flat_hash_map_fixed_capacity(arguments)</span></div>
+<div class="line"><a id="l01161" name="l01161"></a><span class="lineno"> 1161</span><span class="preprocessor">#    define flat_hash_map_reserve(arguments...)                                \</span></div>
+<div class="line"><a id="l01162" name="l01162"></a><span class="lineno"> 1162</span><span class="preprocessor">        CCC_flat_hash_map_reserve(arguments)</span></div>
+<div class="line"><a id="l01163" name="l01163"></a><span class="lineno"> 1163</span><span class="preprocessor">#    define flat_hash_map_initialize(arguments...)                             \</span></div>
+<div class="line"><a id="l01164" name="l01164"></a><span class="lineno"> 1164</span><span class="preprocessor">        CCC_flat_hash_map_initialize(arguments)</span></div>
+<div class="line"><a id="l01165" name="l01165"></a><span class="lineno"> 1165</span><span class="preprocessor">#    define flat_hash_map_from(arguments...) CCC_flat_hash_map_from(arguments)</span></div>
+<div class="line"><a id="l01166" name="l01166"></a><span class="lineno"> 1166</span><span class="preprocessor">#    define flat_hash_map_with_capacity(arguments...)                          \</span></div>
+<div class="line"><a id="l01167" name="l01167"></a><span class="lineno"> 1167</span><span class="preprocessor">        CCC_flat_hash_map_with_capacity(arguments)</span></div>
+<div class="line"><a id="l01168" name="l01168"></a><span class="lineno"> 1168</span><span class="preprocessor">#    define flat_hash_map_with_compound_literal(arguments...)                  \</span></div>
+<div class="line"><a id="l01169" name="l01169"></a><span class="lineno"> 1169</span><span class="preprocessor">        CCC_flat_hash_map_with_compound_literal(arguments)</span></div>
+<div class="line"><a id="l01170" name="l01170"></a><span class="lineno"> 1170</span><span class="preprocessor">#    define flat_hash_map_with_context_compound_literal(arguments...)          \</span></div>
+<div class="line"><a id="l01171" name="l01171"></a><span class="lineno"> 1171</span><span class="preprocessor">        CCC_flat_hash_map_with_context_compound_literal(arguments)</span></div>
+<div class="line"><a id="l01172" name="l01172"></a><span class="lineno"> 1172</span><span class="preprocessor">#    define flat_hash_map_copy(arguments...) CCC_flat_hash_map_copy(arguments)</span></div>
+<div class="line"><a id="l01173" name="l01173"></a><span class="lineno"> 1173</span><span class="preprocessor">#    define flat_hash_map_and_modify_with(arguments...)                        \</span></div>
+<div class="line"><a id="l01174" name="l01174"></a><span class="lineno"> 1174</span><span class="preprocessor">        CCC_flat_hash_map_and_modify_with(arguments)</span></div>
+<div class="line"><a id="l01175" name="l01175"></a><span class="lineno"> 1175</span><span class="preprocessor">#    define flat_hash_map_or_insert_with(arguments...)                         \</span></div>
+<div class="line"><a id="l01176" name="l01176"></a><span class="lineno"> 1176</span><span class="preprocessor">        CCC_flat_hash_map_or_insert_with(arguments)</span></div>
+<div class="line"><a id="l01177" name="l01177"></a><span class="lineno"> 1177</span><span class="preprocessor">#    define flat_hash_map_insert_entry_with(arguments...)                      \</span></div>
+<div class="line"><a id="l01178" name="l01178"></a><span class="lineno"> 1178</span><span class="preprocessor">        CCC_flat_hash_map_insert_entry_with(arguments)</span></div>
+<div class="line"><a id="l01179" name="l01179"></a><span class="lineno"> 1179</span><span class="preprocessor">#    define flat_hash_map_try_insert_with(arguments...)                        \</span></div>
+<div class="line"><a id="l01180" name="l01180"></a><span class="lineno"> 1180</span><span class="preprocessor">        CCC_flat_hash_map_try_insert_with(arguments)</span></div>
+<div class="line"><a id="l01181" name="l01181"></a><span class="lineno"> 1181</span><span class="preprocessor">#    define flat_hash_map_insert_or_assign_with(arguments...)                  \</span></div>
+<div class="line"><a id="l01182" name="l01182"></a><span class="lineno"> 1182</span><span class="preprocessor">        CCC_flat_hash_map_insert_or_assign_with(arguments)</span></div>
+<div class="line"><a id="l01183" name="l01183"></a><span class="lineno"> 1183</span><span class="preprocessor">#    define flat_hash_map_contains(arguments...)                               \</span></div>
+<div class="line"><a id="l01184" name="l01184"></a><span class="lineno"> 1184</span><span class="preprocessor">        CCC_flat_hash_map_contains(arguments)</span></div>
+<div class="line"><a id="l01185" name="l01185"></a><span class="lineno"> 1185</span><span class="preprocessor">#    define flat_hash_map_get_key_value(arguments...)                          \</span></div>
+<div class="line"><a id="l01186" name="l01186"></a><span class="lineno"> 1186</span><span class="preprocessor">        CCC_flat_hash_map_get_key_value(arguments)</span></div>
+<div class="line"><a id="l01187" name="l01187"></a><span class="lineno"> 1187</span><span class="preprocessor">#    define flat_hash_map_remove_key_value_wrap(arguments...)                  \</span></div>
+<div class="line"><a id="l01188" name="l01188"></a><span class="lineno"> 1188</span><span class="preprocessor">        CCC_flat_hash_map_remove_key_value_wrap(arguments)</span></div>
+<div class="line"><a id="l01189" name="l01189"></a><span class="lineno"> 1189</span><span class="preprocessor">#    define flat_hash_map_swap_entry_wrap(arguments...)                        \</span></div>
+<div class="line"><a id="l01190" name="l01190"></a><span class="lineno"> 1190</span><span class="preprocessor">        CCC_flat_hash_map_swap_entry_wrap(arguments)</span></div>
+<div class="line"><a id="l01191" name="l01191"></a><span class="lineno"> 1191</span><span class="preprocessor">#    define flat_hash_map_try_insert_wrap(arguments...)                        \</span></div>
+<div class="line"><a id="l01192" name="l01192"></a><span class="lineno"> 1192</span><span class="preprocessor">        CCC_flat_hash_map_try_insert_wrap(arguments)</span></div>
+<div class="line"><a id="l01193" name="l01193"></a><span class="lineno"> 1193</span><span class="preprocessor">#    define flat_hash_map_insert_or_assign_wrap(arguments...)                  \</span></div>
+<div class="line"><a id="l01194" name="l01194"></a><span class="lineno"> 1194</span><span class="preprocessor">        CCC_flat_hash_map_insert_or_assign_wrap(arguments)</span></div>
+<div class="line"><a id="l01195" name="l01195"></a><span class="lineno"> 1195</span><span class="preprocessor">#    define flat_hash_map_remove_entry_wrap(arguments...)                      \</span></div>
+<div class="line"><a id="l01196" name="l01196"></a><span class="lineno"> 1196</span><span class="preprocessor">        CCC_flat_hash_map_remove_entry_wrap(arguments)</span></div>
+<div class="line"><a id="l01197" name="l01197"></a><span class="lineno"> 1197</span><span class="preprocessor">#    define flat_hash_map_remove_key_value(arguments...)                       \</span></div>
+<div class="line"><a id="l01198" name="l01198"></a><span class="lineno"> 1198</span><span class="preprocessor">        CCC_flat_hash_map_remove_key_value(arguments)</span></div>
+<div class="line"><a id="l01199" name="l01199"></a><span class="lineno"> 1199</span><span class="preprocessor">#    define flat_hash_map_swap_entry(arguments...)                             \</span></div>
+<div class="line"><a id="l01200" name="l01200"></a><span class="lineno"> 1200</span><span class="preprocessor">        CCC_flat_hash_map_swap_entry(arguments)</span></div>
+<div class="line"><a id="l01201" name="l01201"></a><span class="lineno"> 1201</span><span class="preprocessor">#    define flat_hash_map_try_insert(arguments...)                             \</span></div>
+<div class="line"><a id="l01202" name="l01202"></a><span class="lineno"> 1202</span><span class="preprocessor">        CCC_flat_hash_map_try_insert(arguments)</span></div>
+<div class="line"><a id="l01203" name="l01203"></a><span class="lineno"> 1203</span><span class="preprocessor">#    define flat_hash_map_insert_or_assign(arguments...)                       \</span></div>
+<div class="line"><a id="l01204" name="l01204"></a><span class="lineno"> 1204</span><span class="preprocessor">        CCC_flat_hash_map_insert_or_assign(arguments)</span></div>
+<div class="line"><a id="l01205" name="l01205"></a><span class="lineno"> 1205</span><span class="preprocessor">#    define flat_hash_map_remove_entry(arguments...)                           \</span></div>
+<div class="line"><a id="l01206" name="l01206"></a><span class="lineno"> 1206</span><span class="preprocessor">        CCC_flat_hash_map_remove_entry(arguments)</span></div>
+<div class="line"><a id="l01207" name="l01207"></a><span class="lineno"> 1207</span><span class="preprocessor">#    define flat_hash_map_entry_wrap(arguments...)                             \</span></div>
+<div class="line"><a id="l01208" name="l01208"></a><span class="lineno"> 1208</span><span class="preprocessor">        CCC_flat_hash_map_entry_wrap(arguments)</span></div>
+<div class="line"><a id="l01209" name="l01209"></a><span class="lineno"> 1209</span><span class="preprocessor">#    define flat_hash_map_entry(arguments...) CCC_flat_hash_map_entry(arguments)</span></div>
+<div class="line"><a id="l01210" name="l01210"></a><span class="lineno"> 1210</span><span class="preprocessor">#    define flat_hash_map_and_modify(arguments...)                             \</span></div>
+<div class="line"><a id="l01211" name="l01211"></a><span class="lineno"> 1211</span><span class="preprocessor">        CCC_flat_hash_map_and_modify(arguments)</span></div>
+<div class="line"><a id="l01212" name="l01212"></a><span class="lineno"> 1212</span><span class="preprocessor">#    define flat_hash_map_and_modify_context(arguments...)                     \</span></div>
+<div class="line"><a id="l01213" name="l01213"></a><span class="lineno"> 1213</span><span class="preprocessor">        CCC_flat_hash_map_and_modify_context(arguments)</span></div>
+<div class="line"><a id="l01214" name="l01214"></a><span class="lineno"> 1214</span><span class="preprocessor">#    define flat_hash_map_or_insert(arguments...)                              \</span></div>
+<div class="line"><a id="l01215" name="l01215"></a><span class="lineno"> 1215</span><span class="preprocessor">        CCC_flat_hash_map_or_insert(arguments)</span></div>
+<div class="line"><a id="l01216" name="l01216"></a><span class="lineno"> 1216</span><span class="preprocessor">#    define flat_hash_map_insert_entry(arguments...)                           \</span></div>
+<div class="line"><a id="l01217" name="l01217"></a><span class="lineno"> 1217</span><span class="preprocessor">        CCC_flat_hash_map_insert_entry(arguments)</span></div>
+<div class="line"><a id="l01218" name="l01218"></a><span class="lineno"> 1218</span><span class="preprocessor">#    define flat_hash_map_unwrap(arguments...)                                 \</span></div>
+<div class="line"><a id="l01219" name="l01219"></a><span class="lineno"> 1219</span><span class="preprocessor">        CCC_flat_hash_map_unwrap(arguments)</span></div>
+<div class="line"><a id="l01220" name="l01220"></a><span class="lineno"> 1220</span><span class="preprocessor">#    define flat_hash_map_occupied(arguments...)                               \</span></div>
+<div class="line"><a id="l01221" name="l01221"></a><span class="lineno"> 1221</span><span class="preprocessor">        CCC_flat_hash_map_occupied(arguments)</span></div>
+<div class="line"><a id="l01222" name="l01222"></a><span class="lineno"> 1222</span><span class="preprocessor">#    define flat_hash_map_insert_error(arguments...)                           \</span></div>
+<div class="line"><a id="l01223" name="l01223"></a><span class="lineno"> 1223</span><span class="preprocessor">        CCC_flat_hash_map_insert_error(arguments)</span></div>
+<div class="line"><a id="l01224" name="l01224"></a><span class="lineno"> 1224</span><span class="preprocessor">#    define flat_hash_map_begin(arguments...) CCC_flat_hash_map_begin(arguments)</span></div>
+<div class="line"><a id="l01225" name="l01225"></a><span class="lineno"> 1225</span><span class="preprocessor">#    define flat_hash_map_next(arguments...) CCC_flat_hash_map_next(arguments)</span></div>
+<div class="line"><a id="l01226" name="l01226"></a><span class="lineno"> 1226</span><span class="preprocessor">#    define flat_hash_map_end(arguments...) CCC_flat_hash_map_end(arguments)</span></div>
+<div class="line"><a id="l01227" name="l01227"></a><span class="lineno"> 1227</span><span class="preprocessor">#    define flat_hash_map_is_empty(arguments...)                               \</span></div>
+<div class="line"><a id="l01228" name="l01228"></a><span class="lineno"> 1228</span><span class="preprocessor">        CCC_flat_hash_map_is_empty(arguments)</span></div>
+<div class="line"><a id="l01229" name="l01229"></a><span class="lineno"> 1229</span><span class="preprocessor">#    define flat_hash_map_count(arguments...) CCC_flat_hash_map_count(arguments)</span></div>
+<div class="line"><a id="l01230" name="l01230"></a><span class="lineno"> 1230</span><span class="preprocessor">#    define flat_hash_map_clear(arguments...) CCC_flat_hash_map_clear(arguments)</span></div>
+<div class="line"><a id="l01231" name="l01231"></a><span class="lineno"> 1231</span><span class="preprocessor">#    define flat_hash_map_clear_and_free(arguments...)                         \</span></div>
+<div class="line"><a id="l01232" name="l01232"></a><span class="lineno"> 1232</span><span class="preprocessor">        CCC_flat_hash_map_clear_and_free(arguments)</span></div>
+<div class="line"><a id="l01233" name="l01233"></a><span class="lineno"> 1233</span><span class="preprocessor">#    define flat_hash_map_clear_and_free_reserve(arguments...)                 \</span></div>
+<div class="line"><a id="l01234" name="l01234"></a><span class="lineno"> 1234</span><span class="preprocessor">        CCC_flat_hash_map_clear_and_free_reserve(arguments)</span></div>
+<div class="line"><a id="l01235" name="l01235"></a><span class="lineno"> 1235</span><span class="preprocessor">#    define flat_hash_map_capacity(arguments...)                               \</span></div>
+<div class="line"><a id="l01236" name="l01236"></a><span class="lineno"> 1236</span><span class="preprocessor">        CCC_flat_hash_map_capacity(arguments)</span></div>
+<div class="line"><a id="l01237" name="l01237"></a><span class="lineno"> 1237</span><span class="preprocessor">#    define flat_hash_map_validate(arguments...)                               \</span></div>
+<div class="line"><a id="l01238" name="l01238"></a><span class="lineno"> 1238</span><span class="preprocessor">        CCC_flat_hash_map_validate(arguments)</span></div>
+<div class="line"><a id="l01239" name="l01239"></a><span class="lineno"> 1239</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l01240" name="l01240"></a><span class="lineno"> 1240</span> </div>
+<div class="line"><a id="l01241" name="l01241"></a><span class="lineno"> 1241</span><span class="preprocessor">#endif </span><span class="comment">/* CCC_FLAT_HASH_MAP_H */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aflat__hash__map_8h_html_a1005ae1299c0d326c8e7f078c42a3d03"><div class="ttname"><a href="flat__hash__map_8h.html#a1005ae1299c0d326c8e7f078c42a3d03">CCC_flat_hash_map_remove_entry</a></div><div class="ttdeci">CCC_Entry CCC_flat_hash_map_remove_entry(CCC_Flat_hash_map_entry const *entry)</div><div class="ttdoc">Remove the entry from the table if Occupied.</div></div>
 <div class="ttc" id="aflat__hash__map_8h_html_a175e53430218da00b10893523af8ed84"><div class="ttname"><a href="flat__hash__map_8h.html#a175e53430218da00b10893523af8ed84">CCC_flat_hash_map_get_key_value</a></div><div class="ttdeci">void * CCC_flat_hash_map_get_key_value(CCC_Flat_hash_map const *map, void const *key)</div><div class="ttdoc">Returns a reference into the table at entry key.</div></div>
 <div class="ttc" id="aflat__hash__map_8h_html_a198b193f16959066927c9b1094634edc"><div class="ttname"><a href="flat__hash__map_8h.html#a198b193f16959066927c9b1094634edc">CCC_flat_hash_map_insert_or_assign</a></div><div class="ttdeci">CCC_Entry CCC_flat_hash_map_insert_or_assign(CCC_Flat_hash_map *map, void const *type)</div><div class="ttdoc">Invariantly inserts or overwrites a user struct into the table.</div></div>

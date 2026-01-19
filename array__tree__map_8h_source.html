@@ -357,61 +357,69 @@ $(document).ready(function(){initNavTree('array__tree__map_8h_source.html',''); 
 <div class="line"><a id="l01167" name="l01167"></a><span class="lineno"> 1167</span><span class="preprocessor">#ifdef ARRAY_TREE_MAP_USING_NAMESPACE_CCC</span></div>
 <div class="line"><a id="l01168" name="l01168"></a><span class="lineno"> 1168</span><span class="keyword">typedef</span> <a class="code hl_struct" href="structCCC__Array__tree__map.html">CCC_Array_tree_map</a> Array_tree_map;</div>
 <div class="line"><a id="l01169" name="l01169"></a><span class="lineno"> 1169</span><span class="keyword">typedef</span> <a class="code hl_struct" href="structCCC__Array__tree__map__handle.html">CCC_Array_tree_map_handle</a> Array_tree_map_handle;</div>
-<div class="line"><a id="l01170" name="l01170"></a><span class="lineno"> 1170</span><span class="preprocessor">#    define array_tree_map_declare_fixed(args...)                              \</span></div>
-<div class="line"><a id="l01171" name="l01171"></a><span class="lineno"> 1171</span><span class="preprocessor">        CCC_array_tree_map_declare_fixed(args)</span></div>
-<div class="line"><a id="l01172" name="l01172"></a><span class="lineno"> 1172</span><span class="preprocessor">#    define array_tree_map_initialize(args...)                                 \</span></div>
-<div class="line"><a id="l01173" name="l01173"></a><span class="lineno"> 1173</span><span class="preprocessor">        CCC_array_tree_map_initialize(args)</span></div>
-<div class="line"><a id="l01174" name="l01174"></a><span class="lineno"> 1174</span><span class="preprocessor">#    define array_tree_map_from(args...) CCC_array_tree_map_from(args)</span></div>
-<div class="line"><a id="l01175" name="l01175"></a><span class="lineno"> 1175</span><span class="preprocessor">#    define array_tree_map_with_capacity(args...)                              \</span></div>
-<div class="line"><a id="l01176" name="l01176"></a><span class="lineno"> 1176</span><span class="preprocessor">        CCC_array_tree_map_with_capacity(args)</span></div>
-<div class="line"><a id="l01177" name="l01177"></a><span class="lineno"> 1177</span><span class="preprocessor">#    define array_tree_map_with_compound_literal(args...)                      \</span></div>
-<div class="line"><a id="l01178" name="l01178"></a><span class="lineno"> 1178</span><span class="preprocessor">        CCC_array_tree_map_with_compound_literal(args)</span></div>
-<div class="line"><a id="l01179" name="l01179"></a><span class="lineno"> 1179</span><span class="preprocessor">#    define array_tree_map_with_context_compound_literal(args...)              \</span></div>
-<div class="line"><a id="l01180" name="l01180"></a><span class="lineno"> 1180</span><span class="preprocessor">        CCC_array_tree_map_with_context_compound_literal(args)</span></div>
-<div class="line"><a id="l01181" name="l01181"></a><span class="lineno"> 1181</span><span class="preprocessor">#    define array_tree_map_fixed_capacity(args...)                             \</span></div>
-<div class="line"><a id="l01182" name="l01182"></a><span class="lineno"> 1182</span><span class="preprocessor">        CCC_array_tree_map_fixed_capacity(args)</span></div>
-<div class="line"><a id="l01183" name="l01183"></a><span class="lineno"> 1183</span><span class="preprocessor">#    define array_tree_map_copy(args...) CCC_array_tree_map_copy(args)</span></div>
-<div class="line"><a id="l01184" name="l01184"></a><span class="lineno"> 1184</span><span class="preprocessor">#    define array_tree_map_reserve(args...) CCC_array_tree_map_reserve(args)</span></div>
-<div class="line"><a id="l01185" name="l01185"></a><span class="lineno"> 1185</span><span class="preprocessor">#    define array_tree_map_at(args...) CCC_array_tree_map_at(args)</span></div>
-<div class="line"><a id="l01186" name="l01186"></a><span class="lineno"> 1186</span><span class="preprocessor">#    define array_tree_map_as(args...) CCC_array_tree_map_as(args)</span></div>
-<div class="line"><a id="l01187" name="l01187"></a><span class="lineno"> 1187</span><span class="preprocessor">#    define array_tree_map_and_modify_with(args...)                            \</span></div>
-<div class="line"><a id="l01188" name="l01188"></a><span class="lineno"> 1188</span><span class="preprocessor">        CCC_array_tree_map_and_modify_with(args)</span></div>
-<div class="line"><a id="l01189" name="l01189"></a><span class="lineno"> 1189</span><span class="preprocessor">#    define array_tree_map_or_insert_with(args...)                             \</span></div>
-<div class="line"><a id="l01190" name="l01190"></a><span class="lineno"> 1190</span><span class="preprocessor">        CCC_array_tree_map_or_insert_with(args)</span></div>
-<div class="line"><a id="l01191" name="l01191"></a><span class="lineno"> 1191</span><span class="preprocessor">#    define array_tree_map_insert_array_with(args...)                          \</span></div>
-<div class="line"><a id="l01192" name="l01192"></a><span class="lineno"> 1192</span><span class="preprocessor">        CCC_array_tree_map_insert_array_with(args)</span></div>
-<div class="line"><a id="l01193" name="l01193"></a><span class="lineno"> 1193</span><span class="preprocessor">#    define array_tree_map_try_insert_with(args...)                            \</span></div>
-<div class="line"><a id="l01194" name="l01194"></a><span class="lineno"> 1194</span><span class="preprocessor">        CCC_array_tree_map_try_insert_with(args)</span></div>
-<div class="line"><a id="l01195" name="l01195"></a><span class="lineno"> 1195</span><span class="preprocessor">#    define array_tree_map_insert_or_assign_with(args...)                      \</span></div>
-<div class="line"><a id="l01196" name="l01196"></a><span class="lineno"> 1196</span><span class="preprocessor">        CCC_array_tree_map_insert_or_assign_with(args)</span></div>
-<div class="line"><a id="l01197" name="l01197"></a><span class="lineno"> 1197</span><span class="preprocessor">#    define array_tree_map_contains(args...) CCC_array_tree_map_contains(args)</span></div>
-<div class="line"><a id="l01198" name="l01198"></a><span class="lineno"> 1198</span><span class="preprocessor">#    define array_tree_map_get_key_value(args...)                              \</span></div>
-<div class="line"><a id="l01199" name="l01199"></a><span class="lineno"> 1199</span><span class="preprocessor">        CCC_array_tree_map_get_key_value(args)</span></div>
-<div class="line"><a id="l01200" name="l01200"></a><span class="lineno"> 1200</span><span class="preprocessor">#    define array_tree_map_swap_handle(args...)                                \</span></div>
-<div class="line"><a id="l01201" name="l01201"></a><span class="lineno"> 1201</span><span class="preprocessor">        CCC_array_tree_map_swap_handle(args)</span></div>
-<div class="line"><a id="l01202" name="l01202"></a><span class="lineno"> 1202</span><span class="preprocessor">#    define array_tree_map_swap_handle_wrap(args...)                           \</span></div>
-<div class="line"><a id="l01203" name="l01203"></a><span class="lineno"> 1203</span><span class="preprocessor">        CCC_array_tree_map_swap_handle_wrap(args)</span></div>
-<div class="line"><a id="l01204" name="l01204"></a><span class="lineno"> 1204</span><span class="preprocessor">#    define array_tree_map_begin(args...) CCC_array_tree_map_begin(args)</span></div>
-<div class="line"><a id="l01205" name="l01205"></a><span class="lineno"> 1205</span><span class="preprocessor">#    define array_tree_map_reverse_begin(args...)                              \</span></div>
-<div class="line"><a id="l01206" name="l01206"></a><span class="lineno"> 1206</span><span class="preprocessor">        CCC_array_tree_map_reverse_begin(args)</span></div>
-<div class="line"><a id="l01207" name="l01207"></a><span class="lineno"> 1207</span><span class="preprocessor">#    define array_tree_map_next(args...) CCC_array_tree_map_next(args)</span></div>
-<div class="line"><a id="l01208" name="l01208"></a><span class="lineno"> 1208</span><span class="preprocessor">#    define array_tree_map_reverse_next(args...)                               \</span></div>
-<div class="line"><a id="l01209" name="l01209"></a><span class="lineno"> 1209</span><span class="preprocessor">        CCC_array_tree_map_reverse_next(args)</span></div>
-<div class="line"><a id="l01210" name="l01210"></a><span class="lineno"> 1210</span><span class="preprocessor">#    define array_tree_map_end(args...) CCC_array_tree_map_end(args)</span></div>
-<div class="line"><a id="l01211" name="l01211"></a><span class="lineno"> 1211</span><span class="preprocessor">#    define array_tree_map_reverse_end(args...)                                \</span></div>
-<div class="line"><a id="l01212" name="l01212"></a><span class="lineno"> 1212</span><span class="preprocessor">        CCC_array_tree_map_reverse_end(args)</span></div>
-<div class="line"><a id="l01213" name="l01213"></a><span class="lineno"> 1213</span><span class="preprocessor">#    define array_tree_map_is_empty(args...) CCC_array_tree_map_is_empty(args)</span></div>
-<div class="line"><a id="l01214" name="l01214"></a><span class="lineno"> 1214</span><span class="preprocessor">#    define array_tree_map_count(args...) CCC_array_tree_map_count(args)</span></div>
-<div class="line"><a id="l01215" name="l01215"></a><span class="lineno"> 1215</span><span class="preprocessor">#    define array_tree_map_capacity(args...) CCC_array_tree_map_capacity(args)</span></div>
-<div class="line"><a id="l01216" name="l01216"></a><span class="lineno"> 1216</span><span class="preprocessor">#    define array_tree_map_clear(args...) CCC_array_tree_map_clear(args)</span></div>
-<div class="line"><a id="l01217" name="l01217"></a><span class="lineno"> 1217</span><span class="preprocessor">#    define array_tree_map_clear_and_free(args...)                             \</span></div>
-<div class="line"><a id="l01218" name="l01218"></a><span class="lineno"> 1218</span><span class="preprocessor">        CCC_array_tree_map_clear_and_free(args)</span></div>
-<div class="line"><a id="l01219" name="l01219"></a><span class="lineno"> 1219</span><span class="preprocessor">#    define array_tree_map_clear_and_free_reserve(args...)                     \</span></div>
-<div class="line"><a id="l01220" name="l01220"></a><span class="lineno"> 1220</span><span class="preprocessor">        CCC_array_tree_map_clear_and_free_reserve(args)</span></div>
-<div class="line"><a id="l01221" name="l01221"></a><span class="lineno"> 1221</span><span class="preprocessor">#    define array_tree_map_validate(args...) CCC_array_tree_map_validate(args)</span></div>
-<div class="line"><a id="l01222" name="l01222"></a><span class="lineno"> 1222</span><span class="preprocessor">#endif </span><span class="comment">/* ARRAY_TREE_MAP_USING_NAMESPACE_CCC */</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l01223" name="l01223"></a><span class="lineno"> 1223</span> </div>
-<div class="line"><a id="l01224" name="l01224"></a><span class="lineno"> 1224</span><span class="preprocessor">#endif </span><span class="comment">/* CCC_ARRAY_TREE_MAP_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l01170" name="l01170"></a><span class="lineno"> 1170</span><span class="preprocessor">#    define array_tree_map_declare_fixed(arguments...)                         \</span></div>
+<div class="line"><a id="l01171" name="l01171"></a><span class="lineno"> 1171</span><span class="preprocessor">        CCC_array_tree_map_declare_fixed(arguments)</span></div>
+<div class="line"><a id="l01172" name="l01172"></a><span class="lineno"> 1172</span><span class="preprocessor">#    define array_tree_map_initialize(arguments...)                            \</span></div>
+<div class="line"><a id="l01173" name="l01173"></a><span class="lineno"> 1173</span><span class="preprocessor">        CCC_array_tree_map_initialize(arguments)</span></div>
+<div class="line"><a id="l01174" name="l01174"></a><span class="lineno"> 1174</span><span class="preprocessor">#    define array_tree_map_from(arguments...) CCC_array_tree_map_from(arguments)</span></div>
+<div class="line"><a id="l01175" name="l01175"></a><span class="lineno"> 1175</span><span class="preprocessor">#    define array_tree_map_with_capacity(arguments...)                         \</span></div>
+<div class="line"><a id="l01176" name="l01176"></a><span class="lineno"> 1176</span><span class="preprocessor">        CCC_array_tree_map_with_capacity(arguments)</span></div>
+<div class="line"><a id="l01177" name="l01177"></a><span class="lineno"> 1177</span><span class="preprocessor">#    define array_tree_map_with_compound_literal(arguments...)                 \</span></div>
+<div class="line"><a id="l01178" name="l01178"></a><span class="lineno"> 1178</span><span class="preprocessor">        CCC_array_tree_map_with_compound_literal(arguments)</span></div>
+<div class="line"><a id="l01179" name="l01179"></a><span class="lineno"> 1179</span><span class="preprocessor">#    define array_tree_map_with_context_compound_literal(arguments...)         \</span></div>
+<div class="line"><a id="l01180" name="l01180"></a><span class="lineno"> 1180</span><span class="preprocessor">        CCC_array_tree_map_with_context_compound_literal(arguments)</span></div>
+<div class="line"><a id="l01181" name="l01181"></a><span class="lineno"> 1181</span><span class="preprocessor">#    define array_tree_map_fixed_capacity(arguments...)                        \</span></div>
+<div class="line"><a id="l01182" name="l01182"></a><span class="lineno"> 1182</span><span class="preprocessor">        CCC_array_tree_map_fixed_capacity(arguments)</span></div>
+<div class="line"><a id="l01183" name="l01183"></a><span class="lineno"> 1183</span><span class="preprocessor">#    define array_tree_map_copy(arguments...) CCC_array_tree_map_copy(arguments)</span></div>
+<div class="line"><a id="l01184" name="l01184"></a><span class="lineno"> 1184</span><span class="preprocessor">#    define array_tree_map_reserve(arguments...)                               \</span></div>
+<div class="line"><a id="l01185" name="l01185"></a><span class="lineno"> 1185</span><span class="preprocessor">        CCC_array_tree_map_reserve(arguments)</span></div>
+<div class="line"><a id="l01186" name="l01186"></a><span class="lineno"> 1186</span><span class="preprocessor">#    define array_tree_map_at(arguments...) CCC_array_tree_map_at(arguments)</span></div>
+<div class="line"><a id="l01187" name="l01187"></a><span class="lineno"> 1187</span><span class="preprocessor">#    define array_tree_map_as(arguments...) CCC_array_tree_map_as(arguments)</span></div>
+<div class="line"><a id="l01188" name="l01188"></a><span class="lineno"> 1188</span><span class="preprocessor">#    define array_tree_map_and_modify_with(arguments...)                       \</span></div>
+<div class="line"><a id="l01189" name="l01189"></a><span class="lineno"> 1189</span><span class="preprocessor">        CCC_array_tree_map_and_modify_with(arguments)</span></div>
+<div class="line"><a id="l01190" name="l01190"></a><span class="lineno"> 1190</span><span class="preprocessor">#    define array_tree_map_or_insert_with(arguments...)                        \</span></div>
+<div class="line"><a id="l01191" name="l01191"></a><span class="lineno"> 1191</span><span class="preprocessor">        CCC_array_tree_map_or_insert_with(arguments)</span></div>
+<div class="line"><a id="l01192" name="l01192"></a><span class="lineno"> 1192</span><span class="preprocessor">#    define array_tree_map_insert_array_with(arguments...)                     \</span></div>
+<div class="line"><a id="l01193" name="l01193"></a><span class="lineno"> 1193</span><span class="preprocessor">        CCC_array_tree_map_insert_array_with(arguments)</span></div>
+<div class="line"><a id="l01194" name="l01194"></a><span class="lineno"> 1194</span><span class="preprocessor">#    define array_tree_map_try_insert_with(arguments...)                       \</span></div>
+<div class="line"><a id="l01195" name="l01195"></a><span class="lineno"> 1195</span><span class="preprocessor">        CCC_array_tree_map_try_insert_with(arguments)</span></div>
+<div class="line"><a id="l01196" name="l01196"></a><span class="lineno"> 1196</span><span class="preprocessor">#    define array_tree_map_insert_or_assign_with(arguments...)                 \</span></div>
+<div class="line"><a id="l01197" name="l01197"></a><span class="lineno"> 1197</span><span class="preprocessor">        CCC_array_tree_map_insert_or_assign_with(arguments)</span></div>
+<div class="line"><a id="l01198" name="l01198"></a><span class="lineno"> 1198</span><span class="preprocessor">#    define array_tree_map_contains(arguments...)                              \</span></div>
+<div class="line"><a id="l01199" name="l01199"></a><span class="lineno"> 1199</span><span class="preprocessor">        CCC_array_tree_map_contains(arguments)</span></div>
+<div class="line"><a id="l01200" name="l01200"></a><span class="lineno"> 1200</span><span class="preprocessor">#    define array_tree_map_get_key_value(arguments...)                         \</span></div>
+<div class="line"><a id="l01201" name="l01201"></a><span class="lineno"> 1201</span><span class="preprocessor">        CCC_array_tree_map_get_key_value(arguments)</span></div>
+<div class="line"><a id="l01202" name="l01202"></a><span class="lineno"> 1202</span><span class="preprocessor">#    define array_tree_map_swap_handle(arguments...)                           \</span></div>
+<div class="line"><a id="l01203" name="l01203"></a><span class="lineno"> 1203</span><span class="preprocessor">        CCC_array_tree_map_swap_handle(arguments)</span></div>
+<div class="line"><a id="l01204" name="l01204"></a><span class="lineno"> 1204</span><span class="preprocessor">#    define array_tree_map_swap_handle_wrap(arguments...)                      \</span></div>
+<div class="line"><a id="l01205" name="l01205"></a><span class="lineno"> 1205</span><span class="preprocessor">        CCC_array_tree_map_swap_handle_wrap(arguments)</span></div>
+<div class="line"><a id="l01206" name="l01206"></a><span class="lineno"> 1206</span><span class="preprocessor">#    define array_tree_map_begin(arguments...)                                 \</span></div>
+<div class="line"><a id="l01207" name="l01207"></a><span class="lineno"> 1207</span><span class="preprocessor">        CCC_array_tree_map_begin(arguments)</span></div>
+<div class="line"><a id="l01208" name="l01208"></a><span class="lineno"> 1208</span><span class="preprocessor">#    define array_tree_map_reverse_begin(arguments...)                         \</span></div>
+<div class="line"><a id="l01209" name="l01209"></a><span class="lineno"> 1209</span><span class="preprocessor">        CCC_array_tree_map_reverse_begin(arguments)</span></div>
+<div class="line"><a id="l01210" name="l01210"></a><span class="lineno"> 1210</span><span class="preprocessor">#    define array_tree_map_next(arguments...) CCC_array_tree_map_next(arguments)</span></div>
+<div class="line"><a id="l01211" name="l01211"></a><span class="lineno"> 1211</span><span class="preprocessor">#    define array_tree_map_reverse_next(arguments...)                          \</span></div>
+<div class="line"><a id="l01212" name="l01212"></a><span class="lineno"> 1212</span><span class="preprocessor">        CCC_array_tree_map_reverse_next(arguments)</span></div>
+<div class="line"><a id="l01213" name="l01213"></a><span class="lineno"> 1213</span><span class="preprocessor">#    define array_tree_map_end(arguments...) CCC_array_tree_map_end(arguments)</span></div>
+<div class="line"><a id="l01214" name="l01214"></a><span class="lineno"> 1214</span><span class="preprocessor">#    define array_tree_map_reverse_end(arguments...)                           \</span></div>
+<div class="line"><a id="l01215" name="l01215"></a><span class="lineno"> 1215</span><span class="preprocessor">        CCC_array_tree_map_reverse_end(arguments)</span></div>
+<div class="line"><a id="l01216" name="l01216"></a><span class="lineno"> 1216</span><span class="preprocessor">#    define array_tree_map_is_empty(arguments...)                              \</span></div>
+<div class="line"><a id="l01217" name="l01217"></a><span class="lineno"> 1217</span><span class="preprocessor">        CCC_array_tree_map_is_empty(arguments)</span></div>
+<div class="line"><a id="l01218" name="l01218"></a><span class="lineno"> 1218</span><span class="preprocessor">#    define array_tree_map_count(arguments...)                                 \</span></div>
+<div class="line"><a id="l01219" name="l01219"></a><span class="lineno"> 1219</span><span class="preprocessor">        CCC_array_tree_map_count(arguments)</span></div>
+<div class="line"><a id="l01220" name="l01220"></a><span class="lineno"> 1220</span><span class="preprocessor">#    define array_tree_map_capacity(arguments...)                              \</span></div>
+<div class="line"><a id="l01221" name="l01221"></a><span class="lineno"> 1221</span><span class="preprocessor">        CCC_array_tree_map_capacity(arguments)</span></div>
+<div class="line"><a id="l01222" name="l01222"></a><span class="lineno"> 1222</span><span class="preprocessor">#    define array_tree_map_clear(arguments...)                                 \</span></div>
+<div class="line"><a id="l01223" name="l01223"></a><span class="lineno"> 1223</span><span class="preprocessor">        CCC_array_tree_map_clear(arguments)</span></div>
+<div class="line"><a id="l01224" name="l01224"></a><span class="lineno"> 1224</span><span class="preprocessor">#    define array_tree_map_clear_and_free(arguments...)                        \</span></div>
+<div class="line"><a id="l01225" name="l01225"></a><span class="lineno"> 1225</span><span class="preprocessor">        CCC_array_tree_map_clear_and_free(arguments)</span></div>
+<div class="line"><a id="l01226" name="l01226"></a><span class="lineno"> 1226</span><span class="preprocessor">#    define array_tree_map_clear_and_free_reserve(arguments...)                \</span></div>
+<div class="line"><a id="l01227" name="l01227"></a><span class="lineno"> 1227</span><span class="preprocessor">        CCC_array_tree_map_clear_and_free_reserve(arguments)</span></div>
+<div class="line"><a id="l01228" name="l01228"></a><span class="lineno"> 1228</span><span class="preprocessor">#    define array_tree_map_validate(arguments...)                              \</span></div>
+<div class="line"><a id="l01229" name="l01229"></a><span class="lineno"> 1229</span><span class="preprocessor">        CCC_array_tree_map_validate(arguments)</span></div>
+<div class="line"><a id="l01230" name="l01230"></a><span class="lineno"> 1230</span><span class="preprocessor">#endif </span><span class="comment">/* ARRAY_TREE_MAP_USING_NAMESPACE_CCC */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l01231" name="l01231"></a><span class="lineno"> 1231</span> </div>
+<div class="line"><a id="l01232" name="l01232"></a><span class="lineno"> 1232</span><span class="preprocessor">#endif </span><span class="comment">/* CCC_ARRAY_TREE_MAP_H */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aarray__tree__map_8h_html_a11e89ec3d6fbbca13a6d768df4874c60"><div class="ttname"><a href="array__tree__map_8h.html#a11e89ec3d6fbbca13a6d768df4874c60">CCC_array_tree_map_swap_handle</a></div><div class="ttdeci">CCC_Handle CCC_array_tree_map_swap_handle(CCC_Array_tree_map *map, void *type_output)</div><div class="ttdoc">Invariantly inserts the key value in type_output.</div></div>
 <div class="ttc" id="aarray__tree__map_8h_html_a1a4420a3dbaf60445028f79003f8b809"><div class="ttname"><a href="array__tree__map_8h.html#a1a4420a3dbaf60445028f79003f8b809">CCC_array_tree_map_reverse_begin</a></div><div class="ttdeci">CCC_Handle_index CCC_array_tree_map_reverse_begin(CCC_Array_tree_map const *map)</div><div class="ttdoc">Return the start of a reverse inorder traversal of the map. O(lg N).</div></div>
 <div class="ttc" id="aarray__tree__map_8h_html_a1d9960212e8156d0bbe81116807a0705"><div class="ttname"><a href="array__tree__map_8h.html#a1d9960212e8156d0bbe81116807a0705">CCC_array_tree_map_reverse_next</a></div><div class="ttdeci">CCC_Handle_index CCC_array_tree_map_reverse_next(CCC_Array_tree_map const *map, CCC_Handle_index iterator)</div><div class="ttdoc">Return the reverse_next element in a reverse inorder traversal of the map. O(1).</div></div>

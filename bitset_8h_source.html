@@ -292,90 +292,96 @@ $(document).ready(function(){initNavTree('bitset_8h_source.html',''); initResiza
 <div class="line"><a id="l01035" name="l01035"></a><span class="lineno"> 1035</span><span class="preprocessor">#ifdef BITSET_USING_NAMESPACE_CCC</span></div>
 <div class="line"><a id="l01036" name="l01036"></a><span class="lineno"> 1036</span><span class="keyword">typedef</span> <a class="code hl_struct" href="structCCC__Bitset.html">CCC_Bitset</a> Bitset;</div>
 <div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span><span class="preprocessor">#    define BITSET_BLOCK_BITS CCC_BITSET_BLOCK_BITS</span></div>
-<div class="line"><a id="l01038" name="l01038"></a><span class="lineno"> 1038</span><span class="preprocessor">#    define bitset_block_count(args...) CCC_bitset_block_count(args)</span></div>
-<div class="line"><a id="l01039" name="l01039"></a><span class="lineno"> 1039</span><span class="preprocessor">#    define bitset_block_bytes(args...) CCC_bitset_block_bytes(args)</span></div>
-<div class="line"><a id="l01040" name="l01040"></a><span class="lineno"> 1040</span><span class="preprocessor">#    define bitset_blocks(args...) CCC_bitset_blocks(args)</span></div>
-<div class="line"><a id="l01041" name="l01041"></a><span class="lineno"> 1041</span><span class="preprocessor">#    define bitset_initialize(args...) CCC_bitset_initialize(args)</span></div>
-<div class="line"><a id="l01042" name="l01042"></a><span class="lineno"> 1042</span><span class="preprocessor">#    define bitset_from(args...) CCC_bitset_from(args)</span></div>
-<div class="line"><a id="l01043" name="l01043"></a><span class="lineno"> 1043</span><span class="preprocessor">#    define bitset_with_capacity(args...) CCC_bitset_with_capacity(args)</span></div>
-<div class="line"><a id="l01044" name="l01044"></a><span class="lineno"> 1044</span><span class="preprocessor">#    define bitset_with_compound_literal(args...)                              \</span></div>
-<div class="line"><a id="l01045" name="l01045"></a><span class="lineno"> 1045</span><span class="preprocessor">        CCC_bitset_with_compound_literal(args)</span></div>
-<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span><span class="preprocessor">#    define bitset_with_context_compound_literal(args...)                      \</span></div>
-<div class="line"><a id="l01047" name="l01047"></a><span class="lineno"> 1047</span><span class="preprocessor">        CCC_bitset_with_context_compound_literal(args)</span></div>
-<div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span><span class="preprocessor">#    define bitset_copy(args...) CCC_bitset_copy(args)</span></div>
-<div class="line"><a id="l01049" name="l01049"></a><span class="lineno"> 1049</span><span class="preprocessor">#    define bitset_reserve(args...) CCC_bitset_reserve(args)</span></div>
-<div class="line"><a id="l01050" name="l01050"></a><span class="lineno"> 1050</span><span class="preprocessor">#    define bitset_test(args...) CCC_bitset_test(args)</span></div>
-<div class="line"><a id="l01051" name="l01051"></a><span class="lineno"> 1051</span><span class="preprocessor">#    define bitset_set(args...) CCC_bitset_set(args)</span></div>
-<div class="line"><a id="l01052" name="l01052"></a><span class="lineno"> 1052</span><span class="preprocessor">#    define bitset_set_all(args...) CCC_bitset_set_all(args)</span></div>
-<div class="line"><a id="l01053" name="l01053"></a><span class="lineno"> 1053</span><span class="preprocessor">#    define bitset_set_range(args...) CCC_bitset_set_range(args)</span></div>
-<div class="line"><a id="l01054" name="l01054"></a><span class="lineno"> 1054</span><span class="preprocessor">#    define bitset_reset(args...) CCC_bitset_reset(args)</span></div>
-<div class="line"><a id="l01055" name="l01055"></a><span class="lineno"> 1055</span><span class="preprocessor">#    define bitset_reset_all(args...) CCC_bitset_reset_all(args)</span></div>
-<div class="line"><a id="l01056" name="l01056"></a><span class="lineno"> 1056</span><span class="preprocessor">#    define bitset_reset_range(args...) CCC_bitset_reset_range(args)</span></div>
-<div class="line"><a id="l01057" name="l01057"></a><span class="lineno"> 1057</span><span class="preprocessor">#    define bitset_flip(args...) CCC_bitset_flip(args)</span></div>
-<div class="line"><a id="l01058" name="l01058"></a><span class="lineno"> 1058</span><span class="preprocessor">#    define bitset_flip_all(args...) CCC_bitset_flip_all(args)</span></div>
-<div class="line"><a id="l01059" name="l01059"></a><span class="lineno"> 1059</span><span class="preprocessor">#    define bitset_flip_range(args...) CCC_bitset_flip_range(args)</span></div>
-<div class="line"><a id="l01060" name="l01060"></a><span class="lineno"> 1060</span><span class="preprocessor">#    define bitset_any(args...) CCC_bitset_any(args)</span></div>
-<div class="line"><a id="l01061" name="l01061"></a><span class="lineno"> 1061</span><span class="preprocessor">#    define bitset_any_range(args...) CCC_bitset_any_range(args)</span></div>
-<div class="line"><a id="l01062" name="l01062"></a><span class="lineno"> 1062</span><span class="preprocessor">#    define bitset_none(args...) CCC_bitset_none(args)</span></div>
-<div class="line"><a id="l01063" name="l01063"></a><span class="lineno"> 1063</span><span class="preprocessor">#    define bitset_none_range(args...) CCC_bitset_none_range(args)</span></div>
-<div class="line"><a id="l01064" name="l01064"></a><span class="lineno"> 1064</span><span class="preprocessor">#    define bitset_all(args...) CCC_bitset_all(args)</span></div>
-<div class="line"><a id="l01065" name="l01065"></a><span class="lineno"> 1065</span><span class="preprocessor">#    define bitset_all_range(args...) CCC_bitset_all_range(args)</span></div>
-<div class="line"><a id="l01066" name="l01066"></a><span class="lineno"> 1066</span><span class="preprocessor">#    define bitset_first_trailing_one(args...)                                 \</span></div>
-<div class="line"><a id="l01067" name="l01067"></a><span class="lineno"> 1067</span><span class="preprocessor">        CCC_bitset_first_trailing_one(args)</span></div>
-<div class="line"><a id="l01068" name="l01068"></a><span class="lineno"> 1068</span><span class="preprocessor">#    define bitset_first_trailing_one_range(args...)                           \</span></div>
-<div class="line"><a id="l01069" name="l01069"></a><span class="lineno"> 1069</span><span class="preprocessor">        CCC_bitset_first_trailing_one_range(args)</span></div>
-<div class="line"><a id="l01070" name="l01070"></a><span class="lineno"> 1070</span><span class="preprocessor">#    define bitset_first_trailing_ones(args...)                                \</span></div>
-<div class="line"><a id="l01071" name="l01071"></a><span class="lineno"> 1071</span><span class="preprocessor">        CCC_bitset_first_trailing_ones(args)</span></div>
-<div class="line"><a id="l01072" name="l01072"></a><span class="lineno"> 1072</span><span class="preprocessor">#    define bitset_first_trailing_ones_range(args...)                          \</span></div>
-<div class="line"><a id="l01073" name="l01073"></a><span class="lineno"> 1073</span><span class="preprocessor">        CCC_bitset_first_trailing_ones_range(args)</span></div>
-<div class="line"><a id="l01074" name="l01074"></a><span class="lineno"> 1074</span><span class="preprocessor">#    define bitset_first_trailing_zero(args...)                                \</span></div>
-<div class="line"><a id="l01075" name="l01075"></a><span class="lineno"> 1075</span><span class="preprocessor">        CCC_bitset_first_trailing_zero(args)</span></div>
-<div class="line"><a id="l01076" name="l01076"></a><span class="lineno"> 1076</span><span class="preprocessor">#    define bitset_first_trailing_zero_range(args...)                          \</span></div>
-<div class="line"><a id="l01077" name="l01077"></a><span class="lineno"> 1077</span><span class="preprocessor">        CCC_bitset_first_trailing_zero_range(args)</span></div>
-<div class="line"><a id="l01078" name="l01078"></a><span class="lineno"> 1078</span><span class="preprocessor">#    define bitset_first_trailing_zeros(args...)                               \</span></div>
-<div class="line"><a id="l01079" name="l01079"></a><span class="lineno"> 1079</span><span class="preprocessor">        CCC_bitset_first_trailing_zeros(args)</span></div>
-<div class="line"><a id="l01080" name="l01080"></a><span class="lineno"> 1080</span><span class="preprocessor">#    define bitset_first_trailing_zeros_range(args...)                         \</span></div>
-<div class="line"><a id="l01081" name="l01081"></a><span class="lineno"> 1081</span><span class="preprocessor">        CCC_bitset_first_trailing_zeros_range(args)</span></div>
-<div class="line"><a id="l01082" name="l01082"></a><span class="lineno"> 1082</span><span class="preprocessor">#    define bitset_first_leading_one(args...) CCC_bitset_first_leading_one(args)</span></div>
-<div class="line"><a id="l01083" name="l01083"></a><span class="lineno"> 1083</span><span class="preprocessor">#    define bitset_first_leading_one_range(args...)                            \</span></div>
-<div class="line"><a id="l01084" name="l01084"></a><span class="lineno"> 1084</span><span class="preprocessor">        CCC_bitset_first_leading_one_range(args)</span></div>
-<div class="line"><a id="l01085" name="l01085"></a><span class="lineno"> 1085</span><span class="preprocessor">#    define bitset_first_leading_ones(args...)                                 \</span></div>
-<div class="line"><a id="l01086" name="l01086"></a><span class="lineno"> 1086</span><span class="preprocessor">        CCC_bitset_first_leading_ones(args)</span></div>
-<div class="line"><a id="l01087" name="l01087"></a><span class="lineno"> 1087</span><span class="preprocessor">#    define bitset_first_leading_ones_range(args...)                           \</span></div>
-<div class="line"><a id="l01088" name="l01088"></a><span class="lineno"> 1088</span><span class="preprocessor">        CCC_bitset_first_leading_ones_range(args)</span></div>
-<div class="line"><a id="l01089" name="l01089"></a><span class="lineno"> 1089</span><span class="preprocessor">#    define bitset_first_leading_zero(args...)                                 \</span></div>
-<div class="line"><a id="l01090" name="l01090"></a><span class="lineno"> 1090</span><span class="preprocessor">        CCC_bitset_first_leading_zero(args)</span></div>
-<div class="line"><a id="l01091" name="l01091"></a><span class="lineno"> 1091</span><span class="preprocessor">#    define bitset_first_leading_zero_range(args...)                           \</span></div>
-<div class="line"><a id="l01092" name="l01092"></a><span class="lineno"> 1092</span><span class="preprocessor">        CCC_bitset_first_leading_zero_range(args)</span></div>
-<div class="line"><a id="l01093" name="l01093"></a><span class="lineno"> 1093</span><span class="preprocessor">#    define bitset_first_leading_zeros(args...)                                \</span></div>
-<div class="line"><a id="l01094" name="l01094"></a><span class="lineno"> 1094</span><span class="preprocessor">        CCC_bitset_first_leading_zeros(args)</span></div>
-<div class="line"><a id="l01095" name="l01095"></a><span class="lineno"> 1095</span><span class="preprocessor">#    define bitset_first_leading_zeros_range(args...)                          \</span></div>
-<div class="line"><a id="l01096" name="l01096"></a><span class="lineno"> 1096</span><span class="preprocessor">        CCC_bitset_first_leading_zeros_range(args)</span></div>
-<div class="line"><a id="l01097" name="l01097"></a><span class="lineno"> 1097</span><span class="preprocessor">#    define bitset_or(args...) CCC_bitset_or(args)</span></div>
-<div class="line"><a id="l01098" name="l01098"></a><span class="lineno"> 1098</span><span class="preprocessor">#    define bitset_and(args...) CCC_bitset_and(args)</span></div>
-<div class="line"><a id="l01099" name="l01099"></a><span class="lineno"> 1099</span><span class="preprocessor">#    define bitset_xor(args...) CCC_bitset_xor(args)</span></div>
-<div class="line"><a id="l01100" name="l01100"></a><span class="lineno"> 1100</span><span class="preprocessor">#    define bitset_shift_left(args...) CCC_bitset_shift_left(args)</span></div>
-<div class="line"><a id="l01101" name="l01101"></a><span class="lineno"> 1101</span><span class="preprocessor">#    define bitset_shift_right(args...) CCC_bitset_shift_right(args)</span></div>
-<div class="line"><a id="l01102" name="l01102"></a><span class="lineno"> 1102</span><span class="preprocessor">#    define bitset_is_equal(args...) CCC_bitset_is_equal(args)</span></div>
-<div class="line"><a id="l01103" name="l01103"></a><span class="lineno"> 1103</span><span class="preprocessor">#    define bitset_is_proper_subset(args...) CCC_bitset_is_proper_subset(args)</span></div>
-<div class="line"><a id="l01104" name="l01104"></a><span class="lineno"> 1104</span><span class="preprocessor">#    define bitset_is_subset(args...) CCC_bitset_is_subset(args)</span></div>
-<div class="line"><a id="l01105" name="l01105"></a><span class="lineno"> 1105</span><span class="preprocessor">#    define bitset_data(args...) CCC_bitset_data(args)</span></div>
-<div class="line"><a id="l01106" name="l01106"></a><span class="lineno"> 1106</span><span class="preprocessor">#    define bitset_capacity(args...) CCC_bitset_capacity(args)</span></div>
-<div class="line"><a id="l01107" name="l01107"></a><span class="lineno"> 1107</span><span class="preprocessor">#    define bitset_blocks_capacity(args...) CCC_bitset_blocks_capacity(args)</span></div>
-<div class="line"><a id="l01108" name="l01108"></a><span class="lineno"> 1108</span><span class="preprocessor">#    define bitset_count(args...) CCC_bitset_count(args)</span></div>
-<div class="line"><a id="l01109" name="l01109"></a><span class="lineno"> 1109</span><span class="preprocessor">#    define bitset_blocks_count(args...) CCC_bitset_blocks_count(args)</span></div>
-<div class="line"><a id="l01110" name="l01110"></a><span class="lineno"> 1110</span><span class="preprocessor">#    define bitset_is_empty(args...) CCC_bitset_is_empty(args)</span></div>
-<div class="line"><a id="l01111" name="l01111"></a><span class="lineno"> 1111</span><span class="preprocessor">#    define bitset_popcount(args...) CCC_bitset_popcount(args)</span></div>
-<div class="line"><a id="l01112" name="l01112"></a><span class="lineno"> 1112</span><span class="preprocessor">#    define bitset_popcount_range(args...) CCC_bitset_popcount_range(args)</span></div>
-<div class="line"><a id="l01113" name="l01113"></a><span class="lineno"> 1113</span><span class="preprocessor">#    define bitset_clear(args...) CCC_bitset_clear(args)</span></div>
-<div class="line"><a id="l01114" name="l01114"></a><span class="lineno"> 1114</span><span class="preprocessor">#    define bitset_clear_and_free(args...) CCC_bitset_clear_and_free(args)</span></div>
-<div class="line"><a id="l01115" name="l01115"></a><span class="lineno"> 1115</span><span class="preprocessor">#    define bitset_clear_and_free_reserve(args...)                             \</span></div>
-<div class="line"><a id="l01116" name="l01116"></a><span class="lineno"> 1116</span><span class="preprocessor">        CCC_bitset_clear_and_free_reserve(args)</span></div>
-<div class="line"><a id="l01117" name="l01117"></a><span class="lineno"> 1117</span><span class="preprocessor">#    define bitset_push_back(args...) CCC_bitset_push_back(args)</span></div>
-<div class="line"><a id="l01118" name="l01118"></a><span class="lineno"> 1118</span><span class="preprocessor">#    define bitset_pop_back(args...) CCC_bitset_pop_back(args)</span></div>
-<div class="line"><a id="l01119" name="l01119"></a><span class="lineno"> 1119</span><span class="preprocessor">#endif </span><span class="comment">/* BITSET_USING_NAMESPACE_CCC */</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l01120" name="l01120"></a><span class="lineno"> 1120</span> </div>
-<div class="line"><a id="l01121" name="l01121"></a><span class="lineno"> 1121</span><span class="preprocessor">#endif </span><span class="comment">/* CCC_BITSET_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l01038" name="l01038"></a><span class="lineno"> 1038</span><span class="preprocessor">#    define bitset_block_count(arguments...) CCC_bitset_block_count(arguments)</span></div>
+<div class="line"><a id="l01039" name="l01039"></a><span class="lineno"> 1039</span><span class="preprocessor">#    define bitset_block_bytes(arguments...) CCC_bitset_block_bytes(arguments)</span></div>
+<div class="line"><a id="l01040" name="l01040"></a><span class="lineno"> 1040</span><span class="preprocessor">#    define bitset_blocks(arguments...) CCC_bitset_blocks(arguments)</span></div>
+<div class="line"><a id="l01041" name="l01041"></a><span class="lineno"> 1041</span><span class="preprocessor">#    define bitset_initialize(arguments...) CCC_bitset_initialize(arguments)</span></div>
+<div class="line"><a id="l01042" name="l01042"></a><span class="lineno"> 1042</span><span class="preprocessor">#    define bitset_from(arguments...) CCC_bitset_from(arguments)</span></div>
+<div class="line"><a id="l01043" name="l01043"></a><span class="lineno"> 1043</span><span class="preprocessor">#    define bitset_with_capacity(arguments...)                                 \</span></div>
+<div class="line"><a id="l01044" name="l01044"></a><span class="lineno"> 1044</span><span class="preprocessor">        CCC_bitset_with_capacity(arguments)</span></div>
+<div class="line"><a id="l01045" name="l01045"></a><span class="lineno"> 1045</span><span class="preprocessor">#    define bitset_with_compound_literal(arguments...)                         \</span></div>
+<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span><span class="preprocessor">        CCC_bitset_with_compound_literal(arguments)</span></div>
+<div class="line"><a id="l01047" name="l01047"></a><span class="lineno"> 1047</span><span class="preprocessor">#    define bitset_with_context_compound_literal(arguments...)                 \</span></div>
+<div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span><span class="preprocessor">        CCC_bitset_with_context_compound_literal(arguments)</span></div>
+<div class="line"><a id="l01049" name="l01049"></a><span class="lineno"> 1049</span><span class="preprocessor">#    define bitset_copy(arguments...) CCC_bitset_copy(arguments)</span></div>
+<div class="line"><a id="l01050" name="l01050"></a><span class="lineno"> 1050</span><span class="preprocessor">#    define bitset_reserve(arguments...) CCC_bitset_reserve(arguments)</span></div>
+<div class="line"><a id="l01051" name="l01051"></a><span class="lineno"> 1051</span><span class="preprocessor">#    define bitset_test(arguments...) CCC_bitset_test(arguments)</span></div>
+<div class="line"><a id="l01052" name="l01052"></a><span class="lineno"> 1052</span><span class="preprocessor">#    define bitset_set(arguments...) CCC_bitset_set(arguments)</span></div>
+<div class="line"><a id="l01053" name="l01053"></a><span class="lineno"> 1053</span><span class="preprocessor">#    define bitset_set_all(arguments...) CCC_bitset_set_all(arguments)</span></div>
+<div class="line"><a id="l01054" name="l01054"></a><span class="lineno"> 1054</span><span class="preprocessor">#    define bitset_set_range(arguments...) CCC_bitset_set_range(arguments)</span></div>
+<div class="line"><a id="l01055" name="l01055"></a><span class="lineno"> 1055</span><span class="preprocessor">#    define bitset_reset(arguments...) CCC_bitset_reset(arguments)</span></div>
+<div class="line"><a id="l01056" name="l01056"></a><span class="lineno"> 1056</span><span class="preprocessor">#    define bitset_reset_all(arguments...) CCC_bitset_reset_all(arguments)</span></div>
+<div class="line"><a id="l01057" name="l01057"></a><span class="lineno"> 1057</span><span class="preprocessor">#    define bitset_reset_range(arguments...) CCC_bitset_reset_range(arguments)</span></div>
+<div class="line"><a id="l01058" name="l01058"></a><span class="lineno"> 1058</span><span class="preprocessor">#    define bitset_flip(arguments...) CCC_bitset_flip(arguments)</span></div>
+<div class="line"><a id="l01059" name="l01059"></a><span class="lineno"> 1059</span><span class="preprocessor">#    define bitset_flip_all(arguments...) CCC_bitset_flip_all(arguments)</span></div>
+<div class="line"><a id="l01060" name="l01060"></a><span class="lineno"> 1060</span><span class="preprocessor">#    define bitset_flip_range(arguments...) CCC_bitset_flip_range(arguments)</span></div>
+<div class="line"><a id="l01061" name="l01061"></a><span class="lineno"> 1061</span><span class="preprocessor">#    define bitset_any(arguments...) CCC_bitset_any(arguments)</span></div>
+<div class="line"><a id="l01062" name="l01062"></a><span class="lineno"> 1062</span><span class="preprocessor">#    define bitset_any_range(arguments...) CCC_bitset_any_range(arguments)</span></div>
+<div class="line"><a id="l01063" name="l01063"></a><span class="lineno"> 1063</span><span class="preprocessor">#    define bitset_none(arguments...) CCC_bitset_none(arguments)</span></div>
+<div class="line"><a id="l01064" name="l01064"></a><span class="lineno"> 1064</span><span class="preprocessor">#    define bitset_none_range(arguments...) CCC_bitset_none_range(arguments)</span></div>
+<div class="line"><a id="l01065" name="l01065"></a><span class="lineno"> 1065</span><span class="preprocessor">#    define bitset_all(arguments...) CCC_bitset_all(arguments)</span></div>
+<div class="line"><a id="l01066" name="l01066"></a><span class="lineno"> 1066</span><span class="preprocessor">#    define bitset_all_range(arguments...) CCC_bitset_all_range(arguments)</span></div>
+<div class="line"><a id="l01067" name="l01067"></a><span class="lineno"> 1067</span><span class="preprocessor">#    define bitset_first_trailing_one(arguments...)                            \</span></div>
+<div class="line"><a id="l01068" name="l01068"></a><span class="lineno"> 1068</span><span class="preprocessor">        CCC_bitset_first_trailing_one(arguments)</span></div>
+<div class="line"><a id="l01069" name="l01069"></a><span class="lineno"> 1069</span><span class="preprocessor">#    define bitset_first_trailing_one_range(arguments...)                      \</span></div>
+<div class="line"><a id="l01070" name="l01070"></a><span class="lineno"> 1070</span><span class="preprocessor">        CCC_bitset_first_trailing_one_range(arguments)</span></div>
+<div class="line"><a id="l01071" name="l01071"></a><span class="lineno"> 1071</span><span class="preprocessor">#    define bitset_first_trailing_ones(arguments...)                           \</span></div>
+<div class="line"><a id="l01072" name="l01072"></a><span class="lineno"> 1072</span><span class="preprocessor">        CCC_bitset_first_trailing_ones(arguments)</span></div>
+<div class="line"><a id="l01073" name="l01073"></a><span class="lineno"> 1073</span><span class="preprocessor">#    define bitset_first_trailing_ones_range(arguments...)                     \</span></div>
+<div class="line"><a id="l01074" name="l01074"></a><span class="lineno"> 1074</span><span class="preprocessor">        CCC_bitset_first_trailing_ones_range(arguments)</span></div>
+<div class="line"><a id="l01075" name="l01075"></a><span class="lineno"> 1075</span><span class="preprocessor">#    define bitset_first_trailing_zero(arguments...)                           \</span></div>
+<div class="line"><a id="l01076" name="l01076"></a><span class="lineno"> 1076</span><span class="preprocessor">        CCC_bitset_first_trailing_zero(arguments)</span></div>
+<div class="line"><a id="l01077" name="l01077"></a><span class="lineno"> 1077</span><span class="preprocessor">#    define bitset_first_trailing_zero_range(arguments...)                     \</span></div>
+<div class="line"><a id="l01078" name="l01078"></a><span class="lineno"> 1078</span><span class="preprocessor">        CCC_bitset_first_trailing_zero_range(arguments)</span></div>
+<div class="line"><a id="l01079" name="l01079"></a><span class="lineno"> 1079</span><span class="preprocessor">#    define bitset_first_trailing_zeros(arguments...)                          \</span></div>
+<div class="line"><a id="l01080" name="l01080"></a><span class="lineno"> 1080</span><span class="preprocessor">        CCC_bitset_first_trailing_zeros(arguments)</span></div>
+<div class="line"><a id="l01081" name="l01081"></a><span class="lineno"> 1081</span><span class="preprocessor">#    define bitset_first_trailing_zeros_range(arguments...)                    \</span></div>
+<div class="line"><a id="l01082" name="l01082"></a><span class="lineno"> 1082</span><span class="preprocessor">        CCC_bitset_first_trailing_zeros_range(arguments)</span></div>
+<div class="line"><a id="l01083" name="l01083"></a><span class="lineno"> 1083</span><span class="preprocessor">#    define bitset_first_leading_one(arguments...)                             \</span></div>
+<div class="line"><a id="l01084" name="l01084"></a><span class="lineno"> 1084</span><span class="preprocessor">        CCC_bitset_first_leading_one(arguments)</span></div>
+<div class="line"><a id="l01085" name="l01085"></a><span class="lineno"> 1085</span><span class="preprocessor">#    define bitset_first_leading_one_range(arguments...)                       \</span></div>
+<div class="line"><a id="l01086" name="l01086"></a><span class="lineno"> 1086</span><span class="preprocessor">        CCC_bitset_first_leading_one_range(arguments)</span></div>
+<div class="line"><a id="l01087" name="l01087"></a><span class="lineno"> 1087</span><span class="preprocessor">#    define bitset_first_leading_ones(arguments...)                            \</span></div>
+<div class="line"><a id="l01088" name="l01088"></a><span class="lineno"> 1088</span><span class="preprocessor">        CCC_bitset_first_leading_ones(arguments)</span></div>
+<div class="line"><a id="l01089" name="l01089"></a><span class="lineno"> 1089</span><span class="preprocessor">#    define bitset_first_leading_ones_range(arguments...)                      \</span></div>
+<div class="line"><a id="l01090" name="l01090"></a><span class="lineno"> 1090</span><span class="preprocessor">        CCC_bitset_first_leading_ones_range(arguments)</span></div>
+<div class="line"><a id="l01091" name="l01091"></a><span class="lineno"> 1091</span><span class="preprocessor">#    define bitset_first_leading_zero(arguments...)                            \</span></div>
+<div class="line"><a id="l01092" name="l01092"></a><span class="lineno"> 1092</span><span class="preprocessor">        CCC_bitset_first_leading_zero(arguments)</span></div>
+<div class="line"><a id="l01093" name="l01093"></a><span class="lineno"> 1093</span><span class="preprocessor">#    define bitset_first_leading_zero_range(arguments...)                      \</span></div>
+<div class="line"><a id="l01094" name="l01094"></a><span class="lineno"> 1094</span><span class="preprocessor">        CCC_bitset_first_leading_zero_range(arguments)</span></div>
+<div class="line"><a id="l01095" name="l01095"></a><span class="lineno"> 1095</span><span class="preprocessor">#    define bitset_first_leading_zeros(arguments...)                           \</span></div>
+<div class="line"><a id="l01096" name="l01096"></a><span class="lineno"> 1096</span><span class="preprocessor">        CCC_bitset_first_leading_zeros(arguments)</span></div>
+<div class="line"><a id="l01097" name="l01097"></a><span class="lineno"> 1097</span><span class="preprocessor">#    define bitset_first_leading_zeros_range(arguments...)                     \</span></div>
+<div class="line"><a id="l01098" name="l01098"></a><span class="lineno"> 1098</span><span class="preprocessor">        CCC_bitset_first_leading_zeros_range(arguments)</span></div>
+<div class="line"><a id="l01099" name="l01099"></a><span class="lineno"> 1099</span><span class="preprocessor">#    define bitset_or(arguments...) CCC_bitset_or(arguments)</span></div>
+<div class="line"><a id="l01100" name="l01100"></a><span class="lineno"> 1100</span><span class="preprocessor">#    define bitset_and(arguments...) CCC_bitset_and(arguments)</span></div>
+<div class="line"><a id="l01101" name="l01101"></a><span class="lineno"> 1101</span><span class="preprocessor">#    define bitset_xor(arguments...) CCC_bitset_xor(arguments)</span></div>
+<div class="line"><a id="l01102" name="l01102"></a><span class="lineno"> 1102</span><span class="preprocessor">#    define bitset_shift_left(arguments...) CCC_bitset_shift_left(arguments)</span></div>
+<div class="line"><a id="l01103" name="l01103"></a><span class="lineno"> 1103</span><span class="preprocessor">#    define bitset_shift_right(arguments...) CCC_bitset_shift_right(arguments)</span></div>
+<div class="line"><a id="l01104" name="l01104"></a><span class="lineno"> 1104</span><span class="preprocessor">#    define bitset_is_equal(arguments...) CCC_bitset_is_equal(arguments)</span></div>
+<div class="line"><a id="l01105" name="l01105"></a><span class="lineno"> 1105</span><span class="preprocessor">#    define bitset_is_proper_subset(arguments...)                              \</span></div>
+<div class="line"><a id="l01106" name="l01106"></a><span class="lineno"> 1106</span><span class="preprocessor">        CCC_bitset_is_proper_subset(arguments)</span></div>
+<div class="line"><a id="l01107" name="l01107"></a><span class="lineno"> 1107</span><span class="preprocessor">#    define bitset_is_subset(arguments...) CCC_bitset_is_subset(arguments)</span></div>
+<div class="line"><a id="l01108" name="l01108"></a><span class="lineno"> 1108</span><span class="preprocessor">#    define bitset_data(arguments...) CCC_bitset_data(arguments)</span></div>
+<div class="line"><a id="l01109" name="l01109"></a><span class="lineno"> 1109</span><span class="preprocessor">#    define bitset_capacity(arguments...) CCC_bitset_capacity(arguments)</span></div>
+<div class="line"><a id="l01110" name="l01110"></a><span class="lineno"> 1110</span><span class="preprocessor">#    define bitset_blocks_capacity(arguments...)                               \</span></div>
+<div class="line"><a id="l01111" name="l01111"></a><span class="lineno"> 1111</span><span class="preprocessor">        CCC_bitset_blocks_capacity(arguments)</span></div>
+<div class="line"><a id="l01112" name="l01112"></a><span class="lineno"> 1112</span><span class="preprocessor">#    define bitset_count(arguments...) CCC_bitset_count(arguments)</span></div>
+<div class="line"><a id="l01113" name="l01113"></a><span class="lineno"> 1113</span><span class="preprocessor">#    define bitset_blocks_count(arguments...) CCC_bitset_blocks_count(arguments)</span></div>
+<div class="line"><a id="l01114" name="l01114"></a><span class="lineno"> 1114</span><span class="preprocessor">#    define bitset_is_empty(arguments...) CCC_bitset_is_empty(arguments)</span></div>
+<div class="line"><a id="l01115" name="l01115"></a><span class="lineno"> 1115</span><span class="preprocessor">#    define bitset_popcount(arguments...) CCC_bitset_popcount(arguments)</span></div>
+<div class="line"><a id="l01116" name="l01116"></a><span class="lineno"> 1116</span><span class="preprocessor">#    define bitset_popcount_range(arguments...)                                \</span></div>
+<div class="line"><a id="l01117" name="l01117"></a><span class="lineno"> 1117</span><span class="preprocessor">        CCC_bitset_popcount_range(arguments)</span></div>
+<div class="line"><a id="l01118" name="l01118"></a><span class="lineno"> 1118</span><span class="preprocessor">#    define bitset_clear(arguments...) CCC_bitset_clear(arguments)</span></div>
+<div class="line"><a id="l01119" name="l01119"></a><span class="lineno"> 1119</span><span class="preprocessor">#    define bitset_clear_and_free(arguments...)                                \</span></div>
+<div class="line"><a id="l01120" name="l01120"></a><span class="lineno"> 1120</span><span class="preprocessor">        CCC_bitset_clear_and_free(arguments)</span></div>
+<div class="line"><a id="l01121" name="l01121"></a><span class="lineno"> 1121</span><span class="preprocessor">#    define bitset_clear_and_free_reserve(arguments...)                        \</span></div>
+<div class="line"><a id="l01122" name="l01122"></a><span class="lineno"> 1122</span><span class="preprocessor">        CCC_bitset_clear_and_free_reserve(arguments)</span></div>
+<div class="line"><a id="l01123" name="l01123"></a><span class="lineno"> 1123</span><span class="preprocessor">#    define bitset_push_back(arguments...) CCC_bitset_push_back(arguments)</span></div>
+<div class="line"><a id="l01124" name="l01124"></a><span class="lineno"> 1124</span><span class="preprocessor">#    define bitset_pop_back(arguments...) CCC_bitset_pop_back(arguments)</span></div>
+<div class="line"><a id="l01125" name="l01125"></a><span class="lineno"> 1125</span><span class="preprocessor">#endif </span><span class="comment">/* BITSET_USING_NAMESPACE_CCC */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l01126" name="l01126"></a><span class="lineno"> 1126</span> </div>
+<div class="line"><a id="l01127" name="l01127"></a><span class="lineno"> 1127</span><span class="preprocessor">#endif </span><span class="comment">/* CCC_BITSET_H */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="abitset_8h_html_a02bc88eefcc8809fe77d2e6809a66118"><div class="ttname"><a href="bitset_8h.html#a02bc88eefcc8809fe77d2e6809a66118">CCC_bitset_clear</a></div><div class="ttdeci">CCC_Result CCC_bitset_clear(CCC_Bitset *bitset)</div><div class="ttdoc">Clears the bit set by setting the size to 0 and all bits to 0. The underlying memory capacity remains...</div></div>
 <div class="ttc" id="abitset_8h_html_a047e880bfd157c60b37a34f6434e16d7"><div class="ttname"><a href="bitset_8h.html#a047e880bfd157c60b37a34f6434e16d7">CCC_bitset_reset</a></div><div class="ttdeci">CCC_Tribool CCC_bitset_reset(CCC_Bitset *bitset, size_t index)</div><div class="ttdoc">Set the bit at valid index index to boolean value b (true or false).</div></div>
 <div class="ttc" id="abitset_8h_html_a077ab1f869509d48c4dc2da2be8071fe"><div class="ttname"><a href="bitset_8h.html#a077ab1f869509d48c4dc2da2be8071fe">CCC_bitset_is_equal</a></div><div class="ttdeci">CCC_Tribool CCC_bitset_is_equal(CCC_Bitset const *left, CCC_Bitset const *right)</div><div class="ttdoc">Checks two bit sets of the same size (not capacity) for equality.</div></div>

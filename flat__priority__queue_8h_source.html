@@ -240,66 +240,71 @@ $(document).ready(function(){initNavTree('flat__priority__queue_8h_source.html',
 <div class="line"><a id="l00799" name="l00799"></a><span class="lineno">  799</span> </div>
 <div class="line"><a id="l00804" name="l00804"></a><span class="lineno">  804</span><span class="preprocessor">#ifdef FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC</span></div>
 <div class="line"><a id="l00805" name="l00805"></a><span class="lineno">  805</span><span class="keyword">typedef</span> <a class="code hl_struct" href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a> Flat_priority_queue;</div>
-<div class="line"><a id="l00806" name="l00806"></a><span class="lineno">  806</span><span class="preprocessor">#    define flat_priority_queue_initialize(args...)                            \</span></div>
-<div class="line"><a id="l00807" name="l00807"></a><span class="lineno">  807</span><span class="preprocessor">        CCC_flat_priority_queue_initialize(args)</span></div>
-<div class="line"><a id="l00808" name="l00808"></a><span class="lineno">  808</span><span class="preprocessor">#    define flat_priority_queue_from(args...) CCC_flat_priority_queue_from(args)</span></div>
-<div class="line"><a id="l00809" name="l00809"></a><span class="lineno">  809</span><span class="preprocessor">#    define flat_priority_queue_with_capacity(args...)                         \</span></div>
-<div class="line"><a id="l00810" name="l00810"></a><span class="lineno">  810</span><span class="preprocessor">        CCC_flat_priority_queue_with_capacity(args)</span></div>
-<div class="line"><a id="l00811" name="l00811"></a><span class="lineno">  811</span><span class="preprocessor">#    define flat_priority_queue_with_compound_literal(args...)                 \</span></div>
-<div class="line"><a id="l00812" name="l00812"></a><span class="lineno">  812</span><span class="preprocessor">        CCC_flat_priority_queue_with_compound_literal(args)</span></div>
-<div class="line"><a id="l00813" name="l00813"></a><span class="lineno">  813</span><span class="preprocessor">#    define flat_priority_queue_with_context_compound_literal(args...)         \</span></div>
-<div class="line"><a id="l00814" name="l00814"></a><span class="lineno">  814</span><span class="preprocessor">        CCC_flat_priority_queue_with_context_compound_literal(args)</span></div>
-<div class="line"><a id="l00815" name="l00815"></a><span class="lineno">  815</span><span class="preprocessor">#    define flat_priority_queue_heapify_initialize(args...)                    \</span></div>
-<div class="line"><a id="l00816" name="l00816"></a><span class="lineno">  816</span><span class="preprocessor">        CCC_flat_priority_queue_heapify_initialize(args)</span></div>
-<div class="line"><a id="l00817" name="l00817"></a><span class="lineno">  817</span><span class="preprocessor">#    define flat_priority_queue_copy(args...) CCC_flat_priority_queue_copy(args)</span></div>
-<div class="line"><a id="l00818" name="l00818"></a><span class="lineno">  818</span><span class="preprocessor">#    define flat_priority_queue_reserve(args...)                               \</span></div>
-<div class="line"><a id="l00819" name="l00819"></a><span class="lineno">  819</span><span class="preprocessor">        CCC_flat_priority_queue_reserve(args)</span></div>
-<div class="line"><a id="l00820" name="l00820"></a><span class="lineno">  820</span><span class="preprocessor">#    define flat_priority_queue_heapify(args...)                               \</span></div>
-<div class="line"><a id="l00821" name="l00821"></a><span class="lineno">  821</span><span class="preprocessor">        CCC_flat_priority_queue_heapify(args)</span></div>
-<div class="line"><a id="l00822" name="l00822"></a><span class="lineno">  822</span><span class="preprocessor">#    define flat_priority_queue_heapify_inplace(args...)                       \</span></div>
-<div class="line"><a id="l00823" name="l00823"></a><span class="lineno">  823</span><span class="preprocessor">        CCC_flat_priority_queue_heapify_inplace(args)</span></div>
-<div class="line"><a id="l00824" name="l00824"></a><span class="lineno">  824</span><span class="preprocessor">#    define flat_priority_queue_heapsort(args...)                              \</span></div>
-<div class="line"><a id="l00825" name="l00825"></a><span class="lineno">  825</span><span class="preprocessor">        CCC_flat_priority_queue_heapsort(args)</span></div>
-<div class="line"><a id="l00826" name="l00826"></a><span class="lineno">  826</span><span class="preprocessor">#    define flat_priority_queue_emplace(args...)                               \</span></div>
-<div class="line"><a id="l00827" name="l00827"></a><span class="lineno">  827</span><span class="preprocessor">        CCC_flat_priority_queue_emplace(args)</span></div>
-<div class="line"><a id="l00828" name="l00828"></a><span class="lineno">  828</span><span class="preprocessor">#    define flat_priority_queue_push(args...) CCC_flat_priority_queue_push(args)</span></div>
-<div class="line"><a id="l00829" name="l00829"></a><span class="lineno">  829</span><span class="preprocessor">#    define flat_priority_queue_front(args...)                                 \</span></div>
-<div class="line"><a id="l00830" name="l00830"></a><span class="lineno">  830</span><span class="preprocessor">        CCC_flat_priority_queue_front(args)</span></div>
-<div class="line"><a id="l00831" name="l00831"></a><span class="lineno">  831</span><span class="preprocessor">#    define flat_priority_queue_pop(args...) CCC_flat_priority_queue_pop(args)</span></div>
-<div class="line"><a id="l00832" name="l00832"></a><span class="lineno">  832</span><span class="preprocessor">#    define flat_priority_queue_extract(args...)                               \</span></div>
-<div class="line"><a id="l00833" name="l00833"></a><span class="lineno">  833</span><span class="preprocessor">        CCC_flat_priority_queue_extract(args)</span></div>
-<div class="line"><a id="l00834" name="l00834"></a><span class="lineno">  834</span><span class="preprocessor">#    define flat_priority_queue_update(args...)                                \</span></div>
-<div class="line"><a id="l00835" name="l00835"></a><span class="lineno">  835</span><span class="preprocessor">        CCC_flat_priority_queue_update(args)</span></div>
-<div class="line"><a id="l00836" name="l00836"></a><span class="lineno">  836</span><span class="preprocessor">#    define flat_priority_queue_increase(args...)                              \</span></div>
-<div class="line"><a id="l00837" name="l00837"></a><span class="lineno">  837</span><span class="preprocessor">        CCC_flat_priority_queue_increase(args)</span></div>
-<div class="line"><a id="l00838" name="l00838"></a><span class="lineno">  838</span><span class="preprocessor">#    define flat_priority_queue_decrease(args...)                              \</span></div>
-<div class="line"><a id="l00839" name="l00839"></a><span class="lineno">  839</span><span class="preprocessor">        CCC_flat_priority_queue_decrease(args)</span></div>
-<div class="line"><a id="l00840" name="l00840"></a><span class="lineno">  840</span><span class="preprocessor">#    define flat_priority_queue_update_with(args...)                           \</span></div>
-<div class="line"><a id="l00841" name="l00841"></a><span class="lineno">  841</span><span class="preprocessor">        CCC_flat_priority_queue_update_with(args)</span></div>
-<div class="line"><a id="l00842" name="l00842"></a><span class="lineno">  842</span><span class="preprocessor">#    define flat_priority_queue_increase_with(args...)                         \</span></div>
-<div class="line"><a id="l00843" name="l00843"></a><span class="lineno">  843</span><span class="preprocessor">        CCC_flat_priority_queue_increase_with(args)</span></div>
-<div class="line"><a id="l00844" name="l00844"></a><span class="lineno">  844</span><span class="preprocessor">#    define flat_priority_queue_decrease_with(args...)                         \</span></div>
-<div class="line"><a id="l00845" name="l00845"></a><span class="lineno">  845</span><span class="preprocessor">        CCC_flat_priority_queue_decrease_with(args)</span></div>
-<div class="line"><a id="l00846" name="l00846"></a><span class="lineno">  846</span><span class="preprocessor">#    define flat_priority_queue_clear(args...)                                 \</span></div>
-<div class="line"><a id="l00847" name="l00847"></a><span class="lineno">  847</span><span class="preprocessor">        CCC_flat_priority_queue_clear(args)</span></div>
-<div class="line"><a id="l00848" name="l00848"></a><span class="lineno">  848</span><span class="preprocessor">#    define flat_priority_queue_clear_and_free(args...)                        \</span></div>
-<div class="line"><a id="l00849" name="l00849"></a><span class="lineno">  849</span><span class="preprocessor">        CCC_flat_priority_queue_clear_and_free(args)</span></div>
-<div class="line"><a id="l00850" name="l00850"></a><span class="lineno">  850</span><span class="preprocessor">#    define flat_priority_queue_clear_and_free_reserve(args...)                \</span></div>
-<div class="line"><a id="l00851" name="l00851"></a><span class="lineno">  851</span><span class="preprocessor">        CCC_flat_priority_queue_clear_and_free_reserve(args)</span></div>
-<div class="line"><a id="l00852" name="l00852"></a><span class="lineno">  852</span><span class="preprocessor">#    define flat_priority_queue_is_empty(args...)                              \</span></div>
-<div class="line"><a id="l00853" name="l00853"></a><span class="lineno">  853</span><span class="preprocessor">        CCC_flat_priority_queue_is_empty(args)</span></div>
-<div class="line"><a id="l00854" name="l00854"></a><span class="lineno">  854</span><span class="preprocessor">#    define flat_priority_queue_count(args...)                                 \</span></div>
-<div class="line"><a id="l00855" name="l00855"></a><span class="lineno">  855</span><span class="preprocessor">        CCC_flat_priority_queue_count(args)</span></div>
-<div class="line"><a id="l00856" name="l00856"></a><span class="lineno">  856</span><span class="preprocessor">#    define flat_priority_queue_capacity(args...)                              \</span></div>
-<div class="line"><a id="l00857" name="l00857"></a><span class="lineno">  857</span><span class="preprocessor">        CCC_flat_priority_queue_capacity(args)</span></div>
-<div class="line"><a id="l00858" name="l00858"></a><span class="lineno">  858</span><span class="preprocessor">#    define flat_priority_queue_data(args...) CCC_flat_priority_queue_data(args)</span></div>
-<div class="line"><a id="l00859" name="l00859"></a><span class="lineno">  859</span><span class="preprocessor">#    define flat_priority_queue_validate(args...)                              \</span></div>
-<div class="line"><a id="l00860" name="l00860"></a><span class="lineno">  860</span><span class="preprocessor">        CCC_flat_priority_queue_validate(args)</span></div>
-<div class="line"><a id="l00861" name="l00861"></a><span class="lineno">  861</span><span class="preprocessor">#    define flat_priority_queue_order(args...)                                 \</span></div>
-<div class="line"><a id="l00862" name="l00862"></a><span class="lineno">  862</span><span class="preprocessor">        CCC_flat_priority_queue_order(args)</span></div>
-<div class="line"><a id="l00863" name="l00863"></a><span class="lineno">  863</span><span class="preprocessor">#endif </span><span class="comment">/* FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC */</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00864" name="l00864"></a><span class="lineno">  864</span> </div>
-<div class="line"><a id="l00865" name="l00865"></a><span class="lineno">  865</span><span class="preprocessor">#endif </span><span class="comment">/* CCC_FLAT_PRIORITY_QUEUE_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00806" name="l00806"></a><span class="lineno">  806</span><span class="preprocessor">#    define flat_priority_queue_initialize(arguments...)                       \</span></div>
+<div class="line"><a id="l00807" name="l00807"></a><span class="lineno">  807</span><span class="preprocessor">        CCC_flat_priority_queue_initialize(arguments)</span></div>
+<div class="line"><a id="l00808" name="l00808"></a><span class="lineno">  808</span><span class="preprocessor">#    define flat_priority_queue_from(arguments...)                             \</span></div>
+<div class="line"><a id="l00809" name="l00809"></a><span class="lineno">  809</span><span class="preprocessor">        CCC_flat_priority_queue_from(arguments)</span></div>
+<div class="line"><a id="l00810" name="l00810"></a><span class="lineno">  810</span><span class="preprocessor">#    define flat_priority_queue_with_capacity(arguments...)                    \</span></div>
+<div class="line"><a id="l00811" name="l00811"></a><span class="lineno">  811</span><span class="preprocessor">        CCC_flat_priority_queue_with_capacity(arguments)</span></div>
+<div class="line"><a id="l00812" name="l00812"></a><span class="lineno">  812</span><span class="preprocessor">#    define flat_priority_queue_with_compound_literal(arguments...)            \</span></div>
+<div class="line"><a id="l00813" name="l00813"></a><span class="lineno">  813</span><span class="preprocessor">        CCC_flat_priority_queue_with_compound_literal(arguments)</span></div>
+<div class="line"><a id="l00814" name="l00814"></a><span class="lineno">  814</span><span class="preprocessor">#    define flat_priority_queue_with_context_compound_literal(arguments...)    \</span></div>
+<div class="line"><a id="l00815" name="l00815"></a><span class="lineno">  815</span><span class="preprocessor">        CCC_flat_priority_queue_with_context_compound_literal(arguments)</span></div>
+<div class="line"><a id="l00816" name="l00816"></a><span class="lineno">  816</span><span class="preprocessor">#    define flat_priority_queue_heapify_initialize(arguments...)               \</span></div>
+<div class="line"><a id="l00817" name="l00817"></a><span class="lineno">  817</span><span class="preprocessor">        CCC_flat_priority_queue_heapify_initialize(arguments)</span></div>
+<div class="line"><a id="l00818" name="l00818"></a><span class="lineno">  818</span><span class="preprocessor">#    define flat_priority_queue_copy(arguments...)                             \</span></div>
+<div class="line"><a id="l00819" name="l00819"></a><span class="lineno">  819</span><span class="preprocessor">        CCC_flat_priority_queue_copy(arguments)</span></div>
+<div class="line"><a id="l00820" name="l00820"></a><span class="lineno">  820</span><span class="preprocessor">#    define flat_priority_queue_reserve(arguments...)                          \</span></div>
+<div class="line"><a id="l00821" name="l00821"></a><span class="lineno">  821</span><span class="preprocessor">        CCC_flat_priority_queue_reserve(arguments)</span></div>
+<div class="line"><a id="l00822" name="l00822"></a><span class="lineno">  822</span><span class="preprocessor">#    define flat_priority_queue_heapify(arguments...)                          \</span></div>
+<div class="line"><a id="l00823" name="l00823"></a><span class="lineno">  823</span><span class="preprocessor">        CCC_flat_priority_queue_heapify(arguments)</span></div>
+<div class="line"><a id="l00824" name="l00824"></a><span class="lineno">  824</span><span class="preprocessor">#    define flat_priority_queue_heapify_inplace(arguments...)                  \</span></div>
+<div class="line"><a id="l00825" name="l00825"></a><span class="lineno">  825</span><span class="preprocessor">        CCC_flat_priority_queue_heapify_inplace(arguments)</span></div>
+<div class="line"><a id="l00826" name="l00826"></a><span class="lineno">  826</span><span class="preprocessor">#    define flat_priority_queue_heapsort(arguments...)                         \</span></div>
+<div class="line"><a id="l00827" name="l00827"></a><span class="lineno">  827</span><span class="preprocessor">        CCC_flat_priority_queue_heapsort(arguments)</span></div>
+<div class="line"><a id="l00828" name="l00828"></a><span class="lineno">  828</span><span class="preprocessor">#    define flat_priority_queue_emplace(arguments...)                          \</span></div>
+<div class="line"><a id="l00829" name="l00829"></a><span class="lineno">  829</span><span class="preprocessor">        CCC_flat_priority_queue_emplace(arguments)</span></div>
+<div class="line"><a id="l00830" name="l00830"></a><span class="lineno">  830</span><span class="preprocessor">#    define flat_priority_queue_push(arguments...)                             \</span></div>
+<div class="line"><a id="l00831" name="l00831"></a><span class="lineno">  831</span><span class="preprocessor">        CCC_flat_priority_queue_push(arguments)</span></div>
+<div class="line"><a id="l00832" name="l00832"></a><span class="lineno">  832</span><span class="preprocessor">#    define flat_priority_queue_front(arguments...)                            \</span></div>
+<div class="line"><a id="l00833" name="l00833"></a><span class="lineno">  833</span><span class="preprocessor">        CCC_flat_priority_queue_front(arguments)</span></div>
+<div class="line"><a id="l00834" name="l00834"></a><span class="lineno">  834</span><span class="preprocessor">#    define flat_priority_queue_pop(arguments...)                              \</span></div>
+<div class="line"><a id="l00835" name="l00835"></a><span class="lineno">  835</span><span class="preprocessor">        CCC_flat_priority_queue_pop(arguments)</span></div>
+<div class="line"><a id="l00836" name="l00836"></a><span class="lineno">  836</span><span class="preprocessor">#    define flat_priority_queue_extract(arguments...)                          \</span></div>
+<div class="line"><a id="l00837" name="l00837"></a><span class="lineno">  837</span><span class="preprocessor">        CCC_flat_priority_queue_extract(arguments)</span></div>
+<div class="line"><a id="l00838" name="l00838"></a><span class="lineno">  838</span><span class="preprocessor">#    define flat_priority_queue_update(arguments...)                           \</span></div>
+<div class="line"><a id="l00839" name="l00839"></a><span class="lineno">  839</span><span class="preprocessor">        CCC_flat_priority_queue_update(arguments)</span></div>
+<div class="line"><a id="l00840" name="l00840"></a><span class="lineno">  840</span><span class="preprocessor">#    define flat_priority_queue_increase(arguments...)                         \</span></div>
+<div class="line"><a id="l00841" name="l00841"></a><span class="lineno">  841</span><span class="preprocessor">        CCC_flat_priority_queue_increase(arguments)</span></div>
+<div class="line"><a id="l00842" name="l00842"></a><span class="lineno">  842</span><span class="preprocessor">#    define flat_priority_queue_decrease(arguments...)                         \</span></div>
+<div class="line"><a id="l00843" name="l00843"></a><span class="lineno">  843</span><span class="preprocessor">        CCC_flat_priority_queue_decrease(arguments)</span></div>
+<div class="line"><a id="l00844" name="l00844"></a><span class="lineno">  844</span><span class="preprocessor">#    define flat_priority_queue_update_with(arguments...)                      \</span></div>
+<div class="line"><a id="l00845" name="l00845"></a><span class="lineno">  845</span><span class="preprocessor">        CCC_flat_priority_queue_update_with(arguments)</span></div>
+<div class="line"><a id="l00846" name="l00846"></a><span class="lineno">  846</span><span class="preprocessor">#    define flat_priority_queue_increase_with(arguments...)                    \</span></div>
+<div class="line"><a id="l00847" name="l00847"></a><span class="lineno">  847</span><span class="preprocessor">        CCC_flat_priority_queue_increase_with(arguments)</span></div>
+<div class="line"><a id="l00848" name="l00848"></a><span class="lineno">  848</span><span class="preprocessor">#    define flat_priority_queue_decrease_with(arguments...)                    \</span></div>
+<div class="line"><a id="l00849" name="l00849"></a><span class="lineno">  849</span><span class="preprocessor">        CCC_flat_priority_queue_decrease_with(arguments)</span></div>
+<div class="line"><a id="l00850" name="l00850"></a><span class="lineno">  850</span><span class="preprocessor">#    define flat_priority_queue_clear(arguments...)                            \</span></div>
+<div class="line"><a id="l00851" name="l00851"></a><span class="lineno">  851</span><span class="preprocessor">        CCC_flat_priority_queue_clear(arguments)</span></div>
+<div class="line"><a id="l00852" name="l00852"></a><span class="lineno">  852</span><span class="preprocessor">#    define flat_priority_queue_clear_and_free(arguments...)                   \</span></div>
+<div class="line"><a id="l00853" name="l00853"></a><span class="lineno">  853</span><span class="preprocessor">        CCC_flat_priority_queue_clear_and_free(arguments)</span></div>
+<div class="line"><a id="l00854" name="l00854"></a><span class="lineno">  854</span><span class="preprocessor">#    define flat_priority_queue_clear_and_free_reserve(arguments...)           \</span></div>
+<div class="line"><a id="l00855" name="l00855"></a><span class="lineno">  855</span><span class="preprocessor">        CCC_flat_priority_queue_clear_and_free_reserve(arguments)</span></div>
+<div class="line"><a id="l00856" name="l00856"></a><span class="lineno">  856</span><span class="preprocessor">#    define flat_priority_queue_is_empty(arguments...)                         \</span></div>
+<div class="line"><a id="l00857" name="l00857"></a><span class="lineno">  857</span><span class="preprocessor">        CCC_flat_priority_queue_is_empty(arguments)</span></div>
+<div class="line"><a id="l00858" name="l00858"></a><span class="lineno">  858</span><span class="preprocessor">#    define flat_priority_queue_count(arguments...)                            \</span></div>
+<div class="line"><a id="l00859" name="l00859"></a><span class="lineno">  859</span><span class="preprocessor">        CCC_flat_priority_queue_count(arguments)</span></div>
+<div class="line"><a id="l00860" name="l00860"></a><span class="lineno">  860</span><span class="preprocessor">#    define flat_priority_queue_capacity(arguments...)                         \</span></div>
+<div class="line"><a id="l00861" name="l00861"></a><span class="lineno">  861</span><span class="preprocessor">        CCC_flat_priority_queue_capacity(arguments)</span></div>
+<div class="line"><a id="l00862" name="l00862"></a><span class="lineno">  862</span><span class="preprocessor">#    define flat_priority_queue_data(arguments...)                             \</span></div>
+<div class="line"><a id="l00863" name="l00863"></a><span class="lineno">  863</span><span class="preprocessor">        CCC_flat_priority_queue_data(arguments)</span></div>
+<div class="line"><a id="l00864" name="l00864"></a><span class="lineno">  864</span><span class="preprocessor">#    define flat_priority_queue_validate(arguments...)                         \</span></div>
+<div class="line"><a id="l00865" name="l00865"></a><span class="lineno">  865</span><span class="preprocessor">        CCC_flat_priority_queue_validate(arguments)</span></div>
+<div class="line"><a id="l00866" name="l00866"></a><span class="lineno">  866</span><span class="preprocessor">#    define flat_priority_queue_order(arguments...)                            \</span></div>
+<div class="line"><a id="l00867" name="l00867"></a><span class="lineno">  867</span><span class="preprocessor">        CCC_flat_priority_queue_order(arguments)</span></div>
+<div class="line"><a id="l00868" name="l00868"></a><span class="lineno">  868</span><span class="preprocessor">#endif </span><span class="comment">/* FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00869" name="l00869"></a><span class="lineno">  869</span> </div>
+<div class="line"><a id="l00870" name="l00870"></a><span class="lineno">  870</span><span class="preprocessor">#endif </span><span class="comment">/* CCC_FLAT_PRIORITY_QUEUE_H */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="abuffer_8h_html"><div class="ttname"><a href="buffer_8h.html">buffer.h</a></div><div class="ttdoc">The Buffer Interface.</div></div>
 <div class="ttc" id="aflat__priority__queue_8h_html_a088f472500a84645011181f6ab4402ff"><div class="ttname"><a href="flat__priority__queue_8h.html#a088f472500a84645011181f6ab4402ff">CCC_flat_priority_queue_is_empty</a></div><div class="ttdeci">CCC_Tribool CCC_flat_priority_queue_is_empty(CCC_Flat_priority_queue const *priority_queue)</div><div class="ttdoc">Returns true if the priority_queue is empty false if not. O(1).</div></div>
 <div class="ttc" id="aflat__priority__queue_8h_html_a0cb320b06114025649b10b27f4fb2a4d"><div class="ttname"><a href="flat__priority__queue_8h.html#a0cb320b06114025649b10b27f4fb2a4d">CCC_flat_priority_queue_capacity</a></div><div class="ttdeci">CCC_Count CCC_flat_priority_queue_capacity(CCC_Flat_priority_queue const *priority_queue)</div><div class="ttdoc">Returns the capacity of the priority_queue representing total possible slots.</div></div>
