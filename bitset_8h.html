@@ -156,9 +156,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:abc1aaa3bf1fa56eb68eb6ed821c8f1e6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bitset_8h.html#abc1aaa3bf1fa56eb68eb6ed821c8f1e6">CCC_bitset_with_compound_literal</a>(count,  compound_literal_array)&#160;&#160;&#160;    CCC_private_bitset_with_compound_literal(count, compound_literal_array)</td></tr>
 <tr class="memdesc:abc1aaa3bf1fa56eb68eb6ed821c8f1e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the bit set with a starting capacity and size at runtime or compile time with no allocation permissions or context from a compound literal of bitset blocks.  <br /></td></tr>
 <tr class="separator:abc1aaa3bf1fa56eb68eb6ed821c8f1e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb4597e5558b2c24d7f95847e5b5eb7b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bitset_8h.html#abb4597e5558b2c24d7f95847e5b5eb7b">CCC_bitset_with_context_compound_literal</a>(count,  compound_literal_array)</td></tr>
-<tr class="memdesc:abb4597e5558b2c24d7f95847e5b5eb7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the bit set with a starting capacity and size at runtime or compile time with no allocation permissions from a compound literal of bitset blocks.  <br /></td></tr>
-<tr class="separator:abb4597e5558b2c24d7f95847e5b5eb7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8c8a54a4df74c3d2e65a45613d4f72a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bitset_8h.html#af8c8a54a4df74c3d2e65a45613d4f72a">CCC_bitset_with_context_compound_literal</a>(context,  count,  compound_literal_array)</td></tr>
+<tr class="memdesc:af8c8a54a4df74c3d2e65a45613d4f72a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the bit set with a starting capacity and size at runtime or compile time with no allocation permissions from a compound literal of bitset blocks.  <br /></td></tr>
+<tr class="separator:af8c8a54a4df74c3d2e65a45613d4f72a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52c429148b439f77564a95b3edc3b452"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">: size_t { <a class="el" href="bitset_8h.html#a52c429148b439f77564a95b3edc3b452a1caf09195736db544353b8098c3f5346">CCC_BITSET_BLOCK_BITS</a> = CCC_PRIVATE_BITSET_BLOCK_BITS
  }</td></tr>
 <tr class="separator:a52c429148b439f77564a95b3edc3b452"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -749,8 +749,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="abb4597e5558b2c24d7f95847e5b5eb7b" name="abb4597e5558b2c24d7f95847e5b5eb7b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb4597e5558b2c24d7f95847e5b5eb7b">&#9670;&#160;</a></span>CCC_bitset_with_context_compound_literal</h2>
+<a id="af8c8a54a4df74c3d2e65a45613d4f72a" name="af8c8a54a4df74c3d2e65a45613d4f72a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8c8a54a4df74c3d2e65a45613d4f72a">&#9670;&#160;</a></span>CCC_bitset_with_context_compound_literal</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -758,6 +758,12 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td class="memname">#define CCC_bitset_with_context_compound_literal</td>
           <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">context, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">count, </td>
         </tr>
@@ -774,7 +780,7 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_bitset_with_context_compound_literal(count,                    \</div>
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_bitset_with_context_compound_literal(context, count,           \</div>
 <div class="line">                                                     compound_literal_array)</div>
 </div><!-- fragment -->
 <p>Initialize the bit set with a starting capacity and size at runtime or compile time with no allocation permissions from a compound literal of bitset blocks. </p>
@@ -2246,8 +2252,8 @@ This graph shows which files directly or indirectly include this file:</div>
 <p>Return CCC_TRUE if subset is a subset of set (subset ⊆ set). </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">the</td><td>subset to confirm as a subset of set. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">the</td><td>set to check subset against. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">subset</td><td>the subset to confirm as a subset of set. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">set</td><td>the set to check subset against. </td></tr>
   </table>
   </dd>
 </dl>
