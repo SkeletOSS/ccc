@@ -138,7 +138,7 @@ executed on failure. This should only be used in special cases where such a
 function is unusable by the end test macro due to scoping. Even then, consider
 tracking allocations in an array of some sort to be cleaned up upon failure
 or success in the end test macro. Function calls should be a semicolon
-seperated list of calls with their appropriate args. If more complex code
+seperated list of calls with their appropriate arguments. If more complex code
 needs to be written in the cleanup case a code block can be surrounded by
 {...any code goes here...} braces for the formatting assistance braces provide,
 though the braces are not required. */
@@ -178,7 +178,7 @@ executed on failure. This should only be used in special cases where such a
 function is unusable by the end test macro due to scoping. Even then, consider
 tracking allocations in an array of some sort to be cleaned up upon failure or
 success in the end test macro. Function calls should be a semicolon seperated
-list of calls with their appropriate args. If more complex code needs to be
+list of calls with their appropriate arguments. If more complex code needs to be
 written in the cleanup case a code block can be surrounded by
 {...any code goes here...} braces for the formatting assistance braces provide,
 though the braces are not required. */

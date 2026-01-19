@@ -455,8 +455,8 @@ CCC_flat_priority_queue_heapify_inplace(CCC_Flat_priority_queue *priority_queue,
 @param[in] type a pointer to the user element of same type as in
 flat_priority_queue.
 @param[in] temp a pointer to a dummy user type that will be used for swapping.
-@return a pointer to the inserted element or NULl if NULL args are provided or
-push required more memory and failed. Failure can occur if the
+@return a pointer to the inserted element or NULl if NULL arguments are provided
+or push required more memory and failed. Failure can occur if the
 flat_priority_queue is full and allocation is not allowed or a resize failed
 when allocation is allowed.
 
@@ -484,7 +484,7 @@ element.
 @param[in] type a pointer to the stored priority_queue element. Must be in
 the flat_priority_queue.
 @param[in] temp a pointer to a dummy user type that will be used for swapping.
-@return OK if the erase is successful or an input error if NULL args are
+@return OK if the erase is successful or an input error if NULL arguments are
 provided or the priority_queue is empty.
 @warning the user must ensure e is in the flat_priority_queue.
 
@@ -803,63 +803,68 @@ CCC_flat_priority_queue_order(CCC_Flat_priority_queue const *priority_queue);
 flat priority queue container. Check for collisions before name shortening. */
 #ifdef FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC
 typedef CCC_Flat_priority_queue Flat_priority_queue;
-#    define flat_priority_queue_initialize(args...)                            \
-        CCC_flat_priority_queue_initialize(args)
-#    define flat_priority_queue_from(args...) CCC_flat_priority_queue_from(args)
-#    define flat_priority_queue_with_capacity(args...)                         \
-        CCC_flat_priority_queue_with_capacity(args)
-#    define flat_priority_queue_with_compound_literal(args...)                 \
-        CCC_flat_priority_queue_with_compound_literal(args)
-#    define flat_priority_queue_with_context_compound_literal(args...)         \
-        CCC_flat_priority_queue_with_context_compound_literal(args)
-#    define flat_priority_queue_heapify_initialize(args...)                    \
-        CCC_flat_priority_queue_heapify_initialize(args)
-#    define flat_priority_queue_copy(args...) CCC_flat_priority_queue_copy(args)
-#    define flat_priority_queue_reserve(args...)                               \
-        CCC_flat_priority_queue_reserve(args)
-#    define flat_priority_queue_heapify(args...)                               \
-        CCC_flat_priority_queue_heapify(args)
-#    define flat_priority_queue_heapify_inplace(args...)                       \
-        CCC_flat_priority_queue_heapify_inplace(args)
-#    define flat_priority_queue_heapsort(args...)                              \
-        CCC_flat_priority_queue_heapsort(args)
-#    define flat_priority_queue_emplace(args...)                               \
-        CCC_flat_priority_queue_emplace(args)
-#    define flat_priority_queue_push(args...) CCC_flat_priority_queue_push(args)
-#    define flat_priority_queue_front(args...)                                 \
-        CCC_flat_priority_queue_front(args)
-#    define flat_priority_queue_pop(args...) CCC_flat_priority_queue_pop(args)
-#    define flat_priority_queue_extract(args...)                               \
-        CCC_flat_priority_queue_extract(args)
-#    define flat_priority_queue_update(args...)                                \
-        CCC_flat_priority_queue_update(args)
-#    define flat_priority_queue_increase(args...)                              \
-        CCC_flat_priority_queue_increase(args)
-#    define flat_priority_queue_decrease(args...)                              \
-        CCC_flat_priority_queue_decrease(args)
-#    define flat_priority_queue_update_with(args...)                           \
-        CCC_flat_priority_queue_update_with(args)
-#    define flat_priority_queue_increase_with(args...)                         \
-        CCC_flat_priority_queue_increase_with(args)
-#    define flat_priority_queue_decrease_with(args...)                         \
-        CCC_flat_priority_queue_decrease_with(args)
-#    define flat_priority_queue_clear(args...)                                 \
-        CCC_flat_priority_queue_clear(args)
-#    define flat_priority_queue_clear_and_free(args...)                        \
-        CCC_flat_priority_queue_clear_and_free(args)
-#    define flat_priority_queue_clear_and_free_reserve(args...)                \
-        CCC_flat_priority_queue_clear_and_free_reserve(args)
-#    define flat_priority_queue_is_empty(args...)                              \
-        CCC_flat_priority_queue_is_empty(args)
-#    define flat_priority_queue_count(args...)                                 \
-        CCC_flat_priority_queue_count(args)
-#    define flat_priority_queue_capacity(args...)                              \
-        CCC_flat_priority_queue_capacity(args)
-#    define flat_priority_queue_data(args...) CCC_flat_priority_queue_data(args)
-#    define flat_priority_queue_validate(args...)                              \
-        CCC_flat_priority_queue_validate(args)
-#    define flat_priority_queue_order(args...)                                 \
-        CCC_flat_priority_queue_order(args)
+#    define flat_priority_queue_initialize(arguments...)                       \
+        CCC_flat_priority_queue_initialize(arguments)
+#    define flat_priority_queue_from(arguments...)                             \
+        CCC_flat_priority_queue_from(arguments)
+#    define flat_priority_queue_with_capacity(arguments...)                    \
+        CCC_flat_priority_queue_with_capacity(arguments)
+#    define flat_priority_queue_with_compound_literal(arguments...)            \
+        CCC_flat_priority_queue_with_compound_literal(arguments)
+#    define flat_priority_queue_with_context_compound_literal(arguments...)    \
+        CCC_flat_priority_queue_with_context_compound_literal(arguments)
+#    define flat_priority_queue_heapify_initialize(arguments...)               \
+        CCC_flat_priority_queue_heapify_initialize(arguments)
+#    define flat_priority_queue_copy(arguments...)                             \
+        CCC_flat_priority_queue_copy(arguments)
+#    define flat_priority_queue_reserve(arguments...)                          \
+        CCC_flat_priority_queue_reserve(arguments)
+#    define flat_priority_queue_heapify(arguments...)                          \
+        CCC_flat_priority_queue_heapify(arguments)
+#    define flat_priority_queue_heapify_inplace(arguments...)                  \
+        CCC_flat_priority_queue_heapify_inplace(arguments)
+#    define flat_priority_queue_heapsort(arguments...)                         \
+        CCC_flat_priority_queue_heapsort(arguments)
+#    define flat_priority_queue_emplace(arguments...)                          \
+        CCC_flat_priority_queue_emplace(arguments)
+#    define flat_priority_queue_push(arguments...)                             \
+        CCC_flat_priority_queue_push(arguments)
+#    define flat_priority_queue_front(arguments...)                            \
+        CCC_flat_priority_queue_front(arguments)
+#    define flat_priority_queue_pop(arguments...)                              \
+        CCC_flat_priority_queue_pop(arguments)
+#    define flat_priority_queue_extract(arguments...)                          \
+        CCC_flat_priority_queue_extract(arguments)
+#    define flat_priority_queue_update(arguments...)                           \
+        CCC_flat_priority_queue_update(arguments)
+#    define flat_priority_queue_increase(arguments...)                         \
+        CCC_flat_priority_queue_increase(arguments)
+#    define flat_priority_queue_decrease(arguments...)                         \
+        CCC_flat_priority_queue_decrease(arguments)
+#    define flat_priority_queue_update_with(arguments...)                      \
+        CCC_flat_priority_queue_update_with(arguments)
+#    define flat_priority_queue_increase_with(arguments...)                    \
+        CCC_flat_priority_queue_increase_with(arguments)
+#    define flat_priority_queue_decrease_with(arguments...)                    \
+        CCC_flat_priority_queue_decrease_with(arguments)
+#    define flat_priority_queue_clear(arguments...)                            \
+        CCC_flat_priority_queue_clear(arguments)
+#    define flat_priority_queue_clear_and_free(arguments...)                   \
+        CCC_flat_priority_queue_clear_and_free(arguments)
+#    define flat_priority_queue_clear_and_free_reserve(arguments...)           \
+        CCC_flat_priority_queue_clear_and_free_reserve(arguments)
+#    define flat_priority_queue_is_empty(arguments...)                         \
+        CCC_flat_priority_queue_is_empty(arguments)
+#    define flat_priority_queue_count(arguments...)                            \
+        CCC_flat_priority_queue_count(arguments)
+#    define flat_priority_queue_capacity(arguments...)                         \
+        CCC_flat_priority_queue_capacity(arguments)
+#    define flat_priority_queue_data(arguments...)                             \
+        CCC_flat_priority_queue_data(arguments)
+#    define flat_priority_queue_validate(arguments...)                         \
+        CCC_flat_priority_queue_validate(arguments)
+#    define flat_priority_queue_order(arguments...)                            \
+        CCC_flat_priority_queue_order(arguments)
 #endif /* FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC */
 
 #endif /* CCC_FLAT_PRIORITY_QUEUE_H */
