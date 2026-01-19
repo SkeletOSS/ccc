@@ -160,7 +160,6 @@ desired allocation function. */
     CCC_private_array_tree_map_fixed_capacity(fixed_map_type_name)
 
 /** @brief Initializes the map at runtime or compile time.
-@param[in] memory_pointer a pointer to the contiguous user types or NULL.
 @param[in] type_name the name of the user type stored in the map.
 @param[in] type_key_field the name of the field in user type used as key.
 @param[in] compare the key comparison function (see types.h).

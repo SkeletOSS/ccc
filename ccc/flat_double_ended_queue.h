@@ -190,9 +190,9 @@ permissions.
 operator at runtime or compiletime (e.g. CCC_Flat_double_ended_queue q =
 CCC_flat_double_ended_queue_with_context_compound_literal(...);) */
 #define CCC_flat_double_ended_queue_with_context_compound_literal(             \
-    count, compound_literal_array...)                                          \
+    context, count, compound_literal_array...)                                 \
     CCC_private_flat_double_ended_queue_with_context_compound_literal(         \
-        count, compound_literal_array)
+        context, count, compound_literal_array)
 
 /** @brief Copy the queue from source to newly initialized
 destination.

@@ -313,9 +313,9 @@ static Bitset bitset = bitset_with_context_compound_literal(
 ```
 
 This saves some initialization boilerplate. */
-#define CCC_bitset_with_context_compound_literal(count,                        \
+#define CCC_bitset_with_context_compound_literal(context, count,               \
                                                  compound_literal_array)       \
-    CCC_private_bitset_with_context_compound_literal(count,                    \
+    CCC_private_bitset_with_context_compound_literal(context, count,           \
                                                      compound_literal_array)
 
 /** @brief Copy the bit set at source to destination.
@@ -881,8 +881,8 @@ CCC_Tribool CCC_bitset_is_proper_subset(CCC_Bitset const *subset,
                                         CCC_Bitset const *set);
 
 /** @brief Return CCC_TRUE if subset is a subset of set (subset ⊆ set).
-@param[in] the subset to confirm as a subset of set.
-@param[in] the set to check subset against.
+@param[in] subset the subset to confirm as a subset of set.
+@param[in] set the set to check subset against.
 @return CCC_TRUE if all bit positions in subset share the same value--0 or 1--as
 the bit positions in set. A CCC_TRIBOOL_ERROR is returned if set or subset is
 NULL.

@@ -116,7 +116,7 @@ See container documentation for specific behavior. */
 
 /** @brief Remove an element and retain access to its value.
 @param[in] container_pointer a pointer to the container.
-@param remove_args args depend on container.
+@param remove_key_value_args args depend on container.
 @return an entry depending on container specific context.
 
 See container documentation for specific behavior. */
@@ -125,7 +125,7 @@ See container documentation for specific behavior. */
 
 /** @brief Remove an element and retain access to its value.
 @param[in] container_pointer a pointer to the container.
-@param remove_args args depend on container.
+@param remove_key_value_args args depend on container.
 @return an entry depending on container specific context.
 
 See container documentation for specific behavior. */
