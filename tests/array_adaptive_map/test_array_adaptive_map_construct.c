@@ -304,7 +304,7 @@ check_static_begin(array_adaptive_map_test_init_with_capacity_fail)
 }
 
 int
-main()
+main(void)
 {
     return check_run(array_adaptive_map_test_empty(),
                      array_adaptive_map_test_with_literal(),

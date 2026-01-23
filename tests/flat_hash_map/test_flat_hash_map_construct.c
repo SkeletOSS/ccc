@@ -374,7 +374,7 @@ check_static_begin(flat_hash_map_test_init_with_capacity_fail)
 }
 
 int
-main()
+main(void)
 {
     return check_run(flat_hash_map_test_static_initialize(),
                      flat_hash_map_test_with_literal(),

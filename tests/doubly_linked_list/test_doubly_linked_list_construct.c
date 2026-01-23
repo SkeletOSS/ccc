@@ -88,7 +88,7 @@ check_static_begin(doubly_linked_list_test_construct_from_fail)
 }
 
 int
-main()
+main(void)
 {
     return check_run(doubly_linked_list_test_construct(),
                      doubly_linked_list_test_constructor_copy(),

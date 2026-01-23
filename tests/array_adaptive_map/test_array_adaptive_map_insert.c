@@ -768,7 +768,7 @@ check_static_begin(array_adaptive_map_test_insert_weak_srand)
 }
 
 int
-main()
+main(void)
 {
     return check_run(array_adaptive_map_test_insert(),
                      array_adaptive_map_test_insert_macros(),

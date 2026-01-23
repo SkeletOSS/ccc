@@ -710,7 +710,7 @@ check_static_begin(array_tree_map_test_insert_weak_srand)
 }
 
 int
-main()
+main(void)
 {
     return check_run(
         array_tree_map_test_insert(), array_tree_map_test_insert_macros(),

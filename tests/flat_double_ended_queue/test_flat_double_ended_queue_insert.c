@@ -197,7 +197,7 @@ check_static_begin(flat_double_ended_queue_test_insert_ranges_reserve)
 }
 
 int
-main()
+main(void)
 {
     return check_run(flat_double_ended_queue_test_insert_three(),
                      flat_double_ended_queue_test_insert_overwrite_three(),

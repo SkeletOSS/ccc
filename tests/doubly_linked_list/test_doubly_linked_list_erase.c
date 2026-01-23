@@ -169,7 +169,7 @@ check_static_begin(doubly_linked_list_test_splice_two_lists)
 }
 
 int
-main()
+main(void)
 {
     return check_run(doubly_linked_list_test_pop_empty(),
                      doubly_linked_list_test_push_pop_front(),

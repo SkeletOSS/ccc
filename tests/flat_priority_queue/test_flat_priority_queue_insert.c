@@ -175,7 +175,7 @@ check_static_begin(flat_priority_queue_test_read_max_min)
 }
 
 int
-main()
+main(void)
 {
     return check_run(flat_priority_queue_test_insert_one(),
                      flat_priority_queue_test_insert_three(),

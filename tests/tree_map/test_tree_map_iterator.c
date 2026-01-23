@@ -422,7 +422,7 @@ check_static_begin(tree_map_test_empty_range)
 }
 
 int
-main()
+main(void)
 {
     return check_run(
         tree_map_test_forward_iterator(), tree_map_test_iterate_removal(),

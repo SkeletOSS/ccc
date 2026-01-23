@@ -74,7 +74,7 @@ check_static_begin(priority_queue_test_construct_from_fail)
 }
 
 int
-main()
+main(void)
 {
     return check_run(priority_queue_test_empty(),
                      priority_queue_test_construct(),

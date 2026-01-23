@@ -92,7 +92,7 @@ check_static_begin(tree_map_test_construct_from_fail)
 }
 
 int
-main()
+main(void)
 {
     return check_run(tree_map_test_empty(), tree_map_test_construct(),
                      tree_map_test_construct_from(),

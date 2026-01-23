@@ -382,7 +382,7 @@ check_static_begin(singly_linked_list_test_sort_insert)
     check_end();
 }
 int
-main()
+main(void)
 {
     return check_run(singly_linked_list_test_insert_three(),
                      singly_linked_list_test_push_and_splice(),

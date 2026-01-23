@@ -375,7 +375,7 @@ check_static_begin(priority_queue_test_priority_decrease_with)
 }
 
 int
-main()
+main(void)
 {
     return check_run(priority_queue_test_insert_iterate_pop(),
                      priority_queue_test_priority_update(),

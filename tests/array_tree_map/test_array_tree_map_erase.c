@@ -201,7 +201,7 @@ check_static_begin(array_tree_map_test_insert_erase_cycles_allocate)
 }
 
 int
-main()
+main(void)
 {
     return check_run(array_tree_map_test_insert_erase_shuffled(),
                      array_tree_map_test_prime_shuffle(),

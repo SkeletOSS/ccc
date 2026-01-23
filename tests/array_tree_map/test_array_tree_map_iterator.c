@@ -375,7 +375,7 @@ check_static_begin(array_tree_map_test_empty_range)
 }
 
 int
-main()
+main(void)
 {
     return check_run(array_tree_map_test_forward_iterator(),
                      array_tree_map_test_iterate_removal(),

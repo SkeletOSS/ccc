@@ -468,7 +468,7 @@ check_static_begin(tree_map_test_insert_weak_srand)
 }
 
 int
-main()
+main(void)
 {
     return check_run(
         tree_map_test_insert(), tree_map_test_insert_macros(),

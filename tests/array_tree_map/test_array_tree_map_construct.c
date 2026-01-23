@@ -304,7 +304,7 @@ check_static_begin(array_tree_map_test_init_with_capacity_fail)
 }
 
 int
-main()
+main(void)
 {
     return check_run(array_tree_map_test_empty(),
                      array_tree_map_test_with_literal(),

@@ -311,7 +311,7 @@ check_static_begin(flat_hash_map_test_shuffle_erase_dynamic)
 }
 
 int
-main()
+main(void)
 {
     return check_run(flat_hash_map_test_erase(),
                      flat_hash_map_test_shuffle_insert_erase(),

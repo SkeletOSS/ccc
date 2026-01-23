@@ -264,7 +264,7 @@ check_static_begin(flat_priority_queue_test_weak_srand)
 }
 
 int
-main()
+main(void)
 {
     return check_run(
         flat_priority_queue_test_insert_remove_key_value_four_dups(),

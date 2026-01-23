@@ -205,7 +205,7 @@ check_static_begin(array_adaptive_map_test_insert_erase_cycles_allocate)
 }
 
 int
-main()
+main(void)
 {
     return check_run(array_adaptive_map_test_insert_erase_shuffled(),
                      array_adaptive_map_test_prime_shuffle(),
