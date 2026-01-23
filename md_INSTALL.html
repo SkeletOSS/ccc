@@ -105,6 +105,8 @@ Fetch Content Install</h1>
 <div class="line">  #DOWNLOAD_EXTRACT_TIMESTAMP FALSE # CMake may raise a warning to set this. If so, uncomment and set.</div>
 <div class="line">)</div>
 <div class="line">FetchContent_MakeAvailable(ccc)</div>
+<div class="line"># Include this line if you want to ignore compiler warnings from the ccc library when compiling your project.</div>
+<div class="line">target_compile_options(ccc PRIVATE &quot;-w&quot;)</div>
 </div><!-- fragment --><p>To link against the library in the project use the <code>ccc</code> namespace.</p>
 <div class="fragment"><div class="line">add_executable(main main.c)</div>
 <div class="line">target_link_libraries(main ccc::ccc)</div>
@@ -116,6 +118,8 @@ Fetch Content Install</h1>
 <div class="line">  #DOWNLOAD_EXTRACT_TIMESTAMP FALSE # CMake may raise a warning to set this. If so, uncomment and set.</div>
 <div class="line">)</div>
 <div class="line">FetchContent_MakeAvailable(ccc)</div>
+<div class="line"># Include this line if you want to ignore compiler warnings from the ccc library when compiling your project.</div>
+<div class="line">target_compile_options(ccc PRIVATE &quot;-w&quot;)</div>
 <div class="line">add_executable(main main.c)</div>
 <div class="line">target_link_libraries(main ccc::ccc)</div>
 </div><!-- fragment --><p>Now, the C Container Collection is part of your project build, allowing you to configure as you see fit. For a more traditional approach read the manual install section below.</p>
