@@ -692,6 +692,11 @@ typedef CCC_Flat_double_ended_queue Flat_double_ended_queue;
         CCC_flat_double_ended_queue_from(arguments)
 #    define flat_double_ended_queue_with_capacity(arguments...)                \
         CCC_flat_double_ended_queue_with_capacity(arguments)
+#    define flat_double_ended_queue_with_compound_literal(arguments...)        \
+        CCC_flat_double_ended_queue_with_compound_literal(arguments)
+#    define flat_double_ended_queue_with_context_compound_literal(             \
+        arguments...)                                                          \
+        CCC_flat_double_ended_queue_with_context_compound_literal(arguments)
 #    define flat_double_ended_queue_copy(arguments...)                         \
         CCC_flat_double_ended_queue_copy(arguments)
 #    define flat_double_ended_queue_reserve(arguments...)                      \
