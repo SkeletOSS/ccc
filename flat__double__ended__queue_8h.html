@@ -326,7 +326,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <p>Write an element directly to the front slot of the flat_double_ended_queue. O(1) if no allocation permission amortized O(1) if allocation permission is given and a resize is required. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">flat_double_ended_queue_pointer</td><td>a pointer to the flat_double_ended_queue. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">flat_double_ended_queue_pointer</td><td>a pointer to the queue. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td>for integral types, the direct value. For structs and unions use compound literal syntax. </td></tr>
   </table>
   </dd>
@@ -379,13 +379,13 @@ This graph shows which files directly or indirectly include this file:</div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>CCC_Allocator or NULL if no allocation is permitted. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context_data</td><td>any context data needed for managing Flat_double_ended_queue memory. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">optional_capacity</td><td>optionally specify the capacity of the Flat_double_ended_queue if different from the size of the compound literal array initializer. If the capacity is greater than the size of the compound literal array initializer, it is respected and the capacity is reserved. If the capacity is less than the size of the compound array initializer, the compound literal array initializer size is set as the capacity. Therefore, 0 is valid if one is not concerned with the underlying reservation. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal_array</td><td>the initializer of the type stored in flat_double_ended_queue. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">context_data</td><td>any context data needed for managing queue memory. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">optional_capacity</td><td>optionally specify the capacity of the queue if different from the size of the compound literal array initializer. If the capacity is greater than the size of the compound literal array initializer, it is respected and the capacity is reserved. If the capacity is less than the size of the compound array initializer, the compound literal array initializer size is set as the capacity. Therefore, 0 is valid if one is not concerned with the underlying reservation. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal_array</td><td>the initializer of the type stored in queue. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the initialized flat_double_ended_queue. Directly assign to Flat_double_ended_queue on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Flat__double__ended__queue.html">CCC_Flat_double_ended_queue</a> b = <a class="el" href="flat__double__ended__queue_8h.html#aa872dd1e7f6dadfc13045874c4d3c282" title="Initialize a Flat_double_ended_queue from a compound literal array initializer.">CCC_flat_double_ended_queue_from(...)</a>;).</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the initialized flat_double_ended_queue. Directly assign to queue on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Flat__double__ended__queue.html">CCC_Flat_double_ended_queue</a> b = <a class="el" href="flat__double__ended__queue_8h.html#aa872dd1e7f6dadfc13045874c4d3c282" title="Initialize a Flat_double_ended_queue from a compound literal array initializer.">CCC_flat_double_ended_queue_from(...)</a>;).</dd></dl>
 <p>Initialize a dynamic Flat_double_ended_queue with a compound literal array.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="keywordtype">int</span></div>
@@ -523,12 +523,12 @@ This graph shows which files directly or indirectly include this file:</div>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>any user or language standard type name. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>CCC_Allocator or NULL if no allocation is permitted. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context_data</td><td>any context data needed for managing Flat_double_ended_queue memory. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">context_data</td><td>any context data needed for managing queue memory. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">capacity</td><td>the capacity of the Flat_double_ended_queue to reserve. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the initialized flat_double_ended_queue. Directly assign to Flat_double_ended_queue on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Flat__double__ended__queue.html">CCC_Flat_double_ended_queue</a> b = CCC_Flat_double_ended_queue_with_capacity(...);).</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the initialized flat_double_ended_queue. Directly assign to Flat_double_ended_queue on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Flat__double__ended__queue.html">CCC_Flat_double_ended_queue</a> b = flat_double_ended_queue_with_capacity(...);).</dd></dl>
 <p>Initialize a dynamic Flat_double_ended_queue.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="keywordtype">int</span></div>
@@ -929,7 +929,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <p>Copy the queue from source to newly initialized destination. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">destination</td><td>the destination that will copy the source flat_double_ended_queue. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">destination</td><td>the destination that will copy the source queue. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">source</td><td>the source of the flat_double_ended_queue. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the allocation function in case resizing of destination is needed. </td></tr>
   </table>
@@ -1184,12 +1184,12 @@ This graph shows which files directly or indirectly include this file:</div>
 <dl class="section return"><dt>Returns</dt><dd>a pointer to the start of the inserted range or NULL if a resize was required and could not complete.</dd></dl>
 <p>Note that if no allocation is permitted the queue behaves as a ring buffer. Therefore, pushing a range that will exceed capacity will overwrite elements at the start of the flat_double_ended_queue.</p>
 <p>Pushing a range of elements prioritizes the range and allows the range to overwrite elements instead of pushing those elements over the start of the range. For example, push a range <code>{3,4,5}</code> over a queue with capacity 5 before position with value 6.</p>
-<div class="fragment"><div class="line"> front position        front</div>
+<div class="fragment"><div class="line"> front position     front</div>
 <div class="line">┌─┬┴┬─┬┴┬─┐    ┌─┬─┬┴┬─┬─┐</div>
 <div class="line">│ │1│2│6│ │ -&gt; │5│6│2│3│4│</div>
 <div class="line">└─┴─┴─┴─┴─┘    └─┴─┴─┴─┴─┘</div>
-</div><!-- fragment --><p>Notice that 1 and 2 were NOT moved to overwrite the start of the range, the values 3 and 4. The only way the start of a range will be overwritten is if the range itself is too large for the capacity. For example, push a range <code>{0,0,3,3,4,4,5,5}</code> over the same flat_double_ended_queue.</p>
-<div class="fragment"><div class="line"> front position    front</div>
+</div><!-- fragment --><p>Notice that 1 and 2 were NOT moved to overwrite the start of the range, the values 3 and 4. Instead, the value 1 was overwritten and the front of the queue progressed to the next value. The only way the start of a range will be overwritten is if the range itself is too large for the capacity. For example, push a range <code>{0,0,3,3,4,4,5,5}</code> over the same flat_double_ended_queue.</p>
+<div class="fragment"><div class="line"> front position front</div>
 <div class="line">┌─┬┴┬─┬┴┬─┐    ┌┴┬─┬─┬─┬─┐</div>
 <div class="line">│ │1│2│6│ │ -&gt; │3│4│4│5│5│</div>
 <div class="line">└─┴─┴─┴─┴─┘    └─┴─┴─┴─┴─┘</div>
@@ -1285,7 +1285,7 @@ This graph shows which files directly or indirectly include this file:</div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>ok if the pop was successful. If queue is NULL or the flat_double_ended_queue is empty an input error is returned. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>OK if the pop was successful. If queue is NULL or the flat_double_ended_queue is empty an input error is returned. </dd></dl>
 
 </div>
 </div>
@@ -1430,7 +1430,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">queue</td><td>a pointer to the flat_double_ended_queue. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type</td><td>a pointer to the user type to insert into the flat_double_ended_queue. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type</td><td>a pointer to the user type to insert into the queue. </td></tr>
   </table>
   </dd>
 </dl>
