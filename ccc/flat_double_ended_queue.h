@@ -84,20 +84,18 @@ CCC_flat_double_ended_queue_initialize(...);) */
 /** @brief Initialize a Flat_double_ended_queue from a compound literal array
 initializer.
 @param[in] allocate CCC_Allocator or NULL if no allocation is permitted.
-@param[in] context_data any context data needed for managing
-Flat_double_ended_queue memory.
-@param[in] optional_capacity optionally specify the capacity of the
-Flat_double_ended_queue if different from the size of the compound literal
-array initializer. If the capacity is greater than the size of the compound
-literal array initializer, it is respected and the capacity is reserved. If the
-capacity is less than the size of the compound array initializer, the compound
-literal array initializer size is set as the capacity. Therefore, 0 is valid if
-one is not concerned with the underlying reservation.
-@param[in] compound_literal_array the initializer of the type stored in
-flat_double_ended_queue.
-@return the initialized flat_double_ended_queue. Directly assign to
-Flat_double_ended_queue on the right hand side of the equality operator (e.g.
-CCC_Flat_double_ended_queue b = CCC_flat_double_ended_queue_from(...);).
+@param[in] context_data any context data needed for managing queue memory.
+@param[in] optional_capacity optionally specify the capacity of the queue if
+different from the size of the compound literal array initializer. If the
+capacity is greater than the size of the compound literal array initializer, it
+is respected and the capacity is reserved. If the capacity is less than the size
+of the compound array initializer, the compound literal array initializer size
+is set as the capacity. Therefore, 0 is valid if one is not concerned with the
+underlying reservation.
+@param[in] compound_literal_array the initializer of the type stored in queue.
+@return the initialized flat_double_ended_queue. Directly assign to queue on the
+right hand side of the equality operator
+(e.g. CCC_Flat_double_ended_queue b = CCC_flat_double_ended_queue_from(...);).
 
 Initialize a dynamic Flat_double_ended_queue with a compound literal array.
 
@@ -140,13 +138,11 @@ known at compile time, see the CCC_flat_double_ended_queue_initialize() macro.
 /** @brief Initialize a Flat_double_ended_queue with a capacity.
 @param[in] type_name any user or language standard type name.
 @param[in] allocate CCC_Allocator or NULL if no allocation is permitted.
-@param[in] context_data any context data needed for managing
-Flat_double_ended_queue memory.
+@param[in] context_data any context data needed for managing queue memory.
 @param[in] capacity the capacity of the Flat_double_ended_queue to reserve.
 @return the initialized flat_double_ended_queue. Directly assign to
 Flat_double_ended_queue on the right hand side of the equality operator (e.g.
-CCC_Flat_double_ended_queue b =
-CCC_Flat_double_ended_queue_with_capacity(...);).
+CCC_Flat_double_ended_queue b = flat_double_ended_queue_with_capacity(...);).
 
 Initialize a dynamic Flat_double_ended_queue.
 
@@ -196,8 +192,7 @@ CCC_flat_double_ended_queue_with_context_compound_literal(...);) */
 
 /** @brief Copy the queue from source to newly initialized
 destination.
-@param[in] destination the destination that will copy the source
-flat_double_ended_queue.
+@param[in] destination the destination that will copy the source queue.
 @param[in] source the source of the flat_double_ended_queue.
 @param[in] allocate the allocation function in case resizing of destination is
 needed.
@@ -366,10 +361,9 @@ resizing is required to insert the element but fails, NULL is returned. */
 /** @brief Write an element directly to the front slot of the
 flat_double_ended_queue. O(1) if no allocation permission amortized O(1) if
 allocation permission is given and a resize is required.
-@param[in] flat_double_ended_queue_pointer a pointer to the
-flat_double_ended_queue.
-@param[in] value for integral types, the direct value. For structs and
-unions use compound literal syntax.
+@param[in] flat_double_ended_queue_pointer a pointer to the queue.
+@param[in] value for integral types, the direct value. For structs and unions
+use compound literal syntax.
 @return a reference to the inserted element. If allocation is permitted and a
 resizing is required to insert the element but fails, NULL is returned. */
 #define CCC_flat_double_ended_queue_emplace_front(                             \
@@ -407,8 +401,7 @@ CCC_Result CCC_flat_double_ended_queue_push_back_range(
 if no allocation permission amortized O(1) if allocation permission is given and
 a resize is required.
 @param[in] queue a pointer to the flat_double_ended_queue.
-@param[in] type a pointer to the user type to insert into the
-flat_double_ended_queue.
+@param[in] type a pointer to the user type to insert into the queue.
 @return a reference to the inserted element. */
 [[nodiscard]] void *
 CCC_flat_double_ended_queue_push_front(CCC_Flat_double_ended_queue *queue,
@@ -432,24 +425,23 @@ CCC_Result CCC_flat_double_ended_queue_push_front_range(
 /** @brief Push the range of user types before position of the
 flat_double_ended_queue. O(N).
 @param[in] queue a pointer to the flat_double_ended_queue.
-@param[in] position the position in the queue before which to push
-the range.
+@param[in] position the position in the queue before which to push the range.
 @param[in] count the number of user types in the type_array range.
 @param[in] type_array a pointer to the array of user types.
 @return a pointer to the start of the inserted range or NULL if a resize was
 required and could not complete.
 
-Note that if no allocation is permitted the queue behaves as a
-ring buffer. Therefore, pushing a range that will exceed capacity will overwrite
-elements at the start of the flat_double_ended_queue.
+Note that if no allocation is permitted the queue behaves as a ring buffer.
+Therefore, pushing a range that will exceed capacity will overwrite elements at
+the start of the flat_double_ended_queue.
 
 Pushing a range of elements prioritizes the range and allows the range to
 overwrite elements instead of pushing those elements over the start of the
-range. For example, push a range `{3,4,5}` over a queue with
-capacity 5 before position with value 6.
+range. For example, push a range `{3,4,5}` over a queue with capacity 5 before
+position with value 6.
 
 ```
- front position        front
+ front position     front
 ┌─┬┴┬─┬┴┬─┐    ┌─┬─┬┴┬─┬─┐
 │ │1│2│6│ │ -> │5│6│2│3│4│
 └─┴─┴─┴─┴─┘    └─┴─┴─┴─┴─┘
@@ -461,7 +453,7 @@ the range itself is too large for the capacity. For example, push a range
 `{0,0,3,3,4,4,5,5}` over the same flat_double_ended_queue.
 
 ```
- front position    front
+ front position front
 ┌─┬┴┬─┬┴┬─┐    ┌┴┬─┬─┬─┬─┐
 │ │1│2│6│ │ -> │3│4│4│5│5│
 └─┴─┴─┴─┴─┘    └─┴─┴─┴─┴─┘
@@ -482,7 +474,7 @@ CCC_flat_double_ended_queue_pop_front(CCC_Flat_double_ended_queue *queue);
 
 /** @brief Pop an element from the back of the flat_double_ended_queue. O(1).
 @param[in] queue a pointer to the flat_double_ended_queue.
-@return ok if the pop was successful. If queue is NULL or the
+@return OK if the pop was successful. If queue is NULL or the
 flat_double_ended_queue is empty an input error is returned. */
 CCC_Result
 CCC_flat_double_ended_queue_pop_back(CCC_Flat_double_ended_queue *queue);
