@@ -16,6 +16,8 @@ FetchContent_Declare(
   #DOWNLOAD_EXTRACT_TIMESTAMP FALSE # CMake may raise a warning to set this. If so, uncomment and set.
 )
 FetchContent_MakeAvailable(ccc)
+# Include this line if you want to ignore compiler warnings from the ccc library when compiling your project.
+target_compile_options(ccc PRIVATE "-w")
 ```
 
 To link against the library in the project use the `ccc` namespace.
@@ -35,6 +37,8 @@ FetchContent_Declare(
   #DOWNLOAD_EXTRACT_TIMESTAMP FALSE # CMake may raise a warning to set this. If so, uncomment and set.
 )
 FetchContent_MakeAvailable(ccc)
+# Include this line if you want to ignore compiler warnings from the ccc library when compiling your project.
+target_compile_options(ccc PRIVATE "-w")
 add_executable(main main.c)
 target_link_libraries(main ccc::ccc)
 ```
