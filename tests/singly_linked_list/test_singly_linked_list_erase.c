@@ -122,7 +122,7 @@ check_static_begin(singly_linked_list_test_splice_two_lists)
 }
 
 int
-main()
+main(void)
 {
     return check_run(singly_linked_list_test_pop_empty(),
                      singly_linked_list_test_push_pop_three(),

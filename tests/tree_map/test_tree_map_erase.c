@@ -154,7 +154,7 @@ check_static_begin(tree_map_test_insert_erase_cycles)
 }
 
 int
-main()
+main(void)
 {
     return check_run(tree_map_test_insert_erase_shuffled(),
                      tree_map_test_prime_shuffle(), tree_map_test_weak_srand(),

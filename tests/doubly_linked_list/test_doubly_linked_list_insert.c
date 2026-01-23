@@ -398,7 +398,7 @@ check_static_begin(doubly_linked_list_test_sort_insert)
 }
 
 int
-main()
+main(void)
 {
     return check_run(doubly_linked_list_test_push_three_front(),
                      doubly_linked_list_test_push_three_back(),

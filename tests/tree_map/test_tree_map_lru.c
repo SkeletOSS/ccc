@@ -213,7 +213,7 @@ check_static_begin(run_lru_cache)
 }
 
 int
-main()
+main(void)
 {
     return check_run(run_lru_cache());
 }

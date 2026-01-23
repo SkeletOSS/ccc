@@ -250,7 +250,7 @@ check_static_begin(priority_queue_test_weak_srand_allocate)
 }
 
 int
-main()
+main(void)
 {
     return check_run(
         priority_queue_test_insert_remove_key_value_four_dups(),

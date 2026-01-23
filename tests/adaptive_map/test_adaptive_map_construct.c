@@ -96,7 +96,7 @@ check_static_begin(adaptive_map_test_construct_from_fail)
 }
 
 int
-main()
+main(void)
 {
     return check_run(adaptive_map_test_empty(), adaptive_map_test_construct(),
                      adaptive_map_test_construct_from(),

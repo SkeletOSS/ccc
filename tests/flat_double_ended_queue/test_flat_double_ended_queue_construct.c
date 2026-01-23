@@ -166,7 +166,7 @@ check_static_begin(flat_double_ended_queue_test_init_with_capacity_fail)
 }
 
 int
-main()
+main(void)
 {
     return check_run(flat_double_ended_queue_test_construct(),
                      flat_double_ended_queue_test_copy_no_allocate(),

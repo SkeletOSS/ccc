@@ -79,7 +79,7 @@ check_static_begin(singly_linked_list_test_construct_from_fail)
 }
 
 int
-main()
+main(void)
 {
     return check_run(singly_linked_list_test_construct(),
                      singly_linked_list_test_constructor_copy(),

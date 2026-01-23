@@ -358,7 +358,7 @@ check_static_begin(flat_priority_queue_test_init_with_capacity_fail)
 }
 
 int
-main()
+main(void)
 {
     return check_run(
         flat_priority_queue_test_empty(),

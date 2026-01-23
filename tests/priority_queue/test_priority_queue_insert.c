@@ -102,7 +102,7 @@ check_static_begin(priority_queue_test_read_max_min)
 }
 
 int
-main()
+main(void)
 {
     return check_run(priority_queue_test_insert_one(),
                      priority_queue_test_insert_three(),

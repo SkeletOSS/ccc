@@ -381,7 +381,7 @@ check_static_begin(array_adaptive_map_test_empty_range)
 }
 
 int
-main()
+main(void)
 {
     return check_run(
         array_adaptive_map_test_forward_iterator(),

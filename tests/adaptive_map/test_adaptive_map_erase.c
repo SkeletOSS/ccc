@@ -160,7 +160,7 @@ check_static_begin(adaptive_map_test_insert_erase_cycles)
 }
 
 int
-main()
+main(void)
 {
     return check_run(adaptive_map_test_insert_erase_shuffled(),
                      adaptive_map_test_prime_shuffle(),

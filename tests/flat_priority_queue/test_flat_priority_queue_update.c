@@ -166,7 +166,7 @@ check_static_begin(flat_priority_queue_test_priority_update_with)
 }
 
 int
-main()
+main(void)
 {
     return check_run(flat_priority_queue_test_insert_iterate_pop(),
                      flat_priority_queue_test_priority_update(),
