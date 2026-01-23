@@ -448,9 +448,10 @@ position with value 6.
 ```
 
 Notice that 1 and 2 were NOT moved to overwrite the start of the range, the
-values 3 and 4. The only way the start of a range will be overwritten is if
-the range itself is too large for the capacity. For example, push a range
-`{0,0,3,3,4,4,5,5}` over the same flat_double_ended_queue.
+values 3 and 4. Instead, the value 1 was overwritten and the front of the queue
+progressed to the next value. The only way the start of a range will be
+overwritten is if the range itself is too large for the capacity. For example,
+push a range `{0,0,3,3,4,4,5,5}` over the same flat_double_ended_queue.
 
 ```
  front position front
