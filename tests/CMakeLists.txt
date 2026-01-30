@@ -69,6 +69,7 @@ macro(add_buffer_test TEST_NAME)
       buffer_utility
       checkers
       allocate
+      stack_allocator
       random
   )
   set_target_properties(${TEST_NAME} 

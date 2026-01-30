@@ -9,6 +9,7 @@
 #include "checkers.h"
 #include "traits.h"
 #include "types.h"
+#include "utility/allocate.h"
 #include "utility/stack_allocator.h"
 
 check_static_begin(array_adaptive_map_test_empty)
@@ -192,7 +193,7 @@ check_static_begin(array_adaptive_map_test_init_from_overwrite)
 
 check_static_begin(array_adaptive_map_test_init_from_fail)
 {
-    // Whoops forgot an allocation function.
+    /* Whoops forgot an allocation function. */
     Array_adaptive_map map_from_list
         = array_adaptive_map_from(id, id_order, NULL, NULL, 0,
                                   (struct Val[]){
@@ -226,6 +227,47 @@ check_static_begin(array_adaptive_map_test_init_with_capacity)
         struct Val, id, id_order, stack_allocator_allocate, &allocator,
         SMALL_FIXED_CAP - 1);
     check(validate(&map), true);
+    check(array_adaptive_map_capacity(&map).count >= SMALL_FIXED_CAP - 1, true);
+    for (int i = 0; i < 10; ++i)
+    {
+        CCC_Handle const h = CCC_array_adaptive_map_insert_or_assign(
+            &map, &(struct Val){.id = i, .val = i});
+        check(CCC_handle_insert_error(&h), CCC_FALSE);
+        check(array_adaptive_map_validate(&map), CCC_TRUE);
+    }
+    check(array_adaptive_map_count(&map).count, 10);
+    size_t seen = 0;
+    for (CCC_Handle_index i = begin(&map); i != end(&map); i = next(&map, i))
+    {
+        struct Val const *const v = array_adaptive_map_at(&map, i);
+        check(v->id >= 0 && v->id < 10, true);
+        check(v->val >= 0 && v->val < 10, true);
+        check(v->val, v->id);
+        ++seen;
+    }
+    check(seen, 10);
+    check_end(array_adaptive_map_clear_and_free(&map, NULL););
+}
+
+check_static_begin(array_adaptive_map_test_with_allocator)
+{
+    Array_adaptive_map map = CCC_array_adaptive_map_with_allocator(
+        struct Val, id, id_order, std_allocate);
+    check(validate(&map), true);
+    check(CCC_array_adaptive_map_is_empty(&map), true);
+    check_end();
+}
+
+check_static_begin(array_adaptive_map_test_with_context_allocator)
+{
+    struct Stack_allocator allocator
+        = stack_allocator_initialize(Small_fixed_map, 1);
+    Array_adaptive_map map = CCC_array_adaptive_map_with_context_allocator(
+        struct Val, id, id_order, stack_allocator_allocate, &allocator);
+    check(validate(&map), true);
+    check(array_adaptive_map_reserve(&map, SMALL_FIXED_CAP - 1,
+                                     stack_allocator_allocate),
+          CCC_RESULT_OK);
     check(array_adaptive_map_capacity(&map).count >= SMALL_FIXED_CAP - 1, true);
     for (int i = 0; i < 10; ++i)
     {
@@ -308,6 +350,8 @@ main(void)
 {
     return check_run(array_adaptive_map_test_empty(),
                      array_adaptive_map_test_with_literal(),
+                     array_adaptive_map_test_with_allocator(),
+                     array_adaptive_map_test_with_context_allocator(),
                      array_adaptive_map_test_copy_no_allocate(),
                      array_adaptive_map_test_copy_no_allocate_fail(),
                      array_adaptive_map_test_copy_allocate(),

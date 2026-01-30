@@ -134,6 +134,29 @@ of memory in one step. */
     }
 
 /** @internal */
+#define CCC_private_buffer_with_allocator(private_type_name, private_allocate) \
+    {                                                                          \
+        .data = NULL,                                                          \
+        .sizeof_type = sizeof(private_type_name),                              \
+        .count = 0,                                                            \
+        .capacity = 0,                                                         \
+        .allocate = (private_allocate),                                        \
+        .context = NULL,                                                       \
+    }
+
+/** @internal */
+#define CCC_private_buffer_with_context_allocator(                             \
+    private_type_name, private_allocate, private_context)                      \
+    {                                                                          \
+        .data = NULL,                                                          \
+        .sizeof_type = sizeof(private_type_name),                              \
+        .count = 0,                                                            \
+        .capacity = 0,                                                         \
+        .allocate = (private_allocate),                                        \
+        .context = (private_context),                                          \
+    }
+
+/** @internal */
 #define CCC_private_buffer_emplace(private_buffer_pointer, index,              \
                                    private_type_compound_literal...)           \
     (__extension__({                                                           \

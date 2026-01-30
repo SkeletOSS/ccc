@@ -318,6 +318,39 @@ This saves some initialization boilerplate. */
     CCC_private_bitset_with_context_compound_literal(context, count,           \
                                                      compound_literal_array)
 
+/** @brief Initialize an empty dynamic bit set at compile or runtime with an
+allocator.
+@param[in] allocate the CCC_Allocator function.
+@return the initialized bit set on the right hand side of an equality operator.
+
+An empty dynamic bit set.
+
+```
+#define BITSET_USING_NAMESPACE_CCC
+static Bitset bitset = bitset_with_allocator(stdlib_allocate);
+```
+
+This saves some initialization boilerplate. */
+#define CCC_bitset_with_allocator(allocator)                                   \
+    CCC_private_bitset_with_allocator(allocator)
+
+/** @brief Initialize an empty dynamic bit set at compile or runtime with an
+allocator.
+@param[in] allocate the CCC_Allocator function.
+@param[in] context the
+@return the initialized bit set on the right hand side of an equality operator.
+
+An empty dynamic bit set.
+
+```
+#define BITSET_USING_NAMESPACE_CCC
+static Bitset bitset = bitset_with_allocator(arena_allocate, &arena);
+```
+
+This saves some initialization boilerplate. */
+#define CCC_bitset_with_context_allocator(allocator, context)                  \
+    CCC_private_bitset_with_context_allocator(allocator, context)
+
 /** @brief Copy the bit set at source to destination.
 @param[in] destination the initialized destination for the copy of the source
 set.
@@ -1046,6 +1079,10 @@ typedef CCC_Bitset Bitset;
         CCC_bitset_with_compound_literal(arguments)
 #    define bitset_with_context_compound_literal(arguments...)                 \
         CCC_bitset_with_context_compound_literal(arguments)
+#    define bitset_with_allocator(arguments...)                                \
+        CCC_bitset_with_allocator(arguments)
+#    define bitset_with_context_allocator(arguments...)                        \
+        CCC_bitset_with_context_allocator(arguments)
 #    define bitset_copy(arguments...) CCC_bitset_copy(arguments)
 #    define bitset_reserve(arguments...) CCC_bitset_reserve(arguments)
 #    define bitset_test(arguments...) CCC_bitset_test(arguments)

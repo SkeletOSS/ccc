@@ -9,6 +9,7 @@
 #include "checkers.h"
 #include "traits.h"
 #include "types.h"
+#include "utility/allocate.h"
 #include "utility/stack_allocator.h"
 
 check_static_begin(array_tree_map_test_empty)
@@ -303,6 +304,47 @@ check_static_begin(array_tree_map_test_init_with_capacity_fail)
     check_end(array_tree_map_clear_and_free(&map, NULL););
 }
 
+check_static_begin(array_tree_map_test_with_allocator)
+{
+    Array_tree_map map = CCC_array_tree_map_with_allocator(
+        struct Val, id, id_order, std_allocate);
+    check(validate(&map), true);
+    check(CCC_array_tree_map_is_empty(&map), true);
+    check_end();
+}
+
+check_static_begin(array_tree_map_test_with_context_allocator)
+{
+    struct Stack_allocator allocator
+        = stack_allocator_initialize(Small_fixed_map, 1);
+    Array_tree_map map = CCC_array_tree_map_with_context_allocator(
+        struct Val, id, id_order, stack_allocator_allocate, &allocator);
+    check(validate(&map), true);
+    check(array_tree_map_reserve(&map, SMALL_FIXED_CAP - 1,
+                                 stack_allocator_allocate),
+          CCC_RESULT_OK);
+    check(array_tree_map_capacity(&map).count >= SMALL_FIXED_CAP - 1, true);
+    for (int i = 0; i < 10; ++i)
+    {
+        CCC_Handle const h = CCC_array_tree_map_insert_or_assign(
+            &map, &(struct Val){.id = i, .val = i});
+        check(CCC_handle_insert_error(&h), CCC_FALSE);
+        check(array_tree_map_validate(&map), CCC_TRUE);
+    }
+    check(array_tree_map_count(&map).count, 10);
+    size_t seen = 0;
+    for (CCC_Handle_index i = begin(&map); i != end(&map); i = next(&map, i))
+    {
+        struct Val const *const v = array_tree_map_at(&map, i);
+        check(v->id >= 0 && v->id < 10, true);
+        check(v->val >= 0 && v->val < 10, true);
+        check(v->val, v->id);
+        ++seen;
+    }
+    check(seen, 10);
+    check_end(array_tree_map_clear_and_free(&map, NULL););
+}
+
 int
 main(void)
 {
@@ -317,5 +359,7 @@ main(void)
                      array_tree_map_test_init_from_fail(),
                      array_tree_map_test_init_with_capacity(),
                      array_tree_map_test_init_with_capacity_no_op(),
-                     array_tree_map_test_init_with_capacity_fail());
+                     array_tree_map_test_init_with_capacity_fail(),
+                     array_tree_map_test_with_allocator(),
+                     array_tree_map_test_with_context_allocator());
 }
