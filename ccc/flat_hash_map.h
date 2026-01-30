@@ -484,7 +484,8 @@ static Flat_hash_map static_map = flat_hash_map_with_allocator(
 );
 ```
 
-This saves on boilerplate compared to the raw initializer. */
+This saves on boilerplate and reduces occurrences of NULL compared to the raw
+initializer. */
 #define CCC_flat_hash_map_with_allocator(type_name, key_field, hash, compare,  \
                                          allocate)                             \
     CCC_private_flat_hash_map_with_allocator(type_name, key_field, hash,       \
