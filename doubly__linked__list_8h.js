@@ -4,6 +4,8 @@ var doubly__linked__list_8h =
     [ "CCC_doubly_linked_list_emplace_front", "doubly__linked__list_8h.html#a2392274160b41a54c4398f44bb24eab6", null ],
     [ "CCC_doubly_linked_list_from", "doubly__linked__list_8h.html#a6e67cd666af1e37693aee91bdff2221b", null ],
     [ "CCC_doubly_linked_list_initialize", "doubly__linked__list_8h.html#ad9247626e904dd8b999c2368ea5d055d", null ],
+    [ "CCC_doubly_linked_list_with_allocator", "doubly__linked__list_8h.html#a4b5d4367cb19aecffbbdc4195acd9d0c", null ],
+    [ "CCC_doubly_linked_list_with_context_allocator", "doubly__linked__list_8h.html#a4cfbb16d6bdb17a6919ad3a40573b086", null ],
     [ "CCC_Doubly_linked_list", "doubly__linked__list_8h.html#ad6cd73913a91a783faf9a65052916d68", null ],
     [ "CCC_Doubly_linked_list_node", "doubly__linked__list_8h.html#a5f30aec8c3f4beaa578a6f6807eba859", null ],
     [ "CCC_doubly_linked_list_back", "doubly__linked__list_8h.html#af5d1c37ca1615da500ed00f0f2043572", null ],

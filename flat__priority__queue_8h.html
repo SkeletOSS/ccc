@@ -159,6 +159,12 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:a34f86c640de1c23ff5c5bb835b88eb43"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__priority__queue_8h.html#a34f86c640de1c23ff5c5bb835b88eb43">CCC_flat_priority_queue_with_context_compound_literal</a>( order,  compare,  context,  compound_literal_array)</td></tr>
 <tr class="memdesc:a34f86c640de1c23ff5c5bb835b88eb43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a priority_queue as a min or max heap with no allocation permission or context data.  <br /></td></tr>
 <tr class="separator:a34f86c640de1c23ff5c5bb835b88eb43"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68f2e5b8fd3314e202eab6bb484b0ce2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__priority__queue_8h.html#a68f2e5b8fd3314e202eab6bb484b0ce2">CCC_flat_priority_queue_with_allocator</a>(type_name,  order,  compare,  allocate)</td></tr>
+<tr class="memdesc:a68f2e5b8fd3314e202eab6bb484b0ce2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an empty dynamic queue at compile or runtime with an allocator.  <br /></td></tr>
+<tr class="separator:a68f2e5b8fd3314e202eab6bb484b0ce2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61ddcda4064279a7e47a11b6a612433a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__priority__queue_8h.html#a61ddcda4064279a7e47a11b6a612433a">CCC_flat_priority_queue_with_context_allocator</a>( type_name,  order,  compare,  allocate,  context)</td></tr>
+<tr class="memdesc:a61ddcda4064279a7e47a11b6a612433a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an empty dynamic queue at compile or runtime with an allocator with context.  <br /></td></tr>
+<tr class="separator:a61ddcda4064279a7e47a11b6a612433a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23ec35e7b910c2ecefd8492447664e9a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__priority__queue_8h.html#a23ec35e7b910c2ecefd8492447664e9a">CCC_flat_priority_queue_copy</a> (<a class="el" href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a> *destination, <a class="el" href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a> const *source, <a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a> *allocate)</td></tr>
 <tr class="memdesc:a23ec35e7b910c2ecefd8492447664e9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the priority_queue from source to newly initialized destination.  <br /></td></tr>
 <tr class="separator:a23ec35e7b910c2ecefd8492447664e9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -714,6 +720,60 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
+<a id="a68f2e5b8fd3314e202eab6bb484b0ce2" name="a68f2e5b8fd3314e202eab6bb484b0ce2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a68f2e5b8fd3314e202eab6bb484b0ce2">&#9670;&#160;</a></span>CCC_flat_priority_queue_with_allocator</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CCC_flat_priority_queue_with_allocator</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">type_name, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">order, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">compare, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">allocate&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_flat_priority_queue_with_allocator(type_name, order, compare,  \</div>
+<div class="line">                                                   allocate)</div>
+</div><!-- fragment -->
+<p>Initialize an empty dynamic queue at compile or runtime with an allocator. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the name of the type stored in the queue. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">order</td><td>CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max heap, respectively. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the user defined comparison function for user types. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the compound literal array of fixed capacity. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the initialized priority queue on the right hand side of an equality operator. (i.e. <a class="el" href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a> q = <a class="el" href="flat__priority__queue_8h.html#a68f2e5b8fd3314e202eab6bb484b0ce2" title="Initialize an empty dynamic queue at compile or runtime with an allocator.">CCC_flat_priority_queue_with_allocator(...)</a>;). </dd></dl>
+
+</div>
+</div>
 <a id="a6ba15bf011e58e04ea510d81ee4fa067" name="a6ba15bf011e58e04ea510d81ee4fa067"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6ba15bf011e58e04ea510d81ee4fa067">&#9670;&#160;</a></span>CCC_flat_priority_queue_with_capacity</h2>
 
@@ -842,6 +902,67 @@ This graph shows which files directly or indirectly include this file:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the initialized priority queue on the right hand side of an equality operator. (i.e. <a class="el" href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a> q = <a class="el" href="flat__priority__queue_8h.html#a37da3381445ba29b34db97c7942150f7" title="Initialize a priority_queue as a min or max heap with no allocation permission or context data.">CCC_flat_priority_queue_with_compound_literal(...)</a>;). </dd></dl>
+
+</div>
+</div>
+<a id="a61ddcda4064279a7e47a11b6a612433a" name="a61ddcda4064279a7e47a11b6a612433a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61ddcda4064279a7e47a11b6a612433a">&#9670;&#160;</a></span>CCC_flat_priority_queue_with_context_allocator</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CCC_flat_priority_queue_with_context_allocator</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">type_name, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">order, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">compare, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">allocate, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">context&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_flat_priority_queue_with_context_allocator(                    \</div>
+<div class="line">        type_name, order, compare, allocate, context)</div>
+</div><!-- fragment -->
+<p>Initialize an empty dynamic queue at compile or runtime with an allocator with context. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the name of the type stored in the queue. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">order</td><td>CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max heap, respectively. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the user defined comparison function for user types. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the compound literal array of fixed capacity. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>the context for allocator. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the initialized priority queue on the right hand side of an equality operator. (i.e. <a class="el" href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a> q = <a class="el" href="flat__priority__queue_8h.html#a61ddcda4064279a7e47a11b6a612433a" title="Initialize an empty dynamic queue at compile or runtime with an allocator with context.">CCC_flat_priority_queue_with_context_allocator(...)</a>;). </dd></dl>
 
 </div>
 </div>

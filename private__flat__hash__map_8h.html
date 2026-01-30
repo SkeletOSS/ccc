@@ -159,6 +159,10 @@ Macros</h2></td></tr>
 <tr class="separator:a2911ac34e2614797211af5863dc38311"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27ae1415b6402d738c70af9b5a0987fa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__flat__hash__map_8h.html#a27ae1415b6402d738c70af9b5a0987fa">CCC_private_flat_hash_map_with_context_compound_literal</a>( private_key_field,  private_hash,  private_key_compare,  private_context,  private_compound_literal)</td></tr>
 <tr class="separator:a27ae1415b6402d738c70af9b5a0987fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6572f5fa70af91599c843dce253253a9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__flat__hash__map_8h.html#a6572f5fa70af91599c843dce253253a9">CCC_private_flat_hash_map_with_allocator</a>( private_type_name,  private_key_field,  private_hash,  private_key_compare,  private_allocate)</td></tr>
+<tr class="separator:a6572f5fa70af91599c843dce253253a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5e2e66acd4437090a845417b60598d7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__flat__hash__map_8h.html#aa5e2e66acd4437090a845417b60598d7">CCC_private_flat_hash_map_with_context_allocator</a>( private_type_name,  private_key_field,  private_hash,  private_key_compare,  private_allocate,  private_context)</td></tr>
+<tr class="separator:aa5e2e66acd4437090a845417b60598d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b6332ccc161afcb1c5154d1e60f595c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__flat__hash__map_8h.html#a4b6332ccc161afcb1c5154d1e60f595c">CCC_private_flat_hash_map_and_modify_with</a>( Flat_hash_map_entry_pointer,  type_name,  closure_over_T...)</td></tr>
 <tr class="separator:a4b6332ccc161afcb1c5154d1e60f595c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec8e8dc2f6fd7574ad3f484cadb1664b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__flat__hash__map_8h.html#aec8e8dc2f6fd7574ad3f484cadb1664b">CCC_private_flat_hash_map_or_insert_with</a>(Flat_hash_map_entry_pointer,  type_compound_literal...)</td></tr>
@@ -655,6 +659,65 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a6572f5fa70af91599c843dce253253a9" name="a6572f5fa70af91599c843dce253253a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6572f5fa70af91599c843dce253253a9">&#9670;&#160;</a></span>CCC_private_flat_hash_map_with_allocator</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CCC_private_flat_hash_map_with_allocator</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_type_name, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_key_field, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_hash, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_key_compare, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_allocate&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    {                                                                          \</div>
+<div class="line">        .data = NULL,                                                          \</div>
+<div class="line">        .tag = NULL,                                                           \</div>
+<div class="line">        .count = 0,                                                            \</div>
+<div class="line">        .remain = 0,                                                           \</div>
+<div class="line">        .mask = 0,                                                             \</div>
+<div class="line">        .sizeof_type = <span class="keyword">sizeof</span>(private_type_name),                              \</div>
+<div class="line">        .key_offset = offsetof(private_type_name, private_key_field),          \</div>
+<div class="line">        .compare = (private_key_compare),                                      \</div>
+<div class="line">        .hash = (private_hash),                                                \</div>
+<div class="line">        .allocate = (private_allocate),                                        \</div>
+<div class="line">        .context = NULL,                                                       \</div>
+<div class="line">    }</div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="ab3f2de88ddc0d59eae946c6ec3996d54" name="ab3f2de88ddc0d59eae946c6ec3996d54"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab3f2de88ddc0d59eae946c6ec3996d54">&#9670;&#160;</a></span>CCC_private_flat_hash_map_with_capacity</h2>
 
@@ -791,6 +854,71 @@ Variables</h2></td></tr>
 <div class="ttc" id="aprivate__flat__hash__map_8h_html_acb4ac419bacd4c7cf728b5a56b99214a"><div class="ttname"><a href="private__flat__hash__map_8h.html#acb4ac419bacd4c7cf728b5a56b99214a">CCC_private_flat_hash_map_fixed_capacity</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_fixed_capacity(fixed_map_type_name)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:259</div></div>
 </div><!-- fragment --><p>We can cut out boilerplate by assuming fixed size map. </p>
 
+</div>
+</div>
+<a id="aa5e2e66acd4437090a845417b60598d7" name="aa5e2e66acd4437090a845417b60598d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5e2e66acd4437090a845417b60598d7">&#9670;&#160;</a></span>CCC_private_flat_hash_map_with_context_allocator</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CCC_private_flat_hash_map_with_context_allocator</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_type_name, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_key_field, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_hash, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_key_compare, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_allocate, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_context&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    {                                                                          \</div>
+<div class="line">        .data = NULL,                                                          \</div>
+<div class="line">        .tag = NULL,                                                           \</div>
+<div class="line">        .count = 0,                                                            \</div>
+<div class="line">        .remain = 0,                                                           \</div>
+<div class="line">        .mask = 0,                                                             \</div>
+<div class="line">        .sizeof_type = <span class="keyword">sizeof</span>(private_type_name),                              \</div>
+<div class="line">        .key_offset = offsetof(private_type_name, private_key_field),          \</div>
+<div class="line">        .compare = (private_key_compare),                                      \</div>
+<div class="line">        .hash = (private_hash),                                                \</div>
+<div class="line">        .allocate = (private_allocate),                                        \</div>
+<div class="line">        .context = (private_context),                                          \</div>
+<div class="line">    }</div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="a27ae1415b6402d738c70af9b5a0987fa" name="a27ae1415b6402d738c70af9b5a0987fa"></a>

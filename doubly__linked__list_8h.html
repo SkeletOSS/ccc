@@ -138,6 +138,12 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:a6e67cd666af1e37693aee91bdff2221b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="doubly__linked__list_8h.html#a6e67cd666af1e37693aee91bdff2221b">CCC_doubly_linked_list_from</a>(type_intruder_field,  compare,  allocate,  destroy,  context_data,  compound_literal_array...)</td></tr>
 <tr class="memdesc:a6e67cd666af1e37693aee91bdff2221b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a doubly linked list at runtime from a compound literal array.  <br /></td></tr>
 <tr class="separator:a6e67cd666af1e37693aee91bdff2221b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b5d4367cb19aecffbbdc4195acd9d0c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="doubly__linked__list_8h.html#a4b5d4367cb19aecffbbdc4195acd9d0c">CCC_doubly_linked_list_with_allocator</a>( struct_name,  type_intruder_field,  compare,  allocate)</td></tr>
+<tr class="memdesc:a4b5d4367cb19aecffbbdc4195acd9d0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an empty list at compile or runtime with an allocator.  <br /></td></tr>
+<tr class="separator:a4b5d4367cb19aecffbbdc4195acd9d0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4cfbb16d6bdb17a6919ad3a40573b086"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="doubly__linked__list_8h.html#a4cfbb16d6bdb17a6919ad3a40573b086">CCC_doubly_linked_list_with_context_allocator</a>( struct_name,  type_intruder_field,  compare,  allocate,  context)</td></tr>
+<tr class="memdesc:a4cfbb16d6bdb17a6919ad3a40573b086"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an empty list at compile or runtime with an allocator.  <br /></td></tr>
+<tr class="separator:a4cfbb16d6bdb17a6919ad3a40573b086"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Insert and Remove Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Add or remove elements from the doubly linked list. </p>
@@ -467,6 +473,149 @@ This graph shows which files directly or indirectly include this file:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the initialized list. Assign to the list directly on the right hand side of an equality operator. Initialization can occur at runtime or compile time (e.g. CCC_doubly_linked list = <a class="el" href="doubly__linked__list_8h.html#ad9247626e904dd8b999c2368ea5d055d" title="Initialize a doubly linked list with its l-value name, type containing the Doubly_linked_list elems,...">CCC_doubly_linked_list_initialize(...)</a>;). </dd></dl>
+
+</div>
+</div>
+<a id="a4b5d4367cb19aecffbbdc4195acd9d0c" name="a4b5d4367cb19aecffbbdc4195acd9d0c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b5d4367cb19aecffbbdc4195acd9d0c">&#9670;&#160;</a></span>CCC_doubly_linked_list_with_allocator</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CCC_doubly_linked_list_with_allocator</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">struct_name, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">type_intruder_field, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">compare, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">allocate&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_doubly_linked_list_with_allocator(                             \</div>
+<div class="line">        struct_name, type_intruder_field, compare, allocate)</div>
+</div><!-- fragment -->
+<p>Initialize an empty list at compile or runtime with an allocator. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the user defined type stored in the list. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_field</td><td>the name of the intrusive element. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the CCC_Key_comparator the user intends to use. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the CCC_Allocator function used to manage list memory. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the list directly initialized on the right hand side of the equality operator.</dd></dl>
+<p>Initialize a dynamic list at compile time.</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#define DOUBLY_LINKED_LIST_USING_NAMESPACE_CCC</span></div>
+<div class="line"><span class="keyword">struct </span>Val</div>
+<div class="line">{</div>
+<div class="line">    Doubly_linked_list_node node;</div>
+<div class="line">    <span class="keywordtype">int</span> val;</div>
+<div class="line">};</div>
+<div class="line"><span class="keyword">static</span> Doubly_linked_list list = doubly_linked_list_with_allocator(</div>
+<div class="line">    <span class="keyword">struct</span> Val,</div>
+<div class="line">    node,</div>
+<div class="line">    val_order,</div>
+<div class="line">    stdlib_allocate</div>
+<div class="line">);</div>
+</div><!-- fragment --><p>This can help eliminate boilerplate in initializers. </p>
+
+</div>
+</div>
+<a id="a4cfbb16d6bdb17a6919ad3a40573b086" name="a4cfbb16d6bdb17a6919ad3a40573b086"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4cfbb16d6bdb17a6919ad3a40573b086">&#9670;&#160;</a></span>CCC_doubly_linked_list_with_context_allocator</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CCC_doubly_linked_list_with_context_allocator</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">struct_name, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">type_intruder_field, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">compare, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">allocate, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">context&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_doubly_linked_list_with_context_allocator(                     \</div>
+<div class="line">        struct_name, type_intruder_field, compare, allocate, context)</div>
+</div><!-- fragment -->
+<p>Initialize an empty list at compile or runtime with an allocator. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the user defined type stored in the list. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_field</td><td>the name of the intrusive element. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the CCC_Key_comparator the user intends to use. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the CCC_Allocator function used to manage list memory. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the list directly initialized on the right hand side of the equality operator.</dd></dl>
+<p>Initialize a dynamic list at compile time.</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#define DOUBLY_LINKED_LIST_USING_NAMESPACE_CCC</span></div>
+<div class="line"><span class="keyword">struct </span>Val</div>
+<div class="line">{</div>
+<div class="line">    Doubly_linked_list_node node;</div>
+<div class="line">    <span class="keywordtype">int</span> val;</div>
+<div class="line">};</div>
+<div class="line"><span class="keyword">static</span> Doubly_linked_list list = doubly_linked_list_with_allocator(</div>
+<div class="line">    <span class="keyword">struct</span> Val,</div>
+<div class="line">    node,</div>
+<div class="line">    val_order,</div>
+<div class="line">    arena_allocate,</div>
+<div class="line">    &amp;arena</div>
+<div class="line">);</div>
+</div><!-- fragment --><p>This can help eliminate boilerplate in initializers. </p>
 
 </div>
 </div>

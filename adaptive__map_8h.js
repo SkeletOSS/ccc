@@ -14,6 +14,8 @@ var adaptive__map_8h =
     [ "CCC_adaptive_map_swap_entry_wrap", "adaptive__map_8h.html#a489d1a4248eed36ec884db29afd437ba", null ],
     [ "CCC_adaptive_map_try_insert_with", "adaptive__map_8h.html#af0b3fa6736c783e094b85b335422d017", null ],
     [ "CCC_adaptive_map_try_insert_wrap", "adaptive__map_8h.html#ad6162debb2e5dab39637763145d6a15e", null ],
+    [ "CCC_adaptive_map_with_allocator", "adaptive__map_8h.html#a7c58e77f98722d1fff4ccc32b8f805bc", null ],
+    [ "CCC_adaptive_map_with_context_allocator", "adaptive__map_8h.html#a8eff36bc12f00df11d5d14a00c53d754", null ],
     [ "CCC_Adaptive_map", "adaptive__map_8h.html#a3f0d3fec74866606bc401195872efdf3", null ],
     [ "CCC_Adaptive_map_entry", "adaptive__map_8h.html#a6634e04a00bfa7e2b4b274dd7e6aec61", null ],
     [ "CCC_Adaptive_map_node", "adaptive__map_8h.html#ab69a547af78f7449e34ef8bafbe635b7", null ],

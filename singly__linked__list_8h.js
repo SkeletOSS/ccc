@@ -3,6 +3,8 @@ var singly__linked__list_8h =
     [ "CCC_singly_linked_list_emplace_front", "singly__linked__list_8h.html#a68674be68af170f1678cd58fb41be8c2", null ],
     [ "CCC_singly_linked_list_from", "singly__linked__list_8h.html#afbc3c61bb3f0b585815785ca5895058a", null ],
     [ "CCC_singly_linked_list_initialize", "singly__linked__list_8h.html#a532d1949b81a22b2240ff607b80cbe7c", null ],
+    [ "CCC_singly_linked_list_with_allocator", "singly__linked__list_8h.html#a0aa5b121df489bcac67749fb4aaf478d", null ],
+    [ "CCC_singly_linked_list_with_context_allocator", "singly__linked__list_8h.html#abdb9a66a12a9087c25b5dae1fcbf9473", null ],
     [ "CCC_Singly_linked_list", "singly__linked__list_8h.html#adf53f78ed1eadb490812a9b98ec8df21", null ],
     [ "CCC_Singly_linked_list_node", "singly__linked__list_8h.html#a98fdbb620ef522ffdf555669b3536a9b", null ],
     [ "CCC_singly_linked_list_begin", "singly__linked__list_8h.html#a32ec6ce817a4d1cc0daa3e7506e11d91", null ],
