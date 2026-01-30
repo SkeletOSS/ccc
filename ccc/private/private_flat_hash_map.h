@@ -413,6 +413,42 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
         .context = (private_context),                                          \
     }
 
+/** @internal */
+#define CCC_private_flat_hash_map_with_allocator(                              \
+    private_type_name, private_key_field, private_hash, private_key_compare,   \
+    private_allocate)                                                          \
+    {                                                                          \
+        .data = NULL,                                                          \
+        .tag = NULL,                                                           \
+        .count = 0,                                                            \
+        .remain = 0,                                                           \
+        .mask = 0,                                                             \
+        .sizeof_type = sizeof(private_type_name),                              \
+        .key_offset = offsetof(private_type_name, private_key_field),          \
+        .compare = (private_key_compare),                                      \
+        .hash = (private_hash),                                                \
+        .allocate = (private_allocate),                                        \
+        .context = NULL,                                                       \
+    }
+
+/** @internal */
+#define CCC_private_flat_hash_map_with_context_allocator(                      \
+    private_type_name, private_key_field, private_hash, private_key_compare,   \
+    private_allocate, private_context)                                         \
+    {                                                                          \
+        .data = NULL,                                                          \
+        .tag = NULL,                                                           \
+        .count = 0,                                                            \
+        .remain = 0,                                                           \
+        .mask = 0,                                                             \
+        .sizeof_type = sizeof(private_type_name),                              \
+        .key_offset = offsetof(private_type_name, private_key_field),          \
+        .compare = (private_key_compare),                                      \
+        .hash = (private_hash),                                                \
+        .allocate = (private_allocate),                                        \
+        .context = (private_context),                                          \
+    }
+
 /*========================    Construct In Place    =========================*/
 
 /** @internal A fairly good approximation of closures given C23 capabilities.

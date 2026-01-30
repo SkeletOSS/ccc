@@ -131,8 +131,8 @@ void *CCC_private_adaptive_map_insert(struct CCC_Adaptive_map *,
     private_key_comparator, private_allocate, private_context_data)            \
     {                                                                          \
         .root = NULL,                                                          \
-        .allocate = (private_allocate),                                        \
         .compare = (private_key_comparator),                                   \
+        .allocate = (private_allocate),                                        \
         .context = (private_context_data),                                     \
         .size = 0,                                                             \
         .sizeof_type = sizeof(private_struct_name),                            \
@@ -206,6 +206,37 @@ void *CCC_private_adaptive_map_insert(struct CCC_Adaptive_map *,
         }                                                                      \
         private_map;                                                           \
     }))
+
+/** @internal */
+#define CCC_private_adaptive_map_with_allocator(                               \
+    private_struct_name, private_node_node_field, private_key_node_field,      \
+    private_key_comparator, private_allocate)                                  \
+    {                                                                          \
+        .root = NULL,                                                          \
+        .compare = (private_key_comparator),                                   \
+        .allocate = (private_allocate),                                        \
+        .context = NULL,                                                       \
+        .size = 0,                                                             \
+        .sizeof_type = sizeof(private_struct_name),                            \
+        .type_intruder_offset                                                  \
+        = offsetof(private_struct_name, private_node_node_field),              \
+        .key_offset = offsetof(private_struct_name, private_key_node_field),   \
+    }
+
+#define CCC_private_adaptive_map_with_context_allocator(                       \
+    private_struct_name, private_node_node_field, private_key_node_field,      \
+    private_key_comparator, private_allocate, private_context_data)            \
+    {                                                                          \
+        .root = NULL,                                                          \
+        .allocate = (private_allocate),                                        \
+        .compare = (private_key_comparator),                                   \
+        .context = (private_context_data),                                     \
+        .size = 0,                                                             \
+        .sizeof_type = sizeof(private_struct_name),                            \
+        .type_intruder_offset                                                  \
+        = offsetof(private_struct_name, private_node_node_field),              \
+        .key_offset = offsetof(private_struct_name, private_key_node_field),   \
+    }
 
 /** @internal */
 #define CCC_private_adaptive_map_new(adaptive_map_entry)                       \

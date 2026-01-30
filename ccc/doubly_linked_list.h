@@ -116,6 +116,69 @@ front of the list and the final index element at the back of the list. */
                                         allocate, destroy, context_data,       \
                                         compound_literal_array)
 
+/** @brief Initialize an empty list at compile or runtime with an allocator.
+@param[in] type_name the user defined type stored in the list.
+@param[in] type_intruder_field the name of the intrusive element.
+@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] allocate the CCC_Allocator function used to manage list memory.
+@return the list directly initialized on the right hand side of the equality
+operator.
+
+Initialize a dynamic list at compile time.
+
+```
+#define DOUBLY_LINKED_LIST_USING_NAMESPACE_CCC
+struct Val
+{
+    Doubly_linked_list_node node;
+    int val;
+};
+static Doubly_linked_list list = doubly_linked_list_with_allocator(
+    struct Val,
+    node,
+    val_order,
+    stdlib_allocate
+);
+```
+
+This can help eliminate boilerplate in initializers. */
+#define CCC_doubly_linked_list_with_allocator(                                 \
+    struct_name, type_intruder_field, compare, allocate)                       \
+    CCC_private_doubly_linked_list_with_allocator(                             \
+        struct_name, type_intruder_field, compare, allocate)
+
+/** @brief Initialize an empty list at compile or runtime with an allocator.
+@param[in] type_name the user defined type stored in the list.
+@param[in] type_intruder_field the name of the intrusive element.
+@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] allocate the CCC_Allocator function used to manage list memory.
+@return the list directly initialized on the right hand side of the equality
+operator.
+
+Initialize a dynamic list at compile time.
+
+```
+#define DOUBLY_LINKED_LIST_USING_NAMESPACE_CCC
+struct Val
+{
+    Doubly_linked_list_node node;
+    int val;
+};
+static Doubly_linked_list list = doubly_linked_list_with_allocator(
+    struct Val,
+    node,
+    val_order,
+    arena_allocate,
+    &arena
+);
+```
+
+This can help eliminate boilerplate in initializers. */
+#define CCC_doubly_linked_list_with_context_allocator(                         \
+    struct_name, type_intruder_field, compare, allocate, context)              \
+    CCC_private_doubly_linked_list_with_context_allocator(                     \
+        struct_name, type_intruder_field, compare, allocate, context)
+
 /**@}*/
 
 /** @name Insert and Remove Interface
@@ -465,6 +528,10 @@ typedef CCC_Doubly_linked_list Doubly_linked_list;
         CCC_doubly_linked_list_initialize(arguments)
 #    define doubly_linked_list_from(arguments...)                              \
         CCC_doubly_linked_list_from(arguments)
+#    define doubly_linked_list_with_allocator(arguments...)                    \
+        CCC_doubly_linked_list_with_allocator(arguments)
+#    define doubly_linked_list_with_context_allocator(arguments...)            \
+        CCC_doubly_linked_list_with_context_allocator(arguments)
 #    define doubly_linked_list_emplace_back(arguments...)                      \
         CCC_doubly_linked_list_emplace_back(arguments)
 #    define doubly_linked_list_emplace_front(arguments...)                     \

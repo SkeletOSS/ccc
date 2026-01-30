@@ -455,6 +455,78 @@ This saves on boilerplate compared to the raw initializer. */
     CCC_private_flat_hash_map_with_context_compound_literal(                   \
         key_field, hash, compare, context, compound_literal)
 
+/** @brief Initialize an empty dynamic map at compile or runtime with an
+allocator.
+@param[in] type_name the name of the type stored in the map.
+@param[in] key_field the field of the struct used for key storage.
+@param[in] hash the CCC_Key_hasher function provided by the user.
+@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] allocate the CCC_Allocator function.
+@return the flat hash map directly initialized on the right hand side of the
+equality operator
+(e.g. CCC_Flat_hash_map map = flat_hash_map_with_allocator(...);)
+
+Initialize a static dynamic map.
+
+```
+#define FLAT_HASH_MAP_USING_NAMESPACE_CCC
+struct Val
+{
+    int key;
+    int val;
+};
+static Flat_hash_map static_map = flat_hash_map_with_allocator(
+    struct Val,
+    key,
+    flat_hash_map_int_to_u64,
+    flat_hash_map_key_order,
+    std_allocate
+);
+```
+
+This saves on boilerplate and reduces occurrences of NULL compared to the raw
+initializer. */
+#define CCC_flat_hash_map_with_allocator(type_name, key_field, hash, compare,  \
+                                         allocate)                             \
+    CCC_private_flat_hash_map_with_allocator(type_name, key_field, hash,       \
+                                             compare, allocate)
+
+/** @brief Initialize an empty dynamic map at compile or runtime with an
+allocator.
+@param[in] type_name the name of the type stored in the map.
+@param[in] key_field the field of the struct used for key storage.
+@param[in] hash the CCC_Key_hasher function provided by the user.
+@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] allocate the CCC_Allocator function.
+@return the flat hash map directly initialized on the right hand side of the
+equality operator
+(e.g. CCC_Flat_hash_map map = flat_hash_map_with_allocator(...);)
+
+Initialize a static dynamic map.
+
+```
+#define FLAT_HASH_MAP_USING_NAMESPACE_CCC
+struct Val
+{
+    int key;
+    int val;
+};
+static Flat_hash_map static_map = flat_hash_map_with_context_allocator(
+    struct Val,
+    key,
+    flat_hash_map_int_to_u64,
+    flat_hash_map_key_order,
+    arena_allocate,
+    &arena
+);
+```
+
+This saves on boilerplate compared to the raw initializer. */
+#define CCC_flat_hash_map_with_context_allocator(type_name, key_field, hash,   \
+                                                 compare, allocate, context)   \
+    CCC_private_flat_hash_map_with_context_allocator(                          \
+        type_name, key_field, hash, compare, allocate, context)
+
 /** @brief Copy the map at source to destination.
 @param[in] destination the initialized destination for the copy of the source
 map.
@@ -1169,6 +1241,10 @@ typedef CCC_Flat_hash_map_entry Flat_hash_map_entry;
         CCC_flat_hash_map_with_compound_literal(arguments)
 #    define flat_hash_map_with_context_compound_literal(arguments...)          \
         CCC_flat_hash_map_with_context_compound_literal(arguments)
+#    define flat_hash_map_with_allocator(arguments...)                         \
+        CCC_flat_hash_map_with_allocator(arguments)
+#    define flat_hash_map_with_context_allocator(arguments...)                 \
+        CCC_flat_hash_map_with_context_allocator(arguments)
 #    define flat_hash_map_copy(arguments...) CCC_flat_hash_map_copy(arguments)
 #    define flat_hash_map_and_modify_with(arguments...)                        \
         CCC_flat_hash_map_and_modify_with(arguments)

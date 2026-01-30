@@ -877,14 +877,11 @@ Here a small min priority queue of integers with a maximum capacity of 40 has be
 
 ```c
 CCC_Flat_priority_queue flat_priority_queue
-    = CCC_flat_priority_queue_initialize(
+    = CCC_flat_priority_queue_with_allocator(
     int,
     CCC_LESSER,
     int_cmp,
-    std_allocate,
-    NULL,
-    0,
-    NULL
+    std_allocate
 );
 ```
 
@@ -979,15 +976,12 @@ struct Val
     int key;
     int val;
 };
-static Flat_hash_map static_fh = flat_hash_map_initialize(
+static Flat_hash_map static_fh = flat_hash_map_with_allocator(
     struct Val,
     key,
     flat_hash_map_int_to_u64,
     flat_hash_map_id_cmp,
-    std_allocate,
-    NULL,
-    0,
-    NULL
+    std_allocate
 );
 ```
 

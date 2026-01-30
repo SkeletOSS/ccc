@@ -6,6 +6,7 @@
 #include "ccc/types.h"
 #include "checkers.h"
 #include "utility/allocate.h"
+#include "utility/stack_allocator.h"
 
 check_static_begin(buffer_test_empty)
 {
@@ -180,6 +181,27 @@ check_static_begin(buffer_test_init_with_capacity)
     check_end(CCC_buffer_clear_and_free(&b, NULL););
 }
 
+check_static_begin(buffer_test_with_allocator)
+{
+    CCC_Buffer b = CCC_buffer_with_allocator(int, std_allocate);
+    check(CCC_buffer_is_empty(&b), CCC_TRUE);
+    check_end();
+}
+
+check_static_begin(buffer_test_with_context_allocator)
+{
+    struct Stack_allocator allocator = stack_allocator_initialize(int, 8);
+    CCC_Buffer b = CCC_buffer_with_context_allocator(
+        int, stack_allocator_allocate, &allocator);
+    check(CCC_buffer_is_empty(&b), CCC_TRUE);
+    check(CCC_buffer_reserve(&b, 8, stack_allocator_allocate), CCC_RESULT_OK);
+    int const *const i = CCC_buffer_push_back(&b, &(int){2});
+    check(i != NULL, CCC_TRUE);
+    check(*i, 2);
+    check(CCC_buffer_count(&b).count, 1);
+    check_end(CCC_buffer_clear_and_free(&b, NULL););
+}
+
 check_static_begin(buffer_test_init_with_capacity_fail)
 {
     /* Forgot allocation function. */
@@ -205,6 +227,6 @@ main(void)
         buffer_test_copy_no_allocate(), buffer_test_copy_no_allocate_fail(),
         buffer_test_copy_allocate(), buffer_test_copy_allocate_fail(),
         buffer_test_init_from(), buffer_test_init_from_fail(),
-        buffer_test_init_with_capacity(),
-        buffer_test_init_with_capacity_fail());
+        buffer_test_init_with_capacity(), buffer_test_init_with_capacity_fail(),
+        buffer_test_with_allocator(), buffer_test_with_context_allocator());
 }

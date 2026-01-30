@@ -357,6 +357,29 @@ check_static_begin(flat_priority_queue_test_init_with_capacity_fail)
     check_end(CCC_flat_priority_queue_clear_and_free(&queue, NULL););
 }
 
+check_static_begin(flat_priority_queue_test_with_allocator)
+{
+    CCC_Flat_priority_queue queue = CCC_flat_priority_queue_with_allocator(
+        int, CCC_ORDER_LESSER, int_order, std_allocate);
+    check(CCC_flat_priority_queue_is_empty(&queue), CCC_TRUE);
+    check_end();
+}
+
+check_static_begin(flat_priority_queue_test_with_context_allocator)
+{
+    struct Stack_allocator allocator = stack_allocator_initialize(int, 8);
+    CCC_Flat_priority_queue queue
+        = CCC_flat_priority_queue_with_context_allocator(
+            int, CCC_ORDER_LESSER, int_order, stack_allocator_allocate,
+            &allocator);
+    check(CCC_flat_priority_queue_reserve(&queue, 8, stack_allocator_allocate),
+          CCC_RESULT_OK);
+    check(CCC_flat_priority_queue_capacity(&queue).count, 8);
+    check(CCC_flat_priority_queue_push(&queue, &(int){9}, &(int){0}) != NULL,
+          CCC_TRUE);
+    check_end(CCC_flat_priority_queue_clear_and_free(&queue, NULL););
+}
+
 int
 main(void)
 {
@@ -371,6 +394,8 @@ main(void)
         flat_priority_queue_test_copy_no_allocate_fail(),
         flat_priority_queue_test_copy_allocate(),
         flat_priority_queue_test_copy_allocate_fail(),
+        flat_priority_queue_test_with_allocator(),
+        flat_priority_queue_test_with_context_allocator(),
         flat_priority_queue_test_heapsort(),
         flat_priority_queue_test_init_from(),
         flat_priority_queue_test_init_from_fail(),

@@ -7,6 +7,7 @@
 #include "doubly_linked_list.h"
 #include "doubly_linked_list_utility.h"
 #include "traits.h"
+#include "utility/allocate.h"
 #include "utility/stack_allocator.h"
 
 static CCC_Doubly_linked_list
@@ -28,6 +29,28 @@ check_static_begin(doubly_linked_list_test_construct)
     check(is_empty(&doubly_linked_list), false);
     check(count(&doubly_linked_list).count, 1);
     check_end();
+}
+
+check_static_begin(doubly_linked_list_test_with_allocator)
+{
+    Doubly_linked_list doubly_linked_list = doubly_linked_list_with_allocator(
+        struct Val, e, val_order, std_allocate);
+    check(is_empty(&doubly_linked_list), true);
+    check_end();
+}
+
+check_static_begin(doubly_linked_list_test_with_context_allocator)
+{
+    struct Stack_allocator allocator
+        = stack_allocator_initialize(struct Val, 3);
+    CCC_Doubly_linked_list list = doubly_linked_list_with_context_allocator(
+        struct Val, e, val_order, stack_allocator_allocate, &allocator);
+    check(CCC_doubly_linked_list_validate(&list), true);
+    struct Val const *const v
+        = CCC_doubly_linked_list_push_back(&list, &(struct Val){.val = 1}.e);
+    check(v != NULL, true);
+    check(v->val, 1);
+    check_end((void)CCC_doubly_linked_list_clear(&list, NULL););
 }
 
 /** C has no constructor or destructor mechanism. Struct is copied by default.
@@ -93,5 +116,7 @@ main(void)
     return check_run(doubly_linked_list_test_construct(),
                      doubly_linked_list_test_constructor_copy(),
                      doubly_linked_list_test_construct_from(),
-                     doubly_linked_list_test_construct_from_fail());
+                     doubly_linked_list_test_construct_from_fail(),
+                     doubly_linked_list_test_with_allocator(),
+                     doubly_linked_list_test_with_context_allocator());
 }

@@ -4,6 +4,7 @@
 #include "ccc/types.h"
 #include "checkers.h"
 #include "str_view/str_view.h"
+#include "utility/allocate.h"
 #include "utility/stack_allocator.h"
 
 typedef typeof(*(CCC_Bitset){}.blocks) Bitblocks;
@@ -215,6 +216,26 @@ check_static_begin(bitset_test_init_with_capacity_fail)
     check_end(CCC_bitset_clear_and_free(&b););
 }
 
+check_static_begin(bitset_test_with_allocator)
+{
+    CCC_Bitset b = CCC_bitset_with_allocator(std_allocate);
+    check(CCC_bitset_popcount(&b).count, 0);
+    check_end();
+}
+
+check_static_begin(bitset_test_with_context_allocator)
+{
+    struct Stack_allocator allocator
+        = stack_allocator_initialize(Bitblocks, to_blocks(32));
+    CCC_Bitset b = CCC_bitset_with_context_allocator(stack_allocator_allocate,
+                                                     &allocator);
+    check(CCC_bitset_popcount(&b).count, 0);
+    check(CCC_bitset_push_back(&b, CCC_FALSE), CCC_RESULT_OK);
+    check(CCC_bitset_set(&b, 0, CCC_TRUE), CCC_FALSE);
+    check(CCC_bitset_test(&b, 0), CCC_TRUE);
+    check_end();
+}
+
 int
 main(void)
 {
@@ -223,6 +244,6 @@ main(void)
         bitset_test_copy_no_allocate(), bitset_test_copy_allocate(),
         bitset_test_init_from(), bitset_test_init_from_cap(),
         bitset_test_init_from_fail(), bitset_test_init_from_cap_fail(),
-        bitset_test_init_with_capacity(),
-        bitset_test_init_with_capacity_fail());
+        bitset_test_init_with_capacity(), bitset_test_init_with_capacity_fail(),
+        bitset_test_with_allocator(), bitset_test_with_context_allocator());
 }

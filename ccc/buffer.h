@@ -249,6 +249,52 @@ wrapping static or stack based arrays. */
     CCC_private_buffer_with_context_compound_literal(context, count,           \
                                                      compound_literal_array)
 
+/** @brief Initialize an empty Buffer at compile or runtime with an allocator
+function.
+@param[in] type_name the name of the type stored in this buffer.
+@param[in] allocator the CCC_Allocator function.
+@return the initialized buffer. Directly assign to Buffer on the right hand
+side of the equality operator
+(e.g. CCC_Buffer b = CCC_buffer_with_allocator(...);).
+
+Initialization of a Buffer can occur at compile time or run time.
+
+```
+#define BUFFER_USING_NAMESPACE_CCC
+static Buffer stack = buffer_with_allocator(int, stdlib_allocate);
+```
+
+This helps eliminate boilerplate and makes intent clear. */
+#define CCC_buffer_with_allocator(type_name, allocator)                        \
+    CCC_private_buffer_with_allocator(type_name, allocator)
+
+/** @brief Initialize a contiguous Buffer of user a specified type of fixed
+capacity with no allocation permission.
+@param[in] context a pointer to any context needed for each element.
+@param[in] count starting count of the Buffer <= capacity of input literal.
+@param[in] allocator_array the compound literal array of types.
+@return the initialized buffer. Directly assign to Buffer on the right hand
+side of the equality operator
+(e.g. CCC_Buffer b = CCC_buffer_with_context_allocator(...);).
+
+Initialization of a Buffer can occur at compile time or run time but always
+lacks any allocation permissions. The memory pointer should be
+of the same type one intends to store in the buffer.
+
+```
+#define BUFFER_USING_NAMESPACE_CCC
+static Buffer stack = buffer_with_context_allocator(
+    int,
+    arena_allocate,
+    &arena,
+);
+```
+
+Compile time creation of fixed capacity buffers can be a helpful use case when
+wrapping static or stack based arrays. */
+#define CCC_buffer_with_context_allocator(type_name, allocator, context)       \
+    CCC_private_buffer_with_context_allocator(type_name, allocator, context)
+
 /** @brief Reserves space for at least to_add more elements.
 @param[in] buffer a pointer to the buffer.
 @param[in] to_add the number of elements to add to the current size.
@@ -793,6 +839,10 @@ typedef CCC_Buffer Buffer;
         CCC_buffer_with_compound_literal(arguments)
 #    define buffer_with_context_compound_literal(arguments...)                 \
         CCC_buffer_with_context_compound_literal(arguments)
+#    define buffer_with_allocator(arguments...)                                \
+        CCC_buffer_with_allocator(arguments)
+#    define buffer_with_context_allocator(arguments...)                        \
+        CCC_buffer_with_context_allocator(arguments)
 #    define buffer_with_capacity(arguments...)                                 \
         CCC_buffer_with_capacity(arguments)
 #    define buffer_from(arguments...) CCC_buffer_from(arguments)

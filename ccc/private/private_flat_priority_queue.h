@@ -148,6 +148,27 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
         .compare = (private_compare),                                          \
     }
 
+/** @internal */
+#define CCC_private_flat_priority_queue_with_allocator(                        \
+    private_type_name, private_order, private_compare, private_allocate)       \
+    {                                                                          \
+        .buffer                                                                \
+        = CCC_buffer_with_allocator(private_type_name, private_allocate),      \
+        .order = (private_order),                                              \
+        .compare = (private_compare),                                          \
+    }
+
+/** @internal */
+#define CCC_private_flat_priority_queue_with_context_allocator(                \
+    private_type_name, private_order, private_compare, private_allocate,       \
+    private_context)                                                           \
+    {                                                                          \
+        .buffer = CCC_buffer_with_context_allocator(                           \
+            private_type_name, private_allocate, private_context),             \
+        .order = (private_order),                                              \
+        .compare = (private_compare),                                          \
+    }
+
 /** @internal This macro "returns" a value thanks to clang and gcc statement
    expressions. See documentation in the flat priority_queueueue header for
    usage. The ugly details of the macro are hidden here in the impl header. */

@@ -123,6 +123,82 @@ allocate function. */
         type_intruder_field_name, type_key_field_name, compare, allocate,      \
         destroy, context_data, compound_literal_array)
 
+/** @brief Initialize an empty dynamic map at compile or runtime with an
+allocator.
+@param[in] type_name the user defined type stored in the map.
+@param[in] type_intruder_field the name of the intrusive map node element.
+@param[in] type_key_field the field of the struct used for key storage.
+@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] allocate the CCC_Allocator function used to manage map memory.
+@return the map directly initialized on the right hand side of the equality
+operator (e.g. CCC_Adaptive_map map =
+CCC_adaptive_map_with_allocator(...);)
+
+Initialize a dynamic map at compile time.
+
+```
+#define ADAPTIVE_MAP_USING_NAMESPACE_CCC
+struct Val
+{
+    Adaptive_map_node node;
+    int key;
+    int val;
+};
+static Adaptive_map map = adaptive_map_with_allocator(
+    struct Val,
+    node,
+    key,
+    adaptive_map_key_order,
+    stdlib_allocate,
+);
+```
+
+This can help eliminate boilerplate in initializers. */
+#define CCC_adaptive_map_with_allocator(type_name, type_intruder_field,        \
+                                        type_key_field, compare, allocate)     \
+    CCC_private_adaptive_map_with_allocator(type_name, type_intruder_field,    \
+                                            type_key_field, compare, allocate)
+
+/** @brief Initialize an empty dynamic map at compile or runtime with an
+allocator and supplementary context.
+@param[in] type_name the user defined type stored in the map.
+@param[in] type_intruder_field the name of the intrusive map node element.
+@param[in] type_key_field the field of the struct used for key storage.
+@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] allocate the CCC_Allocator function used to manage map memory.
+@param[in] context any additional context needed for comparison or allocation.
+@return the map directly initialized on the right hand side of the equality
+operator (e.g. CCC_Adaptive_map map =
+CCC_adaptive_map_with_context_allocator(...);)
+
+Initialize a dynamic map at compile time.
+
+```
+#define ADAPTIVE_MAP_USING_NAMESPACE_CCC
+struct Val
+{
+    Adaptive_map_node node;
+    int key;
+    int val;
+};
+static Adaptive_map map = adaptive_map_with_context_allocator(
+    struct Val,
+    node,
+    key,
+    adaptive_map_key_order,
+    arena_allocate,
+    &arena_manager,
+);
+```
+
+This can help eliminate boilerplate in initializers. */
+#define CCC_adaptive_map_with_context_allocator(                               \
+    type_name, type_intruder_field, type_key_field, compare, allocate,         \
+    context)                                                                   \
+    CCC_private_adaptive_map_with_context_allocator(                           \
+        type_name, type_intruder_field, type_key_field, compare, allocate,     \
+        context)
+
 /**@}*/
 
 /**@name Membership Interface
@@ -729,6 +805,10 @@ typedef CCC_Adaptive_map Adaptive_map;
 typedef CCC_Adaptive_map_entry Adaptive_map_entry;
 #    define adaptive_map_initialize(arguments...)                              \
         CCC_adaptive_map_initialize(arguments)
+#    define adaptive_map_with_allocator(arguments...)                          \
+        CCC_adaptive_map_with_allocator(arguments)
+#    define adaptive_map_with_context_allocator(arguments...)                  \
+        CCC_adaptive_map_with_context_allocator(arguments)
 #    define adaptive_map_from(arguments...) CCC_adaptive_map_from(arguments)
 #    define adaptive_map_and_modify_with(arguments...)                         \
         CCC_adaptive_map_and_modify_with(arguments)

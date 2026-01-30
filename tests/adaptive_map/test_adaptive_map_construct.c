@@ -8,6 +8,7 @@
 #include "checkers.h"
 #include "traits.h"
 #include "types.h"
+#include "utility/allocate.h"
 #include "utility/stack_allocator.h"
 
 static CCC_Adaptive_map
@@ -42,6 +43,30 @@ check_static_begin(adaptive_map_test_construct)
     check(CCC_entry_insert_error(&entry), false);
     check(CCC_entry_occupied(&entry), false);
     check(CCC_adaptive_map_count(&map).count, 1);
+    check_end();
+}
+
+check_static_begin(adaptive_map_test_with_allocator)
+{
+    CCC_Adaptive_map map = CCC_adaptive_map_with_allocator(
+        struct Val, elem, key, id_order, std_allocate);
+    check(CCC_adaptive_map_validate(&map), true);
+    check(CCC_adaptive_map_is_empty(&map), true);
+    check_end();
+}
+
+check_static_begin(adaptive_map_test_with_context_allocator)
+{
+    struct Stack_allocator allocator
+        = stack_allocator_initialize(struct Val, 3);
+    CCC_Adaptive_map map = CCC_adaptive_map_with_context_allocator(
+        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    check(CCC_adaptive_map_validate(&map), true);
+    check(CCC_adaptive_map_is_empty(&map), true);
+    CCC_Entry one
+        = CCC_adaptive_map_insert_or_assign(&map, &(struct Val){}.elem);
+    check(insert_error(&one), CCC_FALSE);
+    check(CCC_adaptive_map_is_empty(&map), false);
     check_end();
 }
 
@@ -99,6 +124,8 @@ int
 main(void)
 {
     return check_run(adaptive_map_test_empty(), adaptive_map_test_construct(),
+                     adaptive_map_test_with_allocator(),
+                     adaptive_map_test_with_context_allocator(),
                      adaptive_map_test_construct_from(),
                      adaptive_map_test_construct_from_overwrite(),
                      adaptive_map_test_construct_from_fail());

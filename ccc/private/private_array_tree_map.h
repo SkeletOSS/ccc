@@ -370,6 +370,44 @@ runtime. */
     }
 
 /** @internal */
+#define CCC_private_array_tree_map_with_allocator(                             \
+    private_type_name, private_key_field, private_key_compare,                 \
+    private_allocate)                                                          \
+    {                                                                          \
+        .data = NULL,                                                          \
+        .nodes = NULL,                                                         \
+        .parity = NULL,                                                        \
+        .capacity = 0,                                                         \
+        .count = 0,                                                            \
+        .root = 0,                                                             \
+        .free_list = 0,                                                        \
+        .sizeof_type = sizeof(private_type_name),                              \
+        .key_offset = offsetof(private_type_name, private_key_field),          \
+        .compare = (private_key_compare),                                      \
+        .allocate = (private_allocate),                                        \
+        .context = NULL,                                                       \
+    }
+
+/** @internal */
+#define CCC_private_array_tree_map_with_context_allocator(                     \
+    private_type_name, private_key_field, private_key_compare,                 \
+    private_allocate, private_context)                                         \
+    {                                                                          \
+        .data = NULL,                                                          \
+        .nodes = NULL,                                                         \
+        .parity = NULL,                                                        \
+        .capacity = 0,                                                         \
+        .count = 0,                                                            \
+        .root = 0,                                                             \
+        .free_list = 0,                                                        \
+        .sizeof_type = sizeof(private_type_name),                              \
+        .key_offset = offsetof(private_type_name, private_key_field),          \
+        .compare = (private_key_compare),                                      \
+        .allocate = (private_allocate),                                        \
+        .context = (private_context),                                          \
+    }
+
+/** @internal */
 #define CCC_private_array_tree_map_as(array_tree_map_pointer, type_name,       \
                                       handle...)                               \
     ((type_name *)CCC_private_array_tree_map_data_at((array_tree_map_pointer), \

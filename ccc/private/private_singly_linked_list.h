@@ -109,6 +109,36 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
     }
 
 /** @internal */
+#define CCC_private_singly_linked_list_with_allocator(                         \
+    private_struct_name, private_type_intruder_field, private_compare,         \
+    private_allocate)                                                          \
+    {                                                                          \
+        .head = NULL,                                                          \
+        .sizeof_type = sizeof(private_struct_name),                            \
+        .type_intruder_offset                                                  \
+        = offsetof(private_struct_name, private_type_intruder_field),          \
+        .count = 0,                                                            \
+        .allocate = (private_allocate),                                        \
+        .compare = (private_compare),                                          \
+        .context = NULL,                                                       \
+    }
+
+/** @internal */
+#define CCC_private_singly_linked_list_with_context_allocator(                 \
+    private_struct_name, private_type_intruder_field, private_compare,         \
+    private_allocate, private_context)                                         \
+    {                                                                          \
+        .head = NULL,                                                          \
+        .sizeof_type = sizeof(private_struct_name),                            \
+        .type_intruder_offset                                                  \
+        = offsetof(private_struct_name, private_type_intruder_field),          \
+        .count = 0,                                                            \
+        .allocate = (private_allocate),                                        \
+        .compare = (private_compare),                                          \
+        .context = (private_context),                                          \
+    }
+
+/** @internal */
 #define CCC_private_singly_linked_list_from(                                   \
     private_type_intruder_field, private_compare, private_allocate,            \
     private_destroy, private_context_data, private_compound_literal_array...)  \

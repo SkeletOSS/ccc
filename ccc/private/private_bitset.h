@@ -192,4 +192,25 @@ to inline function for bit set construction. */
         .context = (private_context),                                          \
     }
 
+/** @internal */
+#define CCC_private_bitset_with_allocator(private_allocate)                    \
+    {                                                                          \
+        .blocks = NULL,                                                        \
+        .count = 0,                                                            \
+        .capacity = 0,                                                         \
+        .allocate = (private_allocate),                                        \
+        .context = NULL,                                                       \
+    }
+
+/** @internal */
+#define CCC_private_bitset_with_context_allocator(private_allocate,            \
+                                                  private_context)             \
+    {                                                                          \
+        .blocks = NULL,                                                        \
+        .count = 0,                                                            \
+        .capacity = 0,                                                         \
+        .allocate = (private_allocate),                                        \
+        .context = (private_context),                                          \
+    }
+
 #endif /* CCC_PRIVATE_BITSET */
