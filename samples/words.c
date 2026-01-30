@@ -358,9 +358,8 @@ static Buffer
 copy_frequencies(Array_adaptive_map const *const map)
 {
     check(!is_empty(map));
-    Buffer freqs = buffer_initialize(Word, std_allocate, NULL, 0, 0, NULL);
-    CCC_Result const r = buffer_reserve(&freqs, count(map).count, std_allocate);
-    check(r == CCC_RESULT_OK);
+    Buffer freqs
+        = CCC_buffer_with_capacity(Word, std_allocate, NULL, count(map).count);
     size_t const cap = capacity(&freqs).count;
     size_t i = 0;
     for (CCC_Handle_index iter = begin(map); iter != end(map) && i < cap;
@@ -416,8 +415,9 @@ create_frequency_map(struct String_arena *const a, FILE *const f)
     char *linepointer = NULL;
     size_t len = 0;
     ptrdiff_t read = 0;
-    Array_adaptive_map array_adaptive_map = array_adaptive_map_initialize(
-        Word, ofs, order_string_keys, std_allocate, a, 0, NULL);
+    Array_adaptive_map array_adaptive_map
+        = array_adaptive_map_with_context_allocator(
+            Word, ofs, order_string_keys, std_allocate, a);
     while ((read = getline(&linepointer, &len, f)) > 0)
     {
         SV_Str_view const line = {.str = linepointer, .len = read - 1};

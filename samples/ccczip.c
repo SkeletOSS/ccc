@@ -350,8 +350,7 @@ static struct Huffman_tree
 build_encoding_tree(FILE *const f)
 {
     struct Huffman_tree ret = {
-        .bump_arena = buffer_initialize(struct Huffman_node, std_allocate, NULL,
-                                        0, 0, NULL),
+        .bump_arena = buffer_with_allocator(struct Huffman_node, std_allocate),
         .root = 0,
     };
     Flat_priority_queue priority_queue = build_encoding_priority_queue(f, &ret);
@@ -393,9 +392,8 @@ the caller's responsibility to free the priority queue memory when ready. */
 static Flat_priority_queue
 build_encoding_priority_queue(FILE *const f, struct Huffman_tree *const tree)
 {
-    Flat_hash_map frequencies
-        = flat_hash_map_initialize(struct Character_frequency, ch, hash_char,
-                                   char_order, std_allocate, NULL, 0, NULL);
+    Flat_hash_map frequencies = flat_hash_map_with_allocator(
+        struct Character_frequency, ch, hash_char, char_order, std_allocate);
     foreach_filechar(f, c, {
         struct Character_frequency *const ins = flat_hash_map_or_insert_with(
             flat_hash_map_and_modify_with(entry_wrap(&frequencies, c),
@@ -453,7 +451,7 @@ static struct Bit_queue
 build_encoding_bitq(FILE *const f, struct Huffman_tree *const tree)
 {
     struct Bit_queue ret = {
-        .bs = bitset_initialize(std_allocate, NULL, 0, 0, NULL),
+        .bs = bitset_with_allocator(std_allocate),
     };
     /* By memoizing known bit sequences we can save significant time by not
        performing a DFS over the tree. This is especially helpful for large
@@ -545,7 +543,7 @@ compress_tree(struct Huffman_tree *const tree)
 {
     struct Compressed_huffman_tree ret = {
         .tree_paths = {
-            .bs = bitset_initialize( std_allocate, NULL, 0, 0, NULL),
+            .bs = bitset_with_allocator( std_allocate),
         },
         .arena = string_arena_create(START_STRING_ARENA_CAP),
     };
@@ -752,12 +750,12 @@ read_from_file(SV_Str_view const unzip)
     printf("Unzip %s (%zu bytes).\n", SV_begin(unzip), file_size(cccz));
     struct Huffman_encoding ret = {
         .file_bits = {
-            .bs = bitset_initialize(std_allocate, NULL, 0, 0, NULL),
+            .bs = bitset_with_allocator(std_allocate),
         },
         .blueprint = {
             .arena = string_arena_create(START_STRING_ARENA_CAP),
             .tree_paths = {
-                .bs = bitset_initialize( std_allocate, NULL, 0, 0, NULL),
+                .bs = bitset_with_allocator(std_allocate),
             },
         },
     };
