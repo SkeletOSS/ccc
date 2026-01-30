@@ -190,6 +190,29 @@ CCC_flat_double_ended_queue_with_context_compound_literal(...);) */
     CCC_private_flat_double_ended_queue_with_context_compound_literal(         \
         context, count, compound_literal_array)
 
+/** @brief Initialize an empty dynamic queue at compile or runtime with an
+allocator.
+@param[in] type_name the type stored in the queue.
+@param[in] allocate the CCC_Allocator function.
+@return the queue on the right hand side of an equality operator at runtime or
+compiletime (e.g. CCC_Flat_double_ended_queue q =
+CCC_flat_double_ended_queue_with_allocator(...);) */
+#define CCC_flat_double_ended_queue_with_allocator(type_name, allocate)        \
+    CCC_private_flat_double_ended_queue_with_allocator(type_name, allocate)
+
+/** @brief Initialize an empty dynamic queue at compile or runtime with an
+allocator and context.
+@param[in] type_name the type stored in the queue.
+@param[in] allocate the CCC_Allocator function.
+@param[in] context the context needed for allocation.
+@return the queue on the right hand side of an equality operator at runtime or
+compiletime (e.g. CCC_Flat_double_ended_queue q =
+CCC_flat_double_ended_queue_with_allocator(...);) */
+#define CCC_flat_double_ended_queue_with_context_allocator(type_name,          \
+                                                           allocate, context)  \
+    CCC_private_flat_double_ended_queue_with_context_allocator(                \
+        type_name, allocate, context)
+
 /** @brief Copy the queue from source to newly initialized
 destination.
 @param[in] destination the destination that will copy the source queue.
@@ -690,6 +713,10 @@ typedef CCC_Flat_double_ended_queue Flat_double_ended_queue;
 #    define flat_double_ended_queue_with_context_compound_literal(             \
         arguments...)                                                          \
         CCC_flat_double_ended_queue_with_context_compound_literal(arguments)
+#    define flat_double_ended_queue_with_allocator(arguments...)               \
+        CCC_flat_double_ended_queue_with_allocator(arguments)
+#    define flat_double_ended_queue_with_context_allocator(arguments...)       \
+        CCC_flat_double_ended_queue_with_context_allocator(arguments)
 #    define flat_double_ended_queue_copy(arguments...)                         \
         CCC_flat_double_ended_queue_copy(arguments)
 #    define flat_double_ended_queue_reserve(arguments...)                      \

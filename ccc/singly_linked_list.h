@@ -92,6 +92,69 @@ destruction.
     CCC_private_singly_linked_list_initialize(                                 \
         struct_name, type_intruder_field, compare, allocate, context_data)
 
+/** @brief Initialize an empty list at compile or runtime with an allocator.
+@param[in] type_name the user defined type stored in the list.
+@param[in] type_intruder_field the name of the intrusive element.
+@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] allocate the CCC_Allocator function used to manage list memory.
+@return the list directly initialized on the right hand side of the equality
+operator.
+
+Initialize a dynamic list at compile time.
+
+```
+#define SINGLY_LINKED_LIST_USING_NAMESPACE_CCC
+struct Val
+{
+    singly_linked_list_node node;
+    int val;
+};
+static singly_linked_list list = singly_linked_list_with_allocator(
+    struct Val,
+    node,
+    val_order,
+    stdlib_allocate
+);
+```
+
+This can help eliminate boilerplate in initializers. */
+#define CCC_singly_linked_list_with_allocator(                                 \
+    struct_name, type_intruder_field, compare, allocate)                       \
+    CCC_private_singly_linked_list_with_allocator(                             \
+        struct_name, type_intruder_field, compare, allocate)
+
+/** @brief Initialize an empty list at compile or runtime with an allocator.
+@param[in] type_name the user defined type stored in the list.
+@param[in] type_intruder_field the name of the intrusive element.
+@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] allocate the CCC_Allocator function used to manage list memory.
+@return the list directly initialized on the right hand side of the equality
+operator.
+
+Initialize a dynamic list at compile time.
+
+```
+#define SINGLY_LINKED_LIST_USING_NAMESPACE_CCC
+struct Val
+{
+    singly_linked_list_node node;
+    int val;
+};
+static singly_linked_list list = singly_linked_list_with_allocator(
+    struct Val,
+    node,
+    val_order,
+    arena_allocate,
+    &arena
+);
+```
+
+This can help eliminate boilerplate in initializers. */
+#define CCC_singly_linked_list_with_context_allocator(                         \
+    struct_name, type_intruder_field, compare, allocate, context)              \
+    CCC_private_singly_linked_list_with_context_allocator(                     \
+        struct_name, type_intruder_field, compare, allocate, context)
+
 /** @brief Initialize a singly linked list at runtime from a compound literal
 array.
 @param[in] type_intruder_field the name of the field intruding on user's type.
@@ -403,6 +466,10 @@ typedef CCC_Singly_linked_list Singly_linked_list;
         CCC_singly_linked_list_initialize(arguments)
 #    define singly_linked_list_from(arguments...)                              \
         CCC_singly_linked_list_from(arguments)
+#    define singly_linked_list_with_allocator(arguments...)                    \
+        CCC_singly_linked_list_with_allocator(arguments)
+#    define singly_linked_list_with_context_allocator(arguments...)            \
+        CCC_singly_linked_list_with_context_allocator(arguments)
 #    define singly_linked_list_emplace_front(arguments...)                     \
         CCC_singly_linked_list_emplace_front(arguments)
 #    define singly_linked_list_push_front(arguments...)                        \

@@ -63,6 +63,24 @@ void *CCC_private_flat_double_ended_queue_allocate_back(
         .front = 0,                                                            \
     }
 
+/** @internal */
+#define CCC_private_flat_double_ended_queue_with_allocator(private_type_name,  \
+                                                           private_allocate)   \
+    {                                                                          \
+        .buffer                                                                \
+        = CCC_buffer_with_allocator(private_type_name, private_allocate),      \
+        .front = 0,                                                            \
+    }
+
+/** @internal */
+#define CCC_private_flat_double_ended_queue_with_context_allocator(            \
+    private_type_name, private_allocate, private_context)                      \
+    {                                                                          \
+        .buffer = CCC_buffer_with_context_allocator(                           \
+            private_type_name, private_allocate, private_context),             \
+        .front = 0,                                                            \
+    }
+
 /** @internal Takes a compound literal array to initialize the buffer. */
 #define CCC_private_flat_double_ended_queue_from(                              \
     private_allocate, private_context_data, private_optional_capacity,         \

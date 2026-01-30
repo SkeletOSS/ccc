@@ -7,6 +7,7 @@
 #include "flat_double_ended_queue.h"
 #include "traits.h"
 #include "types.h"
+#include "utility/allocate.h"
 #include "utility/stack_allocator.h"
 
 check_static_begin(flat_double_ended_queue_test_construct)
@@ -165,6 +166,29 @@ check_static_begin(flat_double_ended_queue_test_init_with_capacity_fail)
     check_end(CCC_flat_double_ended_queue_clear_and_free(&queue, NULL););
 }
 
+check_static_begin(flat_double_ended_queue_test_init_with_allocator)
+{
+    CCC_Flat_double_ended_queue queue
+        = CCC_flat_double_ended_queue_with_allocator(int, std_allocate);
+    check(CCC_flat_double_ended_queue_is_empty(&queue), CCC_TRUE);
+    check_end(CCC_flat_double_ended_queue_clear_and_free(&queue, NULL););
+}
+
+check_static_begin(flat_double_ended_queue_test_init_with_context_allocator)
+{
+    struct Stack_allocator allocator = stack_allocator_initialize(int, 8);
+    CCC_Flat_double_ended_queue queue
+        = CCC_flat_double_ended_queue_with_context_allocator(
+            int, stack_allocator_allocate, &allocator);
+    check(CCC_flat_double_ended_queue_reserve(&queue, 8,
+                                              stack_allocator_allocate),
+          CCC_RESULT_OK);
+    check(CCC_flat_double_ended_queue_capacity(&queue).count, 8);
+    check(CCC_flat_double_ended_queue_push_back(&queue, &(int){9}) != NULL,
+          CCC_TRUE);
+    check_end(CCC_flat_double_ended_queue_clear_and_free(&queue, NULL););
+}
+
 int
 main(void)
 {
@@ -175,6 +199,8 @@ main(void)
                      flat_double_ended_queue_test_copy_allocate_fail(),
                      flat_double_ended_queue_test_init_from(),
                      flat_double_ended_queue_test_init_from_fail(),
+                     flat_double_ended_queue_test_init_with_allocator(),
+                     flat_double_ended_queue_test_init_with_context_allocator(),
                      flat_double_ended_queue_test_init_with_capacity(),
                      flat_double_ended_queue_test_init_with_capacity_fail());
 }

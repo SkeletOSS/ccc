@@ -373,6 +373,25 @@ check_static_begin(flat_hash_map_test_init_with_capacity_fail)
     check_end(flat_hash_map_clear_and_free(&fh, NULL););
 }
 
+check_static_begin(flat_hash_map_test_with_allocator)
+{
+    Flat_hash_map fh = flat_hash_map_with_allocator(
+        struct Val, key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
+        std_allocate);
+    check(validate(&fh), true);
+    check_end(flat_hash_map_clear_and_free(&fh, NULL););
+}
+
+check_static_begin(flat_hash_map_test_with_context_allocator)
+{
+    int context = 0;
+    Flat_hash_map fh = flat_hash_map_with_context_allocator(
+        struct Val, key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
+        std_allocate, &context);
+    check(validate(&fh), true);
+    check_end(flat_hash_map_clear_and_free(&fh, NULL););
+}
+
 int
 main(void)
 {
@@ -387,5 +406,7 @@ main(void)
                      flat_hash_map_test_init_from_fail(),
                      flat_hash_map_test_init_with_capacity(),
                      flat_hash_map_test_init_with_capacity_no_op(),
+                     flat_hash_map_test_with_allocator(),
+                     flat_hash_map_test_with_context_allocator(),
                      flat_hash_map_test_init_with_capacity_fail());
 }

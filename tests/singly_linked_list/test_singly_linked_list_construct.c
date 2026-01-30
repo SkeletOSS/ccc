@@ -7,6 +7,7 @@
 #include "singly_linked_list.h"
 #include "singly_linked_list_utility.h"
 #include "traits.h"
+#include "utility/allocate.h"
 #include "utility/stack_allocator.h"
 
 static CCC_Singly_linked_list
@@ -19,10 +20,33 @@ construct_empty(void)
 
 check_static_begin(singly_linked_list_test_construct)
 {
-    Singly_linked_list singly_linked_list
+    CCC_Singly_linked_list singly_linked_list
         = singly_linked_list_initialize(struct Val, e, val_order, NULL, NULL);
     check(is_empty(&singly_linked_list), true);
     check_end();
+}
+
+check_static_begin(singly_linked_list_test_with_allocator)
+{
+    CCC_Singly_linked_list singly_linked_list
+        = singly_linked_list_with_allocator(struct Val, e, val_order,
+                                            std_allocate);
+    check(is_empty(&singly_linked_list), true);
+    check_end();
+}
+
+check_static_begin(singly_linked_list_test_with_context_allocator)
+{
+    struct Stack_allocator allocator
+        = stack_allocator_initialize(struct Val, 3);
+    CCC_Singly_linked_list list = singly_linked_list_with_context_allocator(
+        struct Val, e, val_order, stack_allocator_allocate, &allocator);
+    check(CCC_singly_linked_list_validate(&list), true);
+    struct Val const *const v
+        = CCC_singly_linked_list_push_front(&list, &(struct Val){.val = 1}.e);
+    check(v != NULL, true);
+    check(v->val, 1);
+    check_end((void)CCC_singly_linked_list_clear(&list, NULL););
 }
 
 /** C has no constructor or destructor mechanism. Struct is copied by default.
@@ -84,5 +108,7 @@ main(void)
     return check_run(singly_linked_list_test_construct(),
                      singly_linked_list_test_constructor_copy(),
                      singly_linked_list_test_construct_from(),
+                     singly_linked_list_test_with_allocator(),
+                     singly_linked_list_test_with_context_allocator(),
                      singly_linked_list_test_construct_from_fail());
 }
