@@ -543,7 +543,7 @@ compress_tree(struct Huffman_tree *const tree)
 {
     struct Compressed_huffman_tree ret = {
         .tree_paths = {
-            .bs = bitset_with_allocator( std_allocate),
+            .bs = bitset_with_allocator(std_allocate),
         },
         .arena = string_arena_create(START_STRING_ARENA_CAP),
     };
