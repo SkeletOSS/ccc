@@ -54,8 +54,8 @@ enum
 
 /*=======================        Prototypes       ===========================*/
 
-static struct CCC_Adaptive_map_entry container_entry(struct CCC_Adaptive_map *,
-                                                     void const *);
+static struct CCC_Adaptive_map_entry entry(struct CCC_Adaptive_map *,
+                                           void const *);
 static void init_node(struct CCC_Adaptive_map_node *);
 static void swap(void *, void *, void *, size_t);
 static void link(struct CCC_Adaptive_map_node *, enum Link,
@@ -133,7 +133,7 @@ CCC_adaptive_map_entry(CCC_Adaptive_map *const map, void const *const key)
         return (CCC_Adaptive_map_entry){
             {.entry = {.status = CCC_ENTRY_ARGUMENT_ERROR}}};
     }
-    return (CCC_Adaptive_map_entry){container_entry(map, key)};
+    return (CCC_Adaptive_map_entry){entry(map, key)};
 }
 
 void *
@@ -575,7 +575,7 @@ struct CCC_Adaptive_map_entry
 CCC_private_adaptive_map_entry(struct CCC_Adaptive_map *const t,
                                void const *const key)
 {
-    return container_entry(t, key);
+    return entry(t, key);
 }
 
 void *
@@ -602,7 +602,7 @@ CCC_private_adaptive_map_node_in_slot(struct CCC_Adaptive_map const *const t,
 /*======================  Static Splay Tree Helpers  ========================*/
 
 static struct CCC_Adaptive_map_entry
-container_entry(struct CCC_Adaptive_map *const t, void const *const key)
+entry(struct CCC_Adaptive_map *const t, void const *const key)
 {
     void *const found = find(t, key);
     if (found)

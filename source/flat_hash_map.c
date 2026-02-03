@@ -286,8 +286,8 @@ struct Query
 /*===========================   Prototypes   ================================*/
 
 static void swap(void *, void *, void *, size_t);
-static struct CCC_Flat_hash_map_entry
-container_entry(struct CCC_Flat_hash_map *, void const *);
+static struct CCC_Flat_hash_map_entry entry(struct CCC_Flat_hash_map *,
+                                            void const *);
 static struct Query find(struct CCC_Flat_hash_map *, void const *, uint64_t);
 static struct Query find_key_or_slot(struct CCC_Flat_hash_map const *,
                                      void const *, uint64_t);
@@ -425,7 +425,7 @@ CCC_flat_hash_map_entry(CCC_Flat_hash_map *const map, void const *const key)
     {
         return (CCC_Flat_hash_map_entry){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
     }
-    return (CCC_Flat_hash_map_entry){container_entry(map, key)};
+    return (CCC_Flat_hash_map_entry){entry(map, key)};
 }
 
 void *
@@ -523,7 +523,7 @@ CCC_flat_hash_map_swap_entry(CCC_Flat_hash_map *const map,
         return (CCC_Entry){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
     }
     void *const key = key_in_slot(map, type_output);
-    struct CCC_Flat_hash_map_entry ent = container_entry(map, key);
+    struct CCC_Flat_hash_map_entry ent = entry(map, key);
     if (ent.status & CCC_ENTRY_OCCUPIED)
     {
         swap(swap_slot(map), data_at(map, ent.index), type_output,
@@ -553,7 +553,7 @@ CCC_flat_hash_map_try_insert(CCC_Flat_hash_map *const map,
         return (CCC_Entry){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
     }
     void *const key = key_in_slot(map, type);
-    struct CCC_Flat_hash_map_entry ent = container_entry(map, key);
+    struct CCC_Flat_hash_map_entry ent = entry(map, key);
     if (ent.status & CCC_ENTRY_OCCUPIED)
     {
         return (CCC_Entry){{
@@ -581,7 +581,7 @@ CCC_flat_hash_map_insert_or_assign(CCC_Flat_hash_map *const map,
         return (CCC_Entry){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
     }
     void *const key = key_in_slot(map, type);
-    struct CCC_Flat_hash_map_entry ent = container_entry(map, key);
+    struct CCC_Flat_hash_map_entry ent = entry(map, key);
     if (ent.status & CCC_ENTRY_OCCUPIED)
     {
         (void)memcpy(data_at(map, ent.index), type, map->sizeof_type);
@@ -980,7 +980,7 @@ struct CCC_Flat_hash_map_entry
 CCC_private_flat_hash_map_entry(struct CCC_Flat_hash_map *const map,
                                 void const *const key)
 {
-    return container_entry(map, key);
+    return entry(map, key);
 }
 
 void
@@ -1027,7 +1027,7 @@ metadata and location info necessary for future actions. If this entry was
 obtained in hopes of insertions but insertion will cause an error. A status
 flag in the handle field will indicate the error. */
 static struct CCC_Flat_hash_map_entry
-container_entry(struct CCC_Flat_hash_map *const map, void const *const key)
+entry(struct CCC_Flat_hash_map *const map, void const *const key)
 {
     uint64_t const hash = hasher(map, key);
     struct Query const e = find(map, key, hash);
