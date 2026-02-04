@@ -142,13 +142,13 @@ template generic system. Simple 0 based indexing makes the addition and
 multiplication we perform as simple as possible. */
 struct CCC_Flat_hash_map
 {
-    /** Reversed user type data array. */
+    /** User data type array. */
     void *data;
     /** Tag array on byte following data(0). */
     struct CCC_Flat_hash_map_tag *tag;
     /** The number of user active slots. */
     size_t count;
-    /** Track available slots given load factor constrains. When 0, rehash. */
+    /** Track available slots given load factor constraints. When 0, rehash. */
     size_t remain;
     /** The mask for power of two table sizing. */
     size_t mask;
@@ -270,7 +270,7 @@ pointer to the map this pointer could be any of the following.
 All of the above cases are covered by accepting the pointer at .data and only
 evaluating the argument once. This also allows the user to pass a compound
 literal to the first argument and eliminate any dangling references, such as
-`&(static user_defined_map_type){}`. However, to accept a map from all of these
+`&(static User_defined_map_type){}`. However, to accept a map from all of these
 sources at compile or runtime, we must implement lazy initialization. This is
 because we can't initialize the tag array at compile time. By setting the tag
 field to NULL we will be able to tell if our map is initialized whether it is
