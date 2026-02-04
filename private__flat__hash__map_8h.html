@@ -476,7 +476,7 @@ Variables</h2></td></tr>
 - The address of a user defined fixed size map stored on the stack.
 - The address of a user defined fixed size map allocated on the heap.
 - NULL if the user intends for a dynamic map.
-</pre><p> All of the above cases are covered by accepting the pointer at .data and only evaluating the argument once. This also allows the user to pass a compound literal to the first argument and eliminate any dangling references, such as <code>&amp;(static user_defined_map_type){}</code>. However, to accept a map from all of these sources at compile or runtime, we must implement lazy initialization. This is because we can't initialize the tag array at compile time. By setting the tag field to NULL we will be able to tell if our map is initialized whether it is fixed size and has data or is dynamic and has not yet been given allocation. </p>
+</pre><p> All of the above cases are covered by accepting the pointer at .data and only evaluating the argument once. This also allows the user to pass a compound literal to the first argument and eliminate any dangling references, such as <code>&amp;(static User_defined_map_type){}</code>. However, to accept a map from all of these sources at compile or runtime, we must implement lazy initialization. This is because we can't initialize the tag array at compile time. By setting the tag field to NULL we will be able to tell if our map is initialized whether it is fixed size and has data or is dynamic and has not yet been given allocation. </p>
 
 </div>
 </div>
