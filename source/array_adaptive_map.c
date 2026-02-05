@@ -140,9 +140,9 @@ static CCC_Result resize(struct CCC_Array_adaptive_map *, size_t,
                          CCC_Allocator *);
 static void copy_soa(struct CCC_Array_adaptive_map const *, void *, size_t);
 static size_t data_bytes(size_t, size_t);
-static size_t node_bytes(size_t);
-static struct CCC_Array_adaptive_map_node *node_pos(size_t, void const *,
-                                                    size_t);
+static size_t nodes_bytes(size_t);
+static struct CCC_Array_adaptive_map_node *
+nodes_base_address(size_t, void const *, size_t);
 static size_t find(struct CCC_Array_adaptive_map *, void const *);
 static void connect_new_root(struct CCC_Array_adaptive_map *, size_t,
                              CCC_Order);
@@ -685,8 +685,8 @@ CCC_array_adaptive_map_copy(CCC_Array_adaptive_map *const destination,
     else
     {
         /* Might not be necessary but not worth finding out. Do every time. */
-        destination->nodes = node_pos(destination->sizeof_type,
-                                      destination->data, destination->capacity);
+        destination->nodes = nodes_base_address(
+            destination->sizeof_type, destination->data, destination->capacity);
     }
     if (!destination->data || !source->data)
     {
@@ -897,7 +897,8 @@ allocate_slot(struct CCC_Array_adaptive_map *const map)
         }
         else
         {
-            map->nodes = node_pos(map->sizeof_type, map->data, map->capacity);
+            map->nodes = nodes_base_address(map->sizeof_type, map->data,
+                                            map->capacity);
         }
         old_cap = old_count ? old_cap : 0;
         size_t const new_cap = map->capacity;
@@ -941,7 +942,7 @@ resize(struct CCC_Array_adaptive_map *const map, size_t const new_capacity,
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
     copy_soa(map, new_data, new_capacity);
-    map->nodes = node_pos(map->sizeof_type, new_data, new_capacity);
+    map->nodes = nodes_base_address(map->sizeof_type, new_data, new_capacity);
     allocate((CCC_Allocator_context){
         .input = map->data,
         .bytes = 0,
@@ -1210,7 +1211,7 @@ data_bytes(size_t const sizeof_type, size_t const capacity)
 /** Calculates the number of bytes needed for the nodes array without any
 consideration for end padding as no arrays follow. */
 static inline size_t
-node_bytes(size_t const capacity)
+nodes_bytes(size_t const capacity)
 {
     return sizeof(*(struct CCC_Array_adaptive_map){}.nodes) * capacity;
 }
@@ -1227,7 +1228,7 @@ each array in the conceptual struct. */
 static inline size_t
 total_bytes(size_t sizeof_type, size_t const capacity)
 {
-    return data_bytes(sizeof_type, capacity) + node_bytes(capacity);
+    return data_bytes(sizeof_type, capacity) + nodes_bytes(capacity);
 }
 
 /** Returns the base of the node array relative to the data base pointer. This
@@ -1235,8 +1236,8 @@ positions is guaranteed to be the first aligned byte given the alignment of the
 node type after the data array. The data array has added any necessary padding
 after it to ensure that the base of the node array is aligned for its type. */
 static inline struct CCC_Array_adaptive_map_node *
-node_pos(size_t const sizeof_type, void const *const data,
-         size_t const capacity)
+nodes_base_address(size_t const sizeof_type, void const *const data,
+                   size_t const capacity)
 {
     return (struct CCC_Array_adaptive_map_node *)((char *)data
                                                   + data_bytes(sizeof_type,
@@ -1263,9 +1264,10 @@ copy_soa(struct CCC_Array_adaptive_map const *const source,
     (void)memcpy(destination_data_base, source->data,
                  data_bytes(sizeof_type, source->capacity));
     (void)memcpy(
-        node_pos(sizeof_type, destination_data_base, destination_capacity),
-        node_pos(sizeof_type, source->data, source->capacity),
-        node_bytes(source->capacity));
+        nodes_base_address(sizeof_type, destination_data_base,
+                           destination_capacity),
+        nodes_base_address(sizeof_type, source->data, source->capacity),
+        nodes_bytes(source->capacity));
 }
 
 static inline void
