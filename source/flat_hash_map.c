@@ -2070,14 +2070,13 @@ group_convert_constant_to_empty_and_full_to_deleted(struct Group const g)
 
 /** Below is the experimental NEON implementation for ARM architectures. This
 implementation assumes a little endian architecture as that is the norm in
-99.9% of ARM devices. However, monitor treverse_ends just in case. This
-implementation is very similar to the portable one. This is largely due to the
-lack of an equivalent operation to the x86_64 _mm_movemask_epi8, the operation
-responsible for compressing a 128 bit vector into a uint16_t. NEON therefore
-opts for a family of 64 bit operations targeted at u8 bytes. If NEON develops an
-efficient instruction for compressing a 128 bit result into an int--or in our
-case a uint16_t--we should revisit this section for 128 bit targeted intrinsics.
-*/
+99.9% of ARM devices. However, monitor trends just in case. This implementation
+is very similar to the portable one. This is largely due to the lack of an
+equivalent operation to the x86_64 _mm_movemask_epi8, the operation responsible
+for compressing a 128 bit vector into a uint16_t. NEON therefore opts for a
+family of 64 bit operations targeted at u8 bytes. If NEON develops an efficient
+instruction for compressing a 128 bit result into an int--or in our case a
+uint16_t--we should revisit this section for 128 bit targeted intrinsics. */
 
 /*=========================   Match SIMD Matching    ========================*/
 
