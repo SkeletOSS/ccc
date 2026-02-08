@@ -10,7 +10,7 @@
 
 check_static_begin(buffer_test_empty)
 {
-    Buffer b = buffer_initialize(int, NULL, NULL, 5, 0, (int[5]){});
+    Buffer b = buffer_with_compound_literal(0, (int[5]){});
     check(buffer_count(&b).count, 0);
     check(buffer_capacity(&b).count, 5);
     int const *const i = buffer_at(&b, 0);
@@ -32,8 +32,7 @@ check_static_begin(buffer_test_fixed)
 
 check_static_begin(buffer_test_full)
 {
-    Buffer b
-        = buffer_initialize(int, NULL, NULL, 5, 5, (int[5]){0, 1, 2, 3, 4});
+    Buffer b = buffer_with_compound_literal(5, (int[5]){0, 1, 2, 3, 4});
     check(buffer_count(&b).count, 5);
     check(buffer_capacity(&b).count, 5);
     int const *const i = buffer_at(&b, 2);
@@ -55,7 +54,7 @@ check_static_begin(buffer_test_fixed_full)
 
 check_static_begin(buffer_test_reserve)
 {
-    Buffer b = buffer_initialize(int, std_allocate, NULL, 0, 0, NULL);
+    Buffer b = buffer_with_allocator(int, std_allocate);
     check(buffer_reserve(&b, 8, std_allocate), CCC_RESULT_OK);
     check(buffer_count(&b).count, 0);
     check(buffer_capacity(&b).count, 8);
@@ -64,9 +63,8 @@ check_static_begin(buffer_test_reserve)
 
 check_static_begin(buffer_test_copy_no_allocate)
 {
-    Buffer source
-        = buffer_initialize(int, NULL, NULL, 5, 5, (int[5]){0, 1, 2, 3, 4});
-    Buffer destination = buffer_initialize(int, NULL, NULL, 10, 0, (int[10]){});
+    Buffer source = buffer_with_compound_literal(5, (int[5]){0, 1, 2, 3, 4});
+    Buffer destination = buffer_with_compound_literal(0, (int[10]){});
     check(buffer_count(&destination).count, 0);
     check(buffer_capacity(&destination).count, 10);
     CCC_Result const r = buffer_copy(&destination, &source, NULL);
@@ -78,9 +76,8 @@ check_static_begin(buffer_test_copy_no_allocate)
 
 check_static_begin(buffer_test_copy_no_allocate_fail)
 {
-    Buffer source = buffer_initialize(int, NULL, NULL, 3, 3, (int[3]){0, 1, 2});
-    Buffer bad_destination
-        = buffer_initialize(int, NULL, NULL, 2, 0, (int[2]){});
+    Buffer source = buffer_with_compound_literal(3, (int[3]){0, 1, 2});
+    Buffer bad_destination = buffer_with_compound_literal(0, (int[2]){});
     check(buffer_count(&source).count, 3);
     check(buffer_is_empty(&bad_destination), CCC_TRUE);
     CCC_Result res = buffer_copy(&bad_destination, &source, NULL);
@@ -90,8 +87,8 @@ check_static_begin(buffer_test_copy_no_allocate_fail)
 
 check_static_begin(buffer_test_copy_allocate)
 {
-    Buffer source = buffer_initialize(int, std_allocate, NULL, 0, 0, NULL);
-    Buffer destination = buffer_initialize(int, NULL, NULL, 0, 0, NULL);
+    Buffer source = buffer_with_allocator(int, std_allocate);
+    Buffer destination = buffer_with_allocator(int, NULL);
     check(buffer_is_empty(&destination), CCC_TRUE);
     enum : size_t
     {
@@ -123,8 +120,8 @@ check_static_begin(buffer_test_copy_allocate)
 
 check_static_begin(buffer_test_copy_allocate_fail)
 {
-    Buffer source = buffer_initialize(int, std_allocate, NULL, 0, 0, NULL);
-    Buffer destination = buffer_initialize(int, NULL, NULL, 0, 0, NULL);
+    Buffer source = buffer_with_allocator(int, std_allocate);
+    Buffer destination = buffer_with_allocator(int, NULL);
     check(buffer_push_back(&source, &(int){88}) != NULL, CCC_TRUE);
     CCC_Result const res = buffer_copy(&destination, &source, NULL);
     check(res != CCC_RESULT_OK, CCC_TRUE);
