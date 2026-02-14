@@ -44,14 +44,14 @@ check_static_begin(priority_queue_test_construct_from)
 {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 3);
-    CCC_Priority_queue pq
-        = CCC_priority_queue_from(elem, CCC_ORDER_LESSER, val_order,
-                                  stack_allocator_allocate, NULL, &allocator,
-                                  (struct Val[]){
-                                      {.val = 0},
-                                      {.val = 1},
-                                      {.val = 2},
-                                  });
+    CCC_Priority_queue pq = CCC_priority_queue_context_from(
+        elem, CCC_ORDER_LESSER, val_order, stack_allocator_allocate, NULL,
+        &allocator,
+        (struct Val[]){
+            {.val = 0},
+            {.val = 1},
+            {.val = 2},
+        });
     check(CCC_priority_queue_validate(&pq), true);
     check(CCC_priority_queue_count(&pq).count, 3);
     struct Val const *const v = CCC_priority_queue_front(&pq);
@@ -62,13 +62,13 @@ check_static_begin(priority_queue_test_construct_from)
 
 check_static_begin(priority_queue_test_construct_from_fail)
 {
-    CCC_Priority_queue pq = CCC_priority_queue_from(elem, CCC_ORDER_LESSER,
-                                                    val_order, NULL, NULL, NULL,
-                                                    (struct Val[]){
-                                                        {.val = 0},
-                                                        {.val = 1},
-                                                        {.val = 2},
-                                                    });
+    CCC_Priority_queue pq
+        = CCC_priority_queue_from(elem, CCC_ORDER_LESSER, val_order, NULL, NULL,
+                                  (struct Val[]){
+                                      {.val = 0},
+                                      {.val = 1},
+                                      {.val = 2},
+                                  });
     check(CCC_priority_queue_validate(&pq), true);
     check(CCC_priority_queue_is_empty(&pq), true);
     check_end((void)CCC_priority_queue_clear(&pq, NULL););

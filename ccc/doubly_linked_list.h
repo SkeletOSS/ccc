@@ -101,7 +101,6 @@ array.
 @param[in] compare the comparison function for the user type.
 @param[in] allocate the allocation function required for construction.
 @param[in] destroy the optional destructor to run if insertion fails.
-@param[in] context_data context data needed for comparison or destruction.
 @param[in] compound_literal_array the array of user types to insert into the
 map (e.g. (struct My_type[]){ {.val = 1}, {.val = 2}}).
 @return the initialized doubly linked list on the right side of an equality
@@ -110,11 +109,32 @@ operator (e.g. CCC_Doubly_linked_list list = CCC_doubly_linked_list_from(...);)
 The list will be constructed with the element at index 0 of the array as the
 front of the list and the final index element at the back of the list. */
 #define CCC_doubly_linked_list_from(type_intruder_field, compare, allocate,    \
-                                    destroy, context_data,                     \
-                                    compound_literal_array...)                 \
+                                    destroy, compound_literal_array...)        \
     CCC_private_doubly_linked_list_from(type_intruder_field, compare,          \
-                                        allocate, destroy, context_data,       \
+                                        allocate, destroy,                     \
                                         compound_literal_array)
+
+/** @brief Initialize a doubly linked list at runtime from a compound literal
+array.
+@param[in] type_intruder_field the name of the field intruding on user's type.
+@param[in] compare the comparison function for the user type.
+@param[in] allocate the allocation function required for construction.
+@param[in] destroy the optional destructor to run if insertion fails.
+@param[in] context_data context data needed for comparison or destruction.
+@param[in] compound_literal_array the array of user types to insert into the
+map (e.g. (struct My_type[]){ {.val = 1}, {.val = 2}}).
+@return the initialized doubly linked list on the right side of an equality
+operator (e.g. CCC_Doubly_linked_list list
+= CCC_doubly_linked_list_context_from(...);)
+@note The list is constructed to mirror the compound literal array provided.
+The list will be constructed with the element at index 0 of the array as the
+front of the list and the final index element at the back of the list. */
+#define CCC_doubly_linked_list_context_from(type_intruder_field, compare,      \
+                                            allocate, destroy, context_data,   \
+                                            compound_literal_array...)         \
+    CCC_private_doubly_linked_list_context_from(                               \
+        type_intruder_field, compare, allocate, destroy, context_data,         \
+        compound_literal_array)
 
 /** @brief Initialize an empty list at compile or runtime with an allocator.
 @param[in] type_name the user defined type stored in the list.
@@ -528,6 +548,8 @@ typedef CCC_Doubly_linked_list Doubly_linked_list;
         CCC_doubly_linked_list_initialize(arguments)
 #    define doubly_linked_list_from(arguments...)                              \
         CCC_doubly_linked_list_from(arguments)
+#    define doubly_linked_list_context_from(arguments...)                      \
+        CCC_doubly_linked_list_context_from(arguments)
 #    define doubly_linked_list_with_allocator(arguments...)                    \
         CCC_doubly_linked_list_with_allocator(arguments)
 #    define doubly_linked_list_with_context_allocator(arguments...)            \

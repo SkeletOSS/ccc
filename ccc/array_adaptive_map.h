@@ -174,7 +174,6 @@ destruction.
 @param[in] type_key_field the field of the struct used for key storage.
 @param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] allocate the required allocation function.
-@param[in] context_data context data that is needed for hashing or comparison.
 @param[in] optional_capacity optionally specify the capacity of the map if
 different from the size of the compound literal array initializer. If the
 capacity is greater than the size of the compound literal array initializer, it
@@ -212,7 +211,6 @@ main(void)
         key,
         array_adaptive_map_key_order,
         std_allocate,
-        NULL,
         0,
         (struct Val[]) {
             {.key = 1, .val = 1},
@@ -227,11 +225,122 @@ main(void)
 Only dynamic maps may be initialized this way due the inability of the map
 map to protect its invariants from user error at compile time. */
 #define CCC_array_adaptive_map_from(type_key_field, compare, allocate,         \
-                                    context_data, optional_capacity,           \
+                                    optional_capacity,                         \
                                     type_compound_literal_array...)            \
     CCC_private_array_adaptive_map_from(type_key_field, compare, allocate,     \
-                                        context_data, optional_capacity,       \
+                                        optional_capacity,                     \
                                         type_compound_literal_array)
+
+/** @brief Initialize a dynamic map at runtime from an initializer list.
+@param[in] type_key_field the field of the struct used for key storage.
+@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] allocate the required allocation function.
+@param[in] context_data context data that is needed for hashing or comparison.
+@param[in] optional_capacity optionally specify the capacity of the map if
+different from the size of the compound literal array initializer. If the
+capacity is greater than the size of the compound literal array initializer, it
+is respected and the capacity is reserved. If the capacity is less than the size
+of the compound array initializer, the compound literal array initializer size
+is set as the capacity. Therefore, 0 is valid if one is not concerned with the
+size of the underlying reservation.
+@param[in] type_compound_literal_array a list of key value pairs of the type
+intended to be stored in the map, using array compound literal initialization
+syntax (e.g `(struct my_type[]){{.k = 0, .v 0}, {.k = 1, .v = 1}}`).
+@return the  map directly initialized on the right hand side of the equality
+operator (i.e. CCC_Array_adaptive_map map = CCC_array_adaptive_map_from(...);)
+@warning An allocation function is required. This initializer is only available
+for dynamic maps.
+@warning When duplicate keys appear in the initializer list, the last occurrence
+replaces earlier ones by value (all fields are overwritten).
+@warning If initialization fails all subsequent queries, insertions, or
+removals will indicate the error: either memory related or lack of an
+allocation function provided.
+
+Initialize a dynamic map at run time. This example requires no context data for
+initialization.
+
+```
+#define ARRAY_ADAPTIVE_MAP_USING_NAMESPACE_CCC
+struct Val
+{
+    int key;
+    int val;
+};
+int
+main(void)
+{
+    Array_adaptive_map static_map = array_adaptive_map_context_from(
+        key,
+        array_adaptive_map_key_order,
+        arena_allocate,
+        &arena,
+        0,
+        (struct Val[]) {
+            {.key = 1, .val = 1},
+            {.key = 2, .val = 2},
+            {.key = 3, .val = 3},
+        },
+    );
+    return 0;
+}
+```
+
+Only dynamic maps may be initialized this way due the inability of the map
+map to protect its invariants from user error at compile time. */
+#define CCC_array_adaptive_map_context_from(type_key_field, compare, allocate, \
+                                            context_data, optional_capacity,   \
+                                            type_compound_literal_array...)    \
+    CCC_private_array_adaptive_map_context_from(                               \
+        type_key_field, compare, allocate, context_data, optional_capacity,    \
+        type_compound_literal_array)
+
+/** @brief Initialize a dynamic map at runtime with at least the specified
+capacity.
+@param[in] type_name the name of the type being stored in the map.
+@param[in] type_key_field the field of the struct used for key storage.
+@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] allocate the required allocation function.
+@param[in] capacity the desired capacity for the map. A capacity of 0 results
+in an argument error and is a no-op after the map is initialized empty.
+@return the map directly initialized on the right hand side of the equality
+operator (i.e. CCC_Array_adaptive_map map =
+CCC_array_adaptive_map_with_capacity(...);)
+@warning An allocation function is required. This initializer is only available
+for dynamic maps.
+@warning If initialization fails all subsequent queries, insertions, or
+removals will indicate the error: either memory related or lack of an
+allocation function provided.
+
+Initialize a dynamic map at run time. This example requires no context
+data for initialization.
+
+```
+#define ARRAY_ADAPTIVE_MAP_USING_NAMESPACE_CCC
+struct Val
+{
+    int key;
+    int val;
+};
+int
+main(void)
+{
+    Array_adaptive_map map = array_adaptive_map_with_capacity(
+        struct Val,
+        key,
+        array_adaptive_map_key_order,
+        std_allocate,
+        4096
+    );
+    return 0;
+}
+```
+
+Only dynamic maps may be initialized this way as it simply combines the steps
+of initialization and reservation. */
+#define CCC_array_adaptive_map_with_capacity(type_name, type_key_field,        \
+                                             compare, allocate, capacity)      \
+    CCC_private_array_adaptive_map_with_capacity(type_name, type_key_field,    \
+                                                 compare, allocate, capacity)
 
 /** @brief Initialize a dynamic map at runtime with at least the specified
 capacity.
@@ -264,12 +373,12 @@ struct Val
 int
 main(void)
 {
-    Array_adaptive_map map = array_adaptive_map_with_capacity(
+    Array_adaptive_map map = array_adaptive_map_with_context_capacity(
         struct Val,
         key,
         array_adaptive_map_key_order,
-        std_allocate,
-        NULL,
+        arena_allocate,
+        &arena,
         4096
     );
     return 0;
@@ -278,9 +387,9 @@ main(void)
 
 Only dynamic maps may be initialized this way as it simply combines the steps
 of initialization and reservation. */
-#define CCC_array_adaptive_map_with_capacity(                                  \
+#define CCC_array_adaptive_map_with_context_capacity(                          \
     type_name, type_key_field, compare, allocate, context_data, capacity)      \
-    CCC_private_array_adaptive_map_with_capacity(                              \
+    CCC_private_array_adaptive_map_with_context_capacity(                      \
         type_name, type_key_field, compare, allocate, context_data, capacity)
 
 /** @brief Initialize a fixed map at compile or runtime from a previously
@@ -1231,8 +1340,12 @@ typedef CCC_Array_adaptive_map_handle Array_adaptive_map_handle;
         CCC_array_adaptive_map_initialize(arguments)
 #    define array_adaptive_map_from(arguments...)                              \
         CCC_array_adaptive_map_from(arguments)
+#    define array_adaptive_map_context_from(arguments...)                      \
+        CCC_array_adaptive_map_context_from(arguments)
 #    define array_adaptive_map_with_capacity(arguments...)                     \
         CCC_array_adaptive_map_with_capacity(arguments)
+#    define array_adaptive_map_with_context_capacity(arguments...)             \
+        CCC_array_adaptive_map_with_context_capacity(arguments)
 #    define array_adaptive_map_with_compound_literal(arguments...)             \
         CCC_array_adaptive_map_with_compound_literal(arguments)
 #    define array_adaptive_map_with_context_compound_literal(arguments...)     \

@@ -64,9 +64,9 @@ are contiguous. */
 
 /** @internal For dynamic containers to perform the allocation and
 initialization in one convenient step for user. */
-#define CCC_private_buffer_from(private_allocate, private_context_data,        \
-                                private_optional_capacity,                     \
-                                private_compound_literal_array...)             \
+#define CCC_private_buffer_context_from(                                       \
+    private_allocate, private_context_data, private_optional_capacity,         \
+    private_compound_literal_array...)                                         \
     (__extension__({                                                           \
         typeof(*private_compound_literal_array)                                \
             *private_buffer_initializer_list                                   \
@@ -91,11 +91,19 @@ initialization in one convenient step for user. */
         private_buf;                                                           \
     }))
 
+/** @internal For dynamic containers to perform the allocation and
+initialization in one convenient step for user. */
+#define CCC_private_buffer_from(private_allocate, private_optional_capacity,   \
+                                private_compound_literal_array...)             \
+    CCC_private_buffer_context_from(private_allocate, NULL,                    \
+                                    private_optional_capacity,                 \
+                                    private_compound_literal_array)
+
 /** @internal For dynamic containers to perform initialization and reservation
 of memory in one step. */
-#define CCC_private_buffer_with_capacity(private_type_name, private_allocate,  \
-                                         private_context_data,                 \
-                                         private_capacity)                     \
+#define CCC_private_buffer_with_context_capacity(                              \
+    private_type_name, private_allocate, private_context_data,                 \
+    private_capacity)                                                          \
     (__extension__({                                                           \
         struct CCC_Buffer private_buf = CCC_private_buffer_initialize(         \
             private_type_name, private_allocate, private_context_data, 0, 0,   \
@@ -104,6 +112,12 @@ of memory in one step. */
                                  private_allocate);                            \
         private_buf;                                                           \
     }))
+
+/** @internal */
+#define CCC_private_buffer_with_capacity(private_type_name, private_allocate,  \
+                                         private_capacity)                     \
+    CCC_private_buffer_with_context_capacity(                                  \
+        private_type_name, private_allocate, NULL, private_capacity)
 
 /** @internal Initializes a fixed size buffer with no allocation or context. */
 #define CCC_private_buffer_with_compound_literal(                              \

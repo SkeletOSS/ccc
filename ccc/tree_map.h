@@ -92,6 +92,107 @@ destruction.
                                     type_key_field_name, compare, allocate,    \
                                     context_data)
 
+/** @brief Initialize an empty dynamic map at compile or runtime with an
+allocator.
+@param[in] type_name the user defined type stored in the map.
+@param[in] type_intruder_field the name of the intrusive map node element.
+@param[in] type_key_field the field of the struct used for key storage.
+@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] allocate the CCC_Allocator function used to manage map memory.
+@return the map directly initialized on the right hand side of the equality
+operator (e.g. CCC_Tree_map map =
+CCC_tree_map_with_allocator(...);)
+
+Initialize a dynamic map at compile time.
+
+```
+#define TREE_MAP_USING_NAMESPACE_CCC
+struct Val
+{
+    tree_map_node node;
+    int key;
+    int val;
+};
+static Tree_map map = tree_map_with_allocator(
+    struct Val,
+    node,
+    key,
+    map_key_order,
+    stdlib_allocate,
+);
+```
+
+This can help eliminate boilerplate in initializers. */
+#define CCC_tree_map_with_allocator(type_name, type_intruder_field,            \
+                                    type_key_field, compare, allocate)         \
+    CCC_private_tree_map_with_allocator(type_name, type_intruder_field,        \
+                                        type_key_field, compare, allocate)
+
+/** @brief Initialize an empty dynamic map at compile or runtime with an
+allocator.
+@param[in] type_name the user defined type stored in the map.
+@param[in] type_intruder_field the name of the intrusive map node element.
+@param[in] type_key_field the field of the struct used for key storage.
+@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] allocate the CCC_Allocator function used to manage map memory.
+@param[in] context any additional context needed for comparison or allocation.
+@return the map directly initialized on the right hand side of the equality
+operator (e.g. CCC_Tree_map map =
+CCC_tree_map_with_allocator(...);)
+
+Initialize a dynamic map at compile time.
+
+```
+#define TREE_MAP_USING_NAMESPACE_CCC
+struct Val
+{
+    tree_map_node node;
+    int key;
+    int val;
+};
+static Tree_map map = tree_map_with_allocator(
+    struct Val,
+    node,
+    key,
+    map_key_order,
+    arena_allocate,
+    &arena
+);
+```
+
+This can help eliminate boilerplate in initializers. */
+#define CCC_tree_map_with_context_allocator(type_name, type_intruder_field,    \
+                                            type_key_field, compare, allocate, \
+                                            context)                           \
+    CCC_private_tree_map_with_context_allocator(                               \
+        type_name, type_intruder_field, type_key_field, compare, allocate,     \
+        context)
+
+/** @brief Initializes a dynamic tree map at runtime.
+@param[in] type_intruder_field_name the name of the intrusive map elem field.
+@param[in] type_key_field_name the name of the field in user type used
+as key.
+@param[in] compare the key comparison function (see types.h).
+@param[in] allocate the allocation function or NULL if allocation is banned.
+@param[in] destroy the destructor function used to act on every node in case
+initialization of new nodes fails and map is emptied in a failure state.
+@param[in] compound_literal_array the array of user types to insert into the
+map (e.g. (struct My_type[]){ {.key = 1, .val = 1}, {.key = 2, .val = 2}}).
+@return the struct initialized tree map for direct assignment
+(e.g. CCC_Tree_map m = CCC_tree_map_from(...);) or an empty map if
+allocation fails.
+
+@warning If any node allocation fails while copying in the values in the
+compound literal array of user types, the map is cleared; if a destructor is
+provided, it is called on each node and they are freed using the provided
+allocate function. */
+#define CCC_tree_map_from(type_intruder_field_name, type_key_field_name,       \
+                          compare, allocate, destroy,                          \
+                          compound_literal_array...)                           \
+    CCC_private_tree_map_from(type_intruder_field_name, type_key_field_name,   \
+                              compare, allocate, destroy,                      \
+                              compound_literal_array)
+
 /** @brief Initializes a dynamic tree map at runtime.
 @param[in] type_intruder_field_name the name of the intrusive map elem field.
 @param[in] type_key_field_name the name of the field in user type used
@@ -105,19 +206,19 @@ destruction.
 @param[in] compound_literal_array the array of user types to insert into the
 map (e.g. (struct My_type[]){ {.key = 1, .val = 1}, {.key = 2, .val = 2}}).
 @return the struct initialized tree map for direct assignment
-(e.g. CCC_Tree_map m = CCC_tree_map_from(...);) or an empty map if
+(e.g. CCC_Tree_map m = CCC_tree_map_context_from(...);) or an empty map if
 allocation fails.
 
 @warning If any node allocation fails while copying in the values in the
 compound literal array of user types, the map is cleared; if a destructor is
 provided, it is called on each node and they are freed using the provided
 allocate function. */
-#define CCC_tree_map_from(type_intruder_field_name, type_key_field_name,       \
-                          compare, allocate, destroy, context_data,            \
-                          compound_literal_array...)                           \
-    CCC_private_tree_map_from(type_intruder_field_name, type_key_field_name,   \
-                              compare, allocate, destroy, context_data,        \
-                              compound_literal_array)
+#define CCC_tree_map_context_from(                                             \
+    type_intruder_field_name, type_key_field_name, compare, allocate, destroy, \
+    context_data, compound_literal_array...)                                   \
+    CCC_private_tree_map_context_from(                                         \
+        type_intruder_field_name, type_key_field_name, compare, allocate,      \
+        destroy, context_data, compound_literal_array)
 
 /**@}*/
 
@@ -727,7 +828,13 @@ typedef CCC_Tree_map_node Tree_map_node;
 typedef CCC_Tree_map Tree_map;
 typedef CCC_Tree_map_entry Tree_map_entry;
 #    define tree_map_initialize(arguments...) CCC_tree_map_initialize(arguments)
+#    define tree_map_with_allocator(arguments...)                              \
+        CCC_tree_map_with_allocator(arguments)
+#    define tree_map_with_context_allocator(arguments...)                      \
+        CCC_tree_map_with_context_allocator(arguments)
 #    define tree_map_from(arguments...) CCC_tree_map_from(arguments)
+#    define tree_map_context_from(arguments...)                                \
+        CCC_tree_map_context_from(arguments)
 #    define tree_map_and_modify_with(arguments...)                             \
         CCC_tree_map_and_modify_with(arguments)
 #    define tree_map_or_insert_with(arguments...)                              \

@@ -27,7 +27,7 @@ check_static_begin(singly_linked_list_test_push_pop_three)
 {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 3);
-    Singly_linked_list singly_linked_list = singly_linked_list_from(
+    Singly_linked_list singly_linked_list = singly_linked_list_context_from(
         e, val_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[3]){
             {.val = 0},

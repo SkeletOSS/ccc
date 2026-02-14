@@ -92,14 +92,14 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
     }))
 
 /** @internal */
-#define CCC_private_flat_priority_queue_from(                                  \
+#define CCC_private_flat_priority_queue_context_from(                          \
     private_order, private_compare, private_allocate, private_context_data,    \
     private_optional_capacity, private_compound_literal_array...)              \
     (__extension__({                                                           \
         struct CCC_Flat_priority_queue private_flat_priority_queue = {         \
-            .buffer = CCC_buffer_from(private_allocate, private_context_data,  \
-                                      private_optional_capacity,               \
-                                      private_compound_literal_array),         \
+            .buffer = CCC_buffer_context_from(                                 \
+                private_allocate, private_context_data,                        \
+                private_optional_capacity, private_compound_literal_array),    \
             .order = private_order,                                            \
             .compare = private_compare,                                        \
         };                                                                     \
@@ -114,14 +114,36 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
     }))
 
 /** @internal */
-#define CCC_private_flat_priority_queue_with_capacity(                         \
+#define CCC_private_flat_priority_queue_from(                                  \
+    private_order, private_compare, private_allocate,                          \
+    private_optional_capacity, private_compound_literal_array...)              \
+    CCC_private_flat_priority_queue_context_from(                              \
+        private_order, private_compare, private_allocate, NULL,                \
+        private_optional_capacity, private_compound_literal_array)
+
+/** @internal */
+#define CCC_private_flat_priority_queue_with_context_capacity(                 \
     private_type_name, private_order, private_compare, private_allocate,       \
     private_context_data, private_capacity)                                    \
     (__extension__({                                                           \
         struct CCC_Flat_priority_queue private_flat_priority_queue = {         \
-            .buffer = CCC_buffer_with_capacity(                                \
+            .buffer = CCC_buffer_with_context_capacity(                        \
                 private_type_name, private_allocate, private_context_data,     \
                 private_capacity),                                             \
+            .order = (private_order),                                          \
+            .compare = (private_compare),                                      \
+        };                                                                     \
+        private_flat_priority_queue;                                           \
+    }))
+
+/** @internal */
+#define CCC_private_flat_priority_queue_with_capacity(                         \
+    private_type_name, private_order, private_compare, private_allocate,       \
+    private_capacity)                                                          \
+    (__extension__({                                                           \
+        struct CCC_Flat_priority_queue private_flat_priority_queue = {         \
+            .buffer = CCC_buffer_with_capacity(                                \
+                private_type_name, private_allocate, private_capacity),        \
             .order = (private_order),                                          \
             .compare = (private_compare),                                      \
         };                                                                     \

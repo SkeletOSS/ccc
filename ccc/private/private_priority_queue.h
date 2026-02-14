@@ -156,40 +156,25 @@ CCC_private_priority_queue_struct_base(struct CCC_Priority_queue const *,
     }
 
 /** @internal */
-#define CCC_private_priority_queue_with_allocator(                             \
-    private_struct_name, private_type_intruder_field,                          \
-    private_priority_queue_order, private_compare, private_allocate)           \
-    {                                                                          \
-        .root = NULL,                                                          \
-        .count = 0,                                                            \
-        .type_intruder_offset                                                  \
-        = offsetof(private_struct_name, private_type_intruder_field),          \
-        .sizeof_type = sizeof(private_struct_name),                            \
-        .order = (private_priority_queue_order),                               \
-        .compare = (private_compare),                                          \
-        .allocate = (private_allocate),                                        \
-        .context = NULL,                                                       \
-    }
-
-/** @internal */
 #define CCC_private_priority_queue_with_context_allocator(                     \
     private_struct_name, private_type_intruder_field,                          \
     private_priority_queue_order, private_compare, private_allocate,           \
     private_context)                                                           \
-    {                                                                          \
-        .root = NULL,                                                          \
-        .count = 0,                                                            \
-        .type_intruder_offset                                                  \
-        = offsetof(private_struct_name, private_type_intruder_field),          \
-        .sizeof_type = sizeof(private_struct_name),                            \
-        .order = (private_priority_queue_order),                               \
-        .compare = (private_compare),                                          \
-        .allocate = (private_allocate),                                        \
-        .context = (private_context),                                          \
-    }
+    CCC_private_priority_queue_initialize(                                     \
+        private_struct_name, private_type_intruder_field,                      \
+        private_priority_queue_order, private_compare, private_allocate,       \
+        private_context)
 
 /** @internal */
-#define CCC_private_priority_queue_from(                                       \
+#define CCC_private_priority_queue_with_allocator(                             \
+    private_struct_name, private_type_intruder_field,                          \
+    private_priority_queue_order, private_compare, private_allocate)           \
+    CCC_private_priority_queue_initialize(                                     \
+        private_struct_name, private_type_intruder_field,                      \
+        private_priority_queue_order, private_compare, private_allocate, NULL)
+
+/** @internal */
+#define CCC_private_priority_queue_context_from(                               \
     private_type_intruder_field, private_priority_queue_order,                 \
     private_compare, private_allocate, private_destroy, private_context_data,  \
     private_compound_literal_array...)                                         \
@@ -232,6 +217,16 @@ CCC_private_priority_queue_struct_base(struct CCC_Priority_queue const *,
         }                                                                      \
         private_priority_queue;                                                \
     }))
+
+/** @internal */
+#define CCC_private_priority_queue_from(                                       \
+    private_type_intruder_field, private_priority_queue_order,                 \
+    private_compare, private_allocate, private_destroy,                        \
+    private_compound_literal_array...)                                         \
+    CCC_private_priority_queue_context_from(                                   \
+        private_type_intruder_field, private_priority_queue_order,             \
+        private_compare, private_allocate, private_destroy, NULL,              \
+        private_compound_literal_array)
 
 /** @internal */
 #define CCC_private_priority_queue_emplace(priority_queue_pointer,             \

@@ -258,13 +258,13 @@ animate_maze(struct Maze *maze)
         .cost = rand_range(0, 100),
     };
     Flat_hash_map cost_map = CCC_flat_hash_map_from(
-        cell, prim_cell_hash_fn, prim_cell_order, std_allocate, NULL, capacity,
+        cell, prim_cell_hash_fn, prim_cell_order, std_allocate, capacity,
         (struct Prim_cell[]){
             start,
         });
     /* Priority queue gets same reserve interface. */
     Flat_priority_queue cell_priority_queue = flat_priority_queue_from(
-        CCC_ORDER_LESSER, order_prim_cells, std_allocate, NULL, capacity,
+        CCC_ORDER_LESSER, order_prim_cells, std_allocate, capacity,
         (struct Prim_cell[]){
             start,
         });

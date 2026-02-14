@@ -31,7 +31,7 @@ check_static_begin(doubly_linked_list_test_push_pop_front)
 {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 12);
-    Doubly_linked_list doubly_linked_list = doubly_linked_list_from(
+    Doubly_linked_list doubly_linked_list = doubly_linked_list_context_from(
         e, val_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[3]){
             {.val = 0},
@@ -61,7 +61,7 @@ check_static_begin(doubly_linked_list_test_push_pop_back)
 {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 12);
-    Doubly_linked_list doubly_linked_list = doubly_linked_list_from(
+    Doubly_linked_list doubly_linked_list = doubly_linked_list_context_from(
         e, val_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[3]){
             {.val = 0},

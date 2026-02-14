@@ -431,18 +431,17 @@ found_destination(struct Graph *const graph, struct Vertex *const source)
 {
 
     Flat_hash_map parent_map = flat_hash_map_from(
-        current, hash_parent_cells, order_parent_cells, std_allocate, NULL, 0,
+        current, hash_parent_cells, order_parent_cells, std_allocate, 0,
         (struct Path_backtrack_cell[]){
             {
                 .current = source->pos,
                 .parent = (struct Point){-1, -1},
             },
         });
-    Flat_double_ended_queue bfs
-        = flat_double_ended_queue_from(std_allocate, NULL, 0,
-                                       (struct Point[]){
-                                           source->pos,
-                                       });
+    Flat_double_ended_queue bfs = flat_double_ended_queue_from(std_allocate, 0,
+                                                               (struct Point[]){
+                                                                   source->pos,
+                                                               });
     bool destination_connection = false;
     while (!is_empty(&bfs))
     {

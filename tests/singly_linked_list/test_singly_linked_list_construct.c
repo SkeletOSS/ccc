@@ -73,7 +73,7 @@ check_static_begin(singly_linked_list_test_construct_from)
 {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 3);
-    CCC_Singly_linked_list list = CCC_singly_linked_list_from(
+    CCC_Singly_linked_list list = CCC_singly_linked_list_context_from(
         e, val_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[]){
             {.val = 0},
@@ -91,7 +91,7 @@ check_static_begin(singly_linked_list_test_construct_from)
 check_static_begin(singly_linked_list_test_construct_from_fail)
 {
     CCC_Singly_linked_list list
-        = CCC_singly_linked_list_from(e, val_order, NULL, NULL, NULL,
+        = CCC_singly_linked_list_from(e, val_order, NULL, NULL,
                                       (struct Val[]){
                                           {.val = 0},
                                           {.val = 1},

@@ -84,7 +84,6 @@ CCC_flat_double_ended_queue_initialize(...);) */
 /** @brief Initialize a Flat_double_ended_queue from a compound literal array
 initializer.
 @param[in] allocate CCC_Allocator or NULL if no allocation is permitted.
-@param[in] context_data any context data needed for managing queue memory.
 @param[in] optional_capacity optionally specify the capacity of the queue if
 different from the size of the compound literal array initializer. If the
 capacity is greater than the size of the compound literal array initializer, it
@@ -135,10 +134,63 @@ known at compile time, see the CCC_flat_double_ended_queue_initialize() macro.
     CCC_private_flat_double_ended_queue_from(                                  \
         allocate, context_data, optional_capacity, compound_literal_array)
 
+/** @brief Initialize a Flat_double_ended_queue from a compound literal array
+initializer.
+@param[in] allocate CCC_Allocator or NULL if no allocation is permitted.
+@param[in] context_data any context data needed for managing queue memory.
+@param[in] optional_capacity optionally specify the capacity of the queue if
+different from the size of the compound literal array initializer. If the
+capacity is greater than the size of the compound literal array initializer, it
+is respected and the capacity is reserved. If the capacity is less than the size
+of the compound array initializer, the compound literal array initializer size
+is set as the capacity. Therefore, 0 is valid if one is not concerned with the
+underlying reservation.
+@param[in] compound_literal_array the initializer of the type stored in queue.
+@return the initialized flat_double_ended_queue. Directly assign to queue on the
+right hand side of the equality operator
+(e.g. Flat_double_ended_queue b = flat_double_ended_queue_context_from(...);).
+
+Initialize a dynamic Flat_double_ended_queue with a compound literal array.
+
+```
+#define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
+int
+main(void)
+{
+    Flat_double_ended_queue f
+        = flat_double_ended_queue_context_from(arena_allocate, &arena, 0,
+            (int[]){ 0, 1, 2, 3 });
+    return 0;
+}
+```
+
+Initialize a dynamic Flat_double_ended_queue with a compound literal array with
+capacity.
+
+```
+#define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
+int
+main(void)
+{
+    Flat_double_ended_queue f = flat_double_ended_queue_context_from(
+        arena_allocate, &arena, 4096, (int[]){ 0, 1, 2, 3 }
+    );
+    return 0;
+}
+```
+
+Only dynamic flat_double_ended_queues may be initialized this way. For static
+or stack based initialization of fixed flat_double_ended_queues with contents
+known at compile time, see the CCC_flat_double_ended_queue_initialize() macro.
+*/
+#define CCC_flat_double_ended_queue_context_from(                              \
+    allocate, context_data, optional_capacity, compound_literal_array...)      \
+    CCC_private_flat_double_ended_queue_context_from(                          \
+        allocate, context_data, optional_capacity, compound_literal_array)
+
 /** @brief Initialize a Flat_double_ended_queue with a capacity.
 @param[in] type_name any user or language standard type name.
 @param[in] allocate CCC_Allocator or NULL if no allocation is permitted.
-@param[in] context_data any context data needed for managing queue memory.
 @param[in] capacity the capacity of the Flat_double_ended_queue to reserve.
 @return the initialized flat_double_ended_queue. Directly assign to
 Flat_double_ended_queue on the right hand side of the equality operator (e.g.
@@ -152,7 +204,7 @@ int
 main(void)
 {
     Flat_double_ended_queue f
-        = flat_double_ended_queue_from(std_allocate, NULL, 4096);
+        = flat_double_ended_queue_with_capacity(std_allocate, 4096);
     return 0;
 }
 ```
@@ -161,9 +213,40 @@ Only dynamic flat_double_ended_queues may be initialized this way. For static or
 stack based initialization of fixed flat_double_ended_queues with contents known
 at compile time, see the CCC_flat_double_ended_queue_initialize() macro. */
 #define CCC_flat_double_ended_queue_with_capacity(type_name, allocate,         \
-                                                  context_data, capacity)      \
+                                                  capacity)                    \
     CCC_private_flat_double_ended_queue_with_capacity(type_name, allocate,     \
-                                                      context_data, capacity)
+                                                      capacity)
+
+/** @brief Initialize a Flat_double_ended_queue with a capacity.
+@param[in] type_name any user or language standard type name.
+@param[in] allocate CCC_Allocator or NULL if no allocation is permitted.
+@param[in] context_data any context data needed for managing queue memory.
+@param[in] capacity the capacity of the Flat_double_ended_queue to reserve.
+@return the initialized flat_double_ended_queue. Directly assign to
+Flat_double_ended_queue on the right hand side of the equality operator (e.g.
+Flat_double_ended_queue b = flat_double_ended_queue_with_context_capacity(...)).
+
+Initialize a dynamic Flat_double_ended_queue.
+
+```
+#define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
+int
+main(void)
+{
+    Flat_double_ended_queue f = flat_double_ended_queue_with_context_capacity(
+        arena_allocate, &arena, 4096
+    );
+    return 0;
+}
+```
+
+Only dynamic flat_double_ended_queues may be initialized this way. For static or
+stack based initialization of fixed flat_double_ended_queues with contents known
+at compile time, see the CCC_flat_double_ended_queue_initialize() macro. */
+#define CCC_flat_double_ended_queue_with_context_capacity(                     \
+    type_name, allocate, context_data, capacity)                               \
+    CCC_private_flat_double_ended_queue_with_context_capacity(                 \
+        type_name, allocate, context_data, capacity)
 
 /** @brief Initialize the queue from a compound literal array with no allocation
 permissions or context data.
@@ -706,8 +789,10 @@ typedef CCC_Flat_double_ended_queue Flat_double_ended_queue;
         CCC_flat_double_ended_queue_initialize(arguments)
 #    define flat_double_ended_queue_from(arguments...)                         \
         CCC_flat_double_ended_queue_from(arguments)
-#    define flat_double_ended_queue_with_capacity(arguments...)                \
-        CCC_flat_double_ended_queue_with_capacity(arguments)
+#    define flat_double_ended_queue_context_from(arguments...)                 \
+        CCC_flat_double_ended_queue_context_from(arguments)
+#    define flat_double_ended_queue_with_context_capacity(arguments...)        \
+        CCC_flat_double_ended_queue_with_context_capacity(arguments)
 #    define flat_double_ended_queue_with_compound_literal(arguments...)        \
         CCC_flat_double_ended_queue_with_compound_literal(arguments)
 #    define flat_double_ended_queue_with_context_compound_literal(             \
