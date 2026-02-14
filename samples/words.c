@@ -359,7 +359,7 @@ copy_frequencies(Array_adaptive_map const *const map)
 {
     check(!is_empty(map));
     Buffer freqs
-        = CCC_buffer_with_capacity(Word, std_allocate, NULL, count(map).count);
+        = CCC_buffer_with_capacity(Word, std_allocate, count(map).count);
     size_t const cap = capacity(&freqs).count;
     size_t i = 0;
     for (CCC_Handle_index iter = begin(map); iter != end(map) && i < cap;

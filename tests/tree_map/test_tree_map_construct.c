@@ -46,7 +46,7 @@ check_static_begin(tree_map_test_construct_from)
 {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 3);
-    CCC_Tree_map map = CCC_tree_map_from(
+    CCC_Tree_map map = CCC_tree_map_context_from(
         elem, key, id_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[]){
             {.key = 0, .val = 0},
@@ -62,7 +62,7 @@ check_static_begin(tree_map_test_construct_from_overwrite)
 {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 3);
-    CCC_Tree_map map = CCC_tree_map_from(
+    CCC_Tree_map map = CCC_tree_map_context_from(
         elem, key, id_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[]){
             {.key = 0, .val = 0},
@@ -80,7 +80,7 @@ check_static_begin(tree_map_test_construct_from_overwrite)
 
 check_static_begin(tree_map_test_construct_from_fail)
 {
-    CCC_Tree_map map = CCC_tree_map_from(elem, key, id_order, NULL, NULL, NULL,
+    CCC_Tree_map map = CCC_tree_map_from(elem, key, id_order, NULL, NULL,
                                          (struct Val[]){
                                              {.key = 0, .val = 0},
                                              {.key = 1, .val = 1},

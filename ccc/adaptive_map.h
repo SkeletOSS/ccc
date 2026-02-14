@@ -104,8 +104,6 @@ as key.
 @param[in] allocate the allocation function or NULL if allocation is banned.
 @param[in] destroy the destructor function used to act on every node in case
 initialization of new nodes fails and map is emptied in a failure state.
-@param[in] context_data a pointer to any context data for comparison or
-destruction.
 @param[in] compound_literal_array the array of user types to insert into the
 map (e.g. (struct My_type[]){ {.key = 1, .val = 1}, {.key = 2, .val = 2}}).
 @return the struct initialized adaptive map for direct assignment
@@ -117,9 +115,37 @@ compound literal array of user types, the map is cleared; if a destructor is
 provided, it is called on each node and they are freed using the provided
 allocate function. */
 #define CCC_adaptive_map_from(type_intruder_field_name, type_key_field_name,   \
-                              compare, allocate, destroy, context_data,        \
+                              compare, allocate, destroy,                      \
                               compound_literal_array...)                       \
-    CCC_private_adaptive_map_from(                                             \
+    CCC_private_adaptive_map_from(type_intruder_field_name,                    \
+                                  type_key_field_name, compare, allocate,      \
+                                  destroy, compound_literal_array)
+
+/** @brief Initializes a dynamic adaptive map at runtime.
+@param[in] type_intruder_field_name the name of the intrusive map elem
+field.
+@param[in] type_key_field_name the name of the field in user type used
+as key.
+@param[in] compare the key comparison function (see types.h).
+@param[in] allocate the allocation function or NULL if allocation is banned.
+@param[in] destroy the destructor function used to act on every node in case
+initialization of new nodes fails and map is emptied in a failure state.
+@param[in] context_data a pointer to any context data for comparison or
+destruction.
+@param[in] compound_literal_array the array of user types to insert into the
+map (e.g. (struct My_type[]){ {.key = 1, .val = 1}, {.key = 2, .val = 2}}).
+@return the struct initialized adaptive map for direct assignment
+(e.g. CCC_Adaptive_map m = CCC_adaptive_map_context_from(...);) or an empty map
+if allocation fails.
+
+@warning If any node allocation fails while copying in the values in the
+compound literal array of user types, the map is cleared; if a destructor is
+provided, it is called on each node and they are freed using the provided
+allocate function. */
+#define CCC_adaptive_map_context_from(                                         \
+    type_intruder_field_name, type_key_field_name, compare, allocate, destroy, \
+    context_data, compound_literal_array...)                                   \
+    CCC_private_adaptive_map_context_from(                                     \
         type_intruder_field_name, type_key_field_name, compare, allocate,      \
         destroy, context_data, compound_literal_array)
 
@@ -149,7 +175,7 @@ static Adaptive_map map = adaptive_map_with_allocator(
     node,
     key,
     adaptive_map_key_order,
-    stdlib_allocate,
+    stdlib_allocate
 );
 ```
 
@@ -187,7 +213,7 @@ static Adaptive_map map = adaptive_map_with_context_allocator(
     key,
     adaptive_map_key_order,
     arena_allocate,
-    &arena_manager,
+    &arena_manager
 );
 ```
 
@@ -810,6 +836,8 @@ typedef CCC_Adaptive_map_entry Adaptive_map_entry;
 #    define adaptive_map_with_context_allocator(arguments...)                  \
         CCC_adaptive_map_with_context_allocator(arguments)
 #    define adaptive_map_from(arguments...) CCC_adaptive_map_from(arguments)
+#    define adaptive_map_context_from(arguments...)                            \
+        CCC_adaptive_map_context_from(arguments)
 #    define adaptive_map_and_modify_with(arguments...)                         \
         CCC_adaptive_map_and_modify_with(arguments)
 #    define adaptive_map_or_insert_with(arguments...)                          \

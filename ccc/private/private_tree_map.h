@@ -132,7 +132,23 @@ void *CCC_private_tree_map_insert(
     }
 
 /** @internal */
-#define CCC_private_tree_map_from(                                             \
+#define CCC_private_tree_map_with_allocator(                                   \
+    private_struct_name, private_node_node_field, private_key_node_field,      \
+    private_key_order_fn, private_allocate)                                    \
+    CCC_private_tree_map_initialize(                                           \
+        private_struct_name, private_node_node_field, private_key_node_field,  \
+        private_key_order_fn, private_allocate, NULL)
+
+/** @internal */
+#define CCC_private_tree_map_with_context_allocator(                           \
+    private_struct_name, private_node_node_field, private_key_node_field,      \
+    private_key_order_fn, private_allocate, private_context_data)              \
+    CCC_private_tree_map_initialize(                                           \
+        private_struct_name, private_node_node_field, private_key_node_field,  \
+        private_key_order_fn, private_allocate, private_context_data)
+
+/** @internal */
+#define CCC_private_tree_map_context_from(                                     \
     private_type_intruder_field_name, private_key_field_name, private_compare, \
     private_allocate, private_destroy, private_context_data,                   \
     private_compound_literal_array...)                                         \
@@ -197,6 +213,15 @@ void *CCC_private_tree_map_insert(
         }                                                                      \
         private_map;                                                           \
     }))
+
+/** @internal */
+#define CCC_private_tree_map_from(                                             \
+    private_type_intruder_field_name, private_key_field_name, private_compare, \
+    private_allocate, private_destroy, private_compound_literal_array...)      \
+    CCC_private_tree_map_context_from(private_type_intruder_field_name,        \
+                                      private_key_field_name, private_compare, \
+                                      private_allocate, private_destroy, NULL, \
+                                      private_compound_literal_array)
 
 /*==================   Helper Macros for Repeated Logic     =================*/
 

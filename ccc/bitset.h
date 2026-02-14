@@ -163,6 +163,7 @@ A fixed size bit set with size equal to capacity.
 #define BITSET_USING_NAMESPACE_CCC
 Bitset bitset = bitset_initialize(NULL, NULL, 9, 9, bitset_blocks(9));
 ```
+
 A fixed size bit set with dynamic push and pop.
 
 ```

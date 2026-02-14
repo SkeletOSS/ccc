@@ -265,7 +265,6 @@ identical to the provided examples. Omit `static` in a runtime context. */
 @param[in] hash the CCC_Key_hasher function provided by the user.
 @param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] allocate the required allocation function.
-@param[in] context_data context data that is needed for hashing or comparison.
 @param[in] optional_capacity optionally specify the capacity of the map if
 different from the size of the compound literal array initializer. If the
 capacity is greater than the size of the compound literal array initializer, it
@@ -304,7 +303,6 @@ main(void)
         flat_hash_map_int_to_u64,
         flat_hash_map_key_order,
         std_allocate,
-        NULL,
         0,
         (struct Val[]) {
             {.key = 1, .val = 1},
@@ -319,11 +317,74 @@ main(void)
 Only dynamic maps may be initialized this way due the inability of the hash
 map to protect its invariants from user error at compile time. */
 #define CCC_flat_hash_map_from(key_field, hash, compare, allocate,             \
-                               context_data, optional_capacity,                \
-                               array_compound_literal...)                      \
+                               optional_capacity, array_compound_literal...)   \
     CCC_private_flat_hash_map_from(key_field, hash, compare, allocate,         \
-                                   context_data, optional_capacity,            \
-                                   array_compound_literal)
+                                   optional_capacity, array_compound_literal)
+
+/** @brief Initialize a dynamic map at runtime from an initializer list.
+@param[in] key_field the field of the struct used for key storage.
+@param[in] hash the CCC_Key_hasher function provided by the user.
+@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] allocate the required allocation function.
+@param[in] context_data context data that is needed for hashing or comparison.
+@param[in] optional_capacity optionally specify the capacity of the map if
+different from the size of the compound literal array initializer. If the
+capacity is greater than the size of the compound literal array initializer, it
+is respected and the capacity is reserved. If the capacity is less than the size
+of the compound array initializer, the compound literal array initializer size
+is set as the capacity. Therefore, 0 is valid if one is not concerned with the
+size of the underlying reservation.
+@param[in] array_compound_literal a list of key value pairs of the type
+intended to be stored in the map, using array compound literal initialization
+syntax (e.g `(struct My_type[]){{.k = 0, .v 0}, {.k = 1, .v = 1}}`).
+@return the flat hash map directly initialized on the right hand side of the
+equality operator (i.e. CCC_Flat_hash_map map = CCC_flat_hash_map_from(...);)
+@warning An allocation function is required. This initializer is only available
+for dynamic maps.
+@warning When duplicate keys appear in the initializer list, the last occurrence
+replaces earlier ones by value (all fields are overwritten).
+@warning If initialization fails, the map will be returned empty. All subsequent
+queries, insertions, or removals will indicate the error: either memory related
+or lack of an allocation function provided.
+
+Initialize a dynamic hash table at run time. This example requires no context
+data for initialization.
+
+```
+#define FLAT_HASH_MAP_USING_NAMESPACE_CCC
+struct Val
+{
+    int key;
+    int val;
+};
+int
+main(void)
+{
+    Flat_hash_map map = flat_hash_map_context_from(
+        key,
+        flat_hash_map_int_to_u64,
+        flat_hash_map_key_order,
+        arena_allocate,
+        &arena,
+        0,
+        (struct Val[]) {
+            {.key = 1, .val = 1},
+            {.key = 2, .val = 2},
+            {.key = 3, .val = 3},
+        },
+    );
+    return 0;
+}
+```
+
+Only dynamic maps may be initialized this way due the inability of the hash
+map to protect its invariants from user error at compile time. */
+#define CCC_flat_hash_map_context_from(key_field, hash, compare, allocate,     \
+                                       context_data, optional_capacity,        \
+                                       array_compound_literal...)              \
+    CCC_private_flat_hash_map_context_from(key_field, hash, compare, allocate, \
+                                           context_data, optional_capacity,    \
+                                           array_compound_literal)
 
 /** @brief Initialize a dynamic map at runtime with at least the specified
 capacity.
@@ -332,7 +393,6 @@ capacity.
 @param[in] hash the CCC_Key_hasher function provided by the user.
 @param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] allocate the required allocation function.
-@param[in] context_data context data that is needed for hashing or comparison.
 @param[in] capacity the desired capacity for the map. A capacity of 0 results
 in an argument error and is a no-op after the map is initialized empty.
 @return the flat hash map directly initialized on the right hand side of the
@@ -363,7 +423,6 @@ main(void)
         flat_hash_map_int_to_u64,
         flat_hash_map_key_order,
         std_allocate,
-        NULL,
         4096
     );
     return 0;
@@ -373,8 +432,60 @@ main(void)
 Only dynamic maps may be initialized this way as it simply combines the steps
 of initialization and reservation. */
 #define CCC_flat_hash_map_with_capacity(type_name, key_field, hash, compare,   \
-                                        allocate, context_data, capacity)      \
-    CCC_private_flat_hash_map_with_capacity(                                   \
+                                        allocate, capacity)                    \
+    CCC_private_flat_hash_map_with_capacity(type_name, key_field, hash,        \
+                                            compare, allocate, capacity)
+
+/** @brief Initialize a dynamic map at runtime with at least the specified
+capacity.
+@param[in] type_name the name of the type being stored in the map.
+@param[in] key_field the field of the struct used for key storage.
+@param[in] hash the CCC_Key_hasher function provided by the user.
+@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] allocate the required allocation function.
+@param[in] context_data context data that is needed for hashing or comparison.
+@param[in] capacity the desired capacity for the map. A capacity of 0 results
+in an argument error and is a no-op after the map is initialized empty.
+@return the flat hash map directly initialized on the right hand side of the
+equality operator (i.e. CCC_Flat_hash_map map =
+CCC_flat_hash_map_with_context_capacity(...);)
+@warning An allocation function is required. This initializer is only available
+for dynamic maps.
+@warning If initialization fails all subsequent queries, insertions, or
+removals will indicate the error: either memory related or lack of an
+allocation function provided.
+
+Initialize a dynamic hash table at run time. This example requires no context
+data for initialization.
+
+```
+#define FLAT_HASH_MAP_USING_NAMESPACE_CCC
+struct Val
+{
+    int key;
+    int val;
+};
+int
+main(void)
+{
+    Flat_hash_map map = flat_hash_map_with_context_capacity(
+        struct Val,
+        key,
+        flat_hash_map_int_to_u64,
+        flat_hash_map_key_order,
+        arena_allocate,
+        &arena,
+        4096
+    );
+    return 0;
+}
+```
+
+Only dynamic maps may be initialized this way as it simply combines the steps
+of initialization and reservation. */
+#define CCC_flat_hash_map_with_context_capacity(                               \
+    type_name, key_field, hash, compare, allocate, context_data, capacity)     \
+    CCC_private_flat_hash_map_with_context_capacity(                           \
         type_name, key_field, hash, compare, allocate, context_data, capacity)
 
 /** @brief Initialize a fixed map at compile time or runtime from its previously
@@ -1235,8 +1346,12 @@ typedef CCC_Flat_hash_map_entry Flat_hash_map_entry;
 #    define flat_hash_map_initialize(arguments...)                             \
         CCC_flat_hash_map_initialize(arguments)
 #    define flat_hash_map_from(arguments...) CCC_flat_hash_map_from(arguments)
+#    define flat_hash_map_context_from(arguments...)                           \
+        CCC_flat_hash_map_context_from(arguments)
 #    define flat_hash_map_with_capacity(arguments...)                          \
         CCC_flat_hash_map_with_capacity(arguments)
+#    define flat_hash_map_with_context_capacity(arguments...)                  \
+        CCC_flat_hash_map_with_context_capacity(arguments)
 #    define flat_hash_map_with_compound_literal(arguments...)                  \
         CCC_flat_hash_map_with_compound_literal(arguments)
 #    define flat_hash_map_with_context_compound_literal(arguments...)          \

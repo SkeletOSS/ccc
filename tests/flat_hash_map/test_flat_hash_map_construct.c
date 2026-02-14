@@ -164,14 +164,13 @@ check_static_begin(flat_hash_map_test_copy_allocate)
     Flat_hash_map destination = flat_hash_map_initialize(
         struct Val, key, flat_hash_map_int_zero, flat_hash_map_id_order,
         std_allocate, NULL, 0, NULL);
-    Flat_hash_map source
-        = flat_hash_map_from(key, flat_hash_map_int_zero,
-                             flat_hash_map_id_order, std_allocate, NULL, 0,
-                             (struct Val[]){
-                                 {.key = 0},
-                                 {.key = 1, .val = 1},
-                                 {.key = 2, .val = 2},
-                             });
+    Flat_hash_map source = flat_hash_map_from(
+        key, flat_hash_map_int_zero, flat_hash_map_id_order, std_allocate, 0,
+        (struct Val[]){
+            {.key = 0},
+            {.key = 1, .val = 1},
+            {.key = 2, .val = 2},
+        });
     check(count(&source).count, 3);
     check(is_empty(&destination), true);
     CCC_Result res = flat_hash_map_copy(&destination, &source, std_allocate);
@@ -222,14 +221,13 @@ check_static_begin(flat_hash_map_test_empty)
 
 check_static_begin(flat_hash_map_test_init_from)
 {
-    Flat_hash_map map_from_list
-        = flat_hash_map_from(key, flat_hash_map_int_to_u64,
-                             flat_hash_map_id_order, std_allocate, NULL, 0,
-                             (struct Val[]){
-                                 {.key = 0, .val = 0},
-                                 {.key = 1, .val = 1},
-                                 {.key = 2, .val = 2},
-                             });
+    Flat_hash_map map_from_list = flat_hash_map_from(
+        key, flat_hash_map_int_to_u64, flat_hash_map_id_order, std_allocate, 0,
+        (struct Val[]){
+            {.key = 0, .val = 0},
+            {.key = 1, .val = 1},
+            {.key = 2, .val = 2},
+        });
     check(validate(&map_from_list), true);
     check(count(&map_from_list).count, 3);
     size_t seen = 0;
@@ -247,14 +245,13 @@ check_static_begin(flat_hash_map_test_init_from)
 
 check_static_begin(flat_hash_map_test_init_from_overwrite)
 {
-    Flat_hash_map map_from_list
-        = flat_hash_map_from(key, flat_hash_map_int_to_u64,
-                             flat_hash_map_id_order, std_allocate, NULL, 0,
-                             (struct Val[]){
-                                 {.key = 0, .val = 0},
-                                 {.key = 0, .val = 1},
-                                 {.key = 0, .val = 2},
-                             });
+    Flat_hash_map map_from_list = flat_hash_map_from(
+        key, flat_hash_map_int_to_u64, flat_hash_map_id_order, std_allocate, 0,
+        (struct Val[]){
+            {.key = 0, .val = 0},
+            {.key = 0, .val = 1},
+            {.key = 0, .val = 2},
+        });
     check(validate(&map_from_list), true);
     check(count(&map_from_list).count, 1);
     size_t seen = 0;
@@ -273,7 +270,7 @@ check_static_begin(flat_hash_map_test_init_from_fail)
 {
     // Whoops forgot an allocation function.
     Flat_hash_map map_from_list = flat_hash_map_from(
-        key, flat_hash_map_int_to_u64, flat_hash_map_id_order, NULL, NULL, 0,
+        key, flat_hash_map_int_to_u64, flat_hash_map_id_order, NULL, 0,
         (struct Val[]){
             {.key = 0, .val = 0},
             {.key = 0, .val = 1},
@@ -298,9 +295,9 @@ check_static_begin(flat_hash_map_test_init_from_fail)
 
 check_static_begin(flat_hash_map_test_init_with_capacity)
 {
-    Flat_hash_map fh = flat_hash_map_with_capacity(
-        struct Val, key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
-        std_allocate, NULL, 32);
+    Flat_hash_map fh
+        = flat_hash_map_with_capacity(struct Val, key, flat_hash_map_int_to_u64,
+                                      flat_hash_map_id_order, std_allocate, 32);
     check(validate(&fh), true);
     check(flat_hash_map_capacity(&fh).count >= 32, true);
     for (int i = 0; i < 10; ++i)
@@ -326,9 +323,9 @@ check_static_begin(flat_hash_map_test_init_with_capacity)
 check_static_begin(flat_hash_map_test_init_with_capacity_no_op)
 {
     /* Initialize with 0 cap is OK just does nothing. */
-    Flat_hash_map fh = flat_hash_map_with_capacity(
-        struct Val, key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
-        std_allocate, NULL, 0);
+    Flat_hash_map fh
+        = flat_hash_map_with_capacity(struct Val, key, flat_hash_map_int_to_u64,
+                                      flat_hash_map_id_order, std_allocate, 0);
     check(validate(&fh), true);
     check(flat_hash_map_capacity(&fh).count, 0);
     check(flat_hash_map_count(&fh).count, 0);
@@ -354,7 +351,7 @@ check_static_begin(flat_hash_map_test_init_with_capacity_fail)
     /* Forgot allocation function. */
     Flat_hash_map fh
         = flat_hash_map_with_capacity(struct Val, key, flat_hash_map_int_to_u64,
-                                      flat_hash_map_id_order, NULL, NULL, 32);
+                                      flat_hash_map_id_order, NULL, 32);
     check(validate(&fh), true);
     check(flat_hash_map_capacity(&fh).count, 0);
     CCC_Entry const e = CCC_flat_hash_map_insert_or_assign(

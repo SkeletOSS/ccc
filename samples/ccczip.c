@@ -422,7 +422,7 @@ build_encoding_priority_queue(FILE *const f, struct Huffman_tree *const tree)
     /* Use a Buffer to simply push back elements we will heapify at the end. */
     Buffer flat_priority_queue_storage
         = buffer_with_capacity(struct Flat_priority_queue_node, std_allocate,
-                               NULL, flat_hash_map_count(&frequencies).count);
+                               flat_hash_map_count(&frequencies).count);
     check(buffer_capacity(&flat_priority_queue_storage).count);
     for (struct Character_frequency const *i = begin(&frequencies);
          i != end(&frequencies); i = next(&frequencies, i))
@@ -466,7 +466,7 @@ build_encoding_bitq(FILE *const f, struct Huffman_tree *const tree)
        could achieve the same result faster but it would waste much more space.
        It is rare to have a file use all 256 possible character values. */
     Flat_hash_map memo = CCC_flat_hash_map_with_capacity(
-        struct Path_memo, ch, hash_char, path_memo_order, std_allocate, NULL,
+        struct Path_memo, ch, hash_char, path_memo_order, std_allocate,
         tree->num_leaves);
     check(flat_hash_map_capacity(&memo).count);
     foreach_filechar(f, c, {
@@ -798,7 +798,7 @@ reconstruct_tree(struct Compressed_huffman_tree *const blueprint)
     struct Huffman_tree ret = {
         .bump_arena
         /* 0 index is NULL so real data can't be there. */
-        = CCC_buffer_from(std_allocate, NULL, bq_count,
+        = CCC_buffer_from(std_allocate, bq_count,
                           (struct Huffman_node[]){
                               {}, // nil
                               {}, // root

@@ -161,7 +161,6 @@ array.
 @param[in] compare the comparison function for the user type.
 @param[in] allocate the allocation function required for construction.
 @param[in] destroy the optional destructor to run if insertion fails.
-@param[in] context_data context data needed for comparison or destruction.
 @param[in] compound_literal_array the array of user types to insert into the
 map (e.g. (struct My_type[]){ {.val = 1}, {.val = 2}}).
 @return the initialized singly linked list on the right side of an equality
@@ -170,11 +169,32 @@ operator (e.g. CCC_Singly_linked_list list = CCC_singly_linked_list_from(...);)
 The list will be constructed with the element at index 0 of the array as the
 front of the list and the final index element at the back of the list. */
 #define CCC_singly_linked_list_from(type_intruder_field, compare, allocate,    \
-                                    destroy, context_data,                     \
-                                    compound_literal_array...)                 \
+                                    destroy, compound_literal_array...)        \
     CCC_private_singly_linked_list_from(type_intruder_field, compare,          \
-                                        allocate, destroy, context_data,       \
+                                        allocate, destroy,                     \
                                         compound_literal_array)
+
+/** @brief Initialize a singly linked list at runtime from a compound literal
+array.
+@param[in] type_intruder_field the name of the field intruding on user's type.
+@param[in] compare the comparison function for the user type.
+@param[in] allocate the allocation function required for construction.
+@param[in] destroy the optional destructor to run if insertion fails.
+@param[in] context_data context data needed for comparison or destruction.
+@param[in] compound_literal_array the array of user types to insert into the
+map (e.g. (struct My_type[]){ {.val = 1}, {.val = 2}}).
+@return the initialized singly linked list on the right side of an equality
+operator (e.g. CCC_Singly_linked_list list
+= CCC_singly_linked_list_context_from(...);)
+@note The list is constructed to mirror the compound literal array provided.
+The list will be constructed with the element at index 0 of the array as the
+front of the list and the final index element at the back of the list. */
+#define CCC_singly_linked_list_context_from(type_intruder_field, compare,      \
+                                            allocate, destroy, context_data,   \
+                                            compound_literal_array...)         \
+    CCC_private_singly_linked_list_context_from(                               \
+        type_intruder_field, compare, allocate, destroy, context_data,         \
+        compound_literal_array)
 
 /**@}*/
 
@@ -466,6 +486,8 @@ typedef CCC_Singly_linked_list Singly_linked_list;
         CCC_singly_linked_list_initialize(arguments)
 #    define singly_linked_list_from(arguments...)                              \
         CCC_singly_linked_list_from(arguments)
+#    define singly_linked_list_context_from(arguments...)                      \
+        CCC_singly_linked_list_context_from(arguments)
 #    define singly_linked_list_with_allocator(arguments...)                    \
         CCC_singly_linked_list_with_allocator(arguments)
 #    define singly_linked_list_with_context_allocator(arguments...)            \

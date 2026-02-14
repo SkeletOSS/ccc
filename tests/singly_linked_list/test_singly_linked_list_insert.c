@@ -153,7 +153,7 @@ check_static_begin(singly_linked_list_test_sort_reverse)
 {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 6);
-    Singly_linked_list singly_linked_list = singly_linked_list_from(
+    Singly_linked_list singly_linked_list = singly_linked_list_context_from(
         e, val_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[6]){
             {.val = 5},
@@ -179,7 +179,7 @@ check_static_begin(singly_linked_list_test_sort_even)
 {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 8);
-    Singly_linked_list singly_linked_list = singly_linked_list_from(
+    Singly_linked_list singly_linked_list = singly_linked_list_context_from(
         e, val_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[8]){
             {.val = 9},
@@ -210,7 +210,7 @@ check_static_begin(singly_linked_list_test_sort_odd)
 {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 9);
-    Singly_linked_list singly_linked_list = singly_linked_list_from(
+    Singly_linked_list singly_linked_list = singly_linked_list_context_from(
         e, val_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[9]){
             {.val = 10},
@@ -242,7 +242,7 @@ check_static_begin(singly_linked_list_test_sort_runs)
 {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 12);
-    Singly_linked_list singly_linked_list = singly_linked_list_from(
+    Singly_linked_list singly_linked_list = singly_linked_list_context_from(
         e, val_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[12]){
             {.val = 10},
@@ -278,7 +278,7 @@ check_static_begin(singly_linked_list_test_sort_halves)
 {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 12);
-    Singly_linked_list singly_linked_list = singly_linked_list_from(
+    Singly_linked_list singly_linked_list = singly_linked_list_context_from(
         e, val_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[12]){
             {.val = 25},

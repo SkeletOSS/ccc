@@ -241,7 +241,7 @@ check_static_begin(flat_priority_queue_test_copy_no_allocate_fail)
 check_static_begin(flat_priority_queue_test_copy_allocate)
 {
     struct Stack_allocator allocator = stack_allocator_initialize(int, 16);
-    Flat_priority_queue source = flat_priority_queue_with_capacity(
+    Flat_priority_queue source = flat_priority_queue_with_context_capacity(
         int, CCC_ORDER_LESSER, int_order, stack_allocator_allocate, &allocator,
         8);
     Flat_priority_queue destination = flat_priority_queue_initialize(
@@ -274,7 +274,7 @@ check_static_begin(flat_priority_queue_test_copy_allocate)
 check_static_begin(flat_priority_queue_test_copy_allocate_fail)
 {
     struct Stack_allocator allocator = stack_allocator_initialize(int, 16);
-    Flat_priority_queue source = flat_priority_queue_with_capacity(
+    Flat_priority_queue source = flat_priority_queue_with_context_capacity(
         int, CCC_ORDER_LESSER, int_order, stack_allocator_allocate, &allocator,
         8);
     Flat_priority_queue destination = flat_priority_queue_initialize(
@@ -293,7 +293,7 @@ check_static_begin(flat_priority_queue_test_copy_allocate_fail)
 check_static_begin(flat_priority_queue_test_init_from)
 {
     struct Stack_allocator allocator = stack_allocator_initialize(int, 8);
-    CCC_Flat_priority_queue queue = CCC_flat_priority_queue_from(
+    CCC_Flat_priority_queue queue = CCC_flat_priority_queue_context_from(
         CCC_ORDER_LESSER, int_order, stack_allocator_allocate, &allocator, 8,
         (int[7]){8, 6, 7, 5, 3, 0, 9});
     int count = 0;
@@ -315,9 +315,8 @@ check_static_begin(flat_priority_queue_test_init_from)
 check_static_begin(flat_priority_queue_test_init_from_fail)
 {
     /* Whoops forgot allocation function. */
-    CCC_Flat_priority_queue queue
-        = CCC_flat_priority_queue_from(CCC_ORDER_LESSER, int_order, NULL, NULL,
-                                       0, (int[]){8, 6, 7, 5, 3, 0, 9});
+    CCC_Flat_priority_queue queue = CCC_flat_priority_queue_from(
+        CCC_ORDER_LESSER, int_order, NULL, 0, (int[]){8, 6, 7, 5, 3, 0, 9});
     int count = 0;
     int prev = INT_MIN;
     check(CCC_flat_priority_queue_count(&queue).count, 0);
@@ -338,9 +337,10 @@ check_static_begin(flat_priority_queue_test_init_from_fail)
 check_static_begin(flat_priority_queue_test_init_with_capacity)
 {
     struct Stack_allocator allocator = stack_allocator_initialize(int, 8);
-    CCC_Flat_priority_queue queue = CCC_flat_priority_queue_with_capacity(
-        int, CCC_ORDER_LESSER, int_order, stack_allocator_allocate, &allocator,
-        8);
+    CCC_Flat_priority_queue queue
+        = CCC_flat_priority_queue_with_context_capacity(
+            int, CCC_ORDER_LESSER, int_order, stack_allocator_allocate,
+            &allocator, 8);
     check(CCC_flat_priority_queue_capacity(&queue).count, 8);
     check(CCC_flat_priority_queue_push(&queue, &(int){9}, &(int){0}) != NULL,
           CCC_TRUE);
@@ -351,7 +351,7 @@ check_static_begin(flat_priority_queue_test_init_with_capacity_fail)
 {
     /* Forgot allocation function. */
     CCC_Flat_priority_queue queue = CCC_flat_priority_queue_with_capacity(
-        int, CCC_ORDER_LESSER, int_order, NULL, NULL, 8);
+        int, CCC_ORDER_LESSER, int_order, NULL, 8);
     check(CCC_flat_priority_queue_capacity(&queue).count, 0);
     check(CCC_flat_priority_queue_push(&queue, &(int){9}, &(int){0}), NULL);
     check_end(CCC_flat_priority_queue_clear_and_free(&queue, NULL););

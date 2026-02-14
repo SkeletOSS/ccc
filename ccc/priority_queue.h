@@ -131,18 +131,35 @@ for a max priority queue.
 @param[in] compare the function used to compare two user types.
 @param[in] allocate the allocation function required for construction.
 @param[in] destroy the optional destructor to run if insertion fails.
-@param[in] context_data context data needed for comparison or destruction.
 @param[in] compound_literal_array the array of user types to insert into the
 map (e.g. (struct My_type[]){ {.key = 1, .val = 1}, {.key = 2, .val = 2}}).
 @return the initialized priority_queue on the right side of an equality operator
 (e.g. CCC_Priority_queue priority_queue = CCC_priority_queue_from(...);)
 */
 #define CCC_priority_queue_from(type_intruder_field, order, compare, allocate, \
-                                destroy, context_data,                         \
-                                compound_literal_array...)                     \
+                                destroy, compound_literal_array...)            \
     CCC_private_priority_queue_from(type_intruder_field, order, compare,       \
-                                    allocate, destroy, context_data,           \
-                                    compound_literal_array)
+                                    allocate, destroy, compound_literal_array)
+
+/** @brief Initialize a priority queue at runtime from a compound literal array.
+@param[in] type_intruder_field the name of the field intruding on user's type.
+@param[in] order CCC_ORDER_LESSER for a min priority queue or CCC_ORDER_GREATER
+for a max priority queue.
+@param[in] compare the function used to compare two user types.
+@param[in] allocate the allocation function required for construction.
+@param[in] destroy the optional destructor to run if insertion fails.
+@param[in] context_data context data needed for comparison or destruction.
+@param[in] compound_literal_array the array of user types to insert into the
+map (e.g. (struct My_type[]){ {.key = 1, .val = 1}, {.key = 2, .val = 2}}).
+@return the initialized priority_queue on the right side of an equality operator
+(e.g. CCC_Priority_queue priority_queue = CCC_priority_queue_context_from(...);)
+*/
+#define CCC_priority_queue_context_from(type_intruder_field, order, compare,   \
+                                        allocate, destroy, context_data,       \
+                                        compound_literal_array...)             \
+    CCC_private_priority_queue_context_from(                                   \
+        type_intruder_field, order, compare, allocate, destroy, context_data,  \
+        compound_literal_array)
 
 /**@}*/
 
@@ -453,6 +470,8 @@ typedef CCC_Priority_queue Priority_queue;
 #    define priority_queue_initialize(arguments...)                            \
         CCC_priority_queue_initialize(arguments)
 #    define priority_queue_from(arguments...) CCC_priority_queue_from(arguments)
+#    define priority_queue_context_from(arguments...)                          \
+        CCC_priority_queue_context_from(arguments)
 #    define priority_queue_front(arguments...)                                 \
         CCC_priority_queue_front(arguments)
 #    define priority_queue_push(arguments...) CCC_priority_queue_push(arguments)
