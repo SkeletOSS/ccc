@@ -1,10 +1,11 @@
 var tree__map_8h =
 [
     [ "CCC_tree_map_and_modify_with", "tree__map_8h.html#a0ba3ba9667c3dd3dea9e0219647d23c1", null ],
+    [ "CCC_tree_map_context_from", "tree__map_8h.html#a6f883776353b783a164d00325a217672", null ],
     [ "CCC_tree_map_entry_wrap", "tree__map_8h.html#ae9abff7681fd73cdcfcdf87802a83605", null ],
     [ "CCC_tree_map_equal_range_reverse_wrap", "tree__map_8h.html#af225068b0957c93b38f36f48ada9e706", null ],
     [ "CCC_tree_map_equal_range_wrap", "tree__map_8h.html#ab25b87e3f3e1e83ed2995e2756b6951f", null ],
-    [ "CCC_tree_map_from", "tree__map_8h.html#a407c32f7aa441e37d3ed1368bff94449", null ],
+    [ "CCC_tree_map_from", "tree__map_8h.html#a85ade21ce1d4cbc66f7a8528bcae4d45", null ],
     [ "CCC_tree_map_initialize", "tree__map_8h.html#a295a5483c5f6de5e6b22572d4e436997", null ],
     [ "CCC_tree_map_insert_entry_with", "tree__map_8h.html#a4a00bfaa4336aedadc806fcc3efa5627", null ],
     [ "CCC_tree_map_insert_or_assign_with", "tree__map_8h.html#a35857a7bf22d213ccaa914c3518a5953", null ],
@@ -15,6 +16,8 @@ var tree__map_8h =
     [ "CCC_tree_map_swap_entry_wrap", "tree__map_8h.html#a7e6578ed1dadabf2f7955fd6683deeec", null ],
     [ "CCC_tree_map_try_insert_with", "tree__map_8h.html#a948c409ef87b86953f572b4f05fac9a9", null ],
     [ "CCC_tree_map_try_insert_wrap", "tree__map_8h.html#a4c43d1bd7b06586385602024728eb901", null ],
+    [ "CCC_tree_map_with_allocator", "tree__map_8h.html#a77ef14f911f76cfe985b746439d86429", null ],
+    [ "CCC_tree_map_with_context_allocator", "tree__map_8h.html#a08876a7e1f0cc6a314e2baff6a10bb18", null ],
     [ "CCC_Tree_map", "tree__map_8h.html#ad76b2806a3e2c1080ad0dd8b2a9a437b", null ],
     [ "CCC_Tree_map_entry", "tree__map_8h.html#ac2913858a5badbe4f702b8e791e486e9", null ],
     [ "CCC_Tree_map_node", "tree__map_8h.html#a3380f4ad6a7be7422f0496243fe1f4d3", null ],

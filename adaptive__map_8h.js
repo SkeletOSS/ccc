@@ -1,10 +1,11 @@
 var adaptive__map_8h =
 [
     [ "CCC_adaptive_map_and_modify_with", "adaptive__map_8h.html#a40387f8d0ec9b20066d812a2bbb6350e", null ],
+    [ "CCC_adaptive_map_context_from", "adaptive__map_8h.html#a24700b4672c6e49505b615adf8479f38", null ],
     [ "CCC_adaptive_map_entry_wrap", "adaptive__map_8h.html#a2378a144497ffa75fb0ca22d3a5d1bd6", null ],
     [ "CCC_adaptive_map_equal_range_reverse_wrap", "adaptive__map_8h.html#ab3eace6ad54d8c23331df4776e4b6c53", null ],
     [ "CCC_adaptive_map_equal_range_wrap", "adaptive__map_8h.html#af78fb101ce25cc81860102ea54ed472a", null ],
-    [ "CCC_adaptive_map_from", "adaptive__map_8h.html#a7874b40de99cc78375eb87e5b6dfe5d7", null ],
+    [ "CCC_adaptive_map_from", "adaptive__map_8h.html#a4f6b0d06cb0dad028160dc21dcf819e8", null ],
     [ "CCC_adaptive_map_initialize", "adaptive__map_8h.html#ab34ca82a0748237e96162762b9d7d2fb", null ],
     [ "CCC_adaptive_map_insert_entry_with", "adaptive__map_8h.html#adfea2110af8c19d8c0354d87ec3d63ce", null ],
     [ "CCC_adaptive_map_insert_or_assign_with", "adaptive__map_8h.html#a6a398f842fb0da7e8ec83ae3a5b585b2", null ],

@@ -135,9 +135,12 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:ad9247626e904dd8b999c2368ea5d055d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="doubly__linked__list_8h.html#ad9247626e904dd8b999c2368ea5d055d">CCC_doubly_linked_list_initialize</a>(struct_name,  type_intruder_field,  compare,  allocate,  context_data)</td></tr>
 <tr class="memdesc:ad9247626e904dd8b999c2368ea5d055d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a doubly linked list with its l-value name, type containing the Doubly_linked_list elems, the field of the doubly_linked_list elem, allocation function, compare function and any context data needed for comparison, printing, or destructors.  <br /></td></tr>
 <tr class="separator:ad9247626e904dd8b999c2368ea5d055d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e67cd666af1e37693aee91bdff2221b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="doubly__linked__list_8h.html#a6e67cd666af1e37693aee91bdff2221b">CCC_doubly_linked_list_from</a>(type_intruder_field,  compare,  allocate,  destroy,  context_data,  compound_literal_array...)</td></tr>
-<tr class="memdesc:a6e67cd666af1e37693aee91bdff2221b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a doubly linked list at runtime from a compound literal array.  <br /></td></tr>
-<tr class="separator:a6e67cd666af1e37693aee91bdff2221b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46b9061542a492d317f30916557d9db8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="doubly__linked__list_8h.html#a46b9061542a492d317f30916557d9db8">CCC_doubly_linked_list_from</a>(type_intruder_field,  compare,  allocate,  destroy,  compound_literal_array...)</td></tr>
+<tr class="memdesc:a46b9061542a492d317f30916557d9db8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a doubly linked list at runtime from a compound literal array.  <br /></td></tr>
+<tr class="separator:a46b9061542a492d317f30916557d9db8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa90fe73cb20c03b0ae9d033cdc7e3640"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="doubly__linked__list_8h.html#aa90fe73cb20c03b0ae9d033cdc7e3640">CCC_doubly_linked_list_context_from</a>(type_intruder_field,  compare,  allocate,  destroy,  context_data,  compound_literal_array...)</td></tr>
+<tr class="memdesc:aa90fe73cb20c03b0ae9d033cdc7e3640"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a doubly linked list at runtime from a compound literal array.  <br /></td></tr>
+<tr class="separator:aa90fe73cb20c03b0ae9d033cdc7e3640"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b5d4367cb19aecffbbdc4195acd9d0c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="doubly__linked__list_8h.html#a4b5d4367cb19aecffbbdc4195acd9d0c">CCC_doubly_linked_list_with_allocator</a>( struct_name,  type_intruder_field,  compare,  allocate)</td></tr>
 <tr class="memdesc:a4b5d4367cb19aecffbbdc4195acd9d0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an empty list at compile or runtime with an allocator.  <br /></td></tr>
 <tr class="separator:a4b5d4367cb19aecffbbdc4195acd9d0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -263,6 +266,76 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="separator:a519833de81863cf1d50a1af8eb1bb909"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="aa90fe73cb20c03b0ae9d033cdc7e3640" name="aa90fe73cb20c03b0ae9d033cdc7e3640"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa90fe73cb20c03b0ae9d033cdc7e3640">&#9670;&#160;</a></span>CCC_doubly_linked_list_context_from</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CCC_doubly_linked_list_context_from</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">type_intruder_field, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">compare, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">allocate, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">destroy, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">context_data, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">compound_literal_array...&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_doubly_linked_list_context_from(                               \</div>
+<div class="line">        type_intruder_field, compare, allocate, destroy, context_data,         \</div>
+<div class="line">        compound_literal_array)</div>
+</div><!-- fragment -->
+<p>Initialize a doubly linked list at runtime from a compound literal array. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_field</td><td>the name of the field intruding on user's type. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the comparison function for the user type. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the allocation function required for construction. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">destroy</td><td>the optional destructor to run if insertion fails. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">context_data</td><td>context data needed for comparison or destruction. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal_array</td><td>the array of user types to insert into the map (e.g. (struct My_type[]){ {.val = 1}, {.val = 2}}). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the initialized doubly linked list on the right side of an equality operator (e.g. <a class="el" href="structCCC__Doubly__linked__list.html">CCC_Doubly_linked_list</a> list = <a class="el" href="doubly__linked__list_8h.html#aa90fe73cb20c03b0ae9d033cdc7e3640" title="Initialize a doubly linked list at runtime from a compound literal array.">CCC_doubly_linked_list_context_from(...)</a>;) </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The list is constructed to mirror the compound literal array provided. The list will be constructed with the element at index 0 of the array as the front of the list and the final index element at the back of the list. </dd></dl>
+
+</div>
+</div>
 <a id="a9941eb735f16c63e23263db562ef0de5" name="a9941eb735f16c63e23263db562ef0de5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9941eb735f16c63e23263db562ef0de5">&#9670;&#160;</a></span>CCC_doubly_linked_list_emplace_back</h2>
 
@@ -345,8 +418,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a6e67cd666af1e37693aee91bdff2221b" name="a6e67cd666af1e37693aee91bdff2221b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6e67cd666af1e37693aee91bdff2221b">&#9670;&#160;</a></span>CCC_doubly_linked_list_from</h2>
+<a id="a46b9061542a492d317f30916557d9db8" name="a46b9061542a492d317f30916557d9db8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46b9061542a492d317f30916557d9db8">&#9670;&#160;</a></span>CCC_doubly_linked_list_from</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -379,12 +452,6 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">context_data, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
           <td class="paramname">compound_literal_array...&#160;</td>
         </tr>
         <tr>
@@ -395,7 +462,7 @@ This graph shows which files directly or indirectly include this file:</div>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    CCC_private_doubly_linked_list_from(type_intruder_field, compare,          \</div>
-<div class="line">                                        allocate, destroy, context_data,       \</div>
+<div class="line">                                        allocate, destroy,                     \</div>
 <div class="line">                                        compound_literal_array)</div>
 </div><!-- fragment -->
 <p>Initialize a doubly linked list at runtime from a compound literal array. </p>
@@ -405,12 +472,11 @@ This graph shows which files directly or indirectly include this file:</div>
     <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the comparison function for the user type. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the allocation function required for construction. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">destroy</td><td>the optional destructor to run if insertion fails. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context_data</td><td>context data needed for comparison or destruction. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal_array</td><td>the array of user types to insert into the map (e.g. (struct My_type[]){ {.val = 1}, {.val = 2}}). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the initialized doubly linked list on the right side of an equality operator (e.g. <a class="el" href="structCCC__Doubly__linked__list.html">CCC_Doubly_linked_list</a> list = <a class="el" href="doubly__linked__list_8h.html#a6e67cd666af1e37693aee91bdff2221b" title="Initialize a doubly linked list at runtime from a compound literal array.">CCC_doubly_linked_list_from(...)</a>;) </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the initialized doubly linked list on the right side of an equality operator (e.g. <a class="el" href="structCCC__Doubly__linked__list.html">CCC_Doubly_linked_list</a> list = <a class="el" href="doubly__linked__list_8h.html#a46b9061542a492d317f30916557d9db8" title="Initialize a doubly linked list at runtime from a compound literal array.">CCC_doubly_linked_list_from(...)</a>;) </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>The list is constructed to mirror the compound literal array provided. The list will be constructed with the element at index 0 of the array as the front of the list and the final index element at the back of the list. </dd></dl>
 
 </div>

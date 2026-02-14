@@ -140,9 +140,12 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:aa76800be8a11dd66d6d471e25c2a8afb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="priority__queue_8h.html#aa76800be8a11dd66d6d471e25c2a8afb">CCC_priority_queue_with_context_allocator</a>( struct_name,  type_intruder_field,  order,  compare,  allocate,  context)</td></tr>
 <tr class="memdesc:aa76800be8a11dd66d6d471e25c2a8afb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a priority queue at runtime or compile time with an allocator and context.  <br /></td></tr>
 <tr class="separator:aa76800be8a11dd66d6d471e25c2a8afb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc163d507b3e8c638f7ae040b928be95"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="priority__queue_8h.html#afc163d507b3e8c638f7ae040b928be95">CCC_priority_queue_from</a>(type_intruder_field,  order,  compare,  allocate,  destroy,  context_data,  compound_literal_array...)</td></tr>
-<tr class="memdesc:afc163d507b3e8c638f7ae040b928be95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a priority queue at runtime from a compound literal array.  <br /></td></tr>
-<tr class="separator:afc163d507b3e8c638f7ae040b928be95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a592eb95b28d9aaa1c845c0bb935fcc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="priority__queue_8h.html#a5a592eb95b28d9aaa1c845c0bb935fcc">CCC_priority_queue_from</a>(type_intruder_field,  order,  compare,  allocate,  destroy,  compound_literal_array...)</td></tr>
+<tr class="memdesc:a5a592eb95b28d9aaa1c845c0bb935fcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a priority queue at runtime from a compound literal array.  <br /></td></tr>
+<tr class="separator:a5a592eb95b28d9aaa1c845c0bb935fcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a337beaf5bd2b06928319d6557623096c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="priority__queue_8h.html#a337beaf5bd2b06928319d6557623096c">CCC_priority_queue_context_from</a>(type_intruder_field,  order,  compare,  allocate,  destroy,  context_data,  compound_literal_array...)</td></tr>
+<tr class="memdesc:a337beaf5bd2b06928319d6557623096c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a priority queue at runtime from a compound literal array.  <br /></td></tr>
+<tr class="separator:a337beaf5bd2b06928319d6557623096c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Insert and Remove Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Insert and remove elements from the priority queue. </p>
@@ -218,6 +221,82 @@ N) increase/decrease key.  <br /></td></tr>
 <tr class="separator:afcf000133b3cfe37f851a480ae5b0181"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a337beaf5bd2b06928319d6557623096c" name="a337beaf5bd2b06928319d6557623096c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a337beaf5bd2b06928319d6557623096c">&#9670;&#160;</a></span>CCC_priority_queue_context_from</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CCC_priority_queue_context_from</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">type_intruder_field, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">order, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">compare, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">allocate, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">destroy, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">context_data, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">compound_literal_array...&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_priority_queue_context_from(                                   \</div>
+<div class="line">        type_intruder_field, order, compare, allocate, destroy, context_data,  \</div>
+<div class="line">        compound_literal_array)</div>
+</div><!-- fragment -->
+<p>Initialize a priority queue at runtime from a compound literal array. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_field</td><td>the name of the field intruding on user's type. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">order</td><td>CCC_ORDER_LESSER for a min priority queue or CCC_ORDER_GREATER for a max priority queue. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the function used to compare two user types. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the allocation function required for construction. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">destroy</td><td>the optional destructor to run if insertion fails. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">context_data</td><td>context data needed for comparison or destruction. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal_array</td><td>the array of user types to insert into the map (e.g. (struct My_type[]){ {.key = 1, .val = 1}, {.key = 2, .val = 2}}). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the initialized priority_queue on the right side of an equality operator (e.g. <a class="el" href="structCCC__Priority__queue.html">CCC_Priority_queue</a> priority_queue = <a class="el" href="priority__queue_8h.html#a337beaf5bd2b06928319d6557623096c" title="Initialize a priority queue at runtime from a compound literal array.">CCC_priority_queue_context_from(...)</a>;) </dd></dl>
+
+</div>
+</div>
 <a id="aac1b82804363de3b2385c26fc8e0f30d" name="aac1b82804363de3b2385c26fc8e0f30d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aac1b82804363de3b2385c26fc8e0f30d">&#9670;&#160;</a></span>CCC_priority_queue_decrease_with</h2>
 
@@ -318,8 +397,8 @@ N) increase/decrease key.  <br /></td></tr>
 
 </div>
 </div>
-<a id="afc163d507b3e8c638f7ae040b928be95" name="afc163d507b3e8c638f7ae040b928be95"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc163d507b3e8c638f7ae040b928be95">&#9670;&#160;</a></span>CCC_priority_queue_from</h2>
+<a id="a5a592eb95b28d9aaa1c845c0bb935fcc" name="a5a592eb95b28d9aaa1c845c0bb935fcc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a592eb95b28d9aaa1c845c0bb935fcc">&#9670;&#160;</a></span>CCC_priority_queue_from</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -358,12 +437,6 @@ N) increase/decrease key.  <br /></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">context_data, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
           <td class="paramname">compound_literal_array...&#160;</td>
         </tr>
         <tr>
@@ -374,8 +447,7 @@ N) increase/decrease key.  <br /></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    CCC_private_priority_queue_from(type_intruder_field, order, compare,       \</div>
-<div class="line">                                    allocate, destroy, context_data,           \</div>
-<div class="line">                                    compound_literal_array)</div>
+<div class="line">                                    allocate, destroy, compound_literal_array)</div>
 </div><!-- fragment -->
 <p>Initialize a priority queue at runtime from a compound literal array. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -385,12 +457,11 @@ N) increase/decrease key.  <br /></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the function used to compare two user types. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the allocation function required for construction. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">destroy</td><td>the optional destructor to run if insertion fails. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context_data</td><td>context data needed for comparison or destruction. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal_array</td><td>the array of user types to insert into the map (e.g. (struct My_type[]){ {.key = 1, .val = 1}, {.key = 2, .val = 2}}). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the initialized priority_queue on the right side of an equality operator (e.g. <a class="el" href="structCCC__Priority__queue.html">CCC_Priority_queue</a> priority_queue = <a class="el" href="priority__queue_8h.html#afc163d507b3e8c638f7ae040b928be95" title="Initialize a priority queue at runtime from a compound literal array.">CCC_priority_queue_from(...)</a>;) </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the initialized priority_queue on the right side of an equality operator (e.g. <a class="el" href="structCCC__Priority__queue.html">CCC_Priority_queue</a> priority_queue = <a class="el" href="priority__queue_8h.html#a5a592eb95b28d9aaa1c845c0bb935fcc" title="Initialize a priority queue at runtime from a compound literal array.">CCC_priority_queue_from(...)</a>;) </dd></dl>
 
 </div>
 </div>
