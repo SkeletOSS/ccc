@@ -117,14 +117,14 @@ void *CCC_private_tree_map_insert(
 
 /** @internal */
 #define CCC_private_tree_map_initialize(                                       \
-    private_struct_name, private_node_node_field, private_key_node_field,      \
+    private_struct_name, private_node_field, private_key_node_field,           \
     private_key_order_fn, private_allocate, private_context_data)              \
     {                                                                          \
         .root = NULL,                                                          \
         .count = 0,                                                            \
         .key_offset = offsetof(private_struct_name, private_key_node_field),   \
         .type_intruder_offset                                                  \
-        = offsetof(private_struct_name, private_node_node_field),              \
+        = offsetof(private_struct_name, private_node_field),                   \
         .sizeof_type = sizeof(private_struct_name),                            \
         .compare = (private_key_order_fn),                                     \
         .allocate = (private_allocate),                                        \
@@ -133,18 +133,18 @@ void *CCC_private_tree_map_insert(
 
 /** @internal */
 #define CCC_private_tree_map_with_allocator(                                   \
-    private_struct_name, private_node_node_field, private_key_node_field,      \
+    private_struct_name, private_node_field, private_key_node_field,           \
     private_key_order_fn, private_allocate)                                    \
     CCC_private_tree_map_initialize(                                           \
-        private_struct_name, private_node_node_field, private_key_node_field,  \
+        private_struct_name, private_node_field, private_key_node_field,       \
         private_key_order_fn, private_allocate, NULL)
 
 /** @internal */
 #define CCC_private_tree_map_with_context_allocator(                           \
-    private_struct_name, private_node_node_field, private_key_node_field,      \
+    private_struct_name, private_node_field, private_key_node_field,           \
     private_key_order_fn, private_allocate, private_context_data)              \
     CCC_private_tree_map_initialize(                                           \
-        private_struct_name, private_node_node_field, private_key_node_field,  \
+        private_struct_name, private_node_field, private_key_node_field,       \
         private_key_order_fn, private_allocate, private_context_data)
 
 /** @internal */
