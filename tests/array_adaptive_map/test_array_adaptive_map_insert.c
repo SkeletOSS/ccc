@@ -459,9 +459,9 @@ check_static_begin(array_adaptive_map_test_reserve)
         = stack_allocator_initialize(Standard_fixed_map, 1);
     int const to_insert = 1000;
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_with_capacity(struct Val, id, id_order,
-                                           stack_allocator_allocate, &allocator,
-                                           STANDARD_FIXED_CAP - 1);
+        = array_adaptive_map_with_context_capacity(
+            struct Val, id, id_order, stack_allocator_allocate, &allocator,
+            STANDARD_FIXED_CAP - 1);
     check(array_adaptive_map_capacity(&array_adaptive_map).count
               >= STANDARD_FIXED_CAP - 1,
           true);

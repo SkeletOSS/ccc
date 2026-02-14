@@ -185,6 +185,47 @@ See types.h for more on allocation functions. */
 
 /** @brief Initialize the bit set with a custom input string.
 @param[in] allocate the allocation function for the dynamic bit set.
+@param[in] start_string_index the index of the input string to start reading
+is CCC_Tribool input.
+@param[in] count number of characters to read from start_string_index.
+@param[in] bit_on_char the character that when encountered equates to CCC_TRUE
+and results in the corresponding bit in the bit set being set CCC_TRUE. Any
+other character encountered results in the corresponding bit being set to
+CCC_FALSE.
+@param[in] input_string the string literal or pointer to a string.
+@param[in] optional_capacity the custom capacity other than the count passed to
+this initializer. If a greater capacity than the input string is desired because
+more bits will be pushed later, specify with this input. If this input is less
+than count, count becomes the capacity.
+@return the initialized bit set on the right hand side of an equality operator
+with count bits pushed. If the string ends early due to a null terminator, the
+count will be less than that passed as input. This can be checked by checking
+the CCC_bitset_count() function.
+@warning the input string is assumed to adhere to the count. If the string is
+shorter than the count input and not null terminated the behavior is undefined.
+
+A dynamic bit set with input string pushed.
+
+```
+#define BITSET_USING_NAMESPACE_CCC
+Bitset bitset = bitset_from(std_allocate, 0, 4, '1', "1011");
+```
+A dynamic bit set that allocates greater capacity.
+
+```
+#define BITSET_USING_NAMESPACE_CCC
+Bitset bitset = bitset_from(std_allocate, 0, 4, 'A', "GCAT", 4096);
+```
+
+This initializer is only available to dynamic bit sets due to the inability to
+run such input code at compile time. */
+#define CCC_bitset_from(allocate, start_string_index, count, bit_on_char,      \
+                        input_string, optional_capacity...)                    \
+    CCC_private_bitset_from(allocate, start_string_index, count, bit_on_char,  \
+                            input_string, optional_capacity)
+
+/** @brief Initialize the bit set with a custom input string.
+@param[in] allocate the allocation function for the dynamic bit set.
 @param[in] context context data needed for allocation of the bit set.
 @param[in] start_string_index the index of the input string to start reading
 is CCC_Tribool input.
@@ -209,21 +250,59 @@ A dynamic bit set with input string pushed.
 
 ```
 #define BITSET_USING_NAMESPACE_CCC
-Bitset bitset = bitset_from(std_allocate, NULL, 0, 4, '1', "1011");
+Bitset bitset = bitset_context_from(arena_allocate, &arena, 0, 4, '1', "1011");
 ```
 A dynamic bit set that allocates greater capacity.
 
 ```
 #define BITSET_USING_NAMESPACE_CCC
-Bitset bitset = bitset_from(std_allocate, NULL, 0, 4, 'A', "GCAT", 4096);
+Bitset bitset
+    = bitset_context_from(arena_allocate, &arena, 0, 4, 'A', "GCAT", 4096);
 ```
 
 This initializer is only available to dynamic bit sets due to the inability to
 run such input code at compile time. */
-#define CCC_bitset_from(allocate, context, start_string_index, count,          \
-                        bit_on_char, input_string, optional_capacity...)       \
-    CCC_private_bitset_from(allocate, context, start_string_index, count,      \
-                            bit_on_char, input_string, optional_capacity)
+#define CCC_bitset_context_from(allocate, context, start_string_index, count,  \
+                                bit_on_char, input_string,                     \
+                                optional_capacity...)                          \
+    CCC_private_bitset_context_from(allocate, context, start_string_index,     \
+                                    count, bit_on_char, input_string,          \
+                                    optional_capacity)
+
+/** @brief Initialize the bit set with a starting capacity and size at runtime.
+@param[in] allocate the allocation function for a dynamic bit.
+@param[in] capacity the number of bits that will be stored in this bit set.
+@param[in] optional_count an optional starting size <= capacity. This value
+defaults to the same value as capacity which is appropriate for most cases. For
+any case where this is not desirable, set the size manually (for example, a
+bit set that will push bits back would have a non-zero capacity and 0 size).
+@return the initialized bit set on the right hand side of an equality operator
+
+A fixed size bit set with size equal to capacity.
+
+```
+#define BITSET_USING_NAMESPACE_CCC
+int
+main(void)
+{
+    Bitset bitset = bitset_with_capacity(std_allocate, 4096);
+}
+```
+A bit set with dynamic push and pop.
+
+```
+#define BITSET_USING_NAMESPACE_CCC
+int
+main(void)
+{
+    Bitset bitset = bitset_with_capacity(std_allocate, 4096, 0);
+}
+```
+
+This initialization can only be used at runtime. See the normal initializer for
+static and stack based initialization options. */
+#define CCC_bitset_with_capacity(allocate, capacity, optional_count...)        \
+    CCC_private_bitset_with_capacity(allocate, capacity, optional_count)
 
 /** @brief Initialize the bit set with a starting capacity and size at runtime.
 @param[in] allocate the allocation function for a dynamic bit.
@@ -242,7 +321,7 @@ A fixed size bit set with size equal to capacity.
 int
 main(void)
 {
-    Bitset bitset = bitset_with_capacity(std_allocate, NULL, 4096);
+    Bitset bitset = bitset_with_context_capacity(arena_allocate, &arena, 4096);
 }
 ```
 A bit set with dynamic push and pop.
@@ -252,16 +331,17 @@ A bit set with dynamic push and pop.
 int
 main(void)
 {
-    Bitset bitset = bitset_with_capacity(std_allocate, NULL, 4096, 0);
+    Bitset bitset
+        = bitset_with_context_capacity(arena_allocate, &arena, 4096, 0);
 }
 ```
 
 This initialization can only be used at runtime. See the normal initializer for
 static and stack based initialization options. */
-#define CCC_bitset_with_capacity(allocate, context, capacity,                  \
-                                 optional_count...)                            \
-    CCC_private_bitset_with_capacity(allocate, context, capacity,              \
-                                     optional_count)
+#define CCC_bitset_with_context_capacity(allocate, context, capacity,          \
+                                         optional_count...)                    \
+    CCC_private_bitset_with_context_capacity(allocate, context, capacity,      \
+                                             optional_count)
 
 /** @brief Initialize the bit set with a starting capacity and size at runtime
 or compile time with no allocation permissions or context from a compound
@@ -1073,8 +1153,11 @@ typedef CCC_Bitset Bitset;
 #    define bitset_blocks(arguments...) CCC_bitset_blocks(arguments)
 #    define bitset_initialize(arguments...) CCC_bitset_initialize(arguments)
 #    define bitset_from(arguments...) CCC_bitset_from(arguments)
+#    define bitset_context_from(arguments...) CCC_bitset_context_from(arguments)
 #    define bitset_with_capacity(arguments...)                                 \
         CCC_bitset_with_capacity(arguments)
+#    define bitset_with_context_capacity(arguments...)                         \
+        CCC_bitset_with_context_capacity(arguments)
 #    define bitset_with_compound_literal(arguments...)                         \
         CCC_bitset_with_compound_literal(arguments)
 #    define bitset_with_context_compound_literal(arguments...)                 \

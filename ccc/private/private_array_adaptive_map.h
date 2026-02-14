@@ -179,7 +179,7 @@ is of a known fixed size defined at compile time, not just a pointer. */
     }
 
 /** @internal Initialize an array adaptive map from user input list. */
-#define CCC_private_array_adaptive_map_from(                                   \
+#define CCC_private_array_adaptive_map_context_from(                           \
     private_key_field, private_key_compare, private_allocate,                  \
     private_context_data, private_optional_cap,                                \
     private_array_compound_literal...)                                         \
@@ -237,8 +237,16 @@ is of a known fixed size defined at compile time, not just a pointer. */
         private_array_adaptive_map;                                            \
     }))
 
+/** @internal Initialize an array adaptive map from user input list. */
+#define CCC_private_array_adaptive_map_from(                                   \
+    private_key_field, private_key_compare, private_allocate,                  \
+    private_optional_cap, private_array_compound_literal...)                   \
+    CCC_private_array_adaptive_map_context_from(                               \
+        private_key_field, private_key_compare, private_allocate, NULL,        \
+        private_optional_cap, private_array_compound_literal)
+
 /** @internal */
-#define CCC_private_array_adaptive_map_with_capacity(                          \
+#define CCC_private_array_adaptive_map_with_context_capacity(                  \
     private_type_name, private_key_field, private_key_compare,                 \
     private_allocate, private_context_data, private_cap)                       \
     (__extension__({                                                           \
@@ -252,24 +260,12 @@ is of a known fixed size defined at compile time, not just a pointer. */
     }))
 
 /** @internal */
-#define CCC_private_array_adaptive_map_with_compound_literal(                  \
-    private_key_node_field, private_key_order_fn, private_compound_literal)    \
-    {                                                                          \
-        .data = &(private_compound_literal),                                   \
-        .nodes = NULL,                                                         \
-        .capacity = CCC_private_array_adaptive_map_fixed_capacity(             \
-            typeof(private_compound_literal)),                                 \
-        .count = 0,                                                            \
-        .root = 0,                                                             \
-        .free_list = 0,                                                        \
-        .sizeof_type = sizeof(*(private_compound_literal.data)) /*NOLINT*/,    \
-        .key_offset                                                            \
-        = offsetof(typeof(*(private_compound_literal.data)) /*NOLINT*/,        \
-                   private_key_node_field),                                    \
-        .compare = (private_key_order_fn),                                     \
-        .allocate = NULL,                                                      \
-        .context = NULL,                                                       \
-    }
+#define CCC_private_array_adaptive_map_with_capacity(                          \
+    private_type_name, private_key_field, private_key_compare,                 \
+    private_allocate, private_cap)                                             \
+    CCC_private_array_adaptive_map_with_context_capacity(                      \
+        private_type_name, private_key_field, private_key_compare,             \
+        private_allocate, NULL, private_cap)
 
 /** @internal */
 #define CCC_private_array_adaptive_map_with_context_compound_literal(          \
@@ -293,21 +289,11 @@ is of a known fixed size defined at compile time, not just a pointer. */
     }
 
 /** @internal */
-#define CCC_private_array_adaptive_map_with_allocator(                         \
-    private_type_name, private_key_field, private_compare, private_allocate)   \
-    {                                                                          \
-        .data = NULL,                                                          \
-        .nodes = NULL,                                                         \
-        .capacity = 0,                                                         \
-        .count = 0,                                                            \
-        .root = 0,                                                             \
-        .free_list = 0,                                                        \
-        .sizeof_type = sizeof(private_type_name),                              \
-        .key_offset = offsetof(private_type_name, private_key_field),          \
-        .compare = (private_compare),                                          \
-        .allocate = (private_allocate),                                        \
-        .context = NULL,                                                       \
-    }
+#define CCC_private_array_adaptive_map_with_compound_literal(                  \
+    private_key_node_field, private_key_order_fn, private_compound_literal)    \
+    CCC_private_array_adaptive_map_with_context_compound_literal(              \
+        private_key_node_field, private_key_order_fn, NULL,                    \
+        private_compound_literal)
 
 /** @internal */
 #define CCC_private_array_adaptive_map_with_context_allocator(                 \
@@ -326,6 +312,13 @@ is of a known fixed size defined at compile time, not just a pointer. */
         .allocate = (private_allocate),                                        \
         .context = (private_context),                                          \
     }
+
+/** @internal */
+#define CCC_private_array_adaptive_map_with_allocator(                         \
+    private_type_name, private_key_field, private_compare, private_allocate)   \
+    CCC_private_array_adaptive_map_with_context_allocator(                     \
+        private_type_name, private_key_field, private_compare,                 \
+        private_allocate, NULL)
 
 /** @internal */
 #define CCC_private_array_adaptive_map_as(array_adaptive_map_pointer,          \

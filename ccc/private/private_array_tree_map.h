@@ -258,7 +258,7 @@ runtime. */
     }
 
 /** @internal Initialize an array tree map from user input list. */
-#define CCC_private_array_tree_map_from(                                       \
+#define CCC_private_array_tree_map_context_from(                               \
     private_key_field, private_key_compare, private_allocate,                  \
     private_context_data, private_optional_cap,                                \
     private_array_compound_literal...)                                         \
@@ -313,7 +313,16 @@ runtime. */
         private_array_tree_map;                                                \
     }))
 
-#define CCC_private_array_tree_map_with_capacity(                              \
+/** @internal Initialize an array tree map from user input list. */
+#define CCC_private_array_tree_map_from(                                       \
+    private_key_field, private_key_compare, private_allocate,                  \
+    private_optional_cap, private_array_compound_literal...)                   \
+    CCC_private_array_tree_map_context_from(                                   \
+        private_key_field, private_key_compare, private_allocate, NULL,        \
+        private_optional_cap, private_array_compound_literal)
+
+/** @internal */
+#define CCC_private_array_tree_map_with_context_capacity(                      \
     private_type_name, private_key_field, private_key_compare,                 \
     private_allocate, private_context_data, private_cap)                       \
     (__extension__({                                                           \
@@ -327,25 +336,12 @@ runtime. */
     }))
 
 /** @internal */
-#define CCC_private_array_tree_map_with_compound_literal(                      \
-    private_key_node_field, private_key_order_fn, private_compound_literal)    \
-    {                                                                          \
-        .data = &(private_compound_literal),                                   \
-        .nodes = NULL,                                                         \
-        .parity = NULL,                                                        \
-        .capacity = CCC_private_array_tree_map_fixed_capacity(                 \
-            typeof(private_compound_literal)),                                 \
-        .count = 0,                                                            \
-        .root = 0,                                                             \
-        .free_list = 0,                                                        \
-        .sizeof_type = sizeof(*(private_compound_literal.data)) /*NOLINT*/,    \
-        .key_offset                                                            \
-        = offsetof(typeof(*(private_compound_literal.data)) /*NOLINT*/,        \
-                   private_key_node_field),                                    \
-        .compare = (private_key_order_fn),                                     \
-        .allocate = NULL,                                                      \
-        .context = NULL,                                                       \
-    }
+#define CCC_private_array_tree_map_with_capacity(                              \
+    private_type_name, private_key_field, private_key_compare,                 \
+    private_allocate, private_cap)                                             \
+    CCC_private_array_tree_map_with_context_capacity(                          \
+        private_type_name, private_key_field, private_key_compare,             \
+        private_allocate, NULL, private_cap)
 
 /** @internal */
 #define CCC_private_array_tree_map_with_context_compound_literal(              \
@@ -370,23 +366,11 @@ runtime. */
     }
 
 /** @internal */
-#define CCC_private_array_tree_map_with_allocator(                             \
-    private_type_name, private_key_field, private_key_compare,                 \
-    private_allocate)                                                          \
-    {                                                                          \
-        .data = NULL,                                                          \
-        .nodes = NULL,                                                         \
-        .parity = NULL,                                                        \
-        .capacity = 0,                                                         \
-        .count = 0,                                                            \
-        .root = 0,                                                             \
-        .free_list = 0,                                                        \
-        .sizeof_type = sizeof(private_type_name),                              \
-        .key_offset = offsetof(private_type_name, private_key_field),          \
-        .compare = (private_key_compare),                                      \
-        .allocate = (private_allocate),                                        \
-        .context = NULL,                                                       \
-    }
+#define CCC_private_array_tree_map_with_compound_literal(                      \
+    private_key_node_field, private_key_order_fn, private_compound_literal)    \
+    CCC_private_array_tree_map_with_context_compound_literal(                  \
+        private_key_node_field, private_key_order_fn, NULL,                    \
+        private_compound_literal)
 
 /** @internal */
 #define CCC_private_array_tree_map_with_context_allocator(                     \
@@ -406,6 +390,14 @@ runtime. */
         .allocate = (private_allocate),                                        \
         .context = (private_context),                                          \
     }
+
+/** @internal */
+#define CCC_private_array_tree_map_with_allocator(                             \
+    private_type_name, private_key_field, private_key_compare,                 \
+    private_allocate)                                                          \
+    CCC_private_array_tree_map_with_context_allocator(                         \
+        private_type_name, private_key_field, private_key_compare,             \
+        private_allocate, NULL)
 
 /** @internal */
 #define CCC_private_array_tree_map_as(array_tree_map_pointer, type_name,       \

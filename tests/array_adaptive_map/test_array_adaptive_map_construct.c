@@ -85,7 +85,7 @@ check_static_begin(array_adaptive_map_test_copy_allocate)
 {
     struct Stack_allocator allocator
         = stack_allocator_initialize(Small_fixed_map, 2);
-    Array_adaptive_map source = array_adaptive_map_with_capacity(
+    Array_adaptive_map source = array_adaptive_map_with_context_capacity(
         struct Val, id, id_order, stack_allocator_allocate, &allocator,
         SMALL_FIXED_CAP - 1);
     Array_adaptive_map destination = array_adaptive_map_initialize(
@@ -123,7 +123,7 @@ check_static_begin(array_adaptive_map_test_copy_allocate_fail)
 {
     struct Stack_allocator allocator
         = stack_allocator_initialize(Small_fixed_map, 2);
-    Array_adaptive_map source = array_adaptive_map_with_capacity(
+    Array_adaptive_map source = array_adaptive_map_with_context_capacity(
         struct Val, id, id_order, stack_allocator_allocate, &allocator,
         SMALL_FIXED_CAP - 1);
     Array_adaptive_map destination = array_adaptive_map_initialize(
@@ -142,7 +142,7 @@ check_static_begin(array_adaptive_map_test_init_from)
 {
     struct Stack_allocator allocator
         = stack_allocator_initialize(Small_fixed_map, 1);
-    Array_adaptive_map map_from_list = array_adaptive_map_from(
+    Array_adaptive_map map_from_list = array_adaptive_map_context_from(
         id, id_order, stack_allocator_allocate, &allocator, SMALL_FIXED_CAP - 1,
         (struct Val[]){
             {.id = 0, .val = 0},
@@ -169,7 +169,7 @@ check_static_begin(array_adaptive_map_test_init_from_overwrite)
 {
     struct Stack_allocator allocator
         = stack_allocator_initialize(Small_fixed_map, 1);
-    Array_adaptive_map map_from_list = array_adaptive_map_from(
+    Array_adaptive_map map_from_list = array_adaptive_map_context_from(
         id, id_order, stack_allocator_allocate, &allocator, SMALL_FIXED_CAP - 1,
         (struct Val[]){
             {.id = 0, .val = 0},
@@ -195,7 +195,7 @@ check_static_begin(array_adaptive_map_test_init_from_fail)
 {
     /* Whoops forgot an allocation function. */
     Array_adaptive_map map_from_list
-        = array_adaptive_map_from(id, id_order, NULL, NULL, 0,
+        = array_adaptive_map_from(id, id_order, NULL, 0,
                                   (struct Val[]){
                                       {.id = 0, .val = 0},
                                       {.id = 0, .val = 1},
@@ -223,7 +223,7 @@ check_static_begin(array_adaptive_map_test_init_with_capacity)
 {
     struct Stack_allocator allocator
         = stack_allocator_initialize(Small_fixed_map, 1);
-    Array_adaptive_map map = array_adaptive_map_with_capacity(
+    Array_adaptive_map map = array_adaptive_map_with_context_capacity(
         struct Val, id, id_order, stack_allocator_allocate, &allocator,
         SMALL_FIXED_CAP - 1);
     check(validate(&map), true);
@@ -295,7 +295,7 @@ check_static_begin(array_adaptive_map_test_init_with_capacity_no_op)
     /* Initialize with 0 cap is OK just does nothing. */
     struct Stack_allocator allocator
         = stack_allocator_initialize(Small_fixed_map, 1);
-    Array_adaptive_map map = array_adaptive_map_with_capacity(
+    Array_adaptive_map map = array_adaptive_map_with_context_capacity(
         struct Val, id, id_order, stack_allocator_allocate, &allocator, 0);
     check(validate(&map), true);
     check(array_adaptive_map_capacity(&map).count, 0);
@@ -324,8 +324,8 @@ check_static_begin(array_adaptive_map_test_init_with_capacity_no_op)
 check_static_begin(array_adaptive_map_test_init_with_capacity_fail)
 {
     /* Forgot allocation function. */
-    Array_adaptive_map map = array_adaptive_map_with_capacity(
-        struct Val, id, id_order, NULL, NULL, 32);
+    Array_adaptive_map map
+        = array_adaptive_map_with_capacity(struct Val, id, id_order, NULL, 32);
     check(validate(&map), true);
     check(array_adaptive_map_capacity(&map).count, 0);
     CCC_Handle const e = CCC_array_adaptive_map_insert_or_assign(

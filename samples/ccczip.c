@@ -357,18 +357,19 @@ build_encoding_tree(FILE *const f)
     while (count(&priority_queue).count >= 2)
     {
         /* Small elements and we need the pair so we can't hold references. */
-        struct Flat_priority_queue_node zero
+        struct Flat_priority_queue_node const zero
             = *(struct Flat_priority_queue_node *)front(&priority_queue);
         CCC_Result r
             = pop(&priority_queue, &(struct Flat_priority_queue_node){});
         check(r == CCC_RESULT_OK);
-        struct Flat_priority_queue_node one
+        struct Flat_priority_queue_node const one
             = *(struct Flat_priority_queue_node *)front(&priority_queue);
         r = pop(&priority_queue, &(struct Flat_priority_queue_node){});
         check(r == CCC_RESULT_OK);
-        struct Huffman_node *const internal_one
-            = push_back(&ret.bump_arena,
-                        &(struct Huffman_node){.link = {zero.node, one.node}});
+        struct Huffman_node const *const internal_one
+            = push_back(&ret.bump_arena, &(struct Huffman_node){
+                                             .link = {zero.node, one.node},
+                                         });
         size_t const new_root
             = buffer_index(&ret.bump_arena, internal_one).count;
         check(internal_one);
@@ -377,7 +378,9 @@ build_encoding_tree(FILE *const f)
         struct Flat_priority_queue_node const *const pushed
             = push(&priority_queue,
                    &(struct Flat_priority_queue_node){
-                       .freq = zero.freq + one.freq, .node = new_root},
+                       .freq = zero.freq + one.freq,
+                       .node = new_root,
+                   },
                    &(struct Flat_priority_queue_node){});
         check(pushed);
         ret.root = new_root;
@@ -425,12 +428,16 @@ build_encoding_priority_queue(FILE *const f, struct Huffman_tree *const tree)
          i != end(&frequencies); i = next(&frequencies, i))
     {
         struct Huffman_node const *const node
-            = push_back(&tree->bump_arena, &(struct Huffman_node){.ch = i->ch});
+            = push_back(&tree->bump_arena, &(struct Huffman_node){
+                                               .ch = i->ch,
+                                           });
         check(node);
         size_t const node_i = buffer_index(&tree->bump_arena, node).count;
         struct Flat_priority_queue_node const *const pushed = push_back(
             &flat_priority_queue_storage, &(struct Flat_priority_queue_node){
-                                              .freq = i->freq, .node = node_i});
+                                              .freq = i->freq,
+                                              .node = node_i,
+                                          });
         check(pushed);
     }
     /* Free map but not the Buffer because the priority queue took buffer. */

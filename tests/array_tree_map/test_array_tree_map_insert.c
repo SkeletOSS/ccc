@@ -431,7 +431,7 @@ check_static_begin(array_tree_map_test_reserve)
     int const to_insert = 1000;
     struct Stack_allocator allocator
         = stack_allocator_initialize(Standard_fixed_map, 1);
-    CCC_Array_tree_map map = array_tree_map_with_capacity(
+    CCC_Array_tree_map map = array_tree_map_with_context_capacity(
         struct Val, id, id_order, stack_allocator_allocate, &allocator,
         STANDARD_FIXED_CAP - 1);
     check(array_tree_map_capacity(&map).count >= STANDARD_FIXED_CAP - 1, true);
