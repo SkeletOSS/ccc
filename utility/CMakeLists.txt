@@ -26,3 +26,7 @@ add_dependencies(utility stack_allocator)
 add_library(string_arena string_arena.h string_arena.c)
 add_dependencies(utility string_arena)
 
+add_library(defer INTERFACE defer.h)
+if (CMAKE_C_COMPILER_ID STREQUAL "Clang")
+    target_compile_options(defer INTERFACE -fdefer-ts)
+endif()

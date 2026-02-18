@@ -542,6 +542,7 @@ CCC_doubly_linked_list_validate(CCC_Doubly_linked_list const *list);
 names are desired for the doubly linked list container. Ensure no namespace
 clashes exist prior to name shortening. */
 #ifdef DOUBLY_LINKED_LIST_USING_NAMESPACE_CCC
+/* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Doubly_linked_list_node Doubly_linked_list_node;
 typedef CCC_Doubly_linked_list Doubly_linked_list;
 #    define doubly_linked_list_initialize(arguments...)                        \
@@ -610,6 +611,7 @@ typedef CCC_Doubly_linked_list Doubly_linked_list;
         CCC_doubly_linked_list_clear(arguments)
 #    define doubly_linked_list_validate(arguments...)                          \
         CCC_doubly_linked_list_validate(arguments)
+/* NOLINTEND(readability-identifier-naming) */
 #endif /* DOUBLY_LINKED_LIST_USING_NAMESPACE_CCC */
 
 #endif /* CCC_LIST_H */

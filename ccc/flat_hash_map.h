@@ -1335,6 +1335,7 @@ CCC_flat_hash_map_validate(CCC_Flat_hash_map const *map);
 /** Define this preprocessor directive if shorter names are helpful. Ensure
  no namespace clashes occur before shortening. */
 #ifdef FLAT_HASH_MAP_USING_NAMESPACE_CCC
+/* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Flat_hash_map Flat_hash_map;
 typedef CCC_Flat_hash_map_entry Flat_hash_map_entry;
 #    define flat_hash_map_declare_fixed(arguments...)                          \
@@ -1427,6 +1428,7 @@ typedef CCC_Flat_hash_map_entry Flat_hash_map_entry;
         CCC_flat_hash_map_capacity(arguments)
 #    define flat_hash_map_validate(arguments...)                               \
         CCC_flat_hash_map_validate(arguments)
+/* NOLINTEND(readability-identifier-naming) */
 #endif
 
 #endif /* CCC_FLAT_HASH_MAP_H */

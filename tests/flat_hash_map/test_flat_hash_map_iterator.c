@@ -17,7 +17,7 @@ struct Owner
     void *allocation;
 };
 
-CCC_Order
+static CCC_Order
 owners_eq(CCC_Key_comparator_context const order)
 {
     int const *const left = order.key_left;
@@ -25,7 +25,7 @@ owners_eq(CCC_Key_comparator_context const order)
     return (*left > right->key) - (*left < right->key);
 }
 
-void
+static void
 destroy_owner_allocation(CCC_Type_context const t)
 {
     struct Owner const *const o = t.type;

@@ -663,6 +663,7 @@ See container documentation for specific behavior. */
 
 /** Define this preprocessor directive to shorten trait names. */
 #ifdef TRAITS_USING_NAMESPACE_CCC
+/* NOLINTBEGIN(readability-identifier-naming) */
 #    define swap_entry(arguments...) CCC_swap_entry(arguments)
 #    define swap_entry_wrap(arguments...) CCC_swap_entry_wrap(arguments)
 #    define swap_handle(arguments...) CCC_swap_handle(arguments)
@@ -741,6 +742,7 @@ See container documentation for specific behavior. */
 #    define capacity(arguments...) CCC_capacity(arguments)
 #    define is_empty(arguments...) CCC_is_empty(arguments)
 #    define validate(arguments...) CCC_validate(arguments)
+/* NOLINTEND(readability-identifier-naming) */
 #endif /* TRAITS_USING_NAMESPACE_CCC */
 
 #endif /* CCC_TRAITS_H */

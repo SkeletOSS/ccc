@@ -609,6 +609,7 @@ char const *CCC_handle_status_message(CCC_Handle_status status);
 /** Define this directive at the top of a translation unit if shorter names are
 desired. By default the ccc prefix is used to avoid namespace clashes. */
 #ifdef TYPES_USING_NAMESPACE_CCC
+/* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Range Range;
 typedef CCC_Range_reverse Range_reverse;
 typedef CCC_Handle_range Handle_range;
@@ -664,6 +665,7 @@ typedef CCC_Key_hasher Key_hasher;
 #    define array_range_reverse_end(array_range_pointer)                       \
         CCC_array_range_reverse_end(array_range_pointer)
 #    define result_message(res) CCC_result_message(res)
+/* NOLINTEND(readability-identifier-naming) */
 #endif /* TYPES_USING_NAMESPACE_CCC */
 
 #endif /* CCC_TYPES_H */

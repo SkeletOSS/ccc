@@ -1,7 +1,7 @@
-#ifndef checkERS
-#define checkERS
+#ifndef CHECKERS_H
+#define CHECKERS_H
 
-#include <stdio.h> /* NOLINT */
+#include <stdio.h> /* IWYU pragma: keep */
 
 #define CHECK_RED "\033[38;5;9m"
 #define CHECK_GREEN "\033[38;5;10m"
@@ -354,4 +354,4 @@ the individual test that failed with CHECK_FAIL or CHECK_ERROR. */
         check_private_all_checks_res;                                          \
     })
 
-#endif /* checkERS */
+#endif /* CHECKERS_H */

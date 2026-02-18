@@ -14,6 +14,7 @@ Checks: >
    -readability-implicit-bool-conversion,
    -readability-named-parameter,
    -readability-identifier-length,
+   -readability-redundant-parentheses,
    -*-non-private-member-variables-in-classes,
    -*-magic-numbers,
    -concurrency-*,

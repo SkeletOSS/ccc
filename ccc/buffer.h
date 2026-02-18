@@ -908,6 +908,7 @@ CCC_Result CCC_buffer_clear(CCC_Buffer *buffer, CCC_Type_destructor *destroy);
 related types and methods. By default the prefix is required but may be
 dropped with this directive if one is sure no namespace collisions occur. */
 #ifdef BUFFER_USING_NAMESPACE_CCC
+/* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Buffer Buffer;
 #    define buffer_initialize(arguments...) CCC_buffer_initialize(arguments)
 #    define buffer_with_compound_literal(arguments...)                         \
@@ -970,6 +971,7 @@ typedef CCC_Buffer Buffer;
 #    define buffer_reverse_next(arguments...) CCC_buffer_reverse_next(arguments)
 #    define buffer_reverse_end(arguments...) CCC_buffer_reverse_end(arguments)
 #    define buffer_capacity_end(arguments...) CCC_buffer_capacity_end(arguments)
+/* NOLINTEND(readability-identifier-naming) */
 #endif /* BUFFER_USING_NAMESPACE_CCC */
 
 #endif /* CCC_BUFFER_H */

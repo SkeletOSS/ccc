@@ -1173,7 +1173,7 @@ check_static_begin(bitset_test_proper_subset)
 }
 
 /* Returns if the box is valid. 1 for valid, 0 for invalid, -1 for an error */
-CCC_Tribool
+static CCC_Tribool
 validate_sudoku_box(int board[9][9], Bitset *const row_check,
                     Bitset *const col_check, size_t const row_start,
                     size_t const col_start)

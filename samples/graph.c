@@ -41,6 +41,7 @@ Enter 'q' to quit. */
 #include "str_view/str_view.h"
 #include "utility/allocate.h"
 #include "utility/cli.h"
+#include "utility/defer.h"
 #include "utility/random.h"
 
 #define CYN "\033[38;5;14m"
@@ -371,6 +372,10 @@ main(int argc, char **argv)
         return 1;
     }
     graph.grid = calloc((size_t)graph.rows * graph.cols, sizeof(Cell));
+    defer
+    {
+        free(graph.grid);
+    }
     if (!graph.grid)
     {
         quit("allocation failure for specified graph size.\n", 1);
@@ -380,7 +385,6 @@ main(int argc, char **argv)
     find_shortest_paths(&graph);
     set_cursor_position(graph.rows + 1, graph.cols + 1);
     printf("\n");
-    free(graph.grid);
 }
 
 /*========================   Graph Building    ==============================*/
@@ -395,6 +399,10 @@ build_graph(struct Graph *const graph)
 {
     build_path_outline(graph);
     clear_and_flush_graph(graph, MAG);
+    defer
+    {
+        clear_and_flush_graph(graph, MAG);
+    }
     for (int vertex = 0, vertex_title = BEGIN_VERTICES;
          vertex < graph->vertices; ++vertex, ++vertex_title)
     {
@@ -416,7 +424,6 @@ build_graph(struct Graph *const graph)
                && found_destination(graph, source))
         {}
     }
-    clear_and_flush_graph(graph, MAG);
 }
 
 /* This function uses a breadth first search to find the closest vertex it has
@@ -442,7 +449,11 @@ found_destination(struct Graph *const graph, struct Vertex *const source)
                                                                (struct Point[]){
                                                                    source->pos,
                                                                });
-    bool destination_connection = false;
+    defer
+    {
+        (void)clear_and_free(&bfs, NULL);
+        (void)clear_and_free(&parent_map, NULL);
+    }
     while (!is_empty(&bfs))
     {
         struct Point const cur = *((struct Point *)front(&bfs));
@@ -468,8 +479,7 @@ found_destination(struct Graph *const graph, struct Vertex *const source)
                     Entry const in = insert_or_assign(&parent_map, &push);
                     check(!insert_error(&in));
                     edge_construct(graph, &parent_map, source, nv);
-                    destination_connection = true;
-                    goto done;
+                    return true;
                 }
             }
             if (!is_path_cell(next_cell)
@@ -480,10 +490,7 @@ found_destination(struct Graph *const graph, struct Vertex *const source)
             }
         }
     }
-done:
-    (void)clear_and_free(&bfs, NULL);
-    (void)clear_and_free(&parent_map, NULL);
-    return destination_connection;
+    return false;
 }
 
 /* Assumes that source and destination have not already been connected in the
@@ -683,6 +690,10 @@ static void
 find_shortest_paths(struct Graph *const graph)
 {
     char *linepointer = NULL;
+    defer
+    {
+        free(linepointer);
+    }
     size_t len = 0;
     int total_cost = 0;
     for (;;)
@@ -701,18 +712,18 @@ find_shortest_paths(struct Graph *const graph)
         ssize_t read = 0;
         while ((read = getline(&linepointer, &len, stdin)) > 0)
         {
-            struct Path_request pr = parse_path_request(
-                graph, (SV_Str_view){.str = linepointer, .len = read - 1});
+            struct Path_request pr
+                = parse_path_request(graph, (SV_Str_view){
+                                                .str = linepointer,
+                                                .len = read - 1,
+                                            });
             if (pr.source == 'q')
             {
-                free(linepointer);
-                printf("Exiting now.\n");
                 return;
             }
             if (!pr.source)
             {
                 clear_line();
-                free(linepointer);
                 printf("Please provide any source and destination vertex "
                        "represented in the grid\nExamples: AB, A B, B-C, X->Y, "
                        "DtoF\nMost formats work but two capital vertices are "
@@ -757,9 +768,9 @@ dijkstra_shortest_path(struct Graph *const graph, char const source,
        of all, maximum priority_queue/map size is known to be small [A-Z] so
        provide memory on the stack for speed and safety. */
     struct Cost map_priority_queue[MAX_VERTICES] = {};
-    Priority_queue costs = priority_queue_initialize(
+    Priority_queue costs = priority_queue_with_allocator(
         struct Cost, priority_queue_node, CCC_ORDER_LESSER,
-        order_priority_queue_costs, NULL, NULL);
+        order_priority_queue_costs, NULL);
     for (int i = 0, vx = BEGIN_VERTICES; i < graph->vertices; ++i, ++vx)
     {
         struct Cost *const v

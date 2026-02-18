@@ -1330,6 +1330,7 @@ CCC_array_adaptive_map_validate(CCC_Array_adaptive_map const *map);
 /** Define this preprocessor directive if shorter names are helpful. Ensure
  no namespace clashes occur before shortening. */
 #ifdef ARRAY_ADAPTIVE_MAP_USING_NAMESPACE_CCC
+/* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Array_adaptive_map Array_adaptive_map;
 typedef CCC_Array_adaptive_map_handle Array_adaptive_map_handle;
 #    define array_adaptive_map_declare_fixed(arguments...)                     \
@@ -1438,6 +1439,7 @@ typedef CCC_Array_adaptive_map_handle Array_adaptive_map_handle;
         CCC_array_adaptive_map_is_empty(arguments)
 #    define array_adaptive_map_validate(arguments...)                          \
         CCC_array_adaptive_map_validate(arguments)
+/* NOLINTEND(readability-identifier-naming) */
 #endif /* ARRAY_ADAPTIVE_MAP_USING_NAMESPACE_CCC */
 
 #endif /* CCC_ARRAY_ADAPTIVE_MAP_H */

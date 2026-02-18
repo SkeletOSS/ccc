@@ -1342,6 +1342,7 @@ CCC_array_tree_map_validate(CCC_Array_tree_map const *map);
 /** Define this preprocessor directive if shorter names are helpful. Ensure
  no namespace clashes occur before shortening. */
 #ifdef ARRAY_TREE_MAP_USING_NAMESPACE_CCC
+/* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Array_tree_map Array_tree_map;
 typedef CCC_Array_tree_map_handle Array_tree_map_handle;
 #    define array_tree_map_declare_fixed(arguments...)                         \
@@ -1412,6 +1413,7 @@ typedef CCC_Array_tree_map_handle Array_tree_map_handle;
         CCC_array_tree_map_clear_and_free_reserve(arguments)
 #    define array_tree_map_validate(arguments...)                              \
         CCC_array_tree_map_validate(arguments)
+/* NOLINTEND(readability-identifier-naming) */
 #endif /* ARRAY_TREE_MAP_USING_NAMESPACE_CCC */
 
 #endif /* CCC_ARRAY_TREE_MAP_H */

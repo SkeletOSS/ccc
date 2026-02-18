@@ -1147,6 +1147,7 @@ CCC_Tribool CCC_bitset_pop_back(CCC_Bitset *bitset);
 /** Define this preprocessor macro if shorter names are desired for the bit set
 container. Check for namespace clashes before name shortening. */
 #ifdef BITSET_USING_NAMESPACE_CCC
+/* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Bitset Bitset;
 #    define BITSET_BLOCK_BITS CCC_BITSET_BLOCK_BITS
 #    define bitset_block_count(arguments...) CCC_bitset_block_count(arguments)
@@ -1243,6 +1244,7 @@ typedef CCC_Bitset Bitset;
         CCC_bitset_clear_and_free_reserve(arguments)
 #    define bitset_push_back(arguments...) CCC_bitset_push_back(arguments)
 #    define bitset_pop_back(arguments...) CCC_bitset_pop_back(arguments)
+/* NOLINTEND(readability-identifier-naming) */
 #endif /* BITSET_USING_NAMESPACE_CCC */
 
 #endif /* CCC_BITSET_H */

@@ -1984,6 +1984,10 @@ validate(struct CCC_Array_tree_map const *const map)
     {
         return CCC_TRUE;
     }
+    if (!map->data)
+    {
+        return CCC_TRUE;
+    }
     if (!map->count && !parity(map, 0))
     {
         return CCC_FALSE;

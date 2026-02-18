@@ -21,7 +21,7 @@ limitations under the License.
 /** @endcond */
 
 #include "../types.h"
-#include "private_types.h" /* NOLINT */
+#include "private_types.h" /* IWYU pragma: keep */
 
 /* NOLINTBEGIN(readability-identifier-naming) */
 

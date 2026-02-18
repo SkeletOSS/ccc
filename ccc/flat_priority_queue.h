@@ -929,6 +929,7 @@ CCC_flat_priority_queue_order(CCC_Flat_priority_queue const *priority_queue);
 /** Define this preprocessor directive if shortened names are desired for the
 flat priority queue container. Check for collisions before name shortening. */
 #ifdef FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC
+/* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Flat_priority_queue Flat_priority_queue;
 #    define flat_priority_queue_initialize(arguments...)                       \
         CCC_flat_priority_queue_initialize(arguments)
@@ -1000,6 +1001,7 @@ typedef CCC_Flat_priority_queue Flat_priority_queue;
         CCC_flat_priority_queue_validate(arguments)
 #    define flat_priority_queue_order(arguments...)                            \
         CCC_flat_priority_queue_order(arguments)
+/* NOLINTEND(readability-identifier-naming) */
 #endif /* FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC */
 
 #endif /* CCC_FLAT_PRIORITY_QUEUE_H */

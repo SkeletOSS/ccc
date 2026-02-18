@@ -826,6 +826,7 @@ CCC_adaptive_map_validate(CCC_Adaptive_map const *map);
 /** Define this preprocessor directive if shorter names are helpful. Ensure
  no namespace clashes occur before shortening. */
 #ifdef ADAPTIVE_MAP_USING_NAMESPACE_CCC
+/* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Adaptive_map_node Adaptive_map_node;
 typedef CCC_Adaptive_map Adaptive_map;
 typedef CCC_Adaptive_map_entry Adaptive_map_entry;
@@ -895,6 +896,7 @@ typedef CCC_Adaptive_map_entry Adaptive_map_entry;
 #    define adaptive_map_clear(arguments...) CCC_adaptive_map_clear(arguments)
 #    define adaptive_map_validate(arguments...)                                \
         CCC_adaptive_map_validate(arguments)
+/* NOLINTEND(readability-identifier-naming) */
 #endif
 
 #endif /* CCC_ADAPTIVE_MAP_H */

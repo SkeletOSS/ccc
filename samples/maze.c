@@ -34,6 +34,7 @@ Example:
 #include "str_view/str_view.h"
 #include "utility/allocate.h"
 #include "utility/cli.h"
+#include "utility/defer.h"
 #include "utility/random.h"
 
 /*=======================   Maze Helper Types   =============================*/
@@ -90,7 +91,7 @@ static int const speeds[] = {
     0, 5000000, 2500000, 1000000, 500000, 250000, 100000, 1000,
 };
 
-struct Point const dir_offsets[] = {{-2, 0}, {0, 2}, {2, 0}, {0, -2}};
+static struct Point const dir_offsets[] = {{-2, 0}, {0, 2}, {2, 0}, {0, -2}};
 
 enum : size_t
 {
@@ -116,13 +117,10 @@ enum : uint16_t
     CACHE_BIT = 0b0001000000000000,
 };
 
-SV_Str_view const row_flag = SV_from("-r=");
-SV_Str_view const col_flag = SV_from("-c=");
-SV_Str_view const speed_flag = SV_from("-s=");
-SV_Str_view const help_flag = SV_from("-h");
-SV_Str_view const escape = SV_from("\033[");
-SV_Str_view const semi_colon = SV_from(";");
-SV_Str_view const cursor_pos_specifier = SV_from("f");
+static SV_Str_view const row_flag = SV_from("-r=");
+static SV_Str_view const col_flag = SV_from("-c=");
+static SV_Str_view const speed_flag = SV_from("-s=");
+static SV_Str_view const help_flag = SV_from("-h");
 
 /*==========================   Prototypes  ================================= */
 
@@ -224,6 +222,10 @@ main(int argc, char **argv)
     maze.rows = maze.rows + (maze.rows % 2 == 0);
     maze.cols = maze.cols + (maze.cols % 2 == 0);
     maze.maze = calloc((size_t)maze.rows * maze.cols, sizeof(uint16_t));
+    defer
+    {
+        free(maze.maze);
+    }
     if (!maze.maze)
     {
         (void)fprintf(stderr, "allocation failure for specified maze size.\n");
@@ -257,18 +259,21 @@ animate_maze(struct Maze *maze)
         .cell = rand_point(maze),
         .cost = rand_range(0, 100),
     };
-    Flat_hash_map cost_map = CCC_flat_hash_map_from(
+    Flat_hash_map cost_map = flat_hash_map_from(
         cell, prim_cell_hash_fn, prim_cell_order, std_allocate, capacity,
         (struct Prim_cell[]){
             start,
         });
-    /* Priority queue gets same reserve interface. */
     Flat_priority_queue cell_priority_queue = flat_priority_queue_from(
         CCC_ORDER_LESSER, order_prim_cells, std_allocate, capacity,
         (struct Prim_cell[]){
             start,
         });
-    check(!is_empty(&cell_priority_queue) && !is_empty(&cost_map));
+    defer
+    {
+        (void)clear_and_free(&cost_map, NULL);
+        (void)clear_and_free(&cell_priority_queue, NULL);
+    }
     while (!is_empty(&cell_priority_queue))
     {
         struct Prim_cell const *const c = front(&cell_priority_queue);
@@ -309,8 +314,6 @@ animate_maze(struct Maze *maze)
             (void)pop(&cell_priority_queue, &(struct Prim_cell){});
         }
     }
-    (void)clear_and_free(&cost_map, NULL);
-    (void)clear_and_free(&cell_priority_queue, NULL);
 }
 
 /*===================     Container Support Code     ========================*/

@@ -35,6 +35,7 @@ Please specify a command as follows:
 #include "str_view/str_view.h"
 #include "utility/allocate.h"
 #include "utility/cli.h"
+#include "utility/defer.h"
 #include "utility/string_arena.h"
 
 enum Action_type
@@ -232,13 +233,16 @@ main(int argc, char *argv[])
         }
     }
     FILE *const f = open_file(exe.file);
+    defer
+    {
+        (void)fclose(f);
+    }
     if (!f)
     {
         if (SV_begin(exe.file))
         {
             logerr("error opening: %s\n", SV_begin(exe.file));
         }
-        (void)fclose(f);
         return 1;
     }
     if (exe.type == COUNT)
@@ -252,10 +256,8 @@ main(int argc, char *argv[])
     else
     {
         logerr("invalid count or empty word searched\n");
-        (void)fclose(f);
         return 1;
     }
-    (void)fclose(f);
     return 0;
 }
 
@@ -265,8 +267,13 @@ static void
 print_found(FILE *const f, SV_Str_view w)
 {
     struct String_arena a = string_arena_create(ARENA_START_CAP);
-    check(a.arena);
     Array_adaptive_map map = create_frequency_map(&a, f);
+    defer
+    {
+        string_arena_free(&a);
+        (void)array_adaptive_map_clear_and_free(&map, NULL);
+    }
+    check(a.arena);
     check(!is_empty(&map));
     struct String_offset wc = clean_word(&a, w);
     if (!wc.error)
@@ -279,40 +286,49 @@ print_found(FILE *const f, SV_Str_view w)
                    found_w->freq);
         }
     }
-    string_arena_free(&a);
-    (void)array_adaptive_map_clear_and_free(&map, NULL);
 }
 
 static void
 print_top_n(FILE *const f, int n)
 {
     struct String_arena a = string_arena_create(ARENA_START_CAP);
-    check(a.arena);
     Array_adaptive_map map = create_frequency_map(&a, f);
+    defer
+    {
+        (void)clear_and_free(&map, NULL);
+        string_arena_free(&a);
+    }
+    check(a.arena);
     check(!is_empty(&map));
     print_n(&map, CCC_ORDER_GREATER, &a, n);
-    string_arena_free(&a);
-    (void)clear_and_free(&map, NULL);
 }
 
 static void
 print_last_n(FILE *const f, int n)
 {
     struct String_arena a = string_arena_create(ARENA_START_CAP);
-    check(a.arena);
     Array_adaptive_map map = create_frequency_map(&a, f);
+    defer
+    {
+        (void)clear_and_free(&map, NULL);
+        string_arena_free(&a);
+    }
+    check(a.arena);
     check(!is_empty(&map));
     print_n(&map, CCC_ORDER_LESSER, &a, n);
-    string_arena_free(&a);
-    (void)clear_and_free(&map, NULL);
 }
 
 static void
 print_alpha_n(FILE *const f, int n)
 {
     struct String_arena a = string_arena_create(ARENA_START_CAP);
-    check(a.arena);
     Array_adaptive_map map = create_frequency_map(&a, f);
+    defer
+    {
+        (void)clear_and_free(&map, NULL);
+        string_arena_free(&a);
+    }
+    check(a.arena);
     check(!is_empty(&map));
     if (!n)
     {
@@ -326,16 +342,19 @@ print_alpha_n(FILE *const f, int n)
         Word const *const w = array_adaptive_map_at(&map, iter);
         printf("%s %d\n", string_arena_at(&a, &w->ofs), w->freq);
     }
-    string_arena_free(&a);
-    (void)clear_and_free(&map, NULL);
 }
 
 static void
 print_ralpha_n(FILE *const f, int n)
 {
     struct String_arena a = string_arena_create(ARENA_START_CAP);
-    check(a.arena);
     Array_adaptive_map map = create_frequency_map(&a, f);
+    defer
+    {
+        (void)clear_and_free(&map, NULL);
+        string_arena_free(&a);
+    }
+    check(a.arena);
     check(!is_empty(&map));
     if (!n)
     {
@@ -350,8 +369,6 @@ print_ralpha_n(FILE *const f, int n)
         Word const *const w = array_adaptive_map_at(&map, iter);
         printf("%s %d\n", string_arena_at(&a, &w->ofs), w->freq);
     }
-    string_arena_free(&a);
-    (void)clear_and_free(&map, NULL);
 }
 
 static Buffer
@@ -374,13 +391,17 @@ copy_frequencies(Array_adaptive_map const *const map)
 
 static void
 print_n(CCC_Array_adaptive_map *const map, CCC_Order const ord,
-        struct String_arena *const a, int n)
+        struct String_arena *const arena, int n)
 {
     Buffer freqs = copy_frequencies(map);
+    defer
+    {
+        (void)clear_and_free(&freqs, NULL);
+    }
     check(!buffer_is_empty(&freqs));
     Flat_priority_queue flat_priority_queue
         = flat_priority_queue_heapify_initialize(
-            Word, ord, order_words, NULL, a, capacity(&freqs).count,
+            Word, ord, order_words, NULL, arena, capacity(&freqs).count,
             count(&freqs).count, begin(&freqs));
     check(count(&flat_priority_queue).count == count(&freqs).count);
     if (!n)
@@ -390,21 +411,19 @@ print_n(CCC_Array_adaptive_map *const map, CCC_Order const ord,
     /* Because all CCC containers are complete they can be treated as copyable
        types like this. There is no opaque container in CCC. */
     Buffer const sorted_freqs
-        = CCC_flat_priority_queue_heapsort(&flat_priority_queue, &(Word){});
-    check(!flat_priority_queue.buffer.data);
+        = flat_priority_queue_heapsort(&flat_priority_queue, &(Word){});
     int w = 0;
     /* Heap sort puts the root most nodes at the back of the buffer. */
     for (Word const *i = reverse_begin(&sorted_freqs);
          i != reverse_end(&sorted_freqs) && w < n;
          i = reverse_next(&sorted_freqs, i), ++w)
     {
-        char const *const arena_str = string_arena_at(a, &i->ofs);
+        char const *const arena_str = string_arena_at(arena, &i->ofs);
         if (arena_str)
         {
             printf("%d. %s %d\n", w + 1, arena_str, i->freq);
         }
     }
-    (void)clear_and_free(&freqs, NULL);
 }
 
 /*=====================    Container Construction     =======================*/

@@ -824,6 +824,7 @@ NULL. */
 /** Define this preprocessor directive if shorter names are helpful. Ensure
  no namespace clashes occur before shortening. */
 #ifdef TREE_MAP_USING_NAMESPACE_CCC
+/* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Tree_map_node Tree_map_node;
 typedef CCC_Tree_map Tree_map;
 typedef CCC_Tree_map_entry Tree_map_entry;
@@ -888,6 +889,7 @@ typedef CCC_Tree_map_entry Tree_map_entry;
 #    define tree_map_is_empty(arguments...) CCC_tree_map_is_empty(arguments)
 #    define tree_map_clear(arguments...) CCC_tree_map_clear(arguments)
 #    define tree_map_validate(arguments...) CCC_tree_map_validate(arguments)
+/* NOLINTEND(readability-identifier-naming) */
 #endif
 
 #endif /* CCC_TREE_MAP_H */

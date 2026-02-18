@@ -784,6 +784,7 @@ CCC_flat_double_ended_queue_validate(CCC_Flat_double_ended_queue const *queue);
 flat_double_ended_queue container. Ensure no namespace collisions occur before
 name shortening. */
 #ifdef FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
+/* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Flat_double_ended_queue Flat_double_ended_queue;
 #    define flat_double_ended_queue_initialize(arguments...)                   \
         CCC_flat_double_ended_queue_initialize(arguments)
@@ -854,6 +855,7 @@ typedef CCC_Flat_double_ended_queue Flat_double_ended_queue;
         CCC_flat_double_ended_queue_reverse_end(arguments)
 #    define flat_double_ended_queue_validate(arguments...)                     \
         CCC_flat_double_ended_queue_validate(arguments)
+/* NOLINTEND(readability-identifier-naming) */
 #endif /* FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC */
 
 #endif /* CCC_FLAT_DOUBLE_ENDED_QUEUE_H */
