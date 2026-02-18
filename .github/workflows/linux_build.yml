@@ -37,6 +37,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: check-diff
     if: ${{ needs.check-diff.outputs.handle == 'true' }}
+    env:
+      LLVM_PREFIX: LLVM
+      LLVM_VERSION: 22.1.0-rc3
+      LLVM_PLATFORM: Linux-x64
 
     steps:
 
@@ -49,13 +53,25 @@ jobs:
 
     - uses: lukka/get-cmake@latest
     
+    - name: Cache LLVM
+      id: cache-llvm
+      uses: actions/cache@v5
+      with:
+        path: llvm
+        key: ${{env.LLVM_PREFIX}}-${{env.LLVM_VERSION}}-${{env.LLVM_PLATFORM}}
+
+    
     - name: Download LLVM release
+      if: steps.cache-llvm.outputs.cache-hit != 'true'
       run: |
         set -eux
-        LLVM_URL="https://github.com/llvm/llvm-project/releases/download/llvmorg-22.1.0-rc3/LLVM-22.1.0-rc3-Linux-X64.tar.xz"
+        LLVM_URL="https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/${LLVM_PREFIX}-${LLVM_VERSION}-${LLVM_PLATFORM}.tar.xz"
         curl -L --fail "$LLVM_URL" -o llvm.tar.xz
         mkdir -p llvm
         tar -xvf llvm.tar.xz --strip-components=1 -C llvm
+
+    - name: Confirm Clang version
+      run: |
         "$PWD/llvm/bin/clang" --version
 
     - name: Build Debug Clang and Ninja
