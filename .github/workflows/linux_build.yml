@@ -40,7 +40,7 @@ jobs:
     env:
       LLVM_PREFIX: LLVM
       LLVM_VERSION: 22.1.0-rc3
-      LLVM_PLATFORM: Linux-x64
+      LLVM_PLATFORM: Linux-X64
 
     steps:
 
