@@ -36,17 +36,41 @@ jobs:
     runs-on: macos-latest
     needs: check-diff
     if: ${{ needs.check-diff.outputs.handle == 'true' }}
-
+    env:
+      LLVM_PREFIX: LLVM
+      LLVM_VERSION: 22.1.0-rc2
+      LLVM_PLATFORM: macOS-ARM64
+      
     steps:
 
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - uses: lukka/get-cmake@latest 
+    - uses: lukka/get-cmake@latest
 
+    - name: Cache LLVM
+      id: cache-llvm
+      uses: actions/cache@v5
+      with:
+        path: llvm
+        key: ${{env.LLVM_PREFIX}}-${{env.LLVM_VERSION}}-${{env.LLVM_PLATFORM}}
+
+    - name: Download LLVM release
+      if: steps.cache-llvm.outputs.cache-hit != 'true'
+      run: |
+        set -eux
+        LLVM_URL="https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/${LLVM_PREFIX}-${LLVM_VERSION}-${LLVM_PLATFORM}.tar.xz"
+        curl -L --fail "$LLVM_URL" -o llvm.tar.xz
+        mkdir -p llvm
+        tar -xvf llvm.tar.xz --strip-components=1 -C llvm
+
+    - name: Confirm Clang version
+      run: |
+        "$PWD/llvm/bin/clang" --version
+        
     - name: Build Debug Clang and Ninja
       run: |
-        cmake --preset=clang-debug -G "Ninja" && cmake --build build -j$(nproc) --target ccc tests samples
+        cmake --preset=clang-debug -DCMAKE_C_COMPILER="$PWD/llvm/bin/clang" -G "Ninja" && cmake --build build -j$(nproc) --target ccc tests samples
         cmake --build build --target install
     
     - name: Test Debug
@@ -56,7 +80,7 @@ jobs:
     - name: Build Release Clang and Ninja
       run: |
         make clean
-        cmake --preset=clang-release -G "Ninja" && cmake --build build -j$(nproc) --target ccc tests samples
+        cmake --preset=clang-release -DCMAKE_C_COMPILER="$PWD/llvm/bin/clang" -G "Ninja" && cmake --build build -j$(nproc) --target ccc tests samples
         cmake --build build --target install
         
     - name: Test Release
@@ -65,7 +89,7 @@ jobs:
 
     - name: Build Portable Debug Clang and Ninja
       run: |
-        cmake --preset=clang-debug -DCCC_FLAT_HASH_MAP_PORTABLE=ON -G "Ninja" && cmake --build build -j$(nproc) --target ccc tests samples
+        cmake --preset=clang-debug -DCCC_FLAT_HASH_MAP_PORTABLE=ON -DCMAKE_C_COMPILER="$PWD/llvm/bin/clang" -G "Ninja" && cmake --build build -j$(nproc) --target ccc tests samples
         cmake --build build --target install
     
     - name: Test Portable Debug
@@ -75,9 +99,10 @@ jobs:
     - name: Build Portable Release Clang and Ninja
       run: |
         make clean
-        cmake --preset=clang-release -DCCC_FLAT_HASH_MAP_PORTABLE=ON -G "Ninja" && cmake --build build -j$(nproc) --target ccc tests samples
+        cmake --preset=clang-release -DCCC_FLAT_HASH_MAP_PORTABLE=ON -DCMAKE_C_COMPILER="$PWD/llvm/bin/clang" -G "Ninja" && cmake --build build -j$(nproc) --target ccc tests samples
         cmake --build build --target install
         
     - name: Test Portable Release
       run: |
         make rtest
+
