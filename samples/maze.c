@@ -246,7 +246,7 @@ For examples of non-owning container use and composition see other samples.
 This style of data structure use can be comfortable and convenient in some
 cases.
 
-However, we can still be "C" about it by thinking about reserving exactly
+However, we can still be C about it by thinking about reserving exactly
 the memory we need dynamically in the from initializer. */
 static void
 animate_maze(struct Maze *maze)
