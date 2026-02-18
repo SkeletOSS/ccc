@@ -7,8 +7,7 @@
 #include "checkers.h"
 #include "types.h"
 
-struct Val
-{
+struct Val {
     int key;
     int val;
     CCC_Adaptive_map_node elem;

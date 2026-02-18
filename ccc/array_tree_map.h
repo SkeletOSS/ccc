@@ -762,8 +762,7 @@ forbidden, an insert error is set.
 Note that this function may write to the provided user type struct. */
 #define CCC_array_tree_map_swap_handle_wrap(array_tree_map_pointer,            \
                                             type_output_pointer)               \
-    &(CCC_Handle)                                                              \
-    {                                                                          \
+    &(CCC_Handle) {                                                            \
         CCC_array_tree_map_swap_handle((array_tree_map_pointer),               \
                                        (type_output_pointer))                  \
             .private                                                           \
@@ -788,8 +787,7 @@ If Vacant the handle contains a reference to the newly inserted handle in the
 map. If more space is needed but allocation fails an insert error is set. */
 #define CCC_array_tree_map_try_insert_wrap(array_tree_map_pointer,             \
                                            type_pointer)                       \
-    &(CCC_Handle)                                                              \
-    {                                                                          \
+    &(CCC_Handle) {                                                            \
         CCC_array_tree_map_try_insert((array_tree_map_pointer),                \
                                       (type_pointer))                          \
             .private                                                           \
@@ -810,8 +808,7 @@ lazy value compound literal as well. This function ensures the key in the
 compound literal matches the searched key. */
 #define CCC_array_tree_map_try_insert_with(array_tree_map_pointer, key,        \
                                            type_compound_literal...)           \
-    &(CCC_Handle)                                                              \
-    {                                                                          \
+    &(CCC_Handle) {                                                            \
         CCC_private_array_tree_map_try_insert_with(array_tree_map_pointer,     \
                                                    key, type_compound_literal) \
     }
@@ -842,8 +839,7 @@ lazy value compound literal as well. This function ensures the key in the
 compound literal matches the searched key. */
 #define CCC_array_tree_map_insert_or_assign_with(array_tree_map_pointer, key,  \
                                                  type_compound_literal...)     \
-    &(CCC_Handle)                                                              \
-    {                                                                          \
+    &(CCC_Handle) {                                                            \
         CCC_private_array_tree_map_insert_or_assign_with(                      \
             array_tree_map_pointer, key, type_compound_literal)                \
     }
@@ -872,8 +868,7 @@ set.
 Note that this function may write to the user type struct. */
 #define CCC_array_tree_map_remove_key_value_wrap(array_tree_map_pointer,       \
                                                  type_output_pointer)          \
-    &(CCC_Handle)                                                              \
-    {                                                                          \
+    &(CCC_Handle) {                                                            \
         CCC_array_tree_map_remove_key_value((array_tree_map_pointer),          \
                                             (type_output_pointer))             \
             .private                                                           \
@@ -914,8 +909,7 @@ where in the map such an element should be inserted.
 A handle is rarely useful on its own. It should be passed in a functional style
 to subsequent calls in the Handle Interface. */
 #define CCC_array_tree_map_handle_wrap(array_tree_map_pointer, key_pointer)    \
-    &(CCC_Array_tree_map_handle)                                               \
-    {                                                                          \
+    &(CCC_Array_tree_map_handle) {                                             \
         CCC_array_tree_map_handle((array_tree_map_pointer), (key_pointer))     \
             .private                                                           \
     }
@@ -984,8 +978,7 @@ container can deliver the user type T. This means any function calls are lazily
 evaluated in the closure scope. */
 #define CCC_array_tree_map_and_modify_with(map_array_pointer, type_name,       \
                                            closure_over_T...)                  \
-    &(CCC_Array_tree_map_handle)                                               \
-    {                                                                          \
+    &(CCC_Array_tree_map_handle) {                                             \
         CCC_private_array_tree_map_and_modify_with(map_array_pointer,          \
                                                    type_name, closure_over_T)  \
     }
@@ -1064,8 +1057,7 @@ Vacant, no prior handle existed to be removed.
 Note that the reference to the removed handle is invalidated upon any further
 insertions. */
 #define CCC_array_tree_map_remove_handle_wrap(map_array_pointer)               \
-    &(CCC_Handle)                                                              \
-    {                                                                          \
+    &(CCC_Handle) {                                                            \
         CCC_array_tree_map_remove_handle((map_array_pointer)).private          \
     }
 
@@ -1206,8 +1198,7 @@ the range the second to the end of the range.
 enclosing scope. This reference is always non-NULL. */
 #define CCC_array_tree_map_equal_range_wrap(array_tree_map_pointer,            \
                                             begin_and_end_key_pointers...)     \
-    &(CCC_Handle_range)                                                        \
-    {                                                                          \
+    &(CCC_Handle_range) {                                                      \
         CCC_array_tree_map_equal_range((array_tree_map_pointer),               \
                                        (begin_and_end_key_pointers))           \
             .private                                                           \
@@ -1250,8 +1241,7 @@ to the start of the range_reverse the second to the end of the range_reverse.
 with the enclosing scope. This reference is always non-NULL. */
 #define CCC_array_tree_map_equal_range_reverse_wrap(                           \
     array_tree_map_pointer, reverse_begin_and_reverse_end_key_pointers...)     \
-    &(CCC_Handle_range_reverse)                                                \
-    {                                                                          \
+    &(CCC_Handle_range_reverse) {                                              \
         CCC_array_tree_map_equal_range_reverse(                                \
             (array_tree_map_pointer),                                          \
             (reverse_begin_and_reverse_end_key_pointers))                      \

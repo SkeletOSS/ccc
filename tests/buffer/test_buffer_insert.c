@@ -14,27 +14,23 @@
 #include "utility/random.h"
 
 static int
-std_order_ints(void const *const left, void const *const right)
-{
+std_order_ints(void const *const left, void const *const right) {
     int const left_int = *(int *)left;
     int const right_int = *(int *)right;
     return (left_int > right_int) - (left_int < right_int);
 }
 
 static CCC_Order
-ccc_order_ints(CCC_Type_comparator_context const order)
-{
+ccc_order_ints(CCC_Type_comparator_context const order) {
     int const left_int = *(int *)order.type_left;
     int const right_int = *(int *)order.type_right;
     return (left_int > right_int) - (left_int < right_int);
 }
 
-check_static_begin(buffer_test_push_fixed)
-{
+check_static_begin(buffer_test_push_fixed) {
     Buffer b = buffer_with_compound_literal(0, (int[8]){});
     int const push[8] = {7, 6, 5, 4, 3, 2, 1, 0};
-    for (size_t i = 0; i < sizeof(push) / sizeof(*push); ++i)
-    {
+    for (size_t i = 0; i < sizeof(push) / sizeof(*push); ++i) {
         int *p = buffer_push_back(&b, &push[i]);
         check(p != NULL, CCC_TRUE);
         check(*p, push[i]);
@@ -44,15 +40,13 @@ check_static_begin(buffer_test_push_fixed)
     check_end();
 }
 
-check_static_begin(buffer_test_push_resize)
-{
+check_static_begin(buffer_test_push_resize) {
     Buffer b = buffer_with_allocator(int, std_allocate);
     size_t const cap = 32;
     int *const many = malloc(sizeof(int) * cap);
     iota(many, cap, 0);
     check(many != NULL, CCC_TRUE);
-    for (size_t i = 0; i < cap; ++i)
-    {
+    for (size_t i = 0; i < cap; ++i) {
         int *p = buffer_push_back(&b, &many[i]);
         check(p != NULL, CCC_TRUE);
         check(*p, many[i]);
@@ -65,10 +59,8 @@ check_static_begin(buffer_test_push_resize)
     });
 }
 
-check_static_begin(buffer_test_push_qsort)
-{
-    enum : size_t
-    {
+check_static_begin(buffer_test_push_qsort) {
+    enum : size_t {
         BUF_SORT_CAP = 32,
     };
     Buffer b
@@ -89,8 +81,7 @@ check_static_begin(buffer_test_push_qsort)
     int prev = INT_MIN;
     size_t count = 0;
     for (int const *i = buffer_begin(&b); i != buffer_end(&b);
-         i = buffer_next(&b, i))
-    {
+         i = buffer_next(&b, i)) {
         check(i != NULL, CCC_TRUE);
         check(*i >= prev, CCC_TRUE);
         prev = *i;
@@ -100,10 +91,8 @@ check_static_begin(buffer_test_push_qsort)
     check_end();
 }
 
-check_static_begin(buffer_test_push_sort)
-{
-    enum : size_t
-    {
+check_static_begin(buffer_test_push_sort) {
+    enum : size_t {
         BUF_SORT_CAP = 32,
     };
     Buffer b
@@ -115,8 +104,7 @@ check_static_begin(buffer_test_push_sort)
     int prev = INT_MIN;
     size_t count = 0;
     for (int const *i = buffer_begin(&b); i != buffer_end(&b);
-         i = buffer_next(&b, i))
-    {
+         i = buffer_next(&b, i)) {
         check(i != NULL, CCC_TRUE);
         check(*i >= prev, CCC_TRUE);
         prev = *i;
@@ -126,10 +114,8 @@ check_static_begin(buffer_test_push_sort)
     check_end();
 }
 
-check_static_begin(buffer_test_insert_no_allocate)
-{
-    enum : size_t
-    {
+check_static_begin(buffer_test_insert_no_allocate) {
+    enum : size_t {
         BUFINSCAP = 8,
     };
     Buffer b = buffer_with_compound_literal(BUFINSCAP - 3,
@@ -157,10 +143,8 @@ check_static_begin(buffer_test_insert_no_allocate)
     check_end();
 }
 
-check_static_begin(buffer_test_insert_no_allocate_fail)
-{
-    enum : size_t
-    {
+check_static_begin(buffer_test_insert_no_allocate_fail) {
+    enum : size_t {
         BUFINSCAP = 8,
     };
     Buffer b = buffer_with_compound_literal(
@@ -173,8 +157,7 @@ check_static_begin(buffer_test_insert_no_allocate_fail)
 }
 
 /* Force a resize when inserting in middle forces shuffle down. */
-check_static_begin(buffer_test_insert_allocate)
-{
+check_static_begin(buffer_test_insert_allocate) {
     Buffer b = buffer_with_allocator(int, std_allocate);
     CCC_Result r = buffer_reserve(&b, 6, std_allocate);
     check(r, CCC_RESULT_OK);
@@ -203,8 +186,7 @@ check_static_begin(buffer_test_insert_allocate)
 }
 
 int
-main(void)
-{
+main(void) {
     /* NOLINTNEXTLINE Random only needs to be seeded once. */
     srand(time(NULL));
     return check_run(buffer_test_push_fixed(), buffer_test_push_resize(),

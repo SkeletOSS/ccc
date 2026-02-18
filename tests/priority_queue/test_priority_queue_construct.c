@@ -9,15 +9,13 @@
 #include "utility/stack_allocator.h"
 
 static CCC_Priority_queue
-construct_empty(void)
-{
+construct_empty(void) {
     CCC_Priority_queue result = CCC_priority_queue_initialize(
         struct Val, elem, CCC_ORDER_LESSER, val_order, NULL, NULL);
     return result;
 }
 
-check_static_begin(priority_queue_test_empty)
-{
+check_static_begin(priority_queue_test_empty) {
     CCC_Priority_queue priority_queue = CCC_priority_queue_initialize(
         struct Val, elem, CCC_ORDER_LESSER, val_order, NULL, NULL);
     check(CCC_priority_queue_is_empty(&priority_queue), true);
@@ -31,8 +29,7 @@ referential fields will become invalidated after the constructing function ends.
 This leads to a dangling reference to stack memory that no longer exists.
 Disastrous. The solution is to never implement sentinels that refer to a memory
 address on the priority queue struct itself. */
-check_static_begin(priority_queue_test_construct)
-{
+check_static_begin(priority_queue_test_construct) {
     CCC_Priority_queue pq = construct_empty();
     struct Val v = {};
     check(CCC_priority_queue_push(&pq, &v.elem) != NULL, true);
@@ -40,8 +37,7 @@ check_static_begin(priority_queue_test_construct)
     check_end();
 }
 
-check_static_begin(priority_queue_test_construct_from)
-{
+check_static_begin(priority_queue_test_construct_from) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 3);
     CCC_Priority_queue pq = CCC_priority_queue_context_from(
@@ -60,8 +56,7 @@ check_static_begin(priority_queue_test_construct_from)
     check_end((void)CCC_priority_queue_clear(&pq, NULL););
 }
 
-check_static_begin(priority_queue_test_construct_from_fail)
-{
+check_static_begin(priority_queue_test_construct_from_fail) {
     CCC_Priority_queue pq
         = CCC_priority_queue_from(elem, CCC_ORDER_LESSER, val_order, NULL, NULL,
                                   (struct Val[]){
@@ -74,8 +69,7 @@ check_static_begin(priority_queue_test_construct_from_fail)
     check_end((void)CCC_priority_queue_clear(&pq, NULL););
 }
 
-check_static_begin(priority_queue_test_with_allocator)
-{
+check_static_begin(priority_queue_test_with_allocator) {
     CCC_Priority_queue pq = CCC_priority_queue_with_allocator(
         struct Val, elem, CCC_ORDER_LESSER, val_order, std_allocate);
     check(CCC_priority_queue_validate(&pq), true);
@@ -83,8 +77,7 @@ check_static_begin(priority_queue_test_with_allocator)
     check_end();
 }
 
-check_static_begin(priority_queue_test_with_context_allocator)
-{
+check_static_begin(priority_queue_test_with_context_allocator) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 3);
     CCC_Priority_queue pq = CCC_priority_queue_with_context_allocator(
@@ -101,8 +94,7 @@ check_static_begin(priority_queue_test_with_context_allocator)
 }
 
 int
-main(void)
-{
+main(void) {
     return check_run(priority_queue_test_empty(),
                      priority_queue_test_construct(),
                      priority_queue_test_construct_from(),

@@ -8,15 +8,13 @@
 #include "utility/stack_allocator.h"
 
 static CCC_Tree_map
-construct_empty(void)
-{
+construct_empty(void) {
     CCC_Tree_map map
         = CCC_tree_map_initialize(struct Val, elem, key, id_order, NULL, NULL);
     return map;
 }
 
-check_static_begin(tree_map_test_empty)
-{
+check_static_begin(tree_map_test_empty) {
     CCC_Tree_map s
         = CCC_tree_map_initialize(struct Val, elem, key, id_order, NULL, NULL);
     check(CCC_tree_map_is_empty(&s), true);
@@ -30,8 +28,7 @@ invalidated after the constructing function ends. This leads to a dangling
 reference to stack memory that no longer exists. Disastrous. The solution is
 to never implement sentinels that refer to a memory address on the map struct
 itself. */
-check_static_begin(tree_map_test_construct)
-{
+check_static_begin(tree_map_test_construct) {
     struct Val push = {};
     CCC_Tree_map map = construct_empty();
     CCC_Entry entry = CCC_tree_map_insert_or_assign(&map, &push.elem);
@@ -42,8 +39,7 @@ check_static_begin(tree_map_test_construct)
     check_end();
 }
 
-check_static_begin(tree_map_test_construct_from)
-{
+check_static_begin(tree_map_test_construct_from) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 3);
     CCC_Tree_map map = CCC_tree_map_context_from(
@@ -58,8 +54,7 @@ check_static_begin(tree_map_test_construct_from)
     check_end((void)CCC_tree_map_clear(&map, NULL););
 }
 
-check_static_begin(tree_map_test_construct_from_overwrite)
-{
+check_static_begin(tree_map_test_construct_from_overwrite) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 3);
     CCC_Tree_map map = CCC_tree_map_context_from(
@@ -78,8 +73,7 @@ check_static_begin(tree_map_test_construct_from_overwrite)
     check_end((void)CCC_tree_map_clear(&map, NULL););
 }
 
-check_static_begin(tree_map_test_construct_from_fail)
-{
+check_static_begin(tree_map_test_construct_from_fail) {
     CCC_Tree_map map = CCC_tree_map_from(elem, key, id_order, NULL, NULL,
                                          (struct Val[]){
                                              {.key = 0, .val = 0},
@@ -92,8 +86,7 @@ check_static_begin(tree_map_test_construct_from_fail)
 }
 
 int
-main(void)
-{
+main(void) {
     return check_run(tree_map_test_empty(), tree_map_test_construct(),
                      tree_map_test_construct_from(),
                      tree_map_test_construct_from_overwrite(),

@@ -15,8 +15,7 @@ This is good for spinning up a quick test on the stack for container interface
 functions that require an allocator. We test those code paths while not dealing
 with the system heap allocator. As the test harness grows, this speed up is
 valuable. This should only be used for testing. */
-struct Stack_allocator
-{
+struct Stack_allocator {
     /** The stack array of a compile time known capacity of user types. */
     void *blocks;
     /** The size in bytes of the user type stored in this stack array. */

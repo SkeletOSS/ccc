@@ -69,20 +69,17 @@ portable implementation. Consider exposing to user in header docs. */
 
 /** @internal The 128 bit vector type for efficient SIMD group scanning. 16 one
 byte large tags fit in this type. */
-struct Group
-{
+struct Group {
     __m128i v;
 };
 
 /** @internal Because we use 128 bit vectors over tags the results of various
 operations can be compressed into a 16 bit integer. */
-struct Match_mask
-{
+struct Match_mask {
     uint16_t v;
 };
 
-enum : typeof((struct Match_mask){}.v)
-{
+enum : typeof((struct Match_mask){}.v) {
     /** @internal MSB tag bit used for static assert. */
     MATCH_MASK_MSB = 0x8000,
     /** @internal All bits on in a mask except for the 0th tag bit. */
@@ -93,22 +90,19 @@ enum : typeof((struct Match_mask){}.v)
 
 /** @internal The 64 bit vector is used on NEON due to a lack of ability to
 compress a 128 bit vector to a smaller int efficiently. */
-struct Group
-{
+struct Group {
     /** @internal NEON offers a specific type for 64 bit manipulations. */
     uint8x8_t v;
 };
 
 /** @internal The mask will consist of 8 bytes with the most significant bit of
 each byte on to indicate match statuses. */
-struct Match_mask
-{
+struct Match_mask {
     /** @internal NEON returns this type from various uint8x8_t operations. */
     uint64_t v;
 };
 
-enum : uint64_t
-{
+enum : uint64_t {
     /** @internal MSB tag bit used for static assert. */
     MATCH_MASK_MSB = 0x8000000000000000,
     /** @internal MSB tag bits used for byte and word level masking. */
@@ -121,8 +115,7 @@ enum : uint64_t
     MATCH_MASK_0TH_TAG_OFF = 0x8080808080808000,
 };
 
-enum : typeof((struct CCC_Flat_hash_map_tag){}.v)
-{
+enum : typeof((struct CCC_Flat_hash_map_tag){}.v) {
     /** @internal Bits in a tag used to help in creating a group of one tag. */
     TAG_BITS = sizeof(struct CCC_Flat_hash_map_tag) * CHAR_BIT,
 };
@@ -131,8 +124,7 @@ enum : typeof((struct CCC_Flat_hash_map_tag){}.v)
 
 /** @internal The 8 byte word for managing multiple simultaneous equality
 checks. In contrast to SIMD this group size is the same as the match. */
-struct Group
-{
+struct Group {
     /** @internal 64 bits allows 8 tags to be checked at once. */
     uint64_t v;
 };
@@ -140,14 +132,12 @@ struct Group
 /** @internal The match is the same size as the group because only the most
 significant bit in a byte within the mask will be on to indicate the result of
 various queries such as matching a tag, empty, or constant. */
-struct Match_mask
-{
+struct Match_mask {
     /** @internal The match is the same as a group with MSB on. */
     typeof((struct Group){}.v) v;
 };
 
-enum : typeof((struct Group){}.v)
-{
+enum : typeof((struct Group){}.v) {
     /** @internal MSB tag bit used for static assert. */
     MATCH_MASK_MSB = 0x8000000000000000,
     /** @internal MSB tag bits used for byte and word level masking. */
@@ -162,8 +152,7 @@ enum : typeof((struct Group){}.v)
     MATCH_MASK_0TH_TAG_OFF = 0x8080808080808000,
 };
 
-enum : typeof((struct CCC_Flat_hash_map_tag){}.v)
-{
+enum : typeof((struct CCC_Flat_hash_map_tag){}.v) {
     /** @internal Bits in a tag used to help in creating a group of one tag. */
     TAG_BITS = sizeof(struct CCC_Flat_hash_map_tag) * CHAR_BIT,
 };
@@ -172,8 +161,7 @@ enum : typeof((struct CCC_Flat_hash_map_tag){}.v)
 
 /*=========================      Group Count    =============================*/
 
-enum : typeof((struct CCC_Flat_hash_map_tag){}.v)
-{
+enum : typeof((struct CCC_Flat_hash_map_tag){}.v) {
     /** @internal Shortened group size name for readability. */
     GROUP_COUNT = CCC_FLAT_HASH_MAP_GROUP_COUNT,
 };
@@ -195,10 +183,8 @@ One behavior we want to ensure is that the tag array starts on the exact next
 byte after the user data type because the tag array has no alignment
 requirement: it is only a byte so any address following the data array will be
 aligned. */
-struct Fixed_map_test_type
-{
-    struct
-    {
+struct Fixed_map_test_type {
+    struct {
         int const i;
     } const data[2 + 1];
     alignas(GROUP_COUNT) struct CCC_Flat_hash_map_tag const tag[2];
@@ -237,8 +223,7 @@ TAG_FULL = 0b0???_????
 ```
 
 The most significant bit is off and the lower 7 make up the hash bits. */
-enum : typeof((struct CCC_Flat_hash_map_tag){}.v)
-{
+enum : typeof((struct CCC_Flat_hash_map_tag){}.v) {
     /** @internal Deleted is applied when a removed value in a group must signal
     to a probe sequence to continue searching for a match or empty to stop. */
     TAG_DELETED = 0x80,
@@ -269,8 +254,7 @@ https://fgiesen.wordpress.com/2015/02/22/triangular-numbers-mod-2n/
 
 See also Donald Knuth's The Art of Computer Programming Volume 3, Chapter 6.4,
 Answers to Exercises, problem 20, page 731 for another proof. */
-struct Probe_sequence
-{
+struct Probe_sequence {
     /** @internal The index this probe step has placed us on. */
     size_t index;
     /** @internal Stride increases by group size on each iteration. */
@@ -278,8 +262,7 @@ struct Probe_sequence
 };
 
 /** @internal Helper type for obtaining a search result on the map. */
-struct Query
-{
+struct Query {
     /** The slot in the table. */
     size_t index;
     /** Status indicating occupied, vacant, or possible error. */
@@ -363,30 +346,24 @@ static CCC_Tribool check_replica_group(struct CCC_Flat_hash_map const *);
 /*===========================    Interface   ================================*/
 
 CCC_Tribool
-CCC_flat_hash_map_is_empty(CCC_Flat_hash_map const *const map)
-{
-    if (unlikely(!map))
-    {
+CCC_flat_hash_map_is_empty(CCC_Flat_hash_map const *const map) {
+    if (unlikely(!map)) {
         return CCC_TRIBOOL_ERROR;
     }
     return !map->count;
 }
 
 CCC_Count
-CCC_flat_hash_map_count(CCC_Flat_hash_map const *const map)
-{
-    if (!map || map->mask < (GROUP_COUNT - 1))
-    {
+CCC_flat_hash_map_count(CCC_Flat_hash_map const *const map) {
+    if (!map || map->mask < (GROUP_COUNT - 1)) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
     return (CCC_Count){.count = map->count};
 }
 
 CCC_Count
-CCC_flat_hash_map_capacity(CCC_Flat_hash_map const *const map)
-{
-    if (!map || (!map->data && map->mask))
-    {
+CCC_flat_hash_map_capacity(CCC_Flat_hash_map const *const map) {
+    if (!map || (!map->data && map->mask)) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
     return (CCC_Count){.count = map->mask ? map->mask + 1 : 0};
@@ -394,14 +371,11 @@ CCC_flat_hash_map_capacity(CCC_Flat_hash_map const *const map)
 
 CCC_Tribool
 CCC_flat_hash_map_contains(CCC_Flat_hash_map const *const map,
-                           void const *const key)
-{
-    if (unlikely(!map || !key))
-    {
+                           void const *const key) {
+    if (unlikely(!map || !key)) {
         return CCC_TRIBOOL_ERROR;
     }
-    if (unlikely(is_uninitialized(map) || !map->count))
-    {
+    if (unlikely(is_uninitialized(map) || !map->count)) {
         return CCC_FALSE;
     }
     return !find_key_or_fail(map, key, hasher(map, key)).error;
@@ -409,25 +383,20 @@ CCC_flat_hash_map_contains(CCC_Flat_hash_map const *const map,
 
 void *
 CCC_flat_hash_map_get_key_value(CCC_Flat_hash_map const *const map,
-                                void const *const key)
-{
-    if (unlikely(!map || !key || is_uninitialized(map) || !map->count))
-    {
+                                void const *const key) {
+    if (unlikely(!map || !key || is_uninitialized(map) || !map->count)) {
         return NULL;
     }
     CCC_Count const i = find_key_or_fail(map, key, hasher(map, key));
-    if (i.error)
-    {
+    if (i.error) {
         return NULL;
     }
     return data_at(map, i.count);
 }
 
 CCC_Flat_hash_map_entry
-CCC_flat_hash_map_entry(CCC_Flat_hash_map *const map, void const *const key)
-{
-    if (unlikely(!map || !key))
-    {
+CCC_flat_hash_map_entry(CCC_Flat_hash_map *const map, void const *const key) {
+    if (unlikely(!map || !key)) {
         return (CCC_Flat_hash_map_entry){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
     }
     return (CCC_Flat_hash_map_entry){entry(map, key)};
@@ -435,18 +404,14 @@ CCC_flat_hash_map_entry(CCC_Flat_hash_map *const map, void const *const key)
 
 void *
 CCC_flat_hash_map_or_insert(CCC_Flat_hash_map_entry const *const e,
-                            void const *type)
-{
-    if (unlikely(!e || !type))
-    {
+                            void const *type) {
+    if (unlikely(!e || !type)) {
         return NULL;
     }
-    if (e->private.status & CCC_ENTRY_OCCUPIED)
-    {
+    if (e->private.status & CCC_ENTRY_OCCUPIED) {
         return data_at(e->private.map, e->private.index);
     }
-    if (e->private.status & CCC_ENTRY_INSERT_ERROR)
-    {
+    if (e->private.status & CCC_ENTRY_INSERT_ERROR) {
         return NULL;
     }
     insert_and_copy(e->private.map, type, e->private.tag, e->private.index);
@@ -455,20 +420,16 @@ CCC_flat_hash_map_or_insert(CCC_Flat_hash_map_entry const *const e,
 
 void *
 CCC_flat_hash_map_insert_entry(CCC_Flat_hash_map_entry const *const e,
-                               void const *type)
-{
-    if (unlikely(!e || !type))
-    {
+                               void const *type) {
+    if (unlikely(!e || !type)) {
         return NULL;
     }
-    if (e->private.status & CCC_ENTRY_OCCUPIED)
-    {
+    if (e->private.status & CCC_ENTRY_OCCUPIED) {
         void *const slot = data_at(e->private.map, e->private.index);
         (void)memcpy(slot, type, e->private.map->sizeof_type);
         return slot;
     }
-    if (e->private.status & CCC_ENTRY_INSERT_ERROR)
-    {
+    if (e->private.status & CCC_ENTRY_INSERT_ERROR) {
         return NULL;
     }
     insert_and_copy(e->private.map, type, e->private.tag, e->private.index);
@@ -476,14 +437,11 @@ CCC_flat_hash_map_insert_entry(CCC_Flat_hash_map_entry const *const e,
 }
 
 CCC_Entry
-CCC_flat_hash_map_remove_entry(CCC_Flat_hash_map_entry const *const e)
-{
-    if (unlikely(!e))
-    {
+CCC_flat_hash_map_remove_entry(CCC_Flat_hash_map_entry const *const e) {
+    if (unlikely(!e)) {
         return (CCC_Entry){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
     }
-    if (!(e->private.status & CCC_ENTRY_OCCUPIED))
-    {
+    if (!(e->private.status & CCC_ENTRY_OCCUPIED)) {
         return (CCC_Entry){{.status = CCC_ENTRY_VACANT}};
     }
     erase(e->private.map, e->private.index);
@@ -492,10 +450,9 @@ CCC_flat_hash_map_remove_entry(CCC_Flat_hash_map_entry const *const e)
 
 CCC_Flat_hash_map_entry *
 CCC_flat_hash_map_and_modify(CCC_Flat_hash_map_entry *const entry,
-                             CCC_Type_modifier *const modify)
-{
-    if (entry && modify && ((entry->private.status & CCC_ENTRY_OCCUPIED) != 0))
-    {
+                             CCC_Type_modifier *const modify) {
+    if (entry && modify
+        && ((entry->private.status & CCC_ENTRY_OCCUPIED) != 0)) {
         modify((CCC_Type_context){
             .type = data_at(entry->private.map, entry->private.index),
             .context = NULL,
@@ -507,10 +464,9 @@ CCC_flat_hash_map_and_modify(CCC_Flat_hash_map_entry *const entry,
 CCC_Flat_hash_map_entry *
 CCC_flat_hash_map_and_modify_context(CCC_Flat_hash_map_entry *const entry,
                                      CCC_Type_modifier *const modify,
-                                     void *const context)
-{
-    if (entry && modify && ((entry->private.status & CCC_ENTRY_OCCUPIED) != 0))
-    {
+                                     void *const context) {
+    if (entry && modify
+        && ((entry->private.status & CCC_ENTRY_OCCUPIED) != 0)) {
         modify((CCC_Type_context){
             .type = data_at(entry->private.map, entry->private.index),
             .context = context,
@@ -521,16 +477,13 @@ CCC_flat_hash_map_and_modify_context(CCC_Flat_hash_map_entry *const entry,
 
 CCC_Entry
 CCC_flat_hash_map_swap_entry(CCC_Flat_hash_map *const map,
-                             void *const type_output)
-{
-    if (unlikely(!map || !type_output))
-    {
+                             void *const type_output) {
+    if (unlikely(!map || !type_output)) {
         return (CCC_Entry){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
     }
     void *const key = key_in_slot(map, type_output);
     struct CCC_Flat_hash_map_entry ent = entry(map, key);
-    if (ent.status & CCC_ENTRY_OCCUPIED)
-    {
+    if (ent.status & CCC_ENTRY_OCCUPIED) {
         swap(swap_slot(map), data_at(map, ent.index), type_output,
              map->sizeof_type);
         return (CCC_Entry){{
@@ -538,8 +491,7 @@ CCC_flat_hash_map_swap_entry(CCC_Flat_hash_map *const map,
             .status = CCC_ENTRY_OCCUPIED,
         }};
     }
-    if (ent.status & CCC_ENTRY_INSERT_ERROR)
-    {
+    if (ent.status & CCC_ENTRY_INSERT_ERROR) {
         return (CCC_Entry){{.status = CCC_ENTRY_INSERT_ERROR}};
     }
     insert_and_copy(ent.map, type_output, ent.tag, ent.index);
@@ -551,23 +503,19 @@ CCC_flat_hash_map_swap_entry(CCC_Flat_hash_map *const map,
 
 CCC_Entry
 CCC_flat_hash_map_try_insert(CCC_Flat_hash_map *const map,
-                             void const *const type)
-{
-    if (unlikely(!map || !type))
-    {
+                             void const *const type) {
+    if (unlikely(!map || !type)) {
         return (CCC_Entry){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
     }
     void *const key = key_in_slot(map, type);
     struct CCC_Flat_hash_map_entry ent = entry(map, key);
-    if (ent.status & CCC_ENTRY_OCCUPIED)
-    {
+    if (ent.status & CCC_ENTRY_OCCUPIED) {
         return (CCC_Entry){{
             .type = data_at(map, ent.index),
             .status = CCC_ENTRY_OCCUPIED,
         }};
     }
-    if (ent.status & CCC_ENTRY_INSERT_ERROR)
-    {
+    if (ent.status & CCC_ENTRY_INSERT_ERROR) {
         return (CCC_Entry){{.status = CCC_ENTRY_INSERT_ERROR}};
     }
     insert_and_copy(ent.map, type, ent.tag, ent.index);
@@ -579,24 +527,20 @@ CCC_flat_hash_map_try_insert(CCC_Flat_hash_map *const map,
 
 CCC_Entry
 CCC_flat_hash_map_insert_or_assign(CCC_Flat_hash_map *const map,
-                                   void const *const type)
-{
-    if (unlikely(!map || !type))
-    {
+                                   void const *const type) {
+    if (unlikely(!map || !type)) {
         return (CCC_Entry){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
     }
     void *const key = key_in_slot(map, type);
     struct CCC_Flat_hash_map_entry ent = entry(map, key);
-    if (ent.status & CCC_ENTRY_OCCUPIED)
-    {
+    if (ent.status & CCC_ENTRY_OCCUPIED) {
         (void)memcpy(data_at(map, ent.index), type, map->sizeof_type);
         return (CCC_Entry){{
             .type = data_at(map, ent.index),
             .status = CCC_ENTRY_OCCUPIED,
         }};
     }
-    if (ent.status & CCC_ENTRY_INSERT_ERROR)
-    {
+    if (ent.status & CCC_ENTRY_INSERT_ERROR) {
         return (CCC_Entry){{.status = CCC_ENTRY_INSERT_ERROR}};
     }
     insert_and_copy(ent.map, type, ent.tag, ent.index);
@@ -608,20 +552,16 @@ CCC_flat_hash_map_insert_or_assign(CCC_Flat_hash_map *const map,
 
 CCC_Entry
 CCC_flat_hash_map_remove_key_value(CCC_Flat_hash_map *const map,
-                                   void *const type_output)
-{
-    if (unlikely(!map || !type_output))
-    {
+                                   void *const type_output) {
+    if (unlikely(!map || !type_output)) {
         return (CCC_Entry){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
     }
-    if (unlikely(is_uninitialized(map) || !map->count))
-    {
+    if (unlikely(is_uninitialized(map) || !map->count)) {
         return (CCC_Entry){{.status = CCC_ENTRY_VACANT}};
     }
     void *const key = key_in_slot(map, type_output);
     CCC_Count const index = find_key_or_fail(map, key, hasher(map, key));
-    if (index.error)
-    {
+    if (index.error) {
         return (CCC_Entry){{.status = CCC_ENTRY_VACANT}};
     }
     (void)memcpy(type_output, data_at(map, index.count), map->sizeof_type);
@@ -633,10 +573,8 @@ CCC_flat_hash_map_remove_key_value(CCC_Flat_hash_map *const map,
 }
 
 void *
-CCC_flat_hash_map_begin(CCC_Flat_hash_map const *const map)
-{
-    if (unlikely(!map || !map->mask || is_uninitialized(map) || !map->count))
-    {
+CCC_flat_hash_map_begin(CCC_Flat_hash_map const *const map) {
+    if (unlikely(!map || !map->mask || is_uninitialized(map) || !map->count)) {
         return NULL;
     }
     return find_first_full_slot(map, 0);
@@ -644,16 +582,13 @@ CCC_flat_hash_map_begin(CCC_Flat_hash_map const *const map)
 
 void *
 CCC_flat_hash_map_next(CCC_Flat_hash_map const *const map,
-                       void const *const type_iterator)
-{
+                       void const *const type_iterator) {
     if (unlikely(!map || !type_iterator || !map->mask || is_uninitialized(map)
-                 || !map->count))
-    {
+                 || !map->count)) {
         return NULL;
     }
     CCC_Count i = data_index(map, type_iterator);
-    if (i.error)
-    {
+    if (i.error) {
         return NULL;
     }
     size_t const aligned_group_start
@@ -662,24 +597,20 @@ CCC_flat_hash_map_next(CCC_Flat_hash_map const *const map,
         = match_leading_full(group_load_aligned(&map->tag[aligned_group_start]),
                              i.count & (GROUP_COUNT - 1));
     size_t const bit = match_next_one(&m);
-    if (bit != GROUP_COUNT)
-    {
+    if (bit != GROUP_COUNT) {
         return data_at(map, aligned_group_start + bit);
     }
     return find_first_full_slot(map, aligned_group_start + GROUP_COUNT);
 }
 
 void *
-CCC_flat_hash_map_end(CCC_Flat_hash_map const *const)
-{
+CCC_flat_hash_map_end(CCC_Flat_hash_map const *const) {
     return NULL;
 }
 
 void *
-CCC_flat_hash_map_unwrap(CCC_Flat_hash_map_entry const *const e)
-{
-    if (unlikely(!e) || !(e->private.status & CCC_ENTRY_OCCUPIED))
-    {
+CCC_flat_hash_map_unwrap(CCC_Flat_hash_map_entry const *const e) {
+    if (unlikely(!e) || !(e->private.status & CCC_ENTRY_OCCUPIED)) {
         return NULL;
     }
     return data_at(e->private.map, e->private.index);
@@ -687,18 +618,14 @@ CCC_flat_hash_map_unwrap(CCC_Flat_hash_map_entry const *const e)
 
 CCC_Result
 CCC_flat_hash_map_clear(CCC_Flat_hash_map *const map,
-                        CCC_Type_destructor *const destroy)
-{
-    if (unlikely(!map))
-    {
+                        CCC_Type_destructor *const destroy) {
+    if (unlikely(!map)) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    if (unlikely(is_uninitialized(map) || !map->mask || !map->tag))
-    {
+    if (unlikely(is_uninitialized(map) || !map->mask || !map->tag)) {
         return CCC_RESULT_OK;
     }
-    if (!destroy)
-    {
+    if (!destroy) {
         (void)memset(map->tag, TAG_EMPTY, mask_to_tag_bytes(map->mask));
         map->remain = mask_to_capacity_with_load_factor(map->mask);
         map->count = 0;
@@ -713,19 +640,15 @@ CCC_flat_hash_map_clear(CCC_Flat_hash_map *const map,
 
 CCC_Result
 CCC_flat_hash_map_clear_and_free(CCC_Flat_hash_map *const map,
-                                 CCC_Type_destructor *const destroy)
-{
-    if (unlikely(!map || !map->data || !map->mask || is_uninitialized(map)))
-    {
+                                 CCC_Type_destructor *const destroy) {
+    if (unlikely(!map || !map->data || !map->mask || is_uninitialized(map))) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    if (!map->allocate)
-    {
+    if (!map->allocate) {
         (void)CCC_flat_hash_map_clear(map, destroy);
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
-    if (destroy)
-    {
+    if (destroy) {
         destory_each(map, destroy);
     }
     map->remain = 0;
@@ -744,20 +667,16 @@ CCC_flat_hash_map_clear_and_free(CCC_Flat_hash_map *const map,
 CCC_Result
 CCC_flat_hash_map_clear_and_free_reserve(CCC_Flat_hash_map *const map,
                                          CCC_Type_destructor *const destroy,
-                                         CCC_Allocator *const allocate)
-{
+                                         CCC_Allocator *const allocate) {
     if (unlikely(!map || !map->data || is_uninitialized(map) || !map->mask
-                 || (map->allocate && map->allocate != allocate)))
-    {
+                 || (map->allocate && map->allocate != allocate))) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    if (!allocate)
-    {
+    if (!allocate) {
         (void)CCC_flat_hash_map_clear(map, destroy);
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
-    if (destroy)
-    {
+    if (destroy) {
         destory_each(map, destroy);
     }
     map->remain = 0;
@@ -774,30 +693,24 @@ CCC_flat_hash_map_clear_and_free_reserve(CCC_Flat_hash_map *const map,
 }
 
 CCC_Tribool
-CCC_flat_hash_map_occupied(CCC_Flat_hash_map_entry const *const e)
-{
-    if (unlikely(!e))
-    {
+CCC_flat_hash_map_occupied(CCC_Flat_hash_map_entry const *const e) {
+    if (unlikely(!e)) {
         return CCC_TRIBOOL_ERROR;
     }
     return (e->private.status & CCC_ENTRY_OCCUPIED) != 0;
 }
 
 CCC_Tribool
-CCC_flat_hash_map_insert_error(CCC_Flat_hash_map_entry const *const e)
-{
-    if (unlikely(!e))
-    {
+CCC_flat_hash_map_insert_error(CCC_Flat_hash_map_entry const *const e) {
+    if (unlikely(!e)) {
         return CCC_TRIBOOL_ERROR;
     }
     return (e->private.status & CCC_ENTRY_INSERT_ERROR) != 0;
 }
 
 CCC_Entry_status
-CCC_flat_hash_map_entry_status(CCC_Flat_hash_map_entry const *const e)
-{
-    if (unlikely(!e))
-    {
+CCC_flat_hash_map_entry_status(CCC_Flat_hash_map_entry const *const e) {
+    if (unlikely(!e)) {
         return CCC_ENTRY_ARGUMENT_ERROR;
     }
     return e->private.status;
@@ -806,37 +719,30 @@ CCC_flat_hash_map_entry_status(CCC_Flat_hash_map_entry const *const e)
 CCC_Result
 CCC_flat_hash_map_copy(CCC_Flat_hash_map *const destination,
                        CCC_Flat_hash_map const *const source,
-                       CCC_Allocator *const allocate)
-{
+                       CCC_Allocator *const allocate) {
     if (!destination || !source || source == destination
-        || (source->mask && !is_power_of_two(source->mask + 1)))
-    {
+        || (source->mask && !is_power_of_two(source->mask + 1))) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    if (destination->mask < source->mask && !allocate)
-    {
+    if (destination->mask < source->mask && !allocate) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
     CCC_Result check = check_initialize(destination, 0, allocate);
-    if (check != CCC_RESULT_OK)
-    {
+    if (check != CCC_RESULT_OK) {
         return check;
     }
-    if (!source->mask || is_uninitialized(source))
-    {
+    if (!source->mask || is_uninitialized(source)) {
         return CCC_RESULT_OK;
     }
     size_t const source_bytes
         = mask_to_total_bytes(source->sizeof_type, source->mask);
-    if (destination->mask < source->mask)
-    {
+    if (destination->mask < source->mask) {
         void *const new_data = destination->allocate((CCC_Allocator_context){
             .input = destination->data,
             .bytes = source_bytes,
             .context = destination->context,
         });
-        if (!new_data)
-        {
+        if (!new_data) {
             return CCC_RESULT_ALLOCATOR_ERROR;
         }
         destination->data = new_data;
@@ -844,8 +750,7 @@ CCC_flat_hash_map_copy(CCC_Flat_hash_map *const destination,
             = tags_base_address(source->sizeof_type, new_data, source->mask);
         destination->mask = source->mask;
     }
-    if (!destination->data || !source->data)
-    {
+    if (!destination->data || !source->data) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     (void)memset(destination->tag, TAG_EMPTY,
@@ -855,12 +760,10 @@ CCC_flat_hash_map_copy(CCC_Flat_hash_map *const destination,
     {
         size_t group_start = 0;
         struct Match_mask full = {};
-        while ((full = find_first_full_group(source, &group_start)).v)
-        {
+        while ((full = find_first_full_group(source, &group_start)).v) {
             {
                 size_t tag_i = 0;
-                while ((tag_i = match_next_one(&full)) != GROUP_COUNT)
-                {
+                while ((tag_i = match_next_one(&full)) != GROUP_COUNT) {
                     tag_i += group_start;
                     uint64_t const hash = hasher(source, key_at(source, tag_i));
                     size_t const new_i
@@ -881,99 +784,76 @@ CCC_flat_hash_map_copy(CCC_Flat_hash_map *const destination,
 
 CCC_Result
 CCC_flat_hash_map_reserve(CCC_Flat_hash_map *const map, size_t const to_add,
-                          CCC_Allocator *const allocate)
-{
-    if (unlikely(!map || !to_add || !allocate || !to_add))
-    {
+                          CCC_Allocator *const allocate) {
+    if (unlikely(!map || !to_add || !allocate || !to_add)) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     return maybe_rehash(map, to_add, allocate);
 }
 
 CCC_Tribool
-CCC_flat_hash_map_validate(CCC_Flat_hash_map const *const map)
-{
-    if (!map)
-    {
+CCC_flat_hash_map_validate(CCC_Flat_hash_map const *const map) {
+    if (!map) {
         return CCC_TRIBOOL_ERROR;
     }
     /* We initialized the metadata array of 0 capacity table? Not possible. */
-    if (!is_uninitialized(map) && !map->mask)
-    {
+    if (!is_uninitialized(map) && !map->mask) {
         return CCC_FALSE;
     }
     /* No point checking invariants when lazy init hasn't happened yet. */
-    if (is_uninitialized(map) || !map->mask)
-    {
+    if (is_uninitialized(map) || !map->mask) {
         return CCC_TRUE;
     }
     /* We are initialized, these need to point to the array positions. */
-    if (!map->data || !map->tag)
-    {
+    if (!map->data || !map->tag) {
         return CCC_FALSE;
     }
-    if (!check_replica_group(map))
-    {
+    if (!check_replica_group(map)) {
         return CCC_FALSE;
     }
     size_t occupied = 0;
     size_t remain = 0;
     size_t deleted = 0;
-    for (size_t i = 0; i < (map->mask + 1); ++i)
-    {
+    for (size_t i = 0; i < (map->mask + 1); ++i) {
         struct CCC_Flat_hash_map_tag const t = map->tag[i];
         /* If we are a special constant there are only two possible values. */
-        if (tag_constant(t) && t.v != TAG_DELETED && t.v != TAG_EMPTY)
-        {
+        if (tag_constant(t) && t.v != TAG_DELETED && t.v != TAG_EMPTY) {
             return CCC_FALSE;
         }
-        if (t.v == TAG_EMPTY)
-        {
+        if (t.v == TAG_EMPTY) {
             ++remain;
-        }
-        else if (t.v == TAG_DELETED)
-        {
+        } else if (t.v == TAG_DELETED) {
             ++deleted;
-        }
-        else
-        {
-            if (!tag_full(t))
-            {
+        } else {
+            if (!tag_full(t)) {
                 return CCC_FALSE;
             }
-            if (tag_from(hasher(map, data_at(map, i))).v != t.v)
-            {
+            if (tag_from(hasher(map, data_at(map, i))).v != t.v) {
                 return CCC_FALSE;
             }
             ++occupied;
         }
     }
     /* Do our tags agree with our manually tracked and set state? */
-    if (occupied != map->count)
-    {
+    if (occupied != map->count) {
         return CCC_FALSE;
     }
-    if (occupied + remain + deleted != map->mask + 1)
-    {
+    if (occupied + remain + deleted != map->mask + 1) {
         return CCC_FALSE;
     }
     if (mask_to_capacity_with_load_factor(occupied + remain + deleted)
             - occupied - deleted
-        != map->remain)
-    {
+        != map->remain) {
         return CCC_FALSE;
     }
     return CCC_TRUE;
 }
 
 static CCC_Tribool
-check_replica_group(struct CCC_Flat_hash_map const *const h)
-{
+check_replica_group(struct CCC_Flat_hash_map const *const h) {
     for (size_t original = 0, clone = (h->mask + 1); original < GROUP_COUNT;
-         ++original, ++clone)
-    {
-        if (h->tag[original].v != h->tag[clone].v)
-        {
+         ++original, ++clone) {
+        if (h->tag[original].v != h->tag[clone].v) {
             return CCC_FALSE;
         }
     }
@@ -984,44 +864,38 @@ check_replica_group(struct CCC_Flat_hash_map const *const h)
 
 struct CCC_Flat_hash_map_entry
 CCC_private_flat_hash_map_entry(struct CCC_Flat_hash_map *const map,
-                                void const *const key)
-{
+                                void const *const key) {
     return entry(map, key);
 }
 
 void
 CCC_private_flat_hash_map_insert(struct CCC_Flat_hash_map *map,
                                  void const *type,
-                                 struct CCC_Flat_hash_map_tag m, size_t i)
-{
+                                 struct CCC_Flat_hash_map_tag m, size_t i) {
     insert_and_copy(map, type, m, i);
 }
 
 void
-CCC_private_flat_hash_map_erase(struct CCC_Flat_hash_map *map, size_t i)
-{
+CCC_private_flat_hash_map_erase(struct CCC_Flat_hash_map *map, size_t i) {
     erase(map, i);
 }
 
 void *
 CCC_private_flat_hash_map_data_at(struct CCC_Flat_hash_map const *const map,
-                                  size_t const i)
-{
+                                  size_t const i) {
     return data_at(map, i);
 }
 
 void *
 CCC_private_flat_hash_map_key_at(struct CCC_Flat_hash_map const *const map,
-                                 size_t const i)
-{
+                                 size_t const i) {
     return key_at(map, i);
 }
 
 /* This is needed to help the macros only set a new insert conditionally. */
 void
 CCC_private_flat_hash_map_set_insert(
-    struct CCC_Flat_hash_map_entry const *const entry)
-{
+    struct CCC_Flat_hash_map_entry const *const entry) {
     return set_insert_tag(entry->map, entry->tag, entry->index);
 }
 
@@ -1033,8 +907,7 @@ metadata and location info necessary for future actions. If this entry was
 obtained in hopes of insertions but insertion will cause an error. A status
 flag in the handle field will indicate the error. */
 static struct CCC_Flat_hash_map_entry
-entry(struct CCC_Flat_hash_map *const map, void const *const key)
-{
+entry(struct CCC_Flat_hash_map *const map, void const *const key) {
     uint64_t const hash = hasher(map, key);
     struct Query const e = find(map, key, hash);
     return (struct CCC_Flat_hash_map_entry){
@@ -1050,23 +923,19 @@ must continue with that information. The status of the handle will indicate if
 an entry is occupied, vacant, or some error has occurred. */
 static struct Query
 find(struct CCC_Flat_hash_map *const map, void const *const key,
-     uint64_t const hash)
-{
+     uint64_t const hash) {
     CCC_Result const res = maybe_rehash(map, 1, map->allocate);
-    if (res == CCC_RESULT_OK)
-    {
+    if (res == CCC_RESULT_OK) {
         return find_key_or_slot(map, key, hash);
     }
     /* Map was not initialized correctly or cannot allocate. */
-    if (!map->mask)
-    {
+    if (!map->mask) {
         return (struct Query){.status = CCC_ENTRY_INSERT_ERROR};
     }
     struct Query q = find_key_or_slot(map, key, hash);
     /* It's OK to find an occupied value when the map has resizing or memory
        permission errors. If insertion occurs it will be to slot that exists. */
-    if (q.status == CCC_ENTRY_OCCUPIED)
-    {
+    if (q.status == CCC_ENTRY_OCCUPIED) {
         return q;
     }
     /* We need to warn the user that we did not find the key and they cannot
@@ -1079,8 +948,7 @@ find(struct CCC_Flat_hash_map *const map, void const *const key,
 data slot. It is user's responsibility to ensure that the insert is valid. */
 static inline void
 insert_and_copy(struct CCC_Flat_hash_map *const map, void const *const type,
-                struct CCC_Flat_hash_map_tag const m, size_t const i)
-{
+                struct CCC_Flat_hash_map_tag const m, size_t const i) {
     set_insert_tag(map, m, i);
     (void)memcpy(data_at(map, i), type, map->sizeof_type);
 }
@@ -1089,8 +957,7 @@ insert_and_copy(struct CCC_Flat_hash_map *const map, void const *const type,
 the insert is valid. */
 static inline void
 set_insert_tag(struct CCC_Flat_hash_map *const map,
-               struct CCC_Flat_hash_map_tag const m, size_t const i)
-{
+               struct CCC_Flat_hash_map_tag const m, size_t const i) {
     assert(i <= map->mask);
     assert((m.v & TAG_MSB) == 0);
     map->remain -= (map->tag[i].v == TAG_EMPTY);
@@ -1104,8 +971,7 @@ a removal from the table: deleted or empty. Which option to choose is
 determined by what is required to ensure the probing sequence works correctly in
 all future cases. */
 static inline void
-erase(struct CCC_Flat_hash_map *const map, size_t const i)
-{
+erase(struct CCC_Flat_hash_map *const map, size_t const i) {
     assert(i <= map->mask);
     size_t const prev_i = (i - GROUP_COUNT) & map->mask;
     struct Match_mask const prev_empties
@@ -1149,8 +1015,7 @@ that slot will have been the first empty or deleted slot encountered in the
 probe sequence. This function assumes an empty slot exists in the table. */
 static struct Query
 find_key_or_slot(struct CCC_Flat_hash_map const *const map,
-                 void const *const key, uint64_t const hash)
-{
+                 void const *const key, uint64_t const hash) {
     struct CCC_Flat_hash_map_tag const tag = tag_from(hash);
     size_t const mask = map->mask;
     struct Probe_sequence p = {
@@ -1158,17 +1023,14 @@ find_key_or_slot(struct CCC_Flat_hash_map const *const map,
         .stride = 0,
     };
     CCC_Count empty_deleted = {.error = CCC_RESULT_FAIL};
-    for (;;)
-    {
+    for (;;) {
         struct Group const g = group_load_unaligned(&map->tag[p.index]);
         {
             size_t tag_i = 0;
             struct Match_mask m = match_tag(g, tag);
-            while ((tag_i = match_next_one(&m)) != GROUP_COUNT)
-            {
+            while ((tag_i = match_next_one(&m)) != GROUP_COUNT) {
                 tag_i = (p.index + tag_i) & mask;
-                if (likely(is_equal(map, key, tag_i)))
-                {
+                if (likely(is_equal(map, key, tag_i))) {
                     return (struct Query){
                         .index = tag_i,
                         .status = CCC_ENTRY_OCCUPIED,
@@ -1178,17 +1040,14 @@ find_key_or_slot(struct CCC_Flat_hash_map const *const map,
         }
         /* Taking the first available slot once probing is done is important
            to preserve probing operation and efficiency. */
-        if (likely(empty_deleted.error))
-        {
+        if (likely(empty_deleted.error)) {
             size_t const i_take = match_trailing_one(match_empty_deleted(g));
-            if (likely(i_take != GROUP_COUNT))
-            {
+            if (likely(i_take != GROUP_COUNT)) {
                 empty_deleted.count = (p.index + i_take) & mask;
                 empty_deleted.error = CCC_RESULT_OK;
             }
         }
-        if (likely(match_has_one(match_empty(g))))
-        {
+        if (likely(match_has_one(match_empty(g)))) {
             return (struct Query){
                 .index = empty_deleted.count,
                 .status = CCC_ENTRY_VACANT,
@@ -1210,31 +1069,26 @@ This function is better when a simple lookup is needed as a few branches and
 loads are omitted compared to the search with intention to insert or remove. */
 static CCC_Count
 find_key_or_fail(struct CCC_Flat_hash_map const *const map,
-                 void const *const key, uint64_t const hash)
-{
+                 void const *const key, uint64_t const hash) {
     struct CCC_Flat_hash_map_tag const tag = tag_from(hash);
     size_t const mask = map->mask;
     struct Probe_sequence p = {
         .index = hash & mask,
         .stride = 0,
     };
-    for (;;)
-    {
+    for (;;) {
         struct Group const g = group_load_unaligned(&map->tag[p.index]);
         {
             size_t tag_i = 0;
             struct Match_mask m = match_tag(g, tag);
-            while ((tag_i = match_next_one(&m)) != GROUP_COUNT)
-            {
+            while ((tag_i = match_next_one(&m)) != GROUP_COUNT) {
                 tag_i = (p.index + tag_i) & mask;
-                if (likely(is_equal(map, key, tag_i)))
-                {
+                if (likely(is_equal(map, key, tag_i))) {
                     return (CCC_Count){.count = tag_i};
                 }
             }
         }
-        if (likely(match_has_one(match_empty(g))))
-        {
+        if (likely(match_has_one(match_empty(g)))) {
             return (CCC_Count){.error = CCC_RESULT_FAIL};
         }
         p.stride += GROUP_COUNT;
@@ -1248,19 +1102,16 @@ caller of this function must know that there is an available empty or deleted
 slot in the table. */
 static size_t
 find_slot_or_noreturn(struct CCC_Flat_hash_map const *const map,
-                      uint64_t const hash)
-{
+                      uint64_t const hash) {
     size_t const mask = map->mask;
     struct Probe_sequence p = {
         .index = hash & mask,
         .stride = 0,
     };
-    for (;;)
-    {
+    for (;;) {
         size_t const i = match_trailing_one(
             match_empty_deleted(group_load_unaligned(&map->tag[p.index])));
-        if (likely(i != GROUP_COUNT))
-        {
+        if (likely(i != GROUP_COUNT)) {
             return (p.index + i) & mask;
         }
         p.stride += GROUP_COUNT;
@@ -1274,15 +1125,12 @@ user has hash bits occupying the lower 7 bits of the tag. Assumes that the start
 index is the base index of a group of tags such that as we scan groups the
 loads are aligned for performance. */
 static inline void *
-find_first_full_slot(struct CCC_Flat_hash_map const *const map, size_t start)
-{
+find_first_full_slot(struct CCC_Flat_hash_map const *const map, size_t start) {
     assert((start & ~((size_t)(GROUP_COUNT - 1))) == start);
-    while (start < (map->mask + 1))
-    {
+    while (start < (map->mask + 1)) {
         size_t const full = match_trailing_one(
             match_full(group_load_aligned(&map->tag[start])));
-        if (full != GROUP_COUNT)
-        {
+        if (full != GROUP_COUNT) {
             return data_at(map, start + full);
         }
         start += GROUP_COUNT;
@@ -1299,15 +1147,12 @@ Assumes that start is aligned to the 0th tag of a group and only progresses
 start by the size of a group such that it is always aligned. */
 static inline struct Match_mask
 find_first_full_group(struct CCC_Flat_hash_map const *const map,
-                      size_t *const start)
-{
+                      size_t *const start) {
     assert((*start & ~((size_t)(GROUP_COUNT - 1))) == *start);
-    while (*start < (map->mask + 1))
-    {
+    while (*start < (map->mask + 1)) {
         struct Match_mask const full
             = match_full(group_load_aligned(&map->tag[*start]));
-        if (full.v)
-        {
+        if (full.v) {
             return full;
         }
         *start += GROUP_COUNT;
@@ -1324,15 +1169,12 @@ Assumes that start is aligned to the 0th tag of a group and only progresses
 start by the size of a group such that it is always aligned. */
 static inline struct Match_mask
 find_first_deleted_group(struct CCC_Flat_hash_map const *const map,
-                         size_t *const start)
-{
+                         size_t *const start) {
     assert((*start & ~((size_t)(GROUP_COUNT - 1))) == *start);
-    while (*start < (map->mask + 1))
-    {
+    while (*start < (map->mask + 1)) {
         struct Match_mask const deleted
             = match_deleted(group_load_aligned(&map->tag[*start]));
-        if (deleted.v)
-        {
+        if (deleted.v) {
             return deleted;
         }
         *start += GROUP_COUNT;
@@ -1348,34 +1190,27 @@ but only once and for a container that is not given permission to resize
 arbitrarily. */
 static CCC_Result
 maybe_rehash(struct CCC_Flat_hash_map *const map, size_t const to_add,
-             CCC_Allocator *const fn)
-{
-    if (unlikely(!map->mask && !fn))
-    {
+             CCC_Allocator *const fn) {
+    if (unlikely(!map->mask && !fn)) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
     size_t const required_total_cap
         = to_power_of_two(((map->count + to_add) * 8) / 7);
-    if (!required_total_cap)
-    {
+    if (!required_total_cap) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
     CCC_Result const init = check_initialize(map, required_total_cap, fn);
-    if (init != CCC_RESULT_OK)
-    {
+    if (init != CCC_RESULT_OK) {
         return init;
     }
-    if (likely(map->remain))
-    {
+    if (likely(map->remain)) {
         return CCC_RESULT_OK;
     }
     size_t const current_total_cap = map->mask + 1;
-    if (fn && (map->count + to_add) > current_total_cap / 2)
-    {
+    if (fn && (map->count + to_add) > current_total_cap / 2) {
         return rehash_resize(map, to_add, fn);
     }
-    if (map->count == mask_to_capacity_with_load_factor(map->mask))
-    {
+    if (map->count == mask_to_capacity_with_load_factor(map->mask)) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
     rehash_in_place(map);
@@ -1387,13 +1222,11 @@ results. Assumes the table has been allocated and had no more remaining slots
 for insertion. Rehashing in place repeatedly can be expensive so the user
 should ensure to select an appropriate capacity for fixed size tables. */
 static void
-rehash_in_place(struct CCC_Flat_hash_map *const map)
-{
+rehash_in_place(struct CCC_Flat_hash_map *const map) {
     assert((map->mask + 1) % GROUP_COUNT == 0);
     assert(map->tag && map->data);
     size_t const mask = map->mask;
-    for (size_t i = 0; i < mask + 1; i += GROUP_COUNT)
-    {
+    for (size_t i = 0; i < mask + 1; i += GROUP_COUNT) {
         group_store_aligned(&map->tag[i],
                             group_convert_constant_to_empty_and_full_to_deleted(
                                 group_load_aligned(&map->tag[i])));
@@ -1408,12 +1241,10 @@ rehash_in_place(struct CCC_Flat_hash_map *const map)
            converted to empty slots in the prep loop earlier. We can speed
            things up by performing aligned group scans checking for any groups
            with elements that need to be rehashed. */
-        while ((deleted = find_first_deleted_group(map, &group_start)).v)
-        {
+        while ((deleted = find_first_deleted_group(map, &group_start)).v) {
             {
                 size_t tag_i = 0;
-                while ((tag_i = match_next_one(&deleted)) != GROUP_COUNT)
-                {
+                while ((tag_i = match_next_one(&deleted)) != GROUP_COUNT) {
                     tag_i += group_start;
                     /* The inner loop swap case may have made a previously
                        deleted entry in this group filled with the swapped
@@ -1421,12 +1252,10 @@ rehash_in_place(struct CCC_Flat_hash_map *const map)
                        and the swapped element was taken care of by retrying to
                        find a slot in the innermost loop. Therefore skip this
                        slot. It no longer needs processing. */
-                    if (map->tag[tag_i].v != TAG_DELETED)
-                    {
+                    if (map->tag[tag_i].v != TAG_DELETED) {
                         continue;
                     }
-                    for (;;)
-                    {
+                    for (;;) {
                         uint64_t const hash = hasher(map, key_at(map, tag_i));
                         size_t const new_i = find_slot_or_noreturn(map, hash);
                         struct CCC_Flat_hash_map_tag const hash_tag
@@ -1436,16 +1265,14 @@ rehash_in_place(struct CCC_Flat_hash_map *const map)
                            tag is in the proper group for an unaligned load
                            based on where the hashed value will start its loads
                            and the match and does not need relocation. */
-                        if (likely(is_same_group(tag_i, new_i, hash, mask)))
-                        {
+                        if (likely(is_same_group(tag_i, new_i, hash, mask))) {
                             tag_set(map, hash_tag, tag_i);
                             break; /* continues outer loop */
                         }
                         struct CCC_Flat_hash_map_tag const occupant
                             = map->tag[new_i];
                         tag_set(map, hash_tag, new_i);
-                        if (occupant.v == TAG_EMPTY)
-                        {
+                        if (occupant.v == TAG_EMPTY) {
                             tag_set(map,
                                     (struct CCC_Flat_hash_map_tag){TAG_EMPTY},
                                     tag_i);
@@ -1476,28 +1303,24 @@ ideal index in the table, both i and new_slot are already in that group that
 would be loaded for simultaneous scanning. */
 static inline CCC_Tribool
 is_same_group(size_t const i, size_t const new_i, uint64_t const hash,
-              size_t const mask)
-{
+              size_t const mask) {
     return (((i - (hash & mask)) & mask) / GROUP_COUNT)
         == (((new_i - (hash & mask)) & mask) / GROUP_COUNT);
 }
 
 static CCC_Result
 rehash_resize(struct CCC_Flat_hash_map *const map, size_t const to_add,
-              CCC_Allocator *const allocate)
-{
+              CCC_Allocator *const allocate) {
     assert(((map->mask + 1) & map->mask) == 0);
     size_t const new_pow2_cap
         = next_power_of_two((map->mask + 1 + to_add) << 1);
-    if (new_pow2_cap < (map->mask + 1))
-    {
+    if (new_pow2_cap < (map->mask + 1)) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
     size_t const prev_bytes = mask_to_total_bytes(map->sizeof_type, map->mask);
     size_t const total_bytes
         = mask_to_total_bytes(map->sizeof_type, new_pow2_cap - 1);
-    if (total_bytes < prev_bytes)
-    {
+    if (total_bytes < prev_bytes) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
     void *const new_buf = allocate((CCC_Allocator_context){
@@ -1505,8 +1328,7 @@ rehash_resize(struct CCC_Flat_hash_map *const map, size_t const to_add,
         .bytes = total_bytes,
         .context = map->context,
     });
-    if (!new_buf)
-    {
+    if (!new_buf) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
     struct CCC_Flat_hash_map new_map = *map;
@@ -1520,12 +1342,10 @@ rehash_resize(struct CCC_Flat_hash_map *const map, size_t const to_add,
     {
         size_t group_start = 0;
         struct Match_mask full = {};
-        while ((full = find_first_full_group(map, &group_start)).v)
-        {
+        while ((full = find_first_full_group(map, &group_start)).v) {
             {
                 size_t tag_i = 0;
-                while ((tag_i = match_next_one(&full)) != GROUP_COUNT)
-                {
+                while ((tag_i = match_next_one(&full)) != GROUP_COUNT) {
                     tag_i += group_start;
                     uint64_t const hash = hasher(map, key_at(map, tag_i));
                     size_t const new_i = find_slot_or_noreturn(&new_map, hash);
@@ -1552,28 +1372,21 @@ rehash_resize(struct CCC_Flat_hash_map *const map, size_t const to_add,
 to support various sources of memory at compile and runtime. */
 static inline CCC_Result
 check_initialize(struct CCC_Flat_hash_map *const map, size_t required_total_cap,
-                 CCC_Allocator *const allocate)
-{
-    if (likely(!is_uninitialized(map)))
-    {
+                 CCC_Allocator *const allocate) {
+    if (likely(!is_uninitialized(map))) {
         return CCC_RESULT_OK;
     }
-    if (map->mask)
-    {
+    if (map->mask) {
         /* A fixed size map that is not initialized. */
-        if (!map->data || map->mask + 1 < required_total_cap)
-        {
+        if (!map->data || map->mask + 1 < required_total_cap) {
             return CCC_RESULT_ALLOCATOR_ERROR;
         }
-        if (map->mask + 1 < GROUP_COUNT || !is_power_of_two(map->mask + 1))
-        {
+        if (map->mask + 1 < GROUP_COUNT || !is_power_of_two(map->mask + 1)) {
             return CCC_RESULT_ARGUMENT_ERROR;
         }
         map->tag = tags_base_address(map->sizeof_type, map->data, map->mask);
         (void)memset(map->tag, TAG_EMPTY, mask_to_tag_bytes(map->mask));
-    }
-    else
-    {
+    } else {
         /* A dynamic map we can re-size as needed. */
         required_total_cap = max(required_total_cap, GROUP_COUNT);
         size_t const total_bytes
@@ -1583,8 +1396,7 @@ check_initialize(struct CCC_Flat_hash_map *const map, size_t required_total_cap,
             .bytes = total_bytes,
             .context = map->context,
         });
-        if (!map->data)
-        {
+        if (!map->data) {
             return CCC_RESULT_ALLOCATOR_ERROR;
         }
         map->mask = required_total_cap - 1;
@@ -1597,11 +1409,9 @@ check_initialize(struct CCC_Flat_hash_map *const map, size_t required_total_cap,
 
 static inline void
 destory_each(struct CCC_Flat_hash_map *const map,
-             CCC_Type_destructor *const destroy)
-{
+             CCC_Type_destructor *const destroy) {
     for (void *i = CCC_flat_hash_map_begin(map);
-         i != CCC_flat_hash_map_end(map); i = CCC_flat_hash_map_next(map, i))
-    {
+         i != CCC_flat_hash_map_end(map); i = CCC_flat_hash_map_next(map, i)) {
         destroy((CCC_Type_context){
             .type = i,
             .context = map->context,
@@ -1610,8 +1420,7 @@ destory_each(struct CCC_Flat_hash_map *const map,
 }
 
 static inline uint64_t
-hasher(struct CCC_Flat_hash_map const *const map, void const *const any_key)
-{
+hasher(struct CCC_Flat_hash_map const *const map, void const *const any_key) {
     return map->hash((CCC_Key_context){
         .key = any_key,
         .context = map->context,
@@ -1620,8 +1429,7 @@ hasher(struct CCC_Flat_hash_map const *const map, void const *const any_key)
 
 static inline CCC_Tribool
 is_equal(struct CCC_Flat_hash_map const *const map, void const *const key,
-         size_t const i)
-{
+         size_t const i) {
     return map->compare((CCC_Key_comparator_context){
                .key_left = key,
                .type_right = data_at(map, i),
@@ -1631,26 +1439,22 @@ is_equal(struct CCC_Flat_hash_map const *const map, void const *const key,
 }
 
 static inline void *
-key_at(struct CCC_Flat_hash_map const *const map, size_t const i)
-{
+key_at(struct CCC_Flat_hash_map const *const map, size_t const i) {
     return (char *)data_at(map, i) + map->key_offset;
 }
 
 static inline void *
-data_at(struct CCC_Flat_hash_map const *const h, size_t const i)
-{
+data_at(struct CCC_Flat_hash_map const *const h, size_t const i) {
     assert(i <= h->mask);
     return (char *)h->data + (i * h->sizeof_type);
 }
 
 static inline CCC_Count
 data_index(struct CCC_Flat_hash_map const *const map,
-           void const *const data_slot)
-{
+           void const *const data_slot) {
     if (unlikely((char *)data_slot
                      >= (char *)map->data + (map->sizeof_type * (map->mask + 1))
-                 || (char *)data_slot < (char *)map->data))
-    {
+                 || (char *)data_slot < (char *)map->data)) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
     return (CCC_Count){
@@ -1659,16 +1463,13 @@ data_index(struct CCC_Flat_hash_map const *const map,
 }
 
 static inline void *
-swap_slot(struct CCC_Flat_hash_map const *map)
-{
+swap_slot(struct CCC_Flat_hash_map const *map) {
     return (char *)map->data + (map->sizeof_type * (map->mask + 1));
 }
 
 static inline void
-swap(void *const temp, void *const a, void *const b, size_t const ab_size)
-{
-    if (unlikely(!a || !b || a == b))
-    {
+swap(void *const temp, void *const a, void *const b, size_t const ab_size) {
+    if (unlikely(!a || !b || a == b)) {
         return;
     }
     (void)memcpy(temp, a, ab_size);
@@ -1677,18 +1478,15 @@ swap(void *const temp, void *const a, void *const b, size_t const ab_size)
 }
 
 static inline void *
-key_in_slot(struct CCC_Flat_hash_map const *const map, void const *const slot)
-{
+key_in_slot(struct CCC_Flat_hash_map const *const map, void const *const slot) {
     return (char *)slot + map->key_offset;
 }
 
 /** Return n if a power of 2, otherwise returns next greater power of 2. 0 is
 returned if overflow will occur. */
 static inline size_t
-to_power_of_two(size_t const n)
-{
-    if (is_power_of_two(n))
-    {
+to_power_of_two(size_t const n) {
+    if (is_power_of_two(n)) {
         return n;
     }
     return next_power_of_two(n);
@@ -1696,10 +1494,8 @@ to_power_of_two(size_t const n)
 
 /** Returns next power of 2 greater than n or 0 if no greater can be found. */
 static inline size_t
-next_power_of_two(size_t const n)
-{
-    if (n <= 1)
-    {
+next_power_of_two(size_t const n) {
+    if (n <= 1) {
         return n + 1;
     }
     unsigned const shifts = count_leading_zeros_size_t(n - 1);
@@ -1708,8 +1504,7 @@ next_power_of_two(size_t const n)
 
 /** Returns true if n is a power of two. 0 is not considered a power of 2. */
 static inline CCC_Tribool
-is_power_of_two(size_t const n)
-{
+is_power_of_two(size_t const n) {
     return n && ((n & (n - 1)) == 0);
 }
 
@@ -1728,10 +1523,8 @@ more bytes as padding after the tag array but we never need or access those
 bytes so we are only interested in contiguous bytes from start of user data to
 last byte of tag array. */
 static inline size_t
-mask_to_total_bytes(size_t const sizeof_type, size_t const mask)
-{
-    if (unlikely(!mask))
-    {
+mask_to_total_bytes(size_t const sizeof_type, size_t const mask) {
+    if (unlikely(!mask)) {
         return 0;
     }
     return mask_to_data_bytes(sizeof_type, mask) + mask_to_tag_bytes(mask);
@@ -1742,8 +1535,7 @@ bytes for the duplicate group that is at the end of the tag array.
 
 Assumes the mask is non-zero. */
 static inline size_t
-mask_to_tag_bytes(size_t const mask)
-{
+mask_to_tag_bytes(size_t const mask) {
     static_assert(sizeof(struct CCC_Flat_hash_map_tag) == sizeof(uint8_t));
     return mask + 1 + GROUP_COUNT;
 }
@@ -1756,8 +1548,7 @@ calculates. For example, if (mask + 1 = 64), then this function returns 56.
 
 Assumes the mask is non-zero. */
 static inline size_t
-mask_to_capacity_with_load_factor(size_t const mask)
-{
+mask_to_capacity_with_load_factor(size_t const mask) {
     return ((mask + 1) / 8) * 7;
 }
 
@@ -1772,8 +1563,7 @@ the correct number of aligned user data bytes. This allows aligned group loads.
 
 Assumes the mask is non-zero. */
 static inline size_t
-mask_to_data_bytes(size_t const sizeof_type, size_t const mask)
-{
+mask_to_data_bytes(size_t const sizeof_type, size_t const mask) {
     /* Add two because there is always a bonus user data type at the last index
        of the data array for swapping purposes. */
     return roundup(sizeof_type * (mask + 2));
@@ -1785,8 +1575,7 @@ data array and the current mask being used for the hash map to which the data
 belongs. */
 static inline struct CCC_Flat_hash_map_tag *
 tags_base_address(size_t const sizeof_type, void const *const data,
-                  size_t const mask)
-{
+                  size_t const mask) {
     /* Static assertions at top of file ensure this is correct. */
     return (struct CCC_Flat_hash_map_tag *)((char *)data
                                             + mask_to_data_bytes(sizeof_type,
@@ -1794,21 +1583,18 @@ tags_base_address(size_t const sizeof_type, void const *const data,
 }
 
 static inline size_t
-max(size_t const a, size_t const b)
-{
+max(size_t const a, size_t const b) {
     return a > b ? a : b;
 }
 
 static inline CCC_Tribool
-is_uninitialized(struct CCC_Flat_hash_map const *const map)
-{
+is_uninitialized(struct CCC_Flat_hash_map const *const map) {
     return !map->data || !map->tag;
 }
 
 /** Rounds up the provided bytes to a valid alignment for group size. */
 static inline size_t
-roundup(size_t const bytes)
-{
+roundup(size_t const bytes) {
     return (bytes + GROUP_COUNT - 1) & ~(GROUP_COUNT - 1);
 }
 
@@ -1830,8 +1616,7 @@ that uses CPU vector lanes for a single instruction. */
 group at the end of the tag array remains in sync with current tag if needed. */
 static inline void
 tag_set(struct CCC_Flat_hash_map *const map,
-        struct CCC_Flat_hash_map_tag const m, size_t const i)
-{
+        struct CCC_Flat_hash_map_tag const m, size_t const i) {
     size_t const replica_byte = ((i - GROUP_COUNT) & map->mask) + GROUP_COUNT;
     map->tag[i] = m;
     map->tag[replica_byte] = m;
@@ -1839,16 +1624,14 @@ tag_set(struct CCC_Flat_hash_map *const map,
 
 /** Returns CCC_TRUE if the tag holds user hash bits, meaning it is occupied. */
 static inline CCC_Tribool
-tag_full(struct CCC_Flat_hash_map_tag const m)
-{
+tag_full(struct CCC_Flat_hash_map_tag const m) {
     return (m.v & TAG_MSB) == 0;
 }
 
 /** Returns CCC_TRUE if the tag is one of the two special constants EMPTY or
 DELETED. */
 static inline CCC_Tribool
-tag_constant(struct CCC_Flat_hash_map_tag const m)
-{
+tag_constant(struct CCC_Flat_hash_map_tag const m) {
     return (m.v & TAG_MSB) != 0;
 }
 
@@ -1856,8 +1639,7 @@ tag_constant(struct CCC_Flat_hash_map_tag const m)
 7 bits of the hash code. Therefore, hash functions with good entropy in the
 upper bits are desirable. */
 static inline struct CCC_Flat_hash_map_tag
-tag_from(uint64_t const hash)
-{
+tag_from(uint64_t const hash) {
     return (struct CCC_Flat_hash_map_tag){
         (hash >> ((sizeof(hash) * CHAR_BIT) - 7)) & TAG_LOWER_7_MASK,
     };
@@ -1867,8 +1649,7 @@ tag_from(uint64_t const hash)
 
 /** Returns true if any index is on in the mask otherwise false. */
 static inline CCC_Tribool
-match_has_one(struct Match_mask const m)
-{
+match_has_one(struct Match_mask const m) {
     return m.v != 0;
 }
 
@@ -1878,8 +1659,7 @@ group query operation. This index represents the group member with a tag that
 has matched. Because 0 is a valid index the user must check the index against
 `GROUP_COUNT`, which means no trailing one is found. */
 static inline size_t
-match_trailing_one(struct Match_mask const m)
-{
+match_trailing_one(struct Match_mask const m) {
     return count_trailing_zeros(m);
 }
 
@@ -1888,8 +1668,7 @@ function returns the 0-based index of the current on index and then adjusts the
 mask appropriately for future iteration by removing the lowest on index bit. If
 no bits are found the width of the mask is returned. */
 static inline size_t
-match_next_one(struct Match_mask *const m)
-{
+match_next_one(struct Match_mask *const m) {
     assert(m);
     size_t const index = match_trailing_one(*m);
     m->v &= (m->v - 1);
@@ -1899,16 +1678,14 @@ match_next_one(struct Match_mask *const m)
 /** Counts the leading zeros in a match. Leading zeros are those starting
 at the most significant bit. */
 static inline size_t
-match_leading_zeros(struct Match_mask const m)
-{
+match_leading_zeros(struct Match_mask const m) {
     return count_leading_zeros(m);
 }
 
 /** Counts the trailing zeros in a match. Trailing zeros are those
 starting at the least significant bit. */
 static inline size_t
-match_trailing_zeros(struct Match_mask const m)
-{
+match_trailing_zeros(struct Match_mask const m) {
     return count_trailing_zeros(m);
 }
 
@@ -1950,8 +1727,7 @@ hashed data and the full comparison will evaluate to true. Note that this
 method inevitably forces a call to the comparison callback function on every
 match so an efficient comparison is beneficial. */
 static inline struct Match_mask
-match_tag(struct Group const g, struct CCC_Flat_hash_map_tag const m)
-{
+match_tag(struct Group const g, struct CCC_Flat_hash_map_tag const m) {
     return (struct Match_mask){
         _mm_movemask_epi8(_mm_cmpeq_epi8(g.v, _mm_set1_epi8((int8_t)m.v))),
     };
@@ -1961,8 +1737,7 @@ match_tag(struct Group const g, struct CCC_Flat_hash_map_tag const m)
 group g that are the empty special constant. The user must interpret this 0
 based index in the context of the probe sequence. */
 static inline struct Match_mask
-match_empty(struct Group const g)
-{
+match_empty(struct Group const g) {
     return match_tag(g, (struct CCC_Flat_hash_map_tag){TAG_EMPTY});
 }
 
@@ -1970,8 +1745,7 @@ match_empty(struct Group const g)
 group g that are the deleted special constant. The user must interpret this 0
 based index in the context of the probe sequence. */
 static inline struct Match_mask
-match_deleted(struct Group const g)
-{
+match_deleted(struct Group const g) {
     return match_tag(g, (struct CCC_Flat_hash_map_tag){TAG_DELETED});
 }
 
@@ -1980,8 +1754,7 @@ in the group that are the special constant empty or deleted. These are easy
 to find because they are the one tags in a group with the most significant
 bit on. */
 static inline struct Match_mask
-match_empty_deleted(struct Group const g)
-{
+match_empty_deleted(struct Group const g) {
     static_assert(sizeof(int) >= sizeof(uint16_t));
     return (struct Match_mask){_mm_movemask_epi8(g.v)};
 }
@@ -1990,8 +1763,7 @@ match_empty_deleted(struct Group const g)
 group that are occupied by a hashed value. These are those tags that have the
 most significant bit off and the lower 7 bits occupied by user hash. */
 static inline struct Match_mask
-match_full(struct Group const g)
-{
+match_full(struct Group const g) {
     return (struct Match_mask){~match_empty_deleted(g).v};
 }
 
@@ -2003,8 +1775,7 @@ range from [0, start_tag] are zeroed out in the mask.
 
 Assumes start tag is less than group size. */
 static inline struct Match_mask
-match_leading_full(struct Group const g, size_t const start_tag)
-{
+match_leading_full(struct Group const g, size_t const start_tag) {
     assert(start_tag < GROUP_COUNT);
     return (struct Match_mask){
         (~match_empty_deleted(g).v) & (MATCH_MASK_0TH_TAG_OFF << start_tag),
@@ -2017,8 +1788,7 @@ match_leading_full(struct Group const g, size_t const start_tag)
 load and the user must ensure the load will not go off then end of the tag
 array. */
 static inline struct Group
-group_load_aligned(struct CCC_Flat_hash_map_tag const *const source)
-{
+group_load_aligned(struct CCC_Flat_hash_map_tag const *const source) {
     return (struct Group){_mm_load_si128((__m128i *)source)};
 }
 
@@ -2026,8 +1796,7 @@ group_load_aligned(struct CCC_Flat_hash_map_tag const *const source)
 must ensure the store will not go off the end of the tag array. */
 static inline void
 group_store_aligned(struct CCC_Flat_hash_map_tag *const destination,
-                    struct Group const source)
-{
+                    struct Group const source) {
     _mm_store_si128((__m128i *)destination, source.v);
 }
 
@@ -2035,8 +1804,7 @@ group_store_aligned(struct CCC_Flat_hash_map_tag *const destination,
 load and the user must ensure the load will not go off then end of the tag
 array. */
 static inline struct Group
-group_load_unaligned(struct CCC_Flat_hash_map_tag const *const source)
-{
+group_load_unaligned(struct CCC_Flat_hash_map_tag const *const source) {
     return (struct Group){_mm_loadu_si128((__m128i *)source)};
 }
 
@@ -2057,8 +1825,7 @@ TAG_FULL = 0b0101_1101 -> 0b1000_000
 The hashed bits are lost because the full slot has the high bit off and
 therefore is not a match for the constants mask. */
 static inline struct Group
-group_convert_constant_to_empty_and_full_to_deleted(struct Group const g)
-{
+group_convert_constant_to_empty_and_full_to_deleted(struct Group const g) {
     __m128i const zero = _mm_setzero_si128();
     __m128i const match_mask_constants = _mm_cmpgt_epi8(zero, g.v);
     return (struct Group){
@@ -2085,8 +1852,7 @@ indicate if the byte in the group matched the mask to be searched. The only
 bit on shall be this most significant bit to ensure iterating through index
 masks is easier and counting bits make sense in the find loops. */
 static inline struct Match_mask
-match_tag(struct Group const g, struct CCC_Flat_hash_map_tag const m)
-{
+match_tag(struct Group const g, struct CCC_Flat_hash_map_tag const m) {
     struct Match_mask const res = {
         vget_lane_u64(vreinterpret_u64_u8(vceq_u8(g.v, vdup_n_u8(m.v))), 0)
             & MATCH_MASK_TAGS_MSBS,
@@ -2102,8 +1868,7 @@ match_tag(struct Group const g, struct CCC_Flat_hash_map_tag const m)
 in group g that are the empty special constant. The user must interpret this 0
 based index in the context of the probe sequence. */
 static inline struct Match_mask
-match_empty(struct Group const g)
-{
+match_empty(struct Group const g) {
     return match_tag(g, (struct CCC_Flat_hash_map_tag){TAG_EMPTY});
 }
 
@@ -2111,8 +1876,7 @@ match_empty(struct Group const g)
 in group g that are the empty special constant. The user must interpret this 0
 based index in the context of the probe sequence. */
 static inline struct Match_mask
-match_deleted(struct Group const g)
-{
+match_deleted(struct Group const g) {
     return match_tag(g, (struct CCC_Flat_hash_map_tag){TAG_DELETED});
 }
 
@@ -2121,8 +1885,7 @@ in the group that are the special constant empty or deleted. These are easy
 to find because they are the one tags in a group with the most significant
 bit on. */
 static inline struct Match_mask
-match_empty_deleted(struct Group const g)
-{
+match_empty_deleted(struct Group const g) {
     uint8x8_t const cmp = vcltz_s8(vreinterpret_s8_u8(g.v));
     struct Match_mask const res = {
         vget_lane_u64(vreinterpret_u64_u8(cmp), 0) & MATCH_MASK_TAGS_MSBS,
@@ -2138,8 +1901,7 @@ match_empty_deleted(struct Group const g)
 group that are occupied by a user hash value. These are those tags that have
 the most significant bit off and the lower 7 bits occupied by user hash. */
 static inline struct Match_mask
-match_full(struct Group const g)
-{
+match_full(struct Group const g) {
     uint8x8_t const cmp = vcgez_s8(vreinterpret_s8_u8(g.v));
     struct Match_mask const res = {
         vget_lane_u64(vreinterpret_u64_u8(cmp), 0) & MATCH_MASK_TAGS_MSBS,
@@ -2160,8 +1922,7 @@ GROUP_COUNT) are considered.
 
 Assumes start tag is less than group size. */
 static inline struct Match_mask
-match_leading_full(struct Group const g, size_t const start_tag)
-{
+match_leading_full(struct Group const g, size_t const start_tag) {
     assert(start_tag < GROUP_COUNT);
     uint8x8_t const cmp = vcgez_s8(vreinterpret_s8_u8(g.v));
     struct Match_mask const res = {
@@ -2181,8 +1942,7 @@ match_leading_full(struct Group const g, size_t const start_tag)
 aligned load and the user must ensure the load will not go off then end of the
 tag array. */
 static inline struct Group
-group_load_aligned(struct CCC_Flat_hash_map_tag const *const source)
-{
+group_load_aligned(struct CCC_Flat_hash_map_tag const *const source) {
     return (struct Group){vld1_u8(&source->v)};
 }
 
@@ -2190,8 +1950,7 @@ group_load_aligned(struct CCC_Flat_hash_map_tag const *const source)
 must ensure the store will not go off the end of the tag array. */
 static inline void
 group_store_aligned(struct CCC_Flat_hash_map_tag *const destination,
-                    struct Group const source)
-{
+                    struct Group const source) {
     vst1_u8(&destination->v, source.v);
 }
 
@@ -2199,8 +1958,7 @@ group_store_aligned(struct CCC_Flat_hash_map_tag *const destination,
 unaligned load and the user must ensure the load will not go off then end of the
 tag array. */
 static inline struct Group
-group_load_unaligned(struct CCC_Flat_hash_map_tag const *const source)
-{
+group_load_unaligned(struct CCC_Flat_hash_map_tag const *const source) {
     return (struct Group){vld1_u8(&source->v)};
 }
 
@@ -2221,8 +1979,7 @@ TAG_FULL = 0b0101_1101 -> 0b1000_000
 The hashed bits are lost because the full slot has the high bit off and
 therefore is not a match for the constants mask. */
 static inline struct Group
-group_convert_constant_to_empty_and_full_to_deleted(struct Group const g)
-{
+group_convert_constant_to_empty_and_full_to_deleted(struct Group const g) {
     uint8x8_t const constant = vcltz_s8(vreinterpret_s8_u8(g.v));
     return (struct Group){vorr_u8(constant, vdup_n_u8(TAG_MSB))};
 }
@@ -2236,8 +1993,7 @@ can't be achieved. This ideally works for most platforms. */
 
 /* Returns 1=true if platform is little endian, else false for big endian. */
 static inline int
-is_little_endian(void)
-{
+is_little_endian(void) {
     unsigned int x = 1;
     char *c = (char *)&x;
     return (int)*c;
@@ -2246,10 +2002,8 @@ is_little_endian(void)
 /* Returns a mask converted to little endian byte layout. On a little endian
 platform the value is returned, otherwise byte swapping occurs. */
 static inline struct Match_mask
-to_little_endian(struct Match_mask m)
-{
-    if (is_little_endian())
-    {
+to_little_endian(struct Match_mask m) {
+    if (is_little_endian()) {
         return m;
     }
 #    if defined(__has_builtin) && __has_builtin(__builtin_bswap64)
@@ -2276,8 +2030,7 @@ from the searched value only in its lowest bit. This is fine because:
 This algorithm is derived from:
 https://graphics.stanford.edu/~seander/bithacks.html##ValueInWord */
 static inline struct Match_mask
-match_tag(struct Group g, struct CCC_Flat_hash_map_tag const m)
-{
+match_tag(struct Group g, struct CCC_Flat_hash_map_tag const m) {
     struct Group const cmp = {
         g.v
             ^ ((((typeof(g.v))m.v) << (TAG_BITS * 7UL))
@@ -2301,8 +2054,7 @@ match_tag(struct Group g, struct CCC_Flat_hash_map_tag const m)
 /** Returns a struct Match_mask with the most significant bit in every byte on
 if that tag in g is empty. */
 static inline struct Match_mask
-match_empty(struct Group const g)
-{
+match_empty(struct Group const g) {
     /* EMPTY has all bits on and DELETED has the most significant bit on so
        EMPTY must have the top 2 bits on. Because the empty mask has only
        the most significant bit on this also ensure the mask has only the
@@ -2320,8 +2072,7 @@ match_empty(struct Group const g)
 /** Returns a struct Match_mask with the most significant bit in every byte on
 if that tag in g is empty. */
 static inline struct Match_mask
-match_deleted(struct Group const g)
-{
+match_deleted(struct Group const g) {
     /* This is the same process as matching a tag but easier because we can
        make the empty mask a constant at compile time instead of runtime. */
     struct Group const empty_cmp = {g.v ^ MATCH_MASK_TAGS_EMPTY};
@@ -2339,8 +2090,7 @@ match_deleted(struct Group const g)
 /** Returns a match with the most significant bit in every byte on if
 that tag in g is empty or deleted. This is found by the most significant bit. */
 static inline struct Match_mask
-match_empty_deleted(struct Group const g)
-{
+match_empty_deleted(struct Group const g) {
     struct Match_mask const res
         = to_little_endian((struct Match_mask){g.v & MATCH_MASK_TAGS_MSBS});
     assert(
@@ -2354,8 +2104,7 @@ match_empty_deleted(struct Group const g)
 group that are occupied by a user hash value. These are those tags that have
 the most significant bit off and the lower 7 bits occupied by user hash. */
 static inline struct Match_mask
-match_full(struct Group const g)
-{
+match_full(struct Group const g) {
     struct Match_mask const res
         = to_little_endian((struct Match_mask){(~g.v) & MATCH_MASK_TAGS_MSBS});
     assert(
@@ -2374,8 +2123,7 @@ GROUP_COUNT) are considered.
 
 Assumes start_tag is less than group size. */
 static inline struct Match_mask
-match_leading_full(struct Group const g, size_t const start_tag)
-{
+match_leading_full(struct Group const g, size_t const start_tag) {
     assert(start_tag < GROUP_COUNT);
     /* The 0th tag off mask we use also happens to ensure only the MSB in each
        byte of a match is on as the assert confirms after. */
@@ -2393,8 +2141,7 @@ match_leading_full(struct Group const g, size_t const start_tag)
 
 /** Loads tags into a group without violating strict aliasing. */
 static inline struct Group
-group_load_aligned(struct CCC_Flat_hash_map_tag const *const source)
-{
+group_load_aligned(struct CCC_Flat_hash_map_tag const *const source) {
     struct Group g;
     (void)memcpy(&g, source, sizeof(g));
     return g;
@@ -2403,15 +2150,13 @@ group_load_aligned(struct CCC_Flat_hash_map_tag const *const source)
 /** Stores a group back into the tag array without violating strict aliasing. */
 static inline void
 group_store_aligned(struct CCC_Flat_hash_map_tag *const destination,
-                    struct Group const source)
-{
+                    struct Group const source) {
     (void)memcpy(destination, &source, sizeof(source));
 }
 
 /** Loads tags into a group without violating strict aliasing. */
 static inline struct Group
-group_load_unaligned(struct CCC_Flat_hash_map_tag const *const source)
-{
+group_load_unaligned(struct CCC_Flat_hash_map_tag const *const source) {
     struct Group g;
     (void)memcpy(&g, source, sizeof(g));
     return g;
@@ -2434,8 +2179,7 @@ TAG_FULL = 0b0101_1101 -> 0b1000_000
 The hashed bits are lost because the full slot has the high bit off and
 therefore is not a match for the constants mask. */
 static inline struct Group
-group_convert_constant_to_empty_and_full_to_deleted(struct Group g)
-{
+group_convert_constant_to_empty_and_full_to_deleted(struct Group g) {
     g.v = ~g.v & MATCH_MASK_TAGS_MSBS;
     g.v = ~g.v + (g.v >> (TAG_BITS - 1));
     return g;
@@ -2462,8 +2206,7 @@ static_assert(
     "available builtins on the given platform.");
 
 static inline unsigned
-count_trailing_zeros(struct Match_mask const m)
-{
+count_trailing_zeros(struct Match_mask const m) {
     static_assert(
         __builtin_ctz(0x8000) == GROUP_COUNT - 1,
         "Counting trailing zeros will always result in a valid mask "
@@ -2473,8 +2216,7 @@ count_trailing_zeros(struct Match_mask const m)
 }
 
 static inline unsigned
-count_leading_zeros(struct Match_mask const m)
-{
+count_leading_zeros(struct Match_mask const m) {
     static_assert(
         sizeof((struct Match_mask){}.v) * 2UL == sizeof(unsigned),
         "a struct Match_mask will be implicitly widened to exactly twice "
@@ -2483,8 +2225,7 @@ count_leading_zeros(struct Match_mask const m)
 }
 
 static inline unsigned
-count_leading_zeros_size_t(size_t const n)
-{
+count_leading_zeros_size_t(size_t const n) {
     static_assert(sizeof(size_t) == sizeof(unsigned long),
                   "Ensure the available builtin works for the platform defined "
                   "size of a size_t.");
@@ -2494,49 +2235,39 @@ count_leading_zeros_size_t(size_t const n)
 #    else /* !defined(__has_builtin) || !__has_builtin(__builtin_ctz)          \
         || !__has_builtin(__builtin_clz) || !__has_builtin(__builtin_clzl) */
 
-enum : size_t
-{
+enum : size_t {
     /** @internal Most significant bit of size_t for bit counting. */
     SIZE_T_MSB = 0x8000000000000000,
 };
 
 static inline unsigned
-count_trailing_zeros(struct Match_mask m)
-{
-    if (!m.v)
-    {
+count_trailing_zeros(struct Match_mask m) {
+    if (!m.v) {
         return GROUP_COUNT;
     }
     unsigned cnt = 0;
-    for (; m.v; cnt += ((m.v & 1U) == 0), m.v >>= 1U)
-    {}
+    for (; m.v; cnt += ((m.v & 1U) == 0), m.v >>= 1U) {}
     return cnt;
 }
 
 static inline unsigned
-count_leading_zeros(struct Match_mask m)
-{
-    if (!m.v)
-    {
+count_leading_zeros(struct Match_mask m) {
+    if (!m.v) {
         return GROUP_COUNT;
     }
     unsigned mv = (unsigned)m.v << GROUP_COUNT;
     unsigned cnt = 0;
-    for (; (mv & (MATCH_MASK_MSB << GROUP_COUNT)) == 0; ++cnt, mv <<= 1U)
-    {}
+    for (; (mv & (MATCH_MASK_MSB << GROUP_COUNT)) == 0; ++cnt, mv <<= 1U) {}
     return cnt;
 }
 
 static inline unsigned
-count_leading_zeros_size_t(size_t n)
-{
-    if (!n)
-    {
+count_leading_zeros_size_t(size_t n) {
+    if (!n) {
         return sizeof(size_t) * CHAR_BIT;
     }
     unsigned cnt = 0;
-    for (; !(n & SIZE_T_MSB); ++cnt, n <<= 1U)
-    {}
+    for (; !(n & SIZE_T_MSB); ++cnt, n <<= 1U) {}
     return cnt;
 }
 
@@ -2553,8 +2284,7 @@ static_assert(sizeof((struct Match_mask){}.v) == sizeof(long),
               "struct Match_mask");
 
 static inline unsigned
-count_trailing_zeros(struct Match_mask const m)
-{
+count_trailing_zeros(struct Match_mask const m) {
     static_assert(__builtin_ctzl(MATCH_MASK_MSB) / GROUP_COUNT
                       == GROUP_COUNT - 1,
                   "builtin trailing zeros must produce number of bits we "
@@ -2563,8 +2293,7 @@ count_trailing_zeros(struct Match_mask const m)
 }
 
 static inline unsigned
-count_leading_zeros(struct Match_mask const m)
-{
+count_leading_zeros(struct Match_mask const m) {
     static_assert(__builtin_clzl((typeof((struct Match_mask){}.v))0x1)
                           / GROUP_COUNT
                       == GROUP_COUNT - 1,
@@ -2574,8 +2303,7 @@ count_leading_zeros(struct Match_mask const m)
 }
 
 static inline unsigned
-count_leading_zeros_size_t(size_t const n)
-{
+count_leading_zeros_size_t(size_t const n) {
     static_assert(sizeof(size_t) == sizeof(unsigned long));
     return n ? __builtin_clzl(n) : sizeof(size_t) * CHAR_BIT;
 }
@@ -2583,48 +2311,38 @@ count_leading_zeros_size_t(size_t const n)
 #    else /* defined(__has_builtin) && __has_builtin(__builtin_ctzl) &&        \
              __has_builtin(__builtin_clzl) */
 
-enum : size_t
-{
+enum : size_t {
     /** @internal Most significant bit of size_t for bit counting. */
     SIZE_T_MSB = 0x8000000000000000,
 };
 
 static inline unsigned
-count_trailing_zeros(struct Match_mask m)
-{
-    if (!m.v)
-    {
+count_trailing_zeros(struct Match_mask m) {
+    if (!m.v) {
         return GROUP_COUNT;
     }
     unsigned cnt = 0;
-    for (; m.v; cnt += ((m.v & 1U) == 0), m.v >>= 1U)
-    {}
+    for (; m.v; cnt += ((m.v & 1U) == 0), m.v >>= 1U) {}
     return cnt / GROUP_COUNT;
 }
 
 static inline unsigned
-count_leading_zeros(struct Match_mask m)
-{
-    if (!m.v)
-    {
+count_leading_zeros(struct Match_mask m) {
+    if (!m.v) {
         return GROUP_COUNT;
     }
     unsigned cnt = 0;
-    for (; (m.v & MATCH_MASK_MSB) == 0; ++cnt, m.v <<= 1U)
-    {}
+    for (; (m.v & MATCH_MASK_MSB) == 0; ++cnt, m.v <<= 1U) {}
     return cnt / GROUP_COUNT;
 }
 
 static inline unsigned
-count_leading_zeros_size_t(size_t n)
-{
-    if (!n)
-    {
+count_leading_zeros_size_t(size_t n) {
+    if (!n) {
         return sizeof(size_t) * CHAR_BIT;
     }
     unsigned cnt = 0;
-    for (; (n & SIZE_T_MSB) == 0; ++cnt, n <<= 1U)
-    {}
+    for (; (n & SIZE_T_MSB) == 0; ++cnt, n <<= 1U) {}
     return cnt;
 }
 

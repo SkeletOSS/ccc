@@ -10,8 +10,7 @@
 #include "types.h"
 #include "utility/stack_allocator.h"
 
-check_static_begin(singly_linked_list_test_insert_three)
-{
+check_static_begin(singly_linked_list_test_insert_three) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 3);
     Singly_linked_list singly_linked_list = singly_linked_list_initialize(
@@ -38,8 +37,7 @@ check_static_begin(singly_linked_list_test_insert_three)
     check_end();
 }
 
-check_static_begin(singly_linked_list_test_push_and_splice)
-{
+check_static_begin(singly_linked_list_test_push_and_splice) {
     Singly_linked_list singly_linked_list
         = singly_linked_list_initialize(struct Val, e, val_order, NULL, NULL);
     struct Val vals[4] = {{.val = 0}, {.val = 1}, {.val = 2}, {.val = 3}};
@@ -69,8 +67,7 @@ check_static_begin(singly_linked_list_test_push_and_splice)
     check_end();
 }
 
-check_static_begin(singly_linked_list_test_push_and_splice_range)
-{
+check_static_begin(singly_linked_list_test_push_and_splice_range) {
     Singly_linked_list singly_linked_list
         = singly_linked_list_initialize(struct Val, e, val_order, NULL, NULL);
     struct Val vals[5]
@@ -116,8 +113,7 @@ check_static_begin(singly_linked_list_test_push_and_splice_range)
     check_end();
 }
 
-check_static_begin(singly_linked_list_test_push_and_splice_range_no_ops)
-{
+check_static_begin(singly_linked_list_test_push_and_splice_range_no_ops) {
     Singly_linked_list singly_linked_list
         = singly_linked_list_initialize(struct Val, e, val_order, NULL, NULL);
     struct Val vals[5]
@@ -149,8 +145,7 @@ check_static_begin(singly_linked_list_test_push_and_splice_range_no_ops)
     check_end();
 }
 
-check_static_begin(singly_linked_list_test_sort_reverse)
-{
+check_static_begin(singly_linked_list_test_sort_reverse) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 6);
     Singly_linked_list singly_linked_list = singly_linked_list_context_from(
@@ -175,8 +170,7 @@ check_static_begin(singly_linked_list_test_sort_reverse)
     check_end();
 }
 
-check_static_begin(singly_linked_list_test_sort_even)
-{
+check_static_begin(singly_linked_list_test_sort_even) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 8);
     Singly_linked_list singly_linked_list = singly_linked_list_context_from(
@@ -206,8 +200,7 @@ check_static_begin(singly_linked_list_test_sort_even)
     check_end();
 }
 
-check_static_begin(singly_linked_list_test_sort_odd)
-{
+check_static_begin(singly_linked_list_test_sort_odd) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 9);
     Singly_linked_list singly_linked_list = singly_linked_list_context_from(
@@ -238,8 +231,7 @@ check_static_begin(singly_linked_list_test_sort_odd)
     check_end();
 }
 
-check_static_begin(singly_linked_list_test_sort_runs)
-{
+check_static_begin(singly_linked_list_test_sort_runs) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 12);
     Singly_linked_list singly_linked_list = singly_linked_list_context_from(
@@ -274,8 +266,7 @@ check_static_begin(singly_linked_list_test_sort_runs)
     check_end();
 }
 
-check_static_begin(singly_linked_list_test_sort_halves)
-{
+check_static_begin(singly_linked_list_test_sort_halves) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 12);
     Singly_linked_list singly_linked_list = singly_linked_list_context_from(
@@ -310,8 +301,7 @@ check_static_begin(singly_linked_list_test_sort_halves)
     check_end();
 }
 
-check_static_begin(singly_linked_list_test_sort_insert)
-{
+check_static_begin(singly_linked_list_test_sort_insert) {
     Singly_linked_list singly_linked_list
         = singly_linked_list_initialize(struct Val, e, val_order, NULL, NULL);
     struct Val *inserted = singly_linked_list_insert_sorted(
@@ -382,8 +372,7 @@ check_static_begin(singly_linked_list_test_sort_insert)
     check_end();
 }
 int
-main(void)
-{
+main(void) {
     return check_run(singly_linked_list_test_insert_three(),
                      singly_linked_list_test_push_and_splice(),
                      singly_linked_list_test_push_and_splice_range(),

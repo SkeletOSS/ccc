@@ -39,8 +39,7 @@ Example:
 
 /*=======================   Maze Helper Types   =============================*/
 
-enum Animation_speed
-{
+enum Animation_speed {
     INSTANT = 0,
     SPEED_1,
     SPEED_2,
@@ -51,14 +50,12 @@ enum Animation_speed
     SPEED_7,
 };
 
-struct Point
-{
+struct Point {
     int r;
     int c;
 };
 
-struct Maze
-{
+struct Maze {
     int rows;
     int cols;
     enum Animation_speed speed;
@@ -67,8 +64,7 @@ struct Maze
 
 /*===================  Prim's Algorithm Helper Types   ======================*/
 
-struct Prim_cell
-{
+struct Prim_cell {
     struct Point cell;
     int cost;
 };
@@ -93,20 +89,17 @@ static int const speeds[] = {
 
 static struct Point const dir_offsets[] = {{-2, 0}, {0, 2}, {2, 0}, {0, -2}};
 
-enum : size_t
-{
+enum : size_t {
     DIR_OFFSETS_SIZE = sizeof(dir_offsets) / sizeof(dir_offsets[0]),
 };
 
-enum : int
-{
+enum : int {
     DEFAULT_ROWS = 66,
     DEFAULT_COLS = 111,
     ROW_COL_MIN = 7,
 };
 
-enum : uint16_t
-{
+enum : uint16_t {
     PATH_BIT = 0b0010000000000000,
     WALL_MASK = 0b1111,
     FLOAT_WALL = 0b0000,
@@ -125,17 +118,14 @@ static SV_Str_view const help_flag = SV_from("-h");
 /*==========================   Prototypes  ================================= */
 
 #define check(cond, ...)                                                       \
-    do                                                                         \
-    {                                                                          \
-        if (!(cond))                                                           \
-        {                                                                      \
+    do {                                                                       \
+        if (!(cond)) {                                                         \
             __VA_OPT__(__VA_ARGS__)                                            \
             printf("%s, %d, condition is false: %s\n", __FILE__, __LINE__,     \
                    #cond);                                                     \
             exit(1);                                                           \
         }                                                                      \
-    }                                                                          \
-    while (0)
+    } while (0)
 
 static void animate_maze(struct Maze *);
 static void fill_maze_with_walls(struct Maze *);
@@ -160,8 +150,7 @@ static uint64_t hash_64_bits(uint64_t);
 /*======================  Main Arg Handling  ===============================*/
 
 int
-main(int argc, char **argv)
-{
+main(int argc, char **argv) {
     /* Randomness will be used throughout the program but it need not be
        perfect. It only helps build the maze.
        NOLINTNEXTLINE(cert-msc32-c, cert-msc51-cpp) */
@@ -172,47 +161,34 @@ main(int argc, char **argv)
         .speed = SPEED_4,
         .maze = NULL,
     };
-    for (int i = 1; i < argc; ++i)
-    {
+    for (int i = 1; i < argc; ++i) {
         SV_Str_view const arg = SV_from_terminated(argv[i]);
-        if (SV_starts_with(arg, row_flag))
-        {
+        if (SV_starts_with(arg, row_flag)) {
             struct Int_conversion const row_arg = parse_digits(arg);
-            if (row_arg.status == CONV_ER || row_arg.conversion < ROW_COL_MIN)
-            {
+            if (row_arg.status == CONV_ER || row_arg.conversion < ROW_COL_MIN) {
                 quit("rows below required minimum or negative.\n", 1);
                 return 1;
             }
             maze.rows = row_arg.conversion;
-        }
-        else if (SV_starts_with(arg, col_flag))
-        {
+        } else if (SV_starts_with(arg, col_flag)) {
             struct Int_conversion const col_arg = parse_digits(arg);
-            if (col_arg.status == CONV_ER || col_arg.conversion < ROW_COL_MIN)
-            {
+            if (col_arg.status == CONV_ER || col_arg.conversion < ROW_COL_MIN) {
                 quit("cols below required minimum or negative.\n", 1);
                 return 1;
             }
             maze.cols = col_arg.conversion;
-        }
-        else if (SV_starts_with(arg, speed_flag))
-        {
+        } else if (SV_starts_with(arg, speed_flag)) {
             struct Int_conversion const speed_arg = parse_digits(arg);
             if (speed_arg.status == CONV_ER || speed_arg.conversion > SPEED_7
-                || speed_arg.conversion < 0)
-            {
+                || speed_arg.conversion < 0) {
                 quit("speed outside of valid range.\n", 1);
                 return 1;
             }
             maze.speed = speed_arg.conversion;
-        }
-        else if (SV_starts_with(arg, help_flag))
-        {
+        } else if (SV_starts_with(arg, help_flag)) {
             help();
             return 0;
-        }
-        else
-        {
+        } else {
             quit("can only specify rows, columns, or speed "
                  "for now (-r=N, -c=N, -s=N)\n",
                  1);
@@ -222,12 +198,10 @@ main(int argc, char **argv)
     maze.rows = maze.rows + (maze.rows % 2 == 0);
     maze.cols = maze.cols + (maze.cols % 2 == 0);
     maze.maze = calloc((size_t)maze.rows * maze.cols, sizeof(uint16_t));
-    defer
-    {
+    defer {
         free(maze.maze);
     }
-    if (!maze.maze)
-    {
+    if (!maze.maze) {
         (void)fprintf(stderr, "allocation failure for specified maze size.\n");
         return 1;
     }
@@ -249,8 +223,7 @@ cases.
 However, we can still be "C" about it by thinking about reserving exactly
 the memory we need dynamically in the from initializer. */
 static void
-animate_maze(struct Maze *maze)
-{
+animate_maze(struct Maze *maze) {
     int const speed = speeds[maze->speed];
     fill_maze_with_walls(maze);
     clear_and_flush_maze(maze);
@@ -269,26 +242,22 @@ animate_maze(struct Maze *maze)
         (struct Prim_cell[]){
             start,
         });
-    defer
-    {
+    defer {
         (void)clear_and_free(&cost_map, NULL);
         (void)clear_and_free(&cell_priority_queue, NULL);
     }
-    while (!is_empty(&cell_priority_queue))
-    {
+    while (!is_empty(&cell_priority_queue)) {
         struct Prim_cell const *const c = front(&cell_priority_queue);
         *maze_at_wrap(maze, c->cell.r, c->cell.c) |= CACHE_BIT;
         /* 0 is an invalid row and column in any maze. */
         struct Prim_cell min_cell = {};
         int min = INT_MAX;
-        for (size_t i = 0; i < DIR_OFFSETS_SIZE; ++i)
-        {
+        for (size_t i = 0; i < DIR_OFFSETS_SIZE; ++i) {
             struct Point const n = {
                 .r = c->cell.r + dir_offsets[i].r,
                 .c = c->cell.c + dir_offsets[i].c,
             };
-            if (can_build_new_square(maze, n.r, n.c))
-            {
+            if (can_build_new_square(maze, n.r, n.c)) {
                 struct Prim_cell const *const cell
                     = flat_hash_map_or_insert_with(
                         entry_wrap(&cost_map, &n),
@@ -297,20 +266,16 @@ animate_maze(struct Maze *maze)
                             .cost = rand_range(0, 100),
                         });
                 check(cell);
-                if (cell->cost < min)
-                {
+                if (cell->cost < min) {
                     min = cell->cost;
                     min_cell = *cell;
                 }
             }
         }
-        if (min != INT_MAX)
-        {
+        if (min != INT_MAX) {
             join_squares_animated(maze, c->cell, min_cell.cell, speed);
             (void)push(&cell_priority_queue, &min_cell, &(struct Prim_cell){});
-        }
-        else
-        {
+        } else {
             (void)pop(&cell_priority_queue, &(struct Prim_cell){});
         }
     }
@@ -319,22 +284,19 @@ animate_maze(struct Maze *maze)
 /*===================     Container Support Code     ========================*/
 
 static CCC_Order
-prim_cell_order(Key_comparator_context const c)
-{
+prim_cell_order(Key_comparator_context const c) {
     struct Point const *const left = c.key_left;
     struct Prim_cell const *const right = c.type_right;
     CCC_Order const order
         = (left->r < right->cell.r) - (left->r > right->cell.r);
-    if (order != CCC_ORDER_EQUAL)
-    {
+    if (order != CCC_ORDER_EQUAL) {
         return order;
     }
     return (left->c > right->cell.c) - (left->c < right->cell.c);
 }
 
 static uint64_t
-prim_cell_hash_fn(Key_context const k)
-{
+prim_cell_hash_fn(Key_context const k) {
     struct Prim_cell const *const p = k.key;
     uint64_t const wr = p->cell.r;
     static_assert(sizeof((struct Point){}.r) * CHAR_BIT == 32,
@@ -344,8 +306,7 @@ prim_cell_hash_fn(Key_context const k)
 }
 
 static inline uint64_t
-hash_64_bits(uint64_t x)
-{
+hash_64_bits(uint64_t x) {
     x = (x ^ (x >> 30)) * UINT64_C(0xbf58476d1ce4e5b9);
     x = (x ^ (x >> 27)) * UINT64_C(0x94d049bb133111eb);
     x = x ^ (x >> 31);
@@ -353,8 +314,7 @@ hash_64_bits(uint64_t x)
 }
 
 static Order
-order_prim_cells(Type_comparator_context const order_cells)
-{
+order_prim_cells(Type_comparator_context const order_cells) {
     struct Prim_cell const *const left = order_cells.type_left;
     struct Prim_cell const *const right = order_cells.type_right;
     return (left->cost > right->cost) - (left->cost < right->cost);
@@ -363,8 +323,7 @@ order_prim_cells(Type_comparator_context const order_cells)
 /*=========================   Maze Support Code   ===========================*/
 
 static struct Point
-rand_point(struct Maze const *const maze)
-{
+rand_point(struct Maze const *const maze) {
     return (struct Point){
         .r = (2 * rand_range(1, (maze->rows - 2) / 2)) + 1,
         .c = (2 * rand_range(1, (maze->cols - 2) / 2)) + 1,
@@ -372,25 +331,19 @@ rand_point(struct Maze const *const maze)
 }
 
 static void
-fill_maze_with_walls(struct Maze *maze)
-{
-    for (int row = 0; row < maze->rows; ++row)
-    {
-        for (int col = 0; col < maze->cols; ++col)
-        {
+fill_maze_with_walls(struct Maze *maze) {
+    for (int row = 0; row < maze->rows; ++row) {
+        for (int col = 0; col < maze->cols; ++col) {
             build_wall(maze, row, col);
         }
     }
 }
 
 static void
-clear_and_flush_maze(struct Maze const *const maze)
-{
+clear_and_flush_maze(struct Maze const *const maze) {
     clear_screen();
-    for (int row = 0; row < maze->rows; ++row)
-    {
-        for (int col = 0; col < maze->cols; ++col)
-        {
+    for (int row = 0; row < maze->rows; ++row) {
+        for (int col = 0; col < maze->cols; ++col) {
             flush_cursor_maze_coordinate(maze, row, col);
         }
         printf("\n");
@@ -400,27 +353,17 @@ clear_and_flush_maze(struct Maze const *const maze)
 
 static void
 join_squares_animated(struct Maze *maze, struct Point const cur,
-                      struct Point const next, int const time)
-{
+                      struct Point const next, int const time) {
     struct Point wall = cur;
-    if (next.r < cur.r)
-    {
+    if (next.r < cur.r) {
         wall.r--;
-    }
-    else if (next.r > cur.r)
-    {
+    } else if (next.r > cur.r) {
         wall.r++;
-    }
-    else if (next.c < cur.c)
-    {
+    } else if (next.c < cur.c) {
         wall.c--;
-    }
-    else if (next.c > cur.c)
-    {
+    } else if (next.c > cur.c) {
         wall.c++;
-    }
-    else
-    {
+    } else {
         printf("Wall break error. Step through wall didn't work\n");
     }
     carve_path_walls_animated(maze, cur, time);
@@ -430,32 +373,27 @@ join_squares_animated(struct Maze *maze, struct Point const cur,
 
 static void
 carve_path_walls_animated(struct Maze *maze, struct Point const p,
-                          int const time)
-{
+                          int const time) {
     *maze_at_wrap(maze, p.r, p.c) |= PATH_BIT;
     flush_cursor_maze_coordinate(maze, p.r, p.c);
     struct timespec ts = {.tv_sec = 0, .tv_nsec = time};
     nanosleep(&ts, NULL);
-    if (p.r - 1 >= 0 && !(maze_at(maze, p.r - 1, p.c) & PATH_BIT))
-    {
+    if (p.r - 1 >= 0 && !(maze_at(maze, p.r - 1, p.c) & PATH_BIT)) {
         *maze_at_wrap(maze, p.r - 1, p.c) &= ~SOUTH_WALL;
         flush_cursor_maze_coordinate(maze, p.r - 1, p.c);
         nanosleep(&ts, NULL);
     }
-    if (p.r + 1 < maze->rows && !(maze_at(maze, p.r + 1, p.c) & PATH_BIT))
-    {
+    if (p.r + 1 < maze->rows && !(maze_at(maze, p.r + 1, p.c) & PATH_BIT)) {
         *maze_at_wrap(maze, p.r + 1, p.c) &= ~NORTH_WALL;
         flush_cursor_maze_coordinate(maze, p.r + 1, p.c);
         nanosleep(&ts, NULL);
     }
-    if (p.c - 1 >= 0 && !(maze_at(maze, p.r, p.c - 1) & PATH_BIT))
-    {
+    if (p.c - 1 >= 0 && !(maze_at(maze, p.r, p.c - 1) & PATH_BIT)) {
         *maze_at_wrap(maze, p.r, p.c - 1) &= ~EAST_WALL;
         flush_cursor_maze_coordinate(maze, p.r, p.c - 1);
         nanosleep(&ts, NULL);
     }
-    if (p.c + 1 < maze->cols && !(maze_at(maze, p.r, p.c + 1) & PATH_BIT))
-    {
+    if (p.c + 1 < maze->cols && !(maze_at(maze, p.r, p.c + 1) & PATH_BIT)) {
         *maze_at_wrap(maze, p.r, p.c + 1) &= ~WEST_WALL;
         flush_cursor_maze_coordinate(maze, p.r, p.c + 1);
         nanosleep(&ts, NULL);
@@ -464,23 +402,18 @@ carve_path_walls_animated(struct Maze *maze, struct Point const p,
 }
 
 static void
-build_wall(struct Maze *m, int const r, int const c)
-{
+build_wall(struct Maze *m, int const r, int const c) {
     uint16_t wall = 0;
-    if (r - 1 >= 0)
-    {
+    if (r - 1 >= 0) {
         wall |= NORTH_WALL;
     }
-    if (r + 1 < m->rows)
-    {
+    if (r + 1 < m->rows) {
         wall |= SOUTH_WALL;
     }
-    if (c - 1 >= 0)
-    {
+    if (c - 1 >= 0) {
         wall |= WEST_WALL;
     }
-    if (c + 1 < m->cols)
-    {
+    if (c + 1 < m->cols) {
         wall |= EAST_WALL;
     }
     *maze_at_wrap(m, r, c) |= wall;
@@ -488,77 +421,56 @@ build_wall(struct Maze *m, int const r, int const c)
 }
 
 static void
-flush_cursor_maze_coordinate(struct Maze const *maze, int const r, int const c)
-{
+flush_cursor_maze_coordinate(struct Maze const *maze, int const r,
+                             int const c) {
     set_cursor_position(r / 2, c);
     print_square(maze, r, c);
     (void)fflush(stdout);
 }
 
 static void
-print_square(struct Maze const *m, int const r, int const c)
-{
+print_square(struct Maze const *m, int const r, int const c) {
     uint16_t const square = maze_at(m, r, c);
-    if (!(square & PATH_BIT))
-    {
-        if (r % 2)
-        {
+    if (!(square & PATH_BIT)) {
+        if (r % 2) {
             printf("%s", walls[maze_at(m, r - 1, c) & WALL_MASK]);
-        }
-        else
-        {
+        } else {
             printf("%s", walls[square & WALL_MASK]);
         }
-    }
-    else if (square & PATH_BIT)
-    {
-        if (r % 2)
-        {
-            if (r > 0 && !(maze_at(m, r - 1, c) & PATH_BIT))
-            {
+    } else if (square & PATH_BIT) {
+        if (r % 2) {
+            if (r > 0 && !(maze_at(m, r - 1, c) & PATH_BIT)) {
                 printf("▀");
-            }
-            else
-            {
+            } else {
                 printf(" ");
             }
-        }
-        else
-        {
-            if (!(maze_at(m, r + 1, c) & PATH_BIT))
-            {
+        } else {
+            if (!(maze_at(m, r + 1, c) & PATH_BIT)) {
                 printf("▄");
-            }
-            else
-            {
+            } else {
                 printf(" ");
             }
         }
-    }
-    else
-    {
+    } else {
         (void)fprintf(stderr, "uncategorizable square.\n");
     }
 }
 
 /** Square by mutable reference. */
 static uint16_t *
-maze_at_wrap(struct Maze const *const maze, int const r, int const c)
-{
+maze_at_wrap(struct Maze const *const maze, int const r, int const c) {
     return &maze->maze[(r * maze->cols) + c];
 }
 
 /** Square by value. */
 static uint16_t
-maze_at(struct Maze const *const maze, int const r, int const c)
-{
+maze_at(struct Maze const *const maze, int const r, int const c) {
     return maze->maze[(r * maze->cols) + c];
 }
 
 /** Can't build if square has been seen/cached. */
 static bool
-can_build_new_square(struct Maze const *const maze, int const r, int const c)
-{
+can_build_new_square(struct Maze const *const maze, int const r, int const c) {
     return r > 0 && r < maze->rows - 1 && c > 0 && c < maze->cols - 1
         && !(maze_at(maze, r, c) & CACHE_BIT);
 }
@@ -566,16 +478,13 @@ can_build_new_square(struct Maze const *const maze, int const r, int const c)
 /*===========================    Misc    ====================================*/
 
 static struct Int_conversion
-parse_digits(SV_Str_view arg)
-{
+parse_digits(SV_Str_view arg) {
     size_t const eql = SV_reverse_find(arg, SV_npos(arg), SV_from("="));
-    if (eql == SV_npos(arg))
-    {
+    if (eql == SV_npos(arg)) {
         return (struct Int_conversion){.status = CONV_ER};
     }
     arg = SV_substr(arg, eql, ULLONG_MAX);
-    if (SV_is_empty(arg))
-    {
+    if (SV_is_empty(arg)) {
         (void)fprintf(stderr, "please specify element to convert.\n");
         return (struct Int_conversion){.status = CONV_ER};
     }
@@ -584,8 +493,7 @@ parse_digits(SV_Str_view arg)
 }
 
 static void
-help(void)
-{
+help(void) {
     (void)fprintf(
         stdout,
         "Maze Builder:\nBuilds a Perfect Maze with Prim's "

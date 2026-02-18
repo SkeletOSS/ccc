@@ -30,8 +30,7 @@ Because the `CCC_Buffer` abstraction already exists, the flat_double_ended_queue
 can be implemented with a single additional field rather than a front and back
 pointer. The back of the flat_double_ended_queue is always known if we know
 where the front is and how many elements are stored in the buffer. */
-struct CCC_Flat_double_ended_queue
-{
+struct CCC_Flat_double_ended_queue {
     /** @internal The helper Buffer abstraction the flat_double_ended_queue
      * owns.
      */
@@ -160,13 +159,11 @@ void *CCC_private_flat_double_ended_queue_allocate_back(
         __auto_type private_flat_double_ended_queue_pointer                    \
             = (flat_double_ended_queue_pointer);                               \
         void *const private_flat_double_ended_queue_emplace_ret = NULL;        \
-        if (private_flat_double_ended_queue_pointer)                           \
-        {                                                                      \
+        if (private_flat_double_ended_queue_pointer) {                         \
             void *const private_flat_double_ended_queue_emplace_ret            \
                 = CCC_private_flat_double_ended_queue_allocate_back(           \
                     private_flat_double_ended_queue_pointer);                  \
-            if (private_flat_double_ended_queue_emplace_ret)                   \
-            {                                                                  \
+            if (private_flat_double_ended_queue_emplace_ret) {                 \
                 *((typeof(value) *)                                            \
                       private_flat_double_ended_queue_emplace_ret)             \
                     = value;                                                   \
@@ -182,13 +179,11 @@ void *CCC_private_flat_double_ended_queue_allocate_back(
         __auto_type private_flat_double_ended_queue_pointer                    \
             = (flat_double_ended_queue_pointer);                               \
         void *const private_flat_double_ended_queue_emplace_ret = NULL;        \
-        if (private_flat_double_ended_queue_pointer)                           \
-        {                                                                      \
+        if (private_flat_double_ended_queue_pointer) {                         \
             void *const private_flat_double_ended_queue_emplace_ret            \
                 = CCC_private_flat_double_ended_queue_allocate_front(          \
                     private_flat_double_ended_queue_pointer);                  \
-            if (private_flat_double_ended_queue_emplace_ret)                   \
-            {                                                                  \
+            if (private_flat_double_ended_queue_emplace_ret) {                 \
                 *((typeof(value) *)                                            \
                       private_flat_double_ended_queue_emplace_ret)             \
                     = value;                                                   \

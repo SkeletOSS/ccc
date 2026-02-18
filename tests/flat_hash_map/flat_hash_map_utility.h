@@ -7,8 +7,7 @@
 #include "flat_hash_map.h"
 #include "types.h"
 
-struct Val
-{
+struct Val {
     int key;
     int val;
 };
@@ -23,8 +22,7 @@ capacity. Insertions can continue for 87.5% of the capacity so about 896. Play
 it safe and avoid this limit unless testing insertion failure is important. */
 CCC_flat_hash_map_declare_fixed(Standard_fixed_map, struct Val, 1024);
 
-enum : size_t
-{
+enum : size_t {
     SMALL_FIXED_CAP = CCC_flat_hash_map_fixed_capacity(Small_fixed_map),
     STANDARD_FIXED_CAP = CCC_flat_hash_map_fixed_capacity(Standard_fixed_map),
 };

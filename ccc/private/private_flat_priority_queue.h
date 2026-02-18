@@ -32,8 +32,7 @@ storing an implicit complete binary tree; elements are stored contiguously from
 / 2`, the left child is at `(i * 2) + 1`, and the right child is at `(i * 2) +
 2`. The heap can be initialized as a min or max heap due to the use of the three
 way comparison function. */
-struct CCC_Flat_priority_queue
-{
+struct CCC_Flat_priority_queue {
     /** @internal The underlying Buffer owned by the flat_priority_queue. */
     CCC_Buffer buffer;
     /** @internal The order `CCC_ORDER_LESSER` (min) or `CCC_ORDER_GREATER`
@@ -103,8 +102,7 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
             .order = private_order,                                            \
             .compare = private_compare,                                        \
         };                                                                     \
-        if (private_flat_priority_queue.buffer.count)                          \
-        {                                                                      \
+        if (private_flat_priority_queue.buffer.count) {                        \
             CCC_private_flat_priority_queue_in_place_heapify(                  \
                 &private_flat_priority_queue,                                  \
                 private_flat_priority_queue.buffer.count,                      \
@@ -201,20 +199,16 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
             = (flat_priority_queue);                                           \
         typeof(type_compound_literal) *private_flat_priority_queue_res         \
             = CCC_buffer_allocate_back(&private_flat_priority_queue->buffer);  \
-        if (private_flat_priority_queue_res)                                   \
-        {                                                                      \
+        if (private_flat_priority_queue_res) {                                 \
             *private_flat_priority_queue_res = type_compound_literal;          \
-            if (private_flat_priority_queue->buffer.count > 1)                 \
-            {                                                                  \
+            if (private_flat_priority_queue->buffer.count > 1) {               \
                 private_flat_priority_queue_res = CCC_buffer_at(               \
                     &private_flat_priority_queue->buffer,                      \
                     CCC_private_flat_priority_queue_bubble_up(                 \
                         private_flat_priority_queue,                           \
                         &(typeof(type_compound_literal)){0},                   \
                         private_flat_priority_queue->buffer.count - 1));       \
-            }                                                                  \
-            else                                                               \
-            {                                                                  \
+            } else {                                                           \
                 private_flat_priority_queue_res                                \
                     = CCC_buffer_at(&private_flat_priority_queue->buffer, 0);  \
             }                                                                  \
@@ -232,8 +226,7 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
         typeof(*T_pointer) *T = (T_pointer);                                   \
         if (private_flat_priority_queue                                        \
             && !CCC_buffer_is_empty(&private_flat_priority_queue->buffer)      \
-            && T)                                                              \
-        {                                                                      \
+            && T) {                                                            \
             {update_closure_over_T} T                                          \
                 = CCC_private_flat_priority_queue_update_fixup(                \
                     private_flat_priority_queue, T, &(typeof(*T_pointer)){0}); \

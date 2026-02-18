@@ -8,8 +8,7 @@
 #include "types.h"
 #include "utility/stack_allocator.h"
 
-struct Val
-{
+struct Val {
     int id;
     int val;
     CCC_Priority_queue_node elem;
@@ -41,8 +40,7 @@ should be used. */
         enum Check_result check_inorder_result = CHECK_FAIL;                   \
         if (check_priority_queue_pointer                                       \
             && CCC_priority_queue_count(check_priority_queue_pointer).count    \
-                   == (priority_queue_size_integer_literal))                   \
-        {                                                                      \
+                   == (priority_queue_size_integer_literal)) {                 \
             check_inorder_result = private_inorder_fill(                       \
                 &(struct Stack_allocator)stack_allocator_initialize(           \
                     struct Val, priority_queue_size_integer_literal),          \

@@ -14,19 +14,16 @@
 #include "utility/stack_allocator.h"
 
 static inline struct Val
-adaptive_map_create(int const id, int const val)
-{
+adaptive_map_create(int const id, int const val) {
     return (struct Val){.key = id, .val = val};
 }
 
 static inline void
-adaptive_map_modplus(CCC_Type_context const t)
-{
+adaptive_map_modplus(CCC_Type_context const t) {
     ((struct Val *)t.type)->val++;
 }
 
-check_static_begin(adaptive_map_test_insert)
-{
+check_static_begin(adaptive_map_test_insert) {
     CCC_Adaptive_map om
         = adaptive_map_initialize(struct Val, elem, key, id_order, NULL, NULL);
 
@@ -39,8 +36,7 @@ check_static_begin(adaptive_map_test_insert)
     check_end();
 }
 
-check_static_begin(adaptive_map_test_insert_macros)
-{
+check_static_begin(adaptive_map_test_insert_macros) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 10);
     CCC_Adaptive_map om = adaptive_map_initialize(
@@ -87,8 +83,7 @@ check_static_begin(adaptive_map_test_insert_macros)
     check_end(CCC_adaptive_map_clear(&om, NULL););
 }
 
-check_static_begin(adaptive_map_test_insert_overwrite)
-{
+check_static_begin(adaptive_map_test_insert_overwrite) {
     CCC_Adaptive_map om
         = adaptive_map_initialize(struct Val, elem, key, id_order, NULL, NULL);
 
@@ -120,8 +115,7 @@ check_static_begin(adaptive_map_test_insert_overwrite)
     check_end();
 }
 
-check_static_begin(adaptive_map_test_insert_then_bad_ideas)
-{
+check_static_begin(adaptive_map_test_insert_then_bad_ideas) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 5);
     CCC_Adaptive_map om = adaptive_map_initialize(
@@ -151,8 +145,7 @@ check_static_begin(adaptive_map_test_insert_then_bad_ideas)
     check_end();
 }
 
-check_static_begin(adaptive_map_test_entry_api_functional)
-{
+check_static_begin(adaptive_map_test_entry_api_functional) {
     /* Over allocate size now because we don't want to worry about resizing. */
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 200);
@@ -164,8 +157,7 @@ check_static_begin(adaptive_map_test_entry_api_functional)
        inserted. All entries are hashed to last digit so many spread out
        collisions. */
     struct Val def = {0};
-    for (size_t i = 0; i < size / 2; i += 2)
-    {
+    for (size_t i = 0; i < size / 2; i += 2) {
         def.key = (int)i;
         def.val = (int)i;
         struct Val const *const d
@@ -176,25 +168,19 @@ check_static_begin(adaptive_map_test_entry_api_functional)
     }
     check(count(&om).count, (size / 2) / 2);
     /* The default insertion should not occur every other element. */
-    for (size_t i = 0; i < size / 2; ++i)
-    {
+    for (size_t i = 0; i < size / 2; ++i) {
         def.key = (int)i;
         def.val = (int)i;
-        struct Val const *const d = or_insert(
-            adaptive_map_and_modify_with(entry_wrap(&om, &def.key), struct Val,
-                                         {
-                                             T->val++;
-                                         }),
-            &def.elem);
+        struct Val const *const d
+            = or_insert(adaptive_map_and_modify_with(entry_wrap(&om, &def.key),
+                                                     struct Val, { T->val++; }),
+                        &def.elem);
         /* All values in the array should be odd now */
         check((d != NULL), true);
         check(d->key, i);
-        if (i % 2)
-        {
+        if (i % 2) {
             check(d->val, i);
-        }
-        else
-        {
+        } else {
             check(d->val, i + 1);
         }
         check(d->val % 2, true);
@@ -202,8 +188,7 @@ check_static_begin(adaptive_map_test_entry_api_functional)
     check(count(&om).count, (size / 2));
     /* More simply modifications don't require the and modify function. All
        should be switched back to even now. */
-    for (size_t i = 0; i < size / 2; ++i)
-    {
+    for (size_t i = 0; i < size / 2; ++i) {
         def.key = (int)i;
         def.val = (int)i;
         struct Val *const in = or_insert(entry_wrap(&om, &def.key), &def.elem);
@@ -215,8 +200,7 @@ check_static_begin(adaptive_map_test_entry_api_functional)
     check_end(adaptive_map_clear(&om, NULL););
 }
 
-check_static_begin(adaptive_map_test_insert_via_entry)
-{
+check_static_begin(adaptive_map_test_insert_via_entry) {
     /* Over allocate size now because we don't want to worry about resizing. */
     size_t const size = 200;
     struct Stack_allocator allocator
@@ -228,8 +212,7 @@ check_static_begin(adaptive_map_test_insert_via_entry)
        inserted. All entries are hashed to last digit so many spread out
        collisions. */
     struct Val def = {};
-    for (size_t i = 0; i < size / 2; i += 2)
-    {
+    for (size_t i = 0; i < size / 2; i += 2) {
         def.key = (int)i;
         def.val = (int)i;
         struct Val const *const d
@@ -240,8 +223,7 @@ check_static_begin(adaptive_map_test_insert_via_entry)
     }
     check(count(&om).count, (size / 2) / 2);
     /* The default insertion should not occur every other element. */
-    for (size_t i = 0; i < size / 2; ++i)
-    {
+    for (size_t i = 0; i < size / 2; ++i) {
         def.key = (int)i;
         def.val = (int)i + 1;
         struct Val const *const d
@@ -249,12 +231,9 @@ check_static_begin(adaptive_map_test_insert_via_entry)
         /* All values in the array should be odd now */
         check((d != NULL), true);
         check(d->val, i + 1);
-        if (i % 2)
-        {
+        if (i % 2) {
             check(d->val % 2 == 0, true);
-        }
-        else
-        {
+        } else {
             check(d->val % 2, true);
         }
     }
@@ -262,8 +241,7 @@ check_static_begin(adaptive_map_test_insert_via_entry)
     check_end(adaptive_map_clear(&om, NULL););
 }
 
-check_static_begin(adaptive_map_test_insert_via_entry_macros)
-{
+check_static_begin(adaptive_map_test_insert_via_entry_macros) {
     /* Over allocate size now because we don't want to worry about resizing. */
     size_t const size = 200;
     struct Stack_allocator allocator
@@ -274,8 +252,7 @@ check_static_begin(adaptive_map_test_insert_via_entry_macros)
     /* Test entry or insert with for all even values. Default should be
        inserted. All entries are hashed to last digit so many spread out
        collisions. */
-    for (size_t i = 0; i < size / 2; i += 2)
-    {
+    for (size_t i = 0; i < size / 2; i += 2) {
         struct Val const *const d
             = insert_entry(entry_wrap(&om, &i), &(struct Val){i, i, {}}.elem);
         check((d != NULL), true);
@@ -284,19 +261,15 @@ check_static_begin(adaptive_map_test_insert_via_entry_macros)
     }
     check(count(&om).count, (size / 2) / 2);
     /* The default insertion should not occur every other element. */
-    for (size_t i = 0; i < size / 2; ++i)
-    {
+    for (size_t i = 0; i < size / 2; ++i) {
         struct Val const *const d = insert_entry(
             entry_wrap(&om, &i), &(struct Val){i, i + 1, {}}.elem);
         /* All values in the array should be odd now */
         check((d != NULL), true);
         check(d->val, i + 1);
-        if (i % 2)
-        {
+        if (i % 2) {
             check(d->val % 2 == 0, true);
-        }
-        else
-        {
+        } else {
             check(d->val % 2, true);
         }
     }
@@ -304,8 +277,7 @@ check_static_begin(adaptive_map_test_insert_via_entry_macros)
     check_end(adaptive_map_clear(&om, NULL););
 }
 
-check_static_begin(adaptive_map_test_entry_api_macros)
-{
+check_static_begin(adaptive_map_test_entry_api_macros) {
     /* Over allocate size now because we don't want to worry about resizing. */
     int const size = 200;
     struct Stack_allocator allocator
@@ -316,8 +288,7 @@ check_static_begin(adaptive_map_test_entry_api_macros)
     /* Test entry or insert with for all even values. Default should be
        inserted. All entries are hashed to last digit so many spread out
        collisions. */
-    for (int i = 0; i < size / 2; i += 2)
-    {
+    for (int i = 0; i < size / 2; i += 2) {
         /* The macros support functions that will only execute if the or
            insert branch executes. */
         struct Val const *const d = adaptive_map_or_insert_with(
@@ -328,20 +299,16 @@ check_static_begin(adaptive_map_test_entry_api_macros)
     }
     check(count(&om).count, (size / 2) / 2);
     /* The default insertion should not occur every other element. */
-    for (int i = 0; i < size / 2; ++i)
-    {
+    for (int i = 0; i < size / 2; ++i) {
         struct Val const *const d = adaptive_map_or_insert_with(
             and_modify(entry_wrap(&om, &i), adaptive_map_modplus),
             adaptive_map_create(i, i));
         /* All values in the array should be odd now */
         check((d != NULL), true);
         check(d->key, i);
-        if (i % 2)
-        {
+        if (i % 2) {
             check(d->val, i);
-        }
-        else
-        {
+        } else {
             check(d->val, i + 1);
         }
         check(d->val % 2, true);
@@ -349,8 +316,7 @@ check_static_begin(adaptive_map_test_entry_api_macros)
     check(count(&om).count, (size / 2));
     /* More simply modifications don't require the and modify function. All
        should be switched back to even now. */
-    for (int i = 0; i < size / 2; ++i)
-    {
+    for (int i = 0; i < size / 2; ++i) {
         struct Val *v
             = adaptive_map_or_insert_with(entry_wrap(&om, &i), (struct Val){});
         check(v != NULL, true);
@@ -362,8 +328,7 @@ check_static_begin(adaptive_map_test_entry_api_macros)
     check_end(adaptive_map_clear(&om, NULL););
 }
 
-check_static_begin(adaptive_map_test_two_sum)
-{
+check_static_begin(adaptive_map_test_two_sum) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 10);
     CCC_Adaptive_map om = adaptive_map_initialize(
@@ -371,12 +336,11 @@ check_static_begin(adaptive_map_test_two_sum)
     int const addends[10] = {1, 3, -980, 6, 7, 13, 44, 32, 995, -1};
     int const target = 15;
     int solution_indices[2] = {-1, -1};
-    for (size_t i = 0; i < (size_t)(sizeof(addends) / sizeof(addends[0])); ++i)
-    {
+    for (size_t i = 0; i < (size_t)(sizeof(addends) / sizeof(addends[0]));
+         ++i) {
         struct Val const *const other_addend
             = get_key_value(&om, &(int){target - addends[i]});
-        if (other_addend)
-        {
+        if (other_addend) {
             solution_indices[0] = (int)i;
             solution_indices[1] = other_addend->val;
             break;
@@ -390,16 +354,14 @@ check_static_begin(adaptive_map_test_two_sum)
     check_end(adaptive_map_clear(&om, NULL););
 }
 
-check_static_begin(adaptive_map_test_insert_and_find)
-{
+check_static_begin(adaptive_map_test_insert_and_find) {
     int const size = 10;
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 100);
     CCC_Adaptive_map om = adaptive_map_initialize(
         struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
 
-    for (int i = 0; i < size; i += 2)
-    {
+    for (int i = 0; i < size; i += 2) {
         CCC_Entry e = try_insert(&om, &(struct Val){.key = i, .val = i}.elem);
         check(occupied(&e), false);
         check(validate(&om), true);
@@ -411,14 +373,12 @@ check_static_begin(adaptive_map_test_insert_and_find)
         check(v->key, i);
         check(v->val, i);
     }
-    for (int i = 0; i < size; i += 2)
-    {
+    for (int i = 0; i < size; i += 2) {
         check(contains(&om, &i), true);
         check(occupied(entry_wrap(&om, &i)), true);
         check(validate(&om), true);
     }
-    for (int i = 1; i < size; i += 2)
-    {
+    for (int i = 1; i < size; i += 2) {
         check(contains(&om, &i), false);
         check(occupied(entry_wrap(&om, &i)), false);
         check(validate(&om), true);
@@ -426,8 +386,7 @@ check_static_begin(adaptive_map_test_insert_and_find)
     check_end(adaptive_map_clear(&om, NULL););
 }
 
-check_static_begin(adaptive_map_test_insert_shuffle)
-{
+check_static_begin(adaptive_map_test_insert_shuffle) {
     size_t const size = 50;
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 50);
@@ -438,23 +397,20 @@ check_static_begin(adaptive_map_test_insert_shuffle)
     check(insert_shuffled(&om, size, prime), CHECK_PASS);
     int sorted_check[50];
     check(inorder_fill(sorted_check, size, &om), CHECK_PASS);
-    for (size_t i = 1; i < size; ++i)
-    {
+    for (size_t i = 1; i < size; ++i) {
         check(sorted_check[i - 1] <= sorted_check[i], true);
     }
     check_end();
 }
 
-check_static_begin(adaptive_map_test_insert_weak_srand)
-{
+check_static_begin(adaptive_map_test_insert_weak_srand) {
     int const num_nodes = 100;
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 100);
     CCC_Adaptive_map om = adaptive_map_initialize(
         struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
     srand(time(NULL)); /* NOLINT */
-    for (int i = 0; i < num_nodes; ++i)
-    {
+    for (int i = 0; i < num_nodes; ++i) {
         CCC_Entry const e = swap_entry(
             &om, &(struct Val){.key = rand() /* NOLINT */, .val = i}.elem,
             &(struct Val){}.elem);
@@ -466,8 +422,7 @@ check_static_begin(adaptive_map_test_insert_weak_srand)
 }
 
 int
-main(void)
-{
+main(void) {
     return check_run(
         adaptive_map_test_insert(), adaptive_map_test_insert_macros(),
         adaptive_map_test_insert_and_find(),

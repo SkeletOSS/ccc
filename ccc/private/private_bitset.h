@@ -29,8 +29,7 @@ in cache friendly storage and operations.
 By default a bit set is initialized with size equal to capacity but the user may
 select to initialize a 0 sized bit set with non-zero capacity for pushing bits
 back dynamically. */
-struct CCC_Bitset
-{
+struct CCC_Bitset {
     /** The array of bit blocks, a platform defined standard bit width. */
     unsigned *blocks;
     /** The number of active bits in the set available for reads and writes. */
@@ -43,8 +42,7 @@ struct CCC_Bitset
     void *context;
 };
 
-enum : size_t
-{
+enum : size_t {
     /** @internal The number of bits in a bit block. In sync with set type. */
     CCC_PRIVATE_BITSET_BLOCK_BITS
         = (sizeof(*(struct CCC_Bitset){}.blocks) * CHAR_BIT),
@@ -74,8 +72,8 @@ specifiers which is a feature of C23. Not all compilers support this yet. */
 #define CCC_private_bitset_blocks(private_bit_cap, ...)                        \
     (__VA_OPT__(__VA_ARGS__) typeof (                                          \
         *(struct CCC_Bitset){}                                                 \
-             .blocks)[CCC_private_bitset_block_count(private_bit_cap)])        \
-    {}
+             .blocks)[CCC_private_bitset_block_count(private_bit_cap)]) {      \
+    }
 
 /** @internal NOLINTNEXTLINE */
 #define CCC_private_bitset_non_CCC_private_bitset_default_size(private_cap,    \
@@ -110,13 +108,11 @@ static inline struct CCC_Bitset
 CCC_private_bitset_with_capacity_fn(CCC_Allocator *const private_allocate,
                                     void *const private_context,
                                     size_t const private_cap,
-                                    size_t const private_count)
-{
+                                    size_t const private_count) {
     struct CCC_Bitset b = CCC_private_bitset_initialize(
         private_allocate, private_context, 0, 0, NULL);
     if (CCC_private_bitset_reserve(&b, private_cap, private_allocate)
-        == CCC_RESULT_OK)
-    {
+        == CCC_RESULT_OK) {
         b.count = private_count;
     }
     return b;
@@ -137,12 +133,10 @@ to inline function for bit set construction. */
                 &private_bitset,                                               \
                 private_cap < private_count ? private_count : private_cap,     \
                 private_allocate)                                              \
-            == CCC_RESULT_OK)                                                  \
-        {                                                                      \
+            == CCC_RESULT_OK) {                                                \
             private_bitset.count = private_count;                              \
             while (private_index < private_count                               \
-                   && private_string[private_index])                           \
-            {                                                                  \
+                   && private_string[private_index]) {                         \
                 (void)CCC_private_bitset_set(&private_bitset, private_index,   \
                                              private_string[private_index]     \
                                                  == private_on_char);          \
@@ -171,8 +165,7 @@ to inline function for bit set construction. */
             = CCC_private_bitset_optional_size((private_cap), __VA_ARGS__);    \
         if (CCC_private_bitset_reserve(&private_bitset, private_cap,           \
                                        private_allocate)                       \
-            == CCC_RESULT_OK)                                                  \
-        {                                                                      \
+            == CCC_RESULT_OK) {                                                \
             private_bitset.count = private_count;                              \
         }                                                                      \
         private_bitset;                                                        \

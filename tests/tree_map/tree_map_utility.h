@@ -7,8 +7,7 @@
 #include "tree_map.h"
 #include "types.h"
 
-struct Val
-{
+struct Val {
     int key;
     int val;
     CCC_Tree_map_node elem;

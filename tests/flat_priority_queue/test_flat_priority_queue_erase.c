@@ -12,16 +12,14 @@
 #include "types.h"
 #include "utility/stack_allocator.h"
 
-check_static_begin(flat_priority_queue_test_insert_remove_key_value_four_dups)
-{
+check_static_begin(flat_priority_queue_test_insert_remove_key_value_four_dups) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 8);
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_context_capacity(
             struct Val, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
             &allocator, 8);
-    for (int i = 0; i < 4; ++i)
-    {
+    for (int i = 0; i < 4; ++i) {
         check(
             push(&flat_priority_queue, &(struct Val){.val = 0}, &(struct Val){})
                 != NULL,
@@ -32,8 +30,7 @@ check_static_begin(flat_priority_queue_test_insert_remove_key_value_four_dups)
               size_check);
     }
     check(CCC_flat_priority_queue_count(&flat_priority_queue).count, (size_t)4);
-    for (int i = 0; i < 4; ++i)
-    {
+    for (int i = 0; i < 4; ++i) {
         (void)pop(&flat_priority_queue, &(struct Val){});
         check(validate(&flat_priority_queue), true);
     }
@@ -41,8 +38,7 @@ check_static_begin(flat_priority_queue_test_insert_remove_key_value_four_dups)
     check_end();
 }
 
-check_static_begin(flat_priority_queue_test_insert_erase_shuffled)
-{
+check_static_begin(flat_priority_queue_test_insert_erase_shuffled) {
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -61,8 +57,7 @@ check_static_begin(flat_priority_queue_test_insert_erase_shuffled)
     check(inorder_fill(sorted_check, size, &flat_priority_queue), CHECK_PASS);
     /* Now let's delete everything with no errors. */
     struct Val *const vals = allocator.blocks;
-    while (!CCC_flat_priority_queue_is_empty(&flat_priority_queue))
-    {
+    while (!CCC_flat_priority_queue_is_empty(&flat_priority_queue)) {
         size_t const rand_index = rand_range(
             0,
             (int)CCC_flat_priority_queue_count(&flat_priority_queue).count - 1);
@@ -74,8 +69,7 @@ check_static_begin(flat_priority_queue_test_insert_erase_shuffled)
     check_end();
 }
 
-check_static_begin(flat_priority_queue_test_pop_max)
-{
+check_static_begin(flat_priority_queue_test_pop_max) {
     size_t const size = 50;
     int const prime = 53;
     struct Stack_allocator allocator
@@ -90,8 +84,7 @@ check_static_begin(flat_priority_queue_test_pop_max)
     int sorted_check[50];
     check(inorder_fill(sorted_check, size, &flat_priority_queue), CHECK_PASS);
     /* Now let's pop from the front of the queue until empty. */
-    for (size_t i = 0; i < size; ++i)
-    {
+    for (size_t i = 0; i < size; ++i) {
         struct Val const *const front = front(&flat_priority_queue);
         check(front->val, sorted_check[i]);
         (void)pop(&flat_priority_queue, &(struct Val){});
@@ -100,8 +93,7 @@ check_static_begin(flat_priority_queue_test_pop_max)
     check_end();
 }
 
-check_static_begin(flat_priority_queue_test_pop_min)
-{
+check_static_begin(flat_priority_queue_test_pop_min) {
     size_t const size = 50;
     int const prime = 53;
     struct Stack_allocator allocator
@@ -116,8 +108,7 @@ check_static_begin(flat_priority_queue_test_pop_min)
     int sorted_check[50];
     check(inorder_fill(sorted_check, size, &flat_priority_queue), CHECK_PASS);
     /* Now let's pop from the front of the queue until empty. */
-    for (size_t i = 0; i < size; ++i)
-    {
+    for (size_t i = 0; i < size; ++i) {
         struct Val const *const front = front(&flat_priority_queue);
         check(front->val, sorted_check[i]);
         (void)pop(&flat_priority_queue, &(struct Val){});
@@ -126,8 +117,7 @@ check_static_begin(flat_priority_queue_test_pop_min)
     check_end();
 }
 
-check_static_begin(flat_priority_queue_test_delete_prime_shuffle_duplicates)
-{
+check_static_begin(flat_priority_queue_test_delete_prime_shuffle_duplicates) {
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -142,8 +132,7 @@ check_static_begin(flat_priority_queue_test_delete_prime_shuffle_duplicates)
             struct Val, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
             &allocator, 100);
     int shuffled_index = prime % (size - less);
-    for (int i = 0; i < size; ++i)
-    {
+    for (int i = 0; i < size; ++i) {
         check(push(&flat_priority_queue,
                    &(struct Val){
                        .val = shuffled_index,
@@ -160,8 +149,7 @@ check_static_begin(flat_priority_queue_test_delete_prime_shuffle_duplicates)
     }
     size_t cur_size = size;
     struct Val *const vals = allocator.blocks;
-    while (!CCC_flat_priority_queue_is_empty(&flat_priority_queue))
-    {
+    while (!CCC_flat_priority_queue_is_empty(&flat_priority_queue)) {
         size_t const rand_index = rand_range(
             0,
             (int)CCC_flat_priority_queue_count(&flat_priority_queue).count - 1);
@@ -175,8 +163,7 @@ check_static_begin(flat_priority_queue_test_delete_prime_shuffle_duplicates)
     check_end();
 }
 
-check_static_begin(flat_priority_queue_test_prime_shuffle)
-{
+check_static_begin(flat_priority_queue_test_prime_shuffle) {
     int const size = 50;
     int const prime = 53;
     int const less = 10;
@@ -189,8 +176,7 @@ check_static_begin(flat_priority_queue_test_prime_shuffle)
         = CCC_flat_priority_queue_with_context_capacity(
             struct Val, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
             &allocator, 50);
-    for (int i = 0; i < size; ++i)
-    {
+    for (int i = 0; i < size; ++i) {
         check(push(&flat_priority_queue,
                    &(struct Val){
                        .val = shuffled_index,
@@ -206,8 +192,7 @@ check_static_begin(flat_priority_queue_test_prime_shuffle)
        their positions in the tree will be somewhat random */
     size_t cur_size = size;
     struct Val *const vals = allocator.blocks;
-    while (!CCC_flat_priority_queue_is_empty(&flat_priority_queue))
-    {
+    while (!CCC_flat_priority_queue_is_empty(&flat_priority_queue)) {
         size_t const rand_index = rand_range(
             0,
             (int)CCC_flat_priority_queue_count(&flat_priority_queue).count - 1);
@@ -223,8 +208,7 @@ check_static_begin(flat_priority_queue_test_prime_shuffle)
     check_end();
 }
 
-check_static_begin(flat_priority_queue_test_weak_srand)
-{
+check_static_begin(flat_priority_queue_test_weak_srand) {
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -235,8 +219,7 @@ check_static_begin(flat_priority_queue_test_weak_srand)
         = CCC_flat_priority_queue_with_context_capacity(
             struct Val, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
             &allocator, 200);
-    for (int i = 0; i < num_stack_nodes; ++i)
-    {
+    for (int i = 0; i < num_stack_nodes; ++i) {
         check(push(&flat_priority_queue,
                    &(struct Val){
                        .val = rand(), /* NOLINT */
@@ -248,8 +231,7 @@ check_static_begin(flat_priority_queue_test_weak_srand)
         check(validate(&flat_priority_queue), true);
     }
     struct Val *const vals = allocator.blocks;
-    while (!CCC_flat_priority_queue_is_empty(&flat_priority_queue))
-    {
+    while (!CCC_flat_priority_queue_is_empty(&flat_priority_queue)) {
         size_t const rand_index = rand_range(
             0,
             (int)CCC_flat_priority_queue_count(&flat_priority_queue).count - 1);
@@ -264,8 +246,7 @@ check_static_begin(flat_priority_queue_test_weak_srand)
 }
 
 int
-main(void)
-{
+main(void) {
     return check_run(
         flat_priority_queue_test_insert_remove_key_value_four_dups(),
         flat_priority_queue_test_insert_erase_shuffled(),

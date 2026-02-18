@@ -5,19 +5,15 @@
 #include "types.h"
 
 void *
-std_allocate(CCC_Allocator_context const context)
-{
+std_allocate(CCC_Allocator_context const context) {
 
-    if (!context.input && !context.bytes)
-    {
+    if (!context.input && !context.bytes) {
         return NULL;
     }
-    if (!context.input)
-    {
+    if (!context.input) {
         return malloc(context.bytes);
     }
-    if (!context.bytes)
-    {
+    if (!context.bytes) {
         free(context.input);
         return NULL;
     }

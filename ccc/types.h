@@ -129,8 +129,7 @@ behavior one would normally expect.
 
 A third branch can be added while otherwise using simple true(1) and false(0).
 `if (result == CCC_TRIBOOL_ERROR) {} else if (result) {} else {}`. */
-typedef enum : int8_t
-{
+typedef enum : int8_t {
     /** Intended value if CCC_FALSE or CCC_TRUE could not be returned. */
     CCC_TRIBOOL_ERROR = -1,
     /** Equivalent to boolean false, guaranteed to be falsey aka 0. */
@@ -144,8 +143,7 @@ typedef enum : int8_t
 A result indicates the status of the requested operation. Each container
 provides status messages according to the result type returned from a operation
 that uses this type. */
-typedef enum : uint8_t
-{
+typedef enum : uint8_t {
     /** The operation has occurred successfully. */
     CCC_RESULT_OK = 0,
     /** An operation ran but could not return the intended result. */
@@ -167,8 +165,7 @@ CCC_ORDER_LESSER if left hand side is less than right hand side, CCC_ORDER_EQUAL
 if they are equal, and CCC_ORDER_GREATER if left hand side is greater than right
 hand side.
 */
-typedef enum : int8_t
-{
+typedef enum : int8_t {
     /** The left hand side is less than the right hand side. */
     CCC_ORDER_LESSER = -1,
     /** The left hand side and right hand side are equal. */
@@ -198,8 +195,7 @@ if (res.error)
 Full string explanations of the exact CCC_Result error types can be provided via
 the CCC_result_message function if the enum itself does not provide sufficient
 explanation. */
-typedef struct
-{
+typedef struct {
     /** The error that occurred indicated by a status. 0 (falsey) means OK. */
     CCC_Result error;
     /** The count returned by the operation. */
@@ -214,8 +210,7 @@ swappable argument errors. Any type LHS is considered the left hand side and
 any type RHS is the right hand side when considering three-way comparison
 return values. Context data is a reference to any context data provided upon
 container initialization. */
-typedef struct
-{
+typedef struct {
     /** The left hand side for a three-way comparison operation. */
     void const *const type_left;
     /** The right hand side for a three-way comparison operation. */
@@ -241,8 +236,7 @@ Notice that the user type must access its key field of its struct. Comparison
 must happen this way to support searching by key in associative containers
 rather than by entire user struct. Only needing to provide a key can save
 significant memory for a search depending on the size of the user type. */
-typedef struct
-{
+typedef struct {
     /** Key matching the key field of the provided type to the container. */
     void const *const key_left;
     /** The complete user type stored in the container. */
@@ -255,8 +249,7 @@ typedef struct
 
 This is to help users define callback functions that act on each node in a
 container. For example, a destruct function will use this type. */
-typedef struct
-{
+typedef struct {
     /** The user type being stored in the container. */
     void *type;
     /** A reference to context provided to the container on initialization. */
@@ -268,8 +261,7 @@ for hash containers.
 
 A reference to any context data is also provided. This the struct one can use
 to hash their values with their hash function. */
-typedef struct
-{
+typedef struct {
     /** A reference to the same type used for keys in the container. */
     void const *const key;
     /** A reference to context provided to the container on initialization. */
@@ -280,8 +272,7 @@ typedef struct
 function interface. This ensures clarity in inputs and expected outputs to
 an allocator function the user wishes to use for managing containers.
 Additional context can be provided for more complex allocation schemes. */
-typedef struct
-{
+typedef struct {
     /** The input to the allocation function. NULL or previously allocated. */
     void *input;
     /** The bytes being requested from the allocator. 0 is a free request. */

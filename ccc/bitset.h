@@ -86,8 +86,7 @@ typedef struct CCC_Bitset CCC_Bitset;
 Initialize and create containers with memory and permissions. */
 /**@{*/
 
-enum : size_t
-{
+enum : size_t {
     /** @brief The number of bits in a block of the bit set. */
     CCC_BITSET_BLOCK_BITS = CCC_PRIVATE_BITSET_BLOCK_BITS,
 };

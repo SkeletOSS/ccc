@@ -14,26 +14,22 @@ the entry functions. */
 #include "types.h"
 
 static inline struct Val
-val(int const val)
-{
+val(int const val) {
     return (struct Val){.val = val};
 }
 
 static inline struct Val
-idval(int const key, int const val)
-{
+idval(int const key, int const val) {
     return (struct Val){.key = key, .val = val};
 }
 
 static inline void
-plus(CCC_Type_context const t)
-{
+plus(CCC_Type_context const t) {
     ((struct Val *)t.type)->val++;
 }
 
 static inline void
-pluscontext(CCC_Type_context const t)
-{
+pluscontext(CCC_Type_context const t) {
     ((struct Val *)t.type)->val += *(int *)t.context;
 }
 
@@ -47,10 +43,8 @@ pluscontext(CCC_Type_context const t)
    value and incrementing by 1 until n is reached. Assumes id_and_val are
    not present by key in the table and all subsequent inserts are unique. */
 check_static_begin(fill_n, CCC_Flat_hash_map *const fh, size_t const n,
-                   int id_and_val)
-{
-    for (size_t i = 0; i < n; ++i, ++id_and_val)
-    {
+                   int id_and_val) {
+    for (size_t i = 0; i < n; ++i, ++id_and_val) {
         CCC_Entry ent = swap_entry(
             fh, &(struct Val){.key = id_and_val, .val = id_and_val});
         check(insert_error(&ent), false);
@@ -62,8 +56,7 @@ check_static_begin(fill_n, CCC_Flat_hash_map *const fh, size_t const n,
 
 /* Internally there is some maintenance to perform when swapping values for
    the user on insert. Leave this test here to always catch this. */
-check_static_begin(flat_hash_map_test_validate)
-{
+check_static_begin(flat_hash_map_test_validate) {
     CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         (Small_fixed_map){});
@@ -84,8 +77,7 @@ check_static_begin(flat_hash_map_test_validate)
     check_end();
 }
 
-check_static_begin(flat_hash_map_test_insert)
-{
+check_static_begin(flat_hash_map_test_insert) {
     int const size = 30;
     CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
@@ -142,8 +134,7 @@ check_static_begin(flat_hash_map_test_insert)
     check_end();
 }
 
-check_static_begin(flat_hash_map_test_remove_key_value)
-{
+check_static_begin(flat_hash_map_test_remove_key_value) {
     int const size = 30;
     CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
@@ -213,8 +204,7 @@ check_static_begin(flat_hash_map_test_remove_key_value)
     check_end();
 }
 
-check_static_begin(flat_hash_map_test_try_insert)
-{
+check_static_begin(flat_hash_map_test_try_insert) {
     int const size = 30;
     CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
@@ -270,8 +260,7 @@ check_static_begin(flat_hash_map_test_try_insert)
     check_end();
 }
 
-check_static_begin(flat_hash_map_test_try_insert_with)
-{
+check_static_begin(flat_hash_map_test_try_insert_with) {
     int const size = 30;
     CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
@@ -328,8 +317,7 @@ check_static_begin(flat_hash_map_test_try_insert_with)
     check_end();
 }
 
-check_static_begin(flat_hash_map_test_insert_or_assign)
-{
+check_static_begin(flat_hash_map_test_insert_or_assign) {
     int const size = 30;
     CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
@@ -385,8 +373,7 @@ check_static_begin(flat_hash_map_test_insert_or_assign)
     check_end();
 }
 
-check_static_begin(flat_hash_map_test_insert_or_assign_with)
-{
+check_static_begin(flat_hash_map_test_insert_or_assign_with) {
     int const size = 30;
     CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
@@ -442,8 +429,7 @@ check_static_begin(flat_hash_map_test_insert_or_assign_with)
     check_end();
 }
 
-check_static_begin(flat_hash_map_test_entry_and_modify)
-{
+check_static_begin(flat_hash_map_test_entry_and_modify) {
     int const size = 30;
     CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
@@ -512,8 +498,7 @@ check_static_begin(flat_hash_map_test_entry_and_modify)
     check_end();
 }
 
-check_static_begin(flat_hash_map_test_entry_and_modify_context)
-{
+check_static_begin(flat_hash_map_test_entry_and_modify_context) {
     int const size = 30;
     CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
@@ -579,8 +564,7 @@ check_static_begin(flat_hash_map_test_entry_and_modify_context)
     check_end();
 }
 
-check_static_begin(flat_hash_map_test_entry_and_modify_with)
-{
+check_static_begin(flat_hash_map_test_entry_and_modify_with) {
     int const size = 30;
     CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
@@ -645,8 +629,7 @@ check_static_begin(flat_hash_map_test_entry_and_modify_with)
     check_end();
 }
 
-check_static_begin(flat_hash_map_test_or_insert)
-{
+check_static_begin(flat_hash_map_test_or_insert) {
     int const size = 30;
     CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
@@ -699,8 +682,7 @@ check_static_begin(flat_hash_map_test_or_insert)
     check_end();
 }
 
-check_static_begin(flat_hash_map_test_or_insert_with)
-{
+check_static_begin(flat_hash_map_test_or_insert_with) {
     int const size = 30;
     CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
@@ -753,8 +735,7 @@ check_static_begin(flat_hash_map_test_or_insert_with)
     check_end();
 }
 
-check_static_begin(flat_hash_map_test_insert_entry)
-{
+check_static_begin(flat_hash_map_test_insert_entry) {
     int const size = 30;
     CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
@@ -809,8 +790,7 @@ check_static_begin(flat_hash_map_test_insert_entry)
     check_end();
 }
 
-check_static_begin(flat_hash_map_test_insert_entry_with)
-{
+check_static_begin(flat_hash_map_test_insert_entry_with) {
     int const size = 30;
     CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
@@ -863,8 +843,7 @@ check_static_begin(flat_hash_map_test_insert_entry_with)
     check_end();
 }
 
-check_static_begin(flat_hash_map_test_remove_entry)
-{
+check_static_begin(flat_hash_map_test_remove_entry) {
     int const size = 30;
     CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
@@ -916,8 +895,7 @@ check_static_begin(flat_hash_map_test_remove_entry)
 }
 
 int
-main(void)
-{
+main(void) {
     return check_run(
         flat_hash_map_test_insert(), flat_hash_map_test_remove_key_value(),
         flat_hash_map_test_validate(), flat_hash_map_test_try_insert(),

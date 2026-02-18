@@ -10,8 +10,7 @@
 #include "types.h"
 #include "utility/stack_allocator.h"
 
-check_static_begin(doubly_linked_list_test_push_three_front)
-{
+check_static_begin(doubly_linked_list_test_push_three_front) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 3);
     Doubly_linked_list doubly_linked_list = doubly_linked_list_initialize(
@@ -36,8 +35,7 @@ check_static_begin(doubly_linked_list_test_push_three_front)
     check_end();
 }
 
-check_static_begin(doubly_linked_list_test_push_three_back)
-{
+check_static_begin(doubly_linked_list_test_push_three_back) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 3);
     Doubly_linked_list doubly_linked_list = doubly_linked_list_initialize(
@@ -62,8 +60,7 @@ check_static_begin(doubly_linked_list_test_push_three_back)
     check_end();
 }
 
-check_static_begin(doubly_linked_list_test_push_and_splice)
-{
+check_static_begin(doubly_linked_list_test_push_and_splice) {
     Doubly_linked_list doubly_linked_list
         = doubly_linked_list_initialize(struct Val, e, val_order, NULL, NULL);
     struct Val vals[4] = {
@@ -89,8 +86,7 @@ check_static_begin(doubly_linked_list_test_push_and_splice)
     check_end();
 }
 
-check_static_begin(doubly_linked_list_test_push_and_splice_range)
-{
+check_static_begin(doubly_linked_list_test_push_and_splice_range) {
     Doubly_linked_list doubly_linked_list
         = doubly_linked_list_initialize(struct Val, e, val_order, NULL, NULL);
     struct Val vals[4] = {
@@ -124,8 +120,7 @@ check_static_begin(doubly_linked_list_test_push_and_splice_range)
     check_end();
 }
 
-check_static_begin(doubly_linked_list_test_push_and_splice_no_ops)
-{
+check_static_begin(doubly_linked_list_test_push_and_splice_no_ops) {
     Doubly_linked_list doubly_linked_list
         = doubly_linked_list_initialize(struct Val, e, val_order, NULL, NULL);
     struct Val vals[4] = {
@@ -150,8 +145,7 @@ check_static_begin(doubly_linked_list_test_push_and_splice_no_ops)
     check_end();
 }
 
-check_static_begin(doubly_linked_list_test_sort_even)
-{
+check_static_begin(doubly_linked_list_test_sort_even) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 8);
     Doubly_linked_list doubly_linked_list = doubly_linked_list_context_from(
@@ -181,8 +175,7 @@ check_static_begin(doubly_linked_list_test_sort_even)
     check_end();
 }
 
-check_static_begin(doubly_linked_list_test_sort_odd)
-{
+check_static_begin(doubly_linked_list_test_sort_odd) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 9);
     Doubly_linked_list doubly_linked_list = doubly_linked_list_context_from(
@@ -213,8 +206,7 @@ check_static_begin(doubly_linked_list_test_sort_odd)
     check_end();
 }
 
-check_static_begin(doubly_linked_list_test_sort_reverse)
-{
+check_static_begin(doubly_linked_list_test_sort_reverse) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 8);
     Doubly_linked_list doubly_linked_list = doubly_linked_list_context_from(
@@ -242,8 +234,7 @@ check_static_begin(doubly_linked_list_test_sort_reverse)
     check_end();
 }
 
-check_static_begin(doubly_linked_list_test_sort_runs)
-{
+check_static_begin(doubly_linked_list_test_sort_runs) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 12);
     Doubly_linked_list doubly_linked_list = doubly_linked_list_context_from(
@@ -278,8 +269,7 @@ check_static_begin(doubly_linked_list_test_sort_runs)
     check_end();
 }
 
-check_static_begin(doubly_linked_list_test_sort_halves)
-{
+check_static_begin(doubly_linked_list_test_sort_halves) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 12);
     Doubly_linked_list doubly_linked_list = doubly_linked_list_context_from(
@@ -314,8 +304,7 @@ check_static_begin(doubly_linked_list_test_sort_halves)
     check_end();
 }
 
-check_static_begin(doubly_linked_list_test_sort_insert)
-{
+check_static_begin(doubly_linked_list_test_sort_insert) {
     Doubly_linked_list doubly_linked_list
         = doubly_linked_list_initialize(struct Val, e, val_order, NULL, NULL);
     struct Val *inserted = doubly_linked_list_insert_sorted(
@@ -398,8 +387,7 @@ check_static_begin(doubly_linked_list_test_sort_insert)
 }
 
 int
-main(void)
-{
+main(void) {
     return check_run(doubly_linked_list_test_push_three_front(),
                      doubly_linked_list_test_push_three_back(),
                      doubly_linked_list_test_push_and_splice(),

@@ -8,10 +8,8 @@
 #include "ccc/types.h"
 
 static inline void
-swap(void *const temp, void *const a, void *const b, size_t const ab_size)
-{
-    if (a != b)
-    {
+swap(void *const temp, void *const a, void *const b, size_t const ab_size) {
+    if (a != b) {
         (void)memcpy(temp, a, ab_size);
         (void)memcpy(a, b, ab_size);
         (void)memcpy(b, temp, ab_size);
@@ -23,19 +21,16 @@ fall prey to the O(N^2) worst case runtime more easily. With void and iterators
 it is complicated to select a randomized slot but it would still be possible.*/
 static int *
 partition(Buffer *const b, CCC_Type_comparator *const compare, void *const temp,
-          void *lo, void *hi)
-{
+          void *lo, void *hi) {
     void *const pivot_val = hi;
     void *i = lo;
-    for (void *j = lo; j < hi; j = buffer_next(b, j))
-    {
+    for (void *j = lo; j < hi; j = buffer_next(b, j)) {
         CCC_Order const order = compare((CCC_Type_comparator_context){
             .type_left = j,
             .type_right = pivot_val,
             .context = b->context,
         });
-        if (order != CCC_ORDER_GREATER)
-        {
+        if (order != CCC_ORDER_GREATER) {
             swap(temp, i, j, b->sizeof_type);
             i = buffer_next(b, i);
         }
@@ -58,19 +53,14 @@ sort data. This is a fun way to test that part of the Buffer interface for
 correctness and turns out to be pretty nice and clean. */
 static void
 sort_rec(Buffer *const b, CCC_Type_comparator *const compare, void *const temp,
-         void *lo, void *hi)
-{
-    while (lo < hi)
-    {
+         void *lo, void *hi) {
+    while (lo < hi) {
         void const *const pivot_i = partition(b, compare, temp, lo, hi);
         if ((char const *)pivot_i - (char const *)lo
-            < (char const *)hi - (char const *)pivot_i)
-        {
+            < (char const *)hi - (char const *)pivot_i) {
             sort_rec(b, compare, temp, lo, buffer_reverse_next(b, pivot_i));
             lo = buffer_next(b, pivot_i);
-        }
-        else
-        {
+        } else {
             sort_rec(b, compare, temp, buffer_next(b, pivot_i), hi);
             hi = buffer_reverse_next(b, pivot_i);
         }
@@ -83,14 +73,12 @@ sort_rec(Buffer *const b, CCC_Type_comparator *const compare, void *const temp,
 stack space. This implementation does not try to be hyper efficient. In fact, we
 test out using iterators here rather than indices. */
 CCC_Result
-sort(CCC_Buffer *const b, CCC_Type_comparator *const compare, void *const swap)
-{
-    if (!b || !compare || !swap)
-    {
+sort(CCC_Buffer *const b, CCC_Type_comparator *const compare,
+     void *const swap) {
+    if (!b || !compare || !swap) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    if (buffer_count(b).count)
-    {
+    if (buffer_count(b).count) {
         sort_rec(b, compare, swap, buffer_begin(b), buffer_reverse_begin(b));
     }
     return CCC_RESULT_OK;
@@ -98,41 +86,33 @@ sort(CCC_Buffer *const b, CCC_Type_comparator *const compare, void *const swap)
 
 CCC_Order
 buforder(CCC_Buffer const *const left, size_t const right_count,
-         void const *const right)
-{
+         void const *const right) {
     size_t const type_size = buffer_sizeof_type(left).count;
     size_t const buffer_size = buffer_count(left).count;
-    if (buffer_size < right_count)
-    {
+    if (buffer_size < right_count) {
         return CCC_ORDER_LESSER;
     }
-    if (buffer_size < right_count)
-    {
+    if (buffer_size < right_count) {
         return CCC_ORDER_GREATER;
     }
     int const order
         = memcmp(buffer_begin(left), right, buffer_size * type_size);
-    if (order == 0)
-    {
+    if (order == 0) {
         return CCC_ORDER_EQUAL;
     }
-    if (order < 0)
-    {
+    if (order < 0) {
         return CCC_ORDER_LESSER;
     }
     return CCC_ORDER_GREATER;
 }
 
 CCC_Result
-append_range(CCC_Buffer *const b, size_t range_count, void const *const range)
-{
+append_range(CCC_Buffer *const b, size_t range_count, void const *const range) {
     unsigned char const *p = range;
     size_t const sizeof_type = buffer_sizeof_type(b).count;
-    while (range_count--)
-    {
+    while (range_count--) {
         void const *const appended = CCC_buffer_push_back(b, p);
-        if (!appended)
-        {
+        if (!appended) {
             return CCC_RESULT_FAIL;
         }
         p += sizeof_type;

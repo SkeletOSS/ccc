@@ -854,8 +854,7 @@ where in the table such an element should be inserted.
 An entry is most often passed in a functional style to subsequent calls in the
 Entry Interface.*/
 #define CCC_flat_hash_map_entry_wrap(map_pointer, key_pointer)                 \
-    &(CCC_Flat_hash_map_entry)                                                 \
-    {                                                                          \
+    &(CCC_Flat_hash_map_entry) {                                               \
         CCC_flat_hash_map_entry(map_pointer, key_pointer).private              \
     }
 
@@ -922,8 +921,7 @@ container can deliver the user type T. This means any function calls are lazily
 evaluated in the closure scope. */
 #define CCC_flat_hash_map_and_modify_with(map_entry_pointer, type_name,        \
                                           closure_over_T...)                   \
-    &(CCC_Flat_hash_map_entry)                                                 \
-    {                                                                          \
+    &(CCC_Flat_hash_map_entry) {                                               \
         CCC_private_flat_hash_map_and_modify_with(map_entry_pointer,           \
                                                   type_name, closure_over_T)   \
     }
@@ -1010,8 +1008,7 @@ forbidden, an insert error is set.
 Note that this function may write to the struct containing the second parameter
 and wraps it in an entry to provide information about the old value. */
 #define CCC_flat_hash_map_swap_entry_wrap(map_pointer, type_pointer)           \
-    &(CCC_Entry)                                                               \
-    {                                                                          \
+    &(CCC_Entry) {                                                             \
         CCC_flat_hash_map_swap_entry(map_pointer, type_pointer).private        \
     }
 
@@ -1028,8 +1025,7 @@ CCC_flat_hash_map_remove_entry(CCC_Flat_hash_map_entry const *entry);
 the table existed and was removed. If Vacant, no prior entry existed to be
 removed. */
 #define CCC_flat_hash_map_remove_entry_wrap(map_entry_pointer)                 \
-    &(CCC_Entry)                                                               \
-    {                                                                          \
+    &(CCC_Entry) {                                                             \
         CCC_flat_hash_map_remove_entry(map_entry_pointer).private              \
     }
 
@@ -1057,8 +1053,7 @@ forbidden, an insert error is set.
 @warning because this function returns a reference to a user type in the table
 any subsequent insertions or deletions invalidate this reference. */
 #define CCC_flat_hash_map_try_insert_wrap(map_pointer, type_pointer)           \
-    &(CCC_Entry)                                                               \
-    {                                                                          \
+    &(CCC_Entry) {                                                             \
         CCC_flat_hash_map_try_insert(map_pointer, type_pointer).private        \
     }
 
@@ -1080,8 +1075,7 @@ lazy value compound literal as well. This function ensures the key in the
 compound literal matches the searched key. */
 #define CCC_flat_hash_map_try_insert_with(map_pointer, key,                    \
                                           type_compound_literal...)            \
-    &(CCC_Entry)                                                               \
-    {                                                                          \
+    &(CCC_Entry) {                                                             \
         CCC_private_flat_hash_map_try_insert_with(map_pointer, key,            \
                                                   type_compound_literal)       \
     }
@@ -1107,8 +1101,7 @@ overwritten by the new key value. If Vacant no prior table entry existed.
 Note that this function can be used when the old user type is not needed but
 the information regarding its presence is helpful. */
 #define CCC_flat_hash_map_insert_or_assign_wrap(map_pointer, type_pointer)     \
-    &(CCC_Entry)                                                               \
-    {                                                                          \
+    &(CCC_Entry) {                                                             \
         CCC_flat_hash_map_insert_or_assign(map_pointer, type_pointer).private  \
     }
 
@@ -1126,8 +1119,7 @@ lazy value compound literal as well. This function ensures the key in the
 compound literal matches the searched key. */
 #define CCC_flat_hash_map_insert_or_assign_with(map_pointer, key,              \
                                                 type_compound_literal...)      \
-    &(CCC_Entry)                                                               \
-    {                                                                          \
+    &(CCC_Entry) {                                                             \
         CCC_private_flat_hash_map_insert_or_assign_with(map_pointer, key,      \
                                                         type_compound_literal) \
     }
@@ -1162,8 +1154,7 @@ Note that this function may write to the struct containing the second parameter
 and wraps it in an entry to provide information about the old value. */
 #define CCC_flat_hash_map_remove_key_value_wrap(map_pointer,                   \
                                                 type_output_pointer)           \
-    &(CCC_Entry)                                                               \
-    {                                                                          \
+    &(CCC_Entry) {                                                             \
         CCC_flat_hash_map_remove_key_value(map_pointer, type_output_pointer)   \
             .private                                                           \
     }

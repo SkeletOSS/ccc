@@ -32,12 +32,10 @@ a free list. The parent field tracks the parent for an allocated node in the
 tree that the user has inserted into the array. When the user removes a node
 it is added to the front of a free list. The map will track the first free
 node. The list is push to front LIFO stack. */
-struct CCC_Array_tree_map_node
-{
+struct CCC_Array_tree_map_node {
     /** @internal Child nodes in array to unify Left and Right. */
     size_t branch[2];
-    union
-    {
+    union {
         /** @internal Parent of WAVL node when allocated. */
         size_t parent;
         /** @internal Points to next free when not allocated. */
@@ -133,8 +131,7 @@ arbitrarily sized or organized user data while we do operations on nodes and
 bits. Performance metrics still must be measured to say whether this is faster
 or slower than other approaches. However, the goal with this design is space
 efficiency first, speed second. */
-struct CCC_Array_tree_map
-{
+struct CCC_Array_tree_map {
     /** @internal The contiguous array of user data. */
     void *data;
     /** @internal The contiguous array of WAVL tree meta data. */
@@ -162,8 +159,7 @@ struct CCC_Array_tree_map
 };
 
 /** @internal */
-struct CCC_Array_tree_map_handle
-{
+struct CCC_Array_tree_map_handle {
     /** @internal Map associated with this handle. */
     struct CCC_Array_tree_map *map;
     /** @internal Current index of the handle. */
@@ -175,8 +171,7 @@ struct CCC_Array_tree_map_handle
 };
 
 /** @internal Wrapper for return by pointer on the stack in C23. */
-union CCC_Array_tree_map_handle_wrap
-{
+union CCC_Array_tree_map_handle_wrap {
     /** @internal Single field enables return by compound literal reference. */
     struct CCC_Array_tree_map_handle private;
 };
@@ -219,8 +214,7 @@ metadata. */
     private_fixed_map_type_name, private_key_val_type_name, private_capacity)  \
     static_assert((private_capacity) > 1,                                      \
                   "fixed size map must have capacity greater than 1");         \
-    typedef struct                                                             \
-    {                                                                          \
+    typedef struct {                                                           \
         private_key_val_type_name data[(private_capacity)];                    \
         struct CCC_Array_tree_map_node nodes[(private_capacity)];              \
         typeof(*(struct CCC_Array_tree_map){}.parity)                          \
@@ -280,10 +274,8 @@ runtime. */
                                             ? private_array_tree_n             \
                                             : private_cap),                    \
                                        private_allocate)                       \
-            == CCC_RESULT_OK)                                                  \
-        {                                                                      \
-            for (size_t i = 0; i < private_array_tree_n; ++i)                  \
-            {                                                                  \
+            == CCC_RESULT_OK) {                                                \
+            for (size_t i = 0; i < private_array_tree_n; ++i) {                \
                 struct CCC_Array_tree_map_handle private_array_tree_entry      \
                     = CCC_private_array_tree_map_handle(                       \
                         &private_array_tree_map,                               \
@@ -292,8 +284,7 @@ runtime. */
                             .private_key_field);                               \
                 CCC_Handle_index private_index                                 \
                     = private_array_tree_entry.index;                          \
-                if (!(private_array_tree_entry.status & CCC_ENTRY_OCCUPIED))   \
-                {                                                              \
+                if (!(private_array_tree_entry.status & CCC_ENTRY_OCCUPIED)) { \
                     private_index = CCC_private_array_tree_map_allocate_slot(  \
                         &private_array_tree_map);                              \
                 }                                                              \
@@ -301,8 +292,7 @@ runtime. */
                       CCC_private_array_tree_map_data_at(                      \
                           private_array_tree_entry.map, private_index))        \
                     = private_array_tree_map_initializer_list[i];              \
-                if (!(private_array_tree_entry.status & CCC_ENTRY_OCCUPIED))   \
-                {                                                              \
+                if (!(private_array_tree_entry.status & CCC_ENTRY_OCCUPIED)) { \
                     CCC_private_array_tree_map_insert(                         \
                         private_array_tree_entry.map,                          \
                         private_array_tree_entry.index,                        \
@@ -415,17 +405,14 @@ runtime. */
             = (array_tree_map_array_pointer);                                  \
         struct CCC_Array_tree_map_handle private_array_tree_map_mod_hndl       \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                            \
-        if (private_array_tree_map_hndl_pointer)                               \
-        {                                                                      \
+        if (private_array_tree_map_hndl_pointer) {                             \
             private_array_tree_map_mod_hndl                                    \
                 = private_array_tree_map_hndl_pointer->private;                \
-            if (private_array_tree_map_mod_hndl.status & CCC_ENTRY_OCCUPIED)   \
-            {                                                                  \
+            if (private_array_tree_map_mod_hndl.status & CCC_ENTRY_OCCUPIED) { \
                 type_name *const T = CCC_private_array_tree_map_data_at(       \
                     private_array_tree_map_mod_hndl.map,                       \
                     private_array_tree_map_mod_hndl.index);                    \
-                if (T)                                                         \
-                {                                                              \
+                if (T) {                                                       \
                     closure_over_T                                             \
                 }                                                              \
             }                                                                  \
@@ -440,21 +427,16 @@ runtime. */
         __auto_type private_or_ins_array_pointer                               \
             = (array_tree_map_array_pointer);                                  \
         CCC_Handle_index private_array_tree_map_or_ins_ret = 0;                \
-        if (private_or_ins_array_pointer)                                      \
-        {                                                                      \
+        if (private_or_ins_array_pointer) {                                    \
             if (private_or_ins_array_pointer->private.status                   \
-                == CCC_ENTRY_OCCUPIED)                                         \
-            {                                                                  \
+                == CCC_ENTRY_OCCUPIED) {                                       \
                 private_array_tree_map_or_ins_ret                              \
                     = private_or_ins_array_pointer->private.index;             \
-            }                                                                  \
-            else                                                               \
-            {                                                                  \
+            } else {                                                           \
                 private_array_tree_map_or_ins_ret                              \
                     = CCC_private_array_tree_map_allocate_slot(                \
                         private_or_ins_array_pointer->private.map);            \
-                if (private_array_tree_map_or_ins_ret)                         \
-                {                                                              \
+                if (private_array_tree_map_or_ins_ret) {                       \
                     *((typeof(type_compound_literal) *)                        \
                           CCC_private_array_tree_map_data_at(                  \
                               private_or_ins_array_pointer->private.map,       \
@@ -478,16 +460,13 @@ runtime. */
         __auto_type private_ins_array_pointer                                  \
             = (array_tree_map_array_pointer);                                  \
         CCC_Handle_index private_array_tree_map_ins_hndl_ret = 0;              \
-        if (private_ins_array_pointer)                                         \
-        {                                                                      \
+        if (private_ins_array_pointer) {                                       \
             if (!(private_ins_array_pointer->private.status                    \
-                  & CCC_ENTRY_OCCUPIED))                                       \
-            {                                                                  \
+                  & CCC_ENTRY_OCCUPIED)) {                                     \
                 private_array_tree_map_ins_hndl_ret                            \
                     = CCC_private_array_tree_map_allocate_slot(                \
                         private_ins_array_pointer->private.map);               \
-                if (private_array_tree_map_ins_hndl_ret)                       \
-                {                                                              \
+                if (private_array_tree_map_ins_hndl_ret) {                     \
                     *((typeof(type_compound_literal) *)                        \
                           CCC_private_array_tree_map_data_at(                  \
                               private_ins_array_pointer->private.map,          \
@@ -499,10 +478,8 @@ runtime. */
                         private_ins_array_pointer->private.last_order,         \
                         private_array_tree_map_ins_hndl_ret);                  \
                 }                                                              \
-            }                                                                  \
-            else if (private_ins_array_pointer->private.status                 \
-                     == CCC_ENTRY_OCCUPIED)                                    \
-            {                                                                  \
+            } else if (private_ins_array_pointer->private.status               \
+                       == CCC_ENTRY_OCCUPIED) {                                \
                 private_array_tree_map_ins_hndl_ret                            \
                     = private_ins_array_pointer->private.index;                \
                 *((typeof(type_compound_literal) *)                            \
@@ -522,8 +499,7 @@ runtime. */
         __auto_type private_try_ins_map_pointer = (array_tree_map_pointer);    \
         struct CCC_Handle private_array_tree_map_try_ins_hndl_ret              \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                            \
-        if (private_try_ins_map_pointer)                                       \
-        {                                                                      \
+        if (private_try_ins_map_pointer) {                                     \
             __auto_type private_array_tree_map_key = (key);                    \
             struct CCC_Array_tree_map_handle                                   \
                 private_array_tree_map_try_ins_hndl                            \
@@ -531,15 +507,13 @@ runtime. */
                     private_try_ins_map_pointer,                               \
                     (void *)&private_array_tree_map_key);                      \
             if (!(private_array_tree_map_try_ins_hndl.status                   \
-                  & CCC_ENTRY_OCCUPIED))                                       \
-            {                                                                  \
+                  & CCC_ENTRY_OCCUPIED)) {                                     \
                 private_array_tree_map_try_ins_hndl_ret = (struct CCC_Handle){ \
                     .index = CCC_private_array_tree_map_allocate_slot(         \
                         private_array_tree_map_try_ins_hndl.map),              \
                     .status = CCC_ENTRY_INSERT_ERROR,                          \
                 };                                                             \
-                if (private_array_tree_map_try_ins_hndl_ret.index)             \
-                {                                                              \
+                if (private_array_tree_map_try_ins_hndl_ret.index) {           \
                     *((typeof(type_compound_literal) *)                        \
                           CCC_private_array_tree_map_data_at(                  \
                               private_try_ins_map_pointer,                     \
@@ -558,10 +532,8 @@ runtime. */
                     private_array_tree_map_try_ins_hndl_ret.status             \
                         = CCC_ENTRY_VACANT;                                    \
                 }                                                              \
-            }                                                                  \
-            else if (private_array_tree_map_try_ins_hndl.status                \
-                     == CCC_ENTRY_OCCUPIED)                                    \
-            {                                                                  \
+            } else if (private_array_tree_map_try_ins_hndl.status              \
+                       == CCC_ENTRY_OCCUPIED) {                                \
                 private_array_tree_map_try_ins_hndl_ret = (struct CCC_Handle){ \
                     .index = private_array_tree_map_try_ins_hndl.index,        \
                     .status = private_array_tree_map_try_ins_hndl.status,      \
@@ -579,8 +551,7 @@ runtime. */
             = (array_tree_map_pointer);                                        \
         struct CCC_Handle private_array_tree_map_ins_or_assign_hndl_ret        \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                            \
-        if (private_ins_or_assign_map_pointer)                                 \
-        {                                                                      \
+        if (private_ins_or_assign_map_pointer) {                               \
             __auto_type private_array_tree_map_key = (key);                    \
             struct CCC_Array_tree_map_handle                                   \
                 private_array_tree_map_ins_or_assign_hndl                      \
@@ -588,16 +559,14 @@ runtime. */
                     private_ins_or_assign_map_pointer,                         \
                     (void *)&private_array_tree_map_key);                      \
             if (!(private_array_tree_map_ins_or_assign_hndl.status             \
-                  & CCC_ENTRY_OCCUPIED))                                       \
-            {                                                                  \
+                  & CCC_ENTRY_OCCUPIED)) {                                     \
                 private_array_tree_map_ins_or_assign_hndl_ret                  \
                     = (struct CCC_Handle){                                     \
                         .index = CCC_private_array_tree_map_allocate_slot(     \
                             private_array_tree_map_ins_or_assign_hndl.map),    \
                         .status = CCC_ENTRY_INSERT_ERROR,                      \
                     };                                                         \
-                if (private_array_tree_map_ins_or_assign_hndl_ret.index)       \
-                {                                                              \
+                if (private_array_tree_map_ins_or_assign_hndl_ret.index) {     \
                     *((typeof(type_compound_literal) *)                        \
                           CCC_private_array_tree_map_data_at(                  \
                               private_array_tree_map_ins_or_assign_hndl.map,   \
@@ -618,10 +587,8 @@ runtime. */
                     private_array_tree_map_ins_or_assign_hndl_ret.status       \
                         = CCC_ENTRY_VACANT;                                    \
                 }                                                              \
-            }                                                                  \
-            else if (private_array_tree_map_ins_or_assign_hndl.status          \
-                     == CCC_ENTRY_OCCUPIED)                                    \
-            {                                                                  \
+            } else if (private_array_tree_map_ins_or_assign_hndl.status        \
+                       == CCC_ENTRY_OCCUPIED) {                                \
                 *((typeof(type_compound_literal) *)                            \
                       CCC_private_array_tree_map_data_at(                      \
                           private_array_tree_map_ins_or_assign_hndl.map,       \

@@ -8,8 +8,7 @@
 #include "utility/allocate.h"
 #include "utility/stack_allocator.h"
 
-check_static_begin(buffer_test_empty)
-{
+check_static_begin(buffer_test_empty) {
     Buffer b = buffer_with_compound_literal(0, (int[5]){});
     check(buffer_count(&b).count, 0);
     check(buffer_capacity(&b).count, 5);
@@ -19,8 +18,7 @@ check_static_begin(buffer_test_empty)
     check_end();
 }
 
-check_static_begin(buffer_test_fixed)
-{
+check_static_begin(buffer_test_fixed) {
     Buffer b = buffer_with_compound_literal(0, (int[5]){});
     check(buffer_count(&b).count, 0);
     check(buffer_capacity(&b).count, 5);
@@ -30,8 +28,7 @@ check_static_begin(buffer_test_fixed)
     check_end();
 }
 
-check_static_begin(buffer_test_full)
-{
+check_static_begin(buffer_test_full) {
     Buffer b = buffer_with_compound_literal(5, (int[5]){0, 1, 2, 3, 4});
     check(buffer_count(&b).count, 5);
     check(buffer_capacity(&b).count, 5);
@@ -41,8 +38,7 @@ check_static_begin(buffer_test_full)
     check_end();
 }
 
-check_static_begin(buffer_test_fixed_full)
-{
+check_static_begin(buffer_test_fixed_full) {
     Buffer b = buffer_with_compound_literal(5, (int[5]){0, 1, 2, 3, 4});
     check(buffer_count(&b).count, 5);
     check(buffer_capacity(&b).count, 5);
@@ -52,8 +48,7 @@ check_static_begin(buffer_test_fixed_full)
     check_end();
 }
 
-check_static_begin(buffer_test_reserve)
-{
+check_static_begin(buffer_test_reserve) {
     Buffer b = buffer_with_allocator(int, std_allocate);
     check(buffer_reserve(&b, 8, std_allocate), CCC_RESULT_OK);
     check(buffer_count(&b).count, 0);
@@ -61,8 +56,7 @@ check_static_begin(buffer_test_reserve)
     check_end(buffer_clear_and_free(&b, NULL););
 }
 
-check_static_begin(buffer_test_copy_no_allocate)
-{
+check_static_begin(buffer_test_copy_no_allocate) {
     Buffer source = buffer_with_compound_literal(5, (int[5]){0, 1, 2, 3, 4});
     Buffer destination = buffer_with_compound_literal(0, (int[10]){});
     check(buffer_count(&destination).count, 0);
@@ -74,8 +68,7 @@ check_static_begin(buffer_test_copy_no_allocate)
     check_end();
 }
 
-check_static_begin(buffer_test_copy_no_allocate_fail)
-{
+check_static_begin(buffer_test_copy_no_allocate_fail) {
     Buffer source = buffer_with_compound_literal(3, (int[3]){0, 1, 2});
     Buffer bad_destination = buffer_with_compound_literal(0, (int[2]){});
     check(buffer_count(&source).count, 3);
@@ -85,26 +78,22 @@ check_static_begin(buffer_test_copy_no_allocate_fail)
     check_end();
 }
 
-check_static_begin(buffer_test_copy_allocate)
-{
+check_static_begin(buffer_test_copy_allocate) {
     Buffer source = buffer_with_allocator(int, std_allocate);
     Buffer destination = buffer_with_allocator(int, NULL);
     check(buffer_is_empty(&destination), CCC_TRUE);
-    enum : size_t
-    {
+    enum : size_t {
         PUSHCAP = 5,
     };
     int push[PUSHCAP] = {0, 1, 2, 3, 4};
-    for (size_t i = 0; i < PUSHCAP; ++i)
-    {
+    for (size_t i = 0; i < PUSHCAP; ++i) {
         check(buffer_push_back(&source, &push[i]) != NULL, CCC_TRUE);
     }
     CCC_Result const res = buffer_copy(&destination, &source, std_allocate);
     check(res, CCC_RESULT_OK);
     check(*(int *)buffer_begin(&source), 0);
     check(buffer_count(&destination).count, 5);
-    while (!buffer_is_empty(&source) && !buffer_is_empty(&destination))
-    {
+    while (!buffer_is_empty(&source) && !buffer_is_empty(&destination)) {
         int const a = *(int *)buffer_back(&source);
         int const b = *(int *)buffer_back(&destination);
         (void)buffer_pop_back(&source);
@@ -118,8 +107,7 @@ check_static_begin(buffer_test_copy_allocate)
     });
 }
 
-check_static_begin(buffer_test_copy_allocate_fail)
-{
+check_static_begin(buffer_test_copy_allocate_fail) {
     Buffer source = buffer_with_allocator(int, std_allocate);
     Buffer destination = buffer_with_allocator(int, NULL);
     check(buffer_push_back(&source, &(int){88}) != NULL, CCC_TRUE);
@@ -128,14 +116,12 @@ check_static_begin(buffer_test_copy_allocate_fail)
     check_end({ (void)buffer_clear_and_free(&source, NULL); });
 }
 
-check_static_begin(buffer_test_init_from)
-{
+check_static_begin(buffer_test_init_from) {
     CCC_Buffer b
         = CCC_buffer_from(std_allocate, 8, (int[]){1, 2, 3, 4, 5, 6, 7});
     int elem = 1;
     for (int const *i = CCC_buffer_begin(&b); i != CCC_buffer_end(&b);
-         i = CCC_buffer_next(&b, i))
-    {
+         i = CCC_buffer_next(&b, i)) {
         check(elem, *i);
         ++elem;
     }
@@ -145,14 +131,12 @@ check_static_begin(buffer_test_init_from)
     check_end((void)CCC_buffer_clear_and_free(&b, NULL););
 }
 
-check_static_begin(buffer_test_init_from_fail)
-{
+check_static_begin(buffer_test_init_from_fail) {
     /* Whoops forgot allocation function. */
     CCC_Buffer b = CCC_buffer_from(NULL, 0, (int[]){1, 2, 3, 4, 5, 6, 7});
     int elem = 1;
     for (int const *i = CCC_buffer_begin(&b); i != CCC_buffer_end(&b);
-         i = CCC_buffer_next(&b, i))
-    {
+         i = CCC_buffer_next(&b, i)) {
         check(elem, *i);
         ++elem;
     }
@@ -163,30 +147,26 @@ check_static_begin(buffer_test_init_from_fail)
     check_end((void)CCC_buffer_clear_and_free(&b, NULL););
 }
 
-check_static_begin(buffer_test_init_with_capacity)
-{
+check_static_begin(buffer_test_init_with_capacity) {
     CCC_Buffer b = CCC_buffer_with_capacity(int, std_allocate, 8);
     check(CCC_buffer_capacity(&b).count, 8);
     check(CCC_buffer_push_back(&b, &(int){9}) != NULL, CCC_TRUE);
     size_t count = 0;
     for (int const *i = CCC_buffer_begin(&b); i != CCC_buffer_capacity_end(&b);
-         i = CCC_buffer_next(&b, i))
-    {
+         i = CCC_buffer_next(&b, i)) {
         ++count;
     }
     check(count, 8);
     check_end(CCC_buffer_clear_and_free(&b, NULL););
 }
 
-check_static_begin(buffer_test_with_allocator)
-{
+check_static_begin(buffer_test_with_allocator) {
     CCC_Buffer b = CCC_buffer_with_allocator(int, std_allocate);
     check(CCC_buffer_is_empty(&b), CCC_TRUE);
     check_end();
 }
 
-check_static_begin(buffer_test_with_context_allocator)
-{
+check_static_begin(buffer_test_with_context_allocator) {
     struct Stack_allocator allocator = stack_allocator_initialize(int, 8);
     CCC_Buffer b = CCC_buffer_with_context_allocator(
         int, stack_allocator_allocate, &allocator);
@@ -199,16 +179,14 @@ check_static_begin(buffer_test_with_context_allocator)
     check_end(CCC_buffer_clear_and_free(&b, NULL););
 }
 
-check_static_begin(buffer_test_init_with_capacity_fail)
-{
+check_static_begin(buffer_test_init_with_capacity_fail) {
     /* Forgot allocation function. */
     CCC_Buffer b = CCC_buffer_with_capacity(int, NULL, 8);
     check(CCC_buffer_capacity(&b).count, 0);
     check(CCC_buffer_push_back(&b, &(int){9}), NULL);
     size_t count = 0;
     for (int const *i = CCC_buffer_begin(&b); i != CCC_buffer_capacity_end(&b);
-         i = CCC_buffer_next(&b, i))
-    {
+         i = CCC_buffer_next(&b, i)) {
         ++count;
     }
     check(count, 0);
@@ -216,8 +194,7 @@ check_static_begin(buffer_test_init_with_capacity_fail)
 }
 
 int
-main(void)
-{
+main(void) {
     return check_run(
         buffer_test_empty(), buffer_test_fixed(), buffer_test_fixed_full(),
         buffer_test_full(), buffer_test_reserve(),

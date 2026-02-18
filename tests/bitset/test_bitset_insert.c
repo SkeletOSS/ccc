@@ -9,21 +9,16 @@
 #include "types.h"
 #include "utility/allocate.h"
 
-check_static_begin(bitset_test_push_back_no_reallocate)
-{
+check_static_begin(bitset_test_push_back_no_reallocate) {
     CCC_Bitset bs
         = CCC_bitset_initialize(NULL, NULL, 16, 0, CCC_bitset_blocks(16));
     check(CCC_bitset_capacity(&bs).count, 16);
     check(CCC_bitset_count(&bs).count, 0);
     CCC_Result push_status = CCC_RESULT_OK;
-    for (size_t i = 0; push_status == CCC_RESULT_OK; ++i)
-    {
-        if (i % 2)
-        {
+    for (size_t i = 0; push_status == CCC_RESULT_OK; ++i) {
+        if (i % 2) {
             push_status = CCC_bitset_push_back(&bs, CCC_TRUE);
-        }
-        else
-        {
+        } else {
             push_status = CCC_bitset_push_back(&bs, CCC_FALSE);
         }
     }
@@ -40,19 +35,14 @@ check_static_begin(bitset_test_push_back_no_reallocate)
     check_end();
 }
 
-check_static_begin(bitset_test_push_back_allocate)
-{
+check_static_begin(bitset_test_push_back_allocate) {
     CCC_Bitset bs = CCC_bitset_initialize(std_allocate, NULL, 0, 0, NULL);
     check(CCC_bitset_capacity(&bs).count, 0);
     check(CCC_bitset_count(&bs).count, 0);
-    for (size_t i = 0; CCC_bitset_count(&bs).count < 16; ++i)
-    {
-        if (i % 2)
-        {
+    for (size_t i = 0; CCC_bitset_count(&bs).count < 16; ++i) {
+        if (i % 2) {
             check(CCC_bitset_push_back(&bs, CCC_TRUE), CCC_RESULT_OK);
-        }
-        else
-        {
+        } else {
             check(CCC_bitset_push_back(&bs, CCC_FALSE), CCC_RESULT_OK);
         }
     }
@@ -68,21 +58,16 @@ check_static_begin(bitset_test_push_back_allocate)
     check_end();
 }
 
-check_static_begin(bitset_test_push_back_reserve)
-{
+check_static_begin(bitset_test_push_back_reserve) {
     CCC_Bitset bs = CCC_bitset_initialize(NULL, NULL, 0, 0, NULL);
     CCC_Result const r = reserve(&bs, 512, std_allocate);
     check(r, CCC_RESULT_OK);
     check(CCC_bitset_count(&bs).count, 0);
     check(CCC_bitset_capacity(&bs).count != 0, true);
-    for (size_t i = 0; CCC_bitset_count(&bs).count < 512; ++i)
-    {
-        if (i % 2)
-        {
+    for (size_t i = 0; CCC_bitset_count(&bs).count < 512; ++i) {
+        if (i % 2) {
             check(CCC_bitset_push_back(&bs, CCC_TRUE), CCC_RESULT_OK);
-        }
-        else
-        {
+        } else {
             check(CCC_bitset_push_back(&bs, CCC_FALSE), CCC_RESULT_OK);
         }
     }
@@ -99,8 +84,7 @@ check_static_begin(bitset_test_push_back_reserve)
 }
 
 int
-main(void)
-{
+main(void) {
     return check_run(bitset_test_push_back_no_reallocate(),
                      bitset_test_push_back_allocate(),
                      bitset_test_push_back_reserve());

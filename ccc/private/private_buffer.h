@@ -30,8 +30,7 @@ limitations under the License.
 specify any type. The Buffer can be fixed size if no allocation permission is
 given or dynamic if allocation permission is granted. The Buffer can also be
 manually resized via the interface. */
-struct CCC_Buffer
-{
+struct CCC_Buffer {
     /** @internal The contiguous memory of uniform type. */
     void *data;
     /** @internal The current count of active Buffer slots. */
@@ -81,8 +80,7 @@ initialization in one convenient step for user. */
                 &private_buf,                                                  \
                 (private_n > private_cap ? private_n : private_cap),           \
                 private_allocate)                                              \
-            == CCC_RESULT_OK)                                                  \
-        {                                                                      \
+            == CCC_RESULT_OK) {                                                \
             (void)memcpy(private_buf.data, private_buffer_initializer_list,    \
                          private_n                                             \
                              * sizeof(*private_buffer_initializer_list));      \
@@ -179,8 +177,7 @@ of memory in one step. */
         __auto_type private_emplace_buff_pointer = (private_buffer_pointer);   \
         private_buffer_res                                                     \
             = CCC_buffer_at(private_emplace_buff_pointer, private_i);          \
-        if (private_buffer_res)                                                \
-        {                                                                      \
+        if (private_buffer_res) {                                              \
             *private_buffer_res = private_type_compound_literal;               \
         }                                                                      \
         private_buffer_res;                                                    \
@@ -195,8 +192,7 @@ of memory in one step. */
             = (private_buffer_pointer);                                        \
         private_buffer_res = CCC_buffer_allocate_back(                         \
             (private_emplace_back_private_buffer_pointer));                    \
-        if (private_buffer_res)                                                \
-        {                                                                      \
+        if (private_buffer_res) {                                              \
             *private_buffer_res = private_type_compound_literal;               \
         }                                                                      \
         private_buffer_res;                                                    \

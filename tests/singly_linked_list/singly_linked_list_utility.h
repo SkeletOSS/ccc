@@ -7,8 +7,7 @@
 #include "singly_linked_list.h"
 #include "types.h"
 
-struct Val
-{
+struct Val {
     int id;
     int val;
     CCC_Singly_linked_list_node e;

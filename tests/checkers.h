@@ -8,8 +8,7 @@
 #define CHECK_CYAN "\033[38;5;14m"
 #define CHECK_NONE "\033[0m"
 
-enum Check_result
-{
+enum Check_result {
     CHECK_ERROR = -1,
     CHECK_PASS,
     CHECK_FAIL,
@@ -18,8 +17,7 @@ enum Check_result
 typedef enum Check_result (*Tester)(void);
 
 #define check_fail_print(result, result_string, expected, expected_string)     \
-    do                                                                         \
-    {                                                                          \
+    do {                                                                       \
         char const *const check_private_format_string = _Generic((result),     \
             _Bool: "%d",                                                       \
             char: "%c",                                                        \
@@ -53,8 +51,7 @@ typedef enum Check_result (*Tester)(void);
         (void)fprintf(stderr, " ) != expected( ");                             \
         (void)fprintf(stderr, check_private_format_string, expected);          \
         (void)fprintf(stderr, " )\n%s", CHECK_NONE);                           \
-    }                                                                          \
-    while (0)
+    } while (0)
 
 #define check_non_check_default_params(...) __VA_ARGS__
 #define check_default_params(...) void
@@ -104,8 +101,7 @@ check_static_begin(insert_shuffled, ccc_ordered_multimap *pq,
     check_end();
 }*/
 #define check_static_begin(test_name, ...)                                     \
-    static enum Check_result(test_name)(check_optional_params(__VA_ARGS__))    \
-    {                                                                          \
+    static enum Check_result(test_name)(check_optional_params(__VA_ARGS__)) {  \
         enum Check_result check_private_macro_res = CHECK_PASS;
 
 /** @brief Define a test function that has a name and optionally
@@ -118,8 +114,7 @@ It is possible to return early from a test before the end test macro, but it
 is discouraged, especially if any memory allocations need to be cleaned up if
 a test fails. See begin static test for examples. */
 #define check_begin(test_name, ...)                                            \
-    enum Check_result(test_name)(check_optional_params(__VA_ARGS__))           \
-    {                                                                          \
+    enum Check_result(test_name)(check_optional_params(__VA_ARGS__)) {         \
         enum Check_result check_private_macro_res = CHECK_PASS;
 
 /** @brief execute a check within the context of a test.
@@ -143,21 +138,18 @@ needs to be written in the cleanup case a code block can be surrounded by
 {...any code goes here...} braces for the formatting assistance braces provide,
 though the braces are not required. */
 #define check(test_result, test_expected, ...)                                 \
-    do                                                                         \
-    {                                                                          \
+    do {                                                                       \
         const __auto_type check_private_result = (test_result);                \
         const typeof(check_private_result) check_private_expected              \
             = (test_expected);                                                 \
-        if (check_private_result != check_private_expected)                    \
-        {                                                                      \
+        if (check_private_result != check_private_expected) {                  \
             check_fail_print(check_private_result, #test_result,               \
                              check_private_expected, #test_expected);          \
             check_private_macro_res = CHECK_FAIL;                              \
             __VA_OPT__((void)({__VA_ARGS__});)                                 \
             goto please_use_at_least_one_check_and_a_check_end_macro;          \
         }                                                                      \
-    }                                                                          \
-    while (0)
+    } while (0)
 
 /** @brief execute a check within the context of a test that sets an error.
 @param[in] test_result the result value of some action.
@@ -183,21 +175,18 @@ written in the cleanup case a code block can be surrounded by
 {...any code goes here...} braces for the formatting assistance braces provide,
 though the braces are not required. */
 #define check_error(test_result, test_expected, ...)                           \
-    do                                                                         \
-    {                                                                          \
+    do {                                                                       \
         const __auto_type check_private_result = (test_result);                \
         const typeof(check_private_result) check_private_expected              \
             = (test_expected);                                                 \
-        if (check_private_result != check_private_expected)                    \
-        {                                                                      \
+        if (check_private_result != check_private_expected) {                  \
             check_fail_print(check_private_result, #test_result,               \
                              check_private_expected, #test_expected);          \
             check_private_macro_res = CHECK_ERROR;                             \
             __VA_OPT__((void)({__VA_ARGS__});)                                 \
             goto please_use_at_least_one_check_and_a_check_end_macro;          \
         }                                                                      \
-    }                                                                          \
-    while (0)
+    } while (0)
 
 /** Returns the current test status. If the end pass and end fail macros to
 finish a test do not provide the necessary flow control for various test
@@ -267,8 +256,7 @@ macro if more fine grained control over nested scope is required upon a failure.
 #define check_pass_end(...)                                                    \
 please_use_at_least_one_check_and_a_check_end_macro:                           \
     __VA_OPT__((void)({                                                        \
-                   if (check_private_macro_res == CHECK_PASS)                  \
-                   {                                                           \
+                   if (check_private_macro_res == CHECK_PASS) {                \
                        __VA_ARGS__                                             \
                    }                                                           \
                });)                                                            \
@@ -293,8 +281,7 @@ failure.*/
 #define check_fail_end(...)                                                    \
 please_use_at_least_one_check_and_a_check_end_macro:                           \
     __VA_OPT__((void)({                                                        \
-                   if (check_private_macro_res == CHECK_FAIL)                  \
-                   {                                                           \
+                   if (check_private_macro_res == CHECK_FAIL) {                \
                        __VA_ARGS__                                             \
                    }                                                           \
                });)                                                            \
@@ -319,8 +306,7 @@ failure.*/
 #define check_error_end(...)                                                   \
 please_use_at_least_one_check_and_a_check_end_macro:                           \
     __VA_OPT__((void)({                                                        \
-                   if (check_private_macro_res == CHECK_ERROR)                 \
-                   {                                                           \
+                   if (check_private_macro_res == CHECK_ERROR) {               \
                        __VA_ARGS__                                             \
                    }                                                           \
                });)                                                            \
@@ -344,10 +330,8 @@ the individual test that failed with CHECK_FAIL or CHECK_ERROR. */
         enum Check_result check_private_all_checks_res = CHECK_PASS;           \
         for (unsigned long long i = 0;                                         \
              i < sizeof(check_private_all_checks) / sizeof(enum Check_result); \
-             ++i)                                                              \
-        {                                                                      \
-            if (check_private_all_checks[i] != CHECK_PASS)                     \
-            {                                                                  \
+             ++i) {                                                            \
+            if (check_private_all_checks[i] != CHECK_PASS) {                   \
                 check_private_all_checks_res = CHECK_FAIL;                     \
             }                                                                  \
         }                                                                      \

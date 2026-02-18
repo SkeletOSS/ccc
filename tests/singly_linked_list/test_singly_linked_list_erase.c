@@ -10,8 +10,7 @@
 #include "types.h"
 #include "utility/stack_allocator.h"
 
-check_static_begin(singly_linked_list_test_pop_empty)
-{
+check_static_begin(singly_linked_list_test_pop_empty) {
     Singly_linked_list singly_linked_list
         = singly_linked_list_initialize(struct Val, e, val_order, NULL, NULL);
     check(is_empty(&singly_linked_list), true);
@@ -23,8 +22,7 @@ check_static_begin(singly_linked_list_test_pop_empty)
     check_end();
 }
 
-check_static_begin(singly_linked_list_test_push_pop_three)
-{
+check_static_begin(singly_linked_list_test_push_pop_three) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 3);
     Singly_linked_list singly_linked_list = singly_linked_list_context_from(
@@ -35,8 +33,7 @@ check_static_begin(singly_linked_list_test_push_pop_three)
             {.val = 2},
         });
     size_t const end = count(&singly_linked_list).count;
-    for (size_t i = 0; i < end; ++i)
-    {
+    for (size_t i = 0; i < end; ++i) {
         (void)pop_front(&singly_linked_list);
         check(validate(&singly_linked_list), true);
     }
@@ -44,8 +41,7 @@ check_static_begin(singly_linked_list_test_push_pop_three)
     check_end();
 }
 
-check_static_begin(singly_linked_list_test_push_extract_middle)
-{
+check_static_begin(singly_linked_list_test_push_extract_middle) {
     Singly_linked_list singly_linked_list
         = singly_linked_list_initialize(struct Val, e, val_order, NULL, NULL);
     struct Val vals[3] = {{.val = 0}, {.val = 1}, {.val = 2}};
@@ -64,8 +60,7 @@ check_static_begin(singly_linked_list_test_push_extract_middle)
     check_end();
 }
 
-check_static_begin(singly_linked_list_test_push_extract_range)
-{
+check_static_begin(singly_linked_list_test_push_extract_range) {
     Singly_linked_list singly_linked_list
         = singly_linked_list_initialize(struct Val, e, val_order, NULL, NULL);
     struct Val vals[5]
@@ -89,8 +84,7 @@ check_static_begin(singly_linked_list_test_push_extract_range)
     check_end();
 }
 
-check_static_begin(singly_linked_list_test_splice_two_lists)
-{
+check_static_begin(singly_linked_list_test_splice_two_lists) {
     Singly_linked_list to_lose
         = singly_linked_list_initialize(struct Val, e, val_order, NULL, NULL);
     struct Val to_lose_vals[5]
@@ -122,8 +116,7 @@ check_static_begin(singly_linked_list_test_splice_two_lists)
 }
 
 int
-main(void)
-{
+main(void) {
     return check_run(singly_linked_list_test_pop_empty(),
                      singly_linked_list_test_push_pop_three(),
                      singly_linked_list_test_push_extract_middle(),
