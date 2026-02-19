@@ -7,7 +7,8 @@ The C Container Collection offers a variety of containers for C programmers who 
 The following are required for install:
 
 - GCC or Clang supporting `C23`.
-    - 100% coverage of `C23` is not required. For example, at the time of writing Clang 19.1.1 and GCC 14.2 have all features used in this collection covered, but older versions of each compiler may work as well.
+    - The oldest compilers I am aware of that build a release package are Clang 19.1.1 and GCC 14.2. Older compilers may work as well.
+    - To build the samples, tests, and utilities that are not included in the release package newer compilers are needed. At the time of writing Clang 22.1.0-rc3 and GCC 15.2 cover the newer C features used such as `defer`. These newer compilers are only needed for developers looking to contribute to the collection.
 - CMake >= 3.23.
 - Read [INSTALL.md](INSTALL.md).
 
