@@ -345,9 +345,9 @@ This helps eliminate boilerplate and makes intent clear. */
 
 /** @brief Initialize a contiguous Buffer of user a specified type of fixed
 capacity with no allocation permission.
+@param[in] type_name the name of the type stored in this buffer.
+@param[in] allocator the CCC_Allocator function.
 @param[in] context a pointer to any context needed for each element.
-@param[in] count starting count of the Buffer <= capacity of input literal.
-@param[in] allocator_array the compound literal array of types.
 @return the initialized buffer. Directly assign to Buffer on the right hand
 side of the equality operator
 (e.g. CCC_Buffer b = CCC_buffer_with_context_allocator(...);).

@@ -70,7 +70,7 @@ Initialize the container with memory, callbacks, and permissions. */
 /**@{*/
 
 /** @brief Initialize a priority queue at runtime or compile time.
-@param[in] struct_name the name of the user type_intruder wrapping
+@param[in] type_name the name of the user type_intruder wrapping
 priority_queue elems.
 @param[in] type_intruder_field the name of the field for the
 priority_queue elem.
@@ -82,33 +82,29 @@ CCC_ORDER_GREATER for a max priority_queue.
 @return the initialized priority_queue on the right side of an equality operator
 (e.g. CCC_Priority_queue priority_queue = CCC_priority_queue_initialize(...);)
 */
-#define CCC_priority_queue_initialize(struct_name, type_intruder_field, order, \
+#define CCC_priority_queue_initialize(type_name, type_intruder_field, order,   \
                                       compare, allocate, context_data)         \
-    CCC_private_priority_queue_initialize(struct_name, type_intruder_field,    \
+    CCC_private_priority_queue_initialize(type_name, type_intruder_field,      \
                                           order, compare, allocate,            \
                                           context_data)
 
 /** @brief Initialize a priority queue at runtime or compile time with an
 allocator.
-@param[in] struct_name the name of the user type_intruder wrapping
-priority_queue elems.
-@param[in] type_intruder_field the name of the field for the
-priority_queue elem.
-@param[in] order CCC_ORDER_LESSER for a min priority_queue or
-CCC_ORDER_GREATER for a max priority_queue.
+@param[in] type_name the name of the user type_intruder wrapping queue elements.
+@param[in] type_intruder_field the name of the field for the queue elements.
+@param[in] order `CCC_ORDER_LESSER` for a min priority_queue or
+`CCC_ORDER_GREATER` for a max priority_queue.
 @param[in] compare the function used to compare two user types.
 @param[in] allocate the allocation function or NULL if allocation is banned.
-@return the initialized priority_queue on the right side of an equality operator
-(e.g. CCC_Priority_queue priority_queue
-= CCC_priority_queue_with_allocator(...);) */
-#define CCC_priority_queue_with_allocator(struct_name, type_intruder_field,    \
+@return the initialized queue on the right side of an equality operator */
+#define CCC_priority_queue_with_allocator(type_name, type_intruder_field,      \
                                           order, compare, allocate)            \
-    CCC_private_priority_queue_with_allocator(                                 \
-        struct_name, type_intruder_field, order, compare, allocate)
+    CCC_private_priority_queue_with_allocator(type_name, type_intruder_field,  \
+                                              order, compare, allocate)
 
 /** @brief Initialize a priority queue at runtime or compile time with an
 allocator and context.
-@param[in] struct_name the name of the user type_intruder wrapping
+@param[in] type_name the name of the user type_intruder wrapping
 priority_queue elems.
 @param[in] type_intruder_field the name of the field for the
 priority_queue elem.
@@ -117,31 +113,26 @@ CCC_ORDER_GREATER for a max priority_queue.
 @param[in] compare the function used to compare two user types.
 @param[in] allocate the allocation function or NULL if allocation is banned.
 @param[in] context_data context data needed for comparison or destruction.
-@return the initialized priority_queue on the right side of an equality operator
-(e.g. CCC_Priority_queue priority_queue
-= CCC_priority_queue_with_context_allocator(...);) */
+@return the initialized queue on the right side of an equality operator. */
 #define CCC_priority_queue_with_context_allocator(                             \
-    struct_name, type_intruder_field, order, compare, allocate, context_data)  \
+    type_name, type_intruder_field, order, compare, allocate, context_data)    \
     CCC_private_priority_queue_with_context_allocator(                         \
-        struct_name, type_intruder_field, order, compare, allocate,            \
+        type_name, type_intruder_field, order, compare, allocate,              \
         context_data)
 
 /** @brief Initialize a priority queue at runtime or compile time with an
 allocator.
-@param[in] struct_name the name of the user type_intruder wrapping
-priority_queue elems.
-@param[in] type_intruder_field the name of the field for the
-priority_queue elem.
-@param[in] order CCC_ORDER_LESSER for a min priority_queue or
-CCC_ORDER_GREATER for a max priority_queue.
+@param[in] type_name the name of the user type_intruder wrapping queue elements.
+@param[in] type_intruder_field the name of the field for the queue elements.
+@param[in] order `CCC_ORDER_LESSER` for a min priority_queue or
+`CCC_ORDER_GREATER` for a max priority_queue.
 @param[in] compare the function used to compare two user types.
 @param[in] allocate the allocation function or NULL if allocation is banned.
-@return the initialized priority_queue on the right side of an equality operator
-(CCC_Priority_queue priority_queue = CCC_priority_queue_with_allocator(...);) */
-#define CCC_priority_queue_with_allocator(struct_name, type_intruder_field,    \
+@return the initialized queue on the right side of an equality operator */
+#define CCC_priority_queue_with_allocator(type_name, type_intruder_field,      \
                                           order, compare, allocate)            \
-    CCC_private_priority_queue_with_allocator(                                 \
-        struct_name, type_intruder_field, order, compare, allocate)
+    CCC_private_priority_queue_with_allocator(type_name, type_intruder_field,  \
+                                              order, compare, allocate)
 
 /** @brief Initialize a priority queue at runtime from a compound literal array.
 @param[in] type_intruder_field the name of the field intruding on user's type.

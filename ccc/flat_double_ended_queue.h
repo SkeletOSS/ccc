@@ -129,10 +129,10 @@ Only dynamic flat_double_ended_queues may be initialized this way. For static
 or stack based initialization of fixed flat_double_ended_queues with contents
 known at compile time, see the CCC_flat_double_ended_queue_initialize() macro.
 */
-#define CCC_flat_double_ended_queue_from(                                      \
-    allocate, context_data, optional_capacity, compound_literal_array...)      \
-    CCC_private_flat_double_ended_queue_from(                                  \
-        allocate, context_data, optional_capacity, compound_literal_array)
+#define CCC_flat_double_ended_queue_from(allocate, optional_capacity,          \
+                                         compound_literal_array...)            \
+    CCC_private_flat_double_ended_queue_from(allocate, optional_capacity,      \
+                                             compound_literal_array)
 
 /** @brief Initialize a Flat_double_ended_queue from a compound literal array
 initializer.

@@ -609,6 +609,7 @@ allocator.
 @param[in] hash the CCC_Key_hasher function provided by the user.
 @param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] allocate the CCC_Allocator function.
+@param[in] context a pointer to any context needed for the map.
 @return the flat hash map directly initialized on the right hand side of the
 equality operator
 (e.g. CCC_Flat_hash_map map = flat_hash_map_with_allocator(...);)

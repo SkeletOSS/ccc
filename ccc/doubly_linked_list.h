@@ -79,7 +79,7 @@ Initialize the container with memory, callbacks, and permissions. */
 containing the Doubly_linked_list elems, the field of the doubly_linked_list
 elem, allocation function, compare function and any context data needed
 for comparison, printing, or destructors.
-@param[in] struct_name the type containing the intrusive doubly_linked_list
+@param[in] type_name the type containing the intrusive doubly_linked_list
 element.
 @param[in] type_intruder_field name of the Doubly_linked_list element in the
 containing type.
@@ -90,10 +90,10 @@ printing, or destruction of elements.
 @return the initialized list. Assign to the list directly on the right hand
 side of an equality operator. Initialization can occur at runtime or compile
 time (e.g. CCC_doubly_linked list = CCC_doubly_linked_list_initialize(...);). */
-#define CCC_doubly_linked_list_initialize(struct_name, type_intruder_field,    \
+#define CCC_doubly_linked_list_initialize(type_name, type_intruder_field,      \
                                           compare, allocate, context_data)     \
-    CCC_private_doubly_linked_list_initialize(                                 \
-        struct_name, type_intruder_field, compare, allocate, context_data)
+    CCC_private_doubly_linked_list_initialize(type_name, type_intruder_field,  \
+                                              compare, allocate, context_data)
 
 /** @brief Initialize a doubly linked list at runtime from a compound literal
 array.
@@ -162,16 +162,17 @@ static Doubly_linked_list list = doubly_linked_list_with_allocator(
 ```
 
 This can help eliminate boilerplate in initializers. */
-#define CCC_doubly_linked_list_with_allocator(                                 \
-    struct_name, type_intruder_field, compare, allocate)                       \
+#define CCC_doubly_linked_list_with_allocator(type_name, type_intruder_field,  \
+                                              compare, allocate)               \
     CCC_private_doubly_linked_list_with_allocator(                             \
-        struct_name, type_intruder_field, compare, allocate)
+        type_name, type_intruder_field, compare, allocate)
 
 /** @brief Initialize an empty list at compile or runtime with an allocator.
 @param[in] type_name the user defined type stored in the list.
 @param[in] type_intruder_field the name of the intrusive element.
 @param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] allocate the CCC_Allocator function used to manage list memory.
+@param[in] context context data needed for comparison or destruction.
 @return the list directly initialized on the right hand side of the equality
 operator.
 
@@ -195,9 +196,9 @@ static Doubly_linked_list list = doubly_linked_list_with_allocator(
 
 This can help eliminate boilerplate in initializers. */
 #define CCC_doubly_linked_list_with_context_allocator(                         \
-    struct_name, type_intruder_field, compare, allocate, context)              \
+    type_name, type_intruder_field, compare, allocate, context)                \
     CCC_private_doubly_linked_list_with_context_allocator(                     \
-        struct_name, type_intruder_field, compare, allocate, context)
+        type_name, type_intruder_field, compare, allocate, context)
 
 /**@}*/
 
