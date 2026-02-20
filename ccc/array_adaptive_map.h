@@ -934,7 +934,7 @@ CCC_array_adaptive_map_and_modify(CCC_Array_adaptive_map_handle *handle,
 This function makes full use of a CCC_Type_modifier capability, meaning a
 complete CCC_update object will be passed to the update function callback. */
 [[nodiscard]] CCC_Array_adaptive_map_handle *
-CCC_array_adaptive_map_and_modify_context(CCC_Array_adaptive_map_handle *handle,
+CCC_array_adaptive_map_and_context_modify(CCC_Array_adaptive_map_handle *handle,
                                           CCC_Type_modifier *modify,
                                           void *context);
 
@@ -1391,8 +1391,8 @@ typedef CCC_Array_adaptive_map_handle Array_adaptive_map_handle;
         CCC_array_adaptive_map_handle(arguments)
 #    define array_adaptive_map_and_modify(arguments...)                        \
         CCC_array_adaptive_map_and_modify(arguments)
-#    define array_adaptive_map_and_modify_context(arguments...)                \
-        CCC_array_adaptive_map_and_modify_context(arguments)
+#    define array_adaptive_map_and_context_modify(arguments...)                \
+        CCC_array_adaptive_map_and_context_modify(arguments)
 #    define array_adaptive_map_or_insert(arguments...)                         \
         CCC_array_adaptive_map_or_insert(arguments)
 #    define array_adaptive_map_insert_handle(arguments...)                     \

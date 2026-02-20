@@ -936,7 +936,7 @@ CCC_array_tree_map_and_modify(CCC_Array_tree_map_handle *handle,
 This function makes full use of a CCC_Type_modifier capability, meaning a
 complete CCC_update object will be passed to the update function callback. */
 [[nodiscard]] CCC_Array_tree_map_handle *
-CCC_array_tree_map_and_modify_context(CCC_Array_tree_map_handle *handle,
+CCC_array_tree_map_and_context_modify(CCC_Array_tree_map_handle *handle,
                                       CCC_Type_modifier *modify, void *context);
 
 /** @brief Modify an Occupied handle with a closure over user type T.

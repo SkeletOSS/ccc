@@ -242,7 +242,7 @@ CCC_array_adaptive_map_and_modify(CCC_Array_adaptive_map_handle *const handle,
 }
 
 CCC_Array_adaptive_map_handle *
-CCC_array_adaptive_map_and_modify_context(
+CCC_array_adaptive_map_and_context_modify(
     CCC_Array_adaptive_map_handle *const handle,
     CCC_Type_modifier *const modify, void *const context) {
     if (!handle) {

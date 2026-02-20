@@ -498,14 +498,14 @@ check_static_begin(flat_hash_map_test_entry_and_modify) {
     check_end();
 }
 
-check_static_begin(flat_hash_map_test_entry_and_modify_context) {
+check_static_begin(flat_hash_map_test_entry_and_context_modify) {
     int const size = 30;
     CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         (Small_fixed_map){});
     int context = 1;
     CCC_Flat_hash_map_entry *ent = entry_wrap(&fh, &(int){-1});
-    ent = and_modify_context(ent, pluscontext, &context);
+    ent = and_context_modify(ent, pluscontext, &context);
     check(occupied(ent), false);
     check(unwrap(ent) == NULL, true);
     check(count(&fh).count, 0);
@@ -518,7 +518,7 @@ check_static_begin(flat_hash_map_test_entry_and_modify_context) {
     check(v != NULL, true);
     check(v->val, -1);
     check(v->key, -1);
-    ent = and_modify_context(ent, pluscontext, &context);
+    ent = and_context_modify(ent, pluscontext, &context);
     v = unwrap(ent);
     check(v != NULL, true);
     check(v->key, -1);
@@ -529,14 +529,14 @@ check_static_begin(flat_hash_map_test_entry_and_modify_context) {
 
     i += (size / 2);
     ent = entry_wrap(&fh, &i);
-    ent = and_modify_context(ent, pluscontext, &context);
+    ent = and_context_modify(ent, pluscontext, &context);
     check(occupied(ent), false);
     check(unwrap(ent) == NULL, true);
     check(count(&fh).count, i + 1);
     (void)flat_hash_map_insert_or_assign_with(&fh, i, val(i));
     check(validate(&fh), true);
     ent = entry_wrap(&fh, &i);
-    ent = and_modify_context(ent, pluscontext, &context);
+    ent = and_context_modify(ent, pluscontext, &context);
     v = unwrap(ent);
     check(v != NULL, true);
     check(v->val, i + 1);
@@ -548,14 +548,14 @@ check_static_begin(flat_hash_map_test_entry_and_modify_context) {
 
     i = size;
     ent = entry_wrap(&fh, &i);
-    ent = and_modify_context(ent, pluscontext, &context);
+    ent = and_context_modify(ent, pluscontext, &context);
     check(occupied(ent), false);
     check(unwrap(ent) == NULL, true);
     check(count(&fh).count, i + 1);
     (void)flat_hash_map_insert_or_assign_with(&fh, i, val(i));
     check(validate(&fh), true);
     ent = entry_wrap(&fh, &i);
-    ent = and_modify_context(ent, pluscontext, &context);
+    ent = and_context_modify(ent, pluscontext, &context);
     v = unwrap(ent);
     check(v != NULL, true);
     check(v->val, i + 1);
@@ -903,7 +903,7 @@ main(void) {
         flat_hash_map_test_insert_or_assign(),
         flat_hash_map_test_insert_or_assign_with(),
         flat_hash_map_test_entry_and_modify(),
-        flat_hash_map_test_entry_and_modify_context(),
+        flat_hash_map_test_entry_and_context_modify(),
         flat_hash_map_test_entry_and_modify_with(),
         flat_hash_map_test_or_insert(), flat_hash_map_test_or_insert_with(),
         flat_hash_map_test_insert_entry(),

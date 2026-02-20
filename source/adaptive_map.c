@@ -174,7 +174,7 @@ CCC_adaptive_map_and_modify(CCC_Adaptive_map_entry *const entry,
 }
 
 CCC_Adaptive_map_entry *
-CCC_adaptive_map_and_modify_context(CCC_Adaptive_map_entry *const entry,
+CCC_adaptive_map_and_context_modify(CCC_Adaptive_map_entry *const entry,
                                     CCC_Type_modifier *const modify,
                                     void *const context) {
     if (entry && modify && entry->private.entry.status & CCC_ENTRY_OCCUPIED

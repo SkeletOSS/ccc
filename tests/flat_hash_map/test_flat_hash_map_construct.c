@@ -58,7 +58,7 @@ check_static_begin(flat_hash_map_test_static_initialize) {
     /* Modifying an existing value that requires external input is also
        possible with slightly different signature. */
     struct Val *v3 = or_insert(
-        and_modify_context(entry_wrap(&static_fh, &def.key), modw, &def.key),
+        and_context_modify(entry_wrap(&static_fh, &def.key), modw, &def.key),
         &def);
     check((v3 != NULL), true);
     check(inserted->key, 137);
@@ -101,7 +101,7 @@ check_static_begin(flat_hash_map_test_with_literal) {
     /* Modifying an existing value that requires external input is also
        possible with slightly different signature. */
     struct Val *v3 = or_insert(
-        and_modify_context(entry_wrap(&fh, &def.key), modw, &def.key), &def);
+        and_context_modify(entry_wrap(&fh, &def.key), modw, &def.key), &def);
     check((v3 != NULL), true);
     check(inserted->key, 137);
     check(v3->val, 137);

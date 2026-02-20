@@ -290,22 +290,22 @@ limitations under the License.
         CCC_Tree_map_entry const *: CCC_tree_map_and_modify)(                  \
         (container_entry_pointer), (mod_fn))
 
-#define CCC_private_and_modify_context(container_entry_pointer, mod_fn,        \
+#define CCC_private_and_context_modify(container_entry_pointer, mod_fn,        \
                                        context_data_pointer...)                \
     _Generic((container_entry_pointer),                                        \
-        CCC_Flat_hash_map_entry *: CCC_flat_hash_map_and_modify_context,       \
-        CCC_Adaptive_map_entry *: CCC_adaptive_map_and_modify_context,         \
+        CCC_Flat_hash_map_entry *: CCC_flat_hash_map_and_context_modify,       \
+        CCC_Adaptive_map_entry *: CCC_adaptive_map_and_context_modify,         \
         CCC_Array_adaptive_map_handle                                          \
-            *: CCC_array_adaptive_map_and_modify_context,                      \
-        CCC_Array_tree_map_handle *: CCC_array_tree_map_and_modify_context,    \
-        CCC_Tree_map_entry *: CCC_tree_map_and_modify_context,                 \
-        CCC_Flat_hash_map_entry const *: CCC_flat_hash_map_and_modify_context, \
-        CCC_Adaptive_map_entry const *: CCC_adaptive_map_and_modify_context,   \
+            *: CCC_array_adaptive_map_and_context_modify,                      \
+        CCC_Array_tree_map_handle *: CCC_array_tree_map_and_context_modify,    \
+        CCC_Tree_map_entry *: CCC_tree_map_and_context_modify,                 \
+        CCC_Flat_hash_map_entry const *: CCC_flat_hash_map_and_context_modify, \
+        CCC_Adaptive_map_entry const *: CCC_adaptive_map_and_context_modify,   \
         CCC_Array_tree_map_handle const                                        \
-            *: CCC_array_tree_map_and_modify_context,                          \
+            *: CCC_array_tree_map_and_context_modify,                          \
         CCC_Array_adaptive_map_handle const                                    \
-            *: CCC_array_adaptive_map_and_modify_context,                      \
-        CCC_Tree_map_entry const *: CCC_tree_map_and_modify_context)(          \
+            *: CCC_array_adaptive_map_and_context_modify,                      \
+        CCC_Tree_map_entry const *: CCC_tree_map_and_context_modify)(          \
         (container_entry_pointer), (mod_fn), context_data_pointer)
 
 #define CCC_private_insert_entry(container_entry_pointer,                      \

@@ -462,7 +462,7 @@ CCC_flat_hash_map_and_modify(CCC_Flat_hash_map_entry *const entry,
 }
 
 CCC_Flat_hash_map_entry *
-CCC_flat_hash_map_and_modify_context(CCC_Flat_hash_map_entry *const entry,
+CCC_flat_hash_map_and_context_modify(CCC_Flat_hash_map_entry *const entry,
                                      CCC_Type_modifier *const modify,
                                      void *const context) {
     if (entry && modify

@@ -880,7 +880,7 @@ CCC_flat_hash_map_and_modify(CCC_Flat_hash_map_entry *entry,
 This function makes full use of a CCC_Type_modifier capability, meaning a
 complete CCC_update object will be passed to the update function callback. */
 [[nodiscard]] CCC_Flat_hash_map_entry *
-CCC_flat_hash_map_and_modify_context(CCC_Flat_hash_map_entry *entry,
+CCC_flat_hash_map_and_context_modify(CCC_Flat_hash_map_entry *entry,
                                      CCC_Type_modifier *modify, void *context);
 
 /** @brief Modify an Occupied entry with a closure over user type T.
@@ -1392,8 +1392,8 @@ typedef CCC_Flat_hash_map_entry Flat_hash_map_entry;
 #    define flat_hash_map_entry(arguments...) CCC_flat_hash_map_entry(arguments)
 #    define flat_hash_map_and_modify(arguments...)                             \
         CCC_flat_hash_map_and_modify(arguments)
-#    define flat_hash_map_and_modify_context(arguments...)                     \
-        CCC_flat_hash_map_and_modify_context(arguments)
+#    define flat_hash_map_and_context_modify(arguments...)                     \
+        CCC_flat_hash_map_and_context_modify(arguments)
 #    define flat_hash_map_or_insert(arguments...)                              \
         CCC_flat_hash_map_or_insert(arguments)
 #    define flat_hash_map_insert_entry(arguments...)                           \

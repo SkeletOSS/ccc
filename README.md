@@ -980,7 +980,7 @@ Rust has solid interfaces for associative containers, largely due to the Entry I
 
 - `CCC_Entry(container_pointer, key_pointer...)` - Obtains an entry, a view into an Occupied or Vacant user type stored in the container.
 - `CCC_and_modify(entry_pointer, mod_fn)` - Modify an occupied entry with a callback.
-- `CCC_and_modify_context(entry_pointer, mod_fn, context_arguments)` - Modify an Occupied entry with a callback that requires context data.
+- `CCC_and_context_modify(entry_pointer, mod_fn, context_arguments)` - Modify an Occupied entry with a callback that requires context data.
 - `CCC_or_insert(entry_pointer, or_insert_arguments)` - Insert a default key value if Vacant or return the Occupied entry.
 - `CCC_insert_entry(entry_pointer, insert_entry_arguments)` - Invariantly insert a new key value, overwriting an Occupied entry if needed.
 - `CCC_remove_entry(entry_pointer)` - Remove an Occupied entry from the container or do nothing.

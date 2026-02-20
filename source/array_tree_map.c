@@ -408,7 +408,7 @@ CCC_array_tree_map_and_modify(CCC_Array_tree_map_handle *const handle,
 }
 
 CCC_Array_tree_map_handle *
-CCC_array_tree_map_and_modify_context(CCC_Array_tree_map_handle *const handle,
+CCC_array_tree_map_and_context_modify(CCC_Array_tree_map_handle *const handle,
                                       CCC_Type_modifier *const modify,
                                       void *const context) {
     if (handle && modify && handle->private.status & CCC_ENTRY_OCCUPIED

@@ -485,7 +485,7 @@ CCC_tree_map_and_modify(CCC_Tree_map_entry *entry, CCC_Type_modifier *modify);
 This function makes full use of a CCC_Type_modifier capability, meaning a
 complete CCC_update object will be passed to the update function callback. */
 [[nodiscard]] CCC_Tree_map_entry *
-CCC_tree_map_and_modify_context(CCC_Tree_map_entry *entry,
+CCC_tree_map_and_context_modify(CCC_Tree_map_entry *entry,
                                 CCC_Type_modifier *modify, void *context);
 
 /** @brief Modify an Occupied entry with a closure over user type T.
@@ -848,8 +848,8 @@ typedef CCC_Tree_map_entry Tree_map_entry;
 #    define tree_map_entry_wrap(arguments...) CCC_tree_map_entry_wrap(arguments)
 #    define tree_map_and_modify_wrap(arguments...)                             \
         CCC_tree_map_and_modify_wrap(arguments)
-#    define tree_map_and_modify_context_wrap(arguments...)                     \
-        CCC_tree_map_and_modify_context_wrap(arguments)
+#    define tree_map_and_context_modify_wrap(arguments...)                     \
+        CCC_tree_map_and_context_modify_wrap(arguments)
 #    define tree_map_contains(arguments...) CCC_tree_map_contains(arguments)
 #    define tree_map_get_key_value(arguments...)                               \
         CCC_tree_map_get_key_value(arguments)

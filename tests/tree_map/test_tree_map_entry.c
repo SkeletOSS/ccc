@@ -520,7 +520,7 @@ check_static_begin(romap_test_entry_and_modify) {
     check_end();
 }
 
-check_static_begin(romap_test_entry_and_modify_context) {
+check_static_begin(romap_test_entry_and_context_modify) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 35);
     CCC_Tree_map rom = tree_map_initialize(
@@ -528,7 +528,7 @@ check_static_begin(romap_test_entry_and_modify_context) {
     int size = 30;
     int context = 1;
     CCC_Tree_map_entry *ent = entry_wrap(&rom, &(int){-1});
-    ent = and_modify_context(ent, pluscontext, &context);
+    ent = and_context_modify(ent, pluscontext, &context);
     check(occupied(ent), false);
     check(unwrap(ent) == NULL, true);
     check(count(&rom).count, 0);
@@ -541,7 +541,7 @@ check_static_begin(romap_test_entry_and_modify_context) {
     check(v != NULL, true);
     check(v->val, -1);
     check(v->key, -1);
-    ent = and_modify_context(ent, pluscontext, &context);
+    ent = and_context_modify(ent, pluscontext, &context);
     v = unwrap(ent);
     check(v != NULL, true);
     check(v->key, -1);
@@ -552,14 +552,14 @@ check_static_begin(romap_test_entry_and_modify_context) {
 
     i += (size / 2);
     ent = entry_wrap(&rom, &i);
-    ent = and_modify_context(ent, pluscontext, &context);
+    ent = and_context_modify(ent, pluscontext, &context);
     check(occupied(ent), false);
     check(unwrap(ent) == NULL, true);
     check(count(&rom).count, i + 1);
     (void)tree_map_insert_or_assign_with(&rom, i, val(i));
     check(validate(&rom), true);
     ent = entry_wrap(&rom, &i);
-    ent = and_modify_context(ent, pluscontext, &context);
+    ent = and_context_modify(ent, pluscontext, &context);
     v = unwrap(ent);
     check(v != NULL, true);
     check(v->val, i + 1);
@@ -571,14 +571,14 @@ check_static_begin(romap_test_entry_and_modify_context) {
 
     i = size;
     ent = entry_wrap(&rom, &i);
-    ent = and_modify_context(ent, pluscontext, &context);
+    ent = and_context_modify(ent, pluscontext, &context);
     check(occupied(ent), false);
     check(unwrap(ent) == NULL, true);
     check(count(&rom).count, i + 1);
     (void)tree_map_insert_or_assign_with(&rom, i, val(i));
     check(validate(&rom), true);
     ent = entry_wrap(&rom, &i);
-    ent = and_modify_context(ent, pluscontext, &context);
+    ent = and_context_modify(ent, pluscontext, &context);
     v = unwrap(ent);
     check(v != NULL, true);
     check(v->val, i + 1);
@@ -929,7 +929,7 @@ main(void) {
         romap_test_validate(), romap_test_try_insert(),
         romap_test_try_insert_with(), romap_test_insert_or_assign(),
         romap_test_insert_or_assign_with(), romap_test_entry_and_modify(),
-        romap_test_entry_and_modify_context(),
+        romap_test_entry_and_context_modify(),
         romap_test_entry_and_modify_with(), romap_test_or_insert(),
         romap_test_or_insert_with(), romap_test_insert_entry(),
         romap_test_insert_entry_with(), romap_test_remove_entry());

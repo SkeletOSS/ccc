@@ -480,14 +480,14 @@ check_static_begin(array_tree_map_test_array_and_modify) {
     check_end();
 }
 
-check_static_begin(array_tree_map_test_array_and_modify_context) {
+check_static_begin(array_tree_map_test_array_and_context_modify) {
     CCC_Array_tree_map array_tree_map
         = array_tree_map_initialize(struct Val, id, id_order, NULL, NULL,
                                     SMALL_FIXED_CAP, &(Small_fixed_map){});
     int size = 30;
     int context = 1;
     CCC_Array_tree_map_handle *hndl = handle_wrap(&array_tree_map, &(int){-1});
-    hndl = and_modify_context(hndl, pluscontext, &context);
+    hndl = and_context_modify(hndl, pluscontext, &context);
     check(occupied(hndl), false);
     check(count(&array_tree_map).count, 0);
     (void)array_tree_map_insert_or_assign_with(&array_tree_map, -1, val(-1));
@@ -499,7 +499,7 @@ check_static_begin(array_tree_map_test_array_and_modify_context) {
     check(v != NULL, true);
     check(v->val, -1);
     check(v->id, -1);
-    hndl = and_modify_context(hndl, pluscontext, &context);
+    hndl = and_context_modify(hndl, pluscontext, &context);
     v = array_tree_map_at(&array_tree_map, unwrap(hndl));
     check(v != NULL, true);
     check(v->id, -1);
@@ -510,13 +510,13 @@ check_static_begin(array_tree_map_test_array_and_modify_context) {
 
     i += (size / 2);
     hndl = handle_wrap(&array_tree_map, &i);
-    hndl = and_modify_context(hndl, pluscontext, &context);
+    hndl = and_context_modify(hndl, pluscontext, &context);
     check(occupied(hndl), false);
     check(count(&array_tree_map).count, i + 1);
     (void)array_tree_map_insert_or_assign_with(&array_tree_map, i, val(i));
     check(validate(&array_tree_map), true);
     hndl = handle_wrap(&array_tree_map, &i);
-    hndl = and_modify_context(hndl, pluscontext, &context);
+    hndl = and_context_modify(hndl, pluscontext, &context);
     v = array_tree_map_at(&array_tree_map, unwrap(hndl));
     check(v != NULL, true);
     check(v->val, i + 1);
@@ -528,13 +528,13 @@ check_static_begin(array_tree_map_test_array_and_modify_context) {
 
     i = size;
     hndl = handle_wrap(&array_tree_map, &i);
-    hndl = and_modify_context(hndl, pluscontext, &context);
+    hndl = and_context_modify(hndl, pluscontext, &context);
     check(occupied(hndl), false);
     check(count(&array_tree_map).count, i + 1);
     (void)array_tree_map_insert_or_assign_with(&array_tree_map, i, val(i));
     check(validate(&array_tree_map), true);
     hndl = handle_wrap(&array_tree_map, &i);
-    hndl = and_modify_context(hndl, pluscontext, &context);
+    hndl = and_context_modify(hndl, pluscontext, &context);
     v = array_tree_map_at(&array_tree_map, unwrap(hndl));
     check(v != NULL, true);
     check(v->val, i + 1);
@@ -936,7 +936,7 @@ main(void) {
         array_tree_map_test_insert_or_assign(),
         array_tree_map_test_insert_or_assign_with(),
         array_tree_map_test_array_and_modify(),
-        array_tree_map_test_array_and_modify_context(),
+        array_tree_map_test_array_and_context_modify(),
         array_tree_map_test_array_and_modify_with(),
         array_tree_map_test_or_insert(), array_tree_map_test_or_insert_with(),
         array_tree_map_test_insert_handle(),

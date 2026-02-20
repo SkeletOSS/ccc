@@ -382,7 +382,7 @@ CCC_tree_map_and_modify(CCC_Tree_map_entry *e, CCC_Type_modifier *modify) {
 }
 
 CCC_Tree_map_entry *
-CCC_tree_map_and_modify_context(CCC_Tree_map_entry *e,
+CCC_tree_map_and_context_modify(CCC_Tree_map_entry *e,
                                 CCC_Type_modifier *modify, void *context) {
     if (!e) {
         return NULL;

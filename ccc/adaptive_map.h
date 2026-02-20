@@ -473,7 +473,7 @@ CCC_adaptive_map_and_modify(CCC_Adaptive_map_entry *entry,
 This function makes full use of a CCC_Type_modifier capability, meaning a
 complete CCC_update object will be passed to the update function callback. */
 [[nodiscard]] CCC_Adaptive_map_entry *
-CCC_adaptive_map_and_modify_context(CCC_Adaptive_map_entry *entry,
+CCC_adaptive_map_and_context_modify(CCC_Adaptive_map_entry *entry,
                                     CCC_Type_modifier *modify, void *context);
 
 /** @brief Modify an Occupied entry with a closure over user type T.
@@ -849,8 +849,8 @@ typedef CCC_Adaptive_map_entry Adaptive_map_entry;
         CCC_adaptive_map_entry_wrap(arguments)
 #    define adaptive_map_and_modify_wrap(arguments...)                         \
         CCC_adaptive_map_and_modify_wrap(arguments)
-#    define adaptive_map_and_modify_context_wrap(arguments...)                 \
-        CCC_adaptive_map_and_modify_context_wrap(arguments)
+#    define adaptive_map_and_context_modify_wrap(arguments...)                 \
+        CCC_adaptive_map_and_context_modify_wrap(arguments)
 #    define adaptive_map_contains(arguments...)                                \
         CCC_adaptive_map_contains(arguments)
 #    define adaptive_map_get_key_value(arguments...)                           \

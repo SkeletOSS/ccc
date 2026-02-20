@@ -520,7 +520,7 @@ check_static_begin(adaptive_map_test_entry_and_modify) {
     check_end();
 }
 
-check_static_begin(adaptive_map_test_entry_and_modify_context) {
+check_static_begin(adaptive_map_test_entry_and_context_modify) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 35);
     Adaptive_map om = adaptive_map_initialize(
@@ -528,7 +528,7 @@ check_static_begin(adaptive_map_test_entry_and_modify_context) {
     int size = 30;
     int context = 1;
     CCC_Adaptive_map_entry *ent = entry_wrap(&om, &(int){-1});
-    ent = and_modify_context(ent, pluscontext, &context);
+    ent = and_context_modify(ent, pluscontext, &context);
     check(occupied(ent), false);
     check(unwrap(ent) == NULL, true);
     check(count(&om).count, 0);
@@ -541,7 +541,7 @@ check_static_begin(adaptive_map_test_entry_and_modify_context) {
     check(v != NULL, true);
     check(v->val, -1);
     check(v->key, -1);
-    ent = and_modify_context(ent, pluscontext, &context);
+    ent = and_context_modify(ent, pluscontext, &context);
     v = unwrap(ent);
     check(v != NULL, true);
     check(v->key, -1);
@@ -552,14 +552,14 @@ check_static_begin(adaptive_map_test_entry_and_modify_context) {
 
     i += (size / 2);
     ent = entry_wrap(&om, &i);
-    ent = and_modify_context(ent, pluscontext, &context);
+    ent = and_context_modify(ent, pluscontext, &context);
     check(occupied(ent), false);
     check(unwrap(ent) == NULL, true);
     check(count(&om).count, i + 1);
     (void)adaptive_map_insert_or_assign_with(&om, i, val(i));
     check(validate(&om), true);
     ent = entry_wrap(&om, &i);
-    ent = and_modify_context(ent, pluscontext, &context);
+    ent = and_context_modify(ent, pluscontext, &context);
     v = unwrap(ent);
     check(v != NULL, true);
     check(v->val, i + 1);
@@ -571,14 +571,14 @@ check_static_begin(adaptive_map_test_entry_and_modify_context) {
 
     i = size;
     ent = entry_wrap(&om, &i);
-    ent = and_modify_context(ent, pluscontext, &context);
+    ent = and_context_modify(ent, pluscontext, &context);
     check(occupied(ent), false);
     check(unwrap(ent) == NULL, true);
     check(count(&om).count, i + 1);
     (void)adaptive_map_insert_or_assign_with(&om, i, val(i));
     check(validate(&om), true);
     ent = entry_wrap(&om, &i);
-    ent = and_modify_context(ent, pluscontext, &context);
+    ent = and_context_modify(ent, pluscontext, &context);
     v = unwrap(ent);
     check(v != NULL, true);
     check(v->val, i + 1);
@@ -932,7 +932,7 @@ main(void) {
         adaptive_map_test_insert_or_assign(),
         adaptive_map_test_insert_or_assign_with(),
         adaptive_map_test_entry_and_modify(),
-        adaptive_map_test_entry_and_modify_context(),
+        adaptive_map_test_entry_and_context_modify(),
         adaptive_map_test_entry_and_modify_with(),
         adaptive_map_test_or_insert(), adaptive_map_test_or_insert_with(),
         adaptive_map_test_insert_entry(), adaptive_map_test_insert_entry_with(),
