@@ -84,16 +84,16 @@ element.
 @param[in] type_intruder_field name of the Doubly_linked_list element in the
 containing type.
 @param[in] compare the CCC_Type_comparator used to compare list elements.
-@param[in] context_data any context data that will be needed for comparison,
+@param[in] context any context data that will be needed for comparison,
 printing, or destruction of elements.
 @param[in] allocate the optional allocation function or NULL.
 @return the initialized list. Assign to the list directly on the right hand
 side of an equality operator. Initialization can occur at runtime or compile
 time (e.g. CCC_doubly_linked list = CCC_doubly_linked_list_initialize(...);). */
 #define CCC_doubly_linked_list_initialize(type_name, type_intruder_field,      \
-                                          compare, allocate, context_data)     \
+                                          compare, allocate, context)          \
     CCC_private_doubly_linked_list_initialize(type_name, type_intruder_field,  \
-                                              compare, allocate, context_data)
+                                              compare, allocate, context)
 
 /** @brief Initialize a doubly linked list at runtime from a compound literal
 array.
@@ -120,7 +120,7 @@ array.
 @param[in] compare the comparison function for the user type.
 @param[in] allocate the allocation function required for construction.
 @param[in] destroy the optional destructor to run if insertion fails.
-@param[in] context_data context data needed for comparison or destruction.
+@param[in] context context data needed for comparison or destruction.
 @param[in] compound_literal_array the array of user types to insert into the
 map (e.g. (struct My_type[]){ {.val = 1}, {.val = 2}}).
 @return the initialized doubly linked list on the right side of an equality
@@ -130,11 +130,11 @@ operator (e.g. CCC_Doubly_linked_list list
 The list will be constructed with the element at index 0 of the array as the
 front of the list and the final index element at the back of the list. */
 #define CCC_doubly_linked_list_context_from(type_intruder_field, compare,      \
-                                            allocate, destroy, context_data,   \
+                                            allocate, destroy, context,        \
                                             compound_literal_array...)         \
-    CCC_private_doubly_linked_list_context_from(                               \
-        type_intruder_field, compare, allocate, destroy, context_data,         \
-        compound_literal_array)
+    CCC_private_doubly_linked_list_context_from(type_intruder_field, compare,  \
+                                                allocate, destroy, context,    \
+                                                compound_literal_array)
 
 /** @brief Initialize an empty list at compile or runtime with an allocator.
 @param[in] type_name the user defined type stored in the list.

@@ -81,16 +81,16 @@ Initialize the container with memory, callbacks, and permissions. */
 as key.
 @param[in] compare the key comparison function (see types.h).
 @param[in] allocate the allocation function or NULL if allocation is banned.
-@param[in] context_data a pointer to any context data for comparison or
+@param[in] context a pointer to any context data for comparison or
 destruction.
 @return the struct initialized tree map for direct assignment
 (i.e. CCC_Tree_map m = CCC_tree_map_initialize(...);). */
 #define CCC_tree_map_initialize(type_name, type_intruder_field_name,           \
                                 type_key_field_name, compare, allocate,        \
-                                context_data)                                  \
+                                context)                                       \
     CCC_private_tree_map_initialize(type_name, type_intruder_field_name,       \
                                     type_key_field_name, compare, allocate,    \
-                                    context_data)
+                                    context)
 
 /** @brief Initialize an empty dynamic map at compile or runtime with an
 allocator.
@@ -201,7 +201,7 @@ as key.
 @param[in] allocate the allocation function or NULL if allocation is banned.
 @param[in] destroy the destructor function used to act on every node in case
 initialization of new nodes fails and map is emptied in a failure state.
-@param[in] context_data a pointer to any context data for comparison or
+@param[in] context a pointer to any context data for comparison or
 destruction.
 @param[in] compound_literal_array the array of user types to insert into the
 map (e.g. (struct My_type[]){ {.key = 1, .val = 1}, {.key = 2, .val = 2}}).
@@ -213,12 +213,12 @@ allocation fails.
 compound literal array of user types, the map is cleared; if a destructor is
 provided, it is called on each node and they are freed using the provided
 allocate function. */
-#define CCC_tree_map_context_from(                                             \
-    type_intruder_field_name, type_key_field_name, compare, allocate, destroy, \
-    context_data, compound_literal_array...)                                   \
+#define CCC_tree_map_context_from(type_intruder_field_name,                    \
+                                  type_key_field_name, compare, allocate,      \
+                                  destroy, context, compound_literal_array...) \
     CCC_private_tree_map_context_from(                                         \
         type_intruder_field_name, type_key_field_name, compare, allocate,      \
-        destroy, context_data, compound_literal_array)
+        destroy, context, compound_literal_array)
 
 /**@}*/
 

@@ -124,12 +124,12 @@ void *CCC_private_adaptive_map_insert(struct CCC_Adaptive_map *,
 /** @internal */
 #define CCC_private_adaptive_map_initialize(                                   \
     private_struct_name, private_node_node_field, private_key_node_field,      \
-    private_key_comparator, private_allocate, private_context_data)            \
+    private_key_comparator, private_allocate, private_context)                 \
     {                                                                          \
         .root = NULL,                                                          \
         .compare = (private_key_comparator),                                   \
         .allocate = (private_allocate),                                        \
-        .context = (private_context_data),                                     \
+        .context = (private_context),                                          \
         .size = 0,                                                             \
         .sizeof_type = sizeof(private_struct_name),                            \
         .type_intruder_offset                                                  \
@@ -140,7 +140,7 @@ void *CCC_private_adaptive_map_insert(struct CCC_Adaptive_map *,
 /** @internal */
 #define CCC_private_adaptive_map_context_from(                                 \
     private_type_intruder_field_name, private_key_field_name, private_compare, \
-    private_allocate, private_destroy, private_context_data,                   \
+    private_allocate, private_destroy, private_context,                        \
     private_compound_literal_array...)                                         \
     (__extension__({                                                           \
         typeof(*private_compound_literal_array)                                \
@@ -150,7 +150,7 @@ void *CCC_private_adaptive_map_insert(struct CCC_Adaptive_map *,
             = CCC_private_adaptive_map_initialize(                             \
                 typeof(*private_adaptive_map_type_array),                      \
                 private_type_intruder_field_name, private_key_field_name,      \
-                private_compare, private_allocate, private_context_data);      \
+                private_compare, private_allocate, private_context);           \
         if (private_map.allocate) {                                            \
             size_t const private_count                                         \
                 = sizeof(private_compound_literal_array)                       \
@@ -210,10 +210,10 @@ void *CCC_private_adaptive_map_insert(struct CCC_Adaptive_map *,
 /** @internal */
 #define CCC_private_adaptive_map_with_context_allocator(                       \
     private_struct_name, private_node_node_field, private_key_node_field,      \
-    private_key_comparator, private_allocate, private_context_data)            \
+    private_key_comparator, private_allocate, private_context)                 \
     CCC_private_adaptive_map_initialize(                                       \
         private_struct_name, private_node_node_field, private_key_node_field,  \
-        private_key_comparator, private_allocate, private_context_data)
+        private_key_comparator, private_allocate, private_context)
 
 /** @internal */
 #define CCC_private_adaptive_map_with_allocator(                               \

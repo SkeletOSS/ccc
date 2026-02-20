@@ -157,17 +157,17 @@ desired allocation function. */
 @param[in] type_key_field the name of the field in user type used as key.
 @param[in] compare the key comparison function (see types.h).
 @param[in] allocate the allocation function or NULL if allocation is banned.
-@param[in] context_data a pointer to any context data for comparison or
+@param[in] context a pointer to any context data for comparison or
 destruction.
 @param[in] capacity the capacity at data_pointer or 0.
 @param[in] memory_pointer a pointer to the contiguous user types or NULL.
 @return the struct initialized adaptive map for direct assignment
 (i.e. CCC_Array_adaptive_map m = CCC_array_adaptive_map_initialize(...);). */
 #define CCC_array_adaptive_map_initialize(type_name, type_key_field, compare,  \
-                                          allocate, context_data, capacity,    \
+                                          allocate, context, capacity,         \
                                           memory_pointer)                      \
     CCC_private_array_adaptive_map_initialize(type_name, type_key_field,       \
-                                              compare, allocate, context_data, \
+                                              compare, allocate, context,      \
                                               capacity, memory_pointer)
 
 /** @brief Initialize a dynamic map at runtime from an initializer list.
@@ -235,7 +235,7 @@ map to protect its invariants from user error at compile time. */
 @param[in] type_key_field the field of the struct used for key storage.
 @param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] allocate the required allocation function.
-@param[in] context_data context data that is needed for hashing or comparison.
+@param[in] context context data that is needed for hashing or comparison.
 @param[in] optional_capacity optionally specify the capacity of the map if
 different from the size of the compound literal array initializer. If the
 capacity is greater than the size of the compound literal array initializer, it
@@ -288,10 +288,10 @@ main(void)
 Only dynamic maps may be initialized this way due the inability of the map
 map to protect its invariants from user error at compile time. */
 #define CCC_array_adaptive_map_context_from(type_key_field, compare, allocate, \
-                                            context_data, optional_capacity,   \
+                                            context, optional_capacity,        \
                                             type_compound_literal_array...)    \
     CCC_private_array_adaptive_map_context_from(                               \
-        type_key_field, compare, allocate, context_data, optional_capacity,    \
+        type_key_field, compare, allocate, context, optional_capacity,         \
         type_compound_literal_array)
 
 /** @brief Initialize a dynamic map at runtime with at least the specified
@@ -348,7 +348,7 @@ capacity.
 @param[in] type_key_field the field of the struct used for key storage.
 @param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] allocate the required allocation function.
-@param[in] context_data context data that is needed for comparison.
+@param[in] context context data that is needed for comparison.
 @param[in] capacity the desired capacity for the map. A capacity of 0 results
 in an argument error and is a no-op after the map is initialized empty.
 @return the map directly initialized on the right hand side of the equality
@@ -388,9 +388,9 @@ main(void)
 Only dynamic maps may be initialized this way as it simply combines the steps
 of initialization and reservation. */
 #define CCC_array_adaptive_map_with_context_capacity(                          \
-    type_name, type_key_field, compare, allocate, context_data, capacity)      \
+    type_name, type_key_field, compare, allocate, context, capacity)           \
     CCC_private_array_adaptive_map_with_context_capacity(                      \
-        type_name, type_key_field, compare, allocate, context_data, capacity)
+        type_name, type_key_field, compare, allocate, context, capacity)
 
 /** @brief Initialize a fixed map at compile or runtime from a previously
 declared fixed map type with no allocation permission or context.

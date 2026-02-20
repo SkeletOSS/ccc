@@ -140,7 +140,7 @@ CCC_private_priority_queue_struct_base(struct CCC_Priority_queue const *,
 #define CCC_private_priority_queue_initialize(                                 \
     private_struct_name, private_type_intruder_field,                          \
     private_priority_queue_order, private_compare, private_allocate,           \
-    private_context_data)                                                      \
+    private_context)                                                           \
     {                                                                          \
         .root = NULL,                                                          \
         .count = 0,                                                            \
@@ -150,7 +150,7 @@ CCC_private_priority_queue_struct_base(struct CCC_Priority_queue const *,
         .order = (private_priority_queue_order),                               \
         .compare = (private_compare),                                          \
         .allocate = (private_allocate),                                        \
-        .context = (private_context_data),                                     \
+        .context = (private_context),                                          \
     }
 
 /** @internal */
@@ -174,7 +174,7 @@ CCC_private_priority_queue_struct_base(struct CCC_Priority_queue const *,
 /** @internal */
 #define CCC_private_priority_queue_context_from(                               \
     private_type_intruder_field, private_priority_queue_order,                 \
-    private_compare, private_allocate, private_destroy, private_context_data,  \
+    private_compare, private_allocate, private_destroy, private_context,       \
     private_compound_literal_array...)                                         \
     (__extension__({                                                           \
         typeof(*private_compound_literal_array)                                \
@@ -184,7 +184,7 @@ CCC_private_priority_queue_struct_base(struct CCC_Priority_queue const *,
             = CCC_private_priority_queue_initialize(                           \
                 typeof(*private_priority_queue_type_array),                    \
                 private_type_intruder_field, private_priority_queue_order,     \
-                private_compare, private_allocate, private_context_data);      \
+                private_compare, private_allocate, private_context);           \
         if (private_priority_queue.allocate) {                                 \
             size_t const private_count                                         \
                 = sizeof(private_compound_literal_array)                       \

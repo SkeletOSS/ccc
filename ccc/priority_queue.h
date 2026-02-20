@@ -78,15 +78,14 @@ priority_queue elem.
 CCC_ORDER_GREATER for a max priority_queue.
 @param[in] compare the function used to compare two user types.
 @param[in] allocate the allocation function or NULL if allocation is banned.
-@param[in] context_data context data needed for comparison or destruction.
+@param[in] context context data needed for comparison or destruction.
 @return the initialized priority_queue on the right side of an equality operator
 (e.g. CCC_Priority_queue priority_queue = CCC_priority_queue_initialize(...);)
 */
 #define CCC_priority_queue_initialize(type_name, type_intruder_field, order,   \
-                                      compare, allocate, context_data)         \
+                                      compare, allocate, context)              \
     CCC_private_priority_queue_initialize(type_name, type_intruder_field,      \
-                                          order, compare, allocate,            \
-                                          context_data)
+                                          order, compare, allocate, context)
 
 /** @brief Initialize a priority queue at runtime or compile time with an
 allocator.
@@ -112,13 +111,12 @@ priority_queue elem.
 CCC_ORDER_GREATER for a max priority_queue.
 @param[in] compare the function used to compare two user types.
 @param[in] allocate the allocation function or NULL if allocation is banned.
-@param[in] context_data context data needed for comparison or destruction.
+@param[in] context context data needed for comparison or destruction.
 @return the initialized queue on the right side of an equality operator. */
 #define CCC_priority_queue_with_context_allocator(                             \
-    type_name, type_intruder_field, order, compare, allocate, context_data)    \
+    type_name, type_intruder_field, order, compare, allocate, context)         \
     CCC_private_priority_queue_with_context_allocator(                         \
-        type_name, type_intruder_field, order, compare, allocate,              \
-        context_data)
+        type_name, type_intruder_field, order, compare, allocate, context)
 
 /** @brief Initialize a priority queue at runtime or compile time with an
 allocator.
@@ -158,18 +156,18 @@ for a max priority queue.
 @param[in] compare the function used to compare two user types.
 @param[in] allocate the allocation function required for construction.
 @param[in] destroy the optional destructor to run if insertion fails.
-@param[in] context_data context data needed for comparison or destruction.
+@param[in] context context data needed for comparison or destruction.
 @param[in] compound_literal_array the array of user types to insert into the
 map (e.g. (struct My_type[]){ {.key = 1, .val = 1}, {.key = 2, .val = 2}}).
 @return the initialized priority_queue on the right side of an equality operator
 (e.g. CCC_Priority_queue priority_queue = CCC_priority_queue_context_from(...);)
 */
 #define CCC_priority_queue_context_from(type_intruder_field, order, compare,   \
-                                        allocate, destroy, context_data,       \
+                                        allocate, destroy, context,            \
                                         compound_literal_array...)             \
-    CCC_private_priority_queue_context_from(                                   \
-        type_intruder_field, order, compare, allocate, destroy, context_data,  \
-        compound_literal_array)
+    CCC_private_priority_queue_context_from(type_intruder_field, order,        \
+                                            compare, allocate, destroy,        \
+                                            context, compound_literal_array)
 
 /**@}*/
 

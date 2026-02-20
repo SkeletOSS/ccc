@@ -156,7 +156,7 @@ is of a known fixed size defined at compile time, not just a pointer. */
 /** @internal */
 #define CCC_private_array_adaptive_map_initialize(                             \
     private_type_name, private_key_node_field, private_key_order_fn,           \
-    private_allocate, private_context_data, private_capacity,                  \
+    private_allocate, private_context, private_capacity,                       \
     private_memory_pointer)                                                    \
     {                                                                          \
         .data = (private_memory_pointer),                                      \
@@ -169,14 +169,13 @@ is of a known fixed size defined at compile time, not just a pointer. */
         .key_offset = offsetof(private_type_name, private_key_node_field),     \
         .compare = (private_key_order_fn),                                     \
         .allocate = (private_allocate),                                        \
-        .context = (private_context_data),                                     \
+        .context = (private_context),                                          \
     }
 
 /** @internal Initialize an array adaptive map from user input list. */
 #define CCC_private_array_adaptive_map_context_from(                           \
-    private_key_field, private_key_compare, private_allocate,                  \
-    private_context_data, private_optional_cap,                                \
-    private_array_compound_literal...)                                         \
+    private_key_field, private_key_compare, private_allocate, private_context, \
+    private_optional_cap, private_array_compound_literal...)                   \
     (__extension__({                                                           \
         typeof(*private_array_compound_literal)                                \
             *private_array_adaptive_map_initializer_list                       \
@@ -185,7 +184,7 @@ is of a known fixed size defined at compile time, not just a pointer. */
             = CCC_private_array_adaptive_map_initialize(                       \
                 typeof(*private_array_adaptive_map_initializer_list),          \
                 private_key_field, private_key_compare, private_allocate,      \
-                private_context_data, 0, NULL);                                \
+                private_context, 0, NULL);                                     \
         size_t const private_array_adaptive_n                                  \
             = sizeof(private_array_compound_literal)                           \
             / sizeof(*private_array_adaptive_map_initializer_list);            \
@@ -238,12 +237,12 @@ is of a known fixed size defined at compile time, not just a pointer. */
 /** @internal */
 #define CCC_private_array_adaptive_map_with_context_capacity(                  \
     private_type_name, private_key_field, private_key_compare,                 \
-    private_allocate, private_context_data, private_cap)                       \
+    private_allocate, private_context, private_cap)                            \
     (__extension__({                                                           \
         struct CCC_Array_adaptive_map private_array_adaptive_map               \
             = CCC_private_array_adaptive_map_initialize(                       \
                 private_type_name, private_key_field, private_key_compare,     \
-                private_allocate, private_context_data, 0, NULL);              \
+                private_allocate, private_context, 0, NULL);                   \
         (void)CCC_array_adaptive_map_reserve(&private_array_adaptive_map,      \
                                              private_cap, private_allocate);   \
         private_array_adaptive_map;                                            \

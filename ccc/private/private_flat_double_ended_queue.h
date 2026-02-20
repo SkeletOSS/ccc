@@ -53,12 +53,12 @@ void *CCC_private_flat_double_ended_queue_allocate_back(
 
 /** @internal */
 #define CCC_private_flat_double_ended_queue_initialize(                        \
-    private_type_name, private_allocate, private_context_data,                 \
-    private_capacity, private_count, private_data_pointer...)                  \
+    private_type_name, private_allocate, private_context, private_capacity,    \
+    private_count, private_data_pointer...)                                    \
     {                                                                          \
-        .buffer = CCC_buffer_initialize(                                       \
-            private_type_name, private_allocate, private_context_data,         \
-            private_capacity, private_count, private_data_pointer),            \
+        .buffer = CCC_buffer_initialize(private_type_name, private_allocate,   \
+                                        private_context, private_capacity,     \
+                                        private_count, private_data_pointer),  \
         .front = 0,                                                            \
     }
 
@@ -96,13 +96,13 @@ void *CCC_private_flat_double_ended_queue_allocate_back(
 
 /** @internal Takes a compound literal array to initialize the buffer. */
 #define CCC_private_flat_double_ended_queue_context_from(                      \
-    private_allocate, private_context_data, private_optional_capacity,         \
+    private_allocate, private_context, private_optional_capacity,              \
     private_compound_literal_array...)                                         \
     (__extension__({                                                           \
         struct CCC_Flat_double_ended_queue private_flat_double_ended_queue = { \
             .buffer = CCC_buffer_context_from(                                 \
-                private_allocate, private_context_data,                        \
-                private_optional_capacity, private_compound_literal_array),    \
+                private_allocate, private_context, private_optional_capacity,  \
+                private_compound_literal_array),                               \
             .front = 0,                                                        \
         };                                                                     \
         private_flat_double_ended_queue;                                       \
@@ -122,12 +122,11 @@ void *CCC_private_flat_double_ended_queue_allocate_back(
 
 /** @internal */
 #define CCC_private_flat_double_ended_queue_with_context_capacity(             \
-    private_type_name, private_allocate, private_context_data,                 \
-    private_capacity)                                                          \
+    private_type_name, private_allocate, private_context, private_capacity)    \
     (__extension__({                                                           \
         struct CCC_Flat_double_ended_queue private_flat_double_ended_queue = { \
             .buffer = CCC_buffer_with_context_capacity(                        \
-                private_type_name, private_allocate, private_context_data,     \
+                private_type_name, private_allocate, private_context,          \
                 private_capacity),                                             \
             .front = 0,                                                        \
         };                                                                     \

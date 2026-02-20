@@ -291,7 +291,7 @@ limitations under the License.
         (container_entry_pointer), (mod_fn))
 
 #define CCC_private_and_context_modify(container_entry_pointer, mod_fn,        \
-                                       context_data_pointer...)                \
+                                       context_pointer...)                     \
     _Generic((container_entry_pointer),                                        \
         CCC_Flat_hash_map_entry *: CCC_flat_hash_map_and_context_modify,       \
         CCC_Adaptive_map_entry *: CCC_adaptive_map_and_context_modify,         \
@@ -306,7 +306,7 @@ limitations under the License.
         CCC_Array_adaptive_map_handle const                                    \
             *: CCC_array_adaptive_map_and_context_modify,                      \
         CCC_Tree_map_entry const *: CCC_tree_map_and_context_modify)(          \
-        (container_entry_pointer), (mod_fn), context_data_pointer)
+        (container_entry_pointer), (mod_fn), context_pointer)
 
 #define CCC_private_insert_entry(container_entry_pointer,                      \
                                  key_val_container_array_pointer...)           \

@@ -91,17 +91,16 @@ Initialize the container with memory, callbacks, and permissions. */
 heap, respectively.
 @param[in] compare the user defined comarison function for user types.
 @param[in] allocate the allocation function or NULL if no allocation.
-@param[in] context_data any context data needed for destruction of elements.
+@param[in] context any context data needed for destruction of elements.
 @param[in] capacity the capacity of contiguous elements at data_pointer.
 @param[in] data_pointer a pointer to an array of user types or NULL.
 @return the initialized priority queue on the right hand side of an equality
 operator. (i.e. CCC_Flat_priority_queue q =
 CCC_flat_priority_queue_initialize(...);). */
 #define CCC_flat_priority_queue_initialize(                                    \
-    type_name, order, compare, allocate, context_data, capacity, data_pointer) \
-    CCC_private_flat_priority_queue_initialize(type_name, order, compare,      \
-                                               allocate, context_data,         \
-                                               capacity, data_pointer)
+    type_name, order, compare, allocate, context, capacity, data_pointer)      \
+    CCC_private_flat_priority_queue_initialize(                                \
+        type_name, order, compare, allocate, context, capacity, data_pointer)
 
 /** @brief Partial order an array of elements as a min or max heap. O(N).
 @param[in] type_name the name of the user type.
@@ -109,7 +108,7 @@ CCC_flat_priority_queue_initialize(...);). */
 heap, respectively.
 @param[in] compare the user defined comparison function for user types.
 @param[in] allocate the allocation function or NULL if no allocation.
-@param[in] context_data any context data needed for destruction of elements.
+@param[in] context any context data needed for destruction of elements.
 @param[in] capacity the capacity of contiguous elements at data_pointer.
 @param[in] size the size <= capacity.
 @param[in] data_pointer a pointer to an array of user types or NULL.
@@ -117,10 +116,10 @@ heap, respectively.
 operator. (i.e. CCC_Flat_priority_queue q =
 CCC_flat_priority_queue_heapify_initialize(...);). */
 #define CCC_flat_priority_queue_heapify_initialize(                            \
-    type_name, order, compare, allocate, context_data, capacity, size,         \
+    type_name, order, compare, allocate, context, capacity, size,              \
     data_pointer)                                                              \
     CCC_private_flat_priority_queue_heapify_initialize(                        \
-        type_name, order, compare, allocate, context_data, capacity, size,     \
+        type_name, order, compare, allocate, context, capacity, size,          \
         data_pointer)
 
 /** @brief Partial order a compound literal array of elements as a min or max
@@ -289,7 +288,7 @@ compile time, see the CCC_flat_priority_queue_initialize() macro. */
 heap, respectively.
 @param[in] compare the user defined comparison function for user types.
 @param[in] allocate the allocation function or NULL if no allocation.
-@param[in] context_data any context data needed for destruction of elements.
+@param[in] context any context data needed for destruction of elements.
 @param[in] capacity the capacity of contiguous elements at data_pointer.
 @return the initialized flat_priority_queue. Directly assign to
 Flat_priority_queue on the right hand side of the equality operator (e.g.
@@ -318,9 +317,9 @@ Only dynamic Flat_priority_queues may be initialized this way. For static or
 stack based initialization of fixed flat_priority_queues with contents known at
 compile time, see the CCC_flat_priority_queue_initialize() macro. */
 #define CCC_flat_priority_queue_with_context_capacity(                         \
-    type_name, order, compare, allocate, context_data, capacity)               \
+    type_name, order, compare, allocate, context, capacity)                    \
     CCC_private_flat_priority_queue_with_context_capacity(                     \
-        type_name, order, compare, allocate, context_data, capacity)
+        type_name, order, compare, allocate, context, capacity)
 
 /** @brief Initialize a priority_queue as a min or max heap with no allocation
 permission or context data.

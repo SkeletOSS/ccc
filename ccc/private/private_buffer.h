@@ -50,7 +50,7 @@ can specify that the Buffer has some count of elements from index
 `[0, capacity - 1)` at initialization time. The Buffer assumes these elements
 are contiguous. */
 #define CCC_private_buffer_initialize(private_type_name, private_allocate,     \
-                                      private_context_data, private_capacity,  \
+                                      private_context, private_capacity,       \
                                       private_count, private_data...)          \
     {                                                                          \
         .data = (private_data),                                                \
@@ -58,21 +58,21 @@ are contiguous. */
         .count = (private_count),                                              \
         .capacity = (private_capacity),                                        \
         .allocate = (private_allocate),                                        \
-        .context = (private_context_data),                                     \
+        .context = (private_context),                                          \
     }
 
 /** @internal For dynamic containers to perform the allocation and
 initialization in one convenient step for user. */
-#define CCC_private_buffer_context_from(                                       \
-    private_allocate, private_context_data, private_optional_capacity,         \
-    private_compound_literal_array...)                                         \
+#define CCC_private_buffer_context_from(private_allocate, private_context,     \
+                                        private_optional_capacity,             \
+                                        private_compound_literal_array...)     \
     (__extension__({                                                           \
         typeof(*private_compound_literal_array)                                \
             *private_buffer_initializer_list                                   \
             = private_compound_literal_array;                                  \
         struct CCC_Buffer private_buf = CCC_private_buffer_initialize(         \
             typeof(*private_buffer_initializer_list), private_allocate,        \
-            private_context_data, 0, 0, NULL);                                 \
+            private_context, 0, 0, NULL);                                      \
         size_t const private_n = sizeof(private_compound_literal_array)        \
                                / sizeof(*private_buffer_initializer_list);     \
         size_t const private_cap = private_optional_capacity;                  \
@@ -100,12 +100,10 @@ initialization in one convenient step for user. */
 /** @internal For dynamic containers to perform initialization and reservation
 of memory in one step. */
 #define CCC_private_buffer_with_context_capacity(                              \
-    private_type_name, private_allocate, private_context_data,                 \
-    private_capacity)                                                          \
+    private_type_name, private_allocate, private_context, private_capacity)    \
     (__extension__({                                                           \
         struct CCC_Buffer private_buf = CCC_private_buffer_initialize(         \
-            private_type_name, private_allocate, private_context_data, 0, 0,   \
-            NULL);                                                             \
+            private_type_name, private_allocate, private_context, 0, 0, NULL); \
         (void)CCC_buffer_reserve(&private_buf, (private_capacity),             \
                                  private_allocate);                            \
         private_buf;                                                           \

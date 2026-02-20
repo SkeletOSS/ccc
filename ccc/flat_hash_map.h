@@ -198,7 +198,7 @@ restrictions. */
 @param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] allocate the allocation function for resizing or NULL if no
 resizing is allowed.
-@param[in] context_data context data that is needed for hashing or comparison.
+@param[in] context context data that is needed for hashing or comparison.
 @param[in] capacity the capacity of a fixed size map or 0.
 @param[in] map_pointer a pointer to a fixed map allocation or NULL.
 @return the flat hash map directly initialized on the right hand side of the
@@ -254,10 +254,9 @@ static Flat_hash_map static_map = flat_hash_map_initialize(
 Initialization at runtime is also possible. Stack-based or dynamic maps are
 identical to the provided examples. Omit `static` in a runtime context. */
 #define CCC_flat_hash_map_initialize(type_name, key_field, hash, compare,      \
-                                     allocate, context_data, capacity,         \
-                                     map_pointer)                              \
+                                     allocate, context, capacity, map_pointer) \
     CCC_private_flat_hash_map_initialize(type_name, key_field, hash, compare,  \
-                                         allocate, context_data, capacity,     \
+                                         allocate, context, capacity,          \
                                          map_pointer)
 
 /** @brief Initialize a dynamic map at runtime from an initializer list.
@@ -326,7 +325,7 @@ map to protect its invariants from user error at compile time. */
 @param[in] hash the CCC_Key_hasher function provided by the user.
 @param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] allocate the required allocation function.
-@param[in] context_data context data that is needed for hashing or comparison.
+@param[in] context context data that is needed for hashing or comparison.
 @param[in] optional_capacity optionally specify the capacity of the map if
 different from the size of the compound literal array initializer. If the
 capacity is greater than the size of the compound literal array initializer, it
@@ -380,10 +379,10 @@ main(void)
 Only dynamic maps may be initialized this way due the inability of the hash
 map to protect its invariants from user error at compile time. */
 #define CCC_flat_hash_map_context_from(key_field, hash, compare, allocate,     \
-                                       context_data, optional_capacity,        \
+                                       context, optional_capacity,             \
                                        array_compound_literal...)              \
     CCC_private_flat_hash_map_context_from(key_field, hash, compare, allocate, \
-                                           context_data, optional_capacity,    \
+                                           context, optional_capacity,         \
                                            array_compound_literal)
 
 /** @brief Initialize a dynamic map at runtime with at least the specified
@@ -443,7 +442,7 @@ capacity.
 @param[in] hash the CCC_Key_hasher function provided by the user.
 @param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] allocate the required allocation function.
-@param[in] context_data context data that is needed for hashing or comparison.
+@param[in] context context data that is needed for hashing or comparison.
 @param[in] capacity the desired capacity for the map. A capacity of 0 results
 in an argument error and is a no-op after the map is initialized empty.
 @return the flat hash map directly initialized on the right hand side of the
@@ -484,9 +483,9 @@ main(void)
 Only dynamic maps may be initialized this way as it simply combines the steps
 of initialization and reservation. */
 #define CCC_flat_hash_map_with_context_capacity(                               \
-    type_name, key_field, hash, compare, allocate, context_data, capacity)     \
+    type_name, key_field, hash, compare, allocate, context, capacity)          \
     CCC_private_flat_hash_map_with_context_capacity(                           \
-        type_name, key_field, hash, compare, allocate, context_data, capacity)
+        type_name, key_field, hash, compare, allocate, context, capacity)
 
 /** @brief Initialize a fixed map at compile time or runtime from its previously
 declared type using a compound literal with no allocation permissions or

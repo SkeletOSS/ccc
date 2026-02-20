@@ -94,7 +94,7 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
 /** @internal */
 #define CCC_private_singly_linked_list_initialize(                             \
     private_struct_name, private_singly_linked_list_node_field,                \
-    private_compare, private_allocate, private_context_data)                   \
+    private_compare, private_allocate, private_context)                        \
     {                                                                          \
         .head = NULL,                                                          \
         .sizeof_type = sizeof(private_struct_name),                            \
@@ -103,7 +103,7 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
         .count = 0,                                                            \
         .allocate = (private_allocate),                                        \
         .compare = (private_compare),                                          \
-        .context = (private_context_data),                                     \
+        .context = (private_context),                                          \
     }
 
 /** @internal */
@@ -125,7 +125,7 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
 /** @internal */
 #define CCC_private_singly_linked_list_context_from(                           \
     private_type_intruder_field, private_compare, private_allocate,            \
-    private_destroy, private_context_data, private_compound_literal_array...)  \
+    private_destroy, private_context, private_compound_literal_array...)       \
     (__extension__({                                                           \
         typeof(*private_compound_literal_array)                                \
             *private_singly_linked_list_type_array                             \
@@ -134,7 +134,7 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
             = CCC_private_singly_linked_list_initialize(                       \
                 typeof(*private_singly_linked_list_type_array),                \
                 private_type_intruder_field, private_compare,                  \
-                private_allocate, private_context_data);                       \
+                private_allocate, private_context);                            \
         if (private_singly_linked_list.allocate) {                             \
             size_t private_count                                               \
                 = sizeof(private_compound_literal_array)                       \

@@ -104,7 +104,7 @@ CCC_private_doubly_linked_list_node_in(struct CCC_Doubly_linked_list const *,
 name of the list being on the left hand side of the assignment operator. */
 #define CCC_private_doubly_linked_list_initialize(                             \
     private_struct_name, private_type_intruder_field, private_compare,         \
-    private_allocate, private_context_data)                                    \
+    private_allocate, private_context)                                         \
     {                                                                          \
         .head = NULL,                                                          \
         .tail = NULL,                                                          \
@@ -114,7 +114,7 @@ name of the list being on the left hand side of the assignment operator. */
         .count = 0,                                                            \
         .allocate = (private_allocate),                                        \
         .compare = (private_compare),                                          \
-        .context = (private_context_data),                                     \
+        .context = (private_context),                                          \
     }
 
 /** @internal */
@@ -136,7 +136,7 @@ name of the list being on the left hand side of the assignment operator. */
 /** @internal */
 #define CCC_private_doubly_linked_list_context_from(                           \
     private_type_intruder_field, private_compare, private_allocate,            \
-    private_destroy, private_context_data, private_compound_literal_array...)  \
+    private_destroy, private_context, private_compound_literal_array...)       \
     (__extension__({                                                           \
         typeof(*private_compound_literal_array)                                \
             *private_doubly_linked_list_type_array                             \
@@ -145,7 +145,7 @@ name of the list being on the left hand side of the assignment operator. */
             = CCC_private_doubly_linked_list_initialize(                       \
                 typeof(*private_doubly_linked_list_type_array),                \
                 private_type_intruder_field, private_compare,                  \
-                private_allocate, private_context_data);                       \
+                private_allocate, private_context);                            \
         if (private_doubly_linked_list.allocate) {                             \
             size_t const private_count                                         \
                 = sizeof(private_compound_literal_array)                       \

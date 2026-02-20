@@ -83,14 +83,14 @@ elem.
 the intrusive list elem.
 @param[in] compare a comparison function for searching or sorting the list.
 @param[in] allocate an allocation function if allocation is allowed.
-@param[in] context_data a pointer to any context data needed for comparison or
+@param[in] context a pointer to any context data needed for comparison or
 destruction.
 @return a stuct initializer for the singly linked list to be assigned
 (e.g. CCC_Singly_linked_list l = CCC_singly_linked_list_initialize(...);). */
 #define CCC_singly_linked_list_initialize(type_name, type_intruder_field,      \
-                                          compare, allocate, context_data)     \
+                                          compare, allocate, context)          \
     CCC_private_singly_linked_list_initialize(type_name, type_intruder_field,  \
-                                              compare, allocate, context_data)
+                                              compare, allocate, context)
 
 /** @brief Initialize an empty list at compile or runtime with an allocator.
 @param[in] type_name the user defined type stored in the list.
@@ -182,7 +182,7 @@ array.
 @param[in] compare the comparison function for the user type.
 @param[in] allocate the allocation function required for construction.
 @param[in] destroy the optional destructor to run if insertion fails.
-@param[in] context_data context data needed for comparison or destruction.
+@param[in] context context data needed for comparison or destruction.
 @param[in] compound_literal_array the array of user types to insert into the
 map (e.g. (struct My_type[]){ {.val = 1}, {.val = 2}}).
 @return the initialized singly linked list on the right side of an equality
@@ -192,11 +192,11 @@ operator (e.g. CCC_Singly_linked_list list
 The list will be constructed with the element at index 0 of the array as the
 front of the list and the final index element at the back of the list. */
 #define CCC_singly_linked_list_context_from(type_intruder_field, compare,      \
-                                            allocate, destroy, context_data,   \
+                                            allocate, destroy, context,        \
                                             compound_literal_array...)         \
-    CCC_private_singly_linked_list_context_from(                               \
-        type_intruder_field, compare, allocate, destroy, context_data,         \
-        compound_literal_array)
+    CCC_private_singly_linked_list_context_from(type_intruder_field, compare,  \
+                                                allocate, destroy, context,    \
+                                                compound_literal_array)
 
 /**@}*/
 
