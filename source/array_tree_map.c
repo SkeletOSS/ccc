@@ -1393,8 +1393,8 @@ rebalance_3_child(struct CCC_Array_tree_map *const map, size_t z, size_t x) {
                                    branch_index(map, y, R))) {
             demote(map, z);
             demote(map, y);
-        } else if (y) /* p(x) is 1,3, y is not a 2,2 parent, and x is 3-child.*/
-        {
+        } else if (y) {
+            /* p(x) is 1,3, y is not a 2,2 parent, and x is 3-child.*/
             assert(is_1_child(map, z, y));
             assert(is_3_child(map, z, x));
             assert(!is_2_child(map, z, y));
@@ -1409,8 +1409,8 @@ rebalance_3_child(struct CCC_Array_tree_map *const map, size_t z, size_t x) {
                 if (is_leaf(map, z)) {
                     demote(map, z);
                 }
-            } else /* w is a 2-child and v will be a 1-child. */
-            {
+            } else {
+                /* w is a 2-child and v will be a 1-child. */
                 size_t const v = branch_index(map, y, z_to_x_dir);
                 assert(is_2_child(map, y, w));
                 assert(is_1_child(map, y, v));

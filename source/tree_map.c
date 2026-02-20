@@ -908,8 +908,8 @@ rebalance_3_child(struct CCC_Tree_map *const map, struct CCC_Tree_map_node *z,
                 if (is_leaf(z)) {
                     demote(z);
                 }
-            } else /* w is a 2-child and v will be a 1-child. */
-            {
+            } else {
+                /* w is a 2-child and v will be a 1-child. */
                 struct CCC_Tree_map_node *const v = y->branch[z_to_x_dir];
                 assert(is_2_child(y, w));
                 assert(is_1_child(y, v));
@@ -978,7 +978,7 @@ Taking a link as input allows us to code both symmetrical cases at once. */
 static void
 rotate(struct CCC_Tree_map *const map, struct CCC_Tree_map_node *const z,
        struct CCC_Tree_map_node *const x, struct CCC_Tree_map_node *const y,
-       enum Link dir) {
+       enum Link const dir) {
     assert(z != NULL);
     struct CCC_Tree_map_node *const g = z->parent;
     x->parent = g;
@@ -1011,7 +1011,7 @@ Taking a link as input allows us to code both symmetrical cases at once. */
 static void
 double_rotate(struct CCC_Tree_map *const map, struct CCC_Tree_map_node *const z,
               struct CCC_Tree_map_node *const x,
-              struct CCC_Tree_map_node *const y, enum Link dir) {
+              struct CCC_Tree_map_node *const y, enum Link const dir) {
     assert(z != NULL);
     assert(x != NULL);
     assert(y != NULL);
