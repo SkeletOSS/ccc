@@ -672,9 +672,15 @@ unzip_file(SV_Str_view unzip) {
         bitq_clear_and_free(&he.blueprint.tree_paths);
         string_arena_free(&he.blueprint.arena);
     }
+    if (!he.file_bits_count) {
+        return;
+    }
     struct Huffman_tree tree = reconstruct_tree(&he.blueprint);
     defer {
         free_encode_tree(&tree);
+    }
+    if (!tree.root) {
+        return;
     }
 
     /* This means the compressed file was valid so write a new one to output. */
