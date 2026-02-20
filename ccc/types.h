@@ -587,7 +587,7 @@ char const *CCC_entry_status_message(CCC_Entry_status status);
 @return a string message with more detailed information regarding the status.
 
 Note that status for an handle is relevant when it is first obtained and when
-an action completes. Obtaining an handle can provide information on whether
+an action completes. Obtaining a handle can provide information on whether
 the search yielded an Occupied or Vacant handle or any errors that may have
 occurred. If a function tries to complete an action like insertion or removal
 the status can reflect if any errors occurred in this process as well. Usually,
