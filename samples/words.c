@@ -338,10 +338,9 @@ print_n(CCC_Array_adaptive_map *const map, CCC_Order const ord,
         (void)clear_and_free(&freqs, NULL);
     }
     check(!buffer_is_empty(&freqs));
-    Flat_priority_queue flat_priority_queue
-        = flat_priority_queue_heapify_initialize(
-            Word, ord, order_words, NULL, arena, capacity(&freqs).count,
-            count(&freqs).count, begin(&freqs));
+    Flat_priority_queue flat_priority_queue = flat_priority_queue_heapify(
+        Word, ord, order_words, NULL, arena, capacity(&freqs).count,
+        count(&freqs).count, begin(&freqs));
     check(count(&flat_priority_queue).count == count(&freqs).count);
     if (!n) {
         n = count(&flat_priority_queue).count;

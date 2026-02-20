@@ -71,7 +71,7 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
     }
 
 /** @internal */
-#define CCC_private_flat_priority_queue_heapify_initialize(                    \
+#define CCC_private_flat_priority_queue_heapify(                               \
     private_type_name, private_order, private_compare, private_allocate,       \
     private_context, private_capacity, private_size, private_data_pointer)     \
     (__extension__({                                                           \

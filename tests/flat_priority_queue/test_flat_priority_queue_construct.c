@@ -98,7 +98,7 @@ check_static_begin(flat_priority_queue_test_raw_type) {
     check_end();
 }
 
-check_static_begin(flat_priority_queue_test_heapify_initialize) {
+check_static_begin(flat_priority_queue_test_heapify) {
     srand(time(NULL)); /* NOLINT */
     enum : size_t {
         HEAPIFY_CAP = 100,
@@ -107,9 +107,9 @@ check_static_begin(flat_priority_queue_test_heapify_initialize) {
     for (size_t i = 0; i < HEAPIFY_CAP; ++i) {
         heap[i] = rand_range(-99, (int)HEAPIFY_CAP); /* NOLINT */
     }
-    Flat_priority_queue priority_queue = flat_priority_queue_heapify_initialize(
-        int, CCC_ORDER_LESSER, int_order, NULL, NULL, HEAPIFY_CAP, HEAPIFY_CAP,
-        heap);
+    Flat_priority_queue priority_queue
+        = flat_priority_queue_heapify(int, CCC_ORDER_LESSER, int_order, NULL,
+                                      NULL, HEAPIFY_CAP, HEAPIFY_CAP, heap);
     int prev = *((int *)flat_priority_queue_front(&priority_queue));
     (void)pop(&priority_queue, &(int){0});
     while (!flat_priority_queue_is_empty(&priority_queue)) {
@@ -133,8 +133,8 @@ check_static_begin(flat_priority_queue_test_heapify_copy) {
     for (size_t i = 0; i < HEAPIFY_COPY_CAP; ++i) {
         input[i] = rand_range(-99, 99); /* NOLINT */
     }
-    check(flat_priority_queue_heapify(&priority_queue, &(int){0}, input,
-                                      HEAPIFY_COPY_CAP, sizeof(int)),
+    check(flat_priority_queue_copy_heapify(&priority_queue, &(int){0}, input,
+                                           HEAPIFY_COPY_CAP, sizeof(int)),
           CCC_RESULT_OK);
     check(flat_priority_queue_count(&priority_queue).count, HEAPIFY_COPY_CAP);
     int prev = *((int *)flat_priority_queue_front(&priority_queue));
@@ -157,9 +157,9 @@ check_static_begin(flat_priority_queue_test_heapsort) {
     for (size_t i = 0; i < HPSORTCAP; ++i) {
         heap[i] = rand_range(-99, (int)(HPSORTCAP)); /* NOLINT */
     }
-    Flat_priority_queue priority_queue = flat_priority_queue_heapify_initialize(
-        int, CCC_ORDER_LESSER, int_order, NULL, NULL, HPSORTCAP, HPSORTCAP,
-        heap);
+    Flat_priority_queue priority_queue
+        = flat_priority_queue_heapify(int, CCC_ORDER_LESSER, int_order, NULL,
+                                      NULL, HPSORTCAP, HPSORTCAP, heap);
     CCC_Buffer const b
         = CCC_flat_priority_queue_heapsort(&priority_queue, &(int){0});
     int const *prev = begin(&b);
@@ -354,7 +354,7 @@ main(void) {
         flat_priority_queue_test_with_compound_literal(),
         flat_priority_queue_test_macro(), flat_priority_queue_test_macro_grow(),
         flat_priority_queue_test_push(), flat_priority_queue_test_raw_type(),
-        flat_priority_queue_test_heapify_initialize(),
+        flat_priority_queue_test_heapify(),
         flat_priority_queue_test_heapify_copy(),
         flat_priority_queue_test_copy_no_allocate(),
         flat_priority_queue_test_copy_no_allocate_fail(),

@@ -44,9 +44,9 @@ static void destroy_each(struct CCC_Flat_priority_queue *,
 /*=====================       Interface      ================================*/
 
 CCC_Result
-CCC_flat_priority_queue_heapify(CCC_Flat_priority_queue *const priority_queue,
-                                void *const temp, void *const type_array,
-                                size_t const count, size_t const sizeof_type) {
+CCC_flat_priority_queue_copy_heapify(
+    CCC_Flat_priority_queue *const priority_queue, void *const temp,
+    void *const type_array, size_t const count, size_t const sizeof_type) {
     if (!priority_queue || !type_array || !temp
         || type_array == priority_queue->buffer.data
         || sizeof_type != priority_queue->buffer.sizeof_type) {
@@ -65,8 +65,9 @@ CCC_flat_priority_queue_heapify(CCC_Flat_priority_queue *const priority_queue,
 }
 
 CCC_Result
-CCC_flat_priority_queue_heapify_inplace(CCC_Flat_priority_queue *priority_queue,
-                                        void *const temp, size_t const count) {
+CCC_flat_priority_queue_in_place_heapify(
+    CCC_Flat_priority_queue *priority_queue, void *const temp,
+    size_t const count) {
     if (!priority_queue || !temp || count > priority_queue->buffer.capacity) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }

@@ -382,7 +382,7 @@ main(void) {
     enum : size_t {
         HCAP = sizeof(heap) / sizeof(*heap),
     };
-    Flat_priority_queue priority_queue = flat_priority_queue_heapify_initialize(
+    Flat_priority_queue priority_queue = flat_priority_queue_heapify(
         int, CCC_LES, int_cmp, NULL, NULL, HCAP, HCAP, heap);
     Buffer const b = flat_priority_queue_heapsort(&priority_queue, &(int){0});
     int const *prev = begin(&b);

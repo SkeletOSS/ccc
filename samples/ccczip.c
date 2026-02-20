@@ -292,12 +292,19 @@ zip_file(SV_Str_view const to_compress) {
     defer {
         (void)fclose(f);
     }
-    check(f, printf("%s", strerror(errno)););
+    if (!f) {
+        (void)fprintf(stderr, "%s", strerror(errno));
+        return;
+    }
     size_t const fsize = file_size(f);
     printf("Zip %s (%zu bytes).\n", SV_begin(to_compress), fsize);
     struct Huffman_tree tree = build_encoding_tree(f);
     defer {
         free_encode_tree(&tree);
+    }
+    if (!tree.root) {
+        (void)fprintf(stderr, "empty encoding tree cannot zip anything\n");
+        return;
     }
     struct Huffman_encoding encoding = {
         .magic = CCCZ_MAGIC,
@@ -418,7 +425,7 @@ build_encoding_priority_queue(FILE *const f, struct Huffman_tree *const tree) {
     }
     /* Now we steal the buffer's memory and heapify the data in O(N) time rather
        than pushing each element. */
-    return flat_priority_queue_heapify_initialize(
+    return flat_priority_queue_heapify(
         struct Flat_priority_queue_node, CCC_ORDER_LESSER, order_freqs,
         std_allocate, NULL, capacity(&flat_priority_queue_storage).count,
         count(&flat_priority_queue_storage).count,
