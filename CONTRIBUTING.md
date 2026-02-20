@@ -154,8 +154,8 @@ Users may omit this prefix with name shortening on a per module basis. Every hea
 ```c
 #define TYPES_USING_NAMESPACE_CCC
 #define FLAT_HASH_MAP_USING_NAMESPACE_CCC
-#include "ccc/types.h"
 #include "ccc/flat_hash_map.h"
+#include "ccc/types.h"
 ```
 
 This toggle affects only the specified headers, not the global namespace.
@@ -248,15 +248,12 @@ Here is an examples from `buffer.h` (may not be in sync with current code).
 
 ```c
 CCC_Result
-ccc_buf_alloc(CCC_Buffer *const buf, size_t const capacity,
-              CCC_Allocator *const allocate)
-{
-    if (!buf)
-    {
+CCC_Buffer_allocate(CCC_Buffer *const buf, size_t const capacity,
+                    CCC_Allocator *const allocate) {
+    if (!buf) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    if (!allocate)
-    {
+    if (!allocate) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
     void *const new_mem = allocate((CCC_Allocator_context){
@@ -264,8 +261,7 @@ ccc_buf_alloc(CCC_Buffer *const buf, size_t const capacity,
         .bytes = buf->sizeof_type * capacity,
         .context = buf->context,
     });
-    if (capacity && !new_mem)
-    {
+    if (capacity && !new_mem) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
     buf->data = new_mem;
@@ -284,22 +280,22 @@ For example, a flat priority queue is a binary heap that operates by swapping el
 
 ```c
 CCC_Result CCC_flat_priority_queue_pop(CCC_Flat_priority_queue *q, void *tmp);
-
 ```
 
 Other containers may do the same or be able to avoid pushing this space requirement to the user. Here is the ordered map swap entry operation that requires a swap slot.
 
 ```c
-[[nodiscard]] CCC_Entry CCC_adaptive_map_swap_entry(CCC_Adaptive_map *m,
-                                                    CCC_Adaptive_map_node *key_val_output,
-                                                    CCC_Adaptive_map_node *tmp);
+[[nodiscard]] CCC_Entry
+CCC_adaptive_map_swap_entry(CCC_Adaptive_map *m,
+                            CCC_Adaptive_map_node *key_val_output,
+                            CCC_Adaptive_map_node *tmp);
 ```
 
 For the equivalent handle version of this container the space requirement is handled internally.
 
 ```c
-[[nodiscard]] CCC_Handle CCC_array_adaptive_swap_handle(CCC_Array_adaptive_map *m,
-                                                        void *key_val_output);
+[[nodiscard]] CCC_Handle
+CCC_array_adaptive_swap_handle(CCC_Array_adaptive_map *m, void *key_val_output);
 ```
 
 The handle version of the container is required to preserve the 0th slot in the array as the nil node so it is able to swap when needed with this extra slot.
@@ -313,17 +309,15 @@ This library will never be as optimized as a C template-like library that genera
 We can still try to offer the user some performance benefits on key code paths via our container specialized macros. All macros that accept compound literal user types write the user specified data directly memory via casting instead of calling a generic copy function. The pseudo code for such an operation is roughly as follows.
 
 ```c
-#define map_insert_or_assign_macro(container_pointer, key, compound_literal...)\
+#define map_insert_or_assign_macro(container_pointer, key,                     \
+                                   compound_literal...)                        \
     (__extension__({                                                           \
         struct Entry entry = container_find_slot(container_pointer, key);      \
-        if (entry.status & OCCUPIED)                                           \
-        {                                                                      \
-            *((typeof(compound_literal) *) container_slot_at(&entry))          \
+        if (entry.status & OCCUPIED) {                                         \
+            *((typeof(compound_literal) *)container_slot_at(&entry))           \
                 = compound_literal;                                            \
-        }                                                                      \
-        else                                                                   \
-        {                                                                      \
-            *((typeof(compound_literal) *) container_prepare_new_slot(&entry)) \
+        } else {                                                               \
+            *((typeof(compound_literal) *)container_prepare_new_slot(&entry))  \
                 = compound_literal;                                            \
         }                                                                      \
         entry;                                                                 \
