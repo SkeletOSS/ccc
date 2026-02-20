@@ -65,7 +65,7 @@ struct Character_frequency {
 
 enum : uint8_t {
     /** Caching for iterative traversals uses this position as end sentinel. */
-    ITER_END = 2,
+    MAX_CHILD_COUNT = 2,
 };
 
 /** Tree nodes will be pushed into a CCC_Buffer. This is the same concept as
@@ -79,11 +79,11 @@ struct Huffman_node {
     /** The parent for backtracking during DFS and Pre-Order traversal. */
     size_t parent;
     /** The necessary links needed to build the encoding tree. */
-    size_t link[ITER_END];
+    size_t link[MAX_CHILD_COUNT];
     /** The leaf character if this node is a leaf. */
     char ch;
     /** The caching iterator to help emulate recursion with iteration. */
-    uint8_t iterator;
+    uint8_t child_index;
 };
 
 /** Element intended for the flat priority queue during the tree building phase.
@@ -492,22 +492,22 @@ memoize_path(struct Huffman_tree *const tree, Flat_hash_map *const fh,
             break;
         }
         /* Wrong leaf or we have explored both subtrees of an internal node. */
-        if (!node->link[1] || node->iterator >= ITER_END) {
-            node->iterator = 0;
+        if (!node->link[1] || node->child_index >= MAX_CHILD_COUNT) {
+            node->child_index = 0;
             cur = node->parent;
             bitq_pop_back(bq);
             continue;
         }
         /* Depth progression of depth first search. */
-        check(node->iterator <= CCC_TRUE);
-        bitq_push_back(bq, node->iterator);
+        check(node->child_index <= CCC_TRUE);
+        bitq_push_back(bq, node->child_index);
         /* During backtracking this helps us know which child subtree needs to
            be explored or if we are done and can continue backtracking. */
-        cur = node->link[node->iterator++];
+        cur = node->link[node->child_index++];
     }
     /* Cleanup because we now have the correct path. */
     for (; cur; cur = parent_index(tree, cur)) {
-        node_at(tree, cur)->iterator = 0;
+        node_at(tree, cur)->child_index = 0;
     }
     path->path_len = bitq_count(bq) - path->path_start_index;
 }
@@ -542,17 +542,17 @@ compress_tree(struct Huffman_tree *const tree) {
             check(string_arena_push_back(&ret.arena, &ret.leaf_string, node->ch)
                   == STRING_ARENA_OK);
             cur = node->parent;
-        } else if (node->iterator < ITER_END) {
+        } else if (node->child_index < MAX_CHILD_COUNT) {
             /* We only push internal 1 nodes the first time on the way down. We
                still need to access the second child so don't push a bit when we
                are simply progressing to the next child subtree. */
-            if (node->iterator == 0) {
+            if (node->child_index == 0) {
                 bitq_push_back(&ret.tree_paths, CCC_TRUE);
             }
-            cur = node->link[node->iterator++];
+            cur = node->link[node->child_index++];
         } else {
             /* Both child subtrees have been explored, so cleanup/backtrack. */
-            node->iterator = 0;
+            node->child_index = 0;
             cur = node->parent;
         }
     }
@@ -765,13 +765,12 @@ static struct Huffman_tree
 reconstruct_tree(struct Compressed_huffman_tree *const blueprint) {
     size_t const bq_count = bitq_count(&blueprint->tree_paths);
     struct Huffman_tree tree = {
-        .bump_arena
         /* 0 index is NULL so real data can't be there. */
-        = CCC_buffer_from(std_allocate, bq_count,
-                          (struct Huffman_node[]){
-                              {}, // nil
-                              {}, // root
-                          }),
+        .bump_arena = CCC_buffer_from(std_allocate, bq_count,
+                                      (struct Huffman_node[]){
+                                          {}, /* nil */
+                                          {}, /* root */
+                                      }),
         /* By creating the root outside of the main loop we can be sure we
            always have valid prev node. Don't need to check on every loop
            iteration. */
@@ -781,35 +780,37 @@ reconstruct_tree(struct Compressed_huffman_tree *const blueprint) {
     check(!CCC_buffer_is_empty(&tree.bump_arena));
     (void)bitq_pop_front(&blueprint->tree_paths);
     size_t parent = tree.root;
-    size_t node = 0;
+    size_t current = 0;
     char const *leaves
         = string_arena_at(&blueprint->arena, &blueprint->leaf_string);
     while (bitq_count(&blueprint->tree_paths)) {
-        CCC_Tribool bit = CCC_TRUE;
-        if (!node) {
-            bit = bitq_pop_front(&blueprint->tree_paths);
-            struct Huffman_node *const pushed = push_back(
-                &tree.bump_arena, &(struct Huffman_node){.parent = parent});
-            node = CCC_buffer_index(&tree.bump_arena, pushed).count;
+        CCC_Tribool is_internal_node = CCC_TRUE;
+        if (!current) {
+            is_internal_node = bitq_pop_front(&blueprint->tree_paths);
+            struct Huffman_node *const pushed
+                = push_back(&tree.bump_arena, &(struct Huffman_node){
+                                                  .parent = parent,
+                                              });
+            current = CCC_buffer_index(&tree.bump_arena, pushed).count;
             /* Get the parent reference after the buffer push in case the
                buffer resized to accommodate push. */
             struct Huffman_node *const parent_r = node_at(&tree, parent);
-            parent_r->link[parent_r->iterator++] = node;
-            if (!bit) {
+            parent_r->link[parent_r->child_index++] = current;
+            if (!is_internal_node) {
                 pushed->ch = *leaves;
                 ++leaves;
                 ++tree.num_leaves;
             }
         }
-        struct Huffman_node *const node_r = node_at(&tree, node);
+        struct Huffman_node *const node_r = node_at(&tree, current);
         /* An internal node has further child subtrees to build. */
-        if (bit && node_r->iterator < ITER_END) {
-            parent = node;
-            node = node_r->link[node_r->iterator];
+        if (is_internal_node && node_r->child_index < MAX_CHILD_COUNT) {
+            parent = current;
+            current = node_r->link[node_r->child_index];
             continue;
         }
         /* Backtrack. A leaf or internal node with both children built. */
-        node = parent;
+        current = parent;
         parent = parent_index(&tree, parent);
     }
     return tree;
