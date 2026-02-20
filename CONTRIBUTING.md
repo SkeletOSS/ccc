@@ -23,7 +23,8 @@ Required tools:
 
 - [pre-commit](https://pre-commit.com/) - Run `pre-commit install` once the repo is forked/cloned. This will ensure pointless formatting changes don't enter the commit history.
 - clangd - This is helpful for your editor if you have a `LSP` that can auto-format on save. This repo has both a `.clang-tidy` and `.clang-format` file that help `LSP`'s and other tools with warnings while you write.
-- gcc-14+ - GCC 14 onward added excellent `-fanalyzer` capabilities. There are GCC presets in `CMakePresets.json` to run `-fanalyzer` and numerous sanitizers. These work best with newer GCC versions.
+- gcc-15.2+ - GCC 14 onward added excellent `-fanalyzer` capabilities. There are GCC presets in `CMakePresets.json` to run `-fanalyzer` and numerous sanitizers. These work best with newer GCC versions. Also, the defer keyword is used throughout samples and tests which is much newer C23 feature.
+- clang-22+ - Clang added support for the `defer` keyword which is used throughout samples and tests. This is such a great feature that the code base uses it whenever possible in tests and samples. However, `defer` should not be used in core container code that is shipped with releases until it leaves technical specification and enters the next C2Y standard.
 - .editorconfig - Settles cross platform issues like line endings and editor concerns like tabs vs spaces. Ensure your editor supports .editorconfig.
 - .clang-format - This is needed less so now that `pre-commit` helps with formatting.
 - .clang-tidy - Clang tidy should be run often on any changes to the code to catch obvious errors.
@@ -327,6 +328,10 @@ We can still try to offer the user some performance benefits on key code paths v
 Notice that there is minimal scaffolding around calls to the container interface functions. These calls generate the needed memory to write the user data directly. This allows the compiler to optimize the write freely while we do not generate any container machinery code at the call-site. This container specific code can be quite complex, depending on the container, so ensuring we do not duplicate that code is critical. The user is able to leverage an optimizing compiler without exploding their binary size or defining specialized containers throughout their code base.
 
 Therefore, when adding these macros, ensure core container machinery is contained within interface functions.
+
+### No Defer in Container Code
+
+The `defer` keyword is finally being added to major compilers. It is a technical specification for now but will likely enter the next `C2Y` standard. Samples and tests can use `defer` but refrain from using it in any `ccc/*` or `source/*` files that ship with release packages until the feature makes it into the language officially.
 
 ## To Do
 
