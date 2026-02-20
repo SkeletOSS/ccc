@@ -704,7 +704,10 @@ unzip_file(SV_Str_view unzip) {
     defer {
         (void)fclose(copy_of_original);
     }
-    check(copy_of_original, (void)fprintf(stderr, "%s", strerror(errno)););
+    if (!copy_of_original) {
+        (void)fprintf(stderr, "%s", strerror(errno));
+        return;
+    }
     reconstruct_text(copy_of_original, &tree, &he.file_bits);
     printf("Unzipped %s (%zu bytes).\n", path, file_size(copy_of_original));
 }
