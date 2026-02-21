@@ -30,8 +30,7 @@ sibling nodes in a circular doubly linked list in the child ring. When a node
 loses a merge and is sent down to be another nodes child it joins this sibling
 ring of nodes. The list is doubly linked and we have a parent pointer to keep
 operations like delete min, erase, and update fast. */
-struct CCC_Priority_queue_node
-{
+struct CCC_Priority_queue_node {
     /** @internal The left child of this node. */
     struct CCC_Priority_queue_node *child;
     /** @internal The next sibling in the sibling ring or self. */
@@ -83,8 +82,7 @@ implementation keeps the pairing heap fast and easy to understand. In fact, if
 nodes are allocated ahead of time in a buffer, the pairing heap beats the
 binary flat priority queue in the C Container Collection across many operations
 with the trade-off being more memory consumed. */
-struct CCC_Priority_queue
-{
+struct CCC_Priority_queue {
     /** @internal The node at the root of the heap. No parent. */
     struct CCC_Priority_queue_node *root;
     /** @internal Quantity of nodes stored in heap for O(1) reporting. */
@@ -142,7 +140,7 @@ CCC_private_priority_queue_struct_base(struct CCC_Priority_queue const *,
 #define CCC_private_priority_queue_initialize(                                 \
     private_struct_name, private_type_intruder_field,                          \
     private_priority_queue_order, private_compare, private_allocate,           \
-    private_context_data)                                                      \
+    private_context)                                                           \
     {                                                                          \
         .root = NULL,                                                          \
         .count = 0,                                                            \
@@ -152,7 +150,7 @@ CCC_private_priority_queue_struct_base(struct CCC_Priority_queue const *,
         .order = (private_priority_queue_order),                               \
         .compare = (private_compare),                                          \
         .allocate = (private_allocate),                                        \
-        .context = (private_context_data),                                     \
+        .context = (private_context),                                          \
     }
 
 /** @internal */
@@ -176,7 +174,7 @@ CCC_private_priority_queue_struct_base(struct CCC_Priority_queue const *,
 /** @internal */
 #define CCC_private_priority_queue_context_from(                               \
     private_type_intruder_field, private_priority_queue_order,                 \
-    private_compare, private_allocate, private_destroy, private_context_data,  \
+    private_compare, private_allocate, private_destroy, private_context,       \
     private_compound_literal_array...)                                         \
     (__extension__({                                                           \
         typeof(*private_compound_literal_array)                                \
@@ -186,14 +184,13 @@ CCC_private_priority_queue_struct_base(struct CCC_Priority_queue const *,
             = CCC_private_priority_queue_initialize(                           \
                 typeof(*private_priority_queue_type_array),                    \
                 private_type_intruder_field, private_priority_queue_order,     \
-                private_compare, private_allocate, private_context_data);      \
-        if (private_priority_queue.allocate)                                   \
-        {                                                                      \
+                private_compare, private_allocate, private_context);           \
+        if (private_priority_queue.allocate) {                                 \
             size_t const private_count                                         \
                 = sizeof(private_compound_literal_array)                       \
                 / sizeof(*private_priority_queue_type_array);                  \
-            for (size_t private_i = 0; private_i < private_count; ++private_i) \
-            {                                                                  \
+            for (size_t private_i = 0; private_i < private_count;              \
+                 ++private_i) {                                                \
                 typeof(*private_priority_queue_type_array) *const              \
                     private_new_node                                           \
                     = private_priority_queue.allocate((CCC_Allocator_context){ \
@@ -201,8 +198,7 @@ CCC_private_priority_queue_struct_base(struct CCC_Priority_queue const *,
                         .bytes = private_priority_queue.sizeof_type,           \
                         .context = private_priority_queue.context,             \
                     });                                                        \
-                if (!private_new_node)                                         \
-                {                                                              \
+                if (!private_new_node) {                                       \
                     CCC_priority_queue_clear(&private_priority_queue,          \
                                              private_destroy);                 \
                     break;                                                     \
@@ -235,22 +231,17 @@ CCC_private_priority_queue_struct_base(struct CCC_Priority_queue const *,
         typeof(type_compound_literal) *private_priority_queue_res = NULL;      \
         struct CCC_Priority_queue *private_priority_queue                      \
             = (priority_queue_pointer);                                        \
-        if (private_priority_queue)                                            \
-        {                                                                      \
-            if (!private_priority_queue->allocate)                             \
-            {                                                                  \
+        if (private_priority_queue) {                                          \
+            if (!private_priority_queue->allocate) {                           \
                 private_priority_queue_res = NULL;                             \
-            }                                                                  \
-            else                                                               \
-            {                                                                  \
+            } else {                                                           \
                 private_priority_queue_res = private_priority_queue->allocate( \
                     (CCC_Allocator_context){                                   \
                         .input = NULL,                                         \
                         .bytes = private_priority_queue->sizeof_type,          \
                         .context = private_priority_queue->context,            \
                     });                                                        \
-                if (private_priority_queue_res)                                \
-                {                                                              \
+                if (private_priority_queue_res) {                              \
                     *private_priority_queue_res = type_compound_literal;       \
                     CCC_private_priority_queue_push(                           \
                         private_priority_queue,                                \
@@ -270,8 +261,7 @@ CCC_private_priority_queue_struct_base(struct CCC_Priority_queue const *,
         struct CCC_Priority_queue *const private_priority_queue                \
             = (priority_queue_pointer);                                        \
         typeof(*type_pointer) *T = (type_pointer);                             \
-        if (private_priority_queue && T)                                       \
-        {                                                                      \
+        if (private_priority_queue && T) {                                     \
             struct CCC_Priority_queue_node *const                              \
                 private_priority_queue_node_pointer                            \
                 = CCC_private_priority_queue_node_in(private_priority_queue,   \
@@ -281,17 +271,14 @@ CCC_private_priority_queue_struct_base(struct CCC_Priority_queue const *,
                        private_priority_queue,                                 \
                        private_priority_queue_node_pointer,                    \
                        private_priority_queue_node_pointer->parent)            \
-                       == private_priority_queue->order)                       \
-            {                                                                  \
+                       == private_priority_queue->order) {                     \
                 CCC_private_priority_queue_cut_child(                          \
                     private_priority_queue_node_pointer);                      \
                 {update_closure_over_T} private_priority_queue->root           \
                     = CCC_private_priority_queue_merge(                        \
                         private_priority_queue, private_priority_queue->root,  \
                         private_priority_queue_node_pointer);                  \
-            }                                                                  \
-            else                                                               \
-            {                                                                  \
+            } else {                                                           \
                 private_priority_queue->root                                   \
                     = CCC_private_priority_queue_delete_node(                  \
                         private_priority_queue,                                \
@@ -314,19 +301,15 @@ CCC_private_priority_queue_struct_base(struct CCC_Priority_queue const *,
         struct CCC_Priority_queue *const private_priority_queue                \
             = (priority_queue_pointer);                                        \
         typeof(*type_pointer) *T = (type_pointer);                             \
-        if (private_priority_queue && T)                                       \
-        {                                                                      \
+        if (private_priority_queue && T) {                                     \
             struct CCC_Priority_queue_node *const                              \
                 private_priority_queue_node_pointer                            \
                 = CCC_private_priority_queue_node_in(private_priority_queue,   \
                                                      T);                       \
-            if (private_priority_queue->order == CCC_ORDER_GREATER)            \
-            {                                                                  \
+            if (private_priority_queue->order == CCC_ORDER_GREATER) {          \
                 CCC_private_priority_queue_cut_child(                          \
                     private_priority_queue_node_pointer);                      \
-            }                                                                  \
-            else                                                               \
-            {                                                                  \
+            } else {                                                           \
                 private_priority_queue->root                                   \
                     = CCC_private_priority_queue_delete_node(                  \
                         private_priority_queue,                                \
@@ -349,19 +332,15 @@ CCC_private_priority_queue_struct_base(struct CCC_Priority_queue const *,
         struct CCC_Priority_queue *const private_priority_queue                \
             = (priority_queue_pointer);                                        \
         typeof(*type_pointer) *T = (type_pointer);                             \
-        if (private_priority_queue && T)                                       \
-        {                                                                      \
+        if (private_priority_queue && T) {                                     \
             struct CCC_Priority_queue_node *const                              \
                 private_priority_queue_node_pointer                            \
                 = CCC_private_priority_queue_node_in(private_priority_queue,   \
                                                      T);                       \
-            if (private_priority_queue->order == CCC_ORDER_LESSER)             \
-            {                                                                  \
+            if (private_priority_queue->order == CCC_ORDER_LESSER) {           \
                 CCC_private_priority_queue_cut_child(                          \
                     private_priority_queue_node_pointer);                      \
-            }                                                                  \
-            else                                                               \
-            {                                                                  \
+            } else {                                                           \
                 private_priority_queue->root                                   \
                     = CCC_private_priority_queue_delete_node(                  \
                         private_priority_queue,                                \

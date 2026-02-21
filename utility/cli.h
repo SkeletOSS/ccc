@@ -1,14 +1,12 @@
 #ifndef CCC_CLI_H
 #define CCC_CLI_H
 
-enum Conversion_status
-{
+enum Conversion_status {
     CONV_OK,
     CONV_ER,
 };
 
-struct Int_conversion
-{
+struct Int_conversion {
     enum Conversion_status status;
     int conversion;
 };

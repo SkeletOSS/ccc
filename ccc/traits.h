@@ -190,8 +190,8 @@ See container documentation for specific behavior. */
 @return a reference to the modified entry if Occupied or original if Vacant.
 
 See container documentation for specific behavior. */
-#define CCC_and_modify_context(entry_pointer, modify, context_arguments...)    \
-    CCC_private_and_modify_context(entry_pointer, modify, context_arguments)
+#define CCC_and_context_modify(entry_pointer, modify, context_arguments...)    \
+    CCC_private_and_context_modify(entry_pointer, modify, context_arguments)
 
 /** @brief Insert new element or overwrite old element.
 @param[in] entry_pointer a pointer to the container.
@@ -663,6 +663,7 @@ See container documentation for specific behavior. */
 
 /** Define this preprocessor directive to shorten trait names. */
 #ifdef TRAITS_USING_NAMESPACE_CCC
+/* NOLINTBEGIN(readability-identifier-naming) */
 #    define swap_entry(arguments...) CCC_swap_entry(arguments)
 #    define swap_entry_wrap(arguments...) CCC_swap_entry_wrap(arguments)
 #    define swap_handle(arguments...) CCC_swap_handle(arguments)
@@ -687,7 +688,7 @@ See container documentation for specific behavior. */
 #    define insert_entry(arguments...) CCC_insert_entry(arguments)
 #    define insert_handle(arguments...) CCC_insert_handle(arguments)
 #    define and_modify(arguments...) CCC_and_modify(arguments)
-#    define and_modify_context(arguments...) CCC_and_modify_context(arguments)
+#    define and_context_modify(arguments...) CCC_and_context_modify(arguments)
 #    define occupied(arguments...) CCC_occupied(arguments)
 #    define insert_error(arguments...) CCC_insert_error(arguments)
 #    define unwrap(arguments...) CCC_unwrap(arguments)
@@ -741,6 +742,7 @@ See container documentation for specific behavior. */
 #    define capacity(arguments...) CCC_capacity(arguments)
 #    define is_empty(arguments...) CCC_is_empty(arguments)
 #    define validate(arguments...) CCC_validate(arguments)
+/* NOLINTEND(readability-identifier-naming) */
 #endif /* TRAITS_USING_NAMESPACE_CCC */
 
 #endif /* CCC_TRAITS_H */

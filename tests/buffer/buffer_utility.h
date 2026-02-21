@@ -28,8 +28,7 @@ CCC_Result append_range(CCC_Buffer *b, size_t range_count, void const *range);
 
 /** Returns max int between a and b. Ties go to a. */
 static inline int
-maxint(int a, int b)
-{
+maxint(int a, int b) {
     return a > b ? a : b;
 }
 

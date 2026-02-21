@@ -26,8 +26,7 @@ handles. Handles are just an index based version of entries. Not only can
 we clearly understand the enum itself in a debugger, but we may provide more
 detailed strings to the user by taking these values as input to helper
 functions. */
-enum CCC_Entry_status : uint8_t
-{
+enum CCC_Entry_status : uint8_t {
     /** @internal The entry has no value and is ready for new insert. */
     CCC_ENTRY_VACANT = 0,
     /** @internal The entry has a value. */
@@ -49,8 +48,7 @@ searching for elements and then inserting or removing based on the result of a
 search, we can obtain either the present element or a vacant slot where the
 element belongs. This allows us to act how we wish with this reference and no
 second insert, search, or remove operation is needed. */
-struct CCC_Entry
-{
+struct CCC_Entry {
     /** @internal The user type that belongs at this container location. */
     void *type;
     /** @internal A status to help us decide how to act with the entry. */
@@ -68,16 +66,14 @@ CCC_Entry *entry = &(CCC_Entry){function_returns_wrapper(arguments).private};
 We can then wrap that returned compound literal reference in a macro. Union is
 used as the wrapping type as a reminder that this type should serve no other
 purpose and add no additional fields. */
-union CCC_Entry_wrap
-{
+union CCC_Entry_wrap {
     /** @internal Helper to return the compound literal reference. */
     struct CCC_Entry private;
 };
 
 /** @internal A handle is the same as an entry but it uses an index into a
 contiguous region of storage rather than a pointer. */
-struct CCC_Handle
-{
+struct CCC_Handle {
     /** @internal The index into the contiguous region of memory. */
     size_t index;
     /** @internal A status to help us decide how to act with the entry. */
@@ -95,8 +91,7 @@ CCC_Handle *handle = &(CCC_Handle){function_returns_wrapper(arguments).private};
 We can then wrap that returned compound literal reference in a macro. Union is
 used as the wrapping type as a reminder that this type should serve no other
 purpose and add no additional fields. */
-union CCC_Handle_wrap
-{
+union CCC_Handle_wrap {
     /** @internal Helper to return the compound literal reference. */
     struct CCC_Handle private;
 };
@@ -108,17 +103,14 @@ or not. So we use a union for some clarity for the implementer.
 
 We will also wrap this in two different types so that the user has some help
 ensuring they pass the correct direction range to the correct function. */
-struct CCC_Range
-{
-    union
-    {
+struct CCC_Range {
+    union {
         /** @internal Start of forward iteration for a container. */
         void *begin;
         /** @internal Start of reverse iteration for a container. */
         void *reverse_begin;
     };
-    union
-    {
+    union {
         /** @internal End of forward iteration for a container. */
         void *end;
         /** @internal End of reverse iteration for a container. */
@@ -138,8 +130,7 @@ CCC_Range *range
 We can then wrap that returned compound literal reference in a macro. Union is
 used as the wrapping type as a reminder that this type should serve no other
 purpose and add no additional fields. */
-union CCC_Range_wrap
-{
+union CCC_Range_wrap {
     /** @internal Helper to return the compound literal reference. */
     struct CCC_Range private;
 };
@@ -156,8 +147,7 @@ CCC_Range_reverse *range
 We can then wrap that returned compound literal reference in a macro. Union is
 used as the wrapping type as a reminder that this type should serve no other
 purpose and add no additional fields. */
-union CCC_Range_reverse_wrap
-{
+union CCC_Range_reverse_wrap {
     /** @internal Helper to return the compound literal reference. */
     struct CCC_Range private;
 };
@@ -169,17 +159,14 @@ or not. So we use a union for some clarity for the implementer.
 
 We will also wrap this in two different types so that the user has some help
 ensuring they pass the correct direction range to the correct function. */
-struct CCC_Handle_range
-{
-    union
-    {
+struct CCC_Handle_range {
+    union {
         /** @internal Start of forward iteration for a container. */
         size_t begin;
         /** @internal Start of reverse iteration for a container. */
         size_t reverse_begin;
     };
-    union
-    {
+    union {
         /** @internal End of forward iteration for a container. */
         size_t end;
         /** @internal End of reverse iteration for a container. */
@@ -199,8 +186,7 @@ CCC_Handle_range *range
 We can then wrap that returned compound literal reference in a macro. Union is
 used as the wrapping type as a reminder that this type should serve no other
 purpose and add no additional fields. */
-union CCC_Handle_range_wrap
-{
+union CCC_Handle_range_wrap {
     /** @internal Helper to return the compound literal reference. */
     struct CCC_Handle_range private;
 };
@@ -217,8 +203,7 @@ CCC_Handle_range_reverse *range
 We can then wrap that returned compound literal reference in a macro. Union is
 used as the wrapping type as a reminder that this type should serve no other
 purpose and add no additional fields. */
-union CCC_Handle_range_reverse_wrap
-{
+union CCC_Handle_range_reverse_wrap {
     /** @internal Helper to return the compound literal reference. */
     struct CCC_Handle_range private;
 };

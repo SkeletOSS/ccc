@@ -37,40 +37,32 @@ static char const *const result_messages[CCC_PRIVATE_RESULT_COUNT] = {
 /*============================   Interface    ===============================*/
 
 CCC_Tribool
-CCC_entry_occupied(CCC_Entry const *const entry)
-{
-    if (!entry)
-    {
+CCC_entry_occupied(CCC_Entry const *const entry) {
+    if (!entry) {
         return CCC_TRIBOOL_ERROR;
     }
     return (entry->private.status & CCC_ENTRY_OCCUPIED) != 0;
 }
 
 CCC_Tribool
-CCC_entry_insert_error(CCC_Entry const *const entry)
-{
-    if (!entry)
-    {
+CCC_entry_insert_error(CCC_Entry const *const entry) {
+    if (!entry) {
         return CCC_TRIBOOL_ERROR;
     }
     return (entry->private.status & CCC_ENTRY_INSERT_ERROR) != 0;
 }
 
 CCC_Tribool
-CCC_entry_input_error(CCC_Entry const *const entry)
-{
-    if (!entry)
-    {
+CCC_entry_input_error(CCC_Entry const *const entry) {
+    if (!entry) {
         return CCC_TRIBOOL_ERROR;
     }
     return (entry->private.status & CCC_ENTRY_ARGUMENT_ERROR) != 0;
 }
 
 void *
-CCC_entry_unwrap(CCC_Entry const *const entry)
-{
-    if (!entry)
-    {
+CCC_entry_unwrap(CCC_Entry const *const entry) {
+    if (!entry) {
         return NULL;
     }
     return entry->private.status & CCC_ENTRY_NO_UNWRAP ? NULL
@@ -78,40 +70,32 @@ CCC_entry_unwrap(CCC_Entry const *const entry)
 }
 
 CCC_Tribool
-CCC_handle_occupied(CCC_Handle const *const handle)
-{
-    if (!handle)
-    {
+CCC_handle_occupied(CCC_Handle const *const handle) {
+    if (!handle) {
         return CCC_TRIBOOL_ERROR;
     }
     return (handle->private.status & CCC_ENTRY_OCCUPIED) != 0;
 }
 
 CCC_Tribool
-CCC_handle_insert_error(CCC_Handle const *const handle)
-{
-    if (!handle)
-    {
+CCC_handle_insert_error(CCC_Handle const *const handle) {
+    if (!handle) {
         return CCC_TRIBOOL_ERROR;
     }
     return (handle->private.status & CCC_ENTRY_INSERT_ERROR) != 0;
 }
 
 CCC_Tribool
-CCC_handle_input_error(CCC_Handle const *const handle)
-{
-    if (!handle)
-    {
+CCC_handle_input_error(CCC_Handle const *const handle) {
+    if (!handle) {
         return CCC_TRIBOOL_ERROR;
     }
     return (handle->private.status & CCC_ENTRY_ARGUMENT_ERROR) != 0;
 }
 
 CCC_Handle_index
-CCC_handle_unwrap(CCC_Handle const *const handle)
-{
-    if (!handle)
-    {
+CCC_handle_unwrap(CCC_Handle const *const handle) {
+    if (!handle) {
         return 0;
     }
     return handle->private.status & CCC_ENTRY_NO_UNWRAP ? 0
@@ -119,94 +103,77 @@ CCC_handle_unwrap(CCC_Handle const *const handle)
 }
 
 void *
-CCC_range_begin(CCC_Range const *const range)
-{
+CCC_range_begin(CCC_Range const *const range) {
     return range ? range->private.begin : NULL;
 }
 
 void *
-CCC_range_end(CCC_Range const *const range)
-{
+CCC_range_end(CCC_Range const *const range) {
     return range ? range->private.end : NULL;
 }
 
 void *
-CCC_range_reverse_begin(CCC_Range_reverse const *const range)
-{
+CCC_range_reverse_begin(CCC_Range_reverse const *const range) {
     return range ? range->private.reverse_begin : NULL;
 }
 
 void *
-CCC_range_reverse_end(CCC_Range_reverse const *const range)
-{
+CCC_range_reverse_end(CCC_Range_reverse const *const range) {
     return range ? range->private.reverse_end : NULL;
 }
 
 CCC_Handle_index
-CCC_array_range_begin(CCC_Handle_range const *const range)
-{
+CCC_array_range_begin(CCC_Handle_range const *const range) {
     return range ? range->private.begin : 0;
 }
 
 CCC_Handle_index
-CCC_array_range_end(CCC_Handle_range const *const range)
-{
+CCC_array_range_end(CCC_Handle_range const *const range) {
     return range ? range->private.end : 0;
 }
 
 CCC_Handle_index
-CCC_array_range_reverse_begin(CCC_Handle_range_reverse const *const range)
-{
+CCC_array_range_reverse_begin(CCC_Handle_range_reverse const *const range) {
     return range ? range->private.reverse_begin : 0;
 }
 
 CCC_Handle_index
-CCC_array_range_reverse_end(CCC_Handle_range_reverse const *const range)
-{
+CCC_array_range_reverse_end(CCC_Handle_range_reverse const *const range) {
     return range ? range->private.reverse_end : 0;
 }
 
 char const *
-CCC_result_message(CCC_Result const result)
-{
-    if (result >= CCC_PRIVATE_RESULT_COUNT)
-    {
+CCC_result_message(CCC_Result const result) {
+    if (result >= CCC_PRIVATE_RESULT_COUNT) {
         return "error: invalid result provided no message exists";
     }
     return result_messages[result];
 }
 
 CCC_Entry_status
-CCC_get_entry_status(CCC_Entry const *entry)
-{
-    if (!entry)
-    {
+CCC_get_entry_status(CCC_Entry const *entry) {
+    if (!entry) {
         return CCC_ENTRY_ARGUMENT_ERROR;
     }
     return entry->private.status;
 }
 
 CCC_Handle_status
-CCC_get_handle_status(CCC_Handle const *handle)
-{
-    if (!handle)
-    {
+CCC_get_handle_status(CCC_Handle const *handle) {
+    if (!handle) {
         return CCC_ENTRY_ARGUMENT_ERROR;
     }
     return handle->private.status;
 }
 
 char const *
-CCC_handle_status_message(CCC_Handle_status const status)
-{
+CCC_handle_status_message(CCC_Handle_status const status) {
     return CCC_entry_status_message(status);
 }
 
 char const *
-CCC_entry_status_message(CCC_Entry_status const status)
-{
-    switch (status)
-    {
+CCC_entry_status_message(CCC_Entry_status const status) {
+    switch (status) {
         case CCC_ENTRY_VACANT:
             return "vacant with no errors";
             break;

@@ -74,16 +74,14 @@ two alignments in C. */
 #define roundup(bytes_to_round, alignment)                                     \
     (((bytes_to_round) + (alignment) - 1) & ~((alignment) - 1))
 
-enum : size_t
-{
+enum : size_t {
     /* @internal Test capacity. */
     TCAP = 3,
 };
 /** @internal Use an int because that will force the nodes array to be wary of
 where to start. The nodes are 8 byte aligned but an int is 4. This means the
 nodes need to start after a 4 byte Buffer of padding at end of data array. */
-struct Test_data_type
-{
+struct Test_data_type {
     int const i;
 };
 CCC_array_tree_map_declare_fixed(Fixed_map_test_type, struct Test_data_type,
@@ -152,8 +150,7 @@ static_assert(
 /*==========================  Type Declarations   ===========================*/
 
 /** @internal */
-enum Link
-{
+enum Link {
     L = 0,
     R,
 };
@@ -163,12 +160,10 @@ last node encountered on the search for the requested node. It will either be
 the correct node or the parent of the missing node if it is not found. This
 means insertions will not need a second search of the tree and we can insert
 immediately by adding the child. */
-struct Query
-{
+struct Query {
     /** The last branch direction we took to the found or missing node. */
     CCC_Order last_order;
-    union
-    {
+    union {
         /** The node was found so here is its index in the array. */
         size_t found;
         /** The node was not found so here is its direct parent. */
@@ -179,16 +174,14 @@ struct Query
 #define INORDER R
 #define INORDER_REVERSE L
 
-enum
-{
+enum {
     INSERT_ROOT_COUNT = 2,
 };
 
 /** @internal A block of parity bits. */
 typedef typeof(*(struct CCC_Array_tree_map){}.parity) Parity_block;
 
-enum : size_t
-{
+enum : size_t {
     /** @internal The number of bits in a block of parity bits. */
     PARITY_BLOCK_BITS = sizeof(Parity_block) * CHAR_BIT,
     /** @internal Hand calculated log2 of block bits for a fast shift rather
@@ -291,10 +284,8 @@ static size_t max(size_t, size_t);
 
 void *
 CCC_array_tree_map_at(CCC_Array_tree_map const *const h,
-                      CCC_Handle_index const i)
-{
-    if (!h || !i)
-    {
+                      CCC_Handle_index const i) {
+    if (!h || !i) {
         return NULL;
     }
     return data_at(h, i);
@@ -302,10 +293,8 @@ CCC_array_tree_map_at(CCC_Array_tree_map const *const h,
 
 CCC_Tribool
 CCC_array_tree_map_contains(CCC_Array_tree_map const *const map,
-                            void const *const key)
-{
-    if (!map || !key)
-    {
+                            void const *const key) {
+    if (!map || !key) {
         return CCC_TRIBOOL_ERROR;
     }
     return CCC_ORDER_EQUAL == find(map, key).last_order;
@@ -313,10 +302,8 @@ CCC_array_tree_map_contains(CCC_Array_tree_map const *const map,
 
 CCC_Handle_index
 CCC_array_tree_map_get_key_value(CCC_Array_tree_map const *const map,
-                                 void const *const key)
-{
-    if (!map || !key)
-    {
+                                 void const *const key) {
+    if (!map || !key) {
         return 0;
     }
     struct Query const q = find(map, key);
@@ -325,15 +312,12 @@ CCC_array_tree_map_get_key_value(CCC_Array_tree_map const *const map,
 
 CCC_Handle
 CCC_array_tree_map_swap_handle(CCC_Array_tree_map *const map,
-                               void *const type_output)
-{
-    if (!map || !type_output)
-    {
+                               void *const type_output) {
+    if (!map || !type_output) {
         return (CCC_Handle){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
     }
     struct Query const q = find(map, key_in_slot(map, type_output));
-    if (CCC_ORDER_EQUAL == q.last_order)
-    {
+    if (CCC_ORDER_EQUAL == q.last_order) {
         void *const slot = data_at(map, q.found);
         void *const temp = data_at(map, 0);
         swap(temp, type_output, slot, map->sizeof_type);
@@ -344,8 +328,7 @@ CCC_array_tree_map_swap_handle(CCC_Array_tree_map *const map,
     }
     size_t const i
         = maybe_allocate_insert(map, q.parent, q.last_order, type_output);
-    if (!i)
-    {
+    if (!i) {
         return (CCC_Handle){{
             .index = 0,
             .status = CCC_ENTRY_INSERT_ERROR,
@@ -359,23 +342,19 @@ CCC_array_tree_map_swap_handle(CCC_Array_tree_map *const map,
 
 CCC_Handle
 CCC_array_tree_map_try_insert(CCC_Array_tree_map *const map,
-                              void const *const type)
-{
-    if (!map || !type)
-    {
+                              void const *const type) {
+    if (!map || !type) {
         return (CCC_Handle){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
     }
     struct Query const q = find(map, key_in_slot(map, type));
-    if (CCC_ORDER_EQUAL == q.last_order)
-    {
+    if (CCC_ORDER_EQUAL == q.last_order) {
         return (CCC_Handle){{
             .index = q.found,
             .status = CCC_ENTRY_OCCUPIED,
         }};
     }
     size_t const i = maybe_allocate_insert(map, q.parent, q.last_order, type);
-    if (!i)
-    {
+    if (!i) {
         return (CCC_Handle){{
             .index = 0,
             .status = CCC_ENTRY_INSERT_ERROR,
@@ -389,15 +368,12 @@ CCC_array_tree_map_try_insert(CCC_Array_tree_map *const map,
 
 CCC_Handle
 CCC_array_tree_map_insert_or_assign(CCC_Array_tree_map *const map,
-                                    void const *const type)
-{
-    if (!map || !type)
-    {
+                                    void const *const type) {
+    if (!map || !type) {
         return (CCC_Handle){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
     }
     struct Query const q = find(map, key_in_slot(map, type));
-    if (CCC_ORDER_EQUAL == q.last_order)
-    {
+    if (CCC_ORDER_EQUAL == q.last_order) {
         void *const found = data_at(map, q.found);
         (void)memcpy(found, type, map->sizeof_type);
         return (CCC_Handle){{
@@ -406,8 +382,7 @@ CCC_array_tree_map_insert_or_assign(CCC_Array_tree_map *const map,
         }};
     }
     size_t const i = maybe_allocate_insert(map, q.parent, q.last_order, type);
-    if (!i)
-    {
+    if (!i) {
         return (CCC_Handle){{
             .index = 0,
             .status = CCC_ENTRY_INSERT_ERROR,
@@ -421,11 +396,9 @@ CCC_array_tree_map_insert_or_assign(CCC_Array_tree_map *const map,
 
 CCC_Array_tree_map_handle *
 CCC_array_tree_map_and_modify(CCC_Array_tree_map_handle *const handle,
-                              CCC_Type_modifier *const modify)
-{
+                              CCC_Type_modifier *const modify) {
     if (handle && modify && handle->private.status & CCC_ENTRY_OCCUPIED
-        && handle->private.index > 0)
-    {
+        && handle->private.index > 0) {
         modify((CCC_Type_context){
             .type = data_at(handle->private.map, handle->private.index),
             NULL,
@@ -435,13 +408,11 @@ CCC_array_tree_map_and_modify(CCC_Array_tree_map_handle *const handle,
 }
 
 CCC_Array_tree_map_handle *
-CCC_array_tree_map_and_modify_context(CCC_Array_tree_map_handle *const handle,
+CCC_array_tree_map_and_context_modify(CCC_Array_tree_map_handle *const handle,
                                       CCC_Type_modifier *const modify,
-                                      void *const context)
-{
+                                      void *const context) {
     if (handle && modify && handle->private.status & CCC_ENTRY_OCCUPIED
-        && handle->private.status > 0)
-    {
+        && handle->private.status > 0) {
         modify((CCC_Type_context){
             .type = data_at(handle->private.map, handle->private.index),
             context,
@@ -452,14 +423,11 @@ CCC_array_tree_map_and_modify_context(CCC_Array_tree_map_handle *const handle,
 
 CCC_Handle_index
 CCC_array_tree_map_or_insert(CCC_Array_tree_map_handle const *const h,
-                             void const *const type)
-{
-    if (!h || !type)
-    {
+                             void const *const type) {
+    if (!h || !type) {
         return 0;
     }
-    if (h->private.status == CCC_ENTRY_OCCUPIED)
-    {
+    if (h->private.status == CCC_ENTRY_OCCUPIED) {
         return h->private.index;
     }
     return maybe_allocate_insert(h->private.map, h->private.index,
@@ -468,17 +436,13 @@ CCC_array_tree_map_or_insert(CCC_Array_tree_map_handle const *const h,
 
 CCC_Handle_index
 CCC_array_tree_map_insert_handle(CCC_Array_tree_map_handle const *const h,
-                                 void const *const type)
-{
-    if (!h || !type)
-    {
+                                 void const *const type) {
+    if (!h || !type) {
         return 0;
     }
-    if (h->private.status == CCC_ENTRY_OCCUPIED)
-    {
+    if (h->private.status == CCC_ENTRY_OCCUPIED) {
         void *const slot = data_at(h->private.map, h->private.index);
-        if (slot != type)
-        {
+        if (slot != type) {
             (void)memcpy(slot, type, h->private.map->sizeof_type);
         }
         return h->private.index;
@@ -489,10 +453,8 @@ CCC_array_tree_map_insert_handle(CCC_Array_tree_map_handle const *const h,
 
 CCC_Array_tree_map_handle
 CCC_array_tree_map_handle(CCC_Array_tree_map const *const map,
-                          void const *const key)
-{
-    if (!map || !key)
-    {
+                          void const *const key) {
+    if (!map || !key) {
         return (CCC_Array_tree_map_handle){
             {.status = CCC_ENTRY_ARGUMENT_ERROR}};
     }
@@ -500,14 +462,11 @@ CCC_array_tree_map_handle(CCC_Array_tree_map const *const map,
 }
 
 CCC_Handle
-CCC_array_tree_map_remove_handle(CCC_Array_tree_map_handle const *const h)
-{
-    if (!h)
-    {
+CCC_array_tree_map_remove_handle(CCC_Array_tree_map_handle const *const h) {
+    if (!h) {
         return (CCC_Handle){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
     }
-    if (h->private.status == CCC_ENTRY_OCCUPIED)
-    {
+    if (h->private.status == CCC_ENTRY_OCCUPIED) {
         size_t const ret = remove_fixup(h->private.map, h->private.index);
         return (CCC_Handle){{
             .index = ret,
@@ -522,15 +481,12 @@ CCC_array_tree_map_remove_handle(CCC_Array_tree_map_handle const *const h)
 
 CCC_Handle
 CCC_array_tree_map_remove_key_value(CCC_Array_tree_map *const map,
-                                    void *const type_output)
-{
-    if (!map || !type_output)
-    {
+                                    void *const type_output) {
+    if (!map || !type_output) {
         return (CCC_Handle){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
     }
     struct Query const q = find(map, key_in_slot(map, type_output));
-    if (q.last_order != CCC_ORDER_EQUAL)
-    {
+    if (q.last_order != CCC_ORDER_EQUAL) {
         return (CCC_Handle){{
             .index = 0,
             .status = CCC_ENTRY_VACANT,
@@ -539,8 +495,7 @@ CCC_array_tree_map_remove_key_value(CCC_Array_tree_map *const map,
     size_t const removed = remove_fixup(map, q.found);
     assert(removed);
     void const *const r = data_at(map, removed);
-    if (type_output != r)
-    {
+    if (type_output != r) {
         (void)memcpy(type_output, r, map->sizeof_type);
     }
     return (CCC_Handle){{
@@ -552,10 +507,8 @@ CCC_array_tree_map_remove_key_value(CCC_Array_tree_map *const map,
 CCC_Handle_range
 CCC_array_tree_map_equal_range(CCC_Array_tree_map const *const map,
                                void const *const begin_key,
-                               void const *const end_key)
-{
-    if (!map || !begin_key || !end_key)
-    {
+                               void const *const end_key) {
+    if (!map || !begin_key || !end_key) {
         return (CCC_Handle_range){};
     }
     return (CCC_Handle_range){
@@ -566,10 +519,8 @@ CCC_array_tree_map_equal_range(CCC_Array_tree_map const *const map,
 CCC_Handle_range_reverse
 CCC_array_tree_map_equal_range_reverse(CCC_Array_tree_map const *const map,
                                        void const *const reverse_begin_key,
-                                       void const *const reverse_end_key)
-{
-    if (!map || !reverse_begin_key || !reverse_end_key)
-    {
+                                       void const *const reverse_end_key) {
+    if (!map || !reverse_begin_key || !reverse_end_key) {
         return (CCC_Handle_range_reverse){};
     }
     return (CCC_Handle_range_reverse){
@@ -578,60 +529,48 @@ CCC_array_tree_map_equal_range_reverse(CCC_Array_tree_map const *const map,
 }
 
 CCC_Handle_index
-CCC_array_tree_map_unwrap(CCC_Array_tree_map_handle const *const h)
-{
-    if (h && h->private.status & CCC_ENTRY_OCCUPIED && h->private.index > 0)
-    {
+CCC_array_tree_map_unwrap(CCC_Array_tree_map_handle const *const h) {
+    if (h && h->private.status & CCC_ENTRY_OCCUPIED && h->private.index > 0) {
         return h->private.index;
     }
     return 0;
 }
 
 CCC_Tribool
-CCC_array_tree_map_insert_error(CCC_Array_tree_map_handle const *const h)
-{
-    if (!h)
-    {
+CCC_array_tree_map_insert_error(CCC_Array_tree_map_handle const *const h) {
+    if (!h) {
         return CCC_TRIBOOL_ERROR;
     }
     return (h->private.status & CCC_ENTRY_INSERT_ERROR) != 0;
 }
 
 CCC_Tribool
-CCC_array_tree_map_occupied(CCC_Array_tree_map_handle const *const h)
-{
-    if (!h)
-    {
+CCC_array_tree_map_occupied(CCC_Array_tree_map_handle const *const h) {
+    if (!h) {
         return CCC_TRIBOOL_ERROR;
     }
     return (h->private.status & CCC_ENTRY_OCCUPIED) != 0;
 }
 
 CCC_Handle_status
-CCC_array_tree_map_handle_status(CCC_Array_tree_map_handle const *const h)
-{
+CCC_array_tree_map_handle_status(CCC_Array_tree_map_handle const *const h) {
     return h ? h->private.status : CCC_ENTRY_ARGUMENT_ERROR;
 }
 
 CCC_Tribool
-CCC_array_tree_map_is_empty(CCC_Array_tree_map const *const map)
-{
-    if (!map)
-    {
+CCC_array_tree_map_is_empty(CCC_Array_tree_map const *const map) {
+    if (!map) {
         return CCC_TRIBOOL_ERROR;
     }
     return !CCC_array_tree_map_count(map).count;
 }
 
 CCC_Count
-CCC_array_tree_map_count(CCC_Array_tree_map const *const map)
-{
-    if (!map)
-    {
+CCC_array_tree_map_count(CCC_Array_tree_map const *const map) {
+    if (!map) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
-    if (!map->count)
-    {
+    if (!map->count) {
         return (CCC_Count){.count = 0};
     }
     /* The root slot is occupied at 0 but don't don't tell user. */
@@ -641,10 +580,8 @@ CCC_array_tree_map_count(CCC_Array_tree_map const *const map)
 }
 
 CCC_Count
-CCC_array_tree_map_capacity(CCC_Array_tree_map const *const map)
-{
-    if (!map)
-    {
+CCC_array_tree_map_capacity(CCC_Array_tree_map const *const map) {
+    if (!map) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
     return (CCC_Count){
@@ -653,10 +590,8 @@ CCC_array_tree_map_capacity(CCC_Array_tree_map const *const map)
 }
 
 CCC_Handle_index
-CCC_array_tree_map_begin(CCC_Array_tree_map const *const map)
-{
-    if (!map || !map->capacity)
-    {
+CCC_array_tree_map_begin(CCC_Array_tree_map const *const map) {
+    if (!map || !map->capacity) {
         return 0;
     }
     size_t const n = min_max_from(map, map->root, L);
@@ -664,10 +599,8 @@ CCC_array_tree_map_begin(CCC_Array_tree_map const *const map)
 }
 
 CCC_Handle_index
-CCC_array_tree_map_reverse_begin(CCC_Array_tree_map const *const map)
-{
-    if (!map || !map->capacity)
-    {
+CCC_array_tree_map_reverse_begin(CCC_Array_tree_map const *const map) {
+    if (!map || !map->capacity) {
         return 0;
     }
     size_t const n = min_max_from(map, map->root, R);
@@ -676,10 +609,8 @@ CCC_array_tree_map_reverse_begin(CCC_Array_tree_map const *const map)
 
 CCC_Handle_index
 CCC_array_tree_map_next(CCC_Array_tree_map const *const map,
-                        CCC_Handle_index iterator)
-{
-    if (!map || !iterator || !map->capacity)
-    {
+                        CCC_Handle_index iterator) {
+    if (!map || !iterator || !map->capacity) {
         return 0;
     }
     size_t const n = next(map, iterator, INORDER);
@@ -688,10 +619,8 @@ CCC_array_tree_map_next(CCC_Array_tree_map const *const map,
 
 CCC_Handle_index
 CCC_array_tree_map_reverse_next(CCC_Array_tree_map const *const map,
-                                CCC_Handle_index iterator)
-{
-    if (!map || !iterator || !map->capacity)
-    {
+                                CCC_Handle_index iterator) {
+    if (!map || !iterator || !map->capacity) {
         return 0;
     }
     size_t const n = next(map, iterator, INORDER_REVERSE);
@@ -699,53 +628,44 @@ CCC_array_tree_map_reverse_next(CCC_Array_tree_map const *const map,
 }
 
 CCC_Handle_index
-CCC_array_tree_map_end(CCC_Array_tree_map const *const)
-{
+CCC_array_tree_map_end(CCC_Array_tree_map const *const) {
     return 0;
 }
 
 CCC_Handle_index
-CCC_array_tree_map_reverse_end(CCC_Array_tree_map const *const)
-{
+CCC_array_tree_map_reverse_end(CCC_Array_tree_map const *const) {
     return 0;
 }
 
 CCC_Result
 CCC_array_tree_map_reserve(CCC_Array_tree_map *const map, size_t const to_add,
-                           CCC_Allocator *const allocate)
-{
-    if (!map || !to_add || !allocate)
-    {
+                           CCC_Allocator *const allocate) {
+    if (!map || !to_add || !allocate) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     /* Once initialized the Buffer always has a size of one for root node. */
     size_t const needed = map->count + to_add + (map->count == 0);
-    if (needed <= map->capacity)
-    {
+    if (needed <= map->capacity) {
         return CCC_RESULT_OK;
     }
     size_t const old_count = map->count;
     size_t old_cap = map->capacity;
     CCC_Result const r = resize(map, needed, allocate);
-    if (r != CCC_RESULT_OK)
-    {
+    if (r != CCC_RESULT_OK) {
         return r;
     }
     set_parity(map, 0, CCC_TRUE);
-    if (!old_cap)
-    {
+    if (!old_cap) {
         map->count = 1;
     }
     old_cap = old_count ? old_cap : 0;
     size_t const new_cap = map->capacity;
     size_t prev = 0;
     for (ptrdiff_t i = (ptrdiff_t)new_cap - 1; i > 0 && i >= (ptrdiff_t)old_cap;
-         prev = i, --i)
-    {
+         prev = i, --i) {
         node_at(map, i)->next_free = prev;
     }
-    if (!map->free_list)
-    {
+    if (!map->free_list) {
         map->free_list = prev;
     }
     return CCC_RESULT_OK;
@@ -754,11 +674,9 @@ CCC_array_tree_map_reserve(CCC_Array_tree_map *const map, size_t const to_add,
 CCC_Result
 CCC_array_tree_map_copy(CCC_Array_tree_map *const destination,
                         CCC_Array_tree_map const *const source,
-                        CCC_Allocator *const allocate)
-{
+                        CCC_Allocator *const allocate) {
     if (!destination || !source || source == destination
-        || (destination->capacity < source->capacity && !allocate))
-    {
+        || (destination->capacity < source->capacity && !allocate)) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     void *const destination_data = destination->data;
@@ -773,28 +691,22 @@ CCC_array_tree_map_copy(CCC_Array_tree_map *const destination,
     destination->parity = destination_parity;
     destination->capacity = destination_cap;
     destination->allocate = destination_allocate;
-    if (!source->capacity)
-    {
+    if (!source->capacity) {
         return CCC_RESULT_OK;
     }
-    if (destination->capacity < source->capacity)
-    {
+    if (destination->capacity < source->capacity) {
         CCC_Result const r = resize(destination, source->capacity, allocate);
-        if (r != CCC_RESULT_OK)
-        {
+        if (r != CCC_RESULT_OK) {
             return r;
         }
-    }
-    else
-    {
+    } else {
         /* Might not be necessary but not worth finding out. Do every time. */
         destination->nodes = nodes_base_address(
             destination->sizeof_type, destination->data, destination->capacity);
         destination->parity = parities_base_address(
             destination->sizeof_type, destination->data, destination->capacity);
     }
-    if (!destination->data || !source->data)
-    {
+    if (!destination->data || !source->data) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     copy_soa(source, destination->data, destination->capacity);
@@ -803,14 +715,11 @@ CCC_array_tree_map_copy(CCC_Array_tree_map *const destination,
 
 CCC_Result
 CCC_array_tree_map_clear(CCC_Array_tree_map *const map,
-                         CCC_Type_destructor *const destroy)
-{
-    if (!map)
-    {
+                         CCC_Type_destructor *const destroy) {
+    if (!map) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    if (destroy)
-    {
+    if (destroy) {
         delete_nodes(map, destroy);
     }
     map->count = 1;
@@ -820,14 +729,11 @@ CCC_array_tree_map_clear(CCC_Array_tree_map *const map,
 
 CCC_Result
 CCC_array_tree_map_clear_and_free(CCC_Array_tree_map *const map,
-                                  CCC_Type_destructor *const destroy)
-{
-    if (!map || !map->allocate)
-    {
+                                  CCC_Type_destructor *const destroy) {
+    if (!map || !map->allocate) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    if (destroy)
-    {
+    if (destroy) {
         delete_nodes(map, destroy);
     }
     map->root = 0;
@@ -846,14 +752,11 @@ CCC_array_tree_map_clear_and_free(CCC_Array_tree_map *const map,
 CCC_Result
 CCC_array_tree_map_clear_and_free_reserve(CCC_Array_tree_map *const map,
                                           CCC_Type_destructor *const destroy,
-                                          CCC_Allocator *const allocate)
-{
-    if (!map || !allocate)
-    {
+                                          CCC_Allocator *const allocate) {
+    if (!map || !allocate) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    if (destroy)
-    {
+    if (destroy) {
         delete_nodes(map, destroy);
     }
     map->root = 0;
@@ -870,10 +773,8 @@ CCC_array_tree_map_clear_and_free_reserve(CCC_Array_tree_map *const map,
 }
 
 CCC_Tribool
-CCC_array_tree_map_validate(CCC_Array_tree_map const *const map)
-{
-    if (!map)
-    {
+CCC_array_tree_map_validate(CCC_Array_tree_map const *const map) {
+    if (!map) {
         return CCC_TRIBOOL_ERROR;
     }
     return validate(map);
@@ -885,42 +786,36 @@ void
 CCC_private_array_tree_map_insert(struct CCC_Array_tree_map *const map,
                                   size_t const parent_i,
                                   CCC_Order const last_order,
-                                  size_t const elem_i)
-{
+                                  size_t const elem_i) {
     insert(map, parent_i, last_order, elem_i);
 }
 
 struct CCC_Array_tree_map_handle
 CCC_private_array_tree_map_handle(struct CCC_Array_tree_map const *const map,
-                                  void const *const key)
-{
+                                  void const *const key) {
     return handle(map, key);
 }
 
 void *
 CCC_private_array_tree_map_data_at(struct CCC_Array_tree_map const *const map,
-                                   size_t const slot)
-{
+                                   size_t const slot) {
     return data_at(map, slot);
 }
 
 void *
 CCC_private_array_tree_map_key_at(struct CCC_Array_tree_map const *const map,
-                                  size_t const slot)
-{
+                                  size_t const slot) {
     return key_at(map, slot);
 }
 
 struct CCC_Array_tree_map_node *
 CCC_private_array_tree_map_node_at(struct CCC_Array_tree_map const *map,
-                                   size_t const i)
-{
+                                   size_t const i) {
     return node_at(map, i);
 }
 
 size_t
-CCC_private_array_tree_map_allocate_slot(struct CCC_Array_tree_map *const map)
-{
+CCC_private_array_tree_map_allocate_slot(struct CCC_Array_tree_map *const map) {
     return allocate_slot(map);
 }
 
@@ -928,13 +823,11 @@ CCC_private_array_tree_map_allocate_slot(struct CCC_Array_tree_map *const map)
 
 static size_t
 maybe_allocate_insert(struct CCC_Array_tree_map *const map, size_t const parent,
-                      CCC_Order const last_order, void const *const user_type)
-{
+                      CCC_Order const last_order, void const *const user_type) {
     /* The end sentinel node will always be at 0. This also means once
        initialized the internal size for implementer is always at least 1. */
     size_t const node = allocate_slot(map);
-    if (!node)
-    {
+    if (!node) {
         return 0;
     }
     (void)memcpy(data_at(map, node), user_type, map->sizeof_type);
@@ -943,25 +836,19 @@ maybe_allocate_insert(struct CCC_Array_tree_map *const map, size_t const parent,
 }
 
 static size_t
-allocate_slot(struct CCC_Array_tree_map *const map)
-{
+allocate_slot(struct CCC_Array_tree_map *const map) {
     /* The end sentinel node will always be at 0. This also means once
        initialized the internal size for implementer is always at least 1. */
     size_t const old_count = map->count;
     size_t old_cap = map->capacity;
-    if (!old_count || old_count == old_cap)
-    {
+    if (!old_count || old_count == old_cap) {
         assert(!map->free_list);
-        if (old_count == old_cap)
-        {
+        if (old_count == old_cap) {
             if (resize(map, max(old_cap * 2, PARITY_BLOCK_BITS), map->allocate)
-                != CCC_RESULT_OK)
-            {
+                != CCC_RESULT_OK) {
                 return 0;
             }
-        }
-        else
-        {
+        } else {
             map->nodes = nodes_base_address(map->sizeof_type, map->data,
                                             map->capacity);
             map->parity = parities_base_address(map->sizeof_type, map->data,
@@ -970,16 +857,14 @@ allocate_slot(struct CCC_Array_tree_map *const map)
         old_cap = old_count ? old_cap : 0;
         size_t const new_cap = map->capacity;
         size_t prev = 0;
-        for (size_t i = new_cap - 1; i > 0 && i >= old_cap; prev = i, --i)
-        {
+        for (size_t i = new_cap - 1; i > 0 && i >= old_cap; prev = i, --i) {
             node_at(map, i)->next_free = prev;
         }
         map->free_list = prev;
         map->count = max(old_count, 1);
         set_parity(map, 0, CCC_TRUE);
     }
-    if (!map->free_list)
-    {
+    if (!map->free_list) {
         return 0;
     }
     ++map->count;
@@ -990,14 +875,11 @@ allocate_slot(struct CCC_Array_tree_map *const map)
 
 static CCC_Result
 resize(struct CCC_Array_tree_map *const map, size_t const new_capacity,
-       CCC_Allocator *const allocate)
-{
-    if (map->capacity && new_capacity <= map->capacity - 1)
-    {
+       CCC_Allocator *const allocate) {
+    if (map->capacity && new_capacity <= map->capacity - 1) {
         return CCC_RESULT_OK;
     }
-    if (!allocate)
-    {
+    if (!allocate) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
     void *const new_data = allocate((CCC_Allocator_context){
@@ -1005,8 +887,7 @@ resize(struct CCC_Array_tree_map *const map, size_t const new_capacity,
         .bytes = total_bytes(map->sizeof_type, new_capacity),
         .context = map->context,
     });
-    if (!new_data)
-    {
+    if (!new_data) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
     copy_soa(map, new_data, new_capacity);
@@ -1025,36 +906,30 @@ resize(struct CCC_Array_tree_map *const map, size_t const new_capacity,
 
 static void
 insert(struct CCC_Array_tree_map *const map, size_t const parent_i,
-       CCC_Order const last_order, size_t const elem_i)
-{
+       CCC_Order const last_order, size_t const elem_i) {
     struct CCC_Array_tree_map_node *elem = node_at(map, elem_i);
     init_node(map, elem_i);
-    if (map->count == INSERT_ROOT_COUNT)
-    {
+    if (map->count == INSERT_ROOT_COUNT) {
         map->root = elem_i;
         return;
     }
     assert(last_order == CCC_ORDER_GREATER || last_order == CCC_ORDER_LESSER);
     CCC_Tribool rank_rule_break = false;
-    if (parent_i)
-    {
+    if (parent_i) {
         struct CCC_Array_tree_map_node *parent = node_at(map, parent_i);
         rank_rule_break = !parent->branch[L] && !parent->branch[R];
         parent->branch[CCC_ORDER_GREATER == last_order] = elem_i;
     }
     elem->parent = parent_i;
-    if (rank_rule_break)
-    {
+    if (rank_rule_break) {
         insert_fixup(map, parent_i, elem_i);
     }
 }
 
 static struct CCC_Array_tree_map_handle
-handle(struct CCC_Array_tree_map const *const map, void const *const key)
-{
+handle(struct CCC_Array_tree_map const *const map, void const *const key) {
     struct Query const q = find(map, key);
-    if (CCC_ORDER_EQUAL == q.last_order)
-    {
+    if (CCC_ORDER_EQUAL == q.last_order) {
         return (struct CCC_Array_tree_map_handle){
             .map = (struct CCC_Array_tree_map *)map,
             .last_order = q.last_order,
@@ -1071,18 +946,15 @@ handle(struct CCC_Array_tree_map const *const map, void const *const key)
 }
 
 static struct Query
-find(struct CCC_Array_tree_map const *const map, void const *const key)
-{
+find(struct CCC_Array_tree_map const *const map, void const *const key) {
     size_t parent = 0;
     struct Query q = {
         .last_order = CCC_ORDER_ERROR,
         .found = map->root,
     };
-    while (q.found)
-    {
+    while (q.found) {
         q.last_order = order_nodes(map, key, q.found, map->compare);
-        if (CCC_ORDER_EQUAL == q.last_order)
-        {
+        if (CCC_ORDER_EQUAL == q.last_order) {
             return q;
         }
         parent = q.found;
@@ -1095,49 +967,40 @@ find(struct CCC_Array_tree_map const *const map, void const *const key)
 
 static size_t
 next(struct CCC_Array_tree_map const *const map, size_t n,
-     enum Link const traversal)
-{
-    if (!n)
-    {
+     enum Link const traversal) {
+    if (!n) {
         return 0;
     }
     assert(!parent_index(map, map->root));
     /* The node is an internal one that has a sub-tree to explore first. */
-    if (branch_index(map, n, traversal))
-    {
+    if (branch_index(map, n, traversal)) {
         /* The goal is to get far left/right ASAP in any traversal. */
         for (n = branch_index(map, n, traversal);
              branch_index(map, n, !traversal);
-             n = branch_index(map, n, !traversal))
-        {}
+             n = branch_index(map, n, !traversal)) {}
         return n;
     }
     /* This is how to return internal nodes on the way back up from a leaf. */
     size_t p = parent_index(map, n);
     for (; p && branch_index(map, p, !traversal) != n;
-         n = p, p = parent_index(map, p))
-    {}
+         n = p, p = parent_index(map, p)) {}
     return p;
 }
 
 static struct CCC_Handle_range
 equal_range(struct CCC_Array_tree_map const *const map,
             void const *const begin_key, void const *const end_key,
-            enum Link const traversal)
-{
-    if (CCC_array_tree_map_is_empty(map))
-    {
+            enum Link const traversal) {
+    if (CCC_array_tree_map_is_empty(map)) {
         return (struct CCC_Handle_range){};
     }
     CCC_Order const les_or_grt[2] = {CCC_ORDER_LESSER, CCC_ORDER_GREATER};
     struct Query b = find(map, begin_key);
-    if (b.last_order == les_or_grt[traversal])
-    {
+    if (b.last_order == les_or_grt[traversal]) {
         b.found = next(map, b.found, traversal);
     }
     struct Query e = find(map, end_key);
-    if (e.last_order != les_or_grt[!traversal])
-    {
+    if (e.last_order != les_or_grt[!traversal]) {
         e.found = next(map, e.found, traversal);
     }
     return (struct CCC_Handle_range){
@@ -1148,14 +1011,12 @@ equal_range(struct CCC_Array_tree_map const *const map,
 
 static size_t
 min_max_from(struct CCC_Array_tree_map const *const map, size_t start,
-             enum Link const dir)
-{
-    if (!start)
-    {
+             enum Link const dir) {
+    if (!start) {
         return 0;
     }
-    for (; branch_index(map, start, dir); start = branch_index(map, start, dir))
-    {}
+    for (; branch_index(map, start, dir);
+         start = branch_index(map, start, dir)) {}
     return start;
 }
 
@@ -1168,16 +1029,13 @@ simply calls the destructor on each node and removes the nodes references to
 other tree elements. */
 static void
 delete_nodes(struct CCC_Array_tree_map *const map,
-             CCC_Type_destructor *const destroy)
-{
+             CCC_Type_destructor *const destroy) {
     assert(map);
     assert(destroy);
     size_t node = map->root;
-    while (node)
-    {
+    while (node) {
         struct CCC_Array_tree_map_node *const e = node_at(map, node);
-        if (e->branch[L])
-        {
+        if (e->branch[L]) {
             size_t const left = e->branch[L];
             e->branch[L] = node_at(map, left)->branch[R];
             node_at(map, left)->branch[R] = node;
@@ -1197,8 +1055,7 @@ delete_nodes(struct CCC_Array_tree_map *const map,
 
 static inline CCC_Order
 order_nodes(struct CCC_Array_tree_map const *const map, void const *const key,
-            size_t const node, CCC_Key_comparator *const compare)
-{
+            size_t const node, CCC_Key_comparator *const compare) {
     return compare((CCC_Key_comparator_context){
         .key_left = key,
         .type_right = data_at(map, node),
@@ -1212,8 +1069,7 @@ on an aligned byte boundary given the alignment requirements of a node. This
 means the value returned from this function may or may not be slightly larger
 then the raw size of just user elements if rounding up must occur. */
 static inline size_t
-data_bytes(size_t const sizeof_type, size_t const capacity)
-{
+data_bytes(size_t const sizeof_type, size_t const capacity) {
     return ((sizeof_type * capacity)
             + alignof(*(struct CCC_Array_tree_map){}.nodes) - 1)
          & ~(alignof(*(struct CCC_Array_tree_map){}.nodes) - 1);
@@ -1226,8 +1082,7 @@ a parity block. This means the value returned from this function may or may not
 be slightly larger then the raw size of just the nodes array if rounding up must
 occur. */
 static inline size_t
-nodes_bytes(size_t const capacity)
-{
+nodes_bytes(size_t const capacity) {
     return ((sizeof(*(struct CCC_Array_tree_map){}.nodes) * capacity)
             + alignof(*(struct CCC_Array_tree_map){}.parity) - 1)
          & ~(alignof(*(struct CCC_Array_tree_map){}.parity) - 1);
@@ -1237,8 +1092,7 @@ nodes_bytes(size_t const capacity)
 rounding up or alignment concerns need apply because this is the last array
 in the allocation. */
 static inline size_t
-parities_bytes(size_t capacity)
-{
+parities_bytes(size_t capacity) {
     return sizeof(Parity_block) * block_count(capacity);
 }
 
@@ -1252,8 +1106,7 @@ on an aligned byte boundary for its own type. This means that the bytes returned
 by this function may be greater than summing the (sizeof(type) * capacity) for
 each array in the conceptual struct. */
 static inline size_t
-total_bytes(size_t sizeof_type, size_t const capacity)
-{
+total_bytes(size_t sizeof_type, size_t const capacity) {
     return data_bytes(sizeof_type, capacity) + nodes_bytes(capacity)
          + parities_bytes(capacity);
 }
@@ -1264,8 +1117,7 @@ node type after the data array. The data array has added any necessary padding
 after it to ensure that the base of the node array is aligned for its type. */
 static inline struct CCC_Array_tree_map_node *
 nodes_base_address(size_t const sizeof_type, void const *const data,
-                   size_t const capacity)
-{
+                   size_t const capacity) {
     return (
         struct CCC_Array_tree_map_node *)((char *)data
                                           + data_bytes(sizeof_type, capacity));
@@ -1278,8 +1130,7 @@ necessary padding after it to ensure that the base of the parity block array is
 aligned for its type. */
 static inline Parity_block *
 parities_base_address(size_t const sizeof_type, void const *const data,
-                      size_t const capacity)
-{
+                      size_t const capacity) {
     return (Parity_block *)((char *)data + data_bytes(sizeof_type, capacity)
                             + nodes_bytes(capacity));
 }
@@ -1291,10 +1142,8 @@ bytes to support the user data, nodes, and parity arrays for the provided new
 capacity. */
 static inline void
 copy_soa(struct CCC_Array_tree_map const *const source,
-         void *const destination_data_base, size_t const destination_capacity)
-{
-    if (!source->data)
-    {
+         void *const destination_data_base, size_t const destination_capacity) {
+    if (!source->data) {
         return;
     }
     assert(destination_capacity >= source->capacity);
@@ -1316,18 +1165,15 @@ copy_soa(struct CCC_Array_tree_map const *const source,
 }
 
 static inline void
-init_node(struct CCC_Array_tree_map const *const map, size_t const node)
-{
+init_node(struct CCC_Array_tree_map const *const map, size_t const node) {
     set_parity(map, node, CCC_FALSE);
     struct CCC_Array_tree_map_node *const e = node_at(map, node);
     e->branch[L] = e->branch[R] = e->parent = 0;
 }
 
 static inline void
-swap(void *const temp, void *const a, void *const b, size_t const sizeof_type)
-{
-    if (a == b || !a || !b)
-    {
+swap(void *const temp, void *const a, void *const b, size_t const sizeof_type) {
+    if (a == b || !a || !b) {
         return;
     }
     (void)memcpy(temp, a, sizeof_type);
@@ -1336,20 +1182,17 @@ swap(void *const temp, void *const a, void *const b, size_t const sizeof_type)
 }
 
 static inline struct CCC_Array_tree_map_node *
-node_at(struct CCC_Array_tree_map const *const map, size_t const i)
-{
+node_at(struct CCC_Array_tree_map const *const map, size_t const i) {
     return &map->nodes[i];
 }
 
 static inline void *
-data_at(struct CCC_Array_tree_map const *const map, size_t const i)
-{
+data_at(struct CCC_Array_tree_map const *const map, size_t const i) {
     return (char *)map->data + (map->sizeof_type * i);
 }
 
 static inline Parity_block *
-block_at(struct CCC_Array_tree_map const *const map, size_t const i)
-{
+block_at(struct CCC_Array_tree_map const *const map, size_t const i) {
     static_assert((typeof(i))~((typeof(i))0) >= (typeof(i))0,
                   "shifting to avoid division with power of 2 divisor is only "
                   "defined for unsigned types");
@@ -1358,8 +1201,7 @@ block_at(struct CCC_Array_tree_map const *const map, size_t const i)
 }
 
 static inline Parity_block
-bit_on(size_t const i)
-{
+bit_on(size_t const i) {
     static_assert((PARITY_BLOCK_BITS & (PARITY_BLOCK_BITS - 1)) == 0,
                   "the number of bits in a block is always a power of two, "
                   "avoiding modulo operations.");
@@ -1368,40 +1210,32 @@ bit_on(size_t const i)
 
 static inline size_t
 branch_index(struct CCC_Array_tree_map const *const map, size_t const parent,
-             enum Link const dir)
-{
+             enum Link const dir) {
     return node_at(map, parent)->branch[dir];
 }
 
 static inline size_t
-parent_index(struct CCC_Array_tree_map const *const map, size_t const child)
-{
+parent_index(struct CCC_Array_tree_map const *const map, size_t const child) {
     return node_at(map, child)->parent;
 }
 
 static inline CCC_Tribool
-parity(struct CCC_Array_tree_map const *const map, size_t const node)
-{
+parity(struct CCC_Array_tree_map const *const map, size_t const node) {
     return (*block_at(map, node) & bit_on(node)) != 0;
 }
 
 static inline void
 set_parity(struct CCC_Array_tree_map const *const map, size_t const node,
-           CCC_Tribool const status)
-{
-    if (status)
-    {
+           CCC_Tribool const status) {
+    if (status) {
         *block_at(map, node) |= bit_on(node);
-    }
-    else
-    {
+    } else {
         *block_at(map, node) &= ~bit_on(node);
     }
 }
 
 static inline size_t
-block_count(size_t const node_count)
-{
+block_count(size_t const node_count) {
     static_assert((typeof(node_count))~((typeof(node_count))0)
                       >= (typeof(node_count))0,
                   "shifting to avoid division with power of 2 divisor is only "
@@ -1411,27 +1245,23 @@ block_count(size_t const node_count)
 
 static inline size_t *
 branch_pointer(struct CCC_Array_tree_map const *t, size_t const node,
-               enum Link const branch)
-{
+               enum Link const branch) {
     return &node_at(t, node)->branch[branch];
 }
 
 static inline size_t *
-parent_pointer(struct CCC_Array_tree_map const *t, size_t const node)
-{
+parent_pointer(struct CCC_Array_tree_map const *t, size_t const node) {
 
     return &node_at(t, node)->parent;
 }
 
 static inline void *
-key_at(struct CCC_Array_tree_map const *const map, size_t const i)
-{
+key_at(struct CCC_Array_tree_map const *const map, size_t const i) {
     return (char *)data_at(map, i) + map->key_offset;
 }
 
 static void *
-key_in_slot(struct CCC_Array_tree_map const *t, void const *const user_struct)
-{
+key_in_slot(struct CCC_Array_tree_map const *t, void const *const user_struct) {
     return (char *)user_struct + t->key_offset;
 }
 
@@ -1440,36 +1270,28 @@ key_in_slot(struct CCC_Array_tree_map const *t, void const *const user_struct)
 /** Follows the specification in the "Rank-Balanced Trees" paper by Haeupler,
 Sen, and Tarjan (Fig. 2. pg 7). Assumes x's parent z is not null. */
 static void
-insert_fixup(struct CCC_Array_tree_map *const map, size_t z, size_t x)
-{
+insert_fixup(struct CCC_Array_tree_map *const map, size_t z, size_t x) {
     assert(z);
-    do
-    {
+    do {
         promote(map, z);
         x = z;
         z = parent_index(map, z);
-        if (!z)
-        {
+        if (!z) {
             return;
         }
-    }
-    while (is_01_parent(map, x, z, sibling_of(map, x)));
+    } while (is_01_parent(map, x, z, sibling_of(map, x)));
 
-    if (!is_02_parent(map, x, z, sibling_of(map, x)))
-    {
+    if (!is_02_parent(map, x, z, sibling_of(map, x))) {
         return;
     }
     assert(x);
     assert(is_0_child(map, z, x));
     enum Link const p_to_x_dir = branch_index(map, z, R) == x;
     size_t const y = branch_index(map, x, !p_to_x_dir);
-    if (!y || is_2_child(map, z, y))
-    {
+    if (!y || is_2_child(map, z, y)) {
         rotate(map, z, x, y, !p_to_x_dir);
         demote(map, z);
-    }
-    else
-    {
+    } else {
         assert(is_1_child(map, z, y));
         double_rotate(map, z, x, y, p_to_x_dir);
         promote(map, y);
@@ -1479,27 +1301,22 @@ insert_fixup(struct CCC_Array_tree_map *const map, size_t z, size_t x)
 }
 
 static size_t
-remove_fixup(struct CCC_Array_tree_map *const map, size_t const remove)
-{
+remove_fixup(struct CCC_Array_tree_map *const map, size_t const remove) {
     size_t y = 0;
     size_t x = 0;
     size_t p = 0;
     CCC_Tribool two_child = CCC_FALSE;
-    if (!branch_index(map, remove, R) || !branch_index(map, remove, L))
-    {
+    if (!branch_index(map, remove, R) || !branch_index(map, remove, L)) {
         y = remove;
         p = parent_index(map, y);
         x = branch_index(map, y, !branch_index(map, y, L));
         *parent_pointer(map, x) = parent_index(map, y);
-        if (!p)
-        {
+        if (!p) {
             map->root = x;
         }
         *branch_pointer(map, p, branch_index(map, p, R) == y) = x;
         two_child = is_2_child(map, p, y);
-    }
-    else
-    {
+    } else {
         y = min_max_from(map, branch_index(map, remove, R), L);
         p = parent_index(map, y);
         x = branch_index(map, y, !branch_index(map, y, L));
@@ -1511,27 +1328,21 @@ remove_fixup(struct CCC_Array_tree_map *const map, size_t const remove)
         two_child = is_2_child(map, p, y);
         *branch_pointer(map, p, branch_index(map, p, R) == y) = x;
         transplant(map, remove, y);
-        if (remove == p)
-        {
+        if (remove == p) {
             p = y;
         }
     }
 
-    if (p)
-    {
-        if (two_child)
-        {
+    if (p) {
+        if (two_child) {
             assert(p);
             rebalance_3_child(map, p, x);
-        }
-        else if (!x && branch_index(map, p, L) == branch_index(map, p, R))
-        {
+        } else if (!x && branch_index(map, p, L) == branch_index(map, p, R)) {
             assert(p);
             CCC_Tribool const demote_makes_3_child
                 = is_2_child(map, parent_index(map, p), p);
             demote(map, p);
-            if (demote_makes_3_child)
-            {
+            if (demote_makes_3_child) {
                 rebalance_3_child(map, parent_index(map, p), p);
             }
         }
@@ -1545,17 +1356,13 @@ remove_fixup(struct CCC_Array_tree_map *const map, size_t const remove)
 
 static void
 transplant(struct CCC_Array_tree_map *const map, size_t const remove,
-           size_t const replacement)
-{
+           size_t const replacement) {
     assert(remove);
     assert(replacement);
     *parent_pointer(map, replacement) = parent_index(map, remove);
-    if (!parent_index(map, remove))
-    {
+    if (!parent_index(map, remove)) {
         map->root = replacement;
-    }
-    else
-    {
+    } else {
         size_t const p = parent_index(map, remove);
         *branch_pointer(map, p, branch_index(map, p, R) == remove)
             = replacement;
@@ -1572,28 +1379,22 @@ transplant(struct CCC_Array_tree_map *const map, size_t const remove,
 /** Follows the specification in the "Rank-Balanced Trees" paper by Haeupler,
 Sen, and Tarjan (Fig. 3. pg 8). */
 static void
-rebalance_3_child(struct CCC_Array_tree_map *const map, size_t z, size_t x)
-{
+rebalance_3_child(struct CCC_Array_tree_map *const map, size_t z, size_t x) {
     CCC_Tribool made_3_child = CCC_TRUE;
-    while (z && made_3_child)
-    {
+    while (z && made_3_child) {
         assert(branch_index(map, z, L) == x || branch_index(map, z, R) == x);
         size_t const g = parent_index(map, z);
         size_t const y = branch_index(map, z, branch_index(map, z, L) == x);
         made_3_child = g && is_2_child(map, g, z);
-        if (is_2_child(map, z, y))
-        {
+        if (is_2_child(map, z, y)) {
             demote(map, z);
-        }
-        else if (y
-                 && is_22_parent(map, branch_index(map, y, L), y,
-                                 branch_index(map, y, R)))
-        {
+        } else if (y
+                   && is_22_parent(map, branch_index(map, y, L), y,
+                                   branch_index(map, y, R))) {
             demote(map, z);
             demote(map, y);
-        }
-        else if (y) /* p(x) is 1,3, y is not a 2,2 parent, and x is 3-child.*/
-        {
+        } else if (y) {
+            /* p(x) is 1,3, y is not a 2,2 parent, and x is 3-child.*/
             assert(is_1_child(map, z, y));
             assert(is_3_child(map, z, x));
             assert(!is_2_child(map, z, y));
@@ -1601,18 +1402,15 @@ rebalance_3_child(struct CCC_Array_tree_map *const map, size_t z, size_t x)
                                  branch_index(map, y, R)));
             enum Link const z_to_x_dir = branch_index(map, z, R) == x;
             size_t const w = branch_index(map, y, !z_to_x_dir);
-            if (is_1_child(map, y, w))
-            {
+            if (is_1_child(map, y, w)) {
                 rotate(map, z, y, branch_index(map, y, z_to_x_dir), z_to_x_dir);
                 promote(map, y);
                 demote(map, z);
-                if (is_leaf(map, z))
-                {
+                if (is_leaf(map, z)) {
                     demote(map, z);
                 }
-            }
-            else /* w is a 2-child and v will be a 1-child. */
-            {
+            } else {
+                /* w is a 2-child and v will be a 1-child. */
                 size_t const v = branch_index(map, y, z_to_x_dir);
                 assert(is_2_child(map, y, w));
                 assert(is_1_child(map, y, v));
@@ -1629,14 +1427,11 @@ rebalance_3_child(struct CCC_Array_tree_map *const map, size_t z, size_t x)
                    case. Should revisit after more performance testing. */
                 if (!is_leaf(map, z)
                     && is_11_parent(map, branch_index(map, z, L), z,
-                                    branch_index(map, z, R)))
-                {
+                                    branch_index(map, z, R))) {
                     promote(map, z);
-                }
-                else if (!is_leaf(map, y)
-                         && is_11_parent(map, branch_index(map, y, L), y,
-                                         branch_index(map, y, R)))
-                {
+                } else if (!is_leaf(map, y)
+                           && is_11_parent(map, branch_index(map, y, L), y,
+                                           branch_index(map, y, R))) {
                     promote(map, y);
                 }
             }
@@ -1659,19 +1454,15 @@ and uppercase are arbitrary subtrees.
        B              B */
 static void
 rotate(struct CCC_Array_tree_map *const map, size_t const z, size_t const x,
-       size_t const y, enum Link const dir)
-{
+       size_t const y, enum Link const dir) {
     assert(z);
     struct CCC_Array_tree_map_node *const z_r = node_at(map, z);
     struct CCC_Array_tree_map_node *const x_r = node_at(map, x);
     size_t const g = parent_index(map, z);
     x_r->parent = g;
-    if (!g)
-    {
+    if (!g) {
         map->root = x;
-    }
-    else
-    {
+    } else {
         struct CCC_Array_tree_map_node *const g_r = node_at(map, g);
         g_r->branch[g_r->branch[R] == z] = x;
     }
@@ -1696,20 +1487,16 @@ Lowercase are nodes and uppercase are arbitrary subtrees.
 Taking a link as input allows us to code both symmetrical cases at once. */
 static void
 double_rotate(struct CCC_Array_tree_map *const map, size_t const z,
-              size_t const x, size_t const y, enum Link const dir)
-{
+              size_t const x, size_t const y, enum Link const dir) {
     assert(z && x && y);
     struct CCC_Array_tree_map_node *const z_r = node_at(map, z);
     struct CCC_Array_tree_map_node *const x_r = node_at(map, x);
     struct CCC_Array_tree_map_node *const y_r = node_at(map, y);
     size_t const g = z_r->parent;
     y_r->parent = g;
-    if (!g)
-    {
+    if (!g) {
         map->root = y;
-    }
-    else
-    {
+    } else {
         struct CCC_Array_tree_map_node *const g_r = node_at(map, g);
         g_r->branch[g_r->branch[R] == z] = y;
     }
@@ -1730,8 +1517,7 @@ double_rotate(struct CCC_Array_tree_map *const map, size_t const z,
        x */
 [[maybe_unused]] static inline CCC_Tribool
 is_0_child(struct CCC_Array_tree_map const *const map, size_t const p,
-           size_t const x)
-{
+           size_t const x) {
     return p && parity(map, p) == parity(map, x);
 }
 
@@ -1741,8 +1527,7 @@ is_0_child(struct CCC_Array_tree_map const *const map, size_t const p,
        x */
 static inline CCC_Tribool
 is_1_child(struct CCC_Array_tree_map const *const map, size_t const p,
-           size_t const x)
-{
+           size_t const x) {
     return p && parity(map, p) != parity(map, x);
 }
 
@@ -1752,8 +1537,7 @@ is_1_child(struct CCC_Array_tree_map const *const map, size_t const p,
        x */
 static inline CCC_Tribool
 is_2_child(struct CCC_Array_tree_map const *const map, size_t const p,
-           size_t const x)
-{
+           size_t const x) {
     return p && parity(map, p) == parity(map, x);
 }
 
@@ -1763,8 +1547,7 @@ is_2_child(struct CCC_Array_tree_map const *const map, size_t const p,
        x */
 [[maybe_unused]] static inline CCC_Tribool
 is_3_child(struct CCC_Array_tree_map const *const map, size_t const p,
-           size_t const x)
-{
+           size_t const x) {
     return p && parity(map, p) != parity(map, x);
 }
 
@@ -1775,8 +1558,7 @@ is_3_child(struct CCC_Array_tree_map const *const map, size_t const p,
        x   y */
 static inline CCC_Tribool
 is_01_parent(struct CCC_Array_tree_map const *const map, size_t const x,
-             size_t const p, size_t const y)
-{
+             size_t const p, size_t const y) {
     assert(p);
     return (!parity(map, x) && !parity(map, p) && parity(map, y))
         || (parity(map, x) && parity(map, p) && !parity(map, y));
@@ -1789,8 +1571,7 @@ is_01_parent(struct CCC_Array_tree_map const *const map, size_t const x,
        x   y */
 static inline CCC_Tribool
 is_11_parent(struct CCC_Array_tree_map const *const map, size_t const x,
-             size_t const p, size_t const y)
-{
+             size_t const p, size_t const y) {
     assert(p);
     return (!parity(map, x) && parity(map, p) && !parity(map, y))
         || (parity(map, x) && !parity(map, p) && parity(map, y));
@@ -1803,8 +1584,7 @@ is_11_parent(struct CCC_Array_tree_map const *const map, size_t const x,
        x   y */
 static inline CCC_Tribool
 is_02_parent(struct CCC_Array_tree_map const *const map, size_t const x,
-             size_t const p, size_t const y)
-{
+             size_t const p, size_t const y) {
     assert(p);
     return (parity(map, x) == parity(map, p))
         && (parity(map, p) == parity(map, y));
@@ -1820,49 +1600,43 @@ is_02_parent(struct CCC_Array_tree_map const *const map, size_t const x,
        x   y */
 static inline CCC_Tribool
 is_22_parent(struct CCC_Array_tree_map const *const map, size_t const x,
-             size_t const p, size_t const y)
-{
+             size_t const p, size_t const y) {
     assert(p);
     return (parity(map, x) == parity(map, p))
         && (parity(map, p) == parity(map, y));
 }
 
 static inline void
-promote(struct CCC_Array_tree_map const *const map, size_t const x)
-{
-    if (x)
-    {
+promote(struct CCC_Array_tree_map const *const map, size_t const x) {
+    if (x) {
         *block_at(map, x) ^= bit_on(x);
     }
 }
 
 static inline void
-demote(struct CCC_Array_tree_map const *const map, size_t const x)
-{
+demote(struct CCC_Array_tree_map const *const map, size_t const x) {
     promote(map, x);
 }
 
 /* Parity based ranks mean this is no-op but leave in case implementation ever
    changes. Also, makes clear what sections of code are trying to do. */
 static inline void
-double_promote(struct CCC_Array_tree_map const *const, size_t const)
-{}
+double_promote(struct CCC_Array_tree_map const *const, size_t const) {
+}
 
 /* Parity based ranks mean this is no-op but leave in case implementation ever
    changes. Also, makes clear what sections of code are trying to do. */
 static inline void
-double_demote(struct CCC_Array_tree_map const *const, size_t const)
-{}
+double_demote(struct CCC_Array_tree_map const *const, size_t const) {
+}
 
 static inline CCC_Tribool
-is_leaf(struct CCC_Array_tree_map const *const map, size_t const x)
-{
+is_leaf(struct CCC_Array_tree_map const *const map, size_t const x) {
     return !branch_index(map, x, L) && !branch_index(map, x, R);
 }
 
 static inline size_t
-sibling_of(struct CCC_Array_tree_map const *const map, size_t const x)
-{
+sibling_of(struct CCC_Array_tree_map const *const map, size_t const x) {
     size_t const p = parent_index(map, x);
     assert(p);
     /* We want the sibling so we need the truthy value to be opposite of x. */
@@ -1870,8 +1644,7 @@ sibling_of(struct CCC_Array_tree_map const *const map, size_t const x)
 }
 
 static inline size_t
-max(size_t const a, size_t const b)
-{
+max(size_t const a, size_t const b) {
     return a > b ? a : b;
 }
 
@@ -1880,18 +1653,15 @@ max(size_t const a, size_t const b)
 /* NOLINTBEGIN(*misc-no-recursion) */
 
 /** @internal */
-struct Tree_range
-{
+struct Tree_range {
     size_t low;
     size_t root;
     size_t high;
 };
 
 static size_t
-recursive_count(struct CCC_Array_tree_map const *const map, size_t const r)
-{
-    if (!r)
-    {
+recursive_count(struct CCC_Array_tree_map const *const map, size_t const r) {
+    if (!r) {
         return 0;
     }
     return 1 + recursive_count(map, branch_index(map, r, R))
@@ -1900,22 +1670,18 @@ recursive_count(struct CCC_Array_tree_map const *const map, size_t const r)
 
 static CCC_Tribool
 are_subtrees_valid(struct CCC_Array_tree_map const *t,
-                   struct Tree_range const r)
-{
-    if (!r.root)
-    {
+                   struct Tree_range const r) {
+    if (!r.root) {
         return CCC_TRUE;
     }
     if (r.low
         && order_nodes(t, key_at(t, r.low), r.root, t->compare)
-               != CCC_ORDER_LESSER)
-    {
+               != CCC_ORDER_LESSER) {
         return CCC_FALSE;
     }
     if (r.high
         && order_nodes(t, key_at(t, r.high), r.root, t->compare)
-               != CCC_ORDER_GREATER)
-    {
+               != CCC_ORDER_GREATER) {
         return CCC_FALSE;
     }
     return are_subtrees_valid(t,
@@ -1933,14 +1699,11 @@ are_subtrees_valid(struct CCC_Array_tree_map const *t,
 
 static CCC_Tribool
 is_storing_parent(struct CCC_Array_tree_map const *const map, size_t const p,
-                  size_t const root)
-{
-    if (!root)
-    {
+                  size_t const root) {
+    if (!root) {
         return CCC_TRUE;
     }
-    if (parent_index(map, root) != p)
-    {
+    if (parent_index(map, root) != p) {
         return CCC_FALSE;
     }
     return is_storing_parent(map, root, branch_index(map, root, L))
@@ -1948,61 +1711,51 @@ is_storing_parent(struct CCC_Array_tree_map const *const map, size_t const p,
 }
 
 static CCC_Tribool
-is_free_list_valid(struct CCC_Array_tree_map const *const map)
-{
-    if (!map->count)
-    {
+is_free_list_valid(struct CCC_Array_tree_map const *const map) {
+    if (!map->count) {
         return CCC_TRUE;
     }
     size_t list_count = 0;
     size_t cur_free_index = map->free_list;
-    while (cur_free_index && list_count < map->capacity)
-    {
+    while (cur_free_index && list_count < map->capacity) {
         cur_free_index = node_at(map, cur_free_index)->next_free;
         ++list_count;
     }
-    if (cur_free_index)
-    {
+    if (cur_free_index) {
         return CCC_FALSE;
     }
-    if (list_count + map->count != map->capacity)
-    {
+    if (list_count + map->count != map->capacity) {
         return CCC_FALSE;
     }
     return CCC_TRUE;
 }
 
 static inline CCC_Tribool
-validate(struct CCC_Array_tree_map const *const map)
-{
-    if (!map->capacity)
-    {
+validate(struct CCC_Array_tree_map const *const map) {
+    if (!map->capacity) {
         return CCC_TRUE;
     }
     /* If we haven't lazily initialized we should not check anything. */
-    if (map->data && (!map->nodes || !map->parity))
-    {
+    if (map->data && (!map->nodes || !map->parity)) {
         return CCC_TRUE;
     }
-    if (!map->count && !parity(map, 0))
-    {
+    if (!map->data) {
+        return CCC_TRUE;
+    }
+    if (!map->count && !parity(map, 0)) {
         return CCC_FALSE;
     }
-    if (!are_subtrees_valid(map, (struct Tree_range){.root = map->root}))
-    {
+    if (!are_subtrees_valid(map, (struct Tree_range){.root = map->root})) {
         return CCC_FALSE;
     }
     size_t const size = recursive_count(map, map->root);
-    if (size && size != map->count - 1)
-    {
+    if (size && size != map->count - 1) {
         return CCC_FALSE;
     }
-    if (!is_storing_parent(map, 0, map->root))
-    {
+    if (!is_storing_parent(map, 0, map->root)) {
         return CCC_FALSE;
     }
-    if (!is_free_list_valid(map))
-    {
+    if (!is_free_list_valid(map)) {
         return CCC_FALSE;
     }
     return CCC_TRUE;

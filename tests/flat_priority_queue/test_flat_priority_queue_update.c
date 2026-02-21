@@ -11,8 +11,7 @@
 #include "traits.h"
 #include "types.h"
 
-check_static_begin(flat_priority_queue_test_insert_iterate_pop)
-{
+check_static_begin(flat_priority_queue_test_insert_iterate_pop) {
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(1);
@@ -22,8 +21,7 @@ check_static_begin(flat_priority_queue_test_insert_iterate_pop)
         = CCC_flat_priority_queue_initialize(
             struct Val, CCC_ORDER_LESSER, val_order, NULL, NULL,
             (sizeof(vals) / sizeof(vals[0])), vals);
-    for (size_t i = 0; i < num_nodes; ++i)
-    {
+    for (size_t i = 0; i < num_nodes; ++i) {
         /* Force duplicates. */
         vals[i].val = rand() % (num_nodes + 1); // NOLINT
         vals[i].id = (int)i;
@@ -32,8 +30,7 @@ check_static_begin(flat_priority_queue_test_insert_iterate_pop)
         check(validate(&flat_priority_queue), true);
     }
     size_t pop_count = 0;
-    while (!is_empty(&flat_priority_queue))
-    {
+    while (!is_empty(&flat_priority_queue)) {
         (void)pop(&flat_priority_queue, &(struct Val){});
         ++pop_count;
         check(validate(&flat_priority_queue), true);
@@ -42,8 +39,7 @@ check_static_begin(flat_priority_queue_test_insert_iterate_pop)
     check_end();
 }
 
-check_static_begin(flat_priority_queue_test_priority_removal)
-{
+check_static_begin(flat_priority_queue_test_priority_removal) {
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -53,8 +49,7 @@ check_static_begin(flat_priority_queue_test_priority_removal)
         = CCC_flat_priority_queue_initialize(
             struct Val, CCC_ORDER_LESSER, val_order, NULL, NULL,
             (sizeof(vals) / sizeof(vals[0])), vals);
-    for (size_t i = 0; i < num_nodes; ++i)
-    {
+    for (size_t i = 0; i < num_nodes; ++i) {
         /* Force duplicates. */
         struct Val const *res = CCC_flat_priority_queue_emplace(
             &flat_priority_queue,
@@ -66,11 +61,9 @@ check_static_begin(flat_priority_queue_test_priority_removal)
         check(validate(&flat_priority_queue), true);
     }
     int const limit = 400;
-    for (size_t seen = 0, remaining = num_nodes; seen < remaining; ++seen)
-    {
+    for (size_t seen = 0, remaining = num_nodes; seen < remaining; ++seen) {
         struct Val *cur = &vals[seen];
-        if (cur->val > limit)
-        {
+        if (cur->val > limit) {
             (void)erase(&flat_priority_queue, cur, &(struct Val){});
             check(validate(&flat_priority_queue), true);
             --remaining;
@@ -79,8 +72,7 @@ check_static_begin(flat_priority_queue_test_priority_removal)
     check_end();
 }
 
-check_static_begin(flat_priority_queue_test_priority_update)
-{
+check_static_begin(flat_priority_queue_test_priority_update) {
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -90,8 +82,7 @@ check_static_begin(flat_priority_queue_test_priority_update)
         = CCC_flat_priority_queue_initialize(
             struct Val, CCC_ORDER_LESSER, val_order, NULL, NULL,
             (sizeof(vals) / sizeof(vals[0])), vals);
-    for (size_t i = 0; i < num_nodes; ++i)
-    {
+    for (size_t i = 0; i < num_nodes; ++i) {
         /* Force duplicates. */
         struct Val const *res = CCC_flat_priority_queue_emplace(
             &flat_priority_queue,
@@ -103,12 +94,10 @@ check_static_begin(flat_priority_queue_test_priority_update)
         check(validate(&flat_priority_queue), true);
     }
     int const limit = 400;
-    for (size_t val = 0; val < num_nodes; ++val)
-    {
+    for (size_t val = 0; val < num_nodes; ++val) {
         struct Val *cur = &vals[val];
         int backoff = cur->val / 2;
-        if (cur->val > limit)
-        {
+        if (cur->val > limit) {
             struct Val const *const updated
                 = update(&flat_priority_queue, cur, &(struct Val){}, val_update,
                          &backoff);
@@ -121,8 +110,7 @@ check_static_begin(flat_priority_queue_test_priority_update)
     check_end();
 }
 
-check_static_begin(flat_priority_queue_test_priority_update_with)
-{
+check_static_begin(flat_priority_queue_test_priority_update_with) {
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -132,8 +120,7 @@ check_static_begin(flat_priority_queue_test_priority_update_with)
         = CCC_flat_priority_queue_initialize(
             struct Val, CCC_ORDER_LESSER, val_order, NULL, NULL,
             (sizeof(vals) / sizeof(vals[0])), vals);
-    for (size_t i = 0; i < num_nodes; ++i)
-    {
+    for (size_t i = 0; i < num_nodes; ++i) {
         /* Force duplicates. */
         struct Val const *res = CCC_flat_priority_queue_emplace(
             &flat_priority_queue,
@@ -145,17 +132,12 @@ check_static_begin(flat_priority_queue_test_priority_update_with)
         check(validate(&flat_priority_queue), true);
     }
     int const limit = 400;
-    for (size_t val = 0; val < num_nodes; ++val)
-    {
+    for (size_t val = 0; val < num_nodes; ++val) {
         int backoff = vals[val].val / 2;
-        if (vals[val].val > limit)
-        {
+        if (vals[val].val > limit) {
             struct Val const *const updated
-                = CCC_flat_priority_queue_update_with(&flat_priority_queue,
-                                                      &vals[val],
-                                                      {
-                                                          T->val = backoff;
-                                                      });
+                = CCC_flat_priority_queue_update_with(
+                    &flat_priority_queue, &vals[val], { T->val = backoff; });
             check(updated != NULL, true);
             check(updated->val, backoff);
             check(validate(&flat_priority_queue), true);
@@ -166,8 +148,7 @@ check_static_begin(flat_priority_queue_test_priority_update_with)
 }
 
 int
-main(void)
-{
+main(void) {
     return check_run(flat_priority_queue_test_insert_iterate_pop(),
                      flat_priority_queue_test_priority_update(),
                      flat_priority_queue_test_priority_update_with(),

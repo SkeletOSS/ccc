@@ -81,16 +81,16 @@ Initialize the container with memory, callbacks, and permissions. */
 as key.
 @param[in] compare the key comparison function (see types.h).
 @param[in] allocate the allocation function or NULL if allocation is banned.
-@param[in] context_data a pointer to any context data for comparison or
+@param[in] context a pointer to any context data for comparison or
 destruction.
 @return the struct initialized tree map for direct assignment
 (i.e. CCC_Tree_map m = CCC_tree_map_initialize(...);). */
 #define CCC_tree_map_initialize(type_name, type_intruder_field_name,           \
                                 type_key_field_name, compare, allocate,        \
-                                context_data)                                  \
+                                context)                                       \
     CCC_private_tree_map_initialize(type_name, type_intruder_field_name,       \
                                     type_key_field_name, compare, allocate,    \
-                                    context_data)
+                                    context)
 
 /** @brief Initialize an empty dynamic map at compile or runtime with an
 allocator.
@@ -201,7 +201,7 @@ as key.
 @param[in] allocate the allocation function or NULL if allocation is banned.
 @param[in] destroy the destructor function used to act on every node in case
 initialization of new nodes fails and map is emptied in a failure state.
-@param[in] context_data a pointer to any context data for comparison or
+@param[in] context a pointer to any context data for comparison or
 destruction.
 @param[in] compound_literal_array the array of user types to insert into the
 map (e.g. (struct My_type[]){ {.key = 1, .val = 1}, {.key = 2, .val = 2}}).
@@ -213,12 +213,12 @@ allocation fails.
 compound literal array of user types, the map is cleared; if a destructor is
 provided, it is called on each node and they are freed using the provided
 allocate function. */
-#define CCC_tree_map_context_from(                                             \
-    type_intruder_field_name, type_key_field_name, compare, allocate, destroy, \
-    context_data, compound_literal_array...)                                   \
+#define CCC_tree_map_context_from(type_intruder_field_name,                    \
+                                  type_key_field_name, compare, allocate,      \
+                                  destroy, context, compound_literal_array...) \
     CCC_private_tree_map_context_from(                                         \
         type_intruder_field_name, type_key_field_name, compare, allocate,      \
-        destroy, context_data, compound_literal_array)
+        destroy, context, compound_literal_array)
 
 /**@}*/
 
@@ -281,8 +281,7 @@ Note that this function may write to the struct containing temp_intruder_pointer
 and wraps it in an entry to provide information about the old value. */
 #define CCC_tree_map_swap_entry_wrap(map_pointer, type_intruder_pointer,       \
                                      temp_intruder_pointer)                    \
-    &(CCC_Entry)                                                               \
-    {                                                                          \
+    &(CCC_Entry) {                                                             \
         CCC_tree_map_swap_entry((map_pointer), (type_intruder_pointer),        \
                                 (temp_intruder_pointer))                       \
             .private                                                           \
@@ -308,8 +307,7 @@ If Vacant the entry contains a reference to the newly inserted entry in the map.
 If more space is needed but allocation fails or has been forbidden, an insert
 error is set. */
 #define CCC_tree_map_try_insert_wrap(map_pointer, type_intruder_pointer)       \
-    &(CCC_Entry)                                                               \
-    {                                                                          \
+    &(CCC_Entry) {                                                             \
         CCC_tree_map_try_insert((map_pointer), (type_intruder_pointer))        \
             .private                                                           \
     }
@@ -329,8 +327,7 @@ lazy value compound literal as well. This function ensures the key in the
 compound literal matches the searched key. */
 #define CCC_tree_map_try_insert_with(map_pointer, key,                         \
                                      type_compound_literal...)                 \
-    &(CCC_Entry)                                                               \
-    {                                                                          \
+    &(CCC_Entry) {                                                             \
         CCC_private_tree_map_try_insert_with(map_pointer, key,                 \
                                              type_compound_literal)            \
     }
@@ -361,8 +358,7 @@ reference resides in the automatic storage of the calling scope, like a normal
 return by value; the reference is returned to enable function chaining. */
 #define CCC_tree_map_insert_or_assign_wrap(map_pointer,                        \
                                            type_intruder_pointer...)           \
-    &(CCC_Entry)                                                               \
-    {                                                                          \
+    &(CCC_Entry) {                                                             \
         CCC_tree_map_insert_or_assign((map_pointer), type_intruder_pointer)    \
             .private                                                           \
     }
@@ -382,8 +378,7 @@ lazy value compound literal as well. This function ensures the key in the
 compound literal matches the searched key. */
 #define CCC_tree_map_insert_or_assign_with(map_pointer, key,                   \
                                            type_compound_literal...)           \
-    &(CCC_Entry)                                                               \
-    {                                                                          \
+    &(CCC_Entry) {                                                             \
         CCC_private_tree_map_insert_or_assign_with(map_pointer, key,           \
                                                    type_compound_literal)      \
     }
@@ -425,8 +420,7 @@ the output_intruder_pointer. It is then the user's responsibility to manage
 their previously stored memory as they see fit. */
 #define CCC_tree_map_remove_key_value_wrap(map_pointer,                        \
                                            output_intruder_pointer)            \
-    &(CCC_Entry)                                                               \
-    {                                                                          \
+    &(CCC_Entry) {                                                             \
         CCC_tree_map_remove_key_value((map_pointer),                           \
                                       (output_intruder_pointer))               \
             .private                                                           \
@@ -466,8 +460,7 @@ where in the map such an element should be inserted.
 An entry is rarely useful on its own. It should be passed in a functional style
 to subsequent calls in the Entry Interface. */
 #define CCC_tree_map_entry_wrap(map_pointer, key_pointer)                      \
-    &(CCC_Tree_map_entry)                                                      \
-    {                                                                          \
+    &(CCC_Tree_map_entry) {                                                    \
         CCC_tree_map_entry((map_pointer), (key_pointer)).private               \
     }
 
@@ -492,7 +485,7 @@ CCC_tree_map_and_modify(CCC_Tree_map_entry *entry, CCC_Type_modifier *modify);
 This function makes full use of a CCC_Type_modifier capability, meaning a
 complete CCC_update object will be passed to the update function callback. */
 [[nodiscard]] CCC_Tree_map_entry *
-CCC_tree_map_and_modify_context(CCC_Tree_map_entry *entry,
+CCC_tree_map_and_context_modify(CCC_Tree_map_entry *entry,
                                 CCC_Type_modifier *modify, void *context);
 
 /** @brief Modify an Occupied entry with a closure over user type T.
@@ -533,8 +526,7 @@ container can deliver the user type T. This means any function calls are lazily
 evaluated in the closure scope. */
 #define CCC_tree_map_and_modify_with(map_pointer, type_name,                   \
                                      closure_over_T...)                        \
-    &(CCC_Tree_map_entry)                                                      \
-    {                                                                          \
+    &(CCC_Tree_map_entry) {                                                    \
         CCC_private_tree_map_and_modify_with(map_pointer, type_name,           \
                                              closure_over_T)                   \
     }
@@ -611,8 +603,7 @@ will contain a NULL reference. If allocation is prohibited the entry can be
 unwrapped to obtain the old user struct stored in the map and the user may
 free or use as needed. */
 #define CCC_tree_map_remove_entry_wrap(map_pointer)                            \
-    &(CCC_Entry)                                                               \
-    {                                                                          \
+    &(CCC_Entry) {                                                             \
         CCC_tree_map_remove_entry((map_pointer)).private                       \
     }
 
@@ -706,8 +697,7 @@ the range the second to the end of the range.
 enclosing scope. This reference is always non-NULL. */
 #define CCC_tree_map_equal_range_wrap(map_pointer,                             \
                                       begin_and_end_key_pointers...)           \
-    &(CCC_Range)                                                               \
-    {                                                                          \
+    &(CCC_Range) {                                                             \
         CCC_tree_map_equal_range((map_pointer), (begin_and_end_key_pointers))  \
             .private                                                           \
     }
@@ -747,8 +737,7 @@ to the start of the range_reverse the second to the end of the range_reverse.
 with the enclosing scope. This reference is always non-NULL. */
 #define CCC_tree_map_equal_range_reverse_wrap(                                 \
     map_pointer, reverse_begin_and_reverse_end_key_pointers...)                \
-    &(CCC_Range_reverse)                                                       \
-    {                                                                          \
+    &(CCC_Range_reverse) {                                                     \
         CCC_tree_map_equal_range_reverse(                                      \
             (map_pointer), (reverse_begin_and_reverse_end_key_pointers))       \
             .private                                                           \
@@ -824,6 +813,7 @@ NULL. */
 /** Define this preprocessor directive if shorter names are helpful. Ensure
  no namespace clashes occur before shortening. */
 #ifdef TREE_MAP_USING_NAMESPACE_CCC
+/* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Tree_map_node Tree_map_node;
 typedef CCC_Tree_map Tree_map;
 typedef CCC_Tree_map_entry Tree_map_entry;
@@ -858,8 +848,8 @@ typedef CCC_Tree_map_entry Tree_map_entry;
 #    define tree_map_entry_wrap(arguments...) CCC_tree_map_entry_wrap(arguments)
 #    define tree_map_and_modify_wrap(arguments...)                             \
         CCC_tree_map_and_modify_wrap(arguments)
-#    define tree_map_and_modify_context_wrap(arguments...)                     \
-        CCC_tree_map_and_modify_context_wrap(arguments)
+#    define tree_map_and_context_modify_wrap(arguments...)                     \
+        CCC_tree_map_and_context_modify_wrap(arguments)
 #    define tree_map_contains(arguments...) CCC_tree_map_contains(arguments)
 #    define tree_map_get_key_value(arguments...)                               \
         CCC_tree_map_get_key_value(arguments)
@@ -888,6 +878,7 @@ typedef CCC_Tree_map_entry Tree_map_entry;
 #    define tree_map_is_empty(arguments...) CCC_tree_map_is_empty(arguments)
 #    define tree_map_clear(arguments...) CCC_tree_map_clear(arguments)
 #    define tree_map_validate(arguments...) CCC_tree_map_validate(arguments)
+/* NOLINTEND(readability-identifier-naming) */
 #endif
 
 #endif /* CCC_TREE_MAP_H */

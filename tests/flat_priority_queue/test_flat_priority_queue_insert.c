@@ -12,8 +12,7 @@
 #include "utility/allocate.h"
 #include "utility/stack_allocator.h"
 
-check_static_begin(flat_priority_queue_test_insert_one)
-{
+check_static_begin(flat_priority_queue_test_insert_one) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 8);
     CCC_Flat_priority_queue flat_priority_queue
@@ -25,8 +24,7 @@ check_static_begin(flat_priority_queue_test_insert_one)
     check_end();
 }
 
-check_static_begin(flat_priority_queue_test_insert_three)
-{
+check_static_begin(flat_priority_queue_test_insert_three) {
     size_t size = 3;
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 8);
@@ -34,8 +32,7 @@ check_static_begin(flat_priority_queue_test_insert_three)
         = CCC_flat_priority_queue_with_context_capacity(
             struct Val, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
             &allocator, 8);
-    for (size_t i = 0; i < size; ++i)
-    {
+    for (size_t i = 0; i < size; ++i) {
         (void)push(&flat_priority_queue,
                    &(struct Val){
                        .val = (int)i,
@@ -48,16 +45,14 @@ check_static_begin(flat_priority_queue_test_insert_three)
     check_end();
 }
 
-check_static_begin(flat_priority_queue_test_insert_three_dups)
-{
+check_static_begin(flat_priority_queue_test_insert_three_dups) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 8);
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_context_capacity(
             struct Val, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
             &allocator, 8);
-    for (int i = 0; i < 3; ++i)
-    {
+    for (int i = 0; i < 3; ++i) {
         (void)push(&flat_priority_queue,
                    &(struct Val){
                        .val = 0,
@@ -71,8 +66,7 @@ check_static_begin(flat_priority_queue_test_insert_three_dups)
     check_end();
 }
 
-check_static_begin(flat_priority_queue_test_insert_shuffle)
-{
+check_static_begin(flat_priority_queue_test_insert_shuffle) {
     size_t const size = 50;
     int const prime = 53;
     struct Stack_allocator allocator
@@ -88,8 +82,7 @@ check_static_begin(flat_priority_queue_test_insert_shuffle)
     int sorted_check[50];
     check(inorder_fill(sorted_check, size, &flat_priority_queue), CHECK_PASS);
     int prev = sorted_check[0];
-    for (size_t i = 0; i < size; ++i)
-    {
+    for (size_t i = 0; i < size; ++i) {
         check(prev <= sorted_check[i], true);
         prev = sorted_check[i];
     }
@@ -97,8 +90,7 @@ check_static_begin(flat_priority_queue_test_insert_shuffle)
 }
 
 /** This should remain dynamic allocator test to test resizing logic. */
-check_static_begin(flat_priority_queue_test_insert_shuffle_grow)
-{
+check_static_begin(flat_priority_queue_test_insert_shuffle_grow) {
     size_t const size = 50;
     int const prime = 53;
     CCC_Flat_priority_queue flat_priority_queue
@@ -112,8 +104,7 @@ check_static_begin(flat_priority_queue_test_insert_shuffle_grow)
     int sorted_check[50];
     check(inorder_fill(sorted_check, size, &flat_priority_queue), CHECK_PASS);
     int prev = sorted_check[0];
-    for (size_t i = 0; i < size; ++i)
-    {
+    for (size_t i = 0; i < size; ++i) {
         check(prev <= sorted_check[i], true);
         prev = sorted_check[i];
     }
@@ -121,8 +112,7 @@ check_static_begin(flat_priority_queue_test_insert_shuffle_grow)
                                                            NULL););
 }
 
-check_static_begin(flat_priority_queue_test_insert_shuffle_reserve)
-{
+check_static_begin(flat_priority_queue_test_insert_shuffle_reserve) {
     size_t const size = 50;
     int const prime = 53;
     struct Stack_allocator allocator
@@ -139,8 +129,7 @@ check_static_begin(flat_priority_queue_test_insert_shuffle_reserve)
     int sorted_check[50];
     check(inorder_fill(sorted_check, size, &flat_priority_queue), CHECK_PASS);
     int prev = sorted_check[0];
-    for (size_t i = 0; i < size; ++i)
-    {
+    for (size_t i = 0; i < size; ++i) {
         check(prev <= sorted_check[i], true);
         prev = sorted_check[i];
     }
@@ -148,8 +137,7 @@ check_static_begin(flat_priority_queue_test_insert_shuffle_reserve)
                                      stack_allocator_allocate););
 }
 
-check_static_begin(flat_priority_queue_test_read_max_min)
-{
+check_static_begin(flat_priority_queue_test_read_max_min) {
     size_t const size = 10;
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 10);
@@ -157,8 +145,7 @@ check_static_begin(flat_priority_queue_test_read_max_min)
         = CCC_flat_priority_queue_with_context_capacity(
             struct Val, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
             &allocator, 10);
-    for (size_t i = 0; i < size; ++i)
-    {
+    for (size_t i = 0; i < size; ++i) {
         (void)push(&flat_priority_queue,
                    &(struct Val){
                        .val = (int)size - (int)i,
@@ -175,8 +162,7 @@ check_static_begin(flat_priority_queue_test_read_max_min)
 }
 
 int
-main(void)
-{
+main(void) {
     return check_run(flat_priority_queue_test_insert_one(),
                      flat_priority_queue_test_insert_three(),
                      flat_priority_queue_test_insert_three_dups(),

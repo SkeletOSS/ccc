@@ -77,8 +77,7 @@ other state. Wrap a byte in a struct to avoid strict-aliasing exceptions that
 are granted to `uint8_t` (usually unsigned char) and `int8_t` (usually char)
 when passed to functions as pointers. Maybe nets performance gain but depends on
 aggressiveness of compiler. */
-struct CCC_Flat_hash_map_tag
-{
+struct CCC_Flat_hash_map_tag {
     /** Can be set to DELETED or EMPTY or an arbitrary hash 0b0???????. */
     uint8_t v;
 };
@@ -88,8 +87,7 @@ fallback of 8 is good for a portable implementation that will use the widest
 word on a platform for group scanning. Right now, this lib targets 64-bit so
 that means uint64_t is widest default integer widely supported. That width
 is still valid on 32-bit but probably very slow due to emulation. */
-enum : typeof((struct CCC_Flat_hash_map_tag){}.v)
-{
+enum : typeof((struct CCC_Flat_hash_map_tag){}.v) {
 #ifdef CCC_HAS_X86_SIMD
     /** A group of tags that can be loaded into a 128 bit vector. */
     CCC_FLAT_HASH_MAP_GROUP_COUNT = 16,
@@ -140,8 +138,7 @@ still needs to use byte offset multiplication because the data is stored as
 `void *` so we don't have the same optimizations available to us as Rust's
 template generic system. Simple 0 based indexing makes the addition and
 multiplication we perform as simple as possible. */
-struct CCC_Flat_hash_map
-{
+struct CCC_Flat_hash_map {
     /** User data type array. */
     void *data;
     /** Tag array on byte following data(0). */
@@ -168,8 +165,7 @@ struct CCC_Flat_hash_map
 
 /** @internal A struct for containing all relevant information for a query
 into one object so that passing to future functions is cleaner. */
-struct CCC_Flat_hash_map_entry
-{
+struct CCC_Flat_hash_map_entry {
     /** The map associated with this entry. */
     struct CCC_Flat_hash_map *map;
     /** The index in the data/tag array of this entry. */
@@ -186,8 +182,7 @@ a functional chain of calls is not possible with return by value. The interface
 can then return `&(union
 CCC_Flat_hash_map_entry_wrap){function_call(...).private}` which is a compound
 literal reference in C23. */
-union CCC_Flat_hash_map_entry_wrap
-{
+union CCC_Flat_hash_map_entry_wrap {
     /** @internal Wrapped type to make compound literal reference easy. */
     struct CCC_Flat_hash_map_entry private;
 };
@@ -239,8 +234,7 @@ boundary to be able to perform aligned loads and stores. */
     static_assert(((capacity) & ((capacity) - 1)) == 0,                        \
                   "fixed size map must be a power of 2 capacity (32, 64, "     \
                   "128, 256, etc.)");                                          \
-    typedef struct                                                             \
-    {                                                                          \
+    typedef struct {                                                           \
         key_val_type_name data[(capacity) + 1];                                \
         alignas(CCC_FLAT_HASH_MAP_GROUP_COUNT) struct CCC_Flat_hash_map_tag    \
             tag[(capacity) + CCC_FLAT_HASH_MAP_GROUP_COUNT];                   \
@@ -277,7 +271,7 @@ field to NULL we will be able to tell if our map is initialized whether it is
 fixed size and has data or is dynamic and has not yet been given allocation. */
 #define CCC_private_flat_hash_map_initialize(                                  \
     private_type_name, private_key_field, private_hash, private_key_compare,   \
-    private_allocate, private_context_data, private_capacity,                  \
+    private_allocate, private_context, private_capacity,                       \
     private_fixed_map_pointer)                                                 \
     {                                                                          \
         .data = (private_fixed_map_pointer),                                   \
@@ -292,14 +286,13 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
         .compare = (private_key_compare),                                      \
         .hash = (private_hash),                                                \
         .allocate = (private_allocate),                                        \
-        .context = (private_context_data),                                     \
+        .context = (private_context),                                          \
     }
 
 /** @internal Initialize  dynamic container with a compound literal array. */
 #define CCC_private_flat_hash_map_context_from(                                \
     private_key_field, private_hash, private_key_compare, private_allocate,    \
-    private_context_data, private_optional_cap,                                \
-    private_array_compound_literal...)                                         \
+    private_context, private_optional_cap, private_array_compound_literal...)  \
     (__extension__({                                                           \
         typeof(*private_array_compound_literal)                                \
             *private_flat_hash_map_initializer_list                            \
@@ -308,7 +301,7 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
             = CCC_private_flat_hash_map_initialize(                            \
                 typeof(*private_flat_hash_map_initializer_list),               \
                 private_key_field, private_hash, private_key_compare,          \
-                private_allocate, private_context_data, 0, NULL);              \
+                private_allocate, private_context, 0, NULL);                   \
         size_t const private_n                                                 \
             = sizeof(private_array_compound_literal)                           \
             / sizeof(*private_flat_hash_map_initializer_list);                 \
@@ -317,10 +310,8 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
                 &private_map,                                                  \
                 (private_n > private_cap ? private_n : private_cap),           \
                 private_allocate)                                              \
-            == CCC_RESULT_OK)                                                  \
-        {                                                                      \
-            for (size_t i = 0; i < private_n; ++i)                             \
-            {                                                                  \
+            == CCC_RESULT_OK) {                                                \
+            for (size_t i = 0; i < private_n; ++i) {                           \
                 struct CCC_Flat_hash_map_entry private_ent                     \
                     = CCC_private_flat_hash_map_entry(                         \
                         &private_map,                                          \
@@ -331,8 +322,7 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
                       CCC_private_flat_hash_map_data_at(private_ent.map,       \
                                                         private_ent.index))    \
                     = private_flat_hash_map_initializer_list[i];               \
-                if (private_ent.status == CCC_ENTRY_VACANT)                    \
-                {                                                              \
+                if (private_ent.status == CCC_ENTRY_VACANT) {                  \
                     CCC_private_flat_hash_map_set_insert(&private_ent);        \
                 }                                                              \
             }                                                                  \
@@ -352,13 +342,13 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
 /** @internal Initializes the flat hash map with the specified capacity. */
 #define CCC_private_flat_hash_map_with_context_capacity(                       \
     private_type_name, private_key_field, private_hash, private_key_compare,   \
-    private_allocate, private_context_data, private_cap)                       \
+    private_allocate, private_context, private_cap)                            \
     (__extension__({                                                           \
         struct CCC_Flat_hash_map private_map                                   \
             = CCC_private_flat_hash_map_initialize(                            \
                 private_type_name, private_key_field, private_hash,            \
-                private_key_compare, private_allocate, private_context_data,   \
-                0, NULL);                                                      \
+                private_key_compare, private_allocate, private_context, 0,     \
+                NULL);                                                         \
         (void)CCC_flat_hash_map_reserve(&private_map, private_cap,             \
                                         private_allocate);                     \
         private_map;                                                           \
@@ -447,18 +437,15 @@ desired data if occupied. */
             = (Flat_hash_map_entry_pointer);                                   \
         struct CCC_Flat_hash_map_entry private_flat_hash_map_mod_with_ent      \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                            \
-        if (private_flat_hash_map_mod_ent_pointer)                             \
-        {                                                                      \
+        if (private_flat_hash_map_mod_ent_pointer) {                           \
             private_flat_hash_map_mod_with_ent                                 \
                 = private_flat_hash_map_mod_ent_pointer->private;              \
             if (private_flat_hash_map_mod_with_ent.status                      \
-                & CCC_ENTRY_OCCUPIED)                                          \
-            {                                                                  \
+                & CCC_ENTRY_OCCUPIED) {                                        \
                 type_name *const T = CCC_private_flat_hash_map_data_at(        \
                     private_flat_hash_map_mod_with_ent.map,                    \
                     private_flat_hash_map_mod_with_ent.index);                 \
-                if (T)                                                         \
-                {                                                              \
+                if (T) {                                                       \
                     closure_over_T                                             \
                 }                                                              \
             }                                                                  \
@@ -477,19 +464,16 @@ problem. */
             = (Flat_hash_map_entry_pointer);                                   \
         typeof(type_compound_literal) *private_flat_hash_map_or_ins_res        \
             = NULL;                                                            \
-        if (private_flat_hash_map_or_ins_ent_pointer)                          \
-        {                                                                      \
+        if (private_flat_hash_map_or_ins_ent_pointer) {                        \
             if (!(private_flat_hash_map_or_ins_ent_pointer->private.status     \
-                  & CCC_ENTRY_INSERT_ERROR))                                   \
-            {                                                                  \
+                  & CCC_ENTRY_INSERT_ERROR)) {                                 \
                 private_flat_hash_map_or_ins_res                               \
                     = CCC_private_flat_hash_map_data_at(                       \
                         private_flat_hash_map_or_ins_ent_pointer->private.map, \
                         private_flat_hash_map_or_ins_ent_pointer->private      \
                             .index);                                           \
                 if (private_flat_hash_map_or_ins_ent_pointer->private.status   \
-                    == CCC_ENTRY_VACANT)                                       \
-                {                                                              \
+                    == CCC_ENTRY_VACANT) {                                     \
                     *private_flat_hash_map_or_ins_res = type_compound_literal; \
                     CCC_private_flat_hash_map_set_insert(                      \
                         &private_flat_hash_map_or_ins_ent_pointer->private);   \
@@ -509,19 +493,16 @@ occur. */
             = (Flat_hash_map_entry_pointer);                                   \
         typeof(type_compound_literal) *private_flat_hash_map_ins_ent_res       \
             = NULL;                                                            \
-        if (private_flat_hash_map_ins_ent_pointer)                             \
-        {                                                                      \
+        if (private_flat_hash_map_ins_ent_pointer) {                           \
             if (!(private_flat_hash_map_ins_ent_pointer->private.status        \
-                  & CCC_ENTRY_INSERT_ERROR))                                   \
-            {                                                                  \
+                  & CCC_ENTRY_INSERT_ERROR)) {                                 \
                 private_flat_hash_map_ins_ent_res                              \
                     = CCC_private_flat_hash_map_data_at(                       \
                         private_flat_hash_map_ins_ent_pointer->private.map,    \
                         private_flat_hash_map_ins_ent_pointer->private.index); \
                 *private_flat_hash_map_ins_ent_res = type_compound_literal;    \
                 if (private_flat_hash_map_ins_ent_pointer->private.status      \
-                    == CCC_ENTRY_VACANT)                                       \
-                {                                                              \
+                    == CCC_ENTRY_VACANT) {                                     \
                     CCC_private_flat_hash_map_set_insert(                      \
                         &private_flat_hash_map_ins_ent_pointer->private);      \
                 }                                                              \
@@ -540,8 +521,7 @@ Importantly, this function makes sure the key is in sync with key in table. */
             = (flat_hash_map_pointer);                                         \
         struct CCC_Entry private_flat_hash_map_try_insert_res                  \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                            \
-        if (private_flat_hash_map_pointer)                                     \
-        {                                                                      \
+        if (private_flat_hash_map_pointer) {                                   \
             __auto_type private_flat_hash_map_key = key;                       \
             struct CCC_Flat_hash_map_entry private_flat_hash_map_try_ins_ent   \
                 = CCC_private_flat_hash_map_entry(                             \
@@ -550,17 +530,14 @@ Importantly, this function makes sure the key is in sync with key in table. */
             if ((private_flat_hash_map_try_ins_ent.status                      \
                  & CCC_ENTRY_OCCUPIED)                                         \
                 || (private_flat_hash_map_try_ins_ent.status                   \
-                    & CCC_ENTRY_INSERT_ERROR))                                 \
-            {                                                                  \
+                    & CCC_ENTRY_INSERT_ERROR)) {                               \
                 private_flat_hash_map_try_insert_res = (struct CCC_Entry){     \
                     .type = CCC_private_flat_hash_map_data_at(                 \
                         private_flat_hash_map_try_ins_ent.map,                 \
                         private_flat_hash_map_try_ins_ent.index),              \
                     .status = private_flat_hash_map_try_ins_ent.status,        \
                 };                                                             \
-            }                                                                  \
-            else                                                               \
-            {                                                                  \
+            } else {                                                           \
                 private_flat_hash_map_try_insert_res = (struct CCC_Entry){     \
                     .type = CCC_private_flat_hash_map_data_at(                 \
                         private_flat_hash_map_try_ins_ent.map,                 \
@@ -593,8 +570,7 @@ Similar to insert entry this will overwrite. */
             = (flat_hash_map_pointer);                                         \
         struct CCC_Entry private_flat_hash_map_insert_or_assign_res            \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                            \
-        if (private_flat_hash_map_pointer)                                     \
-        {                                                                      \
+        if (private_flat_hash_map_pointer) {                                   \
             private_flat_hash_map_insert_or_assign_res.status                  \
                 = CCC_ENTRY_INSERT_ERROR;                                      \
             __auto_type private_flat_hash_map_key = key;                       \
@@ -604,8 +580,7 @@ Similar to insert entry this will overwrite. */
                     private_flat_hash_map_pointer,                             \
                     (void *)&private_flat_hash_map_key);                       \
             if (!(private_flat_hash_map_ins_or_assign_ent.status               \
-                  & CCC_ENTRY_INSERT_ERROR))                                   \
-            {                                                                  \
+                  & CCC_ENTRY_INSERT_ERROR)) {                                 \
                 private_flat_hash_map_insert_or_assign_res                     \
                     = (struct CCC_Entry){                                      \
                         .type = CCC_private_flat_hash_map_data_at(             \
@@ -623,8 +598,7 @@ Similar to insert entry this will overwrite. */
                           private_flat_hash_map_ins_or_assign_ent.index))      \
                     = private_flat_hash_map_key;                               \
                 if (private_flat_hash_map_ins_or_assign_ent.status             \
-                    == CCC_ENTRY_VACANT)                                       \
-                {                                                              \
+                    == CCC_ENTRY_VACANT) {                                     \
                     CCC_private_flat_hash_map_set_insert(                      \
                         &private_flat_hash_map_ins_or_assign_ent);             \
                 }                                                              \

@@ -15,19 +15,16 @@
 #include "utility/stack_allocator.h"
 
 static inline struct Val
-array_tree_map_create(int const id, int const val)
-{
+array_tree_map_create(int const id, int const val) {
     return (struct Val){.id = id, .val = val};
 }
 
 static inline void
-array_tree_map_modplus(CCC_Type_context const t)
-{
+array_tree_map_modplus(CCC_Type_context const t) {
     ((struct Val *)t.type)->val++;
 }
 
-check_static_begin(array_tree_map_test_insert)
-{
+check_static_begin(array_tree_map_test_insert) {
     CCC_Array_tree_map map
         = array_tree_map_initialize(struct Val, id, id_order, NULL, NULL,
                                     SMALL_FIXED_CAP, &(Small_fixed_map){});
@@ -40,8 +37,7 @@ check_static_begin(array_tree_map_test_insert)
     check_end();
 }
 
-check_static_begin(array_tree_map_test_insert_macros)
-{
+check_static_begin(array_tree_map_test_insert_macros) {
     CCC_Array_tree_map map
         = array_tree_map_initialize(struct Val, id, id_order, NULL, NULL,
                                     SMALL_FIXED_CAP, &(Small_fixed_map){});
@@ -93,8 +89,7 @@ check_static_begin(array_tree_map_test_insert_macros)
     check_end(clear_and_free(&map, NULL););
 }
 
-check_static_begin(array_tree_map_test_insert_overwrite)
-{
+check_static_begin(array_tree_map_test_insert_overwrite) {
     CCC_Array_tree_map map
         = array_tree_map_initialize(struct Val, id, id_order, NULL, NULL,
                                     SMALL_FIXED_CAP, &(Small_fixed_map){});
@@ -127,8 +122,7 @@ check_static_begin(array_tree_map_test_insert_overwrite)
     check_end();
 }
 
-check_static_begin(array_tree_map_test_insert_then_bad_ideas)
-{
+check_static_begin(array_tree_map_test_insert_then_bad_ideas) {
     CCC_Array_tree_map map
         = array_tree_map_initialize(struct Val, id, id_order, NULL, NULL,
                                     SMALL_FIXED_CAP, &(Small_fixed_map){});
@@ -157,8 +151,7 @@ check_static_begin(array_tree_map_test_insert_then_bad_ideas)
     check_end();
 }
 
-check_static_begin(array_tree_map_test_array_api_functional)
-{
+check_static_begin(array_tree_map_test_array_api_functional) {
     /* Over allocate size now because we don't want to worry about resizing. */
     CCC_Array_tree_map map = array_tree_map_initialize(
         struct Val, id, id_order, NULL, NULL, STANDARD_FIXED_CAP,
@@ -169,8 +162,7 @@ check_static_begin(array_tree_map_test_array_api_functional)
        inserted. All entries are hashed to last digit so many spread out
        collisions. */
     struct Val def = {0};
-    for (size_t i = 0; i < size / 2; i += 2)
-    {
+    for (size_t i = 0; i < size / 2; i += 2) {
         def.id = (int)i;
         def.val = (int)i;
         struct Val const *const d = array_tree_map_at(
@@ -181,8 +173,7 @@ check_static_begin(array_tree_map_test_array_api_functional)
     }
     check(count(&map).count, (size / 2) / 2);
     /* The default insertion should not occur every other element. */
-    for (size_t i = 0; i < size / 2; ++i)
-    {
+    for (size_t i = 0; i < size / 2; ++i) {
         def.id = (int)i;
         def.val = (int)i;
         CCC_Handle_index const h = or_insert(
@@ -193,12 +184,9 @@ check_static_begin(array_tree_map_test_array_api_functional)
         /* All values in the array should be odd now */
         check((d != NULL), true);
         check(d->id, i);
-        if (i % 2)
-        {
+        if (i % 2) {
             check(d->val, i);
-        }
-        else
-        {
+        } else {
             check(d->val, i + 1);
         }
         check(d->val % 2, true);
@@ -206,8 +194,7 @@ check_static_begin(array_tree_map_test_array_api_functional)
     check(count(&map).count, (size / 2));
     /* More simply modifications don't require the and modify function. All
        should be switched back to even now. */
-    for (size_t i = 0; i < size / 2; ++i)
-    {
+    for (size_t i = 0; i < size / 2; ++i) {
         def.id = (int)i;
         def.val = (int)i;
         struct Val *const in = array_tree_map_at(
@@ -220,8 +207,7 @@ check_static_begin(array_tree_map_test_array_api_functional)
     check_end();
 }
 
-check_static_begin(array_tree_map_test_insert_via_handle)
-{
+check_static_begin(array_tree_map_test_insert_via_handle) {
     /* Over allocate size now because we don't want to worry about resizing. */
     CCC_Array_tree_map map = array_tree_map_initialize(
         struct Val, id, id_order, NULL, NULL, STANDARD_FIXED_CAP,
@@ -232,8 +218,7 @@ check_static_begin(array_tree_map_test_insert_via_handle)
        inserted. All entries are hashed to last digit so many spread out
        collisions. */
     struct Val def = {0};
-    for (size_t i = 0; i < size / 2; i += 2)
-    {
+    for (size_t i = 0; i < size / 2; i += 2) {
         def.id = (int)i;
         def.val = (int)i;
         struct Val const *const d = array_tree_map_at(
@@ -244,8 +229,7 @@ check_static_begin(array_tree_map_test_insert_via_handle)
     }
     check(count(&map).count, (size / 2) / 2);
     /* The default insertion should not occur every other element. */
-    for (size_t i = 0; i < size / 2; ++i)
-    {
+    for (size_t i = 0; i < size / 2; ++i) {
         def.id = (int)i;
         def.val = (int)i + 1;
         struct Val const *const d = array_tree_map_at(
@@ -253,12 +237,9 @@ check_static_begin(array_tree_map_test_insert_via_handle)
         /* All values in the array should be odd now */
         check((d != NULL), true);
         check(d->val, i + 1);
-        if (i % 2)
-        {
+        if (i % 2) {
             check(d->val % 2 == 0, true);
-        }
-        else
-        {
+        } else {
             check(d->val % 2, true);
         }
     }
@@ -266,8 +247,7 @@ check_static_begin(array_tree_map_test_insert_via_handle)
     check_end();
 }
 
-check_static_begin(array_tree_map_test_insert_via_array_macros)
-{
+check_static_begin(array_tree_map_test_insert_via_array_macros) {
     /* Over allocate size now because we don't want to worry about resizing. */
     CCC_Array_tree_map map = array_tree_map_initialize(
         struct Val, id, id_order, NULL, NULL, STANDARD_FIXED_CAP,
@@ -277,8 +257,7 @@ check_static_begin(array_tree_map_test_insert_via_array_macros)
     /* Test handle or insert with for all even values. Default should be
        inserted. All entries are hashed to last digit so many spread out
        collisions. */
-    for (size_t i = 0; i < size / 2; i += 2)
-    {
+    for (size_t i = 0; i < size / 2; i += 2) {
         struct Val const *const d = array_tree_map_at(
             &map, insert_handle(handle_wrap(&map, &i), &(struct Val){i, i}));
         check((d != NULL), true);
@@ -287,20 +266,16 @@ check_static_begin(array_tree_map_test_insert_via_array_macros)
     }
     check(count(&map).count, (size / 2) / 2);
     /* The default insertion should not occur every other element. */
-    for (size_t i = 0; i < size / 2; ++i)
-    {
+    for (size_t i = 0; i < size / 2; ++i) {
         struct Val const *const d
             = array_tree_map_at(&map, insert_handle(handle_wrap(&map, &i),
                                                     &(struct Val){i, i + 1}));
         /* All values in the array should be odd now */
         check((d != NULL), true);
         check(d->val, i + 1);
-        if (i % 2)
-        {
+        if (i % 2) {
             check(d->val % 2 == 0, true);
-        }
-        else
-        {
+        } else {
             check(d->val % 2, true);
         }
     }
@@ -308,8 +283,7 @@ check_static_begin(array_tree_map_test_insert_via_array_macros)
     check_end();
 }
 
-check_static_begin(array_tree_map_test_array_api_macros)
-{
+check_static_begin(array_tree_map_test_array_api_macros) {
     /* Over allocate size now because we don't want to worry about resizing. */
     CCC_Array_tree_map map = array_tree_map_initialize(
         struct Val, id, id_order, NULL, NULL, STANDARD_FIXED_CAP,
@@ -319,8 +293,7 @@ check_static_begin(array_tree_map_test_array_api_macros)
     /* Test handle or insert with for all even values. Default should be
        inserted. All entries are hashed to last digit so many spread out
        collisions. */
-    for (int i = 0; i < size / 2; i += 2)
-    {
+    for (int i = 0; i < size / 2; i += 2) {
         /* The macros support functions that will only execute if the or
            insert branch executes. */
         struct Val const *const d = array_tree_map_at(
@@ -332,8 +305,7 @@ check_static_begin(array_tree_map_test_array_api_macros)
     }
     check(count(&map).count, (size / 2) / 2);
     /* The default insertion should not occur every other element. */
-    for (int i = 0; i < size / 2; ++i)
-    {
+    for (int i = 0; i < size / 2; ++i) {
         struct Val const *const d = array_tree_map_at(
             &map, array_tree_map_or_insert_with(
                       and_modify(handle_wrap(&map, &i), array_tree_map_modplus),
@@ -341,12 +313,9 @@ check_static_begin(array_tree_map_test_array_api_macros)
         /* All values in the array should be odd now */
         check((d != NULL), true);
         check(d->id, i);
-        if (i % 2)
-        {
+        if (i % 2) {
             check(d->val, i);
-        }
-        else
-        {
+        } else {
             check(d->val, i + 1);
         }
         check(d->val % 2, true);
@@ -354,8 +323,7 @@ check_static_begin(array_tree_map_test_array_api_macros)
     check(count(&map).count, (size / 2));
     /* More simply modifications don't require the and modify function. All
        should be switched back to even now. */
-    for (int i = 0; i < size / 2; ++i)
-    {
+    for (int i = 0; i < size / 2; ++i) {
         struct Val *v = array_tree_map_at(
             &map, array_tree_map_or_insert_with(handle_wrap(&map, &i),
                                                 (struct Val){}));
@@ -368,20 +336,18 @@ check_static_begin(array_tree_map_test_array_api_macros)
     check_end();
 }
 
-check_static_begin(array_tree_map_test_two_sum)
-{
+check_static_begin(array_tree_map_test_two_sum) {
     CCC_Array_tree_map map
         = array_tree_map_initialize(struct Val, id, id_order, NULL, NULL,
                                     SMALL_FIXED_CAP, &(Small_fixed_map){});
     int const addends[10] = {1, 3, -980, 6, 7, 13, 44, 32, 995, -1};
     int const target = 15;
     int solution_indices[2] = {-1, -1};
-    for (size_t i = 0; i < (size_t)(sizeof(addends) / sizeof(addends[0])); ++i)
-    {
+    for (size_t i = 0; i < (size_t)(sizeof(addends) / sizeof(addends[0]));
+         ++i) {
         struct Val const *const other_addend = array_tree_map_at(
             &map, get_key_value(&map, &(int){target - addends[i]}));
-        if (other_addend)
-        {
+        if (other_addend) {
             solution_indices[0] = (int)i;
             solution_indices[1] = other_addend->val;
             break;
@@ -395,15 +361,13 @@ check_static_begin(array_tree_map_test_two_sum)
     check_end();
 }
 
-check_static_begin(array_tree_map_test_resize)
-{
+check_static_begin(array_tree_map_test_resize) {
     CCC_Array_tree_map map = array_tree_map_initialize(
         struct Val, id, id_order, std_allocate, NULL, 0, NULL);
     int const to_insert = 1000;
     int const larger_prime = 1009;
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
-         ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert)
-    {
+         ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert) {
         struct Val elem = {.id = shuffled_index, .val = i};
         struct Val *v = array_tree_map_at(
             &map, insert_handle(handle_wrap(&map, &elem.id), &elem));
@@ -414,8 +378,7 @@ check_static_begin(array_tree_map_test_resize)
     }
     check(count(&map).count, to_insert);
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
-         ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert)
-    {
+         ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert) {
         struct Val swap_slot = {shuffled_index, shuffled_index};
         struct Val const *const in_table = array_tree_map_at(
             &map, insert_handle(handle_wrap(&map, &swap_slot.id), &swap_slot));
@@ -426,8 +389,7 @@ check_static_begin(array_tree_map_test_resize)
     check_end();
 }
 
-check_static_begin(array_tree_map_test_reserve)
-{
+check_static_begin(array_tree_map_test_reserve) {
     int const to_insert = 1000;
     struct Stack_allocator allocator
         = stack_allocator_initialize(Standard_fixed_map, 1);
@@ -437,8 +399,7 @@ check_static_begin(array_tree_map_test_reserve)
     check(array_tree_map_capacity(&map).count >= STANDARD_FIXED_CAP - 1, true);
     int const larger_prime = 1009;
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
-         ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert)
-    {
+         ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert) {
         struct Val elem = {.id = shuffled_index, .val = i};
         struct Val *v = array_tree_map_at(
             &map, insert_handle(handle_wrap(&map, &elem.id), &elem));
@@ -449,8 +410,7 @@ check_static_begin(array_tree_map_test_reserve)
     }
     check(count(&map).count, to_insert);
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
-         ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert)
-    {
+         ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert) {
         struct Val swap_slot = {shuffled_index, shuffled_index};
         struct Val const *const in_table = array_tree_map_at(
             &map, insert_handle(handle_wrap(&map, &swap_slot.id), &swap_slot));
@@ -460,15 +420,13 @@ check_static_begin(array_tree_map_test_reserve)
     check_end(clear_and_free_reserve(&map, NULL, stack_allocator_allocate););
 }
 
-check_static_begin(array_tree_map_test_resize_macros)
-{
+check_static_begin(array_tree_map_test_resize_macros) {
     CCC_Array_tree_map map = array_tree_map_initialize(
         struct Val, id, id_order, std_allocate, NULL, 0, NULL);
     int const to_insert = 1000;
     int const larger_prime = 1009;
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
-         ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert)
-    {
+         ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert) {
         struct Val *v = array_tree_map_at(
             &map, insert_handle(handle_wrap(&map, &shuffled_index),
                                 &(struct Val){shuffled_index, i}));
@@ -478,8 +436,7 @@ check_static_begin(array_tree_map_test_resize_macros)
     }
     check(count(&map).count, to_insert);
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
-         ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert)
-    {
+         ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert) {
         CCC_Handle_index const h = array_tree_map_or_insert_with(
             array_tree_map_and_modify_with(handle_wrap(&map, &shuffled_index),
                                            struct Val,
@@ -501,15 +458,13 @@ check_static_begin(array_tree_map_test_resize_macros)
     check_end();
 }
 
-check_static_begin(array_tree_map_test_resize_from_null)
-{
+check_static_begin(array_tree_map_test_resize_from_null) {
     CCC_Array_tree_map map = array_tree_map_initialize(
         struct Val, id, id_order, std_allocate, NULL, 0, NULL);
     int const to_insert = 1000;
     int const larger_prime = 1009;
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
-         ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert)
-    {
+         ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert) {
         struct Val elem = {.id = shuffled_index, .val = i};
         struct Val *v = array_tree_map_at(
             &map, insert_handle(handle_wrap(&map, &elem.id), &elem));
@@ -519,8 +474,7 @@ check_static_begin(array_tree_map_test_resize_from_null)
     }
     check(count(&map).count, to_insert);
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
-         ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert)
-    {
+         ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert) {
         struct Val swap_slot = {shuffled_index, shuffled_index};
         struct Val const *const in_table = array_tree_map_at(
             &map, insert_handle(handle_wrap(&map, &swap_slot.id), &swap_slot));
@@ -531,15 +485,13 @@ check_static_begin(array_tree_map_test_resize_from_null)
     check_end();
 }
 
-check_static_begin(array_tree_map_test_resize_from_null_macros)
-{
+check_static_begin(array_tree_map_test_resize_from_null_macros) {
     CCC_Array_tree_map map = array_tree_map_initialize(
         struct Val, id, id_order, std_allocate, NULL, 0, NULL);
     int const to_insert = 1000;
     int const larger_prime = 1009;
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
-         ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert)
-    {
+         ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert) {
         struct Val *v = array_tree_map_at(
             &map, insert_handle(handle_wrap(&map, &shuffled_index),
                                 &(struct Val){shuffled_index, i}));
@@ -549,8 +501,7 @@ check_static_begin(array_tree_map_test_resize_from_null_macros)
     }
     check(count(&map).count, to_insert);
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
-         ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert)
-    {
+         ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert) {
         CCC_Handle_index const h = array_tree_map_or_insert_with(
             array_tree_map_and_modify_with(handle_wrap(&map, &shuffled_index),
                                            struct Val,
@@ -572,8 +523,7 @@ check_static_begin(array_tree_map_test_resize_from_null_macros)
     check_end();
 }
 
-check_static_begin(array_tree_map_test_insert_limit)
-{
+check_static_begin(array_tree_map_test_insert_limit) {
     int const size = SMALL_FIXED_CAP;
     CCC_Array_tree_map map
         = array_tree_map_initialize(struct Val, id, id_order, NULL, NULL,
@@ -583,13 +533,11 @@ check_static_begin(array_tree_map_test_insert_limit)
     int last_index = 0;
     int shuffled_index = larger_prime % size;
     for (int i = 0; i < size;
-         ++i, shuffled_index = (shuffled_index + larger_prime) % size)
-    {
+         ++i, shuffled_index = (shuffled_index + larger_prime) % size) {
         struct Val *v = array_tree_map_at(
             &map, insert_handle(handle_wrap(&map, &shuffled_index),
                                 &(struct Val){shuffled_index, i}));
-        if (!v)
-        {
+        if (!v) {
             break;
         }
         check(v->id, shuffled_index);
@@ -638,15 +586,13 @@ check_static_begin(array_tree_map_test_insert_limit)
     check_end();
 }
 
-check_static_begin(array_tree_map_test_insert_and_find)
-{
+check_static_begin(array_tree_map_test_insert_and_find) {
     int const size = SMALL_FIXED_CAP;
     CCC_Array_tree_map map
         = array_tree_map_initialize(struct Val, id, id_order, NULL, NULL,
                                     SMALL_FIXED_CAP, &(Small_fixed_map){});
 
-    for (int i = 0; i < size; i += 2)
-    {
+    for (int i = 0; i < size; i += 2) {
         CCC_Handle e = try_insert(&map, &(struct Val){.id = i, .val = i});
         check(occupied(&e), false);
         check(validate(&map), true);
@@ -658,14 +604,12 @@ check_static_begin(array_tree_map_test_insert_and_find)
         check(v->id, i);
         check(v->val, i);
     }
-    for (int i = 0; i < size; i += 2)
-    {
+    for (int i = 0; i < size; i += 2) {
         check(contains(&map, &i), true);
         check(occupied(handle_wrap(&map, &i)), true);
         check(validate(&map), true);
     }
-    for (int i = 1; i < size; i += 2)
-    {
+    for (int i = 1; i < size; i += 2) {
         check(contains(&map, &i), false);
         check(occupied(handle_wrap(&map, &i)), false);
         check(validate(&map), true);
@@ -673,8 +617,7 @@ check_static_begin(array_tree_map_test_insert_and_find)
     check_end();
 }
 
-check_static_begin(array_tree_map_test_insert_shuffle)
-{
+check_static_begin(array_tree_map_test_insert_shuffle) {
     size_t const size = SMALL_FIXED_CAP - 1;
     CCC_Array_tree_map map
         = array_tree_map_initialize(struct Val, id, id_order, NULL, NULL,
@@ -684,22 +627,19 @@ check_static_begin(array_tree_map_test_insert_shuffle)
     check(insert_shuffled(&map, size, prime), CHECK_PASS);
     int sorted_check[SMALL_FIXED_CAP - 1];
     check(inorder_fill(sorted_check, size, &map), size);
-    for (size_t i = 1; i < size; ++i)
-    {
+    for (size_t i = 1; i < size; ++i) {
         check(sorted_check[i - 1] <= sorted_check[i], true);
     }
     check_end();
 }
 
-check_static_begin(array_tree_map_test_insert_weak_srand)
-{
+check_static_begin(array_tree_map_test_insert_weak_srand) {
     int const num_nodes = STANDARD_FIXED_CAP - 1;
     CCC_Array_tree_map map = array_tree_map_initialize(
         struct Val, id, id_order, NULL, NULL, STANDARD_FIXED_CAP,
         &(Standard_fixed_map){});
     srand(time(NULL)); /* NOLINT */
-    for (int i = 0; i < num_nodes; ++i)
-    {
+    for (int i = 0; i < num_nodes; ++i) {
         CCC_Handle const e = swap_handle(
             &map, &(struct Val){.id = rand() /* NOLINT */, .val = i});
         check(insert_error(&e), false);
@@ -710,8 +650,7 @@ check_static_begin(array_tree_map_test_insert_weak_srand)
 }
 
 int
-main(void)
-{
+main(void) {
     return check_run(
         array_tree_map_test_insert(), array_tree_map_test_insert_macros(),
         array_tree_map_test_insert_and_find(),

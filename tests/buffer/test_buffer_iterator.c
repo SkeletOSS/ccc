@@ -9,15 +9,13 @@
 #include "ccc/types.h"
 #include "checkers.h"
 
-check_static_begin(buffer_test_iterator_forward)
-{
+check_static_begin(buffer_test_iterator_forward) {
     Buffer const b
         = buffer_with_compound_literal(6, (int[6]){1, 2, 3, 4, 5, 6});
     size_t count = 0;
     int prev = 0;
     for (int const *i = buffer_begin(&b); i != buffer_end(&b);
-         i = buffer_next(&b, i))
-    {
+         i = buffer_next(&b, i)) {
         check(i != NULL, CCC_TRUE);
         check(*i > prev, CCC_TRUE);
         ++count;
@@ -26,15 +24,13 @@ check_static_begin(buffer_test_iterator_forward)
     check_end();
 }
 
-check_static_begin(buffer_test_iterator_reverse)
-{
+check_static_begin(buffer_test_iterator_reverse) {
     Buffer const b
         = buffer_with_compound_literal(6, (int[6]){1, 2, 3, 4, 5, 6});
     size_t count = 0;
     int prev = 7;
     for (int const *i = buffer_reverse_begin(&b); i != buffer_reverse_end(&b);
-         i = buffer_reverse_next(&b, i))
-    {
+         i = buffer_reverse_next(&b, i)) {
         check(i != NULL, CCC_TRUE);
         check(*i < prev, CCC_TRUE);
         ++count;
@@ -43,19 +39,16 @@ check_static_begin(buffer_test_iterator_reverse)
     check_end();
 }
 
-check_static_begin(buffer_test_reverse_buf)
-{
+check_static_begin(buffer_test_reverse_buf) {
     Buffer b = buffer_with_compound_literal(6, (int[6]){1, 2, 3, 4, 5, 6});
     int prev = 0;
     for (int const *i = buffer_begin(&b); i != buffer_end(&b);
-         i = buffer_next(&b, i))
-    {
+         i = buffer_next(&b, i)) {
         check(i != NULL, CCC_TRUE);
         check(*i > prev, CCC_TRUE);
     }
     for (int *l = buffer_begin(&b), *r = buffer_reverse_begin(&b); l < r;
-         l = buffer_next(&b, l), r = buffer_reverse_next(&b, r))
-    {
+         l = buffer_next(&b, l), r = buffer_reverse_next(&b, r)) {
         CCC_Result const res
             = buffer_swap(&b, &(int){0}, buffer_index(&b, l).count,
                           buffer_index(&b, r).count);
@@ -63,8 +56,7 @@ check_static_begin(buffer_test_reverse_buf)
     }
     prev = 7;
     for (int const *i = buffer_begin(&b); i != buffer_end(&b);
-         i = buffer_next(&b, i))
-    {
+         i = buffer_next(&b, i)) {
         check(i != NULL, CCC_TRUE);
         check(*i < prev, CCC_TRUE);
     }
@@ -74,10 +66,8 @@ check_static_begin(buffer_test_reverse_buf)
 /** The concept of two pointers can be implemented quite cleanly with the buffer
 iterator abstraction, especially because we don't force a foreach macro use
 onto the user. They are able to set up a while/for loop freely. */
-check_static_begin(buffer_test_trap_rainwater_two_pointers)
-{
-    enum : size_t
-    {
+check_static_begin(buffer_test_trap_rainwater_two_pointers) {
+    enum : size_t {
         HCAP = 12,
     };
     Buffer const heights = buffer_with_compound_literal(
@@ -92,16 +82,12 @@ check_static_begin(buffer_test_trap_rainwater_two_pointers)
     int const *l = buffer_next(&heights, buffer_begin(&heights));
     int const *r
         = buffer_reverse_next(&heights, buffer_reverse_begin(&heights));
-    while (l <= r)
-    {
-        if (lpeak < rpeak)
-        {
+    while (l <= r) {
+        if (lpeak < rpeak) {
             lpeak = maxint(lpeak, *l);
             trapped += (lpeak - *l);
             l = buffer_next(&heights, l);
-        }
-        else
-        {
+        } else {
             rpeak = maxint(rpeak, *r);
             trapped += (rpeak - *r);
             r = buffer_reverse_next(&heights, r);
@@ -112,8 +98,7 @@ check_static_begin(buffer_test_trap_rainwater_two_pointers)
 }
 
 int
-main(void)
-{
+main(void) {
     return check_run(buffer_test_iterator_forward(),
                      buffer_test_iterator_reverse(), buffer_test_reverse_buf(),
                      buffer_test_trap_rainwater_two_pointers());

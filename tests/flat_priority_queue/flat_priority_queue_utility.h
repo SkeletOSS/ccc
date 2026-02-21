@@ -7,8 +7,7 @@
 #include "flat_priority_queue.h"
 #include "types.h"
 
-struct Val
-{
+struct Val {
     int id;
     int val;
 };

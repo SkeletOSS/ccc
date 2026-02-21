@@ -198,7 +198,7 @@ restrictions. */
 @param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] allocate the allocation function for resizing or NULL if no
 resizing is allowed.
-@param[in] context_data context data that is needed for hashing or comparison.
+@param[in] context context data that is needed for hashing or comparison.
 @param[in] capacity the capacity of a fixed size map or 0.
 @param[in] map_pointer a pointer to a fixed map allocation or NULL.
 @return the flat hash map directly initialized on the right hand side of the
@@ -254,10 +254,9 @@ static Flat_hash_map static_map = flat_hash_map_initialize(
 Initialization at runtime is also possible. Stack-based or dynamic maps are
 identical to the provided examples. Omit `static` in a runtime context. */
 #define CCC_flat_hash_map_initialize(type_name, key_field, hash, compare,      \
-                                     allocate, context_data, capacity,         \
-                                     map_pointer)                              \
+                                     allocate, context, capacity, map_pointer) \
     CCC_private_flat_hash_map_initialize(type_name, key_field, hash, compare,  \
-                                         allocate, context_data, capacity,     \
+                                         allocate, context, capacity,          \
                                          map_pointer)
 
 /** @brief Initialize a dynamic map at runtime from an initializer list.
@@ -326,7 +325,7 @@ map to protect its invariants from user error at compile time. */
 @param[in] hash the CCC_Key_hasher function provided by the user.
 @param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] allocate the required allocation function.
-@param[in] context_data context data that is needed for hashing or comparison.
+@param[in] context context data that is needed for hashing or comparison.
 @param[in] optional_capacity optionally specify the capacity of the map if
 different from the size of the compound literal array initializer. If the
 capacity is greater than the size of the compound literal array initializer, it
@@ -380,10 +379,10 @@ main(void)
 Only dynamic maps may be initialized this way due the inability of the hash
 map to protect its invariants from user error at compile time. */
 #define CCC_flat_hash_map_context_from(key_field, hash, compare, allocate,     \
-                                       context_data, optional_capacity,        \
+                                       context, optional_capacity,             \
                                        array_compound_literal...)              \
     CCC_private_flat_hash_map_context_from(key_field, hash, compare, allocate, \
-                                           context_data, optional_capacity,    \
+                                           context, optional_capacity,         \
                                            array_compound_literal)
 
 /** @brief Initialize a dynamic map at runtime with at least the specified
@@ -443,7 +442,7 @@ capacity.
 @param[in] hash the CCC_Key_hasher function provided by the user.
 @param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] allocate the required allocation function.
-@param[in] context_data context data that is needed for hashing or comparison.
+@param[in] context context data that is needed for hashing or comparison.
 @param[in] capacity the desired capacity for the map. A capacity of 0 results
 in an argument error and is a no-op after the map is initialized empty.
 @return the flat hash map directly initialized on the right hand side of the
@@ -484,9 +483,9 @@ main(void)
 Only dynamic maps may be initialized this way as it simply combines the steps
 of initialization and reservation. */
 #define CCC_flat_hash_map_with_context_capacity(                               \
-    type_name, key_field, hash, compare, allocate, context_data, capacity)     \
+    type_name, key_field, hash, compare, allocate, context, capacity)          \
     CCC_private_flat_hash_map_with_context_capacity(                           \
-        type_name, key_field, hash, compare, allocate, context_data, capacity)
+        type_name, key_field, hash, compare, allocate, context, capacity)
 
 /** @brief Initialize a fixed map at compile time or runtime from its previously
 declared type using a compound literal with no allocation permissions or
@@ -609,6 +608,7 @@ allocator.
 @param[in] hash the CCC_Key_hasher function provided by the user.
 @param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] allocate the CCC_Allocator function.
+@param[in] context a pointer to any context needed for the map.
 @return the flat hash map directly initialized on the right hand side of the
 equality operator
 (e.g. CCC_Flat_hash_map map = flat_hash_map_with_allocator(...);)
@@ -854,8 +854,7 @@ where in the table such an element should be inserted.
 An entry is most often passed in a functional style to subsequent calls in the
 Entry Interface.*/
 #define CCC_flat_hash_map_entry_wrap(map_pointer, key_pointer)                 \
-    &(CCC_Flat_hash_map_entry)                                                 \
-    {                                                                          \
+    &(CCC_Flat_hash_map_entry) {                                               \
         CCC_flat_hash_map_entry(map_pointer, key_pointer).private              \
     }
 
@@ -881,7 +880,7 @@ CCC_flat_hash_map_and_modify(CCC_Flat_hash_map_entry *entry,
 This function makes full use of a CCC_Type_modifier capability, meaning a
 complete CCC_update object will be passed to the update function callback. */
 [[nodiscard]] CCC_Flat_hash_map_entry *
-CCC_flat_hash_map_and_modify_context(CCC_Flat_hash_map_entry *entry,
+CCC_flat_hash_map_and_context_modify(CCC_Flat_hash_map_entry *entry,
                                      CCC_Type_modifier *modify, void *context);
 
 /** @brief Modify an Occupied entry with a closure over user type T.
@@ -922,8 +921,7 @@ container can deliver the user type T. This means any function calls are lazily
 evaluated in the closure scope. */
 #define CCC_flat_hash_map_and_modify_with(map_entry_pointer, type_name,        \
                                           closure_over_T...)                   \
-    &(CCC_Flat_hash_map_entry)                                                 \
-    {                                                                          \
+    &(CCC_Flat_hash_map_entry) {                                               \
         CCC_private_flat_hash_map_and_modify_with(map_entry_pointer,           \
                                                   type_name, closure_over_T)   \
     }
@@ -1010,8 +1008,7 @@ forbidden, an insert error is set.
 Note that this function may write to the struct containing the second parameter
 and wraps it in an entry to provide information about the old value. */
 #define CCC_flat_hash_map_swap_entry_wrap(map_pointer, type_pointer)           \
-    &(CCC_Entry)                                                               \
-    {                                                                          \
+    &(CCC_Entry) {                                                             \
         CCC_flat_hash_map_swap_entry(map_pointer, type_pointer).private        \
     }
 
@@ -1028,8 +1025,7 @@ CCC_flat_hash_map_remove_entry(CCC_Flat_hash_map_entry const *entry);
 the table existed and was removed. If Vacant, no prior entry existed to be
 removed. */
 #define CCC_flat_hash_map_remove_entry_wrap(map_entry_pointer)                 \
-    &(CCC_Entry)                                                               \
-    {                                                                          \
+    &(CCC_Entry) {                                                             \
         CCC_flat_hash_map_remove_entry(map_entry_pointer).private              \
     }
 
@@ -1057,8 +1053,7 @@ forbidden, an insert error is set.
 @warning because this function returns a reference to a user type in the table
 any subsequent insertions or deletions invalidate this reference. */
 #define CCC_flat_hash_map_try_insert_wrap(map_pointer, type_pointer)           \
-    &(CCC_Entry)                                                               \
-    {                                                                          \
+    &(CCC_Entry) {                                                             \
         CCC_flat_hash_map_try_insert(map_pointer, type_pointer).private        \
     }
 
@@ -1080,8 +1075,7 @@ lazy value compound literal as well. This function ensures the key in the
 compound literal matches the searched key. */
 #define CCC_flat_hash_map_try_insert_with(map_pointer, key,                    \
                                           type_compound_literal...)            \
-    &(CCC_Entry)                                                               \
-    {                                                                          \
+    &(CCC_Entry) {                                                             \
         CCC_private_flat_hash_map_try_insert_with(map_pointer, key,            \
                                                   type_compound_literal)       \
     }
@@ -1107,8 +1101,7 @@ overwritten by the new key value. If Vacant no prior table entry existed.
 Note that this function can be used when the old user type is not needed but
 the information regarding its presence is helpful. */
 #define CCC_flat_hash_map_insert_or_assign_wrap(map_pointer, type_pointer)     \
-    &(CCC_Entry)                                                               \
-    {                                                                          \
+    &(CCC_Entry) {                                                             \
         CCC_flat_hash_map_insert_or_assign(map_pointer, type_pointer).private  \
     }
 
@@ -1126,8 +1119,7 @@ lazy value compound literal as well. This function ensures the key in the
 compound literal matches the searched key. */
 #define CCC_flat_hash_map_insert_or_assign_with(map_pointer, key,              \
                                                 type_compound_literal...)      \
-    &(CCC_Entry)                                                               \
-    {                                                                          \
+    &(CCC_Entry) {                                                             \
         CCC_private_flat_hash_map_insert_or_assign_with(map_pointer, key,      \
                                                         type_compound_literal) \
     }
@@ -1162,8 +1154,7 @@ Note that this function may write to the struct containing the second parameter
 and wraps it in an entry to provide information about the old value. */
 #define CCC_flat_hash_map_remove_key_value_wrap(map_pointer,                   \
                                                 type_output_pointer)           \
-    &(CCC_Entry)                                                               \
-    {                                                                          \
+    &(CCC_Entry) {                                                             \
         CCC_flat_hash_map_remove_key_value(map_pointer, type_output_pointer)   \
             .private                                                           \
     }
@@ -1335,6 +1326,7 @@ CCC_flat_hash_map_validate(CCC_Flat_hash_map const *map);
 /** Define this preprocessor directive if shorter names are helpful. Ensure
  no namespace clashes occur before shortening. */
 #ifdef FLAT_HASH_MAP_USING_NAMESPACE_CCC
+/* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Flat_hash_map Flat_hash_map;
 typedef CCC_Flat_hash_map_entry Flat_hash_map_entry;
 #    define flat_hash_map_declare_fixed(arguments...)                          \
@@ -1400,8 +1392,8 @@ typedef CCC_Flat_hash_map_entry Flat_hash_map_entry;
 #    define flat_hash_map_entry(arguments...) CCC_flat_hash_map_entry(arguments)
 #    define flat_hash_map_and_modify(arguments...)                             \
         CCC_flat_hash_map_and_modify(arguments)
-#    define flat_hash_map_and_modify_context(arguments...)                     \
-        CCC_flat_hash_map_and_modify_context(arguments)
+#    define flat_hash_map_and_context_modify(arguments...)                     \
+        CCC_flat_hash_map_and_context_modify(arguments)
 #    define flat_hash_map_or_insert(arguments...)                              \
         CCC_flat_hash_map_or_insert(arguments)
 #    define flat_hash_map_insert_entry(arguments...)                           \
@@ -1427,6 +1419,7 @@ typedef CCC_Flat_hash_map_entry Flat_hash_map_entry;
         CCC_flat_hash_map_capacity(arguments)
 #    define flat_hash_map_validate(arguments...)                               \
         CCC_flat_hash_map_validate(arguments)
+/* NOLINTEND(readability-identifier-naming) */
 #endif
 
 #endif /* CCC_FLAT_HASH_MAP_H */

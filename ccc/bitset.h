@@ -86,8 +86,7 @@ typedef struct CCC_Bitset CCC_Bitset;
 Initialize and create containers with memory and permissions. */
 /**@{*/
 
-enum : size_t
-{
+enum : size_t {
     /** @brief The number of bits in a block of the bit set. */
     CCC_BITSET_BLOCK_BITS = CCC_PRIVATE_BITSET_BLOCK_BITS,
 };
@@ -401,7 +400,7 @@ This saves some initialization boilerplate. */
 
 /** @brief Initialize an empty dynamic bit set at compile or runtime with an
 allocator.
-@param[in] allocate the CCC_Allocator function.
+@param[in] allocator the CCC_Allocator function.
 @return the initialized bit set on the right hand side of an equality operator.
 
 An empty dynamic bit set.
@@ -417,7 +416,7 @@ This saves some initialization boilerplate. */
 
 /** @brief Initialize an empty dynamic bit set at compile or runtime with an
 allocator.
-@param[in] allocate the CCC_Allocator function.
+@param[in] allocator the CCC_Allocator function.
 @param[in] context the
 @return the initialized bit set on the right hand side of an equality operator.
 
@@ -1147,6 +1146,7 @@ CCC_Tribool CCC_bitset_pop_back(CCC_Bitset *bitset);
 /** Define this preprocessor macro if shorter names are desired for the bit set
 container. Check for namespace clashes before name shortening. */
 #ifdef BITSET_USING_NAMESPACE_CCC
+/* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Bitset Bitset;
 #    define BITSET_BLOCK_BITS CCC_BITSET_BLOCK_BITS
 #    define bitset_block_count(arguments...) CCC_bitset_block_count(arguments)
@@ -1243,6 +1243,7 @@ typedef CCC_Bitset Bitset;
         CCC_bitset_clear_and_free_reserve(arguments)
 #    define bitset_push_back(arguments...) CCC_bitset_push_back(arguments)
 #    define bitset_pop_back(arguments...) CCC_bitset_pop_back(arguments)
+/* NOLINTEND(readability-identifier-naming) */
 #endif /* BITSET_USING_NAMESPACE_CCC */
 
 #endif /* CCC_BITSET_H */

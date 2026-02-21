@@ -10,31 +10,25 @@
 #include "types.h"
 #include "utility/allocate.h"
 
-check_static_begin(pop_front_n, Flat_double_ended_queue *const q, size_t n)
-{
-    for (; n-- && !is_empty(q); (void)pop_front(q))
-    {
+check_static_begin(pop_front_n, Flat_double_ended_queue *const q, size_t n) {
+    for (; n-- && !is_empty(q); (void)pop_front(q)) {
         check(validate(q), true);
     }
     check_end();
 }
 
-check_static_begin(pop_back_n, Flat_double_ended_queue *const q, size_t n)
-{
-    for (; n-- && !is_empty(q); (void)pop_back(q))
-    {
+check_static_begin(pop_back_n, Flat_double_ended_queue *const q, size_t n) {
+    for (; n-- && !is_empty(q); (void)pop_back(q)) {
         check(validate(q), true);
     }
     check_end();
 }
 
-check_static_begin(flat_double_ended_queue_test_push_pop_back_three)
-{
+check_static_begin(flat_double_ended_queue_test_push_pop_back_three) {
     Flat_double_ended_queue q
         = flat_double_ended_queue_with_compound_literal(0, (int[3]){});
     check(create_queue(&q, 3, (int[3]){0, 1, 2}), CHECK_PASS);
-    while (!is_empty(&q))
-    {
+    while (!is_empty(&q)) {
         (void)pop_back(&q);
         check(validate(&q), true);
     }
@@ -42,11 +36,10 @@ check_static_begin(flat_double_ended_queue_test_push_pop_back_three)
     check_end();
 }
 
-check_static_begin(flat_double_ended_queue_test_push_pop_front_and_back_singles)
-{
+check_static_begin(
+    flat_double_ended_queue_test_push_pop_front_and_back_singles) {
     /* Avoids Variable Length Arrays but nobody else needs this constant. */
-    enum : size_t
-    {
+    enum : size_t {
         SM_FIXED_Q = 64,
     };
     Flat_double_ended_queue q
@@ -55,36 +48,27 @@ check_static_begin(flat_double_ended_queue_test_push_pop_front_and_back_singles)
     (void)CCC_flat_double_ended_queue_push_back_range(
         &q, 20,
         (int[20]){7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7});
-    while (!CCC_flat_double_ended_queue_is_empty(&q))
-    {
+    while (!CCC_flat_double_ended_queue_is_empty(&q)) {
         check(*((int *)CCC_flat_double_ended_queue_front(&q)), 7);
         check(CCC_flat_double_ended_queue_pop_front(&q), CCC_RESULT_OK);
     }
     for (size_t i = 0;
-         CCC_flat_double_ended_queue_count(&q).count != SM_FIXED_Q; ++i)
-    {
-        if (i % 2)
-        {
+         CCC_flat_double_ended_queue_count(&q).count != SM_FIXED_Q; ++i) {
+        if (i % 2) {
             check(CCC_flat_double_ended_queue_push_front(&q, &(int){1}) != NULL,
                   true);
-        }
-        else
-        {
+        } else {
             check(CCC_flat_double_ended_queue_push_back(&q, &(int){0}) != NULL,
                   true);
         }
     }
     size_t i = 0;
-    for (; !CCC_flat_double_ended_queue_is_empty(&q); ++i)
-    {
-        if (i % 2)
-        {
+    for (; !CCC_flat_double_ended_queue_is_empty(&q); ++i) {
+        if (i % 2) {
             int const elem = *((int *)CCC_flat_double_ended_queue_front(&q));
             check(CCC_flat_double_ended_queue_pop_front(&q), CCC_RESULT_OK);
             check(elem, 1);
-        }
-        else
-        {
+        } else {
             int const elem = *((int *)CCC_flat_double_ended_queue_back(&q));
             check(CCC_flat_double_ended_queue_pop_back(&q), CCC_RESULT_OK);
             check(elem, 0);
@@ -95,8 +79,7 @@ check_static_begin(flat_double_ended_queue_test_push_pop_front_and_back_singles)
 }
 
 check_static_begin(
-    flat_double_ended_queue_test_push_pop_front_and_back_singles_dynamic)
-{
+    flat_double_ended_queue_test_push_pop_front_and_back_singles_dynamic) {
     size_t const sm_dyn_q = 128;
     Flat_double_ended_queue q = flat_double_ended_queue_initialize(
         int, std_allocate, NULL, 0, 0, NULL);
@@ -104,36 +87,27 @@ check_static_begin(
     (void)CCC_flat_double_ended_queue_push_back_range(
         &q, 20,
         (int[20]){7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7});
-    while (!CCC_flat_double_ended_queue_is_empty(&q))
-    {
+    while (!CCC_flat_double_ended_queue_is_empty(&q)) {
         check(*((int *)CCC_flat_double_ended_queue_front(&q)), 7);
         check(CCC_flat_double_ended_queue_pop_front(&q), CCC_RESULT_OK);
     }
     for (size_t i = 0; CCC_flat_double_ended_queue_count(&q).count != sm_dyn_q;
-         ++i)
-    {
-        if (i % 2)
-        {
+         ++i) {
+        if (i % 2) {
             check(CCC_flat_double_ended_queue_push_front(&q, &(int){1}) != NULL,
                   true);
-        }
-        else
-        {
+        } else {
             check(CCC_flat_double_ended_queue_push_back(&q, &(int){0}) != NULL,
                   true);
         }
     }
     size_t i = 0;
-    for (; !CCC_flat_double_ended_queue_is_empty(&q); ++i)
-    {
-        if (i % 2)
-        {
+    for (; !CCC_flat_double_ended_queue_is_empty(&q); ++i) {
+        if (i % 2) {
             int const elem = *((int *)CCC_flat_double_ended_queue_front(&q));
             check(CCC_flat_double_ended_queue_pop_front(&q), CCC_RESULT_OK);
             check(elem, 1);
-        }
-        else
-        {
+        } else {
             int const elem = *((int *)CCC_flat_double_ended_queue_back(&q));
             check(CCC_flat_double_ended_queue_pop_back(&q), CCC_RESULT_OK);
             check(elem, 0);
@@ -143,13 +117,11 @@ check_static_begin(
     check_end(CCC_flat_double_ended_queue_clear_and_free(&q, NULL););
 }
 
-check_static_begin(flat_double_ended_queue_test_push_pop_front_three)
-{
+check_static_begin(flat_double_ended_queue_test_push_pop_front_three) {
     Flat_double_ended_queue q
         = flat_double_ended_queue_with_compound_literal(0, (int[3]){});
     check(create_queue(&q, 3, (int[3]){0, 1, 2}), CHECK_PASS);
-    while (!is_empty(&q))
-    {
+    while (!is_empty(&q)) {
         (void)pop_front(&q);
         check(validate(&q), true);
     }
@@ -157,19 +129,14 @@ check_static_begin(flat_double_ended_queue_test_push_pop_front_three)
     check_end();
 }
 
-check_static_begin(flat_double_ended_queue_test_push_pop_front_back)
-{
+check_static_begin(flat_double_ended_queue_test_push_pop_front_back) {
     Flat_double_ended_queue q
         = flat_double_ended_queue_with_compound_literal(0, (int[6]){});
     check(create_queue(&q, 6, (int[6]){0, 1, 2, 3, 4, 5}), CHECK_PASS);
-    while (!is_empty(&q))
-    {
-        if (count(&q).count % 2)
-        {
+    while (!is_empty(&q)) {
+        if (count(&q).count % 2) {
             (void)pop_front(&q);
-        }
-        else
-        {
+        } else {
             (void)pop_back(&q);
         }
         check(validate(&q), true);
@@ -178,8 +145,7 @@ check_static_begin(flat_double_ended_queue_test_push_pop_front_back)
     check_end();
 }
 
-check_static_begin(flat_double_ended_queue_test_push_pop_front_ranges)
-{
+check_static_begin(flat_double_ended_queue_test_push_pop_front_ranges) {
     Flat_double_ended_queue q
         = flat_double_ended_queue_with_compound_literal(0, (int[10]){});
     check(create_queue(&q, 6, (int[6]){0, 1, 2, 3, 4, 5}), CHECK_PASS);
@@ -203,8 +169,7 @@ check_static_begin(flat_double_ended_queue_test_push_pop_front_ranges)
     check_end();
 }
 
-check_static_begin(flat_double_ended_queue_test_push_pop_back_ranges)
-{
+check_static_begin(flat_double_ended_queue_test_push_pop_back_ranges) {
     Flat_double_ended_queue q
         = flat_double_ended_queue_with_compound_literal(0, (int[10]){});
     check(create_queue(&q, 6, (int[6]){0, 1, 2, 3, 4, 5}), CHECK_PASS);
@@ -228,8 +193,7 @@ check_static_begin(flat_double_ended_queue_test_push_pop_back_ranges)
     check_end();
 }
 
-check_static_begin(flat_double_ended_queue_test_push_pop_middle_ranges)
-{
+check_static_begin(flat_double_ended_queue_test_push_pop_middle_ranges) {
     Flat_double_ended_queue q
         = flat_double_ended_queue_with_compound_literal(0, (int[10]){});
     check(create_queue(&q, 6, (int[6]){0, 1, 2, 3, 4, 5}), CHECK_PASS);
@@ -255,8 +219,7 @@ check_static_begin(flat_double_ended_queue_test_push_pop_middle_ranges)
 }
 
 int
-main(void)
-{
+main(void) {
     return check_run(
         flat_double_ended_queue_test_push_pop_back_three(),
         flat_double_ended_queue_test_push_pop_front_three(),

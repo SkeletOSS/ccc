@@ -82,7 +82,7 @@ Initialize the container with memory, callbacks, and permissions. */
 policy, capacity, and optional starting size.
 @param[in] type_name the name of the user type in the buffer.
 @param[in] allocate CCC_Allocator or NULL if no allocation is permitted.
-@param[in] context_data any context data needed for managing Buffer memory.
+@param[in] context any context data needed for managing Buffer memory.
 @param[in] capacity the capacity of memory at data_pointer.
 @param[in] count optional starting size of the Buffer <= capacity.
 @param[in] data_pointer the pointer to existing memory or NULL.
@@ -115,9 +115,9 @@ provide an allocation function. If a dynamic Buffer is preferred, provide the
 allocation function as defined by the signature in types.h. If resizing is
 desired on memory that has already been allocated, ensure allocation has
 occurred with the provided allocation function. */
-#define CCC_buffer_initialize(type_name, allocate, context_data, capacity,     \
-                              count, data_pointer...)                          \
-    CCC_private_buffer_initialize(type_name, allocate, context_data, capacity, \
+#define CCC_buffer_initialize(type_name, allocate, context, capacity, count,   \
+                              data_pointer...)                                 \
+    CCC_private_buffer_initialize(type_name, allocate, context, capacity,      \
                                   count, data_pointer)
 
 /** @brief Initialize a Buffer from a compound literal array initializer.
@@ -170,7 +170,7 @@ CCC_buffer_initialize() macro. */
 
 /** @brief Initialize a Buffer from a compound literal array initializer.
 @param[in] allocate CCC_Allocator or NULL if no allocation is permitted.
-@param[in] context_data any context data needed for managing Buffer memory.
+@param[in] context any context data needed for managing Buffer memory.
 @param[in] optional_capacity optionally specify the capacity of the Buffer if
 different from the size of the compound literal array initializer. If the
 capacity is greater than the size of the compound literal array initializer, it
@@ -213,9 +213,9 @@ main(void)
 Only dynamic buffers may be initialized this way. For static or stack based
 initialization of fixed buffers with contents known at compile time, see the
 CCC_buffer_initialize() macro. */
-#define CCC_buffer_context_from(allocate, context_data, optional_capacity,     \
+#define CCC_buffer_context_from(allocate, context, optional_capacity,          \
                                 compound_literal_array...)                     \
-    CCC_private_buffer_context_from(allocate, context_data, optional_capacity, \
+    CCC_private_buffer_context_from(allocate, context, optional_capacity,      \
                                     compound_literal_array)
 
 /** @brief Initialize a Buffer with a capacity.
@@ -247,7 +247,7 @@ CCC_buffer_initialize() macro. */
 /** @brief Initialize a Buffer with a capacity.
 @param[in] type_name any user or language standard type name.
 @param[in] allocate CCC_Allocator or NULL if no allocation is permitted.
-@param[in] context_data any context data needed for managing Buffer memory.
+@param[in] context any context data needed for managing Buffer memory.
 @param[in] capacity the capacity of the Buffer to reserve.
 @return the initialized buffer. Directly assign to Buffer on the right hand
 side of the equality operator (e.g. CCC_Buffer b =
@@ -268,10 +268,10 @@ main(void)
 Only dynamic buffers may be initialized this way. For static or stack based
 initialization of fixed buffers with contents known at compile time, see the
 CCC_buffer_initialize() macro. */
-#define CCC_buffer_with_context_capacity(type_name, allocate, context_data,    \
+#define CCC_buffer_with_context_capacity(type_name, allocate, context,         \
                                          capacity)                             \
-    CCC_private_buffer_with_context_capacity(type_name, allocate,              \
-                                             context_data, capacity)
+    CCC_private_buffer_with_context_capacity(type_name, allocate, context,     \
+                                             capacity)
 
 /** @brief Initialize a contiguous Buffer of user a specified type of fixed
 capacity with no allocation permission or context.
@@ -345,9 +345,9 @@ This helps eliminate boilerplate and makes intent clear. */
 
 /** @brief Initialize a contiguous Buffer of user a specified type of fixed
 capacity with no allocation permission.
+@param[in] type_name the name of the type stored in this buffer.
+@param[in] allocator the CCC_Allocator function.
 @param[in] context a pointer to any context needed for each element.
-@param[in] count starting count of the Buffer <= capacity of input literal.
-@param[in] allocator_array the compound literal array of types.
 @return the initialized buffer. Directly assign to Buffer on the right hand
 side of the equality operator
 (e.g. CCC_Buffer b = CCC_buffer_with_context_allocator(...);).
@@ -908,6 +908,7 @@ CCC_Result CCC_buffer_clear(CCC_Buffer *buffer, CCC_Type_destructor *destroy);
 related types and methods. By default the prefix is required but may be
 dropped with this directive if one is sure no namespace collisions occur. */
 #ifdef BUFFER_USING_NAMESPACE_CCC
+/* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Buffer Buffer;
 #    define buffer_initialize(arguments...) CCC_buffer_initialize(arguments)
 #    define buffer_with_compound_literal(arguments...)                         \
@@ -970,6 +971,7 @@ typedef CCC_Buffer Buffer;
 #    define buffer_reverse_next(arguments...) CCC_buffer_reverse_next(arguments)
 #    define buffer_reverse_end(arguments...) CCC_buffer_reverse_end(arguments)
 #    define buffer_capacity_end(arguments...) CCC_buffer_capacity_end(arguments)
+/* NOLINTEND(readability-identifier-naming) */
 #endif /* BUFFER_USING_NAMESPACE_CCC */
 
 #endif /* CCC_BUFFER_H */

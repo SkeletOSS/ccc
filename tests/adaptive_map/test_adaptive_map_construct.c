@@ -12,15 +12,13 @@
 #include "utility/stack_allocator.h"
 
 static CCC_Adaptive_map
-construct_empty(void)
-{
+construct_empty(void) {
     CCC_Adaptive_map map = CCC_adaptive_map_initialize(struct Val, elem, key,
                                                        id_order, NULL, NULL);
     return map;
 }
 
-check_static_begin(adaptive_map_test_empty)
-{
+check_static_begin(adaptive_map_test_empty) {
     CCC_Adaptive_map s = CCC_adaptive_map_initialize(struct Val, elem, key,
                                                      id_order, NULL, NULL);
     check(is_empty(&s), true);
@@ -34,8 +32,7 @@ invalidated after the constructing function ends. This leads to a dangling
 reference to stack memory that no longer exists. Disastrous. The solution is
 to never implement sentinels that refer to a memory address on the map struct
 itself. */
-check_static_begin(adaptive_map_test_construct)
-{
+check_static_begin(adaptive_map_test_construct) {
     struct Val push = {};
     CCC_Adaptive_map map = construct_empty();
     CCC_Entry entry = CCC_adaptive_map_insert_or_assign(&map, &push.elem);
@@ -46,8 +43,7 @@ check_static_begin(adaptive_map_test_construct)
     check_end();
 }
 
-check_static_begin(adaptive_map_test_with_allocator)
-{
+check_static_begin(adaptive_map_test_with_allocator) {
     CCC_Adaptive_map map = CCC_adaptive_map_with_allocator(
         struct Val, elem, key, id_order, std_allocate);
     check(CCC_adaptive_map_validate(&map), true);
@@ -55,8 +51,7 @@ check_static_begin(adaptive_map_test_with_allocator)
     check_end();
 }
 
-check_static_begin(adaptive_map_test_with_context_allocator)
-{
+check_static_begin(adaptive_map_test_with_context_allocator) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 3);
     CCC_Adaptive_map map = CCC_adaptive_map_with_context_allocator(
@@ -70,8 +65,7 @@ check_static_begin(adaptive_map_test_with_context_allocator)
     check_end();
 }
 
-check_static_begin(adaptive_map_test_construct_from)
-{
+check_static_begin(adaptive_map_test_construct_from) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 3);
     CCC_Adaptive_map map = CCC_adaptive_map_context_from(
@@ -86,8 +80,7 @@ check_static_begin(adaptive_map_test_construct_from)
     check_end((void)CCC_adaptive_map_clear(&map, NULL););
 }
 
-check_static_begin(adaptive_map_test_construct_from_overwrite)
-{
+check_static_begin(adaptive_map_test_construct_from_overwrite) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 3);
     CCC_Adaptive_map map = CCC_adaptive_map_context_from(
@@ -106,8 +99,7 @@ check_static_begin(adaptive_map_test_construct_from_overwrite)
     check_end((void)CCC_adaptive_map_clear(&map, NULL););
 }
 
-check_static_begin(adaptive_map_test_construct_from_fail)
-{
+check_static_begin(adaptive_map_test_construct_from_fail) {
     CCC_Adaptive_map map
         = CCC_adaptive_map_from(elem, key, id_order, NULL, NULL,
                                 (struct Val[]){
@@ -121,8 +113,7 @@ check_static_begin(adaptive_map_test_construct_from_fail)
 }
 
 int
-main(void)
-{
+main(void) {
     return check_run(adaptive_map_test_empty(), adaptive_map_test_construct(),
                      adaptive_map_test_with_allocator(),
                      adaptive_map_test_with_context_allocator(),

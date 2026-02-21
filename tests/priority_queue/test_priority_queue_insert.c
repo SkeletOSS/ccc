@@ -10,13 +10,11 @@
 #include "types.h"
 #include "utility/stack_allocator.h"
 
-enum : int
-{
+enum : int {
     STANDARD_CAP = 50,
 };
 
-check_static_begin(priority_queue_test_insert_one)
-{
+check_static_begin(priority_queue_test_insert_one) {
     CCC_Priority_queue priority_queue = CCC_priority_queue_initialize(
         struct Val, elem, CCC_ORDER_LESSER, val_order, NULL, NULL);
     struct Val single;
@@ -26,15 +24,13 @@ check_static_begin(priority_queue_test_insert_one)
     check_end();
 }
 
-check_static_begin(priority_queue_test_insert_three)
-{
+check_static_begin(priority_queue_test_insert_three) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 3);
     CCC_Priority_queue priority_queue = CCC_priority_queue_initialize(
         struct Val, elem, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
         &allocator);
-    for (int i = 0; i < 3; ++i)
-    {
+    for (int i = 0; i < 3; ++i) {
         check(push(&priority_queue, &(struct Val){.val = i}.elem) != NULL,
               true);
         check(validate(&priority_queue), true);
@@ -47,15 +43,13 @@ check_static_begin(priority_queue_test_insert_three)
     check_end();
 }
 
-check_static_begin(priority_queue_test_insert_three_dups)
-{
+check_static_begin(priority_queue_test_insert_three_dups) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 3);
     CCC_Priority_queue priority_queue = CCC_priority_queue_initialize(
         struct Val, elem, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
         &allocator);
-    for (int i = 0; i < 3; ++i)
-    {
+    for (int i = 0; i < 3; ++i) {
         check(push(&priority_queue, &(struct Val){.val = 0}.elem) != NULL,
               true);
         check(validate(&priority_queue), true);
@@ -68,8 +62,7 @@ check_static_begin(priority_queue_test_insert_three_dups)
     check_end();
 }
 
-check_static_begin(priority_queue_test_insert_shuffle)
-{
+check_static_begin(priority_queue_test_insert_shuffle) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, STANDARD_CAP);
     CCC_Priority_queue priority_queue = CCC_priority_queue_initialize(
@@ -83,13 +76,11 @@ check_static_begin(priority_queue_test_insert_shuffle)
     check_end();
 }
 
-check_static_begin(priority_queue_test_read_max_min)
-{
+check_static_begin(priority_queue_test_read_max_min) {
     CCC_Priority_queue priority_queue = CCC_priority_queue_initialize(
         struct Val, elem, CCC_ORDER_LESSER, val_order, NULL, NULL);
     struct Val vals[10];
-    for (int i = 0; i < 10; ++i)
-    {
+    for (int i = 0; i < 10; ++i) {
         vals[i].val = i;
         check(push(&priority_queue, &vals[i].elem) != NULL, true);
         check(validate(&priority_queue), true);
@@ -102,8 +93,7 @@ check_static_begin(priority_queue_test_read_max_min)
 }
 
 int
-main(void)
-{
+main(void) {
     return check_run(priority_queue_test_insert_one(),
                      priority_queue_test_insert_three(),
                      priority_queue_test_insert_three_dups(),

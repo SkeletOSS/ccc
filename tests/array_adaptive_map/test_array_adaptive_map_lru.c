@@ -14,14 +14,12 @@ The leetcode lru problem in C. */
 #include "traits.h"
 #include "types.h"
 
-enum : size_t
-{
+enum : size_t {
     LRU_CAP = 32,
     REQS = 11,
 };
 
-struct Lru_cache
-{
+struct Lru_cache {
     CCC_Array_adaptive_map map;
     CCC_Doubly_linked_list l;
     size_t cap;
@@ -29,27 +27,23 @@ struct Lru_cache
 
 /* This map is pointer stable allowing us to have the lru cache represented
    in the same struct. */
-struct Lru_node
-{
+struct Lru_node {
     Doubly_linked_list_node list_node;
     int key;
     int val;
 };
 
-enum Lru_call
-{
+enum Lru_call {
     PUT,
     GET,
     HED,
 };
 
-struct Lru_request
-{
+struct Lru_request {
     enum Lru_call call;
     int key;
     int val;
-    union
-    {
+    union {
         enum Check_result (*putter)(struct Lru_cache *, int, int);
         enum Check_result (*getter)(struct Lru_cache *, int, int *);
         struct Lru_node *(*header)(struct Lru_cache *);
@@ -85,25 +79,20 @@ static struct Lru_cache lru_cache = {
 /*===========================     LRU Test   ================================*/
 
 int
-main(void)
-{
+main(void) {
     return check_run(run_lru_cache());
 }
 
 /* Disable me if tests start failing! */
 static bool const quiet = true;
 #define quiet_print(format_string...)                                          \
-    do                                                                         \
-    {                                                                          \
-        if (!quiet)                                                            \
-        {                                                                      \
+    do {                                                                       \
+        if (!quiet) {                                                          \
             printf(format_string);                                             \
         }                                                                      \
-    }                                                                          \
-    while (0)
+    } while (0)
 
-check_static_begin(run_lru_cache)
-{
+check_static_begin(run_lru_cache) {
     quiet_print("LRU CAPACITY -> %zu\n", lru_cache.cap);
     struct Lru_request requests[REQS] = {
         {PUT, .key = 1, .val = 1, .putter = lru_put},
@@ -118,12 +107,9 @@ check_static_begin(run_lru_cache)
         {GET, .key = 2, .val = -1, .getter = lru_get},
         {HED, .key = 4, .val = 4, .header = lru_head},
     };
-    for (size_t i = 0; i < REQS; ++i)
-    {
-        switch (requests[i].call)
-        {
-            case PUT:
-            {
+    for (size_t i = 0; i < REQS; ++i) {
+        switch (requests[i].call) {
+            case PUT: {
                 check(requests[i].putter(&lru_cache, requests[i].key,
                                          requests[i].val),
                       CHECK_PASS);
@@ -131,10 +117,8 @@ check_static_begin(run_lru_cache)
                             requests[i].val);
                 check(validate(&lru_cache.map), true);
                 check(validate(&lru_cache.l), true);
-            }
-            break;
-            case GET:
-            {
+            } break;
+            case GET: {
                 quiet_print("GET -> {key: %d, val: %d}\n", requests[i].key,
                             requests[i].val);
                 int val = 0;
@@ -142,10 +126,8 @@ check_static_begin(run_lru_cache)
                       CHECK_PASS);
                 check(val, requests[i].val);
                 check(validate(&lru_cache.l), true);
-            }
-            break;
-            case HED:
-            {
+            } break;
+            case HED: {
                 quiet_print("HED -> {key: %d, val: %d}\n", requests[i].key,
                             requests[i].val);
                 struct Lru_node const *const kv
@@ -153,8 +135,7 @@ check_static_begin(run_lru_cache)
                 check(kv != NULL, true);
                 check(kv->key, requests[i].key);
                 check(kv->val, requests[i].val);
-            }
-            break;
+            } break;
             default:
                 break;
         }
@@ -163,12 +144,10 @@ check_static_begin(run_lru_cache)
 }
 
 check_static_begin(lru_put, struct Lru_cache *const lru, int const key,
-                   int const val)
-{
+                   int const val) {
     CCC_Array_adaptive_map_handle const *const ent
         = handle_wrap(&lru->map, &key);
-    if (occupied(ent))
-    {
+    if (occupied(ent)) {
         struct Lru_node *const found
             = array_adaptive_map_at(&lru->map, unwrap(ent));
         found->key = key;
@@ -177,17 +156,14 @@ check_static_begin(lru_put, struct Lru_cache *const lru, int const key,
             &lru->l, doubly_linked_list_node_begin(&lru->l), &lru->l,
             &found->list_node);
         check(r, CCC_RESULT_OK);
-    }
-    else
-    {
+    } else {
         struct Lru_node *new = array_adaptive_map_at(
             &lru->map,
             insert_handle(ent, &(struct Lru_node){.key = key, .val = val}));
         check(new == NULL, false);
         new = doubly_linked_list_push_front(&lru->l, &new->list_node);
         check(new == NULL, false);
-        if (count(&lru->l).count > lru->cap)
-        {
+        if (count(&lru->l).count > lru->cap) {
             struct Lru_node const *const to_drop = back(&lru->l);
             check(to_drop == NULL, false);
             (void)pop_back(&lru->l);
@@ -200,17 +176,13 @@ check_static_begin(lru_put, struct Lru_cache *const lru, int const key,
 }
 
 check_static_begin(lru_get, struct Lru_cache *const lru, int const key,
-                   int *val)
-{
+                   int *val) {
     check_error(val != NULL, true);
     struct Lru_node *const found
         = array_adaptive_map_at(&lru->map, get_key_value(&lru->map, &key));
-    if (!found)
-    {
+    if (!found) {
         *val = -1;
-    }
-    else
-    {
+    } else {
         CCC_Result r = doubly_linked_list_splice(
             &lru->l, doubly_linked_list_node_begin(&lru->l), &lru->l,
             &found->list_node);
@@ -221,22 +193,19 @@ check_static_begin(lru_get, struct Lru_cache *const lru, int const key,
 }
 
 static struct Lru_node *
-lru_head(struct Lru_cache *const lru)
-{
+lru_head(struct Lru_cache *const lru) {
     return doubly_linked_list_front(&lru->l);
 }
 
 static CCC_Order
-order_by_key(CCC_Key_comparator_context const order)
-{
+order_by_key(CCC_Key_comparator_context const order) {
     int const key_left = *(int *)order.key_left;
     struct Lru_node const *const kv = order.type_right;
     return (key_left > kv->key) - (key_left < kv->key);
 }
 
 static CCC_Order
-order_list_nodes(CCC_Type_comparator_context const order)
-{
+order_list_nodes(CCC_Type_comparator_context const order) {
     struct Lru_node const *const kv_a = order.type_left;
     struct Lru_node const *const kv_b = order.type_right;
     return (kv_a->key > kv_b->key) - (kv_a->key < kv_b->key);

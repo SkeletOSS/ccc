@@ -29,8 +29,7 @@ limitations under the License.
 linked list. Supports O(1) insert and delete at the front. Elements always have
 a valid element to point to in the list due to the user of a sentinel so these
 pointers are never NULL if an element is in the list. */
-struct CCC_Singly_linked_list_node
-{
+struct CCC_Singly_linked_list_node {
     /** @internal The next element. Non-null if elem is in list. */
     struct CCC_Singly_linked_list_node *next;
 };
@@ -62,8 +61,7 @@ initialization for these more advanced use cases.
 
 Note that the list itself is not thread-safe; external synchronization is still
 required if multiple threads access the same list. */
-struct CCC_Singly_linked_list
-{
+struct CCC_Singly_linked_list {
     /** @internal The pointer to the current head of the list. */
     struct CCC_Singly_linked_list_node *head;
     /** @internal The number of elements constantly tracked for O(1) check. */
@@ -96,7 +94,7 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
 /** @internal */
 #define CCC_private_singly_linked_list_initialize(                             \
     private_struct_name, private_singly_linked_list_node_field,                \
-    private_compare, private_allocate, private_context_data)                   \
+    private_compare, private_allocate, private_context)                        \
     {                                                                          \
         .head = NULL,                                                          \
         .sizeof_type = sizeof(private_struct_name),                            \
@@ -105,7 +103,7 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
         .count = 0,                                                            \
         .allocate = (private_allocate),                                        \
         .compare = (private_compare),                                          \
-        .context = (private_context_data),                                     \
+        .context = (private_context),                                          \
     }
 
 /** @internal */
@@ -127,7 +125,7 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
 /** @internal */
 #define CCC_private_singly_linked_list_context_from(                           \
     private_type_intruder_field, private_compare, private_allocate,            \
-    private_destroy, private_context_data, private_compound_literal_array...)  \
+    private_destroy, private_context, private_compound_literal_array...)       \
     (__extension__({                                                           \
         typeof(*private_compound_literal_array)                                \
             *private_singly_linked_list_type_array                             \
@@ -136,14 +134,12 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
             = CCC_private_singly_linked_list_initialize(                       \
                 typeof(*private_singly_linked_list_type_array),                \
                 private_type_intruder_field, private_compare,                  \
-                private_allocate, private_context_data);                       \
-        if (private_singly_linked_list.allocate)                               \
-        {                                                                      \
+                private_allocate, private_context);                            \
+        if (private_singly_linked_list.allocate) {                             \
             size_t private_count                                               \
                 = sizeof(private_compound_literal_array)                       \
                 / sizeof(*private_singly_linked_list_type_array);              \
-            while (private_count--)                                            \
-            {                                                                  \
+            while (private_count--) {                                          \
                 typeof(*private_singly_linked_list_type_array) *const          \
                     private_new_node                                           \
                     = private_singly_linked_list.allocate(                     \
@@ -152,8 +148,7 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
                             .bytes = private_singly_linked_list.sizeof_type,   \
                             .context = private_singly_linked_list.context,     \
                         });                                                    \
-                if (!private_new_node)                                         \
-                {                                                              \
+                if (!private_new_node) {                                       \
                     CCC_singly_linked_list_clear(&private_singly_linked_list,  \
                                                  private_destroy);             \
                     break;                                                     \
@@ -184,14 +179,10 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
         typeof(struct_initializer) *private_singly_linked_list_res = NULL;     \
         struct CCC_Singly_linked_list *private_singly_linked_list              \
             = (list_pointer);                                                  \
-        if (private_singly_linked_list)                                        \
-        {                                                                      \
-            if (!private_singly_linked_list->allocate)                         \
-            {                                                                  \
+        if (private_singly_linked_list) {                                      \
+            if (!private_singly_linked_list->allocate) {                       \
                 private_singly_linked_list_res = NULL;                         \
-            }                                                                  \
-            else                                                               \
-            {                                                                  \
+            } else {                                                           \
                 private_singly_linked_list_res                                 \
                     = private_singly_linked_list->allocate(                    \
                         (CCC_Allocator_context){                               \
@@ -199,8 +190,7 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
                             .bytes = private_singly_linked_list->sizeof_type,  \
                             .context = private_singly_linked_list->context,    \
                         });                                                    \
-                if (private_singly_linked_list_res)                            \
-                {                                                              \
+                if (private_singly_linked_list_res) {                          \
                     *private_singly_linked_list_res = struct_initializer;      \
                     CCC_private_singly_linked_list_push_front(                 \
                         private_singly_linked_list,                            \

@@ -77,20 +77,20 @@ Initialize the container with memory, callbacks, and permissions. */
 /**@{*/
 
 /** @brief Initialize a singly linked list at compile or runtime.
-@param[in] struct_name the user type wrapping the intrusive singly_linked_list
+@param[in] type_name the user type wrapping the intrusive singly_linked_list
 elem.
 @param[in] type_intruder_field the name of the field in the user type storing
 the intrusive list elem.
 @param[in] compare a comparison function for searching or sorting the list.
 @param[in] allocate an allocation function if allocation is allowed.
-@param[in] context_data a pointer to any context data needed for comparison or
+@param[in] context a pointer to any context data needed for comparison or
 destruction.
 @return a stuct initializer for the singly linked list to be assigned
 (e.g. CCC_Singly_linked_list l = CCC_singly_linked_list_initialize(...);). */
-#define CCC_singly_linked_list_initialize(struct_name, type_intruder_field,    \
-                                          compare, allocate, context_data)     \
-    CCC_private_singly_linked_list_initialize(                                 \
-        struct_name, type_intruder_field, compare, allocate, context_data)
+#define CCC_singly_linked_list_initialize(type_name, type_intruder_field,      \
+                                          compare, allocate, context)          \
+    CCC_private_singly_linked_list_initialize(type_name, type_intruder_field,  \
+                                              compare, allocate, context)
 
 /** @brief Initialize an empty list at compile or runtime with an allocator.
 @param[in] type_name the user defined type stored in the list.
@@ -118,16 +118,18 @@ static singly_linked_list list = singly_linked_list_with_allocator(
 ```
 
 This can help eliminate boilerplate in initializers. */
-#define CCC_singly_linked_list_with_allocator(                                 \
-    struct_name, type_intruder_field, compare, allocate)                       \
+#define CCC_singly_linked_list_with_allocator(type_name, type_intruder_field,  \
+                                              compare, allocate)               \
     CCC_private_singly_linked_list_with_allocator(                             \
-        struct_name, type_intruder_field, compare, allocate)
+        type_name, type_intruder_field, compare, allocate)
 
 /** @brief Initialize an empty list at compile or runtime with an allocator.
 @param[in] type_name the user defined type stored in the list.
 @param[in] type_intruder_field the name of the intrusive element.
 @param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] allocate the CCC_Allocator function used to manage list memory.
+@param[in] context a pointer to any context data needed for comparison or
+destruction.
 @return the list directly initialized on the right hand side of the equality
 operator.
 
@@ -151,9 +153,9 @@ static singly_linked_list list = singly_linked_list_with_allocator(
 
 This can help eliminate boilerplate in initializers. */
 #define CCC_singly_linked_list_with_context_allocator(                         \
-    struct_name, type_intruder_field, compare, allocate, context)              \
+    type_name, type_intruder_field, compare, allocate, context)                \
     CCC_private_singly_linked_list_with_context_allocator(                     \
-        struct_name, type_intruder_field, compare, allocate, context)
+        type_name, type_intruder_field, compare, allocate, context)
 
 /** @brief Initialize a singly linked list at runtime from a compound literal
 array.
@@ -180,7 +182,7 @@ array.
 @param[in] compare the comparison function for the user type.
 @param[in] allocate the allocation function required for construction.
 @param[in] destroy the optional destructor to run if insertion fails.
-@param[in] context_data context data needed for comparison or destruction.
+@param[in] context context data needed for comparison or destruction.
 @param[in] compound_literal_array the array of user types to insert into the
 map (e.g. (struct My_type[]){ {.val = 1}, {.val = 2}}).
 @return the initialized singly linked list on the right side of an equality
@@ -190,11 +192,11 @@ operator (e.g. CCC_Singly_linked_list list
 The list will be constructed with the element at index 0 of the array as the
 front of the list and the final index element at the back of the list. */
 #define CCC_singly_linked_list_context_from(type_intruder_field, compare,      \
-                                            allocate, destroy, context_data,   \
+                                            allocate, destroy, context,        \
                                             compound_literal_array...)         \
-    CCC_private_singly_linked_list_context_from(                               \
-        type_intruder_field, compare, allocate, destroy, context_data,         \
-        compound_literal_array)
+    CCC_private_singly_linked_list_context_from(type_intruder_field, compare,  \
+                                                allocate, destroy, context,    \
+                                                compound_literal_array)
 
 /**@}*/
 
@@ -480,6 +482,7 @@ CCC_singly_linked_list_validate(CCC_Singly_linked_list const *list);
 /** Define this preprocessor macro if shorter names are desired for the singly
 linked list container. Check for namespace clashes before name shortening. */
 #ifdef SINGLY_LINKED_LIST_USING_NAMESPACE_CCC
+/* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Singly_linked_list_node singly_linked_list_node;
 typedef CCC_Singly_linked_list Singly_linked_list;
 #    define singly_linked_list_initialize(arguments...)                        \
@@ -536,6 +539,7 @@ typedef CCC_Singly_linked_list Singly_linked_list;
         CCC_singly_linked_list_validate(arguments)
 #    define singly_linked_list_clear(arguments...)                             \
         CCC_singly_linked_list_clear(arguments)
+/* NOLINTEND(readability-identifier-naming) */
 #endif /* SINGLY_LINKED_LIST_USING_NAMESPACE_CCC */
 
 #endif /* CCC_FORWARD_LIST_H */

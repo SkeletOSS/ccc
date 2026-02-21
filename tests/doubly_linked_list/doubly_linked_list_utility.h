@@ -7,15 +7,13 @@
 #include "doubly_linked_list.h"
 #include "types.h"
 
-struct Val
-{
+struct Val {
     CCC_Doubly_linked_list_node e;
     int id;
     int val;
 };
 
-enum Push_direction
-{
+enum Push_direction {
     UTIL_PUSH_FRONT,
     UTIL_PUSH_BACK,
 };

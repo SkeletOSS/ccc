@@ -11,15 +11,13 @@
 #include "utility/stack_allocator.h"
 
 static CCC_Doubly_linked_list
-construct_empty(void)
-{
+construct_empty(void) {
     CCC_Doubly_linked_list return_this = CCC_doubly_linked_list_initialize(
         struct Val, e, val_order, NULL, NULL);
     return return_this;
 }
 
-check_static_begin(doubly_linked_list_test_construct)
-{
+check_static_begin(doubly_linked_list_test_construct) {
     struct Val val = {};
     Doubly_linked_list doubly_linked_list
         = doubly_linked_list_initialize(struct Val, e, val_order, NULL, NULL);
@@ -31,16 +29,14 @@ check_static_begin(doubly_linked_list_test_construct)
     check_end();
 }
 
-check_static_begin(doubly_linked_list_test_with_allocator)
-{
+check_static_begin(doubly_linked_list_test_with_allocator) {
     Doubly_linked_list doubly_linked_list = doubly_linked_list_with_allocator(
         struct Val, e, val_order, std_allocate);
     check(is_empty(&doubly_linked_list), true);
     check_end();
 }
 
-check_static_begin(doubly_linked_list_test_with_context_allocator)
-{
+check_static_begin(doubly_linked_list_test_with_context_allocator) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 3);
     CCC_Doubly_linked_list list = doubly_linked_list_with_context_allocator(
@@ -61,8 +57,7 @@ enter Undefined Behavior when the list constructed in the helper function is
 copied to the calling code's stack frame. Therefore, we implement the doubly
 linked list in a way that is paranoid about, and protected from, such misuse.
 This way we do not enforce any coding style on the user. */
-check_static_begin(doubly_linked_list_test_constructor_copy)
-{
+check_static_begin(doubly_linked_list_test_constructor_copy) {
     CCC_Doubly_linked_list copy = construct_empty();
     struct Val val1 = {};
     struct Val val2 = {};
@@ -77,8 +72,7 @@ check_static_begin(doubly_linked_list_test_constructor_copy)
     check_end();
 }
 
-check_static_begin(doubly_linked_list_test_construct_from)
-{
+check_static_begin(doubly_linked_list_test_construct_from) {
     struct Stack_allocator allocator
         = stack_allocator_initialize(struct Val, 3);
     CCC_Doubly_linked_list list = CCC_doubly_linked_list_context_from(
@@ -96,8 +90,7 @@ check_static_begin(doubly_linked_list_test_construct_from)
     check_end((void)CCC_doubly_linked_list_clear(&list, NULL););
 }
 
-check_static_begin(doubly_linked_list_test_construct_from_fail)
-{
+check_static_begin(doubly_linked_list_test_construct_from_fail) {
     CCC_Doubly_linked_list list
         = CCC_doubly_linked_list_from(e, val_order, NULL, NULL,
                                       (struct Val[]){
@@ -111,8 +104,7 @@ check_static_begin(doubly_linked_list_test_construct_from_fail)
 }
 
 int
-main(void)
-{
+main(void) {
     return check_run(doubly_linked_list_test_construct(),
                      doubly_linked_list_test_constructor_copy(),
                      doubly_linked_list_test_construct_from(),

@@ -21,7 +21,7 @@ limitations under the License.
 /** @endcond */
 
 #include "../types.h"
-#include "private_types.h" /* NOLINT */
+#include "private_types.h" /* IWYU pragma: keep */
 
 /* NOLINTBEGIN(readability-identifier-naming) */
 
@@ -30,12 +30,10 @@ list for providing new nodes within the buffer. The parent field normally
 tracks parent when in the tree for iteration purposes. When a node is removed
 from the tree it is added to the free singly linked list. The free list is a
 LIFO push to front stack. */
-struct CCC_Array_adaptive_map_node
-{
+struct CCC_Array_adaptive_map_node {
     /** @internal Child nodes in array to unify Left and Right. */
     size_t branch[2];
-    union
-    {
+    union {
         /** @internal Parent of splay tree node when allocated. */
         size_t parent;
         /** @internal Points to next free when not allocated. */
@@ -68,8 +66,7 @@ top down splay operation. However, the benefit of space saving and no wasted
 padding bytes between element fields or multiple elements in an array is the
 goal of this implementation. Speed is a secondary goal to space for these
 implementations as the space savings can be significant. */
-struct CCC_Array_adaptive_map
-{
+struct CCC_Array_adaptive_map {
     /** @internal The contiguous array of user data. */
     void *data;
     /** @internal The contiguous array of tree meta data. */
@@ -96,8 +93,7 @@ struct CCC_Array_adaptive_map
 
 /** @internal A handle is like an entry but if the handle is Occupied, we can
 guarantee the user that their element will not move from the provided index. */
-struct CCC_Array_adaptive_map_handle
-{
+struct CCC_Array_adaptive_map_handle {
     /** @internal Map associated with this handle. */
     struct CCC_Array_adaptive_map *map;
     /** @internal Current index of the handle. */
@@ -112,8 +108,7 @@ struct CCC_Array_adaptive_map_handle
 of this method as return by value but with the additional ability to pass by
 pointer in a functional style. `fnB(&(union
 CCC_Array_adaptive_map_handle_wrap){fnA().private});` */
-union CCC_Array_adaptive_map_handle_wrap
-{
+union CCC_Array_adaptive_map_handle_wrap {
     /** @internal The field containing the handle struct. */
     struct CCC_Array_adaptive_map_handle private;
 };
@@ -147,8 +142,7 @@ static asserts to ensure the layout is compatible with our internal metadata. */
     private_fixed_map_type_name, private_key_val_type_name, private_capacity)  \
     static_assert((private_capacity) > 1,                                      \
                   "fixed size map must have capacity greater than 1");         \
-    typedef struct                                                             \
-    {                                                                          \
+    typedef struct {                                                           \
         private_key_val_type_name data[(private_capacity)];                    \
         struct CCC_Array_adaptive_map_node nodes[(private_capacity)];          \
     }(private_fixed_map_type_name)
@@ -162,7 +156,7 @@ is of a known fixed size defined at compile time, not just a pointer. */
 /** @internal */
 #define CCC_private_array_adaptive_map_initialize(                             \
     private_type_name, private_key_node_field, private_key_order_fn,           \
-    private_allocate, private_context_data, private_capacity,                  \
+    private_allocate, private_context, private_capacity,                       \
     private_memory_pointer)                                                    \
     {                                                                          \
         .data = (private_memory_pointer),                                      \
@@ -175,14 +169,13 @@ is of a known fixed size defined at compile time, not just a pointer. */
         .key_offset = offsetof(private_type_name, private_key_node_field),     \
         .compare = (private_key_order_fn),                                     \
         .allocate = (private_allocate),                                        \
-        .context = (private_context_data),                                     \
+        .context = (private_context),                                          \
     }
 
 /** @internal Initialize an array adaptive map from user input list. */
 #define CCC_private_array_adaptive_map_context_from(                           \
-    private_key_field, private_key_compare, private_allocate,                  \
-    private_context_data, private_optional_cap,                                \
-    private_array_compound_literal...)                                         \
+    private_key_field, private_key_compare, private_allocate, private_context, \
+    private_optional_cap, private_array_compound_literal...)                   \
     (__extension__({                                                           \
         typeof(*private_array_compound_literal)                                \
             *private_array_adaptive_map_initializer_list                       \
@@ -191,7 +184,7 @@ is of a known fixed size defined at compile time, not just a pointer. */
             = CCC_private_array_adaptive_map_initialize(                       \
                 typeof(*private_array_adaptive_map_initializer_list),          \
                 private_key_field, private_key_compare, private_allocate,      \
-                private_context_data, 0, NULL);                                \
+                private_context, 0, NULL);                                     \
         size_t const private_array_adaptive_n                                  \
             = sizeof(private_array_compound_literal)                           \
             / sizeof(*private_array_adaptive_map_initializer_list);            \
@@ -202,10 +195,8 @@ is of a known fixed size defined at compile time, not just a pointer. */
                      ? private_array_adaptive_n                                \
                      : private_cap),                                           \
                 private_allocate)                                              \
-            == CCC_RESULT_OK)                                                  \
-        {                                                                      \
-            for (size_t i = 0; i < private_array_adaptive_n; ++i)              \
-            {                                                                  \
+            == CCC_RESULT_OK) {                                                \
+            for (size_t i = 0; i < private_array_adaptive_n; ++i) {            \
                 struct CCC_Array_adaptive_map_handle                           \
                     private_array_adaptive_entry                               \
                     = CCC_private_array_adaptive_map_handle(                   \
@@ -216,8 +207,7 @@ is of a known fixed size defined at compile time, not just a pointer. */
                 CCC_Handle_index private_index                                 \
                     = private_array_adaptive_entry.index;                      \
                 if (!(private_array_adaptive_entry.status                      \
-                      & CCC_ENTRY_OCCUPIED))                                   \
-                {                                                              \
+                      & CCC_ENTRY_OCCUPIED)) {                                 \
                     private_index                                              \
                         = CCC_private_array_adaptive_map_allocate_slot(        \
                             &private_array_adaptive_map);                      \
@@ -227,8 +217,7 @@ is of a known fixed size defined at compile time, not just a pointer. */
                           private_array_adaptive_entry.map, private_index))    \
                     = private_array_adaptive_map_initializer_list[i];          \
                 if (!(private_array_adaptive_entry.status                      \
-                      & CCC_ENTRY_OCCUPIED))                                   \
-                {                                                              \
+                      & CCC_ENTRY_OCCUPIED)) {                                 \
                     CCC_private_array_adaptive_map_insert(                     \
                         private_array_adaptive_entry.map, private_index);      \
                 }                                                              \
@@ -248,12 +237,12 @@ is of a known fixed size defined at compile time, not just a pointer. */
 /** @internal */
 #define CCC_private_array_adaptive_map_with_context_capacity(                  \
     private_type_name, private_key_field, private_key_compare,                 \
-    private_allocate, private_context_data, private_cap)                       \
+    private_allocate, private_context, private_cap)                            \
     (__extension__({                                                           \
         struct CCC_Array_adaptive_map private_array_adaptive_map               \
             = CCC_private_array_adaptive_map_initialize(                       \
                 private_type_name, private_key_field, private_key_compare,     \
-                private_allocate, private_context_data, 0, NULL);              \
+                private_allocate, private_context, 0, NULL);                   \
         (void)CCC_array_adaptive_map_reserve(&private_array_adaptive_map,      \
                                              private_cap, private_allocate);   \
         private_array_adaptive_map;                                            \
@@ -337,18 +326,15 @@ is of a known fixed size defined at compile time, not just a pointer. */
         struct CCC_Array_adaptive_map_handle                                   \
             private_array_adaptive_map_mod_hndl                                \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                            \
-        if (private_array_adaptive_map_mod_hndl_pointer)                       \
-        {                                                                      \
+        if (private_array_adaptive_map_mod_hndl_pointer) {                     \
             private_array_adaptive_map_mod_hndl                                \
                 = private_array_adaptive_map_mod_hndl_pointer->private;        \
             if (private_array_adaptive_map_mod_hndl.status                     \
-                & CCC_ENTRY_OCCUPIED)                                          \
-            {                                                                  \
+                & CCC_ENTRY_OCCUPIED) {                                        \
                 type_name *const T = CCC_private_array_adaptive_map_data_at(   \
                     private_array_adaptive_map_mod_hndl.map,                   \
                     private_array_adaptive_map_mod_hndl.index);                \
-                if (T)                                                         \
-                {                                                              \
+                if (T) {                                                       \
                     closure_over_T                                             \
                 }                                                              \
             }                                                                  \
@@ -363,23 +349,18 @@ is of a known fixed size defined at compile time, not just a pointer. */
         __auto_type private_array_adaptive_map_or_ins_hndl_pointer             \
             = (array_adaptive_map_array_pointer);                              \
         CCC_Handle_index private_array_adaptive_map_or_ins_ret = 0;            \
-        if (private_array_adaptive_map_or_ins_hndl_pointer)                    \
-        {                                                                      \
+        if (private_array_adaptive_map_or_ins_hndl_pointer) {                  \
             if (private_array_adaptive_map_or_ins_hndl_pointer->private.status \
-                == CCC_ENTRY_OCCUPIED)                                         \
-            {                                                                  \
+                == CCC_ENTRY_OCCUPIED) {                                       \
                 private_array_adaptive_map_or_ins_ret                          \
                     = private_array_adaptive_map_or_ins_hndl_pointer->private  \
                           .index;                                              \
-            }                                                                  \
-            else                                                               \
-            {                                                                  \
+            } else {                                                           \
                 private_array_adaptive_map_or_ins_ret                          \
                     = CCC_private_array_adaptive_map_allocate_slot(            \
                         private_array_adaptive_map_or_ins_hndl_pointer         \
                             ->private.map);                                    \
-                if (private_array_adaptive_map_or_ins_ret)                     \
-                {                                                              \
+                if (private_array_adaptive_map_or_ins_ret) {                   \
                     *((typeof(type_compound_literal) *)                        \
                           CCC_private_array_adaptive_map_data_at(              \
                               private_array_adaptive_map_or_ins_hndl_pointer   \
@@ -403,17 +384,14 @@ is of a known fixed size defined at compile time, not just a pointer. */
         __auto_type private_array_adaptive_map_ins_hndl_pointer                \
             = (array_adaptive_map_array_pointer);                              \
         CCC_Handle_index private_array_adaptive_map_ins_hndl_ret = 0;          \
-        if (private_array_adaptive_map_ins_hndl_pointer)                       \
-        {                                                                      \
+        if (private_array_adaptive_map_ins_hndl_pointer) {                     \
             if (!(private_array_adaptive_map_ins_hndl_pointer->private.status  \
-                  & CCC_ENTRY_OCCUPIED))                                       \
-            {                                                                  \
+                  & CCC_ENTRY_OCCUPIED)) {                                     \
                 private_array_adaptive_map_ins_hndl_ret                        \
                     = CCC_private_array_adaptive_map_allocate_slot(            \
                         private_array_adaptive_map_ins_hndl_pointer->private   \
                             .map);                                             \
-                if (private_array_adaptive_map_ins_hndl_ret)                   \
-                {                                                              \
+                if (private_array_adaptive_map_ins_hndl_ret) {                 \
                     *((typeof(type_compound_literal) *)                        \
                           CCC_private_array_adaptive_map_data_at(              \
                               private_array_adaptive_map_ins_hndl_pointer      \
@@ -425,11 +403,9 @@ is of a known fixed size defined at compile time, not just a pointer. */
                             .map,                                              \
                         private_array_adaptive_map_ins_hndl_ret);              \
                 }                                                              \
-            }                                                                  \
-            else if (private_array_adaptive_map_ins_hndl_pointer->private      \
-                         .status                                               \
-                     == CCC_ENTRY_OCCUPIED)                                    \
-            {                                                                  \
+            } else if (private_array_adaptive_map_ins_hndl_pointer->private    \
+                           .status                                             \
+                       == CCC_ENTRY_OCCUPIED) {                                \
                 *((typeof(type_compound_literal) *)                            \
                       CCC_private_array_adaptive_map_data_at(                  \
                           private_array_adaptive_map_ins_hndl_pointer->private \
@@ -453,8 +429,7 @@ is of a known fixed size defined at compile time, not just a pointer. */
             = (array_adaptive_map_pointer);                                    \
         struct CCC_Handle private_array_adaptive_map_try_ins_hndl_ret          \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                            \
-        if (private_array_adaptive_map_try_ins_map_pointer)                    \
-        {                                                                      \
+        if (private_array_adaptive_map_try_ins_map_pointer) {                  \
             __auto_type private_array_adaptive_map_key = (key);                \
             struct CCC_Array_adaptive_map_handle                               \
                 private_array_adaptive_map_try_ins_hndl                        \
@@ -462,16 +437,14 @@ is of a known fixed size defined at compile time, not just a pointer. */
                     private_array_adaptive_map_try_ins_map_pointer,            \
                     (void *)&private_array_adaptive_map_key);                  \
             if (!(private_array_adaptive_map_try_ins_hndl.status               \
-                  & CCC_ENTRY_OCCUPIED))                                       \
-            {                                                                  \
+                  & CCC_ENTRY_OCCUPIED)) {                                     \
                 private_array_adaptive_map_try_ins_hndl_ret                    \
                     = (struct CCC_Handle){                                     \
                         .index = CCC_private_array_adaptive_map_allocate_slot( \
                             private_array_adaptive_map_try_ins_hndl.map),      \
                         .status = CCC_ENTRY_INSERT_ERROR,                      \
                     };                                                         \
-                if (private_array_adaptive_map_try_ins_hndl_ret.index)         \
-                {                                                              \
+                if (private_array_adaptive_map_try_ins_hndl_ret.index) {       \
                     *((typeof(type_compound_literal) *)                        \
                           CCC_private_array_adaptive_map_data_at(              \
                               private_array_adaptive_map_try_ins_map_pointer,  \
@@ -490,10 +463,8 @@ is of a known fixed size defined at compile time, not just a pointer. */
                     private_array_adaptive_map_try_ins_hndl_ret.status         \
                         = CCC_ENTRY_VACANT;                                    \
                 }                                                              \
-            }                                                                  \
-            else if (private_array_adaptive_map_try_ins_hndl.status            \
-                     == CCC_ENTRY_OCCUPIED)                                    \
-            {                                                                  \
+            } else if (private_array_adaptive_map_try_ins_hndl.status          \
+                       == CCC_ENTRY_OCCUPIED) {                                \
                 private_array_adaptive_map_try_ins_hndl_ret                    \
                     = (struct CCC_Handle){                                     \
                         .index                                                 \
@@ -513,8 +484,7 @@ is of a known fixed size defined at compile time, not just a pointer. */
             = (array_adaptive_map_pointer);                                         \
         struct CCC_Handle private_array_adaptive_map_ins_or_assign_hndl_ret         \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                                 \
-        if (private_array_adaptive_map_ins_or_assign_map_pointer)                   \
-        {                                                                           \
+        if (private_array_adaptive_map_ins_or_assign_map_pointer) {                 \
             __auto_type private_array_adaptive_map_key = (key);                     \
             struct CCC_Array_adaptive_map_handle                                    \
                 private_array_adaptive_map_ins_or_assign_hndl                       \
@@ -522,8 +492,7 @@ is of a known fixed size defined at compile time, not just a pointer. */
                     private_array_adaptive_map_ins_or_assign_map_pointer,           \
                     (void *)&private_array_adaptive_map_key);                       \
             if (!(private_array_adaptive_map_ins_or_assign_hndl.status              \
-                  & CCC_ENTRY_OCCUPIED))                                            \
-            {                                                                       \
+                  & CCC_ENTRY_OCCUPIED)) {                                          \
                 private_array_adaptive_map_ins_or_assign_hndl_ret                   \
                     = (struct CCC_Handle){                                          \
                         .index = CCC_private_array_adaptive_map_allocate_slot(      \
@@ -531,8 +500,7 @@ is of a known fixed size defined at compile time, not just a pointer. */
                                 .map),                                              \
                         .status = CCC_ENTRY_INSERT_ERROR,                           \
                     };                                                              \
-                if (private_array_adaptive_map_ins_or_assign_hndl_ret.index)        \
-                {                                                                   \
+                if (private_array_adaptive_map_ins_or_assign_hndl_ret.index) {      \
                     *((typeof(type_compound_literal) *)                             \
                           CCC_private_array_adaptive_map_data_at(                   \
                               private_array_adaptive_map_ins_or_assign_map_pointer, \
@@ -553,10 +521,8 @@ is of a known fixed size defined at compile time, not just a pointer. */
                     private_array_adaptive_map_ins_or_assign_hndl_ret.status        \
                         = CCC_ENTRY_VACANT;                                         \
                 }                                                                   \
-            }                                                                       \
-            else if (private_array_adaptive_map_ins_or_assign_hndl.status           \
-                     == CCC_ENTRY_OCCUPIED)                                         \
-            {                                                                       \
+            } else if (private_array_adaptive_map_ins_or_assign_hndl.status         \
+                       == CCC_ENTRY_OCCUPIED) {                                     \
                 *((typeof(type_compound_literal) *)                                 \
                       CCC_private_array_adaptive_map_data_at(                       \
                           private_array_adaptive_map_ins_or_assign_hndl.map,        \

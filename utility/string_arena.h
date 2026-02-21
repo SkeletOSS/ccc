@@ -6,8 +6,7 @@
 
 /** Used to indicate the status of various API requests. Any non-zero status
 means an error has occurred, simplifying error checking. */
-enum String_arena_result : uint8_t
-{
+enum String_arena_result : uint8_t {
     STRING_ARENA_OK = 0,
     STRING_ARENA_ARGUMENT_ERROR,
     STRING_ARENA_ALLOCATION_FAIL,
@@ -18,8 +17,7 @@ enum String_arena_result : uint8_t
 exists. Upon allocation the error field will be set to STRING_ARENA_OK if the
 allocation succeeded. If any error occurred the status will be non-zero and
 the offset index should not be accessed. */
-struct String_offset
-{
+struct String_offset {
     /** The status of the offset, STRING_ARENA_OK or any non-zero error. */
     enum String_arena_result error;
     /** The starting index of the string in the arena. */
@@ -37,8 +35,7 @@ recent bump allocation in order to enable minimal dynamic string operations.
 Assume that any request to allocate a string or push back characters may result
 in a resizing operation. This is why indices are returned not pointers. Pointers
 into the arena should only be accessed for reading or writing, not saved. */
-struct String_arena
-{
+struct String_arena {
     /** The underlying base of allocation all strings are offset from. */
     char *arena;
     /** The front of the free list or next position in arena available. */

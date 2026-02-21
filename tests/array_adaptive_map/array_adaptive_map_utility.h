@@ -7,8 +7,7 @@
 #include "checkers.h"
 #include "types.h"
 
-struct Val
-{
+struct Val {
     int id;
     int val;
 };
@@ -16,8 +15,7 @@ struct Val
 CCC_array_adaptive_map_declare_fixed(Small_fixed_map, struct Val, 64);
 CCC_array_adaptive_map_declare_fixed(Standard_fixed_map, struct Val, 1024);
 
-enum : size_t
-{
+enum : size_t {
     SMALL_FIXED_CAP = CCC_array_adaptive_map_fixed_capacity(Small_fixed_map),
     STANDARD_FIXED_CAP
         = CCC_array_adaptive_map_fixed_capacity(Standard_fixed_map),
