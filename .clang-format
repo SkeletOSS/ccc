@@ -13,7 +13,7 @@ AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
 BreakBeforeBinaryOperators: All
 AlignOperands: AlignAfterOperator
-AlignAfterOpenBracket: Align
+AlignAfterOpenBracket: true
 AlignTrailingComments: Always
 BinPackArguments: true
 BinPackParameters: true
