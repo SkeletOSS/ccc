@@ -1,7 +1,7 @@
 var traits_8h =
 [
+    [ "CCC_and_context_modify", "traits_8h.html#a86a879e1ce61a86c14d35aa236279cba", null ],
     [ "CCC_and_modify", "traits_8h.html#a06c69e9a18e4bbafb9d6e5c7327fd0e8", null ],
-    [ "CCC_and_modify_context", "traits_8h.html#a7c34a81e1bc264dcdee759807d8a4427", null ],
     [ "CCC_back", "traits_8h.html#a55359b1a71f993ab27c2f267012a62c2", null ],
     [ "CCC_begin", "traits_8h.html#a7cafec411ee3f60bc10033bb8abf7ac4", null ],
     [ "CCC_capacity", "traits_8h.html#ae6b2442930285cb2343ec96593776759", null ],

@@ -1,7 +1,7 @@
 var adaptive__map_8h =
 [
     [ "CCC_adaptive_map_and_modify_with", "adaptive__map_8h.html#a40387f8d0ec9b20066d812a2bbb6350e", null ],
-    [ "CCC_adaptive_map_context_from", "adaptive__map_8h.html#a24700b4672c6e49505b615adf8479f38", null ],
+    [ "CCC_adaptive_map_context_from", "adaptive__map_8h.html#aa83d5a2e4fa3c23f2ed04a480adb66cc", null ],
     [ "CCC_adaptive_map_entry_wrap", "adaptive__map_8h.html#a2378a144497ffa75fb0ca22d3a5d1bd6", null ],
     [ "CCC_adaptive_map_equal_range_reverse_wrap", "adaptive__map_8h.html#ab3eace6ad54d8c23331df4776e4b6c53", null ],
     [ "CCC_adaptive_map_equal_range_wrap", "adaptive__map_8h.html#af78fb101ce25cc81860102ea54ed472a", null ],
@@ -20,8 +20,8 @@ var adaptive__map_8h =
     [ "CCC_Adaptive_map", "adaptive__map_8h.html#a3f0d3fec74866606bc401195872efdf3", null ],
     [ "CCC_Adaptive_map_entry", "adaptive__map_8h.html#a6634e04a00bfa7e2b4b274dd7e6aec61", null ],
     [ "CCC_Adaptive_map_node", "adaptive__map_8h.html#ab69a547af78f7449e34ef8bafbe635b7", null ],
+    [ "CCC_adaptive_map_and_context_modify", "adaptive__map_8h.html#a821952943677fc1baaa336516f45db33", null ],
     [ "CCC_adaptive_map_and_modify", "adaptive__map_8h.html#aeb3ce74c4d9858a1f1fceda5d5cd6173", null ],
-    [ "CCC_adaptive_map_and_modify_context", "adaptive__map_8h.html#ad2fec3b768adf75198000b979cde05ee", null ],
     [ "CCC_adaptive_map_begin", "adaptive__map_8h.html#ac4c0ecaa062f31300cdda1b57b67b4a6", null ],
     [ "CCC_adaptive_map_clear", "adaptive__map_8h.html#a6dde8f2788ecd0346acb885f20d068c1", null ],
     [ "CCC_adaptive_map_contains", "adaptive__map_8h.html#a56ee19fcf5bfb20ca2c657c7a9355287", null ],

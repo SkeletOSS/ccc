@@ -109,7 +109,7 @@ Collaboration diagram for CCC_Entry_wrap:</div>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A helper type so that we may return entries by compound literal reference to other functions for API consistency. The user interacts with this type in the API as follows but we typedef it so they don't care.</p>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a> *entry = &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>){function_returns_wrapper(arguments).private};</div>
-<div class="ttc" id="astructCCC__Entry_html"><div class="ttname"><a href="structCCC__Entry.html">CCC_Entry</a></div><div class="ttdef"><b>Definition:</b> private_types.h:53</div></div>
+<div class="ttc" id="astructCCC__Entry_html"><div class="ttname"><a href="structCCC__Entry.html">CCC_Entry</a></div><div class="ttdef"><b>Definition:</b> private_types.h:51</div></div>
 </div><!-- fragment --><p>We can then wrap that returned compound literal reference in a macro. Union is used as the wrapping type as a reminder that this type should serve no other purpose and add no additional fields. </p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>

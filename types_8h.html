@@ -359,9 +359,9 @@ Data Structures</h2></td></tr>
 <div class="line">    }</div>
 <div class="line">    <span class="keywordflow">return</span> realloc(context.<a class="code hl_variable" href="structCCC__Allocator__context.html#a08a36defe443dc79c0b74b5fc8d02d17">input</a>, context.<a class="code hl_variable" href="structCCC__Allocator__context.html#a19f41f86d549a4cd98ede1d5a087769b">bytes</a>);</div>
 <div class="line">}</div>
-<div class="ttc" id="astructCCC__Allocator__context_html"><div class="ttname"><a href="structCCC__Allocator__context.html">CCC_Allocator_context</a></div><div class="ttdoc">A bundle of arguments to pass to the user-implemented Allocator function interface....</div><div class="ttdef"><b>Definition:</b> types.h:284</div></div>
-<div class="ttc" id="astructCCC__Allocator__context_html_a08a36defe443dc79c0b74b5fc8d02d17"><div class="ttname"><a href="structCCC__Allocator__context.html#a08a36defe443dc79c0b74b5fc8d02d17">CCC_Allocator_context::input</a></div><div class="ttdeci">void * input</div><div class="ttdef"><b>Definition:</b> types.h:286</div></div>
-<div class="ttc" id="astructCCC__Allocator__context_html_a19f41f86d549a4cd98ede1d5a087769b"><div class="ttname"><a href="structCCC__Allocator__context.html#a19f41f86d549a4cd98ede1d5a087769b">CCC_Allocator_context::bytes</a></div><div class="ttdeci">size_t bytes</div><div class="ttdef"><b>Definition:</b> types.h:288</div></div>
+<div class="ttc" id="astructCCC__Allocator__context_html"><div class="ttname"><a href="structCCC__Allocator__context.html">CCC_Allocator_context</a></div><div class="ttdoc">A bundle of arguments to pass to the user-implemented Allocator function interface....</div><div class="ttdef"><b>Definition:</b> types.h:275</div></div>
+<div class="ttc" id="astructCCC__Allocator__context_html_a08a36defe443dc79c0b74b5fc8d02d17"><div class="ttname"><a href="structCCC__Allocator__context.html#a08a36defe443dc79c0b74b5fc8d02d17">CCC_Allocator_context::input</a></div><div class="ttdeci">void * input</div><div class="ttdef"><b>Definition:</b> types.h:277</div></div>
+<div class="ttc" id="astructCCC__Allocator__context_html_a19f41f86d549a4cd98ede1d5a087769b"><div class="ttname"><a href="structCCC__Allocator__context.html#a19f41f86d549a4cd98ede1d5a087769b">CCC_Allocator_context::bytes</a></div><div class="ttdeci">size_t bytes</div><div class="ttdef"><b>Definition:</b> types.h:279</div></div>
 </div><!-- fragment --><p>However, the above example is only useful if the standard library allocator is used. Any allocator that implements the required behavior is sufficient. For example programs that utilize the context parameter, see the sample programs. Using custom arena allocators or container compositions are cases when context is needed. </p>
 
 </div>
@@ -1099,7 +1099,7 @@ Data Structures</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a string message with more detailed information regarding the status.</dd></dl>
-<p>Note that status for an handle is relevant when it is first obtained and when an action completes. Obtaining an handle can provide information on whether the search yielded an Occupied or Vacant handle or any errors that may have occurred. If a function tries to complete an action like insertion or removal the status can reflect if any errors occurred in this process as well. Usually, the provided interface gives all the functions needed to check status but these strings can be used when more details are required. </p>
+<p>Note that status for an handle is relevant when it is first obtained and when an action completes. Obtaining a handle can provide information on whether the search yielded an Occupied or Vacant handle or any errors that may have occurred. If a function tries to complete an action like insertion or removal the status can reflect if any errors occurred in this process as well. Usually, the provided interface gives all the functions needed to check status but these strings can be used when more details are required. </p>
 
 </div>
 </div>

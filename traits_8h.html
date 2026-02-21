@@ -189,9 +189,9 @@ Include dependency graph for traits.h:</div>
 <tr class="memitem:a06c69e9a18e4bbafb9d6e5c7327fd0e8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="traits_8h.html#a06c69e9a18e4bbafb9d6e5c7327fd0e8">CCC_and_modify</a>(entry_pointer,  mod_fn)&#160;&#160;&#160;    CCC_private_and_modify(entry_pointer, mod_fn)</td></tr>
 <tr class="memdesc:a06c69e9a18e4bbafb9d6e5c7327fd0e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modify an entry if Occupied.  <br /></td></tr>
 <tr class="separator:a06c69e9a18e4bbafb9d6e5c7327fd0e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7c34a81e1bc264dcdee759807d8a4427"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="traits_8h.html#a7c34a81e1bc264dcdee759807d8a4427">CCC_and_modify_context</a>(entry_pointer,  modify,  context_arguments...)&#160;&#160;&#160;    CCC_private_and_modify_context(entry_pointer, modify, context_arguments)</td></tr>
-<tr class="memdesc:a7c34a81e1bc264dcdee759807d8a4427"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modify an entry if Occupied.  <br /></td></tr>
-<tr class="separator:a7c34a81e1bc264dcdee759807d8a4427"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86a879e1ce61a86c14d35aa236279cba"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="traits_8h.html#a86a879e1ce61a86c14d35aa236279cba">CCC_and_context_modify</a>(entry_pointer,  modify,  context_arguments...)&#160;&#160;&#160;    CCC_private_and_context_modify(entry_pointer, modify, context_arguments)</td></tr>
+<tr class="memdesc:a86a879e1ce61a86c14d35aa236279cba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modify an entry if Occupied.  <br /></td></tr>
+<tr class="separator:a86a879e1ce61a86c14d35aa236279cba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5cce635dbfc91154cf7002a71d639cc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="traits_8h.html#ab5cce635dbfc91154cf7002a71d639cc">CCC_insert_entry</a>(entry_pointer,  insert_entry_arguments...)&#160;&#160;&#160;    CCC_private_insert_entry(entry_pointer, insert_entry_arguments)</td></tr>
 <tr class="memdesc:ab5cce635dbfc91154cf7002a71d639cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert new element or overwrite old element.  <br /></td></tr>
 <tr class="separator:ab5cce635dbfc91154cf7002a71d639cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -371,6 +371,52 @@ Include dependency graph for traits.h:</div>
 <tr class="separator:a8e45c5f2d2e0a1221ce6310dfee7bce5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a86a879e1ce61a86c14d35aa236279cba" name="a86a879e1ce61a86c14d35aa236279cba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86a879e1ce61a86c14d35aa236279cba">&#9670;&#160;</a></span>CCC_and_context_modify</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CCC_and_context_modify</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">entry_pointer, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">modify, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">context_arguments...&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;    CCC_private_and_context_modify(entry_pointer, modify, context_arguments)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Modify an entry if Occupied. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">entry_pointer</td><td>a pointer to the container. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">modify</td><td>a modification function. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">context_arguments</td><td>context data for mod_fn. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a reference to the modified entry if Occupied or original if Vacant.</dd></dl>
+<p>See container documentation for specific behavior. </p>
+
+</div>
+</div>
 <a id="a06c69e9a18e4bbafb9d6e5c7327fd0e8" name="a06c69e9a18e4bbafb9d6e5c7327fd0e8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a06c69e9a18e4bbafb9d6e5c7327fd0e8">&#9670;&#160;</a></span>CCC_and_modify</h2>
 
@@ -402,52 +448,6 @@ Include dependency graph for traits.h:</div>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">entry_pointer</td><td>a pointer to the container. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">mod_fn</td><td>a modification function that does not need context. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>a reference to the modified entry if Occupied or original if Vacant.</dd></dl>
-<p>See container documentation for specific behavior. </p>
-
-</div>
-</div>
-<a id="a7c34a81e1bc264dcdee759807d8a4427" name="a7c34a81e1bc264dcdee759807d8a4427"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7c34a81e1bc264dcdee759807d8a4427">&#9670;&#160;</a></span>CCC_and_modify_context</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_and_modify_context</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">entry_pointer, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">modify, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">context_arguments...&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;    CCC_private_and_modify_context(entry_pointer, modify, context_arguments)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Modify an entry if Occupied. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">entry_pointer</td><td>a pointer to the container. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">modify</td><td>a modification function. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context_arguments</td><td>context data for mod_fn. </td></tr>
   </table>
   </dd>
 </dl>

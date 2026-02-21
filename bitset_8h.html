@@ -477,9 +477,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">    NULL,</div>
 <div class="line">    256</div>
 <div class="line">);</div>
-<div class="ttc" id="abitset_8h_html_a872da66828891cfed4872081d7f3a83f"><div class="ttname"><a href="bitset_8h.html#a872da66828891cfed4872081d7f3a83f">CCC_bitset_blocks</a></div><div class="ttdeci">#define CCC_bitset_blocks(bit_cap, optional_storage_duration...)</div><div class="ttdoc">Allocate the necessary number of blocks at compile or runtime on the stack or data segment.</div><div class="ttdef"><b>Definition:</b> bitset.h:144</div></div>
-<div class="ttc" id="abitset_8h_html_aa4c81aa7a9bd7bb0a98ee5f8a198bd66"><div class="ttname"><a href="bitset_8h.html#aa4c81aa7a9bd7bb0a98ee5f8a198bd66">CCC_bitset_initialize</a></div><div class="ttdeci">#define CCC_bitset_initialize(allocate, context, cap, count, bitblock_pointer...)</div><div class="ttdoc">Initialize the bit set with memory and allocation permissions.</div><div class="ttdef"><b>Definition:</b> bitset.h:182</div></div>
-<div class="ttc" id="astructCCC__Bitset_html"><div class="ttname"><a href="structCCC__Bitset.html">CCC_Bitset</a></div><div class="ttdef"><b>Definition:</b> private_bitset.h:33</div></div>
+<div class="ttc" id="abitset_8h_html_a872da66828891cfed4872081d7f3a83f"><div class="ttname"><a href="bitset_8h.html#a872da66828891cfed4872081d7f3a83f">CCC_bitset_blocks</a></div><div class="ttdeci">#define CCC_bitset_blocks(bit_cap, optional_storage_duration...)</div><div class="ttdoc">Allocate the necessary number of blocks at compile or runtime on the stack or data segment.</div><div class="ttdef"><b>Definition:</b> bitset.h:143</div></div>
+<div class="ttc" id="abitset_8h_html_aa4c81aa7a9bd7bb0a98ee5f8a198bd66"><div class="ttname"><a href="bitset_8h.html#aa4c81aa7a9bd7bb0a98ee5f8a198bd66">CCC_bitset_initialize</a></div><div class="ttdeci">#define CCC_bitset_initialize(allocate, context, cap, count, bitblock_pointer...)</div><div class="ttdoc">Initialize the bit set with memory and allocation permissions.</div><div class="ttdef"><b>Definition:</b> bitset.h:181</div></div>
+<div class="ttc" id="astructCCC__Bitset_html"><div class="ttname"><a href="structCCC__Bitset.html">CCC_Bitset</a></div><div class="ttdef"><b>Definition:</b> private_bitset.h:32</div></div>
 </div><!-- fragment --><p>The above example also illustrates the benefits of a static compound literal to encapsulate the bits within the bit set array to prevent dangling references. If the compiler does not support storage duration of compound literals the more traditional example follows:</p>
 <div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code hl_struct" href="structCCC__Bitset.html">CCC_Bitset</a> bit = <a class="code hl_define" href="bitset_8h.html#aa4c81aa7a9bd7bb0a98ee5f8a198bd66">CCC_bitset_initialize</a>(</div>
 <div class="line">    <a class="code hl_define" href="bitset_8h.html#a872da66828891cfed4872081d7f3a83f">CCC_bitset_blocks</a>(256),</div>
@@ -743,7 +743,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <p>Initialize an empty dynamic bit set at compile or runtime with an allocator. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the CCC_Allocator function. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the CCC_Allocator function. </td></tr>
   </table>
   </dd>
 </dl>
@@ -890,7 +890,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <p>Initialize an empty dynamic bit set at compile or runtime with an allocator. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the CCC_Allocator function. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the CCC_Allocator function. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>the </td></tr>
   </table>
   </dd>
@@ -1490,7 +1490,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">    13</div>
 <div class="line">);</div>
 <div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res = bitset_copy(&amp;destination, &amp;source, NULL);</div>
-<div class="ttc" id="atypes_8h_html_aa1ded61d294b114942f11e711b331dcf"><div class="ttname"><a href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a></div><div class="ttdeci">CCC_Result</div><div class="ttdoc">A result of actions on containers.</div><div class="ttdef"><b>Definition:</b> types.h:148</div></div>
+<div class="ttc" id="atypes_8h_html_aa1ded61d294b114942f11e711b331dcf"><div class="ttname"><a href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a></div><div class="ttdeci">CCC_Result</div><div class="ttdoc">A result of actions on containers.</div><div class="ttdef"><b>Definition:</b> types.h:146</div></div>
 </div><!-- fragment --><p>The above requires destination capacity be greater than or equal to source capacity. Here is memory management handed over to the copy function.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define BITSET_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="keyword">static</span> Bitset source = bitset_initialize(</div>
