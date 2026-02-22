@@ -1,4 +1,5 @@
 ---
+Language: Cpp
 IndentWidth: 4
 ColumnLimit: 80
 SpacesInParentheses: false
