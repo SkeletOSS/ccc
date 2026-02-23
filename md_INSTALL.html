@@ -120,7 +120,11 @@ Fetch Content Install</h1>
 <div class="line">FetchContent_MakeAvailable(ccc)</div>
 <div class="line"># Include this line if you want to ignore compiler warnings from the ccc library when compiling your project.</div>
 <div class="line">target_compile_options(ccc PRIVATE &quot;-w&quot;)</div>
+<div class="line"># Optionally use ccc as a system library so that your tooling like clang-tidy ignores ccc.</div>
+<div class="line">get_target_property(ccc_SOURCE_DIR ccc SOURCE_DIR)</div>
 <div class="line">add_executable(main main.c)</div>
+<div class="line"># Optionally include ccc source directory as system so that your tooling like clang-tidy ignores ccc.</div>
+<div class="line">target_include_directories(main SYSTEM PRIVATE ${ccc_SOURCE_DIR})</div>
 <div class="line">target_link_libraries(main ccc::ccc)</div>
 </div><!-- fragment --><p>Now, the C Container Collection is part of your project build, allowing you to configure as you see fit. For a more traditional approach read the manual install section below.</p>
 <h1><a class="anchor" id="autotoc_md5"></a>
