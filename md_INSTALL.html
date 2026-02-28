@@ -168,7 +168,11 @@ Manual Install Quick Start</h1>
 Include the Library</h2>
 <p>Once CMake can find the package, link against it and include the container header.</p>
 <p>The <code>CMakeLists.txt</code> file.</p>
-<div class="fragment"><div class="line">add_executable(main main.c)</div>
+<div class="fragment"><div class="line"># Optionally use ccc as a system library so that your tooling like clang-tidy ignores ccc.</div>
+<div class="line">get_target_property(ccc_SOURCE_DIR ccc SOURCE_DIR)</div>
+<div class="line">add_executable(main main.c)</div>
+<div class="line"># Optionally include ccc source directory as system so that your tooling like clang-tidy ignores ccc.</div>
+<div class="line">target_include_directories(main SYSTEM PRIVATE ${ccc_SOURCE_DIR})</div>
 <div class="line">target_link_libraries(main ccc::ccc)</div>
 </div><!-- fragment --><p>The C code.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="flat__hash__map_8h.html">ccc/flat_hash_map.h</a>&quot;</span></div>
