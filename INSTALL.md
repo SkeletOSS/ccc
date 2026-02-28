@@ -118,7 +118,11 @@ Once CMake can find the package, link against it and include the container heade
 The `CMakeLists.txt` file.
 
 ```cmake
+# Optionally use ccc as a system library so that your tooling like clang-tidy ignores ccc.
+get_target_property(ccc_SOURCE_DIR ccc SOURCE_DIR)
 add_executable(main main.c)
+# Optionally include ccc source directory as system so that your tooling like clang-tidy ignores ccc.
+target_include_directories(main SYSTEM PRIVATE ${ccc_SOURCE_DIR})
 target_link_libraries(main ccc::ccc)
 ```
 
