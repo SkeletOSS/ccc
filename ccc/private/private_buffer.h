@@ -68,8 +68,7 @@ initialization in one convenient step for user. */
                                         private_compound_literal_array...)     \
     (__extension__({                                                           \
         typeof(*private_compound_literal_array)                                \
-            *private_buffer_initializer_list                                   \
-            = private_compound_literal_array;                                  \
+            *private_buffer_initializer_list = private_compound_literal_array; \
         struct CCC_Buffer private_buf = CCC_private_buffer_initialize(         \
             typeof(*private_buffer_initializer_list), private_allocate,        \
             private_context, 0, 0, NULL);                                      \

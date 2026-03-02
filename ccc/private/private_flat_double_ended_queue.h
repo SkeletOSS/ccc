@@ -164,8 +164,7 @@ void *CCC_private_flat_double_ended_queue_allocate_back(
                     private_flat_double_ended_queue_pointer);                  \
             if (private_flat_double_ended_queue_emplace_ret) {                 \
                 *((typeof(value) *)                                            \
-                      private_flat_double_ended_queue_emplace_ret)             \
-                    = value;                                                   \
+                      private_flat_double_ended_queue_emplace_ret) = value;    \
             }                                                                  \
         }                                                                      \
         private_flat_double_ended_queue_emplace_ret;                           \
@@ -184,8 +183,7 @@ void *CCC_private_flat_double_ended_queue_allocate_back(
                     private_flat_double_ended_queue_pointer);                  \
             if (private_flat_double_ended_queue_emplace_ret) {                 \
                 *((typeof(value) *)                                            \
-                      private_flat_double_ended_queue_emplace_ret)             \
-                    = value;                                                   \
+                      private_flat_double_ended_queue_emplace_ret) = value;    \
             }                                                                  \
         }                                                                      \
         private_flat_double_ended_queue_emplace_ret;                           \

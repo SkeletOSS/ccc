@@ -153,8 +153,7 @@ name of the list being on the left hand side of the assignment operator. */
             for (size_t private_i = 0; private_i < private_count;              \
                  ++private_i) {                                                \
                 typeof(*private_doubly_linked_list_type_array) *const          \
-                    private_new_node                                           \
-                    = private_doubly_linked_list.allocate(                     \
+                    private_new_node = private_doubly_linked_list.allocate(    \
                         (CCC_Allocator_context){                               \
                             .input = NULL,                                     \
                             .bytes = private_doubly_linked_list.sizeof_type,   \

@@ -144,8 +144,7 @@ void *CCC_private_adaptive_map_insert(struct CCC_Adaptive_map *,
     private_compound_literal_array...)                                         \
     (__extension__({                                                           \
         typeof(*private_compound_literal_array)                                \
-            *private_adaptive_map_type_array                                   \
-            = private_compound_literal_array;                                  \
+            *private_adaptive_map_type_array = private_compound_literal_array; \
         struct CCC_Adaptive_map private_map                                    \
             = CCC_private_adaptive_map_initialize(                             \
                 typeof(*private_adaptive_map_type_array),                      \
@@ -264,8 +263,7 @@ void *CCC_private_adaptive_map_insert(struct CCC_Adaptive_map *,
         };                                                                     \
         if (private_adaptive_map_new_ins_base) {                               \
             *((typeof(type_compound_literal) *)                                \
-                  private_adaptive_map_new_ins_base)                           \
-                = type_compound_literal;                                       \
+                  private_adaptive_map_new_ins_base) = type_compound_literal;  \
             *((typeof(key) *)CCC_private_adaptive_map_key_in_slot(             \
                 om_insert_entry.map, private_adaptive_map_new_ins_base))       \
                 = key;                                                         \
