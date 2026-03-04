@@ -209,7 +209,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:a922b69ba09e22ab0e5783b49e0b7c21c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__hash__map_8h.html#a922b69ba09e22ab0e5783b49e0b7c21c">CCC_flat_hash_map_swap_entry_wrap</a>(map_pointer,  type_pointer)</td></tr>
 <tr class="memdesc:a922b69ba09e22ab0e5783b49e0b7c21c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invariantly inserts the key value wrapping out_handle.  <br /></td></tr>
 <tr class="separator:a922b69ba09e22ab0e5783b49e0b7c21c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a76f154fc20d4a033856736b7c31794f2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__hash__map_8h.html#a76f154fc20d4a033856736b7c31794f2">CCC_flat_hash_map_remove_entry_wrap</a>(map_entry_pointer)</td></tr>
+<tr class="memitem:a76f154fc20d4a033856736b7c31794f2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__hash__map_8h.html#a76f154fc20d4a033856736b7c31794f2">CCC_flat_hash_map_remove_entry_wrap</a>(map_entry_pointer)&#160;&#160;&#160;    &amp;(<a class="el" href="structCCC__Entry.html">CCC_Entry</a>){<a class="el" href="flat__hash__map_8h.html#a1005ae1299c0d326c8e7f078c42a3d03">CCC_flat_hash_map_remove_entry</a>(map_entry_pointer).private}</td></tr>
 <tr class="memdesc:a76f154fc20d4a033856736b7c31794f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the entry from the table if Occupied.  <br /></td></tr>
 <tr class="separator:a76f154fc20d4a033856736b7c31794f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa6389376b4967a060710c8acfb84932e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__hash__map_8h.html#aa6389376b4967a060710c8acfb84932e">CCC_flat_hash_map_try_insert_wrap</a>(map_pointer,  type_pointer)</td></tr>
@@ -364,11 +364,10 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="flat__hash__map_8h.html#a11c397e5235fefa94bd3b1f3298a1ae0">CCC_Flat_hash_map_entry</a>) {                                               \</div>
-<div class="line">        CCC_private_flat_hash_map_and_modify_with(map_entry_pointer,           \</div>
-<div class="line">                                                  type_name, closure_over_T)   \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="flat__hash__map_8h.html#a11c397e5235fefa94bd3b1f3298a1ae0">CCC_Flat_hash_map_entry</a>){<a class="code hl_define" href="private__flat__hash__map_8h.html#a4b6332ccc161afcb1c5154d1e60f595c">CCC_private_flat_hash_map_and_modify_with</a>(      \</div>
+<div class="line">        map_entry_pointer, type_name, closure_over_T)}</div>
 <div class="ttc" id="aflat__hash__map_8h_html_a11c397e5235fefa94bd3b1f3298a1ae0"><div class="ttname"><a href="flat__hash__map_8h.html#a11c397e5235fefa94bd3b1f3298a1ae0">CCC_Flat_hash_map_entry</a></div><div class="ttdeci">union CCC_Flat_hash_map_entry_wrap CCC_Flat_hash_map_entry</div><div class="ttdoc">A container specific entry used to implement the Entry Interface.</div><div class="ttdef"><b>Definition:</b> flat_hash_map.h:116</div></div>
+<div class="ttc" id="aprivate__flat__hash__map_8h_html_a4b6332ccc161afcb1c5154d1e60f595c"><div class="ttname"><a href="private__flat__hash__map_8h.html#a4b6332ccc161afcb1c5154d1e60f595c">CCC_private_flat_hash_map_and_modify_with</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_and_modify_with( Flat_hash_map_entry_pointer, type_name, closure_over_T...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:433</div></div>
 </div><!-- fragment -->
 <p>Modify an Occupied entry with a closure over user type T. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -617,9 +616,8 @@ If initialization fails, the map will be returned empty. All subsequent queries,
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="flat__hash__map_8h.html#a11c397e5235fefa94bd3b1f3298a1ae0">CCC_Flat_hash_map_entry</a>) {                                               \</div>
-<div class="line">        CCC_flat_hash_map_entry(map_pointer, key_pointer).private              \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="flat__hash__map_8h.html#a11c397e5235fefa94bd3b1f3298a1ae0">CCC_Flat_hash_map_entry</a>){                                                \</div>
+<div class="line">        CCC_flat_hash_map_entry(map_pointer, key_pointer).private}</div>
 </div><!-- fragment -->
 <p>Obtains an entry for the provided key in the table for future use. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -955,10 +953,9 @@ If initialization fails, the map will be returned empty. All subsequent queries,
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>) {                                                             \</div>
-<div class="line">        CCC_private_flat_hash_map_insert_or_assign_with(map_pointer, key,      \</div>
-<div class="line">                                                        type_compound_literal) \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>){<a class="code hl_define" href="private__flat__hash__map_8h.html#a9b0bb89a9e79d518c1bbd4529a320451">CCC_private_flat_hash_map_insert_or_assign_with</a>(              \</div>
+<div class="line">        map_pointer, key, type_compound_literal)}</div>
+<div class="ttc" id="aprivate__flat__hash__map_8h_html_a9b0bb89a9e79d518c1bbd4529a320451"><div class="ttname"><a href="private__flat__hash__map_8h.html#a9b0bb89a9e79d518c1bbd4529a320451">CCC_private_flat_hash_map_insert_or_assign_with</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_insert_or_assign_with( flat_hash_map_pointer, key, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:566</div></div>
 <div class="ttc" id="astructCCC__Entry_html"><div class="ttname"><a href="structCCC__Entry.html">CCC_Entry</a></div><div class="ttdef"><b>Definition:</b> private_types.h:51</div></div>
 </div><!-- fragment -->
 <p>Inserts a new key value pair or overwrites the existing entry. </p>
@@ -1000,9 +997,8 @@ If initialization fails, the map will be returned empty. All subsequent queries,
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>) {                                                             \</div>
-<div class="line">        CCC_flat_hash_map_insert_or_assign(map_pointer, type_pointer).private  \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>){                                                              \</div>
+<div class="line">        CCC_flat_hash_map_insert_or_assign(map_pointer, type_pointer).private}</div>
 </div><!-- fragment -->
 <p>Invariantly inserts or overwrites a user struct into the table. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1070,14 +1066,11 @@ If initialization fails, the map will be returned empty. All subsequent queries,
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">map_entry_pointer</td><td>)</td>
-          <td></td>
+          <td>&#160;&#160;&#160;    &amp;(<a class="el" href="structCCC__Entry.html">CCC_Entry</a>){<a class="el" href="flat__hash__map_8h.html#a1005ae1299c0d326c8e7f078c42a3d03">CCC_flat_hash_map_remove_entry</a>(map_entry_pointer).private}</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>) {                                                             \</div>
-<div class="line">        CCC_flat_hash_map_remove_entry(map_entry_pointer).private              \</div>
-<div class="line">    }</div>
-</div><!-- fragment -->
+
 <p>Remove the entry from the table if Occupied. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -1114,10 +1107,9 @@ If initialization fails, the map will be returned empty. All subsequent queries,
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>) {                                                             \</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>){                                                              \</div>
 <div class="line">        CCC_flat_hash_map_remove_key_value(map_pointer, type_output_pointer)   \</div>
-<div class="line">            .private                                                           \</div>
-<div class="line">    }</div>
+<div class="line">            .private}</div>
 </div><!-- fragment -->
 <p>Removes the key value in the map storing the old value, if present, in the struct containing out_array_pointer provided by the user. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1157,9 +1149,8 @@ If initialization fails, the map will be returned empty. All subsequent queries,
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>) {                                                             \</div>
-<div class="line">        CCC_flat_hash_map_swap_entry(map_pointer, type_pointer).private        \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>){                                                              \</div>
+<div class="line">        CCC_flat_hash_map_swap_entry(map_pointer, type_pointer).private}</div>
 </div><!-- fragment -->
 <p>Invariantly inserts the key value wrapping out_handle. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1205,10 +1196,9 @@ If initialization fails, the map will be returned empty. All subsequent queries,
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>) {                                                             \</div>
-<div class="line">        CCC_private_flat_hash_map_try_insert_with(map_pointer, key,            \</div>
-<div class="line">                                                  type_compound_literal)       \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>){<a class="code hl_define" href="private__flat__hash__map_8h.html#a6192df10948a8c7d1a953bb9129b5a39">CCC_private_flat_hash_map_try_insert_with</a>(                    \</div>
+<div class="line">        map_pointer, key, type_compound_literal)}</div>
+<div class="ttc" id="aprivate__flat__hash__map_8h_html_a6192df10948a8c7d1a953bb9129b5a39"><div class="ttname"><a href="private__flat__hash__map_8h.html#a6192df10948a8c7d1a953bb9129b5a39">CCC_private_flat_hash_map_try_insert_with</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_try_insert_with(flat_hash_map_pointer, key, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:517</div></div>
 </div><!-- fragment -->
 <p>lazily insert type_compound_literal into the map at key if key is absent. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1250,9 +1240,8 @@ If initialization fails, the map will be returned empty. All subsequent queries,
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>) {                                                             \</div>
-<div class="line">        CCC_flat_hash_map_try_insert(map_pointer, type_pointer).private        \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>){                                                              \</div>
+<div class="line">        CCC_flat_hash_map_try_insert(map_pointer, type_pointer).private}</div>
 </div><!-- fragment -->
 <p>Attempts to insert the key value wrapping key_val_array_pointer. </p>
 <dl class="params"><dt>Parameters</dt><dd>

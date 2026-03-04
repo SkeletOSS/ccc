@@ -219,7 +219,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:a6f15a63d7c037f810617791c38e9d4d4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a6f15a63d7c037f810617791c38e9d4d4">CCC_array_adaptive_map_insert_array_with</a>(array_pointer,  type_compound_literal...)</td></tr>
 <tr class="memdesc:a6f15a63d7c037f810617791c38e9d4d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the contents of the compound literal type_compound_literal to a node.  <br /></td></tr>
 <tr class="separator:a6f15a63d7c037f810617791c38e9d4d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a331d96f78d0c0706c60a44eb53fd29ae"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a331d96f78d0c0706c60a44eb53fd29ae">CCC_array_adaptive_map_remove_handle_wrap</a>(array_pointer)</td></tr>
+<tr class="memitem:a331d96f78d0c0706c60a44eb53fd29ae"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a331d96f78d0c0706c60a44eb53fd29ae">CCC_array_adaptive_map_remove_handle_wrap</a>(array_pointer)&#160;&#160;&#160;    &amp;(<a class="el" href="structCCC__Handle.html">CCC_Handle</a>){<a class="el" href="array__adaptive__map_8h.html#a7ead4b3654a7cb197b2236e27c6e06e6">CCC_array_adaptive_map_remove_handle</a>((array_pointer)).private}</td></tr>
 <tr class="memdesc:a331d96f78d0c0706c60a44eb53fd29ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the handle from the map if Occupied.  <br /></td></tr>
 <tr class="separator:a331d96f78d0c0706c60a44eb53fd29ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12e3313f0460ecdb3140ad48de2e3d61"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Handle.html">CCC_Handle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a12e3313f0460ecdb3140ad48de2e3d61">CCC_array_adaptive_map_swap_handle</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *map, void *type_output)</td></tr>
@@ -370,10 +370,9 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="array__adaptive__map_8h.html#a67ce76b9053351d5eabb334544cb2530">CCC_Array_adaptive_map_handle</a>) {                                         \</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="array__adaptive__map_8h.html#a67ce76b9053351d5eabb334544cb2530">CCC_Array_adaptive_map_handle</a>){                                          \</div>
 <div class="line">        CCC_private_array_adaptive_map_and_modify_with(                        \</div>
-<div class="line">            array_pointer, type_name, closure_over_T)                          \</div>
-<div class="line">    }</div>
+<div class="line">            array_pointer, type_name, closure_over_T)}</div>
 <div class="ttc" id="aarray__adaptive__map_8h_html_a67ce76b9053351d5eabb334544cb2530"><div class="ttname"><a href="array__adaptive__map_8h.html#a67ce76b9053351d5eabb334544cb2530">CCC_Array_adaptive_map_handle</a></div><div class="ttdeci">union CCC_Array_adaptive_map_handle_wrap CCC_Array_adaptive_map_handle</div><div class="ttdoc">A container specific handle used to implement the Handle Interface.</div><div class="ttdef"><b>Definition:</b> array_adaptive_map.h:79</div></div>
 </div><!-- fragment -->
 <p>Modify an Occupied handle with a closure over user type T. </p>
@@ -656,11 +655,10 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="types_8h.html#aa24094a0fb5618980a629b4accdd37d7">CCC_Handle_range_reverse</a>) {                                              \</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="types_8h.html#aa24094a0fb5618980a629b4accdd37d7">CCC_Handle_range_reverse</a>){                                               \</div>
 <div class="line">        CCC_array_adaptive_map_equal_range_reverse(                            \</div>
 <div class="line">            map_pointer, reverse_begin_and_reverse_end_key_pointers)           \</div>
-<div class="line">            .private                                                           \</div>
-<div class="line">    }</div>
+<div class="line">            .private}</div>
 <div class="ttc" id="atypes_8h_html_aa24094a0fb5618980a629b4accdd37d7"><div class="ttname"><a href="types_8h.html#aa24094a0fb5618980a629b4accdd37d7">CCC_Handle_range_reverse</a></div><div class="ttdeci">union CCC_Handle_range_reverse_wrap CCC_Handle_range_reverse</div><div class="ttdoc">The result of a range_reverse query on iterable containers.</div><div class="ttdef"><b>Definition:</b> types.h:68</div></div>
 </div><!-- fragment -->
 <p>Returns a compound literal reference to the desired range_reverse. Amortized O(lg N). </p>
@@ -700,11 +698,10 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle__range.html">CCC_Handle_range</a>) {                                                      \</div>
-<div class="line">        CCC_array_adaptive_map_equal_range(map_pointer,                        \</div>
-<div class="line">                                           begin_and_end_key_pointers)         \</div>
-<div class="line">            .private                                                           \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle__range.html">CCC_Handle_range</a>){<a class="code hl_function" href="array__adaptive__map_8h.html#acb4a40014feb193966eeeaf61e8392db">CCC_array_adaptive_map_equal_range</a>(                    \</div>
+<div class="line">                            map_pointer, begin_and_end_key_pointers)           \</div>
+<div class="line">                            .private}</div>
+<div class="ttc" id="aarray__adaptive__map_8h_html_acb4a40014feb193966eeeaf61e8392db"><div class="ttname"><a href="array__adaptive__map_8h.html#acb4a40014feb193966eeeaf61e8392db">CCC_array_adaptive_map_equal_range</a></div><div class="ttdeci">CCC_Handle_range CCC_array_adaptive_map_equal_range(CCC_Array_adaptive_map *map, void const *begin_key, void const *end_key)</div><div class="ttdoc">Return an iterable range of values from [begin_key, end_key). Amortized O(lg N).</div></div>
 <div class="ttc" id="astructCCC__Handle__range_html"><div class="ttname"><a href="structCCC__Handle__range.html">CCC_Handle_range</a></div><div class="ttdef"><b>Definition:</b> private_types.h:162</div></div>
 </div><!-- fragment -->
 <p>Returns a compound literal reference to the desired range. Amortized O(lg N). </p>
@@ -862,9 +859,8 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="array__adaptive__map_8h.html#a67ce76b9053351d5eabb334544cb2530">CCC_Array_adaptive_map_handle</a>) {                                         \</div>
-<div class="line">        CCC_array_adaptive_map_handle((array_pointer), (key_pointer)).private  \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="array__adaptive__map_8h.html#a67ce76b9053351d5eabb334544cb2530">CCC_Array_adaptive_map_handle</a>){                                          \</div>
+<div class="line">        CCC_array_adaptive_map_handle((array_pointer), (key_pointer)).private}</div>
 </div><!-- fragment -->
 <p>Obtains a handle for the provided key in the map for future use. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1028,10 +1024,8 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>) {                                                            \</div>
-<div class="line">        CCC_private_array_adaptive_map_insert_or_assign_with(                  \</div>
-<div class="line">            map_pointer, key, type_compound_literal)                           \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>){CCC_private_array_adaptive_map_insert_or_assign_with(        \</div>
+<div class="line">        map_pointer, key, type_compound_literal)}</div>
 <div class="ttc" id="astructCCC__Handle_html"><div class="ttname"><a href="structCCC__Handle.html">CCC_Handle</a></div><div class="ttdef"><b>Definition:</b> private_types.h:76</div></div>
 </div><!-- fragment -->
 <p>Inserts a new key value pair or overwrites the existing handle. </p>
@@ -1100,14 +1094,11 @@ If initialization fails all subsequent queries, insertions, or removals will ind
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">array_pointer</td><td>)</td>
-          <td></td>
+          <td>&#160;&#160;&#160;    &amp;(<a class="el" href="structCCC__Handle.html">CCC_Handle</a>){<a class="el" href="array__adaptive__map_8h.html#a7ead4b3654a7cb197b2236e27c6e06e6">CCC_array_adaptive_map_remove_handle</a>((array_pointer)).private}</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>) {                                                            \</div>
-<div class="line">        CCC_array_adaptive_map_remove_handle((array_pointer)).private          \</div>
-<div class="line">    }</div>
-</div><!-- fragment -->
+
 <p>Remove the handle from the map if Occupied. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -1144,11 +1135,10 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>) {                                                            \</div>
-<div class="line">        CCC_array_adaptive_map_remove_key_value((map_pointer),                 \</div>
-<div class="line">                                                (type_output_pointer))         \</div>
-<div class="line">            .private                                                           \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>){<a class="code hl_function" href="array__adaptive__map_8h.html#aab51d4696e0a25ea272e46c35c200dd8">CCC_array_adaptive_map_remove_key_value</a>(                     \</div>
+<div class="line">                      (map_pointer), (type_output_pointer))                    \</div>
+<div class="line">                      .private}</div>
+<div class="ttc" id="aarray__adaptive__map_8h_html_aab51d4696e0a25ea272e46c35c200dd8"><div class="ttname"><a href="array__adaptive__map_8h.html#aab51d4696e0a25ea272e46c35c200dd8">CCC_array_adaptive_map_remove_key_value</a></div><div class="ttdeci">CCC_Handle CCC_array_adaptive_map_remove_key_value(CCC_Array_adaptive_map *map, void *type_output)</div><div class="ttdoc">Removes the key value in the map storing the old value, if present, in the struct containing type_out...</div></div>
 </div><!-- fragment -->
 <p>Removes the key value in the map storing the old value, if present, in the struct containing type_output provided by the user. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1188,11 +1178,10 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>) {                                                            \</div>
-<div class="line">        CCC_array_adaptive_map_swap_handle((map_pointer),                      \</div>
-<div class="line">                                           (type_output_pointer))              \</div>
-<div class="line">            .private                                                           \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>){<a class="code hl_function" href="array__adaptive__map_8h.html#a12e3313f0460ecdb3140ad48de2e3d61">CCC_array_adaptive_map_swap_handle</a>((map_pointer),            \</div>
+<div class="line">                                                     (type_output_pointer))    \</div>
+<div class="line">                      .private}</div>
+<div class="ttc" id="aarray__adaptive__map_8h_html_a12e3313f0460ecdb3140ad48de2e3d61"><div class="ttname"><a href="array__adaptive__map_8h.html#a12e3313f0460ecdb3140ad48de2e3d61">CCC_array_adaptive_map_swap_handle</a></div><div class="ttdeci">CCC_Handle CCC_array_adaptive_map_swap_handle(CCC_Array_adaptive_map *map, void *type_output)</div><div class="ttdoc">Invariantly inserts the key value wrapping type.</div></div>
 </div><!-- fragment -->
 <p>Invariantly inserts the key value wrapping type. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1238,10 +1227,8 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>) {                                                            \</div>
-<div class="line">        CCC_private_array_adaptive_map_try_insert_with(map_pointer, key,       \</div>
-<div class="line">                                                       type_compound_literal)  \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>){CCC_private_array_adaptive_map_try_insert_with(              \</div>
+<div class="line">        map_pointer, key, type_compound_literal)}</div>
 </div><!-- fragment -->
 <p>lazily insert type_compound_literal into the map at key if key is absent. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1282,10 +1269,9 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>) {                                                            \</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>){                                                             \</div>
 <div class="line">        CCC_array_adaptive_map_try_insert((map_pointer), (type_pointer))       \</div>
-<div class="line">            .private                                                           \</div>
-<div class="line">    }</div>
+<div class="line">            .private}</div>
 </div><!-- fragment -->
 <p>Attempts to insert the key value wrapping type. </p>
 <dl class="params"><dt>Parameters</dt><dd>

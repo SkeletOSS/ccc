@@ -220,7 +220,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:a2f964a66662a9fc4b885d3de1cbf3dbc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#a2f964a66662a9fc4b885d3de1cbf3dbc">CCC_array_tree_map_insert_array_with</a>(map_array_pointer,  type_compound_literal...)</td></tr>
 <tr class="memdesc:a2f964a66662a9fc4b885d3de1cbf3dbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the contents of the compound literal type_compound_literal to a node.  <br /></td></tr>
 <tr class="separator:a2f964a66662a9fc4b885d3de1cbf3dbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab6fa48be8ff4fea18444c9f02b96610c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#ab6fa48be8ff4fea18444c9f02b96610c">CCC_array_tree_map_remove_handle_wrap</a>(map_array_pointer)</td></tr>
+<tr class="memitem:ab6fa48be8ff4fea18444c9f02b96610c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#ab6fa48be8ff4fea18444c9f02b96610c">CCC_array_tree_map_remove_handle_wrap</a>(map_array_pointer)&#160;&#160;&#160;    &amp;(<a class="el" href="structCCC__Handle.html">CCC_Handle</a>){<a class="el" href="array__tree__map_8h.html#aa973cb277942ad13bb56ff3a67a48659">CCC_array_tree_map_remove_handle</a>((map_array_pointer)).private}</td></tr>
 <tr class="memdesc:ab6fa48be8ff4fea18444c9f02b96610c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the handle from the map if Occupied.  <br /></td></tr>
 <tr class="separator:ab6fa48be8ff4fea18444c9f02b96610c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a11e89ec3d6fbbca13a6d768df4874c60"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Handle.html">CCC_Handle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#a11e89ec3d6fbbca13a6d768df4874c60">CCC_array_tree_map_swap_handle</a> (<a class="el" href="structCCC__Array__tree__map.html">CCC_Array_tree_map</a> *map, void *type_output)</td></tr>
@@ -371,10 +371,8 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="array__tree__map_8h.html#aed55ef4dcf4466a9ea1fc0f84e938422">CCC_Array_tree_map_handle</a>) {                                             \</div>
-<div class="line">        CCC_private_array_tree_map_and_modify_with(map_array_pointer,          \</div>
-<div class="line">                                                   type_name, closure_over_T)  \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="array__tree__map_8h.html#aed55ef4dcf4466a9ea1fc0f84e938422">CCC_Array_tree_map_handle</a>){CCC_private_array_tree_map_and_modify_with(   \</div>
+<div class="line">        map_array_pointer, type_name, closure_over_T)}</div>
 <div class="ttc" id="aarray__tree__map_8h_html_aed55ef4dcf4466a9ea1fc0f84e938422"><div class="ttname"><a href="array__tree__map_8h.html#aed55ef4dcf4466a9ea1fc0f84e938422">CCC_Array_tree_map_handle</a></div><div class="ttdeci">union CCC_Array_tree_map_handle_wrap CCC_Array_tree_map_handle</div><div class="ttdoc">A container specific handle used to implement the Handle Interface.</div><div class="ttdef"><b>Definition:</b> array_tree_map.h:85</div></div>
 </div><!-- fragment -->
 <p>Modify an Occupied handle with a closure over user type T. </p>
@@ -660,12 +658,11 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="types_8h.html#aa24094a0fb5618980a629b4accdd37d7">CCC_Handle_range_reverse</a>) {                                              \</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="types_8h.html#aa24094a0fb5618980a629b4accdd37d7">CCC_Handle_range_reverse</a>){                                               \</div>
 <div class="line">        CCC_array_tree_map_equal_range_reverse(                                \</div>
 <div class="line">            (array_tree_map_pointer),                                          \</div>
 <div class="line">            (reverse_begin_and_reverse_end_key_pointers))                      \</div>
-<div class="line">            .private                                                           \</div>
-<div class="line">    }</div>
+<div class="line">            .private}</div>
 <div class="ttc" id="atypes_8h_html_aa24094a0fb5618980a629b4accdd37d7"><div class="ttname"><a href="types_8h.html#aa24094a0fb5618980a629b4accdd37d7">CCC_Handle_range_reverse</a></div><div class="ttdeci">union CCC_Handle_range_reverse_wrap CCC_Handle_range_reverse</div><div class="ttdoc">The result of a range_reverse query on iterable containers.</div><div class="ttdef"><b>Definition:</b> types.h:68</div></div>
 </div><!-- fragment -->
 <p>Returns a compound literal reference to the desired range_reverse. O(lg N). </p>
@@ -705,11 +702,10 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle__range.html">CCC_Handle_range</a>) {                                                      \</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle__range.html">CCC_Handle_range</a>){                                                       \</div>
 <div class="line">        CCC_array_tree_map_equal_range((array_tree_map_pointer),               \</div>
 <div class="line">                                       (begin_and_end_key_pointers))           \</div>
-<div class="line">            .private                                                           \</div>
-<div class="line">    }</div>
+<div class="line">            .private}</div>
 <div class="ttc" id="astructCCC__Handle__range_html"><div class="ttname"><a href="structCCC__Handle__range.html">CCC_Handle_range</a></div><div class="ttdef"><b>Definition:</b> private_types.h:162</div></div>
 </div><!-- fragment -->
 <p>Returns a compound literal reference to the desired range. O(lg N). </p>
@@ -867,10 +863,9 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="array__tree__map_8h.html#aed55ef4dcf4466a9ea1fc0f84e938422">CCC_Array_tree_map_handle</a>) {                                             \</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="array__tree__map_8h.html#aed55ef4dcf4466a9ea1fc0f84e938422">CCC_Array_tree_map_handle</a>){                                              \</div>
 <div class="line">        CCC_array_tree_map_handle((array_tree_map_pointer), (key_pointer))     \</div>
-<div class="line">            .private                                                           \</div>
-<div class="line">    }</div>
+<div class="line">            .private}</div>
 </div><!-- fragment -->
 <p>Obtains a handle for the provided key in the map for future use. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1034,10 +1029,8 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>) {                                                            \</div>
-<div class="line">        CCC_private_array_tree_map_insert_or_assign_with(                      \</div>
-<div class="line">            array_tree_map_pointer, key, type_compound_literal)                \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>){CCC_private_array_tree_map_insert_or_assign_with(            \</div>
+<div class="line">        array_tree_map_pointer, key, type_compound_literal)}</div>
 <div class="ttc" id="astructCCC__Handle_html"><div class="ttname"><a href="structCCC__Handle.html">CCC_Handle</a></div><div class="ttdef"><b>Definition:</b> private_types.h:76</div></div>
 </div><!-- fragment -->
 <p>Inserts a new key value pair or overwrites the existing handle. </p>
@@ -1106,14 +1099,11 @@ If initialization fails all subsequent queries, insertions, or removals will ind
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">map_array_pointer</td><td>)</td>
-          <td></td>
+          <td>&#160;&#160;&#160;    &amp;(<a class="el" href="structCCC__Handle.html">CCC_Handle</a>){<a class="el" href="array__tree__map_8h.html#aa973cb277942ad13bb56ff3a67a48659">CCC_array_tree_map_remove_handle</a>((map_array_pointer)).private}</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>) {                                                            \</div>
-<div class="line">        CCC_array_tree_map_remove_handle((map_array_pointer)).private          \</div>
-<div class="line">    }</div>
-</div><!-- fragment -->
+
 <p>Remove the handle from the map if Occupied. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -1151,11 +1141,10 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>) {                                                            \</div>
-<div class="line">        CCC_array_tree_map_remove_key_value((array_tree_map_pointer),          \</div>
-<div class="line">                                            (type_output_pointer))             \</div>
-<div class="line">            .private                                                           \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>){<a class="code hl_function" href="array__tree__map_8h.html#a86681b949a450c6c8b20767ef247bd75">CCC_array_tree_map_remove_key_value</a>(                         \</div>
+<div class="line">                      (array_tree_map_pointer), (type_output_pointer))         \</div>
+<div class="line">                      .private}</div>
+<div class="ttc" id="aarray__tree__map_8h_html_a86681b949a450c6c8b20767ef247bd75"><div class="ttname"><a href="array__tree__map_8h.html#a86681b949a450c6c8b20767ef247bd75">CCC_array_tree_map_remove_key_value</a></div><div class="ttdeci">CCC_Handle CCC_array_tree_map_remove_key_value(CCC_Array_tree_map *map, void *type_output)</div><div class="ttdoc">Removes the key value in the map storing the old value, if present, in the struct containing type_out...</div></div>
 </div><!-- fragment -->
 <p>Removes the key value in the map storing the old value, if present, in the struct containing key value type provided by the user. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1195,11 +1184,10 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>) {                                                            \</div>
-<div class="line">        CCC_array_tree_map_swap_handle((array_tree_map_pointer),               \</div>
-<div class="line">                                       (type_output_pointer))                  \</div>
-<div class="line">            .private                                                           \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>){<a class="code hl_function" href="array__tree__map_8h.html#a11e89ec3d6fbbca13a6d768df4874c60">CCC_array_tree_map_swap_handle</a>((array_tree_map_pointer),     \</div>
+<div class="line">                                                 (type_output_pointer))        \</div>
+<div class="line">                      .private}</div>
+<div class="ttc" id="aarray__tree__map_8h_html_a11e89ec3d6fbbca13a6d768df4874c60"><div class="ttname"><a href="array__tree__map_8h.html#a11e89ec3d6fbbca13a6d768df4874c60">CCC_array_tree_map_swap_handle</a></div><div class="ttdeci">CCC_Handle CCC_array_tree_map_swap_handle(CCC_Array_tree_map *map, void *type_output)</div><div class="ttdoc">Invariantly inserts the key value in type_output.</div></div>
 </div><!-- fragment -->
 <p>Invariantly inserts the key value in type_output_pointer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1245,10 +1233,8 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>) {                                                            \</div>
-<div class="line">        CCC_private_array_tree_map_try_insert_with(array_tree_map_pointer,     \</div>
-<div class="line">                                                   key, type_compound_literal) \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>){CCC_private_array_tree_map_try_insert_with(                  \</div>
+<div class="line">        array_tree_map_pointer, key, type_compound_literal)}</div>
 </div><!-- fragment -->
 <p>lazily insert type_compound_literal into the map at key if key is absent. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1289,11 +1275,10 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>) {                                                            \</div>
-<div class="line">        CCC_array_tree_map_try_insert((array_tree_map_pointer),                \</div>
-<div class="line">                                      (type_pointer))                          \</div>
-<div class="line">            .private                                                           \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>){<a class="code hl_function" href="array__tree__map_8h.html#a840c3ff0b065c5ff9678633865c9a0f5">CCC_array_tree_map_try_insert</a>((array_tree_map_pointer),      \</div>
+<div class="line">                                                (type_pointer))                \</div>
+<div class="line">                      .private}</div>
+<div class="ttc" id="aarray__tree__map_8h_html_a840c3ff0b065c5ff9678633865c9a0f5"><div class="ttname"><a href="array__tree__map_8h.html#a840c3ff0b065c5ff9678633865c9a0f5">CCC_array_tree_map_try_insert</a></div><div class="ttdeci">CCC_Handle CCC_array_tree_map_try_insert(CCC_Array_tree_map *map, void const *type)</div><div class="ttdoc">Attempts to insert the key value in type.</div></div>
 </div><!-- fragment -->
 <p>Attempts to insert the key value type_pointer. </p>
 <dl class="params"><dt>Parameters</dt><dd>

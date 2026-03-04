@@ -180,7 +180,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:a4a00bfaa4336aedadc806fcc3efa5627"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tree__map_8h.html#a4a00bfaa4336aedadc806fcc3efa5627">CCC_tree_map_insert_entry_with</a>(map_pointer,  type_compound_literal...)&#160;&#160;&#160;    CCC_private_tree_map_insert_entry_with(map_pointer, type_compound_literal)</td></tr>
 <tr class="memdesc:a4a00bfaa4336aedadc806fcc3efa5627"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the contents of the compound literal type_compound_literal to a node.  <br /></td></tr>
 <tr class="separator:a4a00bfaa4336aedadc806fcc3efa5627"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7c372b4be230450bd7fd991d9d7bac42"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tree__map_8h.html#a7c372b4be230450bd7fd991d9d7bac42">CCC_tree_map_remove_entry_wrap</a>(map_pointer)</td></tr>
+<tr class="memitem:a7c372b4be230450bd7fd991d9d7bac42"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tree__map_8h.html#a7c372b4be230450bd7fd991d9d7bac42">CCC_tree_map_remove_entry_wrap</a>(map_pointer)&#160;&#160;&#160;    &amp;(<a class="el" href="structCCC__Entry.html">CCC_Entry</a>){<a class="el" href="tree__map_8h.html#afbe5d25c7d8fdaa7ee174a440dd46187">CCC_tree_map_remove_entry</a>((map_pointer)).private}</td></tr>
 <tr class="memdesc:a7c372b4be230450bd7fd991d9d7bac42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the entry from the map if Occupied.  <br /></td></tr>
 <tr class="separator:a7c372b4be230450bd7fd991d9d7bac42"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cf2d969d740dbe900e419f7532e80eb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Entry.html">CCC_Entry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tree__map_8h.html#a6cf2d969d740dbe900e419f7532e80eb">CCC_tree_map_swap_entry</a> (<a class="el" href="structCCC__Tree__map.html">CCC_Tree_map</a> *map, <a class="el" href="structCCC__Tree__map__node.html">CCC_Tree_map_node</a> *type_intruder, <a class="el" href="structCCC__Tree__map__node.html">CCC_Tree_map_node</a> *temp_intruder)</td></tr>
@@ -335,10 +335,8 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="tree__map_8h.html#ac2913858a5badbe4f702b8e791e486e9">CCC_Tree_map_entry</a>) {                                                    \</div>
-<div class="line">        CCC_private_tree_map_and_modify_with(map_pointer, type_name,           \</div>
-<div class="line">                                             closure_over_T)                   \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="tree__map_8h.html#ac2913858a5badbe4f702b8e791e486e9">CCC_Tree_map_entry</a>){CCC_private_tree_map_and_modify_with(                \</div>
+<div class="line">        map_pointer, type_name, closure_over_T)}</div>
 <div class="ttc" id="atree__map_8h_html_ac2913858a5badbe4f702b8e791e486e9"><div class="ttname"><a href="tree__map_8h.html#ac2913858a5badbe4f702b8e791e486e9">CCC_Tree_map_entry</a></div><div class="ttdeci">union CCC_Tree_map_entry_wrap CCC_Tree_map_entry</div><div class="ttdoc">A container specific entry used to implement the Entry Interface.</div><div class="ttdef"><b>Definition:</b> tree_map.h:69</div></div>
 </div><!-- fragment -->
 <p>Modify an Occupied entry with a closure over user type T. </p>
@@ -476,9 +474,8 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="tree__map_8h.html#ac2913858a5badbe4f702b8e791e486e9">CCC_Tree_map_entry</a>) {                                                    \</div>
-<div class="line">        CCC_tree_map_entry((map_pointer), (key_pointer)).private               \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="tree__map_8h.html#ac2913858a5badbe4f702b8e791e486e9">CCC_Tree_map_entry</a>){                                                     \</div>
+<div class="line">        CCC_tree_map_entry((map_pointer), (key_pointer)).private}</div>
 </div><!-- fragment -->
 <p>Obtains an entry for the provided key in the map for future use. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -520,11 +517,10 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="types_8h.html#a87bdc16619e9a0f9585a8102846c20a8">CCC_Range_reverse</a>) {                                                     \</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="types_8h.html#a87bdc16619e9a0f9585a8102846c20a8">CCC_Range_reverse</a>){                                                      \</div>
 <div class="line">        CCC_tree_map_equal_range_reverse(                                      \</div>
 <div class="line">            (map_pointer), (reverse_begin_and_reverse_end_key_pointers))       \</div>
-<div class="line">            .private                                                           \</div>
-<div class="line">    }</div>
+<div class="line">            .private}</div>
 <div class="ttc" id="atypes_8h_html_a87bdc16619e9a0f9585a8102846c20a8"><div class="ttname"><a href="types_8h.html#a87bdc16619e9a0f9585a8102846c20a8">CCC_Range_reverse</a></div><div class="ttdeci">union CCC_Range_reverse_wrap CCC_Range_reverse</div><div class="ttdoc">The result of a range_reverse query on iterable containers.</div><div class="ttdef"><b>Definition:</b> types.h:52</div></div>
 </div><!-- fragment -->
 <p>Returns a compound literal reference to the desired range_reverse. Amortized O(lg N). </p>
@@ -564,10 +560,9 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Range.html">CCC_Range</a>) {                                                             \</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Range.html">CCC_Range</a>){                                                              \</div>
 <div class="line">        CCC_tree_map_equal_range((map_pointer), (begin_and_end_key_pointers))  \</div>
-<div class="line">            .private                                                           \</div>
-<div class="line">    }</div>
+<div class="line">            .private}</div>
 <div class="ttc" id="astructCCC__Range_html"><div class="ttname"><a href="structCCC__Range.html">CCC_Range</a></div><div class="ttdef"><b>Definition:</b> private_types.h:106</div></div>
 </div><!-- fragment -->
 <p>Returns a compound literal reference to the desired range. Amortized O(lg N). </p>
@@ -790,10 +785,8 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>) {                                                             \</div>
-<div class="line">        CCC_private_tree_map_insert_or_assign_with(map_pointer, key,           \</div>
-<div class="line">                                                   type_compound_literal)      \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>){CCC_private_tree_map_insert_or_assign_with(                   \</div>
+<div class="line">        map_pointer, key, type_compound_literal)}</div>
 <div class="ttc" id="astructCCC__Entry_html"><div class="ttname"><a href="structCCC__Entry.html">CCC_Entry</a></div><div class="ttdef"><b>Definition:</b> private_types.h:51</div></div>
 </div><!-- fragment -->
 <p>Inserts a new key value pair or overwrites the existing entry. </p>
@@ -835,10 +828,9 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>) {                                                             \</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>){                                                              \</div>
 <div class="line">        CCC_tree_map_insert_or_assign((map_pointer), type_intruder_pointer)    \</div>
-<div class="line">            .private                                                           \</div>
-<div class="line">    }</div>
+<div class="line">            .private}</div>
 </div><!-- fragment -->
 <p>Invariantly inserts or overwrites a user struct into the map. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -903,14 +895,11 @@ This graph shows which files directly or indirectly include this file:</div>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">map_pointer</td><td>)</td>
-          <td></td>
+          <td>&#160;&#160;&#160;    &amp;(<a class="el" href="structCCC__Entry.html">CCC_Entry</a>){<a class="el" href="tree__map_8h.html#afbe5d25c7d8fdaa7ee174a440dd46187">CCC_tree_map_remove_entry</a>((map_pointer)).private}</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>) {                                                             \</div>
-<div class="line">        CCC_tree_map_remove_entry((map_pointer)).private                       \</div>
-<div class="line">    }</div>
-</div><!-- fragment -->
+
 <p>Remove the entry from the map if Occupied. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -948,11 +937,10 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>) {                                                             \</div>
-<div class="line">        CCC_tree_map_remove_key_value((map_pointer),                           \</div>
-<div class="line">                                      (output_intruder_pointer))               \</div>
-<div class="line">            .private                                                           \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>){<a class="code hl_function" href="tree__map_8h.html#a84598fade22aa7545e123ab5ebc4a8bf">CCC_tree_map_remove_key_value</a>((map_pointer),                  \</div>
+<div class="line">                                               (output_intruder_pointer))      \</div>
+<div class="line">                     .private}</div>
+<div class="ttc" id="atree__map_8h_html_a84598fade22aa7545e123ab5ebc4a8bf"><div class="ttname"><a href="tree__map_8h.html#a84598fade22aa7545e123ab5ebc4a8bf">CCC_tree_map_remove_key_value</a></div><div class="ttdeci">CCC_Entry CCC_tree_map_remove_key_value(CCC_Tree_map *map, CCC_Tree_map_node *output_intruder)</div><div class="ttdoc">Removes the key value in the map storing the old value, if present, in the struct containing output_i...</div></div>
 </div><!-- fragment -->
 <p>Removes the key value in the map storing the old value, if present, in the struct containing output_intruder_pointer provided by the user. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -999,11 +987,11 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>) {                                                             \</div>
-<div class="line">        CCC_tree_map_swap_entry((map_pointer), (type_intruder_pointer),        \</div>
-<div class="line">                                (temp_intruder_pointer))                       \</div>
-<div class="line">            .private                                                           \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>){<a class="code hl_function" href="tree__map_8h.html#a6cf2d969d740dbe900e419f7532e80eb">CCC_tree_map_swap_entry</a>((map_pointer),                        \</div>
+<div class="line">                                         (type_intruder_pointer),              \</div>
+<div class="line">                                         (temp_intruder_pointer))              \</div>
+<div class="line">                     .private}</div>
+<div class="ttc" id="atree__map_8h_html_a6cf2d969d740dbe900e419f7532e80eb"><div class="ttname"><a href="tree__map_8h.html#a6cf2d969d740dbe900e419f7532e80eb">CCC_tree_map_swap_entry</a></div><div class="ttdeci">CCC_Entry CCC_tree_map_swap_entry(CCC_Tree_map *map, CCC_Tree_map_node *type_intruder, CCC_Tree_map_node *temp_intruder)</div><div class="ttdoc">Invariantly inserts the key value wrapping type_intruder.</div></div>
 </div><!-- fragment -->
 <p>Invariantly inserts the key value wrapping type_intruder_pointer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1050,10 +1038,8 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>) {                                                             \</div>
-<div class="line">        CCC_private_tree_map_try_insert_with(map_pointer, key,                 \</div>
-<div class="line">                                             type_compound_literal)            \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>){CCC_private_tree_map_try_insert_with(map_pointer, key,        \</div>
+<div class="line">                                                      type_compound_literal)}</div>
 </div><!-- fragment -->
 <p>lazily insert type_compound_literal into the map at key if key is absent. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1094,10 +1080,9 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>) {                                                             \</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>){                                                              \</div>
 <div class="line">        CCC_tree_map_try_insert((map_pointer), (type_intruder_pointer))        \</div>
-<div class="line">            .private                                                           \</div>
-<div class="line">    }</div>
+<div class="line">            .private}</div>
 </div><!-- fragment -->
 <p>Attempts to insert the key value wrapping type_intruder. </p>
 <dl class="params"><dt>Parameters</dt><dd>
