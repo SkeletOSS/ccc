@@ -43,11 +43,9 @@ limitations under the License.
 
 #define CCC_private_swap_entry_wrap(container_pointer,                         \
                                     key_val_container_array_pointer...)        \
-    &(CCC_Entry) {                                                             \
-        CCC_private_swap_entry(container_pointer,                              \
-                               key_val_container_array_pointer)                \
-            .private                                                           \
-    }
+    &(CCC_Entry){CCC_private_swap_entry(container_pointer,                     \
+                                        key_val_container_array_pointer)       \
+                     .private}
 
 #define CCC_private_swap_handle(container_pointer, swap_arguments...)          \
     _Generic((container_pointer),                                              \
@@ -57,11 +55,9 @@ limitations under the License.
 
 #define CCC_private_swap_handle_wrap(container_pointer,                        \
                                      key_val_container_array_pointer...)       \
-    &(CCC_Handle) {                                                            \
-        CCC_private_swap_handle(container_pointer,                             \
-                                key_val_container_array_pointer)               \
-            .private                                                           \
-    }
+    &(CCC_Handle){CCC_private_swap_handle(container_pointer,                   \
+                                          key_val_container_array_pointer)     \
+                      .private}
 
 #define CCC_private_try_insert(container_pointer, try_insert_arguments...)     \
     _Generic((container_pointer),                                              \
@@ -191,9 +187,7 @@ limitations under the License.
         (container_entry_pointer))
 
 #define CCC_private_remove_entry_wrap(container_entry_pointer)                 \
-    &(CCC_Entry) {                                                             \
-        CCC_private_remove_entry(container_entry_pointer).private              \
-    }
+    &(CCC_Entry){CCC_private_remove_entry(container_entry_pointer).private}
 
 #define CCC_private_remove_handle(container_array_pointer)                     \
     _Generic((container_array_pointer),                                        \
@@ -205,9 +199,7 @@ limitations under the License.
         (container_array_pointer))
 
 #define CCC_private_remove_handle_wrap(container_array_pointer)                \
-    &(CCC_Handle) {                                                            \
-        CCC_private_remove_handle(container_array_pointer).private             \
-    }
+    &(CCC_Handle){CCC_private_remove_handle(container_array_pointer).private}
 
 #define CCC_private_entry(container_pointer, key_pointer...)                   \
     _Generic((container_pointer),                                              \

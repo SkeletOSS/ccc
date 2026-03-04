@@ -141,8 +141,7 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
                 / sizeof(*private_singly_linked_list_type_array);              \
             while (private_count--) {                                          \
                 typeof(*private_singly_linked_list_type_array) *const          \
-                    private_new_node                                           \
-                    = private_singly_linked_list.allocate(                     \
+                    private_new_node = private_singly_linked_list.allocate(    \
                         (CCC_Allocator_context){                               \
                             .input = NULL,                                     \
                             .bytes = private_singly_linked_list.sizeof_type,   \

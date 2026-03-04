@@ -411,8 +411,7 @@ is of a known fixed size defined at compile time, not just a pointer. */
                           private_array_adaptive_map_ins_hndl_pointer->private \
                               .map,                                            \
                           private_array_adaptive_map_ins_hndl_pointer->private \
-                              .index))                                         \
-                    = type_compound_literal;                                   \
+                              .index)) = type_compound_literal;                \
                 private_array_adaptive_map_ins_hndl_ret                        \
                     = private_array_adaptive_map_ins_hndl_pointer->private     \
                           .index;                                              \
@@ -449,14 +448,12 @@ is of a known fixed size defined at compile time, not just a pointer. */
                           CCC_private_array_adaptive_map_data_at(              \
                               private_array_adaptive_map_try_ins_map_pointer,  \
                               private_array_adaptive_map_try_ins_hndl_ret      \
-                                  .index))                                     \
-                        = type_compound_literal;                               \
+                                  .index)) = type_compound_literal;            \
                     *((typeof(private_array_adaptive_map_key) *)               \
                           CCC_private_array_adaptive_map_key_at(               \
                               private_array_adaptive_map_try_ins_hndl.map,     \
                               private_array_adaptive_map_try_ins_hndl_ret      \
-                                  .index))                                     \
-                        = private_array_adaptive_map_key;                      \
+                                  .index)) = private_array_adaptive_map_key;   \
                     CCC_private_array_adaptive_map_insert(                     \
                         private_array_adaptive_map_try_ins_hndl.map,           \
                         private_array_adaptive_map_try_ins_hndl_ret.index);    \
@@ -505,15 +502,13 @@ is of a known fixed size defined at compile time, not just a pointer. */
                           CCC_private_array_adaptive_map_data_at(                   \
                               private_array_adaptive_map_ins_or_assign_map_pointer, \
                               private_array_adaptive_map_ins_or_assign_hndl_ret     \
-                                  .index))                                          \
-                        = type_compound_literal;                                    \
+                                  .index)) = type_compound_literal;                 \
                     *((typeof(private_array_adaptive_map_key) *)                    \
                           CCC_private_array_adaptive_map_key_at(                    \
                               private_array_adaptive_map_ins_or_assign_hndl         \
                                   .map,                                             \
                               private_array_adaptive_map_ins_or_assign_hndl_ret     \
-                                  .index))                                          \
-                        = private_array_adaptive_map_key;                           \
+                                  .index)) = private_array_adaptive_map_key;        \
                     CCC_private_array_adaptive_map_insert(                          \
                         private_array_adaptive_map_ins_or_assign_hndl.map,          \
                         private_array_adaptive_map_ins_or_assign_hndl_ret           \
@@ -527,8 +522,7 @@ is of a known fixed size defined at compile time, not just a pointer. */
                       CCC_private_array_adaptive_map_data_at(                       \
                           private_array_adaptive_map_ins_or_assign_hndl.map,        \
                           private_array_adaptive_map_ins_or_assign_hndl             \
-                              .index))                                              \
-                    = type_compound_literal;                                        \
+                              .index)) = type_compound_literal;                     \
                 private_array_adaptive_map_ins_or_assign_hndl_ret                   \
                     = (struct CCC_Handle){                                          \
                         .index                                                      \
@@ -541,8 +535,7 @@ is of a known fixed size defined at compile time, not just a pointer. */
                       CCC_private_array_adaptive_map_key_at(                        \
                           private_array_adaptive_map_ins_or_assign_hndl.map,        \
                           private_array_adaptive_map_ins_or_assign_hndl             \
-                              .index))                                              \
-                    = private_array_adaptive_map_key;                               \
+                              .index)) = private_array_adaptive_map_key;            \
             }                                                                       \
         }                                                                           \
         private_array_adaptive_map_ins_or_assign_hndl_ret;                          \

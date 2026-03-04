@@ -570,14 +570,12 @@ runtime. */
                           CCC_private_array_tree_map_data_at(                  \
                               private_array_tree_map_ins_or_assign_hndl.map,   \
                               private_array_tree_map_ins_or_assign_hndl_ret    \
-                                  .index))                                     \
-                        = type_compound_literal;                               \
+                                  .index)) = type_compound_literal;            \
                     *((typeof(private_array_tree_map_key) *)                   \
                           CCC_private_array_tree_map_key_at(                   \
                               private_array_tree_map_ins_or_assign_hndl.map,   \
                               private_array_tree_map_ins_or_assign_hndl_ret    \
-                                  .index))                                     \
-                        = private_array_tree_map_key;                          \
+                                  .index)) = private_array_tree_map_key;       \
                     CCC_private_array_tree_map_insert(                         \
                         private_array_tree_map_ins_or_assign_hndl.map,         \
                         private_array_tree_map_ins_or_assign_hndl.index,       \

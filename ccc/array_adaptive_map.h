@@ -758,11 +758,9 @@ Note that this function may write to the struct containing type_output and
 wraps it in a handle to provide information about the old value. */
 #define CCC_array_adaptive_map_swap_handle_wrap(map_pointer,                   \
                                                 type_output_pointer)           \
-    &(CCC_Handle) {                                                            \
-        CCC_array_adaptive_map_swap_handle((map_pointer),                      \
-                                           (type_output_pointer))              \
-            .private                                                           \
-    }
+    &(CCC_Handle){CCC_array_adaptive_map_swap_handle((map_pointer),            \
+                                                     (type_output_pointer))    \
+                      .private}
 
 /** @brief Attempts to insert the key value wrapping type.
 @param[in] map the pointer to the map.
@@ -783,10 +781,9 @@ contains a reference to the key value user type in the map and may be unwrapped.
 If Vacant the handle contains a reference to the newly inserted handle in the
 map. If more space is needed but allocation fails an insert error is set. */
 #define CCC_array_adaptive_map_try_insert_wrap(map_pointer, type_pointer)      \
-    &(CCC_Handle) {                                                            \
+    &(CCC_Handle){                                                             \
         CCC_array_adaptive_map_try_insert((map_pointer), (type_pointer))       \
-            .private                                                           \
-    }
+            .private}
 
 /** @brief lazily insert type_compound_literal into the map at key if key is
 absent.
@@ -803,10 +800,8 @@ lazy value compound literal as well. This function ensures the key in the
 compound literal matches the searched key. */
 #define CCC_array_adaptive_map_try_insert_with(map_pointer, key,               \
                                                type_compound_literal...)       \
-    &(CCC_Handle) {                                                            \
-        CCC_private_array_adaptive_map_try_insert_with(map_pointer, key,       \
-                                                       type_compound_literal)  \
-    }
+    &(CCC_Handle){CCC_private_array_adaptive_map_try_insert_with(              \
+        map_pointer, key, type_compound_literal)}
 
 /** @brief Invariantly inserts or overwrites a user struct into the map.
 @param[in] map a pointer to the handle hash map.
@@ -835,10 +830,8 @@ lazy value compound literal as well. This function ensures the key in the
 compound literal matches the searched key. */
 #define CCC_array_adaptive_map_insert_or_assign_with(map_pointer, key,         \
                                                      type_compound_literal...) \
-    &(CCC_Handle) {                                                            \
-        CCC_private_array_adaptive_map_insert_or_assign_with(                  \
-            map_pointer, key, type_compound_literal)                           \
-    }
+    &(CCC_Handle){CCC_private_array_adaptive_map_insert_or_assign_with(        \
+        map_pointer, key, type_compound_literal)}
 
 /** @brief Removes the key value in the map storing the old value, if present,
 in the struct containing type_output provided by the user.
@@ -867,11 +860,9 @@ Note that this function may write to the struct containing the second parameter
 and wraps it in a handle to provide information about the old value. */
 #define CCC_array_adaptive_map_remove_key_value_wrap(map_pointer,              \
                                                      type_output_pointer)      \
-    &(CCC_Handle) {                                                            \
-        CCC_array_adaptive_map_remove_key_value((map_pointer),                 \
-                                                (type_output_pointer))         \
-            .private                                                           \
-    }
+    &(CCC_Handle){CCC_array_adaptive_map_remove_key_value(                     \
+                      (map_pointer), (type_output_pointer))                    \
+                      .private}
 
 /** @brief Obtains a handle for the provided key in the map for future use.
 @param[in] map the map to be searched.
@@ -908,9 +899,8 @@ where in the map such an element should be inserted.
 A handle is rarely useful on its own. It should be passed in a functional style
 to subsequent calls in the Handle Interface. */
 #define CCC_array_adaptive_map_handle_wrap(array_pointer, key_pointer)         \
-    &(CCC_Array_adaptive_map_handle) {                                         \
-        CCC_array_adaptive_map_handle((array_pointer), (key_pointer)).private  \
-    }
+    &(CCC_Array_adaptive_map_handle){                                          \
+        CCC_array_adaptive_map_handle((array_pointer), (key_pointer)).private}
 
 /** @brief Modifies the provided handle if it is Occupied.
 @param[in] handle the handle obtained from a handle function or macro.
@@ -976,10 +966,9 @@ container can deliver the user type T. This means any function calls are lazily
 evaluated in the closure scope. */
 #define CCC_array_adaptive_map_and_modify_with(array_pointer, type_name,       \
                                                closure_over_T...)              \
-    &(CCC_Array_adaptive_map_handle) {                                         \
+    &(CCC_Array_adaptive_map_handle){                                          \
         CCC_private_array_adaptive_map_and_modify_with(                        \
-            array_pointer, type_name, closure_over_T)                          \
-    }
+            array_pointer, type_name, closure_over_T)}
 
 /** @brief Inserts the struct with user type if the handle is Vacant.
 @param[in] handle the handle obtained via function or macro call.
@@ -1047,9 +1036,7 @@ CCC_array_adaptive_map_remove_handle(CCC_Array_adaptive_map_handle *handle);
 information about the old handle. If Occupied a handle in the map existed and
 was removed. If Vacant, no prior handle existed to be removed. */
 #define CCC_array_adaptive_map_remove_handle_wrap(array_pointer)               \
-    &(CCC_Handle) {                                                            \
-        CCC_array_adaptive_map_remove_handle((array_pointer)).private          \
-    }
+    &(CCC_Handle){CCC_array_adaptive_map_remove_handle((array_pointer)).private}
 
 /** @brief Unwraps the provided handle to obtain a view into the map element.
 @param[in] handle the handle from a query to the map via function or macro.
@@ -1123,11 +1110,9 @@ range.
 enclosing scope. This reference is always be valid. */
 #define CCC_array_adaptive_map_equal_range_wrap(map_pointer,                   \
                                                 begin_and_end_key_pointers...) \
-    &(CCC_Handle_range) {                                                      \
-        CCC_array_adaptive_map_equal_range(map_pointer,                        \
-                                           begin_and_end_key_pointers)         \
-            .private                                                           \
-    }
+    &(CCC_Handle_range){CCC_array_adaptive_map_equal_range(                    \
+                            map_pointer, begin_and_end_key_pointers)           \
+                            .private}
 
 /** @brief Return an iterable range_reverse of values from [reverse_begin_key,
 end_key). Amortized O(lg N).
@@ -1166,11 +1151,10 @@ reverse_begin and reverse_end of the range.
 with the enclosing scope. This reference is always valid. */
 #define CCC_array_adaptive_map_equal_range_reverse_wrap(                       \
     map_pointer, reverse_begin_and_reverse_end_key_pointers...)                \
-    &(CCC_Handle_range_reverse) {                                              \
+    &(CCC_Handle_range_reverse){                                               \
         CCC_array_adaptive_map_equal_range_reverse(                            \
             map_pointer, reverse_begin_and_reverse_end_key_pointers)           \
-            .private                                                           \
-    }
+            .private}
 
 /** @brief Return the start of an inorder traversal of the map. Amortized
 O(lg N).
