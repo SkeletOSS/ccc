@@ -37,14 +37,17 @@ See checkers.h for the testing framework all tests agree to use. */
 #ifdef __linux__
 #    include <linux/limits.h>
 #    define FILESYS_MAX_PATH PATH_MAX
+#    include <signal.h>
 #endif
 #ifdef __APPLE__
 #    include <sys/syslimits.h>
 #    define FILESYS_MAX_PATH NAME_MAX
+#    include <_string.h>
+#    include <sys/_types/_pid_t.h>
+#    include <sys/dirent.h>
 #endif
 
 #include <dirent.h>
-#include <signal.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
