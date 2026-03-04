@@ -417,7 +417,7 @@ This saves some initialization boilerplate. */
 /** @brief Initialize an empty dynamic bit set at compile or runtime with an
 allocator.
 @param[in] allocator the CCC_Allocator function.
-@param[in] context the
+@param[in] context the pointer to any context needed for the allocator.
 @return the initialized bit set on the right hand side of an equality operator.
 
 An empty dynamic bit set.
