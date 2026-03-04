@@ -350,7 +350,6 @@ main(int argc, char **argv) {
     }
     build_graph(&graph);
     find_shortest_paths(&graph);
-    set_cursor_position(graph.rows + 1, graph.cols + 1);
     printf("\n");
 }
 
@@ -644,10 +643,11 @@ find_shortest_paths(struct Graph *const graph) {
             }
             if (!pr.source) {
                 clear_line();
-                printf("Please provide any source and destination vertex "
-                       "represented in the grid\nExamples: AB, A B, B-C, X->Y, "
-                       "DtoF\nMost formats work but two capital vertices are "
-                       "needed.\n");
+                printf(
+                    "Error. Provide any source and destination vertex "
+                    "represented in the grid\nExamples: AB, A B, B-C, X->Y, "
+                    "DtoF\nMost formats work but two upper case vertices are "
+                    "required.\n");
                 return;
             }
             total_cost
@@ -1029,7 +1029,7 @@ hash_64_bits(uint64_t x) {
    returned. */
 static struct Path_request
 parse_path_request(struct Graph *const g, SV_Str_view const r) {
-    if (SV_contains(r, quit_cmd)) {
+    if (SV_compare(r, quit_cmd) == SV_ORDER_EQUAL) {
         return (struct Path_request){'q', 'q'};
     }
     struct Path_request res = {};
