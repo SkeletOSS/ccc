@@ -36,9 +36,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: check-diff
     if: ${{ needs.check-diff.outputs.handle == 'true' }}
-    matrix:
-      build: [debug, release]
-      portable: [OFF, ON]
+    strategy:
+      matrix:
+        build: [debug, release]
+        portable: [OFF, ON]
 
     steps:
 
