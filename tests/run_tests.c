@@ -10,16 +10,7 @@ Point the executable at the tests as follows:
 
 The much easier way is to run the Makefile command:
 
-In debug mode:
-
-make dtest
-
-In release mode:
-
-make rtest
-
-The path will be different to the run_tests executable depending on the build
-being build/debug/bin or build/bin.
+make test
 
 This program runs the tests as a child process so that we can also accept a
 report from the test program on its own determination of success. Each child
