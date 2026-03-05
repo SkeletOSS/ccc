@@ -84,14 +84,16 @@ all-clang-debug:
 all-clang-release:
 	cmake --preset=clang-release -DCMAKE_INSTALL_PREFIX=$(PREFIX) && cmake --build build $(JOBS) --target ccc tests samples
 
-dtest: tests
+test:
 	cmake --build build $(JOBS) --target tests
-	$(BUILD_DIR)debug/bin/run_tests $(BUILD_DIR)debug/bin/tests/
-	@echo "RAN TESTS"
-
-rtest: tests
-	cmake --build build $(JOBS) --target tests
-	$(BUILD_DIR)bin/run_tests $(BUILD_DIR)bin/tests/
+	@if [ -x "$(BUILD_DIR)debug/bin/run_tests" ]; then                \
+		$(BUILD_DIR)debug/bin/run_tests $(BUILD_DIR)debug/bin/tests/; \
+	elif [ -x "$(BUILD_DIR)bin/run_tests" ]; then                     \
+		$(BUILD_DIR)bin/run_tests $(BUILD_DIR)bin/tests/;             \
+	else                                                              \
+		echo "No test runner found";                                  \
+		exit 1;                                                       \
+	fi
 	@echo "RAN TESTS"
 
 clean:
