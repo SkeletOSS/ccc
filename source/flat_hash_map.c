@@ -24,7 +24,7 @@ Abseil: https://github.com/abseil/abseil-cpp
 Hashbrown: https://github.com/rust-lang/hashbrown
 
 This implementation is focused on SIMD friendly code or portable word based
-code when SIMD is not available. In any case the goal is to query multiple
+code when SIMD is not available. On any platform, the goal is to query multiple
 candidate keys for a match in the map simultaneously. This is achieved in the
 best case by having 16 one-byte hash fingerprints analyzed simultaneously for
 a match against a candidate fingerprint. The details of how this is done and
