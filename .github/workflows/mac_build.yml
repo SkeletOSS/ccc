@@ -77,9 +77,5 @@ jobs:
         make clean
         cmake --preset=clang-${{ matrix.build }} -DCCC_FLAT_HASH_MAP_PORTABLE=${{ matrix.portable }} -DCMAKE_C_COMPILER="$PWD/llvm/bin/clang" -G "Ninja" && cmake --build build -j$(nproc) --target ccc tests samples
         cmake --build build --target install
-        if [ "${{ matrix.build_type }}" = "debug" ]; then
-          make dtest
-        else
-          make rtest
-        fi
+        make test
 

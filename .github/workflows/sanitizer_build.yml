@@ -52,8 +52,4 @@ jobs:
       run: |
         make clean
         cmake --preset=gcc-sanitize-${{ matrix.build }} -DCCC_FLAT_HASH_MAP_PORTABLE=${{ matrix.portable }} && cmake --build build -j$(nproc) --target ccc tests
-        if [ "${{ matrix.build_type }}" = "debug" ]; then
-          make dtest
-        else
-          make rtest
-        fi
+        make test
