@@ -110,6 +110,8 @@ stack or data segment.
 such as static or automatic.
 @return a compound literal array of the necessary bit block type allocated in
 the scope it is created with any storage duration specifiers added.
+@note The user is expected to use this macro to generate compound literal arrays
+for the bit set blocks, rather than manual calculations.
 
 This method can be used for compile time initialization of bit set. For example:
 
