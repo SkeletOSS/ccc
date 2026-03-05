@@ -38,8 +38,12 @@ jobs:
     if: ${{ needs.check-diff.outputs.handle == 'true' }}
     env:
       LLVM_PREFIX: LLVM
-      LLVM_VERSION: 22.1.0-rc2
+      LLVM_VERSION: 22.1.0
       LLVM_PLATFORM: macOS-ARM64
+        strategy:
+    matrix:
+      build: [debug, release]
+      portable: [OFF, ON]
       
     steps:
 
@@ -68,41 +72,14 @@ jobs:
       run: |
         "$PWD/llvm/bin/clang" --version
         
-    - name: Build Debug Clang and Ninja
-      run: |
-        cmake --preset=clang-debug -DCMAKE_C_COMPILER="$PWD/llvm/bin/clang" -G "Ninja" && cmake --build build -j$(nproc) --target ccc tests samples
-        cmake --build build --target install
-    
-    - name: Test Debug
-      run: |
-        make dtest
-
-    - name: Build Release Clang and Ninja
+    - name: Build and Test all Variants
       run: |
         make clean
-        cmake --preset=clang-release -DCMAKE_C_COMPILER="$PWD/llvm/bin/clang" -G "Ninja" && cmake --build build -j$(nproc) --target ccc tests samples
+        cmake --preset=clang-${{ matrix.build }} -DCCC_FLAT_HASH_MAP_PORTABLE=${{ matrix.portable }} -DCMAKE_C_COMPILER="$PWD/llvm/bin/clang" -G "Ninja" && cmake --build build -j$(nproc) --target ccc tests samples
         cmake --build build --target install
-        
-    - name: Test Release
-      run: |
-        make rtest
-
-    - name: Build Portable Debug Clang and Ninja
-      run: |
-        cmake --preset=clang-debug -DCCC_FLAT_HASH_MAP_PORTABLE=ON -DCMAKE_C_COMPILER="$PWD/llvm/bin/clang" -G "Ninja" && cmake --build build -j$(nproc) --target ccc tests samples
-        cmake --build build --target install
-    
-    - name: Test Portable Debug
-      run: |
-        make dtest
-
-    - name: Build Portable Release Clang and Ninja
-      run: |
-        make clean
-        cmake --preset=clang-release -DCCC_FLAT_HASH_MAP_PORTABLE=ON -DCMAKE_C_COMPILER="$PWD/llvm/bin/clang" -G "Ninja" && cmake --build build -j$(nproc) --target ccc tests samples
-        cmake --build build --target install
-        
-    - name: Test Portable Release
-      run: |
-        make rtest
+        if [ "${{ matrix.build_type }}" = "debug" ]; then
+          make dtest
+        else
+          make rtest
+        fi
 
