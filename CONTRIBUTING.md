@@ -109,10 +109,7 @@ Now that tooling is set up, the workflow is roughly as follows.
 - `tests` - The tests.
     - `cmake --preset=[PRESET HERE] && cmake --build build -j[NUM THREADS] --target tests`
     - `make tests` to build.
-    - `make dtest` to run in debug build.
-    - `make rtest` to run in release build.
-    - `./build/debug/bin/tests/[TEST_FILE_NAME]` to run a specific container test in debug mode.
-    - `./build/bin/tests/[TEST_FILE_NAME]` to run a specific container test in release mode.
+    - `make test` to run all the tests.
 - `samples` - The samples.
     - `cmake --preset=[PRESET HERE] && cmake --build build -j[NUM THREADS] --target samples`
     - `./build/debug/bin/[SAMPLE_NAME]` to run a sample in debug mode.

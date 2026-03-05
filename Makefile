@@ -25,7 +25,7 @@ clang-ccc:
 	cmake --build $(BUILD_DIR) $(JOBS) --target install $(JOBS)
 
 install:
-	cmake --build $(BUILD_DIR) $(JOBS) --target install $(JOBS)
+	cmake --build $(BUILD_DIR) $(JOBS) --target install
 
 gcc-release:
 	cmake --preset=gcc-release -DCMAKE_INSTALL_PREFIX=$(PREFIX)
@@ -55,16 +55,16 @@ format:
 	cmake --build $(BUILD_DIR) $(JOBS) --target format
 
 tidy:
-	cmake --build $(BUILD_DIR) $(JOBS) --target tidy $(JOBS)
+	cmake --build $(BUILD_DIR) $(JOBS) --target tidy
 
 tests:
-	cmake --build $(BUILD_DIR) $(JOBS) --target tests $(JOBS)
+	cmake --build $(BUILD_DIR) $(JOBS) --target tests
 
 samples:
-	cmake --build $(BUILD_DIR) $(JOBS) --target samples $(JOBS)
+	cmake --build $(BUILD_DIR) $(JOBS) --target samples
 
 utility:
-	cmake --build $(BUILD_DIR) $(JOBS) --target utility $(JOBS)
+	cmake --build $(BUILD_DIR) $(JOBS) --target utility
 
 all-gcc-debug:
 	cmake --preset=gcc-debug -DCMAKE_INSTALL_PREFIX=$(PREFIX) && cmake --build build $(JOBS) --target ccc tests samples
@@ -84,8 +84,7 @@ all-clang-debug:
 all-clang-release:
 	cmake --preset=clang-release -DCMAKE_INSTALL_PREFIX=$(PREFIX) && cmake --build build $(JOBS) --target ccc tests samples
 
-test:
-	cmake --build build $(JOBS) --target tests
+test: tests
 	@if [ -x "$(BUILD_DIR)debug/bin/run_tests" ]; then                \
 		$(BUILD_DIR)debug/bin/run_tests $(BUILD_DIR)debug/bin/tests/; \
 	elif [ -x "$(BUILD_DIR)bin/run_tests" ]; then                     \
