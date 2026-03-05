@@ -164,7 +164,7 @@ desired allocation function. */
 @param[in] type_key_field the name of the field in user type used as key.
 @param[in] compare the key comparison function (see types.h).
 @param[in] allocate the allocation function or NULL if allocation is banned.
-@param[in] context a pointer to any context data for comparison or
+@param[in] context a pointer to any context data for comparison, allocation, or
 destruction.
 @param[in] capacity the capacity at data_pointer or 0.
 @param[in] memory_pointer a pointer to the contiguous user types or NULL.
