@@ -41,9 +41,10 @@ jobs:
       LLVM_PREFIX: LLVM
       LLVM_VERSION: 22.1.0
       LLVM_PLATFORM: Linux-X64
-    matrix:
-      build: [debug, release]
-      portable: [OFF, ON]
+    strategy:
+      matrix:
+        build: [debug, release]
+        portable: [OFF, ON]
 
     steps:
 
