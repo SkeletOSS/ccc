@@ -35,6 +35,10 @@ instructions available. However, if for any reason the user wishes to use the
 most portable Single Register Multiple Data fallback implementation, there are
 many options.
 
+To use the map as a set, when only keys are needed, wrap a type in a struct or
+union. For example a set of `int` could be represented by creating a type
+`struct My_int {int key;};`. All interface functions can then be used normally.
+
 If building this library separately to include its library file, add the
 flag to the build (and read INSTALL.md for more details).
 

@@ -27,20 +27,24 @@ the best case, repeated searches of the same value yield an `O(1)` access and
 many other frequently searched values will remain close to the root of the map.
 
 The array version of the adaptive map promises contiguous storage and random
-access if needed. Handles remain valid until an element is removed even if other
-elements are inserted, other elements are removed, or resizing occurs. All
-elements in the map track their relationships to one another via indices in the
-array. Therefore, this data structure can be relocated, copied, serialized, or
-written to disk and all internal data structure references will remain valid.
-Insertion may invoke an O(N) operation if resizing occurs. Finally, if
-allocation is prohibited upon initialization, and the user provides a capacity
-of `N` upon initialization, one slot will be used for a sentinel node. The user
-available capacity is `N - 1`.
+access if needed with handles. Handles remain valid until an element is removed
+even if other elements are inserted, other elements are removed, or resizing
+occurs. All elements in the map track their relationships to one another via
+indices in the array. Therefore, this data structure can be relocated, copied,
+serialized, or written to disk and all internal data structure references will
+remain valid. Insertion may invoke an O(N) operation if resizing occurs.
+Finally, if allocation is prohibited upon initialization, and the user provides
+a capacity of `C` upon initialization, one slot will be used for a sentinel
+node. The user available capacity is `C - 1`.
 
 All interface functions accept `void *` references to either the key or the full
 type the user is storing in the map. Therefore, it is important for the user to
 be aware if they are passing a reference to the key or the full type depending
 on the function requirements.
+
+To use the map as a set, when only keys are needed, wrap a type in a struct or
+union. For example a set of `int` could be represented by creating a type
+`struct My_int {int key;};`. All interface functions can then be used normally.
 
 To shorten names in the interface, define the following preprocessor directive
 at the top of your file.
@@ -730,41 +734,40 @@ Obtain and operate on container handles for efficient queries when non-trivial
 control flow is needed. */
 /**@{*/
 
-/** @brief Invariantly inserts the key value wrapping type.
+/** @brief Invariantly inserts the key value type.
 @param[in] map the pointer to the adaptive map.
-@param[out] type_output the handle to the user type wrapping map elem.
+@param[out] type_output the handle to the user type map elem.
 @return a handle. If Vacant, no prior element with key existed and the type
-wrapping type_output remains unchanged. If Occupied the old value is written
-to the type wrapping type_output and may be unwrapped to view. If more space
-is needed but allocation fails or has been forbidden, an insert error is set.
+type_output remains unchanged. If Occupied the old value is written to the type
+type_output and may be unwrapped to view. If more space is needed but allocation
+fails or has been forbidden, an insert error is set.
 
-Note that this function may write to the struct containing type_output and
-wraps it in a handle to provide information about the old value. */
+Note that this function may write to type_output and wraps it in a handle to
+provide information about the old value. */
 [[nodiscard]] CCC_Handle
 CCC_array_adaptive_map_swap_handle(CCC_Array_adaptive_map *map,
                                    void *type_output);
 
-/** @brief Invariantly inserts the key value wrapping type.
+/** @brief Invariantly inserts the key value type.
 @param[in] map_pointer the pointer to the adaptive map.
-@param[out] type_output_pointer the handle to the user type wrapping map
-elem.
+@param[out] type_output_pointer the handle to the user type map elem.
 @return a compound literal reference to a handle. If Vacant, no prior element
-with key existed and the type wrapping type_output remains unchanged. If
-Occupied the old value is written to the type wrapping type_output and may be
-unwrapped to view. If more space is needed but allocation fails or has been
-forbidden, an insert error is set.
+with key existed and the type type_output remains unchanged. If Occupied the old
+value is written to the type type_output and may be unwrapped to view. If more
+space is needed but allocation fails or has been forbidden, an insert error is
+set.
 
-Note that this function may write to the struct containing type_output and
-wraps it in a handle to provide information about the old value. */
+Note that this function may write to type_output and wraps it in a handle to
+provide information about the old value. */
 #define CCC_array_adaptive_map_swap_handle_wrap(map_pointer,                   \
                                                 type_output_pointer)           \
     &(CCC_Handle){CCC_array_adaptive_map_swap_handle((map_pointer),            \
                                                      (type_output_pointer))    \
                       .private}
 
-/** @brief Attempts to insert the key value wrapping type.
+/** @brief Attempts to insert the key value type.
 @param[in] map the pointer to the map.
-@param[in] type the handle to the user type wrapping map elem.
+@param[in] type the handle to the user type map elem.
 @return a handle. If Occupied, the handle contains a reference to the key value
 user type in the map and may be unwrapped. If Vacant the handle contains a
 reference to the newly inserted handle in the map. If more space is needed but
@@ -773,9 +776,9 @@ allocation fails, an insert error is set. */
 CCC_array_adaptive_map_try_insert(CCC_Array_adaptive_map *map,
                                   void const *type);
 
-/** @brief Attempts to insert the key value wrapping type.
+/** @brief Attempts to insert the key value type.
 @param[in] map_pointer the pointer to the map.
-@param[in] type_pointer the handle to the user type wrapping map elem.
+@param[in] type_pointer the handle to the user type map elem.
 @return a compound literal reference to a handle. If Occupied, the handle
 contains a reference to the key value user type in the map and may be unwrapped.
 If Vacant the handle contains a reference to the newly inserted handle in the
@@ -805,7 +808,7 @@ compound literal matches the searched key. */
 
 /** @brief Invariantly inserts or overwrites a user struct into the map.
 @param[in] map a pointer to the handle hash map.
-@param[in] type the handle to the wrapping user struct key value.
+@param[in] type the user struct key value type.
 @return a handle. If Occupied a handle was overwritten by the new key value.
 If Vacant no prior map handle existed.
 
@@ -836,7 +839,7 @@ compound literal matches the searched key. */
 /** @brief Removes the key value in the map storing the old value, if present,
 in the struct containing type_output provided by the user.
 @param[in] map the pointer to the adaptive map.
-@param[out] type_output the handle to the user type wrapping map elem.
+@param[out] type_output the handle to the user type map elem.
 @return the removed handle. If Occupied the struct containing type_output
 holds the old value. If Vacant the key value pair was not stored in the map. If
 bad input is provided an input error is set.
@@ -850,7 +853,7 @@ CCC_array_adaptive_map_remove_key_value(CCC_Array_adaptive_map *map,
 /** @brief Removes the key value in the map storing the old value, if present,
 in the struct containing type_output provided by the user.
 @param[in] map_pointer the pointer to the adaptive map.
-@param[out] type_output_pointer the handle to the user type wrapping map
+@param[out] type_output_pointer the handle to the user type map
 elem.
 @return a compound literal reference to a handle. If Occupied the struct
 containing type_output holds the old value. If Vacant the key value pair was

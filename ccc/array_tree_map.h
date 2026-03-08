@@ -19,30 +19,35 @@ limitations under the License.
 An array tree map offers insertion, removal, and searching with a strict bound
 of `O(log(N))` time. This map is suitable for realtime applications if resizing
 can be well controlled. Insert operations may cause resizing if allocation is
-allowed. Searching is a thread-safe read-only operation. Balancing modifications
-only occur upon insertion or removal.
+allowed changing the insertion runtime to amortized `O(log(N))`. Searching is a
+thread-safe read-only operation. Balancing modifications only occur upon
+insertion or removal.
 
-The handle variant of the tree map promises contiguous storage and random
-access if needed. Handles are stable and the user can use them to refer to an
-element until that element is removed from the map. Handles remain valid even if
-resizing of the table, insertions of other elements, or removals of other
-elements occur. Active user elements may not be contiguous from index `[0, N)`
-where `N` is the size of map; there may be gaps between active elements in the
-array and it is only guaranteed that `N` elements are stored between index `[0,
-Capacity)`.
+This array variant of the tree map promises contiguous storage and random
+access if needed with handles. Handles are stable and the user can use them to
+refer to an element until that element is removed from the map. Handles remain
+valid even if resizing of the table, insertions of other elements, or removals
+of other elements occur. Active user elements may not be contiguous from index
+`[0, N)` where `N` is the size of map; there may be gaps between active elements
+in the array and it is only guaranteed that `N` elements are stored between
+index `[0, Capacity)`.
 
 All elements in the map track their relationships via indices in the buffer.
 Therefore, this data structure can be relocated, copied, serialized, or written
 to disk and all internal data structure references will remain valid. Insertion
 may invoke an `O(N)` operation if resizing occurs. Finally, if allocation is
-prohibited upon initialization, and the user provides a capacity of `N` upon
+prohibited upon initialization, and the user provides a capacity of `C` upon
 initialization, one slot will be used for a sentinel node. The user available
-capacity is `N - 1`.
+capacity is `C - 1`.
 
 All interface functions accept `void *` references to either the key or the full
 type the user is storing in the map. Therefore, it is important for the user to
 be aware if they are passing a reference to the key or the full type depending
 on the function requirements.
+
+To use the map as a set, when only keys are needed, wrap a type in a struct or
+union. For example a set of `int` could be represented by creating a type
+`struct My_int {int key;};`. All interface functions can then be used normally.
 
 To shorten names in the interface, define the following preprocessor directive
 at the top of your file.
@@ -837,7 +842,7 @@ compound literal matches the searched key. */
         array_tree_map_pointer, key, type_compound_literal)}
 
 /** @brief Removes the key value in the map storing the old value, if present,
-in the struct containing type_output provided by the user.
+in the type_output provided by the user.
 @param[in] map the pointer to the tree map.
 @param[out] type_output the type user type map elem.
 @return the removed handle. If Occupied key value type holds the old key value
@@ -849,7 +854,7 @@ Note that this function may write to the user type struct. */
 CCC_array_tree_map_remove_key_value(CCC_Array_tree_map *map, void *type_output);
 
 /** @brief Removes the key value in the map storing the old value, if present,
-in the struct containing key value type provided by the user.
+in the key value type provided by the user.
 @param[in] array_tree_map_pointer the pointer to the tree map.
 @param[out] type_output_pointer type user type map elem.
 @return a compound literal reference to the removed handle. If Occupied
