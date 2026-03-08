@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stddef.h>
 
 #define FLAT_HASH_MAP_USING_NAMESPACE_CCC
@@ -20,6 +21,13 @@ static void
 modw(CCC_Type_context const u) {
     struct Val *v = u.type;
     v->val = *((int *)u.context);
+}
+
+static CCC_Order
+flat_hash_map_int_order(CCC_Key_comparator_context const order) {
+    int const *const right = order.type_right;
+    int const left = *((int *)order.key_left);
+    return (left > *right) - (left < *right);
 }
 
 static CCC_Flat_hash_map static_fh = flat_hash_map_with_compound_literal(
@@ -363,6 +371,31 @@ check_static_begin(flat_hash_map_test_with_context_allocator) {
     check_end(flat_hash_map_clear_and_free(&fh, NULL););
 }
 
+/* This could be a really nice way to encourage users to use the map as a set.
+The only problem is that a struct containing one field is not guaranteed to be
+the same size as that field by the C standard. So without these static assert
+the copy of the int compound literal could be undefined behavior. However,
+this would allow the user to forgo cluttering their type namespace with a
+struct wrapping a single integral type. Will need to explore how to make this
+more robust for the user before recommending. */
+check_static_begin(flat_hash_map_test_with_anonymous_struct) {
+    static_assert(
+        sizeof(struct { int _; }) == sizeof(int),
+        "anonymous single field structs match the size of the type they wrap.");
+    Flat_hash_map fh = flat_hash_map_with_allocator(
+        struct { int _; }, _, flat_hash_map_int_to_u64, flat_hash_map_int_order,
+        std_allocate);
+    check(validate(&fh), true);
+    CCC_Entry const e = CCC_flat_hash_map_insert_or_assign(&fh, &(int){1});
+    check(occupied(&e), CCC_FALSE);
+    CCC_Entry const *e_pointer
+        = CCC_flat_hash_map_insert_or_assign_with(&fh, 2, &(int){2});
+    check(occupied(e_pointer), CCC_FALSE);
+    check(validate(&fh), true);
+    check(count(&fh).count, 2);
+    check_end(flat_hash_map_clear_and_free(&fh, NULL););
+}
+
 int
 main(void) {
     return check_run(flat_hash_map_test_static_initialize(),
@@ -378,5 +411,6 @@ main(void) {
                      flat_hash_map_test_init_with_capacity_no_op(),
                      flat_hash_map_test_with_allocator(),
                      flat_hash_map_test_with_context_allocator(),
+                     flat_hash_map_test_with_anonymous_struct(),
                      flat_hash_map_test_init_with_capacity_fail());
 }

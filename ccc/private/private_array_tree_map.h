@@ -365,20 +365,9 @@ runtime. */
 #define CCC_private_array_tree_map_with_context_allocator(                     \
     private_type_name, private_key_field, private_key_compare,                 \
     private_allocate, private_context)                                         \
-    {                                                                          \
-        .data = NULL,                                                          \
-        .nodes = NULL,                                                         \
-        .parity = NULL,                                                        \
-        .capacity = 0,                                                         \
-        .count = 0,                                                            \
-        .root = 0,                                                             \
-        .free_list = 0,                                                        \
-        .sizeof_type = sizeof(private_type_name),                              \
-        .key_offset = offsetof(private_type_name, private_key_field),          \
-        .compare = (private_key_compare),                                      \
-        .allocate = (private_allocate),                                        \
-        .context = (private_context),                                          \
-    }
+    CCC_private_array_tree_map_initialize(                                     \
+        private_type_name, private_key_field, private_key_compare,             \
+        private_allocate, private_context, 0, NULL)
 
 /** @internal */
 #define CCC_private_array_tree_map_with_allocator(                             \
