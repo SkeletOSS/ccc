@@ -123,10 +123,11 @@ This graph shows which files directly or indirectly include this file:</div>
 <p><a href="array__tree__map_8h_source.html">Go to the source code of this file.</a></p>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The Array Tree Map Interface. </p>
-<p>An array tree map offers insertion, removal, and searching with a strict bound of <code>O(log(N))</code> time. This map is suitable for realtime applications if resizing can be well controlled. Insert operations may cause resizing if allocation is allowed. Searching is a thread-safe read-only operation. Balancing modifications only occur upon insertion or removal.</p>
-<p>The handle variant of the tree map promises contiguous storage and random access if needed. Handles are stable and the user can use them to refer to an element until that element is removed from the map. Handles remain valid even if resizing of the table, insertions of other elements, or removals of other elements occur. Active user elements may not be contiguous from index <code>[0, N)</code> where <code>N</code> is the size of map; there may be gaps between active elements in the array and it is only guaranteed that <code>N</code> elements are stored between index <code>[0, Capacity)</code>.</p>
-<p>All elements in the map track their relationships via indices in the buffer. Therefore, this data structure can be relocated, copied, serialized, or written to disk and all internal data structure references will remain valid. Insertion may invoke an <code>O(N)</code> operation if resizing occurs. Finally, if allocation is prohibited upon initialization, and the user provides a capacity of <code>N</code> upon initialization, one slot will be used for a sentinel node. The user available capacity is <code>N - 1</code>.</p>
+<p>An array tree map offers insertion, removal, and searching with a strict bound of <code>O(log(N))</code> time. This map is suitable for realtime applications if resizing can be well controlled. Insert operations may cause resizing if allocation is allowed changing the insertion runtime to amortized <code>O(log(N))</code>. Searching is a thread-safe read-only operation. Balancing modifications only occur upon insertion or removal.</p>
+<p>This array variant of the tree map promises contiguous storage and random access if needed with handles. Handles are stable and the user can use them to refer to an element until that element is removed from the map. Handles remain valid even if resizing of the table, insertions of other elements, or removals of other elements occur. Active user elements may not be contiguous from index <code>[0, N)</code> where <code>N</code> is the size of map; there may be gaps between active elements in the array and it is only guaranteed that <code>N</code> elements are stored between index <code>[0, Capacity)</code>.</p>
+<p>All elements in the map track their relationships via indices in the buffer. Therefore, this data structure can be relocated, copied, serialized, or written to disk and all internal data structure references will remain valid. Insertion may invoke an <code>O(N)</code> operation if resizing occurs. Finally, if allocation is prohibited upon initialization, and the user provides a capacity of <code>C</code> upon initialization, one slot will be used for a sentinel node. The user available capacity is <code>C - 1</code>.</p>
 <p>All interface functions accept <code>void *</code> references to either the key or the full type the user is storing in the map. Therefore, it is important for the user to be aware if they are passing a reference to the key or the full type depending on the function requirements.</p>
+<p>To use the map as a set, when only keys are needed, wrap a type in a struct or union. For example a set of <code>int</code> could be represented by creating a type <code>struct My_int {int key;};</code>. All interface functions can then be used normally.</p>
 <p>To shorten names in the interface, define the following preprocessor directive at the top of your file.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define ARRAY_TREE_MAP_USING_NAMESPACE_CCC</span></div>
 </div><!-- fragment --><p>All types and functions can then be written without the <code>CCC_</code> prefix. </p>
@@ -206,7 +207,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memdesc:aa4a3dc7f4a389b68446d191b04f02c32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a new key value pair or overwrites the existing handle.  <br /></td></tr>
 <tr class="separator:aa4a3dc7f4a389b68446d191b04f02c32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8fdd65c49420ab002fe6891ee8ee2acc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#a8fdd65c49420ab002fe6891ee8ee2acc">CCC_array_tree_map_remove_key_value_wrap</a>(array_tree_map_pointer,  type_output_pointer)</td></tr>
-<tr class="memdesc:a8fdd65c49420ab002fe6891ee8ee2acc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the key value in the map storing the old value, if present, in the struct containing key value type provided by the user.  <br /></td></tr>
+<tr class="memdesc:a8fdd65c49420ab002fe6891ee8ee2acc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the key value in the map storing the old value, if present, in the key value type provided by the user.  <br /></td></tr>
 <tr class="separator:a8fdd65c49420ab002fe6891ee8ee2acc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b1d7885cf410b23c2e0c02ebd507270"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#a4b1d7885cf410b23c2e0c02ebd507270">CCC_array_tree_map_handle_wrap</a>(array_tree_map_pointer,  key_pointer)</td></tr>
 <tr class="memdesc:a4b1d7885cf410b23c2e0c02ebd507270"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtains a handle for the provided key in the map for future use.  <br /></td></tr>
@@ -233,7 +234,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memdesc:a93e1ea76edf1313ced017ac98b2429d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invariantly inserts or overwrites a user struct into the map.  <br /></td></tr>
 <tr class="separator:a93e1ea76edf1313ced017ac98b2429d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a86681b949a450c6c8b20767ef247bd75"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Handle.html">CCC_Handle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#a86681b949a450c6c8b20767ef247bd75">CCC_array_tree_map_remove_key_value</a> (<a class="el" href="structCCC__Array__tree__map.html">CCC_Array_tree_map</a> *map, void *type_output)</td></tr>
-<tr class="memdesc:a86681b949a450c6c8b20767ef247bd75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the key value in the map storing the old value, if present, in the struct containing type_output provided by the user.  <br /></td></tr>
+<tr class="memdesc:a86681b949a450c6c8b20767ef247bd75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the key value in the map storing the old value, if present, in the type_output provided by the user.  <br /></td></tr>
 <tr class="separator:a86681b949a450c6c8b20767ef247bd75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6dcdac3020da2d6868b33863462556af"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Array__tree__map__handle.html">CCC_Array_tree_map_handle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#a6dcdac3020da2d6868b33863462556af">CCC_array_tree_map_handle</a> (<a class="el" href="structCCC__Array__tree__map.html">CCC_Array_tree_map</a> const *map, void const *key)</td></tr>
 <tr class="memdesc:a6dcdac3020da2d6868b33863462556af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtains a handle for the provided key in the map for future use.  <br /></td></tr>
@@ -373,7 +374,7 @@ This graph shows which files directly or indirectly include this file:</div>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="array__tree__map_8h.html#aed55ef4dcf4466a9ea1fc0f84e938422">CCC_Array_tree_map_handle</a>){CCC_private_array_tree_map_and_modify_with(   \</div>
 <div class="line">        map_array_pointer, type_name, closure_over_T)}</div>
-<div class="ttc" id="aarray__tree__map_8h_html_aed55ef4dcf4466a9ea1fc0f84e938422"><div class="ttname"><a href="array__tree__map_8h.html#aed55ef4dcf4466a9ea1fc0f84e938422">CCC_Array_tree_map_handle</a></div><div class="ttdeci">union CCC_Array_tree_map_handle_wrap CCC_Array_tree_map_handle</div><div class="ttdoc">A container specific handle used to implement the Handle Interface.</div><div class="ttdef"><b>Definition:</b> array_tree_map.h:85</div></div>
+<div class="ttc" id="aarray__tree__map_8h_html_aed55ef4dcf4466a9ea1fc0f84e938422"><div class="ttname"><a href="array__tree__map_8h.html#aed55ef4dcf4466a9ea1fc0f84e938422">CCC_Array_tree_map_handle</a></div><div class="ttdeci">union CCC_Array_tree_map_handle_wrap CCC_Array_tree_map_handle</div><div class="ttdoc">A container specific handle used to implement the Handle Interface.</div><div class="ttdef"><b>Definition:</b> array_tree_map.h:90</div></div>
 </div><!-- fragment -->
 <p>Modify an Occupied handle with a closure over user type T. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -610,7 +611,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <div class="line">    array_tree_map_key_order,</div>
 <div class="line">    (<span class="keyword">static</span> Small_fixed_map){}</div>
 <div class="line">);</div>
-<div class="ttc" id="aarray__tree__map_8h_html_a889e90409ac17a1052715f28eadac38e"><div class="ttname"><a href="array__tree__map_8h.html#a889e90409ac17a1052715f28eadac38e">CCC_array_tree_map_declare_fixed</a></div><div class="ttdeci">#define CCC_array_tree_map_declare_fixed(fixed_map_type_name, type_name, capacity)</div><div class="ttdoc">Declare a fixed size map type for use in the stack, heap, or data segment. Does not return a value.</div><div class="ttdef"><b>Definition:</b> array_tree_map.h:151</div></div>
+<div class="ttc" id="aarray__tree__map_8h_html_a889e90409ac17a1052715f28eadac38e"><div class="ttname"><a href="array__tree__map_8h.html#a889e90409ac17a1052715f28eadac38e">CCC_array_tree_map_declare_fixed</a></div><div class="ttdeci">#define CCC_array_tree_map_declare_fixed(fixed_map_type_name, type_name, capacity)</div><div class="ttdoc">Declare a fixed size map type for use in the stack, heap, or data segment. Does not return a value.</div><div class="ttdef"><b>Definition:</b> array_tree_map.h:156</div></div>
 </div><!-- fragment --><p>Similarly, a fixed size map can be used on the stack.</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>Val</div>
 <div class="line">{</div>
@@ -1144,9 +1145,9 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>){<a class="code hl_function" href="array__tree__map_8h.html#a86681b949a450c6c8b20767ef247bd75">CCC_array_tree_map_remove_key_value</a>(                         \</div>
 <div class="line">                      (array_tree_map_pointer), (type_output_pointer))         \</div>
 <div class="line">                      .private}</div>
-<div class="ttc" id="aarray__tree__map_8h_html_a86681b949a450c6c8b20767ef247bd75"><div class="ttname"><a href="array__tree__map_8h.html#a86681b949a450c6c8b20767ef247bd75">CCC_array_tree_map_remove_key_value</a></div><div class="ttdeci">CCC_Handle CCC_array_tree_map_remove_key_value(CCC_Array_tree_map *map, void *type_output)</div><div class="ttdoc">Removes the key value in the map storing the old value, if present, in the struct containing type_out...</div></div>
+<div class="ttc" id="aarray__tree__map_8h_html_a86681b949a450c6c8b20767ef247bd75"><div class="ttname"><a href="array__tree__map_8h.html#a86681b949a450c6c8b20767ef247bd75">CCC_array_tree_map_remove_key_value</a></div><div class="ttdeci">CCC_Handle CCC_array_tree_map_remove_key_value(CCC_Array_tree_map *map, void *type_output)</div><div class="ttdoc">Removes the key value in the map storing the old value, if present, in the type_output provided by th...</div></div>
 </div><!-- fragment -->
-<p>Removes the key value in the map storing the old value, if present, in the struct containing key value type provided by the user. </p>
+<p>Removes the key value in the map storing the old value, if present, in the key value type provided by the user. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">array_tree_map_pointer</td><td>the pointer to the tree map. </td></tr>
@@ -2812,7 +2813,7 @@ do not try to access data in the table manually with a handle. Always use this p
       </table>
 </div><div class="memdoc">
 
-<p>Removes the key value in the map storing the old value, if present, in the struct containing type_output provided by the user. </p>
+<p>Removes the key value in the map storing the old value, if present, in the type_output provided by the user. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map</td><td>the pointer to the tree map. </td></tr>

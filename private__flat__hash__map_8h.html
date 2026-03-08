@@ -912,19 +912,10 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    {                                                                          \</div>
-<div class="line">        .data = NULL,                                                          \</div>
-<div class="line">        .tag = NULL,                                                           \</div>
-<div class="line">        .count = 0,                                                            \</div>
-<div class="line">        .remain = 0,                                                           \</div>
-<div class="line">        .mask = 0,                                                             \</div>
-<div class="line">        .sizeof_type = <span class="keyword">sizeof</span>(private_type_name),                              \</div>
-<div class="line">        .key_offset = offsetof(private_type_name, private_key_field),          \</div>
-<div class="line">        .compare = (private_key_compare),                                      \</div>
-<div class="line">        .hash = (private_hash),                                                \</div>
-<div class="line">        .allocate = (private_allocate),                                        \</div>
-<div class="line">        .context = (private_context),                                          \</div>
-<div class="line">    }</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__hash__map_8h.html#a597c15f2d38b88417b025bf9d7cb4a52">CCC_private_flat_hash_map_initialize</a>(                                      \</div>
+<div class="line">        private_type_name, private_key_field, private_hash,                    \</div>
+<div class="line">        private_key_compare, private_allocate, private_context, 0, NULL)</div>
+<div class="ttc" id="aprivate__flat__hash__map_8h_html_a597c15f2d38b88417b025bf9d7cb4a52"><div class="ttname"><a href="private__flat__hash__map_8h.html#a597c15f2d38b88417b025bf9d7cb4a52">CCC_private_flat_hash_map_initialize</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_initialize( private_type_name, private_key_field, private_hash, private_key_compare, private_allocate, private_context, private_capacity, private_fixed_map_pointer)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:272</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -994,7 +985,6 @@ Variables</h2></td></tr>
 <div class="line">        private_map;                                                           \</div>
 <div class="line">    }))</div>
 <div class="ttc" id="aflat__hash__map_8h_html_abde2c0903a9cb74a55ae6e22b58d0c80"><div class="ttname"><a href="flat__hash__map_8h.html#abde2c0903a9cb74a55ae6e22b58d0c80">CCC_flat_hash_map_reserve</a></div><div class="ttdeci">CCC_Result CCC_flat_hash_map_reserve(CCC_Flat_hash_map *map, size_t to_add, CCC_Allocator *allocate)</div><div class="ttdoc">Reserve space required to add a specified number of elements to the map. If the current capacity is s...</div></div>
-<div class="ttc" id="aprivate__flat__hash__map_8h_html_a597c15f2d38b88417b025bf9d7cb4a52"><div class="ttname"><a href="private__flat__hash__map_8h.html#a597c15f2d38b88417b025bf9d7cb4a52">CCC_private_flat_hash_map_initialize</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_initialize( private_type_name, private_key_field, private_hash, private_key_compare, private_allocate, private_context, private_capacity, private_fixed_map_pointer)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:272</div></div>
 <div class="ttc" id="astructCCC__Flat__hash__map_html"><div class="ttname"><a href="structCCC__Flat__hash__map.html">CCC_Flat_hash_map</a></div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:141</div></div>
 </div><!-- fragment --><p>Initializes the flat hash map with the specified capacity. </p>
 

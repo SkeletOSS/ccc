@@ -124,8 +124,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The Array Adaptive Map Interface. </p>
 <p>A array adaptive map is a contiguously stored map offering storage and retrieval by key. Because the data structure is self-optimizing it is not a suitable map in a realtime environment where strict runtime bounds are needed. Also, searching the map is not a const thread-safe operation as indicated by the function signatures. The map is optimized upon every new search in attempt to adapt to the usage pattern. In many cases the self-optimizing structure of the map may be beneficial when considering non-uniform access patterns. In the best case, repeated searches of the same value yield an <code>O(1)</code> access and many other frequently searched values will remain close to the root of the map.</p>
-<p>The array version of the adaptive map promises contiguous storage and random access if needed. Handles remain valid until an element is removed even if other elements are inserted, other elements are removed, or resizing occurs. All elements in the map track their relationships to one another via indices in the array. Therefore, this data structure can be relocated, copied, serialized, or written to disk and all internal data structure references will remain valid. Insertion may invoke an O(N) operation if resizing occurs. Finally, if allocation is prohibited upon initialization, and the user provides a capacity of <code>N</code> upon initialization, one slot will be used for a sentinel node. The user available capacity is <code>N - 1</code>.</p>
+<p>The array version of the adaptive map promises contiguous storage and random access if needed with handles. Handles remain valid until an element is removed even if other elements are inserted, other elements are removed, or resizing occurs. All elements in the map track their relationships to one another via indices in the array. Therefore, this data structure can be relocated, copied, serialized, or written to disk and all internal data structure references will remain valid. Insertion may invoke an O(N) operation if resizing occurs. Finally, if allocation is prohibited upon initialization, and the user provides a capacity of <code>C</code> upon initialization, one slot will be used for a sentinel node. The user available capacity is <code>C - 1</code>.</p>
 <p>All interface functions accept <code>void *</code> references to either the key or the full type the user is storing in the map. Therefore, it is important for the user to be aware if they are passing a reference to the key or the full type depending on the function requirements.</p>
+<p>To use the map as a set, when only keys are needed, wrap a type in a struct or union. For example a set of <code>int</code> could be represented by creating a type <code>struct My_int {int key;};</code>. All interface functions can then be used normally.</p>
 <p>To shorten names in the interface, define the following preprocessor directive at the top of your file.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define ARRAY_ADAPTIVE_MAP_USING_NAMESPACE_CCC</span></div>
 </div><!-- fragment --><p>All types and functions can then be written without the <code>CCC_</code> prefix. </p>
@@ -193,10 +194,10 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr><td class="ititle" colspan="2"><p>Obtain and operate on container handles for efficient queries when non-trivial control flow is needed. </p>
 </td></tr>
 <tr class="memitem:ae38d277c09750eaf0a57250b8122f808"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#ae38d277c09750eaf0a57250b8122f808">CCC_array_adaptive_map_swap_handle_wrap</a>(map_pointer,  type_output_pointer)</td></tr>
-<tr class="memdesc:ae38d277c09750eaf0a57250b8122f808"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invariantly inserts the key value wrapping type.  <br /></td></tr>
+<tr class="memdesc:ae38d277c09750eaf0a57250b8122f808"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invariantly inserts the key value type.  <br /></td></tr>
 <tr class="separator:ae38d277c09750eaf0a57250b8122f808"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69c9caa87fd345aeedb51f1a6bbd7051"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a69c9caa87fd345aeedb51f1a6bbd7051">CCC_array_adaptive_map_try_insert_wrap</a>(map_pointer,  type_pointer)</td></tr>
-<tr class="memdesc:a69c9caa87fd345aeedb51f1a6bbd7051"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts to insert the key value wrapping type.  <br /></td></tr>
+<tr class="memdesc:a69c9caa87fd345aeedb51f1a6bbd7051"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts to insert the key value type.  <br /></td></tr>
 <tr class="separator:a69c9caa87fd345aeedb51f1a6bbd7051"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe39139c57071844161f3bfdb9a38b14"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#abe39139c57071844161f3bfdb9a38b14">CCC_array_adaptive_map_try_insert_with</a>(map_pointer,  key,  type_compound_literal...)</td></tr>
 <tr class="memdesc:abe39139c57071844161f3bfdb9a38b14"><td class="mdescLeft">&#160;</td><td class="mdescRight">lazily insert type_compound_literal into the map at key if key is absent.  <br /></td></tr>
@@ -223,10 +224,10 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memdesc:a331d96f78d0c0706c60a44eb53fd29ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the handle from the map if Occupied.  <br /></td></tr>
 <tr class="separator:a331d96f78d0c0706c60a44eb53fd29ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12e3313f0460ecdb3140ad48de2e3d61"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Handle.html">CCC_Handle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a12e3313f0460ecdb3140ad48de2e3d61">CCC_array_adaptive_map_swap_handle</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *map, void *type_output)</td></tr>
-<tr class="memdesc:a12e3313f0460ecdb3140ad48de2e3d61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invariantly inserts the key value wrapping type.  <br /></td></tr>
+<tr class="memdesc:a12e3313f0460ecdb3140ad48de2e3d61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invariantly inserts the key value type.  <br /></td></tr>
 <tr class="separator:a12e3313f0460ecdb3140ad48de2e3d61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a615526c758a02c6c994784d21eb756fe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Handle.html">CCC_Handle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a615526c758a02c6c994784d21eb756fe">CCC_array_adaptive_map_try_insert</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *map, void const *type)</td></tr>
-<tr class="memdesc:a615526c758a02c6c994784d21eb756fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts to insert the key value wrapping type.  <br /></td></tr>
+<tr class="memdesc:a615526c758a02c6c994784d21eb756fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts to insert the key value type.  <br /></td></tr>
 <tr class="separator:a615526c758a02c6c994784d21eb756fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aacdf570b3ea9a14f0e6c3e32c30bb29c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Handle.html">CCC_Handle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#aacdf570b3ea9a14f0e6c3e32c30bb29c">CCC_array_adaptive_map_insert_or_assign</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *map, void const *type)</td></tr>
 <tr class="memdesc:aacdf570b3ea9a14f0e6c3e32c30bb29c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invariantly inserts or overwrites a user struct into the map.  <br /></td></tr>
@@ -373,7 +374,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="array__adaptive__map_8h.html#a67ce76b9053351d5eabb334544cb2530">CCC_Array_adaptive_map_handle</a>){                                          \</div>
 <div class="line">        CCC_private_array_adaptive_map_and_modify_with(                        \</div>
 <div class="line">            array_pointer, type_name, closure_over_T)}</div>
-<div class="ttc" id="aarray__adaptive__map_8h_html_a67ce76b9053351d5eabb334544cb2530"><div class="ttname"><a href="array__adaptive__map_8h.html#a67ce76b9053351d5eabb334544cb2530">CCC_Array_adaptive_map_handle</a></div><div class="ttdeci">union CCC_Array_adaptive_map_handle_wrap CCC_Array_adaptive_map_handle</div><div class="ttdoc">A container specific handle used to implement the Handle Interface.</div><div class="ttdef"><b>Definition:</b> array_adaptive_map.h:79</div></div>
+<div class="ttc" id="aarray__adaptive__map_8h_html_a67ce76b9053351d5eabb334544cb2530"><div class="ttname"><a href="array__adaptive__map_8h.html#a67ce76b9053351d5eabb334544cb2530">CCC_Array_adaptive_map_handle</a></div><div class="ttdeci">union CCC_Array_adaptive_map_handle_wrap CCC_Array_adaptive_map_handle</div><div class="ttdoc">A container specific handle used to implement the Handle Interface.</div><div class="ttdef"><b>Definition:</b> array_adaptive_map.h:83</div></div>
 </div><!-- fragment -->
 <p>Modify an Occupied handle with a closure over user type T. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -608,7 +609,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <div class="line">    array_adaptive_map_key_order,</div>
 <div class="line">    (<span class="keyword">static</span> Small_fixed_map){}</div>
 <div class="line">);</div>
-<div class="ttc" id="aarray__adaptive__map_8h_html_aa5cd7d6e3b43cc6934c045378e3e3875"><div class="ttname"><a href="array__adaptive__map_8h.html#aa5cd7d6e3b43cc6934c045378e3e3875">CCC_array_adaptive_map_declare_fixed</a></div><div class="ttdeci">#define CCC_array_adaptive_map_declare_fixed(fixed_map_type_name, type_name, capacity)</div><div class="ttdoc">Declare a fixed size map type for use in the stack, heap, or data segment. Does not return a value.</div><div class="ttdef"><b>Definition:</b> array_adaptive_map.h:144</div></div>
+<div class="ttc" id="aarray__adaptive__map_8h_html_aa5cd7d6e3b43cc6934c045378e3e3875"><div class="ttname"><a href="array__adaptive__map_8h.html#aa5cd7d6e3b43cc6934c045378e3e3875">CCC_array_adaptive_map_declare_fixed</a></div><div class="ttdeci">#define CCC_array_adaptive_map_declare_fixed(fixed_map_type_name, type_name, capacity)</div><div class="ttdoc">Declare a fixed size map type for use in the stack, heap, or data segment. Does not return a value.</div><div class="ttdef"><b>Definition:</b> array_adaptive_map.h:148</div></div>
 </div><!-- fragment --><p>Similarly, a fixed size map can be used on the stack.</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>Val</div>
 <div class="line">{</div>
@@ -1144,7 +1145,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map_pointer</td><td>the pointer to the adaptive map. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">type_output_pointer</td><td>the handle to the user type wrapping map elem. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">type_output_pointer</td><td>the handle to the user type map elem. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1181,18 +1182,18 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>){<a class="code hl_function" href="array__adaptive__map_8h.html#a12e3313f0460ecdb3140ad48de2e3d61">CCC_array_adaptive_map_swap_handle</a>((map_pointer),            \</div>
 <div class="line">                                                     (type_output_pointer))    \</div>
 <div class="line">                      .private}</div>
-<div class="ttc" id="aarray__adaptive__map_8h_html_a12e3313f0460ecdb3140ad48de2e3d61"><div class="ttname"><a href="array__adaptive__map_8h.html#a12e3313f0460ecdb3140ad48de2e3d61">CCC_array_adaptive_map_swap_handle</a></div><div class="ttdeci">CCC_Handle CCC_array_adaptive_map_swap_handle(CCC_Array_adaptive_map *map, void *type_output)</div><div class="ttdoc">Invariantly inserts the key value wrapping type.</div></div>
+<div class="ttc" id="aarray__adaptive__map_8h_html_a12e3313f0460ecdb3140ad48de2e3d61"><div class="ttname"><a href="array__adaptive__map_8h.html#a12e3313f0460ecdb3140ad48de2e3d61">CCC_array_adaptive_map_swap_handle</a></div><div class="ttdeci">CCC_Handle CCC_array_adaptive_map_swap_handle(CCC_Array_adaptive_map *map, void *type_output)</div><div class="ttdoc">Invariantly inserts the key value type.</div></div>
 </div><!-- fragment -->
-<p>Invariantly inserts the key value wrapping type. </p>
+<p>Invariantly inserts the key value type. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map_pointer</td><td>the pointer to the adaptive map. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">type_output_pointer</td><td>the handle to the user type wrapping map elem. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">type_output_pointer</td><td>the handle to the user type map elem. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>a compound literal reference to a handle. If Vacant, no prior element with key existed and the type wrapping type_output remains unchanged. If Occupied the old value is written to the type wrapping type_output and may be unwrapped to view. If more space is needed but allocation fails or has been forbidden, an insert error is set.</dd></dl>
-<p>Note that this function may write to the struct containing type_output and wraps it in a handle to provide information about the old value. </p>
+<dl class="section return"><dt>Returns</dt><dd>a compound literal reference to a handle. If Vacant, no prior element with key existed and the type type_output remains unchanged. If Occupied the old value is written to the type type_output and may be unwrapped to view. If more space is needed but allocation fails or has been forbidden, an insert error is set.</dd></dl>
+<p>Note that this function may write to type_output and wraps it in a handle to provide information about the old value. </p>
 
 </div>
 </div>
@@ -1273,11 +1274,11 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <div class="line">        CCC_array_adaptive_map_try_insert((map_pointer), (type_pointer))       \</div>
 <div class="line">            .private}</div>
 </div><!-- fragment -->
-<p>Attempts to insert the key value wrapping type. </p>
+<p>Attempts to insert the key value type. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map_pointer</td><td>the pointer to the map. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_pointer</td><td>the handle to the user type wrapping map elem. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_pointer</td><td>the handle to the user type map elem. </td></tr>
   </table>
   </dd>
 </dl>
@@ -2609,7 +2610,7 @@ do not try to access data in the table manually with a handle. Always use this p
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map</td><td>a pointer to the handle hash map. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type</td><td>the handle to the wrapping user struct key value. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type</td><td>the user struct key value type. </td></tr>
   </table>
   </dd>
 </dl>
@@ -2807,7 +2808,7 @@ do not try to access data in the table manually with a handle. Always use this p
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map</td><td>the pointer to the adaptive map. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">type_output</td><td>the handle to the user type wrapping map elem. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">type_output</td><td>the handle to the user type map elem. </td></tr>
   </table>
   </dd>
 </dl>
@@ -2982,16 +2983,16 @@ do not try to access data in the table manually with a handle. Always use this p
       </table>
 </div><div class="memdoc">
 
-<p>Invariantly inserts the key value wrapping type. </p>
+<p>Invariantly inserts the key value type. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map</td><td>the pointer to the adaptive map. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">type_output</td><td>the handle to the user type wrapping map elem. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">type_output</td><td>the handle to the user type map elem. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>a handle. If Vacant, no prior element with key existed and the type wrapping type_output remains unchanged. If Occupied the old value is written to the type wrapping type_output and may be unwrapped to view. If more space is needed but allocation fails or has been forbidden, an insert error is set.</dd></dl>
-<p>Note that this function may write to the struct containing type_output and wraps it in a handle to provide information about the old value. </p>
+<dl class="section return"><dt>Returns</dt><dd>a handle. If Vacant, no prior element with key existed and the type type_output remains unchanged. If Occupied the old value is written to the type type_output and may be unwrapped to view. If more space is needed but allocation fails or has been forbidden, an insert error is set.</dd></dl>
+<p>Note that this function may write to type_output and wraps it in a handle to provide information about the old value. </p>
 
 </div>
 </div>
@@ -3021,11 +3022,11 @@ do not try to access data in the table manually with a handle. Always use this p
       </table>
 </div><div class="memdoc">
 
-<p>Attempts to insert the key value wrapping type. </p>
+<p>Attempts to insert the key value type. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map</td><td>the pointer to the map. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type</td><td>the handle to the user type wrapping map elem. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type</td><td>the handle to the user type map elem. </td></tr>
   </table>
   </dd>
 </dl>
