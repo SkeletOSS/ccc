@@ -141,7 +141,7 @@ multiplication we perform as simple as possible. */
 struct CCC_Flat_hash_map {
     /** User data type array. */
     void *data;
-    /** Tag array on byte following data(0). */
+    /** Tag array on byte following data. */
     struct CCC_Flat_hash_map_tag *tag;
     /** The number of user active slots. */
     size_t count;
@@ -252,6 +252,24 @@ how we ensure no fixed size type is allowed to be defined in a way to make this
 call unsafe. */
 #define CCC_private_flat_hash_map_fixed_capacity(fixed_map_type_name)          \
     (sizeof((fixed_map_type_name){}.tag) - CCC_FLAT_HASH_MAP_GROUP_COUNT)
+
+#define CCC_private_compound_literal_array_capacity(                           \
+    private_type_compound_literal_array)                                       \
+    (sizeof(private_type_compound_literal_array)                               \
+     / sizeof(*(private_type_compound_literal_array)))
+
+#define CCC_private_flat_hash_map_from_compound_literal_array(                 \
+    private_type_compound_literal_array, optional_storage_specifier...)        \
+    (optional_storage_specifier struct {                                       \
+        typeof(*(private_type_compound_literal_array))                         \
+            data[CCC_private_compound_literal_array_capacity(                  \
+                private_type_compound_literal_array)];                         \
+        alignas(CCC_FLAT_HASH_MAP_GROUP_COUNT) struct CCC_Flat_hash_map_tag    \
+            tag[CCC_private_compound_literal_array_capacity(                   \
+                    private_type_compound_literal_array)                       \
+                + CCC_FLAT_HASH_MAP_GROUP_COUNT];                              \
+    }) {                                                                       \
+    }
 
 /** @internal Initialization is tricky but we simplify by only accepting a
 pointer to the map this pointer could be any of the following.
@@ -365,39 +383,48 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
 /** @internal We can cut out boilerplate by assuming fixed size map. */
 #define CCC_private_flat_hash_map_with_context_compound_literal(               \
     private_key_field, private_hash, private_key_compare, private_context,     \
-    private_compound_literal)                                                  \
+    private_compound_literal, private_optional_storage_specifier...)           \
     {                                                                          \
-        .data = &(private_compound_literal),                                   \
+        .data = &CCC_private_flat_hash_map_from_compound_literal_array(        \
+            private_compound_literal, private_optional_storage_specifier),     \
         .tag = NULL,                                                           \
         .count = 0,                                                            \
-        .remain = ((CCC_private_flat_hash_map_fixed_capacity(                  \
-                        typeof(private_compound_literal))                      \
+        .remain = ((CCC_private_compound_literal_array_capacity(               \
+                        private_compound_literal)                              \
                     / (size_t)8)                                               \
                    * (size_t)7),                                               \
-        .mask = ((CCC_private_flat_hash_map_fixed_capacity(                    \
-                      typeof(private_compound_literal))                        \
-                  > (size_t)0)                                                 \
-                     ? (CCC_private_flat_hash_map_fixed_capacity(              \
-                            typeof(private_compound_literal))                  \
-                        - (size_t)1)                                           \
-                     : (size_t)0),                                             \
-        .sizeof_type = sizeof(*(private_compound_literal.data)), /*NOLINT*/    \
-        .key_offset                                                            \
-        = offsetof(typeof(*(private_compound_literal.data)), /*NOLINT*/        \
-                   private_key_field),                                         \
+        .mask = CCC_private_compound_literal_array_capacity(                   \
+                    private_compound_literal)                                  \
+              - (size_t)1,                                                     \
+        .sizeof_type = sizeof(*(private_compound_literal)),         /*NOLINT*/ \
+        .key_offset = offsetof(typeof(*(private_compound_literal)), /*NOLINT*/ \
+                               private_key_field),                             \
         .compare = (private_key_compare),                                      \
         .hash = (private_hash),                                                \
         .allocate = NULL,                                                      \
         .context = (private_context),                                          \
-    }
+    };                                                                         \
+    static_assert(                                                             \
+        CCC_private_compound_literal_array_capacity(private_compound_literal)  \
+            >= CCC_FLAT_HASH_MAP_GROUP_COUNT,                                  \
+        "fixed size map must have capacity >= CCC_FLAT_HASH_MAP_GROUP_COUNT "  \
+        "(8 or 16 depending on platform)");                                    \
+    static_assert(                                                             \
+        (CCC_private_compound_literal_array_capacity(private_compound_literal) \
+         & (CCC_private_compound_literal_array_capacity(                       \
+                private_compound_literal)                                      \
+            - 1))                                                              \
+            == 0,                                                              \
+        "fixed size map must be a power of 2 capacity (32, 64, "               \
+        "128, 256, etc.)")
 
 /** @internal We can cut out boilerplate by assuming fixed size map. */
 #define CCC_private_flat_hash_map_with_compound_literal(                       \
     private_key_field, private_hash, private_key_compare,                      \
-    private_compound_literal)                                                  \
+    private_compound_literal, private_optional_storage_specifier...)           \
     CCC_private_flat_hash_map_with_context_compound_literal(                   \
         private_key_field, private_hash, private_key_compare, NULL,            \
-        private_compound_literal)
+        private_compound_literal, private_optional_storage_specifier)
 
 /** @internal */
 #define CCC_private_flat_hash_map_with_context_allocator(                      \

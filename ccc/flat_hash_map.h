@@ -498,6 +498,8 @@ context.
 @param[in] hash the CCC_Key_hasher function provided by the user.
 @param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] compound_literal the fixed map compound literal.
+@param[in] optional_storage_specifier lifetime specifier such as static for the
+fixed size map in the scope at which it is allocated or declared.
 @return the flat hash map directly initialized on the right hand side of the
 equality operator
 (e.g. CCC_Flat_hash_map map = flat_hash_map_with_compound_literal(...);)
@@ -524,10 +526,11 @@ static Flat_hash_map static_map = flat_hash_map_with_compound_literal(
 ```
 
 This saves on boilerplate compared to the raw initializer. */
-#define CCC_flat_hash_map_with_compound_literal(key_field, hash, compare,      \
-                                                compound_literal)              \
-    CCC_private_flat_hash_map_with_compound_literal(key_field, hash, compare,  \
-                                                    compound_literal)
+#define CCC_flat_hash_map_with_compound_literal(                               \
+    key_field, hash, compare, compound_literal, optional_storage_specifier...) \
+    CCC_private_flat_hash_map_with_compound_literal(                           \
+        key_field, hash, compare, compound_literal,                            \
+        optional_storage_specifier)
 
 /** @brief Initialize a fixed map at compile time or runtime from its previously
 declared type using a compound literal with no allocation permissions or
@@ -537,6 +540,8 @@ context.
 @param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] context a pointer to any context needed for the map.
 @param[in] compound_literal the fixed map compound literal.
+@param[in] optional_storage_specifier lifetime specifier such as static for the
+fixed size map in the scope at which it is allocated or declared.
 @return the flat hash map directly initialized on the right hand side of the
 equality operator
 (e.g. CCC_Flat_hash_map map = flat_hash_map_with_context_compound_literal(...);)
@@ -565,9 +570,11 @@ static Flat_hash_map static_map = flat_hash_map_with_context_compound_literal(
 
 This saves on boilerplate compared to the raw initializer. */
 #define CCC_flat_hash_map_with_context_compound_literal(                       \
-    key_field, hash, compare, context, compound_literal)                       \
+    key_field, hash, compare, context, compound_literal,                       \
+    optional_storage_specifier...)                                             \
     CCC_private_flat_hash_map_with_context_compound_literal(                   \
-        key_field, hash, compare, context, compound_literal)
+        key_field, hash, compare, context, compound_literal,                   \
+        optional_storage_specifier)
 
 /** @brief Initialize an empty dynamic map at compile or runtime with an
 allocator.

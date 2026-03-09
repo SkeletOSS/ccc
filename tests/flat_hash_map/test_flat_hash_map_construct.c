@@ -31,27 +31,28 @@ flat_hash_map_int_order(CCC_Key_comparator_context const order) {
 }
 
 static CCC_Flat_hash_map static_fh = flat_hash_map_with_compound_literal(
-    key, flat_hash_map_int_to_u64, flat_hash_map_id_order, (Small_fixed_map){});
+    key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
+    (struct Val[SMALL_FIXED_CAP]){});
 
 check_static_begin(flat_hash_map_test_static_initialize) {
     check(flat_hash_map_capacity(&static_fh).count, SMALL_FIXED_CAP);
     check(flat_hash_map_count(&static_fh).count, 0);
-    check(validate(&static_fh), true);
-    check(is_empty(&static_fh), true);
+    check(validate(&static_fh), CCC_TRUE);
+    check(is_empty(&static_fh), CCC_TRUE);
     struct Val def = {.key = 137, .val = 0};
 
     /* Returning a vacant entry is possible when modification is attempted. */
     Flat_hash_map_entry *ent
         = and_modify(entry_wrap(&static_fh, &def.key), mod);
-    check(occupied(ent), false);
-    check((unwrap(ent) == NULL), true);
+    check(occupied(ent), CCC_FALSE);
+    check((unwrap(ent) == NULL), CCC_TRUE);
 
     /* Inserting default value before an in place modification is possible. */
     struct Val *v = or_insert(entry_wrap(&static_fh, &def.key), &def);
-    check(v != NULL, true);
+    check(v != NULL, CCC_TRUE);
     v->val++;
     struct Val const *const inserted = get_key_value(&static_fh, &def.key);
-    check((inserted != NULL), true);
+    check((inserted != NULL), CCC_TRUE);
     check(inserted->key, 137);
     check(inserted->val, 1);
 
@@ -59,7 +60,7 @@ check_static_begin(flat_hash_map_test_static_initialize) {
        context input is needed. */
     struct Val *v2
         = or_insert(and_modify(entry_wrap(&static_fh, &def.key), mod), &def);
-    check((v2 != NULL), true);
+    check((v2 != NULL), CCC_TRUE);
     check(inserted->key, 137);
     check(v2->val, 6);
 
@@ -68,7 +69,7 @@ check_static_begin(flat_hash_map_test_static_initialize) {
     struct Val *v3 = or_insert(
         and_context_modify(entry_wrap(&static_fh, &def.key), modw, &def.key),
         &def);
-    check((v3 != NULL), true);
+    check((v3 != NULL), CCC_TRUE);
     check(inserted->key, 137);
     check(v3->val, 137);
     check_end();
@@ -77,24 +78,24 @@ check_static_begin(flat_hash_map_test_static_initialize) {
 check_static_begin(flat_hash_map_test_with_literal) {
     Flat_hash_map fh = flat_hash_map_with_compound_literal(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
-        (Small_fixed_map){});
+        (struct Val[SMALL_FIXED_CAP]){});
     check(flat_hash_map_capacity(&fh).count, SMALL_FIXED_CAP);
     check(flat_hash_map_count(&fh).count, 0);
-    check(validate(&fh), true);
-    check(is_empty(&fh), true);
+    check(validate(&fh), CCC_TRUE);
+    check(is_empty(&fh), CCC_TRUE);
     struct Val def = {.key = 137, .val = 0};
 
     /* Returning a vacant entry is possible when modification is attempted. */
     Flat_hash_map_entry *ent = and_modify(entry_wrap(&fh, &def.key), mod);
-    check(occupied(ent), false);
-    check((unwrap(ent) == NULL), true);
+    check(occupied(ent), CCC_FALSE);
+    check((unwrap(ent) == NULL), CCC_TRUE);
 
     /* Inserting default value before an in place modification is possible. */
     struct Val *v = or_insert(entry_wrap(&fh, &def.key), &def);
-    check(v != NULL, true);
+    check(v != NULL, CCC_TRUE);
     v->val++;
     struct Val const *const inserted = get_key_value(&fh, &def.key);
-    check((inserted != NULL), true);
+    check((inserted != NULL), CCC_TRUE);
     check(inserted->key, 137);
     check(inserted->val, 1);
 
@@ -102,7 +103,7 @@ check_static_begin(flat_hash_map_test_with_literal) {
        context input is needed. */
     struct Val *v2
         = or_insert(and_modify(entry_wrap(&fh, &def.key), mod), &def);
-    check((v2 != NULL), true);
+    check((v2 != NULL), CCC_TRUE);
     check(inserted->key, 137);
     check(v2->val, 6);
 
@@ -110,7 +111,7 @@ check_static_begin(flat_hash_map_test_with_literal) {
        possible with slightly different signature. */
     struct Val *v3 = or_insert(
         and_context_modify(entry_wrap(&fh, &def.key), modw, &def.key), &def);
-    check((v3 != NULL), true);
+    check((v3 != NULL), CCC_TRUE);
     check(inserted->key, 137);
     check(v3->val, 137);
     check_end();
@@ -119,7 +120,7 @@ check_static_begin(flat_hash_map_test_with_literal) {
 check_static_begin(flat_hash_map_test_copy_no_allocate) {
     Flat_hash_map source = flat_hash_map_with_compound_literal(
         key, flat_hash_map_int_zero, flat_hash_map_id_order,
-        (Small_fixed_map){});
+        (struct Val[SMALL_FIXED_CAP]){});
     Flat_hash_map destination = flat_hash_map_initialize(
         struct Val, key, flat_hash_map_int_zero, flat_hash_map_id_order, NULL,
         NULL, STANDARD_FIXED_CAP, &(Standard_fixed_map){});
@@ -127,7 +128,7 @@ check_static_begin(flat_hash_map_test_copy_no_allocate) {
     (void)swap_entry(&source, &(struct Val){.key = 1, .val = 1});
     (void)swap_entry(&source, &(struct Val){.key = 2, .val = 2});
     check(count(&source).count, 3);
-    check(is_empty(&destination), true);
+    check(is_empty(&destination), CCC_TRUE);
     CCC_Result res = flat_hash_map_copy(&destination, &source, NULL);
     check(res, CCC_RESULT_OK);
     check(count(&destination).count, count(&source).count);
@@ -139,24 +140,24 @@ check_static_begin(flat_hash_map_test_copy_no_allocate) {
         check(occupied(&source_e), occupied(&destination_e));
     }
     check(is_empty(&source), is_empty(&destination));
-    check(is_empty(&destination), true);
+    check(is_empty(&destination), CCC_TRUE);
     check_end();
 }
 
 check_static_begin(flat_hash_map_test_copy_no_allocate_fail) {
     Flat_hash_map source = flat_hash_map_with_compound_literal(
         key, flat_hash_map_int_zero, flat_hash_map_id_order,
-        (Standard_fixed_map){});
+        (struct Val[STANDARD_FIXED_CAP]){});
     Flat_hash_map destination = flat_hash_map_with_compound_literal(
         key, flat_hash_map_int_zero, flat_hash_map_id_order,
-        (Small_fixed_map){});
+        (struct Val[SMALL_FIXED_CAP]){});
     (void)swap_entry(&source, &(struct Val){.key = 0});
     (void)swap_entry(&source, &(struct Val){.key = 1, .val = 1});
     (void)swap_entry(&source, &(struct Val){.key = 2, .val = 2});
     check(count(&source).count, 3);
-    check(is_empty(&destination), true);
+    check(is_empty(&destination), CCC_TRUE);
     CCC_Result res = flat_hash_map_copy(&destination, &source, NULL);
-    check(res != CCC_RESULT_OK, true);
+    check(res != CCC_RESULT_OK, CCC_TRUE);
     check_end();
 }
 
@@ -172,7 +173,7 @@ check_static_begin(flat_hash_map_test_copy_allocate) {
             {.key = 2, .val = 2},
         });
     check(count(&source).count, 3);
-    check(is_empty(&destination), true);
+    check(is_empty(&destination), CCC_TRUE);
     CCC_Result res = flat_hash_map_copy(&destination, &source, std_allocate);
     check(res, CCC_RESULT_OK);
     check(count(&destination).count, count(&source).count);
@@ -184,7 +185,7 @@ check_static_begin(flat_hash_map_test_copy_allocate) {
         check(occupied(&source_e), occupied(&destination_e));
     }
     check(is_empty(&source), is_empty(&destination));
-    check(is_empty(&destination), true);
+    check(is_empty(&destination), CCC_TRUE);
     check_end({
         (void)flat_hash_map_clear_and_free(&source, NULL);
         (void)flat_hash_map_clear_and_free(&destination, NULL);
@@ -202,9 +203,9 @@ check_static_begin(flat_hash_map_test_copy_allocate_fail) {
     (void)swap_entry(&source, &(struct Val){.key = 1, .val = 1});
     (void)swap_entry(&source, &(struct Val){.key = 2, .val = 2});
     check(count(&source).count, 3);
-    check(is_empty(&destination), true);
+    check(is_empty(&destination), CCC_TRUE);
     CCC_Result res = flat_hash_map_copy(&destination, &source, NULL);
-    check(res != CCC_RESULT_OK, true);
+    check(res != CCC_RESULT_OK, CCC_TRUE);
     check_end({ (void)flat_hash_map_clear_and_free(&source, NULL); });
 }
 
@@ -212,7 +213,7 @@ check_static_begin(flat_hash_map_test_empty) {
     Flat_hash_map fh = flat_hash_map_initialize(
         struct Val, key, flat_hash_map_int_zero, flat_hash_map_id_order, NULL,
         NULL, SMALL_FIXED_CAP, &(Small_fixed_map){});
-    check(is_empty(&fh), true);
+    check(is_empty(&fh), CCC_TRUE);
     check_end();
 }
 
@@ -224,14 +225,14 @@ check_static_begin(flat_hash_map_test_init_from) {
             {.key = 1, .val = 1},
             {.key = 2, .val = 2},
         });
-    check(validate(&map_from_list), true);
+    check(validate(&map_from_list), CCC_TRUE);
     check(count(&map_from_list).count, 3);
     size_t seen = 0;
     for (struct Val const *i = begin(&map_from_list); i != end(&map_from_list);
          i = next(&map_from_list, i)) {
         check((i->key == 0 && i->val == 0) || (i->key == 1 && i->val == 1)
                   || (i->key == 2 && i->val == 2),
-              true);
+              CCC_TRUE);
         ++seen;
     }
     check(seen, 3);
@@ -246,7 +247,7 @@ check_static_begin(flat_hash_map_test_init_from_overwrite) {
             {.key = 0, .val = 1},
             {.key = 0, .val = 2},
         });
-    check(validate(&map_from_list), true);
+    check(validate(&map_from_list), CCC_TRUE);
     check(count(&map_from_list).count, 1);
     size_t seen = 0;
     for (struct Val const *i = begin(&map_from_list); i != end(&map_from_list);
@@ -268,7 +269,7 @@ check_static_begin(flat_hash_map_test_init_from_fail) {
             {.key = 0, .val = 1},
             {.key = 0, .val = 2},
         });
-    check(validate(&map_from_list), true);
+    check(validate(&map_from_list), CCC_TRUE);
     check(count(&map_from_list).count, 0);
     size_t seen = 0;
     for (struct Val const *i = begin(&map_from_list); i != end(&map_from_list);
@@ -288,8 +289,8 @@ check_static_begin(flat_hash_map_test_init_with_capacity) {
     Flat_hash_map fh
         = flat_hash_map_with_capacity(struct Val, key, flat_hash_map_int_to_u64,
                                       flat_hash_map_id_order, std_allocate, 32);
-    check(validate(&fh), true);
-    check(flat_hash_map_capacity(&fh).count >= 32, true);
+    check(validate(&fh), CCC_TRUE);
+    check(flat_hash_map_capacity(&fh).count >= 32, CCC_TRUE);
     for (int i = 0; i < 10; ++i) {
         CCC_Entry const e = CCC_flat_hash_map_insert_or_assign(
             &fh, &(struct Val){.key = i, .val = i});
@@ -299,8 +300,8 @@ check_static_begin(flat_hash_map_test_init_with_capacity) {
     check(flat_hash_map_count(&fh).count, 10);
     size_t seen = 0;
     for (struct Val const *i = begin(&fh); i != end(&fh); i = next(&fh, i)) {
-        check(i->key >= 0 && i->key < 10, true);
-        check(i->val >= 0 && i->val < 10, true);
+        check(i->key >= 0 && i->key < 10, CCC_TRUE);
+        check(i->val >= 0 && i->val < 10, CCC_TRUE);
         check(i->val, i->key);
         ++seen;
     }
@@ -313,7 +314,7 @@ check_static_begin(flat_hash_map_test_init_with_capacity_no_op) {
     Flat_hash_map fh
         = flat_hash_map_with_capacity(struct Val, key, flat_hash_map_int_to_u64,
                                       flat_hash_map_id_order, std_allocate, 0);
-    check(validate(&fh), true);
+    check(validate(&fh), CCC_TRUE);
     check(flat_hash_map_capacity(&fh).count, 0);
     check(flat_hash_map_count(&fh).count, 0);
     CCC_Entry const e = CCC_flat_hash_map_insert_or_assign(
@@ -327,7 +328,7 @@ check_static_begin(flat_hash_map_test_init_with_capacity_no_op) {
         ++seen;
     }
     check(flat_hash_map_count(&fh).count, 1);
-    check(flat_hash_map_capacity(&fh).count > 0, true);
+    check(flat_hash_map_capacity(&fh).count > 0, CCC_TRUE);
     check(seen, 1);
     check_end(flat_hash_map_clear_and_free(&fh, NULL););
 }
@@ -337,7 +338,7 @@ check_static_begin(flat_hash_map_test_init_with_capacity_fail) {
     Flat_hash_map fh
         = flat_hash_map_with_capacity(struct Val, key, flat_hash_map_int_to_u64,
                                       flat_hash_map_id_order, NULL, 32);
-    check(validate(&fh), true);
+    check(validate(&fh), CCC_TRUE);
     check(flat_hash_map_capacity(&fh).count, 0);
     CCC_Entry const e = CCC_flat_hash_map_insert_or_assign(
         &fh, &(struct Val){.key = 1, .val = 1});
@@ -358,7 +359,7 @@ check_static_begin(flat_hash_map_test_with_allocator) {
     Flat_hash_map fh = flat_hash_map_with_allocator(
         struct Val, key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         std_allocate);
-    check(validate(&fh), true);
+    check(validate(&fh), CCC_TRUE);
     check_end(flat_hash_map_clear_and_free(&fh, NULL););
 }
 
@@ -367,33 +368,36 @@ check_static_begin(flat_hash_map_test_with_context_allocator) {
     Flat_hash_map fh = flat_hash_map_with_context_allocator(
         struct Val, key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         std_allocate, &context);
-    check(validate(&fh), true);
+    check(validate(&fh), CCC_TRUE);
     check_end(flat_hash_map_clear_and_free(&fh, NULL););
 }
 
 /* This could be a really nice way to encourage users to use the map as a set.
 The only problem is that a struct containing one field is not guaranteed to be
-the same size as that field by the C standard. So without these static assert
+the same size as that field by the C standard. So without the static assert
 the copy of the int compound literal could be undefined behavior. However,
 this would allow the user to forgo cluttering their type namespace with a
-struct wrapping a single integral type. Will need to explore how to make this
-more robust for the user before recommending. */
+struct wrapping a single integral type. Internally, I use memcpy based on type
+sizes so there are no risks of strict aliasing violations and the macro versions
+of functions would use the integral types directly. Will need to explore how to
+make this more robust for the user before recommending. */
 check_static_begin(flat_hash_map_test_with_anonymous_struct) {
     static_assert(
         sizeof(struct { int _; }) == sizeof(int),
         "anonymous single field structs match the size of the type they wrap.");
-    Flat_hash_map fh = flat_hash_map_with_allocator(
-        struct { int _; }, _, flat_hash_map_int_to_u64, flat_hash_map_int_order,
-        std_allocate);
-    check(validate(&fh), true);
+    Flat_hash_map fh = flat_hash_map_with_compound_literal(
+        _, flat_hash_map_int_to_u64, flat_hash_map_int_order,
+        (struct { int _; }[SMALL_FIXED_CAP]){});
+    check(validate(&fh), CCC_TRUE);
     CCC_Entry const e = CCC_flat_hash_map_insert_or_assign(&fh, &(int){1});
     check(occupied(&e), CCC_FALSE);
     CCC_Entry const *e_pointer
-        = CCC_flat_hash_map_insert_or_assign_with(&fh, 2, &(int){2});
+        = CCC_flat_hash_map_insert_or_assign_with(&fh, 2, 2);
     check(occupied(e_pointer), CCC_FALSE);
-    check(validate(&fh), true);
+    check(contains(&fh, &(int){2}), CCC_TRUE);
+    check(validate(&fh), CCC_TRUE);
     check(count(&fh).count, 2);
-    check_end(flat_hash_map_clear_and_free(&fh, NULL););
+    check_end();
 }
 
 int
