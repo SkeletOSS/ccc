@@ -210,7 +210,7 @@ CCC_private_flat_hash_map_set_insert(struct CCC_Flat_hash_map_entry const *);
 /*======================    Macro Implementations   =========================*/
 
 /** @internal */
-#define CCC_private_compound_literal_array_capacity(                           \
+#define CCC_private_flat_hash_map_compound_literal_array_capacity(             \
     private_type_compound_literal_array)                                       \
     (sizeof(private_type_compound_literal_array)                               \
      / sizeof(*(private_type_compound_literal_array)))
@@ -223,26 +223,28 @@ CCC_private_flat_hash_map_set_insert(struct CCC_Flat_hash_map_entry const *);
                           typeof(private_type_compound_literal_array),         \
                           typeof(&(private_type_compound_literal_array)[0])),  \
                       "initialize with a compound literal array only");        \
-        static_assert(CCC_private_compound_literal_array_capacity(             \
-                          private_type_compound_literal_array)                 \
-                          >= CCC_FLAT_HASH_MAP_GROUP_COUNT,                    \
-                      "fixed size map must have capacity >= "                  \
-                      "CCC_FLAT_HASH_MAP_GROUP_COUNT "                         \
-                      "(8 or 16 depending on platform)");                      \
-        static_assert((CCC_private_compound_literal_array_capacity(            \
-                           private_type_compound_literal_array)                \
-                       & (CCC_private_compound_literal_array_capacity(         \
-                              private_type_compound_literal_array)             \
-                          - 1))                                                \
-                          == 0,                                                \
-                      "fixed size map must be a power of 2 capacity (32, 64, " \
-                      "128, 256, etc.)");                                      \
+        static_assert(                                                         \
+            CCC_private_flat_hash_map_compound_literal_array_capacity(         \
+                private_type_compound_literal_array)                           \
+                >= CCC_FLAT_HASH_MAP_GROUP_COUNT,                              \
+            "fixed size map must have capacity >= "                            \
+            "CCC_FLAT_HASH_MAP_GROUP_COUNT "                                   \
+            "(8 or 16 depending on platform)");                                \
+        static_assert(                                                         \
+            (CCC_private_flat_hash_map_compound_literal_array_capacity(        \
+                 private_type_compound_literal_array)                          \
+             & (CCC_private_flat_hash_map_compound_literal_array_capacity(     \
+                    private_type_compound_literal_array)                       \
+                - 1))                                                          \
+                == 0,                                                          \
+            "fixed size map must be a power of 2 capacity (32, 64, "           \
+            "128, 256, etc.)");                                                \
         typeof(*(private_type_compound_literal_array))                         \
-            data[CCC_private_compound_literal_array_capacity(                  \
+            data[CCC_private_flat_hash_map_compound_literal_array_capacity(    \
                      private_type_compound_literal_array)                      \
                  + 1];                                                         \
         alignas(CCC_FLAT_HASH_MAP_GROUP_COUNT) struct CCC_Flat_hash_map_tag    \
-            tag[CCC_private_compound_literal_array_capacity(                   \
+            tag[CCC_private_flat_hash_map_compound_literal_array_capacity(     \
                     private_type_compound_literal_array)                       \
                 + CCC_FLAT_HASH_MAP_GROUP_COUNT];                              \
     }) {                                                                       \
@@ -366,11 +368,11 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
             private_compound_literal, private_optional_storage_specifier),     \
         .tag = NULL,                                                           \
         .count = 0,                                                            \
-        .remain = ((CCC_private_compound_literal_array_capacity(               \
+        .remain = ((CCC_private_flat_hash_map_compound_literal_array_capacity( \
                         private_compound_literal)                              \
                     / (size_t)8)                                               \
                    * (size_t)7),                                               \
-        .mask = CCC_private_compound_literal_array_capacity(                   \
+        .mask = CCC_private_flat_hash_map_compound_literal_array_capacity(     \
                     private_compound_literal)                                  \
               - (size_t)1,                                                     \
         .sizeof_type = sizeof(*(private_compound_literal)),                    \

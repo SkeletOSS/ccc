@@ -200,7 +200,6 @@ struct Val
     int key;
     int val;
 };
-flat_hash_map_declare_fixed(Small_fixed_map, struct Val, 64);
 static Flat_hash_map static_map = flat_hash_map_initialize(
     struct Val,
     key,
@@ -208,8 +207,8 @@ static Flat_hash_map static_map = flat_hash_map_initialize(
     flat_hash_map_key_order,
     NULL,
     NULL,
-    flat_hash_map_fixed_capacity(Small_fixed_map),
-    &(static Small_fixed_map){}
+    64,
+    &flat_hash_map_declare_compound_literal((struct Val[64]){}, static)
 );
 ```
 
@@ -483,8 +482,8 @@ fixed size map in the scope at which it is allocated or declared.
 @return the flat hash map directly initialized on the right hand side of the
 equality operator
 (e.g. CCC_Flat_hash_map map = flat_hash_map_with_compound_literal(...);)
-@note See CCC_flat_hash_map_declare_fixed_map() for how to declare a fixed size
-map and use its compound literal initializer.
+@note This initializer will warn the user if the compound literal provided is
+not a power of two capacity.
 
 Initialize a static fixed size hash map at compile time that has
 no allocation permission or context data needed.
@@ -496,12 +495,12 @@ struct Val
     int key;
     int val;
 };
-flat_hash_map_declare_fixed(Small_fixed_map, struct Val, 64);
 static Flat_hash_map static_map = flat_hash_map_with_compound_literal(
     key,
     flat_hash_map_int_to_u64,
     flat_hash_map_key_order,
-    (static Small_fixed_map){},
+    (struct Val[64]){},
+    static
 );
 ```
 
@@ -525,8 +524,8 @@ fixed size map in the scope at which it is allocated or declared.
 @return the flat hash map directly initialized on the right hand side of the
 equality operator
 (e.g. CCC_Flat_hash_map map = flat_hash_map_with_context_compound_literal(...);)
-@note See CCC_flat_hash_map_declare_fixed_map() for how to declare a fixed size
-map and use its compound literal initializer.
+@note This initializer will warn the user if the compound literal provided is
+not a power of two capacity.
 
 Initialize a static fixed size hash map at compile time that has
 no allocation permission or context data needed.
@@ -538,13 +537,13 @@ struct Val
     int key;
     int val;
 };
-flat_hash_map_declare_fixed(Small_fixed_map, struct Val, 64);
 static Flat_hash_map static_map = flat_hash_map_with_context_compound_literal(
     key,
     flat_hash_map_int_to_u64,
     flat_hash_map_key_order,
     &module_context,
-    (static Small_fixed_map){},
+    (struct Val[64]){},
+    static
 );
 ```
 
@@ -655,27 +654,18 @@ struct Val
     int key;
     int val;
 };
-flat_hash_map_declare_fixed(Small_fixed_map, struct Val, 64);
-Flat_hash_map source = flat_hash_map_initialize(
-    struct Val,
+Flat_hash_map source = flat_hash_map_with_compound_literal(
     key,
     flat_hash_map_int_to_u64,
     flat_hash_map_key_order,
-    NULL,
-    NULL,
-    CCC_flat_hash_map_fixed_capacity(Small_fixed_map),
-    &(static Small_fixed_map){}
+    (struct Val[64]){}
 );
 insert_rand_vals(&source);
-Flat_hash_map destination = flat_hash_map_initialize(
-    struct Val,
+Flat_hash_map destination = flat_hash_map_with_compound_literal(
     key,
     flat_hash_map_int_to_u64,
     flat_hash_map_key_order,
-    NULL,
-    NULL,
-    CCC_flat_hash_map_fixed_capacity(Small_fixed_map),
-    &(static Small_fixed_map){}
+    (struct Val[64]){}
 );
 CCC_Result res = flat_hash_map_copy(&destination, &source, NULL);
 ```
