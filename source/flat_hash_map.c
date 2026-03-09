@@ -183,16 +183,12 @@ One behavior we want to ensure is that the tag array starts on the exact next
 byte after the user data type because the tag array has no alignment
 requirement: it is only a byte so any address following the data array will be
 aligned. */
-struct Fixed_map_test_type {
+static struct {
     struct {
         int const i;
     } const data[2 + 1];
     alignas(GROUP_COUNT) struct CCC_Flat_hash_map_tag const tag[2];
-};
-/** The type must actually get an allocation on the given platform to validate
-some memory layout assumptions. This should be sufficient and the assumptions
-will hold if the user happens to allocate a fixed size map on the stack. */
-static struct Fixed_map_test_type const data_tag_layout_test;
+} data_tag_layout_test;
 static_assert((char const *)&data_tag_layout_test.tag[2]
                       - (char const *)&data_tag_layout_test.data[0]
                   == (comptime_roundup((sizeof(data_tag_layout_test.data)))
@@ -204,7 +200,7 @@ static_assert((char const *)&data_tag_layout_test.data
                   == (char const *)&data_tag_layout_test.tag,
               "We calculate the correct position of the tag array considering "
               "it may get extra padding at start for alignment by group size.");
-static_assert((offsetof(struct Fixed_map_test_type, tag) % GROUP_COUNT) == 0,
+static_assert((offsetof(typeof(data_tag_layout_test), tag) % GROUP_COUNT) == 0,
               "The tag array starts at an aligned group size byte boundary "
               "within the struct.");
 
