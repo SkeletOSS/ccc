@@ -294,10 +294,8 @@ flat_hash_map_id_cmp(CCC_Key_comparator_context const cmp) {
     return (left > right->key) - (left < right->key);
 }
 
-flat_hash_map_declare_fixed(Standard_fixed_map, struct Key_val, 1024);
-
 enum : size_t {
-    STANDARD_FIXED_CAP = flat_hash_map_fixed_capacity(Standard_fixed_map),
+    STANDARD_FIXED_CAP = 1024,
 };
 
 /* Longest Consecutive Sequence Leetcode Problem */
@@ -305,7 +303,7 @@ int
 main(void) {
     CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_cmp,
-        (Standard_fixed_map){});
+        (struct Key_val[STANDARD_FIXED_CAP]){});
     /* Longest sequence is 1,2,3,4,5,6,7,8,9,10 of length 10. */
     int const nums[] = {
         99, 54, 1, 4, 9,  2, 3,   4,  8,  271, 32, 45, 86, 44, 7,  777, 6,  20,
@@ -874,10 +872,9 @@ struct Val {
     int key;
     int val;
 };
-flat_hash_map_declare_fixed(Val_fixed_map, struct Val, 64);
 static Flat_hash_map static_fh = flat_hash_map_with_compound_literal(
     key, flat_hash_map_int_to_u64, flat_hash_map_id_cmp,
-    (static Val_fixed_map){});
+    (struct Val[64]){}, static);
 ```
 
 A flat hash map can also be initialized in preparation for dynamic allocation at compile time if an allocation function is provided (see [allocation](#allocation) for more on `std_alloc`).
