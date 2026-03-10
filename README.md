@@ -871,7 +871,7 @@ struct Val {
 };
 static Flat_hash_map static_fh = flat_hash_map_with_compound_literal(
     key, flat_hash_map_int_to_u64, flat_hash_map_id_cmp,
-    (struct Val[64]){}, static);
+    (struct Val[64]){});
 ```
 
 A flat hash map can also be initialized in preparation for dynamic allocation at compile time if an allocation function is provided (see [allocation](#allocation) for more on `std_alloc`).
