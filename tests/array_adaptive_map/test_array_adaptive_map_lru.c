@@ -68,9 +68,8 @@ static enum Check_result run_lru_cache(void);
 /* This is a good opportunity to test the static initialization capabilities
    of the hash table and list. */
 static struct Lru_cache lru_cache = {
-    .map = array_adaptive_map_initialize(
-        struct Lru_node, key, order_by_key, NULL, NULL,
-        array_adaptive_map_fixed_capacity(Lru_fixed_map), &(Lru_fixed_map){}),
+    .map = array_adaptive_map_with_compound_literal(key, order_by_key,
+                                                    (Lru_fixed_map){}),
     .l = doubly_linked_list_initialize(struct Lru_node, list_node,
                                        order_list_nodes, NULL, NULL),
     .cap = 3,

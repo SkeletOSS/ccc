@@ -13,9 +13,8 @@
 #include "utility/stack_allocator.h"
 
 check_static_begin(array_adaptive_map_test_empty) {
-    Array_adaptive_map s
-        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
-                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
+    Array_adaptive_map s = array_adaptive_map_with_compound_literal(
+        id, id_order, (Small_fixed_map){});
     check(is_empty(&s), true);
     check_end();
 }
@@ -30,12 +29,10 @@ check_static_begin(array_adaptive_map_test_with_literal) {
 }
 
 check_static_begin(array_adaptive_map_test_copy_no_allocate) {
-    Array_adaptive_map source
-        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
-                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
-    Array_adaptive_map destination
-        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
-                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
+    Array_adaptive_map source = array_adaptive_map_with_compound_literal(
+        id, id_order, (Small_fixed_map){});
+    Array_adaptive_map destination = array_adaptive_map_with_compound_literal(
+        id, id_order, (Small_fixed_map){});
     (void)swap_handle(&source, &(struct Val){.id = 0});
     (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1});
     (void)swap_handle(&source, &(struct Val){.id = 2, .val = 2});
@@ -60,12 +57,10 @@ check_static_begin(array_adaptive_map_test_copy_no_allocate) {
 }
 
 check_static_begin(array_adaptive_map_test_copy_no_allocate_fail) {
-    Array_adaptive_map source = array_adaptive_map_initialize(
-        struct Val, id, id_order, NULL, NULL, STANDARD_FIXED_CAP,
-        &(Standard_fixed_map){});
-    Array_adaptive_map destination
-        = array_adaptive_map_initialize(struct Val, id, id_order, NULL, NULL,
-                                        SMALL_FIXED_CAP, &(Small_fixed_map){});
+    Array_adaptive_map source = array_adaptive_map_with_compound_literal(
+        id, id_order, (Standard_fixed_map){});
+    Array_adaptive_map destination = array_adaptive_map_with_compound_literal(
+        id, id_order, (Small_fixed_map){});
     (void)swap_handle(&source, &(struct Val){.id = 0});
     (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1});
     (void)swap_handle(&source, &(struct Val){.id = 2, .val = 2});
