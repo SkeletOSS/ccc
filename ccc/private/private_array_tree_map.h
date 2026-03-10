@@ -65,13 +65,11 @@ index. This allows the implementation to follow the theorist's ideal.
 
 Here is the layout in one contiguous array.
 
-```
-(D = Data Array, N = Nodes Array, P = Parity Bit Array, _N = Capacity - 1)
+(D = Data Array, N = Nodes Array, P = Parity Bit Array, C = Capacity - 1)
 
-┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
-│D_0│D_1│...│D_N│N_0│N_1│...│N_N│P_0│P_1│...│P_N│
-└───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
-```
+┌──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┐
+│D0│D1│..│DC│N0│N1│..│NC│P0│P1│..│PC│
+└──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┘
 
 Consider how this layout saves space. Here is a more traditional approach.
 
@@ -105,7 +103,7 @@ If the user wanted a simple set of 64 ints we have the following waste.
 In contrast the current struct of arrays design lays out data as follows.
 
 ```
-  (64 ints * 4 bytes per int)
++ (64 ints * 4 bytes per int)
 + (4 bytes sentinel int)
 + (4 bytes padding)
 + (64 nodes * 24 bytes per node)

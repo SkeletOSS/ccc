@@ -759,6 +759,7 @@ main(void) {
 - [Intrusive and non-intrusive containers](#intrusive-and-non-intrusive-containers).
 - [Non-allocating container options](#non-allocating-containers).
 - [Compile time initialization](#compile-time-initialization).
+- [Metadata is trivially copyable](#metadata-is-trivially-copyable).
 - [No `container_of` macro required of the user to get to their type after a function call](#no-container-of-macros).
 - [Rust's Entry API for associative containers with C and C++ influences](#rusts-entry-interface).
     - Opt-in macros for more succinct insertion and in place modifications (see "closures" in the [and_modify_wth](https://skeletoss.github.io/ccc/flat__hash__map_8h.html) interface for associative containers).
@@ -896,6 +897,30 @@ static Flat_doubled_ended_queue ring_buffer
 ```
 
 In all the preceding examples initializing at compile time simplifies the code, eliminates the need for initialization functions, and ensures that all containers are ready to operate when execution begins. Using compound literal initialization also helps create better ownership of memory for each container, eliminating named references to a container's memory that could be accessed by mistake.
+
+### Metadata is Trivially Copyable
+
+For all containers, the metadata structure that is passed to interface functions is separate from the underlying storage and has no self-referential pointers. The metadata only stores configuration and references to externally managed storage. Therefore, the metadata structure can be safely copied and returned by value.
+
+```c
+static CCC_Doubly_linked_list
+construct_empty(void) {
+    CCC_Doubly_linked_list this = CCC_doubly_linked_list_initialize(
+        struct Val, e, val_order, NULL, NULL);
+    return this;
+}
+
+int
+main(void) {
+    CCC_Doubly_linked_list list = construct_empty();
+    doubly_linked_list_push_front(&list, &(struct Val){.val = 1}.e);
+    assert(is_empty(&list) == false);
+    assert(validate(&list));
+    return 0;
+}
+```
+
+For other C container libraries the metadata structure may contain sentinel fields to which the metadata structure or external allocations point, making the above example exhibit undefined behavior. In the C Container Collection, fields within a metadata structure are never referenced from either the metadata structure itself or the allocations it manages. Therefore, returning the metadata structure for a container is well defined. This means users can organize their code how they wish, given their own standards of encapsulation and readability. However, keep in mind that C performs shallow copies by default. Therefore, copying a container metadata structure does not duplicate underlying nodes, buffers, or arrays to which it points. Instead, the new metadata instance will refer to the same underlying storage as the original container.
 
 
 ### No Container of Macros

@@ -546,12 +546,10 @@ overwrite elements instead of pushing those elements over the start of the
 range. For example, push a range `{3,4,5}` over a queue with capacity 5 before
 position with value 6.
 
-```
- front position     front
+front  position     front
 ┌─┬┴┬─┬┴┬─┐    ┌─┬─┬┴┬─┬─┐
 │ │1│2│6│ │ -> │5│6│2│3│4│
 └─┴─┴─┴─┴─┘    └─┴─┴─┴─┴─┘
-```
 
 Notice that 1 and 2 were NOT moved to overwrite the start of the range, the
 values 3 and 4. Instead, the value 1 was overwritten and the front of the queue
@@ -559,12 +557,10 @@ progressed to the next value. The only way the start of a range will be
 overwritten is if the range itself is too large for the capacity. For example,
 push a range `{0,0,3,3,4,4,5,5}` over the same flat_double_ended_queue.
 
-```
- front position front
+front  position front
 ┌─┬┴┬─┬┴┬─┐    ┌┴┬─┬─┬─┬─┐
 │ │1│2│6│ │ -> │3│4│4│5│5│
 └─┴─┴─┴─┴─┘    └─┴─┴─┴─┴─┘
-```
 
 Notice that the start of the range, `{0,0,3,...}`, is overwritten. */
 [[nodiscard]] void *
