@@ -169,8 +169,11 @@ main(void)
 }
 ```
 
-Usually, using a dynamic map and the reserve interface would be sufficient. Such
-a use case may be rare, but must be supported by this container. */
+Usually, using a dynamic map and the reserve interface would be sufficient.
+However, the reserve interface only guarantees that at least the needed bytes
+are allocated. When the user must know the exact size of the backing object due
+to strict memory requirements, this is helpful. Such a use case may be rare, but
+must be supported by this container. */
 #define CCC_flat_hash_map_storage_for(user_type_compound_literal_array,        \
                                       optional_storage_specifier...)           \
     CCC_private_flat_hash_map_storage_for(user_type_compound_literal_array,    \
