@@ -95,8 +95,8 @@ typedef union CCC_Array_tree_map_handle_wrap CCC_Array_tree_map_handle;
 Initialize the container with memory, callbacks, and permissions. */
 /**@{*/
 
-/** @brief Create the underlying fixed size struct of arrays from a user
-declared compound literal array of the type the user intends to store.
+/** @brief Create the underlying fixed size map storage from a user declared
+compound literal array of the type the user intends to store.
 @param[in] user_type_compound_literal_array a compound literal array of the type
 around which the map will be built.
 @param[in] optional_storage_specifier a storage specifier for the backing struct
@@ -121,9 +121,7 @@ int
 main(void)
 {
     void *const map = malloc(
-        sizeof(
-            CCC_array_tree_map_declare_compound_literal((structVal[4096]){})
-        )
+        sizeof(CCC_array_tree_map_storage_for((struct Val[4096]){}))
     );
     defer free(map);
     CCC_Array_tree_map map = CCC_array_tree_map_initialize(
@@ -140,10 +138,10 @@ main(void)
 ```
 
 Such a use case may be rare, but must be supported by this container. */
-#define CCC_array_tree_map_declare_compound_literal(                           \
-    user_type_compound_literal_array, optional_storage_specifier...)           \
-    CCC_private_array_tree_map_declare_compound_literal(                       \
-        user_type_compound_literal_array, optional_storage_specifier)
+#define CCC_array_tree_map_storage_for(user_type_compound_literal_array,       \
+                                       optional_storage_specifier...)          \
+    CCC_private_array_tree_map_storage_for(user_type_compound_literal_array,   \
+                                           optional_storage_specifier)
 
 /** @brief Initializes the map at runtime or compile time.
 @param[in] type_name the name of the user type stored in the map.
@@ -1310,8 +1308,8 @@ CCC_array_tree_map_validate(CCC_Array_tree_map const *map);
 /* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Array_tree_map Array_tree_map;
 typedef CCC_Array_tree_map_handle Array_tree_map_handle;
-#    define array_tree_map_declare_compound_literal(arguments...)              \
-        CCC_array_tree_map_declare_compound_literal(arguments)
+#    define array_tree_map_storage_for(arguments...)                           \
+        CCC_array_tree_map_storage_for(arguments)
 #    define array_tree_map_initialize(arguments...)                            \
         CCC_array_tree_map_initialize(arguments)
 #    define array_tree_map_from(arguments...) CCC_array_tree_map_from(arguments)

@@ -145,7 +145,7 @@ CCC_private_array_adaptive_map_allocate_slot(struct CCC_Array_adaptive_map *);
 /** @internal The user can declare a fixed size realtime ordered map with the
 help of static asserts to ensure the layout is compatible with our internal
 metadata. */
-#define CCC_private_array_adaptive_map_declare_compound_literal(               \
+#define CCC_private_array_adaptive_map_storage_for(                            \
     private_type_compound_literal_array, optional_storage_specifier...)        \
     (optional_storage_specifier struct {                                       \
         static_assert(!__builtin_types_compatible_p(                           \
@@ -274,7 +274,7 @@ metadata. */
     private_key_node_field, private_key_order_fn, private_context,             \
     private_compound_literal, private_optional_storage_specifier...)           \
     {                                                                          \
-        .data = &CCC_private_array_adaptive_map_declare_compound_literal(      \
+        .data = &CCC_private_array_adaptive_map_storage_for(                   \
             private_compound_literal, private_optional_storage_specifier),     \
         .nodes = NULL,                                                         \
         .capacity                                                              \

@@ -417,10 +417,10 @@ check_static_begin(array_adaptive_map_test_resize) {
 }
 
 check_static_begin(array_adaptive_map_test_reserve) {
-    struct Stack_allocator allocator = stack_allocator_initialize(
-        typeof(array_adaptive_map_declare_compound_literal(
-            (struct Val[STANDARD_FIXED_CAP]){})),
-        1);
+    struct Stack_allocator allocator
+        = stack_allocator_initialize(typeof(array_adaptive_map_storage_for(
+                                         (struct Val[STANDARD_FIXED_CAP]){})),
+                                     1);
     int const to_insert = 1000;
     CCC_Array_adaptive_map array_adaptive_map
         = array_adaptive_map_with_context_capacity(

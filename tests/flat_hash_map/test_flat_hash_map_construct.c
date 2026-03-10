@@ -124,8 +124,7 @@ check_static_begin(flat_hash_map_test_copy_no_allocate) {
     Flat_hash_map destination = flat_hash_map_initialize(
         struct Val, key, flat_hash_map_int_zero, flat_hash_map_id_order, NULL,
         NULL, STANDARD_FIXED_CAP,
-        &flat_hash_map_declare_compound_literal(
-            (struct Val[STANDARD_FIXED_CAP]){}));
+        &flat_hash_map_storage_for((struct Val[STANDARD_FIXED_CAP]){}));
     (void)swap_entry(&source, &(struct Val){.key = 0});
     (void)swap_entry(&source, &(struct Val){.key = 1, .val = 1});
     (void)swap_entry(&source, &(struct Val){.key = 2, .val = 2});
@@ -215,8 +214,7 @@ check_static_begin(flat_hash_map_test_empty) {
     Flat_hash_map fh = flat_hash_map_initialize(
         struct Val, key, flat_hash_map_int_zero, flat_hash_map_id_order, NULL,
         NULL, SMALL_FIXED_CAP,
-        &flat_hash_map_declare_compound_literal(
-            (struct Val[SMALL_FIXED_CAP]){}));
+        &flat_hash_map_storage_for((struct Val[SMALL_FIXED_CAP]){}));
     check(is_empty(&fh), CCC_TRUE);
     check_end();
 }

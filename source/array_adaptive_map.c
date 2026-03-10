@@ -64,7 +64,7 @@ Use an int because that will force the nodes array to be wary of
 where to start. The nodes are 8 byte aligned but an int is 4. This means the
 nodes need to start after a 4 byte Buffer of padding at end of data array. */
 static __auto_type const static_data_nodes_layout_test
-    = CCC_array_adaptive_map_declare_compound_literal((int const[TCAP]){});
+    = CCC_array_adaptive_map_storage_for((int const[TCAP]){});
 /** Some assumptions in the code assume that nodes array is last so ensure that
 is the case here. Also good to assume user data comes first. */
 static_assert((char const *)static_data_nodes_layout_test.data

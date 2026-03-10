@@ -127,8 +127,8 @@ size map is required that will not have allocation permission, the user must
 declare the type name and size of the map they will use. */
 /**@{*/
 
-/** @brief Create the underlying fixed size struct of arrays from a user
-declared compound literal array of the type the user intends to store.
+/** @brief Create the underlying fixed size storage for a user declared compound
+literal array of the type the user intends to store.
 @param[in] user_type_compound_literal_array a compound literal array of the type
 around which the map will be built. Must be a power of 2 capacity array.
 @param[in] optional_storage_specifier a storage specifier for the backing struct
@@ -139,8 +139,8 @@ there are also many other options.
 
 This macro is required to support the edge case for the user allocating a fixed
 size map dynamically from an allocator at runtime. In this case, the user needs
-access to the compound literal struct of arrays map to know how many bytes to
-allocate. See the below example.
+access to the underlying map storage object to know how many bytes to allocate.
+See the below example.
 
 ```
 struct Val
@@ -153,7 +153,7 @@ int
 main(void)
 {
     void *const map = malloc(
-        sizeof(CCC_flat_hash_map_declare_compound_literal((struct Val[4096]){}))
+        sizeof(CCC_flat_hash_map_storage_for((struct Val[4096]){}))
     );
     defer free(map);
     CCC_Flat_hash_map hash_map = CCC_flat_hash_map_initialize(
@@ -169,11 +169,12 @@ main(void)
 }
 ```
 
-Such a use case may be rare, but must be supported by this container. */
-#define CCC_flat_hash_map_declare_compound_literal(                            \
-    user_type_compound_literal_array, optional_storage_specifier...)           \
-    CCC_private_flat_hash_map_declare_compound_literal(                        \
-        user_type_compound_literal_array, optional_storage_specifier)
+Usually, using a dynamic map and the reserve interface would be sufficient. Such
+a use case may be rare, but must be supported by this container. */
+#define CCC_flat_hash_map_storage_for(user_type_compound_literal_array,        \
+                                      optional_storage_specifier...)           \
+    CCC_private_flat_hash_map_storage_for(user_type_compound_literal_array,    \
+                                          optional_storage_specifier)
 
 /** @brief Initialize a map of types at compile time or runtime.
 @param[in] type_name the name of the user defined type stored in the map.
@@ -208,7 +209,7 @@ static Flat_hash_map static_map = flat_hash_map_initialize(
     NULL,
     NULL,
     64,
-    &flat_hash_map_declare_compound_literal((struct Val[64]){}, static)
+    &flat_hash_map_storage_for((struct Val[64]){}, static)
 );
 ```
 
@@ -1298,8 +1299,8 @@ CCC_flat_hash_map_validate(CCC_Flat_hash_map const *map);
 /* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Flat_hash_map Flat_hash_map;
 typedef CCC_Flat_hash_map_entry Flat_hash_map_entry;
-#    define flat_hash_map_declare_compound_literal(arguments...)               \
-        CCC_flat_hash_map_declare_compound_literal(arguments)
+#    define flat_hash_map_storage_for(arguments...)                            \
+        CCC_flat_hash_map_storage_for(arguments)
 #    define flat_hash_map_reserve(arguments...)                                \
         CCC_flat_hash_map_reserve(arguments)
 #    define flat_hash_map_initialize(arguments...)                             \

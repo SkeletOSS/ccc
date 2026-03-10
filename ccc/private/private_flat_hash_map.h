@@ -216,7 +216,7 @@ CCC_private_flat_hash_map_set_insert(struct CCC_Flat_hash_map_entry const *);
      / sizeof(*(private_type_compound_literal_array)))
 
 /** @internal */
-#define CCC_private_flat_hash_map_declare_compound_literal(                    \
+#define CCC_private_flat_hash_map_storage_for(                                 \
     private_type_compound_literal_array, optional_storage_specifier...)        \
     (optional_storage_specifier struct {                                       \
         static_assert(!__builtin_types_compatible_p(                           \
@@ -364,7 +364,7 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
     private_key_field, private_hash, private_key_compare, private_context,     \
     private_compound_literal, private_optional_storage_specifier...)           \
     {                                                                          \
-        .data = &CCC_private_flat_hash_map_declare_compound_literal(           \
+        .data = &CCC_private_flat_hash_map_storage_for(                        \
             private_compound_literal, private_optional_storage_specifier),     \
         .tag = NULL,                                                           \
         .count = 0,                                                            \
