@@ -16,7 +16,7 @@
 
 check_static_begin(array_adaptive_map_test_insert_erase_shuffled) {
     CCC_Array_adaptive_map s = array_adaptive_map_with_compound_literal(
-        id, id_order, (Small_fixed_map){});
+        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     size_t const size = 50;
     int const prime = 53;
     check(insert_shuffled(&s, size, prime), CHECK_PASS);
@@ -38,7 +38,7 @@ check_static_begin(array_adaptive_map_test_insert_erase_shuffled) {
 
 check_static_begin(array_adaptive_map_test_prime_shuffle) {
     CCC_Array_adaptive_map s = array_adaptive_map_with_compound_literal(
-        id, id_order, (Small_fixed_map){});
+        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     size_t const size = 50;
     size_t const prime = 53;
     size_t const less = 10;
@@ -67,7 +67,7 @@ check_static_begin(array_adaptive_map_test_prime_shuffle) {
 
 check_static_begin(array_adaptive_map_test_weak_srand) {
     CCC_Array_adaptive_map s = array_adaptive_map_with_compound_literal(
-        id, id_order, (Standard_fixed_map){});
+        id, id_order, (struct Val[STANDARD_FIXED_CAP]){});
     srand(time(NULL)); /* NOLINT */
     int const num_nodes = 100;
     int id_keys[100];
@@ -96,7 +96,7 @@ check_static_begin(array_adaptive_map_test_weak_srand) {
 
 check_static_begin(array_adaptive_map_test_insert_erase_cycles_no_allocate) {
     CCC_Array_adaptive_map s = array_adaptive_map_with_compound_literal(
-        id, id_order, (Standard_fixed_map){});
+        id, id_order, (struct Val[STANDARD_FIXED_CAP]){});
     srand(time(NULL)); /* NOLINT */
     int const num_nodes = 100;
     int id_keys[100];

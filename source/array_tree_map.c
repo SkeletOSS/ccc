@@ -90,7 +90,7 @@ Use an int because that will force the nodes array to be wary of
 where to start. The nodes are 8 byte aligned but an int is 4. This means the
 nodes need to start after a 4 byte Buffer of padding at end of data array. */
 static __auto_type const static_data_nodes_parity_layout_test
-    = CCC_private_array_tree_map_declare_compound_literal((int[TCAP]){});
+    = CCC_private_array_tree_map_declare_compound_literal((int const[TCAP]){});
 /** Some assumptions in the code assume that parity array is last so ensure that
 is the case here. Also good to assume user data comes first. */
 static_assert(((char const *)static_data_nodes_parity_layout_test.data

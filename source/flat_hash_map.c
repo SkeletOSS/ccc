@@ -188,7 +188,7 @@ static struct {
         int const i;
     } const data[2 + 1];
     alignas(GROUP_COUNT) struct CCC_Flat_hash_map_tag const tag[2];
-} data_tag_layout_test;
+} const data_tag_layout_test;
 static_assert((char const *)&data_tag_layout_test.tag[2]
                       - (char const *)&data_tag_layout_test.data[0]
                   == (comptime_roundup((sizeof(data_tag_layout_test.data)))

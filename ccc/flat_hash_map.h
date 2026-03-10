@@ -476,7 +476,8 @@ context.
 @param[in] key_field the field of the struct used for key storage.
 @param[in] hash the CCC_Key_hasher function provided by the user.
 @param[in] compare the CCC_Key_comparator the user intends to use.
-@param[in] compound_literal the fixed map compound literal.
+@param[in] compound_literal the compound literal array of a type provided by the
+user around which the struct of arrays backing storage for the map is built.
 @param[in] optional_storage_specifier lifetime specifier of the backing struct
 of array storage, such as static, for the fixed size map in the scope at which
 it is allocated or declared.
@@ -511,14 +512,14 @@ This saves on boilerplate compared to the raw initializer. */
         key_field, hash, compare, compound_literal,                            \
         optional_storage_specifier)
 
-/** @brief Initialize a fixed map at compile time or runtime from its previously
-declared type using a compound literal with no allocation permissions or
-context.
+/** @brief Initialize a fixed map at compile time or runtime from any user
+chosen type using a compound literal with no allocation permissions.
 @param[in] key_field the field of the struct used for key storage.
 @param[in] hash the CCC_Key_hasher function provided by the user.
 @param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] context a pointer to any context needed for the map.
-@param[in] compound_literal the fixed map compound literal.
+@param[in] compound_literal the compound literal array of a type provided by the
+user around which the struct of arrays backing storage for the map is built.
 @param[in] optional_storage_specifier lifetime specifier of the backing struct
 of array storage, such as static, for the fixed size map in the scope at which
 it is allocated or declared.

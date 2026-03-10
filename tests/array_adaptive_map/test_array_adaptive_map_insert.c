@@ -26,8 +26,8 @@ array_adaptive_map_modplus(CCC_Type_context const t) {
 
 check_static_begin(array_adaptive_map_test_insert) {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_with_compound_literal(id, id_order,
-                                                   (Small_fixed_map){});
+        = array_adaptive_map_with_compound_literal(
+            id, id_order, (struct Val[SMALL_FIXED_CAP]){});
 
     /* Nothing was there before so nothing is in the handle. */
     CCC_Handle *hndl = swap_handle_wrap(&array_adaptive_map,
@@ -39,8 +39,8 @@ check_static_begin(array_adaptive_map_test_insert) {
 
 check_static_begin(array_adaptive_map_test_insert_macros) {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_with_compound_literal(id, id_order,
-                                                   (Small_fixed_map){});
+        = array_adaptive_map_with_compound_literal(
+            id, id_order, (struct Val[SMALL_FIXED_CAP]){});
 
     struct Val const *ins = array_adaptive_map_at(
         &array_adaptive_map, CCC_array_adaptive_map_or_insert_with(
@@ -99,8 +99,8 @@ check_static_begin(array_adaptive_map_test_insert_macros) {
 
 check_static_begin(array_adaptive_map_test_insert_overwrite) {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_with_compound_literal(id, id_order,
-                                                   (Small_fixed_map){});
+        = array_adaptive_map_with_compound_literal(
+            id, id_order, (struct Val[SMALL_FIXED_CAP]){});
 
     struct Val q = {.id = 137, .val = 99};
     CCC_Handle hndl = swap_handle(&array_adaptive_map, &q);
@@ -133,8 +133,8 @@ check_static_begin(array_adaptive_map_test_insert_overwrite) {
 
 check_static_begin(array_adaptive_map_test_insert_then_bad_ideas) {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_with_compound_literal(id, id_order,
-                                                   (Small_fixed_map){});
+        = array_adaptive_map_with_compound_literal(
+            id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     struct Val q = {.id = 137, .val = 99};
     CCC_Handle hndl = swap_handle(&array_adaptive_map, &q);
     check(occupied(&hndl), false);
@@ -164,8 +164,8 @@ check_static_begin(array_adaptive_map_test_insert_then_bad_ideas) {
 check_static_begin(array_adaptive_map_test_array_api_functional) {
     /* Over allocate size now because we don't want to worry about resizing. */
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_with_compound_literal(id, id_order,
-                                                   (Standard_fixed_map){});
+        = array_adaptive_map_with_compound_literal(
+            id, id_order, (struct Val[STANDARD_FIXED_CAP]){});
     size_t const size = 200;
 
     /* Test handle or insert with for all even values. Default should be
@@ -224,8 +224,8 @@ check_static_begin(array_adaptive_map_test_array_api_functional) {
 check_static_begin(array_adaptive_map_test_insert_via_handle) {
     /* Over allocate size now because we don't want to worry about resizing. */
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_with_compound_literal(id, id_order,
-                                                   (Standard_fixed_map){});
+        = array_adaptive_map_with_compound_literal(
+            id, id_order, (struct Val[STANDARD_FIXED_CAP]){});
     size_t const size = 200;
 
     /* Test handle or insert with for all even values. Default should be
@@ -266,8 +266,8 @@ check_static_begin(array_adaptive_map_test_insert_via_handle) {
 check_static_begin(array_adaptive_map_test_insert_via_array_macros) {
     /* Over allocate size now because we don't want to worry about resizing. */
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_with_compound_literal(id, id_order,
-                                                   (Standard_fixed_map){});
+        = array_adaptive_map_with_compound_literal(
+            id, id_order, (struct Val[STANDARD_FIXED_CAP]){});
     size_t const size = 200;
 
     /* Test handle or insert with for all even values. Default should be
@@ -305,8 +305,8 @@ check_static_begin(array_adaptive_map_test_insert_via_array_macros) {
 check_static_begin(array_adaptive_map_test_array_api_macros) {
     /* Over allocate size now because we don't want to worry about resizing. */
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_with_compound_literal(id, id_order,
-                                                   (Standard_fixed_map){});
+        = array_adaptive_map_with_compound_literal(
+            id, id_order, (struct Val[STANDARD_FIXED_CAP]){});
     int const size = 200;
 
     /* Test handle or insert with for all even values. Default should be
@@ -361,8 +361,8 @@ check_static_begin(array_adaptive_map_test_array_api_macros) {
 
 check_static_begin(array_adaptive_map_test_two_sum) {
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_with_compound_literal(id, id_order,
-                                                   (Small_fixed_map){});
+        = array_adaptive_map_with_compound_literal(
+            id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     int const addends[10] = {1, 3, -980, 6, 7, 13, 44, 32, 995, -1};
     int const target = 15;
     int solution_indices[2] = {-1, -1};
@@ -417,8 +417,10 @@ check_static_begin(array_adaptive_map_test_resize) {
 }
 
 check_static_begin(array_adaptive_map_test_reserve) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(Standard_fixed_map, 1);
+    struct Stack_allocator allocator = stack_allocator_initialize(
+        typeof(array_adaptive_map_declare_compound_literal(
+            (struct Val[STANDARD_FIXED_CAP]){})),
+        1);
     int const to_insert = 1000;
     CCC_Array_adaptive_map array_adaptive_map
         = array_adaptive_map_with_context_capacity(
@@ -576,8 +578,8 @@ check_static_begin(array_adaptive_map_test_resize_from_null_macros) {
 check_static_begin(array_adaptive_map_test_insert_limit) {
     int const size = SMALL_FIXED_CAP;
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_with_compound_literal(id, id_order,
-                                                   (Small_fixed_map){});
+        = array_adaptive_map_with_compound_literal(
+            id, id_order, (struct Val[SMALL_FIXED_CAP]){});
 
     int const larger_prime = 103;
     int last_index = 0;
@@ -644,8 +646,8 @@ check_static_begin(array_adaptive_map_test_insert_limit) {
 check_static_begin(array_adaptive_map_test_insert_and_find) {
     int const size = SMALL_FIXED_CAP;
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_with_compound_literal(id, id_order,
-                                                   (Small_fixed_map){});
+        = array_adaptive_map_with_compound_literal(
+            id, id_order, (struct Val[SMALL_FIXED_CAP]){});
 
     for (int i = 0; i < size; i += 2) {
         CCC_Handle e
@@ -677,8 +679,8 @@ check_static_begin(array_adaptive_map_test_insert_and_find) {
 check_static_begin(array_adaptive_map_test_insert_shuffle) {
     size_t const size = SMALL_FIXED_CAP - 1;
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_with_compound_literal(id, id_order,
-                                                   (Small_fixed_map){});
+        = array_adaptive_map_with_compound_literal(
+            id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     check(size > 1, true);
     int const prime = 67;
     check(insert_shuffled(&array_adaptive_map, size, prime), CHECK_PASS);
@@ -693,8 +695,8 @@ check_static_begin(array_adaptive_map_test_insert_shuffle) {
 check_static_begin(array_adaptive_map_test_insert_weak_srand) {
     int const num_nodes = STANDARD_FIXED_CAP - 1;
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_with_compound_literal(id, id_order,
-                                                   (Standard_fixed_map){});
+        = array_adaptive_map_with_compound_literal(
+            id, id_order, (struct Val[STANDARD_FIXED_CAP]){});
     srand(time(NULL)); /* NOLINT */
     for (int i = 0; i < num_nodes; ++i) {
         CCC_Handle const e

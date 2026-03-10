@@ -121,11 +121,12 @@ int
 main(void)
 {
     void *const map = malloc(
-        sizeof(CCC_array_tree_map_declare_compound_literal((struct
-Val[4096]){}))
+        sizeof(
+            CCC_array_tree_map_declare_compound_literal((structVal[4096]){})
+        )
     );
     defer free(map);
-    CCC_Flat_hash_map hash_map = CCC_flat_hash_map_initialize(
+    CCC_Array_tree_map map = CCC_array_tree_map_initialize(
         struct Val,
         key,
         hash_key,
@@ -384,14 +385,17 @@ of initialization and reservation. */
     CCC_private_array_tree_map_with_context_capacity(                          \
         type_name, type_key_field, compare, allocate, context, capacity)
 
-/** @brief Initialize a fixed map at compile or runtime from a previously
-declared fixed map type with no allocation permission or context.
+/** @brief Initialize a fixed map at compile or runtime from any user chosen
+type with no allocation permission or context.
 @param[in] type_key_field the field of the struct used for key storage.
 @param[in] compare the CCC_Key_comparator the user intends to use.
-@param[in] compound_literal the previously declared fixed map compound literal.
+@param[in] compound_literal the compound literal array of a type provided by the
+user around which the struct of array backing storage for the map will be built.
+@param[in] optional_storage_specifier lifetime specifier of the backing struct
+of array storage, such as static, for the fixed size map in the scope at which
+it is allocated or declared.
 @return the map directly initialized on the right hand side of the equality
-operator (e.g. CCC_Array_tree_map map =
-CCC_array_tree_map_with_compound_literal(...);)
+operator.
 
 Initialize a fixed map.
 
@@ -410,20 +414,23 @@ static Array_tree_map map = array_tree_map_with_compound_literal(
 ```
 
 This can help eliminate boilerplate in initializers. */
-#define CCC_array_tree_map_with_compound_literal(type_key_field, compare,      \
-                                                 compound_literal)             \
-    CCC_private_array_tree_map_with_compound_literal(type_key_field, compare,  \
-                                                     compound_literal)
+#define CCC_array_tree_map_with_compound_literal(                              \
+    type_key_field, compare, compound_literal, optional_storage_specifier...)  \
+    CCC_private_array_tree_map_with_compound_literal(                          \
+        type_key_field, compare, compound_literal, optional_storage_specifier)
 
-/** @brief Initialize a fixed map at compile or runtime from a previously
-declared fixed map type with no allocation permission.
+/** @brief Initialize a fixed map at compile or runtime from any user chosen
+type with no allocation permission.
 @param[in] type_key_field the field of the struct used for key storage.
 @param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] context context for the map.
-@param[in] compound_literal the previously declared fixed map compound literal.
+@param[in] compound_literal the compound literal array of a type provided by the
+user around which the struct of array backing storage for the map will be built.
+@param[in] optional_storage_specifier lifetime specifier of the backing struct
+of array storage, such as static, for the fixed size map in the scope at which
+it is allocated or declared.
 @return the map directly initialized on the right hand side of the equality
-operator (e.g. CCC_Array_tree_map map =
-CCC_array_tree_map_with_compound_literal(...);)
+operator.
 
 Initialize a fixed map.
 
@@ -434,7 +441,6 @@ struct Val
     int key;
     int val;
 };
-CCC_array_tree_map_declare_fixed(Small_fixed_map, struct Val, 64);
 static Array_tree_map map = array_tree_map_with_compound_literal(
     key,
     array_tree_map_key_order,
@@ -445,9 +451,11 @@ static Array_tree_map map = array_tree_map_with_compound_literal(
 
 This can help eliminate boilerplate in initializers. */
 #define CCC_array_tree_map_with_context_compound_literal(                      \
-    type_key_field, compare, context, compound_literal)                        \
+    type_key_field, compare, context, compound_literal,                        \
+    optional_storage_specifier...)                                             \
     CCC_private_array_tree_map_with_context_compound_literal(                  \
-        type_key_field, compare, context, compound_literal)
+        type_key_field, compare, context, compound_literal,                    \
+        optional_storage_specifier)
 
 /** @brief Initialize an empty dynamic map at compile or runtime with an
 allocator.

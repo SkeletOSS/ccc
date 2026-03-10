@@ -417,8 +417,6 @@ struct Key_val {
     int val;
 };
 
-array_adaptive_map_declare_fixed(Key_val_fixed_map, struct Key_val, 26);
-
 static CCC_Order
 Key_val_cmp(CCC_Key_comparator_context const cmp) {
     struct Key_val const *const right = cmp.type_right;
@@ -432,7 +430,7 @@ main(void) {
        named elem, key field named key, no allocation permission, key comparison
        function, no context data. */
     Array_adaptive_map s = array_adaptive_map_with_compound_literal(
-        key, Key_val_cmp, (Key_val_fixed_map){});
+        key, Key_val_cmp, (struct Key_val[26]){});
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
     for (int i = 0, id = 0; i < num_nodes; ++i, id += 5) {
