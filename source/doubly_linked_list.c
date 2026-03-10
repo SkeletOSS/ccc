@@ -597,7 +597,7 @@ However, if refactors change this location, seek the list intrusive container
 module for original implementations. The code has been changed for the C
 Container Collection as follows:
 
-- there is a single sentinel node rather than two.
+- there is no sentinel node, only NULL pointer.
 - splicing in the merge operation has been simplified along with other tweaks.
 - comparison callbacks are handled with three way comparison.
 

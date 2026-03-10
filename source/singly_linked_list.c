@@ -415,7 +415,7 @@ module for original implementations. The code has been changed for the C
 Container Collection as follows:
 
 - the algorithm is adapted to work with a singly linked list rather than doubly
-- there is a single sentinel node rather than two.
+- there is no sentinel, only NULL pointer.
 - splicing in the merge operation has been simplified along with other tweaks.
 - comparison callbacks are handled with three way comparison.
 
