@@ -88,35 +88,20 @@ typedef union CCC_Array_adaptive_map_handle_wrap CCC_Array_adaptive_map_handle;
 Initialize the container with memory, callbacks, and permissions. */
 /**@{*/
 
-/** @brief Declare a fixed size map type for use in the stack, heap, or data
-segment. Does not return a value.
-@param[in] fixed_map_type_name the user chosen name of the fixed sized map.
-@param[in] type_name the type the user plans to store in the map. It
-may have a key and value field as well as any additional fields. For set-like
-behavior, wrap a field in a struct/union (e.g. `union int_node {int e;};`).
-@param[in] capacity the desired number of user accessible nodes.
-@warning the map will use one slot of the specified capacity for a sentinel
-node. This is not important to the user unless an exact allocation count is
-needed in which case 1 should be added to desired capacity.
+/** @brief Create the underlying fixed size storage for a user declared compound
+literal array of the type the user intends to store.
+@param[in] user_type_compound_literal_array a compound literal array of the type
+around which the map will be built.
+@param[in] optional_storage_specifier a storage specifier for the backing struct
+of array storage may be added on newer compilers such as static.
+@warning This should rarely be used. If a fixed size map is desired simply use
+the CCC_array_adaptive_map_with_compound_literal() initializer. For dynamic
+maps, there are also many other options.
 
-Once the location for the fixed size map is chosen--stack, heap, or data
-segment--provide a pointer to the map for the initialization macro.
-
-```
-struct Val
-{
-    int key;
-    int val;
-};
-CCC_array_adaptive_map_declare_fixed(Small_fixed_map, struct Val, 64);
-static Array_adaptive_map static_map = array_adaptive_map_with_compound_literal(
-    key,
-    array_adaptive_map_key_order,
-    (static Small_fixed_map){}
-);
-```
-
-Similarly, a fixed size map can be used on the stack.
+This macro is required to support the edge case for the user allocating a fixed
+size map dynamically from an allocator at runtime. In this case, the user needs
+access to the compound literal struct of arrays map to know how many bytes to
+allocate. See the below example.
 
 ```
 struct Val
@@ -124,37 +109,36 @@ struct Val
     int key;
     int val;
 };
-CCC_array_adaptive_map_declare_fixed(Small_fixed_map, struct Val, 64);
-int main(void)
+
+int
+main(void)
 {
-    Array_adaptive_map map = array_adaptive_map_with_compound_literal(
-        key,
-        array_adaptive_map_key_order,
-        (Small_fixed_map){}
+    void *const map = malloc(
+        sizeof(CCC_array_adaptive_map_storage_for((struct Val[4096]){}))
     );
-    return 0;
+    defer free(map);
+    CCC_Array_adaptive_map map = CCC_array_adaptive_map_initialize(
+        struct Val,
+        key,
+        hash_key,
+        order_vals,
+        NULL,
+        NULL,
+        4096,
+        map
+    );
 }
 ```
 
-The CCC_array_adaptive_map_fixed_capacity macro can be used to obtain the
-previously provided capacity when declaring the fixed map type. Finally, one
-could allocate a fixed size map on the heap; however, it is usually better to
-initialize a dynamic map and use the CCC_array_adaptive_map_reserve function
-for such a use case.
-
-This macro is not needed when a dynamic resizing map is needed. For dynamic
-maps, pass NULL and 0 capacity to the initialization macro along with the
-desired allocation function. */
-#define CCC_array_adaptive_map_declare_fixed(fixed_map_type_name, type_name,   \
-                                             capacity)                         \
-    CCC_private_array_adaptive_map_declare_fixed(fixed_map_type_name,          \
-                                                 type_name, capacity)
-
-/** @brief Obtain the capacity previously chosen for the fixed size map type.
-@param[in] fixed_map_type_name the name of a previously declared map.
-@return the size_t capacity previously specified for this type by user. */
-#define CCC_array_adaptive_map_fixed_capacity(fixed_map_type_name)             \
-    CCC_private_array_adaptive_map_fixed_capacity(fixed_map_type_name)
+Usually, using a dynamic map and the reserve interface would be sufficient.
+However, the reserve interface only guarantees that at least the needed bytes
+are allocated. When the user must know the exact size of the backing object due
+to strict memory requirements, this is helpful. Such a use case may be rare, but
+must be supported by this container. */
+#define CCC_array_adaptive_map_storage_for(user_type_compound_literal_array,   \
+                                           optional_storage_specifier...)      \
+    CCC_private_array_adaptive_map_storage_for(                                \
+        user_type_compound_literal_array, optional_storage_specifier)
 
 /** @brief Initializes the map at runtime or compile time.
 @param[in] type_name the name of the user type stored in the map.
@@ -396,14 +380,17 @@ of initialization and reservation. */
     CCC_private_array_adaptive_map_with_context_capacity(                      \
         type_name, type_key_field, compare, allocate, context, capacity)
 
-/** @brief Initialize a fixed map at compile or runtime from a previously
-declared fixed map type with no allocation permission or context.
+/** @brief Initialize a fixed map at compile or runtime from any user chosen
+type with no allocation permission or context.
 @param[in] type_key_field the field of the struct used for key storage.
 @param[in] compare the CCC_Key_comparator the user intends to use.
-@param[in] compound_literal the previously declared fixed map compound literal.
+@param[in] compound_literal the compound literal array of a type provided by the
+user around which the struct of array backing storage for the map will be built.
+@param[in] optional_storage_specifier lifetime specifier of the backing struct
+of array storage, such as static, for the fixed size map in the scope at which
+it is allocated or declared.
 @return the map directly initialized on the right hand side of the equality
-operator (e.g. CCC_Array_adaptive_map map =
-CCC_array_adaptive_map_with_compound_literal(...);)
+operator.
 
 Initialize a fixed map.
 
@@ -414,29 +401,31 @@ struct Val
     int key;
     int val;
 };
-CCC_array_adaptive_map_declare_fixed(Small_fixed_map, struct Val, 64);
 static Array_adaptive_map map = array_adaptive_map_with_compound_literal(
     key,
     array_adaptive_map_key_order,
-    (Small_fixed_map){},
+    (struct Val[4096]){}
 );
 ```
 
 This can help eliminate boilerplate in initializers. */
-#define CCC_array_adaptive_map_with_compound_literal(type_key_field, compare,  \
-                                                     compound_literal)         \
+#define CCC_array_adaptive_map_with_compound_literal(                          \
+    type_key_field, compare, compound_literal, optional_storage_specifier...)  \
     CCC_private_array_adaptive_map_with_compound_literal(                      \
-        type_key_field, compare, compound_literal)
+        type_key_field, compare, compound_literal, optional_storage_specifier)
 
-/** @brief Initialize a fixed map at compile or runtime from a previously
-declared fixed map type with no allocation permission.
+/** @brief Initialize a fixed map at compile or runtime from any user chosen
+type with no allocation permission.
 @param[in] type_key_field the field of the struct used for key storage.
 @param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] context context for the map.
-@param[in] compound_literal the previously declared fixed map compound literal.
+@param[in] compound_literal the compound literal array of a type provided by the
+user around which the struct of array backing storage for the map will be built.
+@param[in] optional_storage_specifier lifetime specifier of the backing struct
+of array storage, such as static, for the fixed size map in the scope at which
+it is allocated or declared.
 @return the map directly initialized on the right hand side of the equality
-operator (e.g. CCC_Array_adaptive_map map =
-CCC_array_adaptive_map_with_compound_literal(...);)
+operator.
 
 Initialize a fixed map.
 
@@ -447,20 +436,21 @@ struct Val
     int key;
     int val;
 };
-CCC_array_adaptive_map_declare_fixed(Small_fixed_map, struct Val, 64);
 static Array_adaptive_map map = array_adaptive_map_with_compound_literal(
     key,
     array_adaptive_map_key_order,
     &module_context,
-    (Small_fixed_map){},
+    (struct Val[4096]){}
 );
 ```
 
 This can help eliminate boilerplate in initializers. */
 #define CCC_array_adaptive_map_with_context_compound_literal(                  \
-    type_key_field, compare, context, compound_literal)                        \
+    type_key_field, compare, context, compound_literal,                        \
+    optional_storage_specifier...)                                             \
     CCC_private_array_adaptive_map_with_context_compound_literal(              \
-        type_key_field, compare, context, compound_literal)
+        type_key_field, compare, context, compound_literal,                    \
+        optional_storage_specifier)
 
 /** @brief Initialize an empty dynamic map at compile or runtime with an
 allocator.
@@ -1310,10 +1300,8 @@ CCC_array_adaptive_map_validate(CCC_Array_adaptive_map const *map);
 /* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Array_adaptive_map Array_adaptive_map;
 typedef CCC_Array_adaptive_map_handle Array_adaptive_map_handle;
-#    define array_adaptive_map_declare_fixed(arguments...)                     \
-        CCC_array_adaptive_map_declare_fixed(arguments)
-#    define array_adaptive_map_fixed_capacity(arguments...)                    \
-        CCC_array_adaptive_map_fixed_capacity(arguments)
+#    define array_adaptive_map_storage_for(arguments...)                       \
+        CCC_array_adaptive_map_storage_for(arguments)
 #    define array_adaptive_map_initialize(arguments...)                        \
         CCC_array_adaptive_map_initialize(arguments)
 #    define array_adaptive_map_from(arguments...)                              \

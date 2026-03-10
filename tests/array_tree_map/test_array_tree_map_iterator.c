@@ -128,9 +128,8 @@ check_static_begin(iterator_check, Array_tree_map *s) {
 }
 
 check_static_begin(array_tree_map_test_forward_iterator) {
-    CCC_Array_tree_map s
-        = array_tree_map_initialize(struct Val, id, id_order, NULL, NULL,
-                                    SMALL_FIXED_CAP, &(Small_fixed_map){});
+    CCC_Array_tree_map s = array_tree_map_with_compound_literal(
+        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     /* We should have the expected behavior iteration over empty tree. */
     int j = 0;
     for (CCC_Handle_index e = begin(&s); e != end(&s); e = next(&s, e), ++j) {}
@@ -156,9 +155,8 @@ check_static_begin(array_tree_map_test_forward_iterator) {
 }
 
 check_static_begin(array_tree_map_test_iterate_removal) {
-    CCC_Array_tree_map s = array_tree_map_initialize(
-        struct Val, id, id_order, NULL, NULL, STANDARD_FIXED_CAP,
-        &(Standard_fixed_map){});
+    CCC_Array_tree_map s = array_tree_map_with_compound_literal(
+        id, id_order, (struct Val[STANDARD_FIXED_CAP]){});
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(1);
@@ -185,9 +183,8 @@ check_static_begin(array_tree_map_test_iterate_removal) {
 }
 
 check_static_begin(array_tree_map_test_iterate_remove_key_value_reinsert) {
-    CCC_Array_tree_map s = array_tree_map_initialize(
-        struct Val, id, id_order, NULL, NULL, STANDARD_FIXED_CAP,
-        &(Standard_fixed_map){});
+    CCC_Array_tree_map s = array_tree_map_with_compound_literal(
+        id, id_order, (struct Val[STANDARD_FIXED_CAP]){});
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -220,9 +217,8 @@ check_static_begin(array_tree_map_test_iterate_remove_key_value_reinsert) {
 }
 
 check_static_begin(array_tree_map_test_valid_range) {
-    CCC_Array_tree_map s
-        = array_tree_map_initialize(struct Val, id, id_order, NULL, NULL,
-                                    SMALL_FIXED_CAP, &(Small_fixed_map){});
+    CCC_Array_tree_map s = array_tree_map_with_compound_literal(
+        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
 
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
@@ -247,9 +243,8 @@ check_static_begin(array_tree_map_test_valid_range) {
 }
 
 check_static_begin(array_tree_map_test_valid_range_equals) {
-    CCC_Array_tree_map s
-        = array_tree_map_initialize(struct Val, id, id_order, NULL, NULL,
-                                    SMALL_FIXED_CAP, &(Small_fixed_map){});
+    CCC_Array_tree_map s = array_tree_map_with_compound_literal(
+        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
     for (int i = 0, id = 0; i < num_nodes; ++i, id += 5) {
@@ -272,9 +267,8 @@ check_static_begin(array_tree_map_test_valid_range_equals) {
 }
 
 check_static_begin(array_tree_map_test_invalid_range) {
-    CCC_Array_tree_map s
-        = array_tree_map_initialize(struct Val, id, id_order, NULL, NULL,
-                                    SMALL_FIXED_CAP, &(Small_fixed_map){});
+    CCC_Array_tree_map s = array_tree_map_with_compound_literal(
+        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
     for (int i = 0, id = 0; i < num_nodes; ++i, id += 5) {
@@ -298,9 +292,8 @@ check_static_begin(array_tree_map_test_invalid_range) {
 }
 
 check_static_begin(array_tree_map_test_empty_range) {
-    CCC_Array_tree_map s
-        = array_tree_map_initialize(struct Val, id, id_order, NULL, NULL,
-                                    SMALL_FIXED_CAP, &(Small_fixed_map){});
+    CCC_Array_tree_map s = array_tree_map_with_compound_literal(
+        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     int const num_nodes = 25;
     int const step = 5;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */

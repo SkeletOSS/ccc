@@ -4,7 +4,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "flat_hash_map.h"
 #include "types.h"
 
 struct Val {
@@ -12,19 +11,9 @@ struct Val {
     int val;
 };
 
-/** A small fixed map is good when 64 is a desirable upper bound on capacity.
-Insertions can continue for about 87.5% of the capacity so about 56. Play it
-safe and avoid this limit unless testing insertion failure is important. */
-CCC_flat_hash_map_declare_fixed(Small_fixed_map, struct Val, 64);
-
-/** A standard fixed map is good when 1024 is a desirable upper bound on
-capacity. Insertions can continue for 87.5% of the capacity so about 896. Play
-it safe and avoid this limit unless testing insertion failure is important. */
-CCC_flat_hash_map_declare_fixed(Standard_fixed_map, struct Val, 1024);
-
 enum : size_t {
-    SMALL_FIXED_CAP = CCC_flat_hash_map_fixed_capacity(Small_fixed_map),
-    STANDARD_FIXED_CAP = CCC_flat_hash_map_fixed_capacity(Standard_fixed_map),
+    SMALL_FIXED_CAP = 64,
+    STANDARD_FIXED_CAP = 1024,
 };
 
 uint64_t flat_hash_map_int_zero(CCC_Key_context);

@@ -76,7 +76,7 @@ validate_sudoku_box(int const board[9][9], Bitset *const row_check,
                     Bitset *const col_check, size_t const row_start,
                     size_t const col_start) {
     Bitset box_check
-        = bitset_with_compound_literal(DIGITS, bitset_blocks(DIGITS));
+        = bitset_with_compound_literal(DIGITS, bitset_storage_for(DIGITS));
     CCC_Tribool was_on = CCC_FALSE;
     for (size_t r = row_start; r < row_start + BOX_SIZE; ++r) {
         for (size_t c = col_start; c < col_start + BOX_SIZE; ++c) {
@@ -109,9 +109,9 @@ validate_sudoku_box(int const board[9][9], Bitset *const row_check,
 static CCC_Tribool
 is_valid_sudoku(int const board[9][9]) {
     Bitset row_check = bitset_with_compound_literal(
-        ROWS * DIGITS, bitset_blocks(ROWS * DIGITS));
+        ROWS * DIGITS, bitset_storage_for(ROWS * DIGITS));
     Bitset col_check = bitset_with_compound_literal(
-        COLS * DIGITS, bitset_blocks(COLS * DIGITS));
+        COLS * DIGITS, bitset_storage_for(COLS * DIGITS));
     for (size_t row = 0; row < ROWS; row += BOX_SIZE) {
         for (size_t col = 0; col < COLS; col += BOX_SIZE) {
             if (!validate_sudoku_box(board, &row_check, &col_check, row, col)) {
@@ -294,10 +294,8 @@ flat_hash_map_id_cmp(CCC_Key_comparator_context const cmp) {
     return (left > right->key) - (left < right->key);
 }
 
-flat_hash_map_declare_fixed(Standard_fixed_map, struct Key_val, 1024);
-
 enum : size_t {
-    STANDARD_FIXED_CAP = flat_hash_map_fixed_capacity(Standard_fixed_map),
+    STANDARD_FIXED_CAP = 1024,
 };
 
 /* Longest Consecutive Sequence Leetcode Problem */
@@ -305,7 +303,7 @@ int
 main(void) {
     CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_cmp,
-        (Standard_fixed_map){});
+        (struct Key_val[STANDARD_FIXED_CAP]){});
     /* Longest sequence is 1,2,3,4,5,6,7,8,9,10 of length 10. */
     int const nums[] = {
         99, 54, 1, 4, 9,  2, 3,   4,  8,  271, 32, 45, 86, 44, 7,  777, 6,  20,
@@ -419,8 +417,6 @@ struct Key_val {
     int val;
 };
 
-array_adaptive_map_declare_fixed(Key_val_fixed_map, struct Key_val, 26);
-
 static CCC_Order
 Key_val_cmp(CCC_Key_comparator_context const cmp) {
     struct Key_val const *const right = cmp.type_right;
@@ -434,7 +430,7 @@ main(void) {
        named elem, key field named key, no allocation permission, key comparison
        function, no context data. */
     Array_adaptive_map s = array_adaptive_map_with_compound_literal(
-        key, Key_val_cmp, (Key_val_fixed_map){});
+        key, Key_val_cmp, (struct Key_val[26]){});
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
     for (int i = 0, id = 0; i < num_nodes; ++i, id += 5) {
@@ -487,7 +483,6 @@ struct Key_val {
     int key;
     int val;
 };
-CCC_array_tree_map_declare_fixed(Key_val_fixed_map, struct Val, 64);
 
 static CCC_Order
 Key_val_cmp(CCC_Key_comparator_context const cmp) {
@@ -501,7 +496,7 @@ main(void) {
     /* stack array, user defined type, key field named key, no allocation
        permission, key comparison function, no context data. */
     Array_tree_map s = array_tree_map_with_compound_literal(
-        key, hrmap_key_cmp, (Key_val_fixed_map){});
+        key, hrmap_key_cmp, (struct Kay_val[64]){});
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
     for (int i = 0, id = 0; i < num_nodes; ++i, id += 5) {
@@ -874,10 +869,9 @@ struct Val {
     int key;
     int val;
 };
-flat_hash_map_declare_fixed(Val_fixed_map, struct Val, 64);
 static Flat_hash_map static_fh = flat_hash_map_with_compound_literal(
     key, flat_hash_map_int_to_u64, flat_hash_map_id_cmp,
-    (static Val_fixed_map){});
+    (struct Val[64]){}, static);
 ```
 
 A flat hash map can also be initialized in preparation for dynamic allocation at compile time if an allocation function is provided (see [allocation](#allocation) for more on `std_alloc`).
