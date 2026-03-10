@@ -1407,16 +1407,10 @@ This graph shows which files directly or indirectly include this file:</div>
 <dl class="section return"><dt>Returns</dt><dd>a pointer to the start of the inserted range or NULL if a resize was required and could not complete.</dd></dl>
 <p>Note that if no allocation is permitted the queue behaves as a ring buffer. Therefore, pushing a range that will exceed capacity will overwrite elements at the start of the flat_double_ended_queue.</p>
 <p>Pushing a range of elements prioritizes the range and allows the range to overwrite elements instead of pushing those elements over the start of the range. For example, push a range <code>{3,4,5}</code> over a queue with capacity 5 before position with value 6.</p>
-<div class="fragment"><div class="line"> front position     front</div>
-<div class="line">┌─┬┴┬─┬┴┬─┐    ┌─┬─┬┴┬─┬─┐</div>
-<div class="line">│ │1│2│6│ │ -&gt; │5│6│2│3│4│</div>
-<div class="line">└─┴─┴─┴─┴─┘    └─┴─┴─┴─┴─┘</div>
-</div><!-- fragment --><p>Notice that 1 and 2 were NOT moved to overwrite the start of the range, the values 3 and 4. Instead, the value 1 was overwritten and the front of the queue progressed to the next value. The only way the start of a range will be overwritten is if the range itself is too large for the capacity. For example, push a range <code>{0,0,3,3,4,4,5,5}</code> over the same flat_double_ended_queue.</p>
-<div class="fragment"><div class="line"> front position front</div>
-<div class="line">┌─┬┴┬─┬┴┬─┐    ┌┴┬─┬─┬─┬─┐</div>
-<div class="line">│ │1│2│6│ │ -&gt; │3│4│4│5│5│</div>
-<div class="line">└─┴─┴─┴─┴─┘    └─┴─┴─┴─┴─┘</div>
-</div><!-- fragment --><p>Notice that the start of the range, <code>{0,0,3,...}</code>, is overwritten. </p>
+<p>front position front ┌─┬┴┬─┬┴┬─┐ ┌─┬─┬┴┬─┬─┐ │ │1│2│6│ │ -&gt; │5│6│2│3│4│ └─┴─┴─┴─┴─┘ └─┴─┴─┴─┴─┘</p>
+<p>Notice that 1 and 2 were NOT moved to overwrite the start of the range, the values 3 and 4. Instead, the value 1 was overwritten and the front of the queue progressed to the next value. The only way the start of a range will be overwritten is if the range itself is too large for the capacity. For example, push a range <code>{0,0,3,3,4,4,5,5}</code> over the same flat_double_ended_queue.</p>
+<p>front position front ┌─┬┴┬─┬┴┬─┐ ┌┴┬─┬─┬─┬─┐ │ │1│2│6│ │ -&gt; │3│4│4│5│5│ └─┴─┴─┴─┴─┘ └─┴─┴─┴─┴─┘</p>
+<p>Notice that the start of the range, <code>{0,0,3,...}</code>, is overwritten. </p>
 
 </div>
 </div>

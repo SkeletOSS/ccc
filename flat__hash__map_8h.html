@@ -365,7 +365,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="flat__hash__map_8h.html#a11c397e5235fefa94bd3b1f3298a1ae0">CCC_Flat_hash_map_entry</a>){<a class="code hl_define" href="private__flat__hash__map_8h.html#a4b6332ccc161afcb1c5154d1e60f595c">CCC_private_flat_hash_map_and_modify_with</a>(      \</div>
 <div class="line">        map_entry_pointer, type_name, closure_over_T)}</div>
 <div class="ttc" id="aflat__hash__map_8h_html_a11c397e5235fefa94bd3b1f3298a1ae0"><div class="ttname"><a href="flat__hash__map_8h.html#a11c397e5235fefa94bd3b1f3298a1ae0">CCC_Flat_hash_map_entry</a></div><div class="ttdeci">union CCC_Flat_hash_map_entry_wrap CCC_Flat_hash_map_entry</div><div class="ttdoc">A container specific entry used to implement the Entry Interface.</div><div class="ttdef"><b>Definition:</b> flat_hash_map.h:120</div></div>
-<div class="ttc" id="aprivate__flat__hash__map_8h_html_a4b6332ccc161afcb1c5154d1e60f595c"><div class="ttname"><a href="private__flat__hash__map_8h.html#a4b6332ccc161afcb1c5154d1e60f595c">CCC_private_flat_hash_map_and_modify_with</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_and_modify_with( Flat_hash_map_entry_pointer, type_name, closure_over_T...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:416</div></div>
+<div class="ttc" id="aprivate__flat__hash__map_8h_html_a4b6332ccc161afcb1c5154d1e60f595c"><div class="ttname"><a href="private__flat__hash__map_8h.html#a4b6332ccc161afcb1c5154d1e60f595c">CCC_private_flat_hash_map_and_modify_with</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_and_modify_with( Flat_hash_map_entry_pointer, type_name, closure_over_T...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:414</div></div>
 </div><!-- fragment -->
 <p>Modify an Occupied entry with a closure over user type T. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -458,7 +458,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__hash__map_8h.html#a21ccd207494502ab79e7af7d6bb260cd">CCC_private_flat_hash_map_context_from</a>(key_field, hash, compare, allocate, \</div>
 <div class="line">                                           context, optional_capacity,         \</div>
 <div class="line">                                           array_compound_literal)</div>
-<div class="ttc" id="aprivate__flat__hash__map_8h_html_a21ccd207494502ab79e7af7d6bb260cd"><div class="ttname"><a href="private__flat__hash__map_8h.html#a21ccd207494502ab79e7af7d6bb260cd">CCC_private_flat_hash_map_context_from</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_context_from( private_key_field, private_hash, private_key_compare, private_allocate, private_context, private_optional_cap, private_array_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:290</div></div>
+<div class="ttc" id="aprivate__flat__hash__map_8h_html_a21ccd207494502ab79e7af7d6bb260cd"><div class="ttname"><a href="private__flat__hash__map_8h.html#a21ccd207494502ab79e7af7d6bb260cd">CCC_private_flat_hash_map_context_from</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_context_from( private_key_field, private_hash, private_key_compare, private_allocate, private_context, private_optional_cap, private_array_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:288</div></div>
 </div><!-- fragment -->
 <p>Initialize a dynamic map at runtime from an initializer list. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -602,7 +602,7 @@ If initialization fails, the map will be returned empty. All subsequent queries,
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__hash__map_8h.html#a76b5091d70df9aa21c219e37b7b9a190">CCC_private_flat_hash_map_from</a>(key_field, hash, compare, allocate,         \</div>
 <div class="line">                                   optional_capacity, array_compound_literal)</div>
-<div class="ttc" id="aprivate__flat__hash__map_8h_html_a76b5091d70df9aa21c219e37b7b9a190"><div class="ttname"><a href="private__flat__hash__map_8h.html#a76b5091d70df9aa21c219e37b7b9a190">CCC_private_flat_hash_map_from</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_from( private_key_field, private_hash, private_key_compare, private_allocate, private_optional_cap, private_array_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:331</div></div>
+<div class="ttc" id="aprivate__flat__hash__map_8h_html_a76b5091d70df9aa21c219e37b7b9a190"><div class="ttname"><a href="private__flat__hash__map_8h.html#a76b5091d70df9aa21c219e37b7b9a190">CCC_private_flat_hash_map_from</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_from( private_key_field, private_hash, private_key_compare, private_allocate, private_optional_cap, private_array_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:329</div></div>
 </div><!-- fragment -->
 <p>Initialize a dynamic map at runtime from an initializer list. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -714,7 +714,7 @@ If initialization fails, the map will be returned empty. All subsequent queries,
 <b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__hash__map_8h.html#a597c15f2d38b88417b025bf9d7cb4a52">CCC_private_flat_hash_map_initialize</a>(type_name, key_field, hash, compare,  \</div>
 <div class="line">                                         allocate, context, capacity,          \</div>
 <div class="line">                                         map_pointer)</div>
-<div class="ttc" id="aprivate__flat__hash__map_8h_html_a597c15f2d38b88417b025bf9d7cb4a52"><div class="ttname"><a href="private__flat__hash__map_8h.html#a597c15f2d38b88417b025bf9d7cb4a52">CCC_private_flat_hash_map_initialize</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_initialize( private_type_name, private_key_field, private_hash, private_key_compare, private_allocate, private_context, private_capacity, private_fixed_map_pointer)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:269</div></div>
+<div class="ttc" id="aprivate__flat__hash__map_8h_html_a597c15f2d38b88417b025bf9d7cb4a52"><div class="ttname"><a href="private__flat__hash__map_8h.html#a597c15f2d38b88417b025bf9d7cb4a52">CCC_private_flat_hash_map_initialize</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_initialize( private_type_name, private_key_field, private_hash, private_key_compare, private_allocate, private_context, private_capacity, private_fixed_map_pointer)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:267</div></div>
 </div><!-- fragment -->
 <p>Initialize a map of types at compile time or runtime. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -797,7 +797,7 @@ If initialization fails, the map will be returned empty. All subsequent queries,
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__hash__map_8h.html#a1436dc74263c3b59ec9ee1d05dd005c2">CCC_private_flat_hash_map_insert_entry_with</a>(map_entry_pointer,             \</div>
 <div class="line">                                                type_compound_literal)</div>
-<div class="ttc" id="aprivate__flat__hash__map_8h_html_a1436dc74263c3b59ec9ee1d05dd005c2"><div class="ttname"><a href="private__flat__hash__map_8h.html#a1436dc74263c3b59ec9ee1d05dd005c2">CCC_private_flat_hash_map_insert_entry_with</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_insert_entry_with( Flat_hash_map_entry_pointer, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:472</div></div>
+<div class="ttc" id="aprivate__flat__hash__map_8h_html_a1436dc74263c3b59ec9ee1d05dd005c2"><div class="ttname"><a href="private__flat__hash__map_8h.html#a1436dc74263c3b59ec9ee1d05dd005c2">CCC_private_flat_hash_map_insert_entry_with</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_insert_entry_with( Flat_hash_map_entry_pointer, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:470</div></div>
 </div><!-- fragment -->
 <p>write the contents of the compound literal type_compound_literal to a slot. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -844,7 +844,7 @@ If initialization fails, the map will be returned empty. All subsequent queries,
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>){<a class="code hl_define" href="private__flat__hash__map_8h.html#a9b0bb89a9e79d518c1bbd4529a320451">CCC_private_flat_hash_map_insert_or_assign_with</a>(              \</div>
 <div class="line">        map_pointer, key, type_compound_literal)}</div>
-<div class="ttc" id="aprivate__flat__hash__map_8h_html_a9b0bb89a9e79d518c1bbd4529a320451"><div class="ttname"><a href="private__flat__hash__map_8h.html#a9b0bb89a9e79d518c1bbd4529a320451">CCC_private_flat_hash_map_insert_or_assign_with</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_insert_or_assign_with( flat_hash_map_pointer, key, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:549</div></div>
+<div class="ttc" id="aprivate__flat__hash__map_8h_html_a9b0bb89a9e79d518c1bbd4529a320451"><div class="ttname"><a href="private__flat__hash__map_8h.html#a9b0bb89a9e79d518c1bbd4529a320451">CCC_private_flat_hash_map_insert_or_assign_with</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_insert_or_assign_with( flat_hash_map_pointer, key, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:547</div></div>
 <div class="ttc" id="astructCCC__Entry_html"><div class="ttname"><a href="structCCC__Entry.html">CCC_Entry</a></div><div class="ttdef"><b>Definition:</b> private_types.h:51</div></div>
 </div><!-- fragment -->
 <p>Inserts a new key value pair or overwrites the existing entry. </p>
@@ -929,7 +929,7 @@ If initialization fails, the map will be returned empty. All subsequent queries,
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__hash__map_8h.html#aec8e8dc2f6fd7574ad3f484cadb1664b">CCC_private_flat_hash_map_or_insert_with</a>(map_entry_pointer,                \</div>
 <div class="line">                                             type_compound_literal)</div>
-<div class="ttc" id="aprivate__flat__hash__map_8h_html_aec8e8dc2f6fd7574ad3f484cadb1664b"><div class="ttname"><a href="private__flat__hash__map_8h.html#aec8e8dc2f6fd7574ad3f484cadb1664b">CCC_private_flat_hash_map_or_insert_with</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_or_insert_with(Flat_hash_map_entry_pointer, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:443</div></div>
+<div class="ttc" id="aprivate__flat__hash__map_8h_html_aec8e8dc2f6fd7574ad3f484cadb1664b"><div class="ttname"><a href="private__flat__hash__map_8h.html#aec8e8dc2f6fd7574ad3f484cadb1664b">CCC_private_flat_hash_map_or_insert_with</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_or_insert_with(Flat_hash_map_entry_pointer, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:441</div></div>
 </div><!-- fragment -->
 <p>lazily insert the desired key value into the entry if it is Vacant. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1040,7 +1040,7 @@ If initialization fails, the map will be returned empty. All subsequent queries,
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__hash__map_8h.html#a5d30075708daa8114ecdbc19b3e4ba12">CCC_private_flat_hash_map_storage_for</a>(user_type_compound_literal_array,    \</div>
 <div class="line">                                          optional_storage_specifier)</div>
-<div class="ttc" id="aprivate__flat__hash__map_8h_html_a5d30075708daa8114ecdbc19b3e4ba12"><div class="ttname"><a href="private__flat__hash__map_8h.html#a5d30075708daa8114ecdbc19b3e4ba12">CCC_private_flat_hash_map_storage_for</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_storage_for( private_type_compound_literal_array, optional_storage_specifier...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:219</div></div>
+<div class="ttc" id="aprivate__flat__hash__map_8h_html_a5d30075708daa8114ecdbc19b3e4ba12"><div class="ttname"><a href="private__flat__hash__map_8h.html#a5d30075708daa8114ecdbc19b3e4ba12">CCC_private_flat_hash_map_storage_for</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_storage_for( private_type_compound_literal_array, optional_storage_specifier...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:217</div></div>
 </div><!-- fragment -->
 <p>Create the underlying fixed size storage for a user declared compound literal array of the type the user intends to store. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1078,7 +1078,7 @@ If initialization fails, the map will be returned empty. All subsequent queries,
 <div class="line">}</div>
 <div class="ttc" id="aflat__hash__map_8h_html_acd83c44a79479260e818e896ec1006ac"><div class="ttname"><a href="flat__hash__map_8h.html#acd83c44a79479260e818e896ec1006ac">CCC_flat_hash_map_initialize</a></div><div class="ttdeci">#define CCC_flat_hash_map_initialize(type_name, key_field, hash, compare, allocate, context, capacity, map_pointer)</div><div class="ttdoc">Initialize a map of types at compile time or runtime.</div><div class="ttdef"><b>Definition:</b> flat_hash_map.h:243</div></div>
 <div class="ttc" id="aflat__hash__map_8h_html_aef0cc74007bbdab507c0c3cf0b36351e"><div class="ttname"><a href="flat__hash__map_8h.html#aef0cc74007bbdab507c0c3cf0b36351e">CCC_flat_hash_map_storage_for</a></div><div class="ttdeci">#define CCC_flat_hash_map_storage_for(user_type_compound_literal_array, optional_storage_specifier...)</div><div class="ttdoc">Create the underlying fixed size storage for a user declared compound literal array of the type the u...</div><div class="ttdef"><b>Definition:</b> flat_hash_map.h:177</div></div>
-<div class="ttc" id="astructCCC__Flat__hash__map_html"><div class="ttname"><a href="structCCC__Flat__hash__map.html">CCC_Flat_hash_map</a></div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:141</div></div>
+<div class="ttc" id="astructCCC__Flat__hash__map_html"><div class="ttname"><a href="structCCC__Flat__hash__map.html">CCC_Flat_hash_map</a></div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:139</div></div>
 </div><!-- fragment --><p>Usually, using a dynamic map and the reserve interface would be sufficient. However, the reserve interface only guarantees that at least the needed bytes are allocated. When the user must know the exact size of the backing object due to strict memory requirements, this is helpful. Such a use case may be rare, but must be supported by this container. </p>
 
 </div>
@@ -1157,7 +1157,7 @@ If initialization fails, the map will be returned empty. All subsequent queries,
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>){<a class="code hl_define" href="private__flat__hash__map_8h.html#a6192df10948a8c7d1a953bb9129b5a39">CCC_private_flat_hash_map_try_insert_with</a>(                    \</div>
 <div class="line">        map_pointer, key, type_compound_literal)}</div>
-<div class="ttc" id="aprivate__flat__hash__map_8h_html_a6192df10948a8c7d1a953bb9129b5a39"><div class="ttname"><a href="private__flat__hash__map_8h.html#a6192df10948a8c7d1a953bb9129b5a39">CCC_private_flat_hash_map_try_insert_with</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_try_insert_with(flat_hash_map_pointer, key, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:500</div></div>
+<div class="ttc" id="aprivate__flat__hash__map_8h_html_a6192df10948a8c7d1a953bb9129b5a39"><div class="ttname"><a href="private__flat__hash__map_8h.html#a6192df10948a8c7d1a953bb9129b5a39">CCC_private_flat_hash_map_try_insert_with</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_try_insert_with(flat_hash_map_pointer, key, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:498</div></div>
 </div><!-- fragment -->
 <p>lazily insert type_compound_literal into the map at key if key is absent. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1260,7 +1260,7 @@ If initialization fails, the map will be returned empty. All subsequent queries,
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__hash__map_8h.html#a6572f5fa70af91599c843dce253253a9">CCC_private_flat_hash_map_with_allocator</a>(type_name, key_field, hash,       \</div>
 <div class="line">                                             compare, allocate)</div>
-<div class="ttc" id="aprivate__flat__hash__map_8h_html_a6572f5fa70af91599c843dce253253a9"><div class="ttname"><a href="private__flat__hash__map_8h.html#a6572f5fa70af91599c843dce253253a9">CCC_private_flat_hash_map_with_allocator</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_with_allocator( private_type_name, private_key_field, private_hash, private_key_compare, private_allocate)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:404</div></div>
+<div class="ttc" id="aprivate__flat__hash__map_8h_html_a6572f5fa70af91599c843dce253253a9"><div class="ttname"><a href="private__flat__hash__map_8h.html#a6572f5fa70af91599c843dce253253a9">CCC_private_flat_hash_map_with_allocator</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_with_allocator( private_type_name, private_key_field, private_hash, private_key_compare, private_allocate)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:402</div></div>
 </div><!-- fragment -->
 <p>Initialize an empty dynamic map at compile or runtime with an allocator. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1343,7 +1343,7 @@ If initialization fails, the map will be returned empty. All subsequent queries,
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__hash__map_8h.html#a0ae2e7583b028e84ccdddbcad5b5f132">CCC_private_flat_hash_map_with_capacity</a>(type_name, key_field, hash,        \</div>
 <div class="line">                                            compare, allocate, capacity)</div>
-<div class="ttc" id="aprivate__flat__hash__map_8h_html_a0ae2e7583b028e84ccdddbcad5b5f132"><div class="ttname"><a href="private__flat__hash__map_8h.html#a0ae2e7583b028e84ccdddbcad5b5f132">CCC_private_flat_hash_map_with_capacity</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_with_capacity( private_type_name, private_key_field, private_hash, private_key_compare, private_allocate, private_cap)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:355</div></div>
+<div class="ttc" id="aprivate__flat__hash__map_8h_html_a0ae2e7583b028e84ccdddbcad5b5f132"><div class="ttname"><a href="private__flat__hash__map_8h.html#a0ae2e7583b028e84ccdddbcad5b5f132">CCC_private_flat_hash_map_with_capacity</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_with_capacity( private_type_name, private_key_field, private_hash, private_key_compare, private_allocate, private_cap)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:353</div></div>
 </div><!-- fragment -->
 <p>Initialize a dynamic map at runtime with at least the specified capacity. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1431,7 +1431,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__hash__map_8h.html#ab76b5534e565ddc746d99964d2c24b8c">CCC_private_flat_hash_map_with_compound_literal</a>(                           \</div>
 <div class="line">        key_field, hash, compare, compound_literal,                            \</div>
 <div class="line">        optional_storage_specifier)</div>
-<div class="ttc" id="aprivate__flat__hash__map_8h_html_ab76b5534e565ddc746d99964d2c24b8c"><div class="ttname"><a href="private__flat__hash__map_8h.html#ab76b5534e565ddc746d99964d2c24b8c">CCC_private_flat_hash_map_with_compound_literal</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_with_compound_literal( private_key_field, private_hash, private_key_compare, private_compound_literal, private_optional_storage_specifier...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:388</div></div>
+<div class="ttc" id="aprivate__flat__hash__map_8h_html_ab76b5534e565ddc746d99964d2c24b8c"><div class="ttname"><a href="private__flat__hash__map_8h.html#ab76b5534e565ddc746d99964d2c24b8c">CCC_private_flat_hash_map_with_compound_literal</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_with_compound_literal( private_key_field, private_hash, private_key_compare, private_compound_literal, private_optional_storage_specifier...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:386</div></div>
 </div><!-- fragment -->
 <p>Initialize a fixed map at compile time or runtime from its previously declared type using a compound literal with no allocation permissions or context. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1514,7 +1514,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__hash__map_8h.html#aa5e2e66acd4437090a845417b60598d7">CCC_private_flat_hash_map_with_context_allocator</a>(                          \</div>
 <div class="line">        type_name, key_field, hash, compare, allocate, context)</div>
-<div class="ttc" id="aprivate__flat__hash__map_8h_html_aa5e2e66acd4437090a845417b60598d7"><div class="ttname"><a href="private__flat__hash__map_8h.html#aa5e2e66acd4437090a845417b60598d7">CCC_private_flat_hash_map_with_context_allocator</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_with_context_allocator( private_type_name, private_key_field, private_hash, private_key_compare, private_allocate, private_context)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:396</div></div>
+<div class="ttc" id="aprivate__flat__hash__map_8h_html_aa5e2e66acd4437090a845417b60598d7"><div class="ttname"><a href="private__flat__hash__map_8h.html#aa5e2e66acd4437090a845417b60598d7">CCC_private_flat_hash_map_with_context_allocator</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_with_context_allocator( private_type_name, private_key_field, private_hash, private_key_compare, private_allocate, private_context)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:394</div></div>
 </div><!-- fragment -->
 <p>Initialize an empty dynamic map at compile or runtime with an allocator. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1605,7 +1605,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__hash__map_8h.html#aad7580cd04e17534d25733bc6b25c5a8">CCC_private_flat_hash_map_with_context_capacity</a>(                           \</div>
 <div class="line">        type_name, key_field, hash, compare, allocate, context, capacity)</div>
-<div class="ttc" id="aprivate__flat__hash__map_8h_html_aad7580cd04e17534d25733bc6b25c5a8"><div class="ttname"><a href="private__flat__hash__map_8h.html#aad7580cd04e17534d25733bc6b25c5a8">CCC_private_flat_hash_map_with_context_capacity</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_with_context_capacity( private_type_name, private_key_field, private_hash, private_key_compare, private_allocate, private_context, private_cap)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:340</div></div>
+<div class="ttc" id="aprivate__flat__hash__map_8h_html_aad7580cd04e17534d25733bc6b25c5a8"><div class="ttname"><a href="private__flat__hash__map_8h.html#aad7580cd04e17534d25733bc6b25c5a8">CCC_private_flat_hash_map_with_context_capacity</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_with_context_capacity( private_type_name, private_key_field, private_hash, private_key_compare, private_allocate, private_context, private_cap)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:338</div></div>
 </div><!-- fragment -->
 <p>Initialize a dynamic map at runtime with at least the specified capacity. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1701,7 +1701,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__hash__map_8h.html#aa83f2920f9ab650598c9f303220e113f">CCC_private_flat_hash_map_with_context_compound_literal</a>(                   \</div>
 <div class="line">        key_field, hash, compare, context, compound_literal,                   \</div>
 <div class="line">        optional_storage_specifier)</div>
-<div class="ttc" id="aprivate__flat__hash__map_8h_html_aa83f2920f9ab650598c9f303220e113f"><div class="ttname"><a href="private__flat__hash__map_8h.html#aa83f2920f9ab650598c9f303220e113f">CCC_private_flat_hash_map_with_context_compound_literal</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_with_context_compound_literal( private_key_field, private_hash, private_key_compare, private_context, private_compound_literal, private_optional_storage_specifier...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:363</div></div>
+<div class="ttc" id="aprivate__flat__hash__map_8h_html_aa83f2920f9ab650598c9f303220e113f"><div class="ttname"><a href="private__flat__hash__map_8h.html#aa83f2920f9ab650598c9f303220e113f">CCC_private_flat_hash_map_with_context_compound_literal</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_with_context_compound_literal( private_key_field, private_hash, private_key_compare, private_context, private_compound_literal, private_optional_storage_specifier...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:361</div></div>
 </div><!-- fragment -->
 <p>Initialize a fixed map at compile time or runtime from any user chosen type using a compound literal with no allocation permissions. </p>
 <dl class="params"><dt>Parameters</dt><dd>
