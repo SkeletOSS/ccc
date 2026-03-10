@@ -134,12 +134,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Initialization Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Initialize the container with memory, callbacks, and permissions. </p>
 </td></tr>
-<tr class="memitem:aa5cd7d6e3b43cc6934c045378e3e3875"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#aa5cd7d6e3b43cc6934c045378e3e3875">CCC_array_adaptive_map_declare_fixed</a>(fixed_map_type_name,  type_name,  capacity)</td></tr>
-<tr class="memdesc:aa5cd7d6e3b43cc6934c045378e3e3875"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a fixed size map type for use in the stack, heap, or data segment. Does not return a value.  <br /></td></tr>
-<tr class="separator:aa5cd7d6e3b43cc6934c045378e3e3875"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89e80f373bb1e9b7f5893fc79b4791ab"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a89e80f373bb1e9b7f5893fc79b4791ab">CCC_array_adaptive_map_fixed_capacity</a>(fixed_map_type_name)&#160;&#160;&#160;    CCC_private_array_adaptive_map_fixed_capacity(fixed_map_type_name)</td></tr>
-<tr class="memdesc:a89e80f373bb1e9b7f5893fc79b4791ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtain the capacity previously chosen for the fixed size map type.  <br /></td></tr>
-<tr class="separator:a89e80f373bb1e9b7f5893fc79b4791ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a601c8adfbe08523b6a147b2071db585b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a601c8adfbe08523b6a147b2071db585b">CCC_array_adaptive_map_storage_for</a>(user_type_compound_literal_array,  optional_storage_specifier...)</td></tr>
+<tr class="memdesc:a601c8adfbe08523b6a147b2071db585b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create the underlying fixed size storage for a user declared compound literal array of the type the user intends to store.  <br /></td></tr>
+<tr class="separator:a601c8adfbe08523b6a147b2071db585b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a63dccaeb8ec31adf2bb79ba8997934fe"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a63dccaeb8ec31adf2bb79ba8997934fe">CCC_array_adaptive_map_initialize</a>(type_name,  type_key_field,  compare,  allocate,  context,  capacity,  memory_pointer)</td></tr>
 <tr class="memdesc:a63dccaeb8ec31adf2bb79ba8997934fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the map at runtime or compile time.  <br /></td></tr>
 <tr class="separator:a63dccaeb8ec31adf2bb79ba8997934fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -155,12 +152,12 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:ab7805a2557f8682845753b08339f1f1a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#ab7805a2557f8682845753b08339f1f1a">CCC_array_adaptive_map_with_context_capacity</a>( type_name,  type_key_field,  compare,  allocate,  context,  capacity)</td></tr>
 <tr class="memdesc:ab7805a2557f8682845753b08339f1f1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a dynamic map at runtime with at least the specified capacity.  <br /></td></tr>
 <tr class="separator:ab7805a2557f8682845753b08339f1f1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a51bcf371289fbd0a7a41a1066ffd7511"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a51bcf371289fbd0a7a41a1066ffd7511">CCC_array_adaptive_map_with_compound_literal</a>(type_key_field,  compare,  compound_literal)</td></tr>
-<tr class="memdesc:a51bcf371289fbd0a7a41a1066ffd7511"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a fixed map at compile or runtime from a previously declared fixed map type with no allocation permission or context.  <br /></td></tr>
-<tr class="separator:a51bcf371289fbd0a7a41a1066ffd7511"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3016df8053c72b6ee45e73da580633e9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a3016df8053c72b6ee45e73da580633e9">CCC_array_adaptive_map_with_context_compound_literal</a>( type_key_field,  compare,  context,  compound_literal)</td></tr>
-<tr class="memdesc:a3016df8053c72b6ee45e73da580633e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a fixed map at compile or runtime from a previously declared fixed map type with no allocation permission.  <br /></td></tr>
-<tr class="separator:a3016df8053c72b6ee45e73da580633e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a085dd403ec7dfe6cc4426c429e046929"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a085dd403ec7dfe6cc4426c429e046929">CCC_array_adaptive_map_with_compound_literal</a>( type_key_field,  compare,  compound_literal,  optional_storage_specifier...)</td></tr>
+<tr class="memdesc:a085dd403ec7dfe6cc4426c429e046929"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a fixed map at compile or runtime from any user chosen type with no allocation permission or context.  <br /></td></tr>
+<tr class="separator:a085dd403ec7dfe6cc4426c429e046929"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c041399faff7e4d28a64ca455f16dcc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a4c041399faff7e4d28a64ca455f16dcc">CCC_array_adaptive_map_with_context_compound_literal</a>( type_key_field,  compare,  context,  compound_literal,  optional_storage_specifier...)</td></tr>
+<tr class="memdesc:a4c041399faff7e4d28a64ca455f16dcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a fixed map at compile or runtime from any user chosen type with no allocation permission.  <br /></td></tr>
+<tr class="separator:a4c041399faff7e4d28a64ca455f16dcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa425985d1ddf181e8bec88492b398b19"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#aa425985d1ddf181e8bec88492b398b19">CCC_array_adaptive_map_with_allocator</a>(type_name,  type_key_field,  compare,  allocate)</td></tr>
 <tr class="memdesc:aa425985d1ddf181e8bec88492b398b19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an empty dynamic map at compile or runtime with an allocator.  <br /></td></tr>
 <tr class="separator:aa425985d1ddf181e8bec88492b398b19"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -553,84 +550,6 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 
 </div>
 </div>
-<a id="aa5cd7d6e3b43cc6934c045378e3e3875" name="aa5cd7d6e3b43cc6934c045378e3e3875"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa5cd7d6e3b43cc6934c045378e3e3875">&#9670;&#160;</a></span>CCC_array_adaptive_map_declare_fixed</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_array_adaptive_map_declare_fixed</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">fixed_map_type_name, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_name, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">capacity&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_adaptive_map_declare_fixed(fixed_map_type_name,          \</div>
-<div class="line">                                                 type_name, capacity)</div>
-</div><!-- fragment -->
-<p>Declare a fixed size map type for use in the stack, heap, or data segment. Does not return a value. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">fixed_map_type_name</td><td>the user chosen name of the fixed sized map. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the type the user plans to store in the map. It may have a key and value field as well as any additional fields. For set-like behavior, wrap a field in a struct/union (e.g. <code>union int_node {int e;};</code>). </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">capacity</td><td>the desired number of user accessible nodes. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section warning"><dt>Warning</dt><dd>the map will use one slot of the specified capacity for a sentinel node. This is not important to the user unless an exact allocation count is needed in which case 1 should be added to desired capacity.</dd></dl>
-<p>Once the location for the fixed size map is chosen&ndash;stack, heap, or data segment&ndash;provide a pointer to the map for the initialization macro.</p>
-<div class="fragment"><div class="line"><span class="keyword">struct </span>Val</div>
-<div class="line">{</div>
-<div class="line">    <span class="keywordtype">int</span> key;</div>
-<div class="line">    <span class="keywordtype">int</span> val;</div>
-<div class="line">};</div>
-<div class="line"><a class="code hl_define" href="array__adaptive__map_8h.html#aa5cd7d6e3b43cc6934c045378e3e3875">CCC_array_adaptive_map_declare_fixed</a>(Small_fixed_map, <span class="keyword">struct</span> Val, 64);</div>
-<div class="line"><span class="keyword">static</span> Array_adaptive_map static_map = array_adaptive_map_with_compound_literal(</div>
-<div class="line">    key,</div>
-<div class="line">    array_adaptive_map_key_order,</div>
-<div class="line">    (<span class="keyword">static</span> Small_fixed_map){}</div>
-<div class="line">);</div>
-<div class="ttc" id="aarray__adaptive__map_8h_html_aa5cd7d6e3b43cc6934c045378e3e3875"><div class="ttname"><a href="array__adaptive__map_8h.html#aa5cd7d6e3b43cc6934c045378e3e3875">CCC_array_adaptive_map_declare_fixed</a></div><div class="ttdeci">#define CCC_array_adaptive_map_declare_fixed(fixed_map_type_name, type_name, capacity)</div><div class="ttdoc">Declare a fixed size map type for use in the stack, heap, or data segment. Does not return a value.</div><div class="ttdef"><b>Definition:</b> array_adaptive_map.h:148</div></div>
-</div><!-- fragment --><p>Similarly, a fixed size map can be used on the stack.</p>
-<div class="fragment"><div class="line"><span class="keyword">struct </span>Val</div>
-<div class="line">{</div>
-<div class="line">    <span class="keywordtype">int</span> key;</div>
-<div class="line">    <span class="keywordtype">int</span> val;</div>
-<div class="line">};</div>
-<div class="line"><a class="code hl_define" href="array__adaptive__map_8h.html#aa5cd7d6e3b43cc6934c045378e3e3875">CCC_array_adaptive_map_declare_fixed</a>(Small_fixed_map, <span class="keyword">struct</span> Val, 64);</div>
-<div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">void</span>)</div>
-<div class="line">{</div>
-<div class="line">    Array_adaptive_map map = array_adaptive_map_with_compound_literal(</div>
-<div class="line">        key,</div>
-<div class="line">        array_adaptive_map_key_order,</div>
-<div class="line">        (Small_fixed_map){}</div>
-<div class="line">    );</div>
-<div class="line">    <span class="keywordflow">return</span> 0;</div>
-<div class="line">}</div>
-</div><!-- fragment --><p>The CCC_array_adaptive_map_fixed_capacity macro can be used to obtain the previously provided capacity when declaring the fixed map type. Finally, one could allocate a fixed size map on the heap; however, it is usually better to initialize a dynamic map and use the CCC_array_adaptive_map_reserve function for such a use case.</p>
-<p>This macro is not needed when a dynamic resizing map is needed. For dynamic maps, pass NULL and 0 capacity to the initialization macro along with the desired allocation function. </p>
-
-</div>
-</div>
 <a id="a3cd82daf7a8cb0624eebefabb795d733" name="a3cd82daf7a8cb0624eebefabb795d733"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3cd82daf7a8cb0624eebefabb795d733">&#9670;&#160;</a></span>CCC_array_adaptive_map_equal_range_reverse_wrap</h2>
 
@@ -714,33 +633,6 @@ If initialization fails all subsequent queries, insertions, or removals will ind
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a compound literal reference to the produced range associated with the enclosing scope. This reference is always be valid. </dd></dl>
-
-</div>
-</div>
-<a id="a89e80f373bb1e9b7f5893fc79b4791ab" name="a89e80f373bb1e9b7f5893fc79b4791ab"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a89e80f373bb1e9b7f5893fc79b4791ab">&#9670;&#160;</a></span>CCC_array_adaptive_map_fixed_capacity</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_array_adaptive_map_fixed_capacity</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">fixed_map_type_name</td><td>)</td>
-          <td>&#160;&#160;&#160;    CCC_private_array_adaptive_map_fixed_capacity(fixed_map_type_name)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Obtain the capacity previously chosen for the fixed size map type. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">fixed_map_type_name</td><td>the name of a previously declared map. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the size_t capacity previously specified for this type by user. </dd></dl>
 
 </div>
 </div>
@@ -1154,6 +1046,75 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 
 </div>
 </div>
+<a id="a601c8adfbe08523b6a147b2071db585b" name="a601c8adfbe08523b6a147b2071db585b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a601c8adfbe08523b6a147b2071db585b">&#9670;&#160;</a></span>CCC_array_adaptive_map_storage_for</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CCC_array_adaptive_map_storage_for</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">user_type_compound_literal_array, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">optional_storage_specifier...&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_adaptive_map_storage_for(                                \</div>
+<div class="line">        user_type_compound_literal_array, optional_storage_specifier)</div>
+</div><!-- fragment -->
+<p>Create the underlying fixed size storage for a user declared compound literal array of the type the user intends to store. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">user_type_compound_literal_array</td><td>a compound literal array of the type around which the map will be built. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">optional_storage_specifier</td><td>a storage specifier for the backing struct of array storage may be added on newer compilers such as static. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section warning"><dt>Warning</dt><dd>This should rarely be used. If a fixed size map is desired simply use the <a class="el" href="array__adaptive__map_8h.html#a085dd403ec7dfe6cc4426c429e046929" title="Initialize a fixed map at compile or runtime from any user chosen type with no allocation permission ...">CCC_array_adaptive_map_with_compound_literal()</a> initializer. For dynamic maps, there are also many other options.</dd></dl>
+<p>This macro is required to support the edge case for the user allocating a fixed size map dynamically from an allocator at runtime. In this case, the user needs access to the compound literal struct of arrays map to know how many bytes to allocate. See the below example.</p>
+<div class="fragment"><div class="line"><span class="keyword">struct </span>Val</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordtype">int</span> key;</div>
+<div class="line">    <span class="keywordtype">int</span> val;</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">int</span></div>
+<div class="line">main(<span class="keywordtype">void</span>)</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordtype">void</span> *<span class="keyword">const</span> map = malloc(</div>
+<div class="line">        <span class="keyword">sizeof</span>(<a class="code hl_define" href="array__adaptive__map_8h.html#a601c8adfbe08523b6a147b2071db585b">CCC_array_adaptive_map_storage_for</a>((<span class="keyword">struct</span> Val[4096]){}))</div>
+<div class="line">    );</div>
+<div class="line">    defer free(map);</div>
+<div class="line">    <a class="code hl_struct" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> map = <a class="code hl_define" href="array__adaptive__map_8h.html#a63dccaeb8ec31adf2bb79ba8997934fe">CCC_array_adaptive_map_initialize</a>(</div>
+<div class="line">        <span class="keyword">struct</span> Val,</div>
+<div class="line">        key,</div>
+<div class="line">        hash_key,</div>
+<div class="line">        order_vals,</div>
+<div class="line">        NULL,</div>
+<div class="line">        NULL,</div>
+<div class="line">        4096,</div>
+<div class="line">        map</div>
+<div class="line">    );</div>
+<div class="line">}</div>
+<div class="ttc" id="aarray__adaptive__map_8h_html_a601c8adfbe08523b6a147b2071db585b"><div class="ttname"><a href="array__adaptive__map_8h.html#a601c8adfbe08523b6a147b2071db585b">CCC_array_adaptive_map_storage_for</a></div><div class="ttdeci">#define CCC_array_adaptive_map_storage_for(user_type_compound_literal_array, optional_storage_specifier...)</div><div class="ttdoc">Create the underlying fixed size storage for a user declared compound literal array of the type the u...</div><div class="ttdef"><b>Definition:</b> array_adaptive_map.h:138</div></div>
+<div class="ttc" id="aarray__adaptive__map_8h_html_a63dccaeb8ec31adf2bb79ba8997934fe"><div class="ttname"><a href="array__adaptive__map_8h.html#a63dccaeb8ec31adf2bb79ba8997934fe">CCC_array_adaptive_map_initialize</a></div><div class="ttdeci">#define CCC_array_adaptive_map_initialize(type_name, type_key_field, compare, allocate, context, capacity, memory_pointer)</div><div class="ttdoc">Initializes the map at runtime or compile time.</div><div class="ttdef"><b>Definition:</b> array_adaptive_map.h:154</div></div>
+<div class="ttc" id="astructCCC__Array__adaptive__map_html"><div class="ttname"><a href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a></div><div class="ttdef"><b>Definition:</b> private_array_adaptive_map.h:69</div></div>
+</div><!-- fragment --><p>Usually, using a dynamic map and the reserve interface would be sufficient. However, the reserve interface only guarantees that at least the needed bytes are allocated. When the user must know the exact size of the backing object due to strict memory requirements, this is helpful. Such a use case may be rare, but must be supported by this container. </p>
+
+</div>
+</div>
 <a id="ae38d277c09750eaf0a57250b8122f808" name="ae38d277c09750eaf0a57250b8122f808"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae38d277c09750eaf0a57250b8122f808">&#9670;&#160;</a></span>CCC_array_adaptive_map_swap_handle_wrap</h2>
 
@@ -1438,8 +1399,8 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 
 </div>
 </div>
-<a id="a51bcf371289fbd0a7a41a1066ffd7511" name="a51bcf371289fbd0a7a41a1066ffd7511"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a51bcf371289fbd0a7a41a1066ffd7511">&#9670;&#160;</a></span>CCC_array_adaptive_map_with_compound_literal</h2>
+<a id="a085dd403ec7dfe6cc4426c429e046929" name="a085dd403ec7dfe6cc4426c429e046929"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a085dd403ec7dfe6cc4426c429e046929">&#9670;&#160;</a></span>CCC_array_adaptive_map_with_compound_literal</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1460,7 +1421,13 @@ If initialization fails all subsequent queries, insertions, or removals will ind
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">compound_literal&#160;</td>
+          <td class="paramname">compound_literal, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">optional_storage_specifier...&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1470,18 +1437,19 @@ If initialization fails all subsequent queries, insertions, or removals will ind
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_adaptive_map_with_compound_literal(                      \</div>
-<div class="line">        type_key_field, compare, compound_literal)</div>
+<div class="line">        type_key_field, compare, compound_literal, optional_storage_specifier)</div>
 </div><!-- fragment -->
-<p>Initialize a fixed map at compile or runtime from a previously declared fixed map type with no allocation permission or context. </p>
+<p>Initialize a fixed map at compile or runtime from any user chosen type with no allocation permission or context. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">type_key_field</td><td>the field of the struct used for key storage. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the CCC_Key_comparator the user intends to use. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal</td><td>the previously declared fixed map compound literal. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal</td><td>the compound literal array of a type provided by the user around which the struct of array backing storage for the map will be built. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">optional_storage_specifier</td><td>lifetime specifier of the backing struct of array storage, such as static, for the fixed size map in the scope at which it is allocated or declared. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the map directly initialized on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> map = <a class="el" href="array__adaptive__map_8h.html#a51bcf371289fbd0a7a41a1066ffd7511" title="Initialize a fixed map at compile or runtime from a previously declared fixed map type with no alloca...">CCC_array_adaptive_map_with_compound_literal(...)</a>;)</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the map directly initialized on the right hand side of the equality operator.</dd></dl>
 <p>Initialize a fixed map.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define ARRAY_ADAPTIVE_MAP_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="keyword">struct </span>Val</div>
@@ -1489,11 +1457,10 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <div class="line">    <span class="keywordtype">int</span> key;</div>
 <div class="line">    <span class="keywordtype">int</span> val;</div>
 <div class="line">};</div>
-<div class="line"><a class="code hl_define" href="array__adaptive__map_8h.html#aa5cd7d6e3b43cc6934c045378e3e3875">CCC_array_adaptive_map_declare_fixed</a>(Small_fixed_map, <span class="keyword">struct</span> Val, 64);</div>
 <div class="line"><span class="keyword">static</span> Array_adaptive_map map = array_adaptive_map_with_compound_literal(</div>
 <div class="line">    key,</div>
 <div class="line">    array_adaptive_map_key_order,</div>
-<div class="line">    (Small_fixed_map){},</div>
+<div class="line">    (<span class="keyword">struct</span> Val[4096]){}</div>
 <div class="line">);</div>
 </div><!-- fragment --><p>This can help eliminate boilerplate in initializers. </p>
 
@@ -1667,8 +1634,8 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 
 </div>
 </div>
-<a id="a3016df8053c72b6ee45e73da580633e9" name="a3016df8053c72b6ee45e73da580633e9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3016df8053c72b6ee45e73da580633e9">&#9670;&#160;</a></span>CCC_array_adaptive_map_with_context_compound_literal</h2>
+<a id="a4c041399faff7e4d28a64ca455f16dcc" name="a4c041399faff7e4d28a64ca455f16dcc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c041399faff7e4d28a64ca455f16dcc">&#9670;&#160;</a></span>CCC_array_adaptive_map_with_context_compound_literal</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1695,7 +1662,13 @@ If initialization fails all subsequent queries, insertions, or removals will ind
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">compound_literal&#160;</td>
+          <td class="paramname">compound_literal, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">optional_storage_specifier...&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1705,19 +1678,21 @@ If initialization fails all subsequent queries, insertions, or removals will ind
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_adaptive_map_with_context_compound_literal(              \</div>
-<div class="line">        type_key_field, compare, context, compound_literal)</div>
+<div class="line">        type_key_field, compare, context, compound_literal,                    \</div>
+<div class="line">        optional_storage_specifier)</div>
 </div><!-- fragment -->
-<p>Initialize a fixed map at compile or runtime from a previously declared fixed map type with no allocation permission. </p>
+<p>Initialize a fixed map at compile or runtime from any user chosen type with no allocation permission. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">type_key_field</td><td>the field of the struct used for key storage. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the CCC_Key_comparator the user intends to use. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>context for the map. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal</td><td>the previously declared fixed map compound literal. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal</td><td>the compound literal array of a type provided by the user around which the struct of array backing storage for the map will be built. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">optional_storage_specifier</td><td>lifetime specifier of the backing struct of array storage, such as static, for the fixed size map in the scope at which it is allocated or declared. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the map directly initialized on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> map = <a class="el" href="array__adaptive__map_8h.html#a51bcf371289fbd0a7a41a1066ffd7511" title="Initialize a fixed map at compile or runtime from a previously declared fixed map type with no alloca...">CCC_array_adaptive_map_with_compound_literal(...)</a>;)</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the map directly initialized on the right hand side of the equality operator.</dd></dl>
 <p>Initialize a fixed map.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define ARRAY_ADAPTIVE_MAP_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="keyword">struct </span>Val</div>
@@ -1725,12 +1700,11 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <div class="line">    <span class="keywordtype">int</span> key;</div>
 <div class="line">    <span class="keywordtype">int</span> val;</div>
 <div class="line">};</div>
-<div class="line"><a class="code hl_define" href="array__adaptive__map_8h.html#aa5cd7d6e3b43cc6934c045378e3e3875">CCC_array_adaptive_map_declare_fixed</a>(Small_fixed_map, <span class="keyword">struct</span> Val, 64);</div>
 <div class="line"><span class="keyword">static</span> Array_adaptive_map map = array_adaptive_map_with_compound_literal(</div>
 <div class="line">    key,</div>
 <div class="line">    array_adaptive_map_key_order,</div>
 <div class="line">    &amp;module_context,</div>
-<div class="line">    (Small_fixed_map){},</div>
+<div class="line">    (<span class="keyword">struct</span> Val[4096]){}</div>
 <div class="line">);</div>
 </div><!-- fragment --><p>This can help eliminate boilerplate in initializers. </p>
 
@@ -2168,7 +2142,7 @@ do not try to access data in the table manually with a handle. Always use this p
 <div class="line">    <span class="keywordtype">int</span> key;</div>
 <div class="line">    <span class="keywordtype">int</span> val;</div>
 <div class="line">};</div>
-<div class="line"><a class="code hl_define" href="array__adaptive__map_8h.html#aa5cd7d6e3b43cc6934c045378e3e3875">CCC_array_adaptive_map_declare_fixed</a>(Small_fixed_map, <span class="keyword">struct</span> Val, 64);</div>
+<div class="line">CCC_array_adaptive_map_declare_fixed(Small_fixed_map, <span class="keyword">struct</span> Val, 64);</div>
 <div class="line"><span class="keyword">static</span> Array_tree_map source = array_adaptive_map_initialize(</div>
 <div class="line">    <span class="keyword">struct</span> Val,</div>
 <div class="line">    key,</div>

@@ -129,7 +129,7 @@ $(document).ready(function(){initNavTree('private__bitset_8h_source.html',''); i
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="preprocessor">#define CCC_private_bitset_block_bytes(private_bit_cap)                        \</span></div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="preprocessor">    (sizeof(*(struct CCC_Bitset){}.blocks) * (private_bit_cap))</span></div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="preprocessor">#define CCC_private_bitset_blocks(private_bit_cap, ...)                        \</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="preprocessor">#define CCC_private_bitset_storage_for(private_bit_cap, ...)                   \</span></div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="preprocessor">    (__VA_OPT__(__VA_ARGS__) typeof (                                          \</span></div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="preprocessor">        *(struct CCC_Bitset){}                                                 \</span></div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="preprocessor">             .blocks)[CCC_private_bitset_block_count(private_bit_cap)]) {      \</span></div>
