@@ -114,11 +114,9 @@ the scope it is created with any storage specifier specifiers added.
 This method can be used for compile time initialization of bit set. For example:
 
 ```
-static CCC_Bitset b = CCC_bitset_initialize(
+static CCC_Bitset b = CCC_bitset_with_compound_literal(
+    256,
     CCC_bitset_storage_for(256, static),
-    NULL,
-    NULL,
-    256
 );
 ```
 
@@ -128,11 +126,9 @@ If the compiler does not support storage specifier of compound literals the more
 traditional example follows:
 
 ```
-static CCC_Bitset b = CCC_bitset_initialize(
+static CCC_Bitset b = CCC_bitset_with_compound_literal(
+    256,
     CCC_bitset_storage_for(256),
-    NULL,
-    NULL,
-    256
 );
 ```
 
