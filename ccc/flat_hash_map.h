@@ -131,8 +131,8 @@ declare the type name and size of the map they will use. */
 declared compound literal array of the type the user intends to store.
 @param[in] user_type_compound_literal_array a compound literal array of the type
 around which the map will be built. Must be a power of 2 capacity array.
-@param[in] optional_storage_specifier a storage specifier may be added on newer
-compilers such as static.
+@param[in] optional_storage_specifier a storage specifier for the backing struct
+of array storage may be added on newer compilers such as static.
 @warning This should rarely be used. If a fixed size map is desired simply use
 the CCC_flat_hash_map_with_compound_literal() initializer. For dynamic maps,
 there are also many other options.
@@ -477,8 +477,9 @@ context.
 @param[in] hash the CCC_Key_hasher function provided by the user.
 @param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] compound_literal the fixed map compound literal.
-@param[in] optional_storage_specifier lifetime specifier such as static for the
-fixed size map in the scope at which it is allocated or declared.
+@param[in] optional_storage_specifier lifetime specifier of the backing struct
+of array storage, such as static, for the fixed size map in the scope at which
+it is allocated or declared.
 @return the flat hash map directly initialized on the right hand side of the
 equality operator
 (e.g. CCC_Flat_hash_map map = flat_hash_map_with_compound_literal(...);)
@@ -499,8 +500,7 @@ static Flat_hash_map static_map = flat_hash_map_with_compound_literal(
     key,
     flat_hash_map_int_to_u64,
     flat_hash_map_key_order,
-    (struct Val[64]){},
-    static
+    (struct Val[64]){}
 );
 ```
 
@@ -519,8 +519,9 @@ context.
 @param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] context a pointer to any context needed for the map.
 @param[in] compound_literal the fixed map compound literal.
-@param[in] optional_storage_specifier lifetime specifier such as static for the
-fixed size map in the scope at which it is allocated or declared.
+@param[in] optional_storage_specifier lifetime specifier of the backing struct
+of array storage, such as static, for the fixed size map in the scope at which
+it is allocated or declared.
 @return the flat hash map directly initialized on the right hand side of the
 equality operator
 (e.g. CCC_Flat_hash_map map = flat_hash_map_with_context_compound_literal(...);)
@@ -542,8 +543,7 @@ static Flat_hash_map static_map = flat_hash_map_with_context_compound_literal(
     flat_hash_map_int_to_u64,
     flat_hash_map_key_order,
     &module_context,
-    (struct Val[64]){},
-    static
+    (struct Val[64]){}
 );
 ```
 

@@ -485,7 +485,6 @@ struct Key_val {
     int key;
     int val;
 };
-CCC_array_tree_map_declare_fixed(Key_val_fixed_map, struct Val, 64);
 
 static CCC_Order
 Key_val_cmp(CCC_Key_comparator_context const cmp) {
@@ -499,7 +498,7 @@ main(void) {
     /* stack array, user defined type, key field named key, no allocation
        permission, key comparison function, no context data. */
     Array_tree_map s = array_tree_map_with_compound_literal(
-        key, hrmap_key_cmp, (Key_val_fixed_map){});
+        key, hrmap_key_cmp, (struct Kay_val[64]){});
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
     for (int i = 0, id = 0; i < num_nodes; ++i, id += 5) {

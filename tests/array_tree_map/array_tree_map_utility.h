@@ -12,12 +12,9 @@ struct Val {
     int val;
 };
 
-CCC_array_tree_map_declare_fixed(Small_fixed_map, struct Val, 64);
-CCC_array_tree_map_declare_fixed(Standard_fixed_map, struct Val, 1024);
-
 enum : size_t {
-    SMALL_FIXED_CAP = CCC_array_tree_map_fixed_capacity(Small_fixed_map),
-    STANDARD_FIXED_CAP = CCC_array_tree_map_fixed_capacity(Standard_fixed_map),
+    SMALL_FIXED_CAP = 64,
+    STANDARD_FIXED_CAP = 1024,
 };
 
 CCC_Order id_order(CCC_Key_comparator_context);

@@ -50,10 +50,6 @@ struct Lru_request {
     };
 };
 
-/* Fixed map used for the lru storage. List piggy backs of this array for its
-   memory. Map does not need to re-size for this small test. */
-array_tree_map_declare_fixed(Lru_fixed_map, struct Lru_node, LRU_CAP);
-
 /*===========================   Prototypes   ================================*/
 
 static CCC_Order order_by_key(CCC_Key_comparator_context order);
@@ -68,9 +64,8 @@ static enum Check_result run_lru_cache(void);
 /* This is a good opportunity to test the static initialization capabilities
    of the hash table and list. */
 static struct Lru_cache lru_cache = {
-    .map = array_tree_map_initialize(
-        struct Lru_node, key, order_by_key, NULL, NULL,
-        array_tree_map_fixed_capacity(Lru_fixed_map), &(Lru_fixed_map){}),
+    .map = array_tree_map_with_compound_literal(key, order_by_key,
+                                                (struct Lru_node[LRU_CAP]){}),
     .l = doubly_linked_list_initialize(struct Lru_node, list_node,
                                        order_list_nodes, NULL, NULL),
     .cap = 3,
