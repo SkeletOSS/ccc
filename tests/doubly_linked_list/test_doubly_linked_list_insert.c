@@ -11,9 +11,8 @@
 #include "utility/stack_allocator.h"
 
 check_static_begin(doubly_linked_list_test_push_three_front) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 3);
-    Doubly_linked_list doubly_linked_list = doubly_linked_list_initialize(
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
+    Doubly_linked_list doubly_linked_list = doubly_linked_list_for(
         struct Val, e, val_order, stack_allocator_allocate, &allocator);
     check(push_front(&doubly_linked_list, &(struct Val){}.e) != NULL, true);
     check(validate(&doubly_linked_list), true);
@@ -36,9 +35,8 @@ check_static_begin(doubly_linked_list_test_push_three_front) {
 }
 
 check_static_begin(doubly_linked_list_test_push_three_back) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 3);
-    Doubly_linked_list doubly_linked_list = doubly_linked_list_initialize(
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
+    Doubly_linked_list doubly_linked_list = doubly_linked_list_for(
         struct Val, e, val_order, stack_allocator_allocate, &allocator);
     check(push_back(&doubly_linked_list, &(struct Val){}.e) != NULL, true);
     check(validate(&doubly_linked_list), true);
@@ -62,7 +60,7 @@ check_static_begin(doubly_linked_list_test_push_three_back) {
 
 check_static_begin(doubly_linked_list_test_push_and_splice) {
     Doubly_linked_list doubly_linked_list
-        = doubly_linked_list_initialize(struct Val, e, val_order, NULL, NULL);
+        = doubly_linked_list_for(struct Val, e, val_order, NULL, NULL);
     struct Val vals[4] = {
         [0] = {.val = 0},
         [1] = {.val = 1},
@@ -88,7 +86,7 @@ check_static_begin(doubly_linked_list_test_push_and_splice) {
 
 check_static_begin(doubly_linked_list_test_push_and_splice_range) {
     Doubly_linked_list doubly_linked_list
-        = doubly_linked_list_initialize(struct Val, e, val_order, NULL, NULL);
+        = doubly_linked_list_for(struct Val, e, val_order, NULL, NULL);
     struct Val vals[4] = {
         [0] = {.val = 0},
         [1] = {.val = 1},
@@ -122,7 +120,7 @@ check_static_begin(doubly_linked_list_test_push_and_splice_range) {
 
 check_static_begin(doubly_linked_list_test_push_and_splice_no_ops) {
     Doubly_linked_list doubly_linked_list
-        = doubly_linked_list_initialize(struct Val, e, val_order, NULL, NULL);
+        = doubly_linked_list_for(struct Val, e, val_order, NULL, NULL);
     struct Val vals[4] = {
         [0] = {.val = 0},
         [1] = {.val = 1},
@@ -146,8 +144,7 @@ check_static_begin(doubly_linked_list_test_push_and_splice_no_ops) {
 }
 
 check_static_begin(doubly_linked_list_test_sort_even) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 8);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 8);
     Doubly_linked_list doubly_linked_list = doubly_linked_list_context_from(
         e, val_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[8]){
@@ -176,8 +173,7 @@ check_static_begin(doubly_linked_list_test_sort_even) {
 }
 
 check_static_begin(doubly_linked_list_test_sort_odd) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 9);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 9);
     Doubly_linked_list doubly_linked_list = doubly_linked_list_context_from(
         e, val_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[9]){
@@ -207,8 +203,7 @@ check_static_begin(doubly_linked_list_test_sort_odd) {
 }
 
 check_static_begin(doubly_linked_list_test_sort_reverse) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 8);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 8);
     Doubly_linked_list doubly_linked_list = doubly_linked_list_context_from(
         e, val_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[8]){
@@ -235,8 +230,7 @@ check_static_begin(doubly_linked_list_test_sort_reverse) {
 }
 
 check_static_begin(doubly_linked_list_test_sort_runs) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 12);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 12);
     Doubly_linked_list doubly_linked_list = doubly_linked_list_context_from(
         e, val_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[12]){
@@ -270,8 +264,7 @@ check_static_begin(doubly_linked_list_test_sort_runs) {
 }
 
 check_static_begin(doubly_linked_list_test_sort_halves) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 12);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 12);
     Doubly_linked_list doubly_linked_list = doubly_linked_list_context_from(
         e, val_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[12]){
@@ -306,7 +299,7 @@ check_static_begin(doubly_linked_list_test_sort_halves) {
 
 check_static_begin(doubly_linked_list_test_sort_insert) {
     Doubly_linked_list doubly_linked_list
-        = doubly_linked_list_initialize(struct Val, e, val_order, NULL, NULL);
+        = doubly_linked_list_for(struct Val, e, val_order, NULL, NULL);
     struct Val *inserted = doubly_linked_list_insert_sorted(
         &doubly_linked_list, &(struct Val){.val = -99999}.e);
     check(inserted->val, -99999);

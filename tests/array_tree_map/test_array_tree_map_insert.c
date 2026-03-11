@@ -353,8 +353,8 @@ check_static_begin(array_tree_map_test_two_sum) {
 }
 
 check_static_begin(array_tree_map_test_resize) {
-    CCC_Array_tree_map map = array_tree_map_initialize(
-        struct Val, id, id_order, std_allocate, NULL, 0, NULL);
+    CCC_Array_tree_map map = array_tree_map_for(struct Val, id, id_order,
+                                                std_allocate, NULL, 0, NULL);
     int const to_insert = 1000;
     int const larger_prime = 1009;
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
@@ -382,7 +382,7 @@ check_static_begin(array_tree_map_test_resize) {
 
 check_static_begin(array_tree_map_test_reserve) {
     int const to_insert = 1000;
-    struct Stack_allocator allocator = stack_allocator_initialize(
+    struct Stack_allocator allocator = stack_allocator_for(
         typeof(array_tree_map_storage_for((struct Val[STANDARD_FIXED_CAP]){})),
         1);
     CCC_Array_tree_map map = array_tree_map_with_context_capacity(
@@ -413,8 +413,8 @@ check_static_begin(array_tree_map_test_reserve) {
 }
 
 check_static_begin(array_tree_map_test_resize_macros) {
-    CCC_Array_tree_map map = array_tree_map_initialize(
-        struct Val, id, id_order, std_allocate, NULL, 0, NULL);
+    CCC_Array_tree_map map = array_tree_map_for(struct Val, id, id_order,
+                                                std_allocate, NULL, 0, NULL);
     int const to_insert = 1000;
     int const larger_prime = 1009;
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
@@ -451,8 +451,8 @@ check_static_begin(array_tree_map_test_resize_macros) {
 }
 
 check_static_begin(array_tree_map_test_resize_from_null) {
-    CCC_Array_tree_map map = array_tree_map_initialize(
-        struct Val, id, id_order, std_allocate, NULL, 0, NULL);
+    CCC_Array_tree_map map = array_tree_map_for(struct Val, id, id_order,
+                                                std_allocate, NULL, 0, NULL);
     int const to_insert = 1000;
     int const larger_prime = 1009;
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
@@ -478,8 +478,8 @@ check_static_begin(array_tree_map_test_resize_from_null) {
 }
 
 check_static_begin(array_tree_map_test_resize_from_null_macros) {
-    CCC_Array_tree_map map = array_tree_map_initialize(
-        struct Val, id, id_order, std_allocate, NULL, 0, NULL);
+    CCC_Array_tree_map map = array_tree_map_for(struct Val, id, id_order,
+                                                std_allocate, NULL, 0, NULL);
     int const to_insert = 1000;
     int const larger_prime = 1009;
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;

@@ -161,7 +161,7 @@ check_static_begin(flat_double_ended_queue_test_insert_ranges) {
 
 check_static_begin(flat_double_ended_queue_test_insert_ranges_reserve) {
     Flat_double_ended_queue q
-        = flat_double_ended_queue_initialize(int, NULL, NULL, 0, 0, NULL);
+        = flat_double_ended_queue_for(int, NULL, NULL, 0, 0, NULL);
     CCC_Result const r = flat_double_ended_queue_reserve(&q, 6, std_allocate);
     check(r, CCC_RESULT_OK);
     (void)flat_double_ended_queue_push_back_range(&q, 3, (int[3]){0, 1, 2});

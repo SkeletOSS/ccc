@@ -60,10 +60,9 @@ check_static_begin(fill_n, CCC_Tree_map *const rom, size_t const n,
 /* Internally there is some maintenance to perform when swapping values for
    the user on insert. Leave this test here to always catch this. */
 check_static_begin(romap_test_validate) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 3);
-    CCC_Tree_map rom = tree_map_initialize(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
+    CCC_Tree_map rom = tree_map_for(struct Val, elem, key, id_order,
+                                    stack_allocator_allocate, &allocator);
     CCC_Entry ent = swap_entry(&rom, &(struct Val){.key = -1, .val = -1}.elem,
                                &(struct Val){}.elem);
     check(validate(&rom), true);
@@ -83,10 +82,9 @@ check_static_begin(romap_test_validate) {
 }
 
 check_static_begin(romap_test_insert) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 35);
-    CCC_Tree_map rom = tree_map_initialize(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 35);
+    CCC_Tree_map rom = tree_map_for(struct Val, elem, key, id_order,
+                                    stack_allocator_allocate, &allocator);
     int size = 30;
     CCC_Entry ent = swap_entry(&rom, &(struct Val){.key = -1, .val = -1}.elem,
                                &(struct Val){}.elem);
@@ -147,10 +145,9 @@ check_static_begin(romap_test_insert) {
 }
 
 check_static_begin(romap_test_remove_key_value) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 35);
-    CCC_Tree_map rom = tree_map_initialize(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 35);
+    CCC_Tree_map rom = tree_map_for(struct Val, elem, key, id_order,
+                                    stack_allocator_allocate, &allocator);
     int size = 30;
     CCC_Entry ent
         = CCC_remove_key_value(&rom, &(struct Val){.key = -1, .val = -1}.elem);
@@ -221,10 +218,9 @@ check_static_begin(romap_test_remove_key_value) {
 }
 
 check_static_begin(romap_test_try_insert) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 35);
-    CCC_Tree_map rom = tree_map_initialize(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 35);
+    CCC_Tree_map rom = tree_map_for(struct Val, elem, key, id_order,
+                                    stack_allocator_allocate, &allocator);
     int size = 30;
     CCC_Entry ent = try_insert(&rom, &(struct Val){.key = -1, .val = -1}.elem);
     check(validate(&rom), true);
@@ -278,10 +274,9 @@ check_static_begin(romap_test_try_insert) {
 }
 
 check_static_begin(romap_test_try_insert_with) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 35);
-    CCC_Tree_map rom = tree_map_initialize(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 35);
+    CCC_Tree_map rom = tree_map_for(struct Val, elem, key, id_order,
+                                    stack_allocator_allocate, &allocator);
     int size = 30;
     CCC_Entry *ent = tree_map_try_insert_with(&rom, -1, val(-1));
     check(validate(&rom), true);
@@ -336,10 +331,9 @@ check_static_begin(romap_test_try_insert_with) {
 }
 
 check_static_begin(romap_test_insert_or_assign) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 35);
-    CCC_Tree_map rom = tree_map_initialize(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 35);
+    CCC_Tree_map rom = tree_map_for(struct Val, elem, key, id_order,
+                                    stack_allocator_allocate, &allocator);
     int size = 30;
     CCC_Entry ent
         = insert_or_assign(&rom, &(struct Val){.key = -1, .val = -1}.elem);
@@ -394,10 +388,9 @@ check_static_begin(romap_test_insert_or_assign) {
 }
 
 check_static_begin(romap_test_insert_or_assign_with) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 35);
-    CCC_Tree_map rom = tree_map_initialize(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 35);
+    CCC_Tree_map rom = tree_map_for(struct Val, elem, key, id_order,
+                                    stack_allocator_allocate, &allocator);
     int size = 30;
     CCC_Entry *ent = tree_map_insert_or_assign_with(&rom, -1, val(-1));
     check(validate(&rom), true);
@@ -451,10 +444,9 @@ check_static_begin(romap_test_insert_or_assign_with) {
 }
 
 check_static_begin(romap_test_entry_and_modify) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 35);
-    CCC_Tree_map rom = tree_map_initialize(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 35);
+    CCC_Tree_map rom = tree_map_for(struct Val, elem, key, id_order,
+                                    stack_allocator_allocate, &allocator);
     int size = 30;
     CCC_Tree_map_entry *ent = entry_wrap(&rom, &(int){-1});
     check(validate(&rom), true);
@@ -521,10 +513,9 @@ check_static_begin(romap_test_entry_and_modify) {
 }
 
 check_static_begin(romap_test_entry_and_context_modify) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 35);
-    CCC_Tree_map rom = tree_map_initialize(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 35);
+    CCC_Tree_map rom = tree_map_for(struct Val, elem, key, id_order,
+                                    stack_allocator_allocate, &allocator);
     int size = 30;
     int context = 1;
     CCC_Tree_map_entry *ent = entry_wrap(&rom, &(int){-1});
@@ -588,10 +579,9 @@ check_static_begin(romap_test_entry_and_context_modify) {
 }
 
 check_static_begin(romap_test_entry_and_modify_with) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 35);
-    CCC_Tree_map rom = tree_map_initialize(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 35);
+    CCC_Tree_map rom = tree_map_for(struct Val, elem, key, id_order,
+                                    stack_allocator_allocate, &allocator);
     int size = 30;
     CCC_Tree_map_entry *ent = entry_wrap(&rom, &(int){-1});
     ent = tree_map_and_modify_with(ent, struct Val, { T->val++; });
@@ -654,10 +644,9 @@ check_static_begin(romap_test_entry_and_modify_with) {
 }
 
 check_static_begin(romap_test_or_insert) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 35);
-    CCC_Tree_map rom = tree_map_initialize(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 35);
+    CCC_Tree_map rom = tree_map_for(struct Val, elem, key, id_order,
+                                    stack_allocator_allocate, &allocator);
     int size = 30;
     struct Val *v = or_insert(entry_wrap(&rom, &(int){-1}),
                               &(struct Val){.key = -1, .val = -1}.elem);
@@ -710,10 +699,9 @@ check_static_begin(romap_test_or_insert) {
 }
 
 check_static_begin(romap_test_or_insert_with) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 35);
-    CCC_Tree_map rom = tree_map_initialize(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 35);
+    CCC_Tree_map rom = tree_map_for(struct Val, elem, key, id_order,
+                                    stack_allocator_allocate, &allocator);
     int size = 30;
     struct Val *v
         = tree_map_or_insert_with(entry_wrap(&rom, &(int){-1}), idval(-1, -1));
@@ -763,10 +751,9 @@ check_static_begin(romap_test_or_insert_with) {
 }
 
 check_static_begin(romap_test_insert_entry) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 35);
-    CCC_Tree_map rom = tree_map_initialize(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 35);
+    CCC_Tree_map rom = tree_map_for(struct Val, elem, key, id_order,
+                                    stack_allocator_allocate, &allocator);
     int size = 30;
     struct Val *v = insert_entry(entry_wrap(&rom, &(int){-1}),
                                  &(struct Val){.key = -1, .val = -1}.elem);
@@ -821,10 +808,9 @@ check_static_begin(romap_test_insert_entry) {
 }
 
 check_static_begin(romap_test_insert_entry_with) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 35);
-    CCC_Tree_map rom = tree_map_initialize(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 35);
+    CCC_Tree_map rom = tree_map_for(struct Val, elem, key, id_order,
+                                    stack_allocator_allocate, &allocator);
     int size = 30;
     struct Val *v = tree_map_insert_entry_with(entry_wrap(&rom, &(int){-1}),
                                                idval(-1, -1));
@@ -874,10 +860,9 @@ check_static_begin(romap_test_insert_entry_with) {
 }
 
 check_static_begin(romap_test_remove_entry) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 35);
-    CCC_Tree_map rom = tree_map_initialize(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 35);
+    CCC_Tree_map rom = tree_map_for(struct Val, elem, key, id_order,
+                                    stack_allocator_allocate, &allocator);
     int size = 30;
     struct Val *v = or_insert(entry_wrap(&rom, &(int){-1}),
                               &(struct Val){.key = -1, .val = -1}.elem);

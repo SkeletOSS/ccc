@@ -87,7 +87,7 @@ policy, capacity, and optional starting size.
 @param[in] count optional starting size of the Buffer <= capacity.
 @param[in] data_pointer the pointer to existing memory or NULL.
 @return the initialized buffer. Directly assign to Buffer on the right hand
-side of the equality operator (e.g. CCC_Buffer b = CCC_buffer_initialize(...);).
+side of the equality operator (e.g. CCC_Buffer b = CCC_buffer_for(...);).
 
 Initialization of a Buffer can occur at compile time or run time depending
 on the arguments. The memory pointer should be of the same type one intends to
@@ -95,7 +95,7 @@ store in the buffer.
 
 ```
 #define BUFFER_USING_NAMESPACE_CCC
-static Buffer stack = buffer_initialize(
+static Buffer stack = buffer_for(
     int, NULL, NULL, 4096, 0, &(static int[4096]){}
 );
 ```
@@ -104,7 +104,7 @@ Initialize a fixed Buffer with some elements occupied.
 
 ```
 #define BUFFER_USING_NAMESPACE_CCC
-static Buffer stack = buffer_initialize(
+static Buffer stack = buffer_for(
     int, NULL, NULL, 4096, 4, &(static int[4096]){0, 1, 2, 3}
 );
 ```
@@ -115,10 +115,10 @@ provide an allocation function. If a dynamic Buffer is preferred, provide the
 allocation function as defined by the signature in types.h. If resizing is
 desired on memory that has already been allocated, ensure allocation has
 occurred with the provided allocation function. */
-#define CCC_buffer_initialize(type_name, allocate, context, capacity, count,   \
-                              data_pointer...)                                 \
-    CCC_private_buffer_initialize(type_name, allocate, context, capacity,      \
-                                  count, data_pointer)
+#define CCC_buffer_for(type_name, allocate, context, capacity, count,          \
+                       data_pointer...)                                        \
+    CCC_private_buffer_for(type_name, allocate, context, capacity, count,      \
+                           data_pointer)
 
 /** @brief Initialize a Buffer from a compound literal array initializer.
 @param[in] allocate CCC_Allocator or NULL if no allocation is permitted.
@@ -163,7 +163,7 @@ main(void)
 
 Only dynamic buffers may be initialized this way. For static or stack based
 initialization of fixed buffers with contents known at compile time, see the
-CCC_buffer_initialize() macro. */
+CCC_buffer_for() macro. */
 #define CCC_buffer_from(allocate, optional_capacity,                           \
                         compound_literal_array...)                             \
     CCC_private_buffer_from(allocate, optional_capacity, compound_literal_array)
@@ -212,7 +212,7 @@ main(void)
 
 Only dynamic buffers may be initialized this way. For static or stack based
 initialization of fixed buffers with contents known at compile time, see the
-CCC_buffer_initialize() macro. */
+CCC_buffer_for() macro. */
 #define CCC_buffer_context_from(allocate, context, optional_capacity,          \
                                 compound_literal_array...)                     \
     CCC_private_buffer_context_from(allocate, context, optional_capacity,      \
@@ -240,7 +240,7 @@ main(void)
 
 Only dynamic buffers may be initialized this way. For static or stack based
 initialization of fixed buffers with contents known at compile time, see the
-CCC_buffer_initialize() macro. */
+CCC_buffer_for() macro. */
 #define CCC_buffer_with_capacity(type_name, allocate, capacity)                \
     CCC_private_buffer_with_capacity(type_name, allocate, capacity)
 
@@ -267,7 +267,7 @@ main(void)
 
 Only dynamic buffers may be initialized this way. For static or stack based
 initialization of fixed buffers with contents known at compile time, see the
-CCC_buffer_initialize() macro. */
+CCC_buffer_for() macro. */
 #define CCC_buffer_with_context_capacity(type_name, allocate, context,         \
                                          capacity)                             \
     CCC_private_buffer_with_context_capacity(type_name, allocate, context,     \
@@ -410,10 +410,10 @@ Manual memory management with no allocation function provided.
 
 ```
 #define BUFFER_USING_NAMESPACE_CCC
-Buffer source = buffer_initialize((int[10]){}, int, NULL, NULL, 10);
+Buffer source = buffer_for((int[10]){}, int, NULL, NULL, 10);
 int *new_data = malloc(sizeof(int) * buffer_capacity(&source).count);
 Buffer destination
-    = buffer_initialize(new_data, int, NULL, NULL,
+    = buffer_for(new_data, int, NULL, NULL,
 buffer_capacity(&source).count); CCC_Result res = buffer_copy(&destination,
 &source, NULL);
 ```
@@ -423,9 +423,9 @@ capacity. Here is memory management handed over to the copy function.
 
 ```
 #define BUFFER_USING_NAMESPACE_CCC
-Buffer source = buffer_initialize(NULL, int, std_allocate, NULL, 0);
+Buffer source = buffer_for(NULL, int, std_allocate, NULL, 0);
 (void)CCC_buffer_push_back_range(&source, 5, (int[5]){0,1,2,3,4});
-Buffer destination = buffer_initialize(NULL, int, std_allocate, NULL, 0);
+Buffer destination = buffer_for(NULL, int, std_allocate, NULL, 0);
 CCC_Result res = buffer_copy(&destination, &source, std_allocate);
 ```
 
@@ -436,9 +436,9 @@ as a fixed size buffer (ring buffer).
 
 ```
 #define BUFFER_USING_NAMESPACE_CCC
-Buffer source = buffer_initialize(NULL, int, std_allocate, NULL, 0);
+Buffer source = buffer_for(NULL, int, std_allocate, NULL, 0);
 (void)CCC_buffer_push_back_range(&source, 5, (int[5]){0,1,2,3,4});
-Buffer destination = buffer_initialize(NULL, int, NULL, NULL, 0);
+Buffer destination = buffer_for(NULL, int, NULL, NULL, 0);
 CCC_Result res = buffer_copy(&destination, &source, std_allocate);
 ```
 
@@ -910,7 +910,7 @@ dropped with this directive if one is sure no namespace collisions occur. */
 #ifdef BUFFER_USING_NAMESPACE_CCC
 /* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Buffer Buffer;
-#    define buffer_initialize(arguments...) CCC_buffer_initialize(arguments)
+#    define buffer_for(arguments...) CCC_buffer_for(arguments)
 #    define buffer_with_compound_literal(arguments...)                         \
         CCC_buffer_with_compound_literal(arguments)
 #    define buffer_with_context_compound_literal(arguments...)                 \

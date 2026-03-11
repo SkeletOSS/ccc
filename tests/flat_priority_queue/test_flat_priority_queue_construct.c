@@ -25,7 +25,7 @@ int_order(CCC_Type_comparator_context const order) {
 
 check_static_begin(flat_priority_queue_test_empty) {
     struct Val vals[2] = {};
-    Flat_priority_queue priority_queue = flat_priority_queue_initialize(
+    Flat_priority_queue priority_queue = flat_priority_queue_for(
         struct Val, CCC_ORDER_LESSER, val_order, NULL, NULL,
         (sizeof(vals) / sizeof(struct Val)), vals);
     check(flat_priority_queue_is_empty(&priority_queue), true);
@@ -43,7 +43,7 @@ check_static_begin(flat_priority_queue_test_with_compound_literal) {
 
 check_static_begin(flat_priority_queue_test_macro) {
     struct Val vals[2] = {};
-    Flat_priority_queue priority_queue = flat_priority_queue_initialize(
+    Flat_priority_queue priority_queue = flat_priority_queue_for(
         struct Val, CCC_ORDER_LESSER, val_order, NULL, NULL,
         (sizeof(vals) / sizeof(struct Val)), vals);
     struct Val *res = flat_priority_queue_emplace(
@@ -57,7 +57,7 @@ check_static_begin(flat_priority_queue_test_macro) {
 }
 
 check_static_begin(flat_priority_queue_test_macro_grow) {
-    Flat_priority_queue priority_queue = flat_priority_queue_initialize(
+    Flat_priority_queue priority_queue = flat_priority_queue_for(
         struct Val, CCC_ORDER_LESSER, val_order, std_allocate, NULL, 0, NULL);
     struct Val *res = flat_priority_queue_emplace(
         &priority_queue, (struct Val){.val = 0, .id = 0});
@@ -72,7 +72,7 @@ check_static_begin(flat_priority_queue_test_macro_grow) {
 
 check_static_begin(flat_priority_queue_test_push) {
     struct Val vals[3] = {};
-    Flat_priority_queue priority_queue = flat_priority_queue_initialize(
+    Flat_priority_queue priority_queue = flat_priority_queue_for(
         struct Val, CCC_ORDER_LESSER, val_order, NULL, NULL,
         (sizeof(vals) / sizeof(struct Val)), vals);
     struct Val *res = push(&priority_queue, &vals[0], &(struct Val){});
@@ -83,9 +83,9 @@ check_static_begin(flat_priority_queue_test_push) {
 
 check_static_begin(flat_priority_queue_test_raw_type) {
     int vals[4] = {};
-    Flat_priority_queue priority_queue = flat_priority_queue_initialize(
-        int, CCC_ORDER_LESSER, int_order, NULL, NULL,
-        (sizeof(vals) / sizeof(int)), vals);
+    Flat_priority_queue priority_queue
+        = flat_priority_queue_for(int, CCC_ORDER_LESSER, int_order, NULL, NULL,
+                                  (sizeof(vals) / sizeof(int)), vals);
     int val = 1;
     int *res = push(&priority_queue, &val, &(int){0});
     check(res != NULL, true);
@@ -126,9 +126,9 @@ check_static_begin(flat_priority_queue_test_heapify_copy) {
     enum : size_t {
         HEAPIFY_COPY_CAP = 100,
     };
-    Flat_priority_queue priority_queue = flat_priority_queue_initialize(
-        int, CCC_ORDER_LESSER, int_order, NULL, NULL, HEAPIFY_COPY_CAP,
-        (int[HEAPIFY_COPY_CAP]){});
+    Flat_priority_queue priority_queue
+        = flat_priority_queue_for(int, CCC_ORDER_LESSER, int_order, NULL, NULL,
+                                  HEAPIFY_COPY_CAP, (int[HEAPIFY_COPY_CAP]){});
     int input[HEAPIFY_COPY_CAP] = {};
     for (size_t i = 0; i < HEAPIFY_COPY_CAP; ++i) {
         input[i] = rand_range(-99, 99); /* NOLINT */
@@ -176,9 +176,9 @@ check_static_begin(flat_priority_queue_test_heapsort) {
 }
 
 check_static_begin(flat_priority_queue_test_copy_no_allocate) {
-    Flat_priority_queue source = flat_priority_queue_initialize(
+    Flat_priority_queue source = flat_priority_queue_for(
         int, CCC_ORDER_LESSER, int_order, NULL, NULL, 4, (int[4]){});
-    Flat_priority_queue destination = flat_priority_queue_initialize(
+    Flat_priority_queue destination = flat_priority_queue_for(
         int, CCC_ORDER_LESSER, int_order, NULL, NULL, 5, (int[5]){});
     (void)push(&source, &(int){0}, &(int){0});
     (void)push(&source, &(int){1}, &(int){0});
@@ -201,9 +201,9 @@ check_static_begin(flat_priority_queue_test_copy_no_allocate) {
 }
 
 check_static_begin(flat_priority_queue_test_copy_no_allocate_fail) {
-    Flat_priority_queue source = flat_priority_queue_initialize(
+    Flat_priority_queue source = flat_priority_queue_for(
         int, CCC_ORDER_LESSER, int_order, NULL, NULL, 4, (int[4]){});
-    Flat_priority_queue destination = flat_priority_queue_initialize(
+    Flat_priority_queue destination = flat_priority_queue_for(
         int, CCC_ORDER_LESSER, int_order, NULL, NULL, 2, (int[2]){});
     (void)push(&source, &(int){0}, &(int){0});
     (void)push(&source, &(int){1}, &(int){0});
@@ -217,11 +217,11 @@ check_static_begin(flat_priority_queue_test_copy_no_allocate_fail) {
 }
 
 check_static_begin(flat_priority_queue_test_copy_allocate) {
-    struct Stack_allocator allocator = stack_allocator_initialize(int, 16);
+    struct Stack_allocator allocator = stack_allocator_for(int, 16);
     Flat_priority_queue source = flat_priority_queue_with_context_capacity(
         int, CCC_ORDER_LESSER, int_order, stack_allocator_allocate, &allocator,
         8);
-    Flat_priority_queue destination = flat_priority_queue_initialize(
+    Flat_priority_queue destination = flat_priority_queue_for(
         int, CCC_ORDER_LESSER, int_order, stack_allocator_allocate, &allocator,
         0, NULL);
     (void)push(&source, &(int){0}, &(int){0});
@@ -248,11 +248,11 @@ check_static_begin(flat_priority_queue_test_copy_allocate) {
 }
 
 check_static_begin(flat_priority_queue_test_copy_allocate_fail) {
-    struct Stack_allocator allocator = stack_allocator_initialize(int, 16);
+    struct Stack_allocator allocator = stack_allocator_for(int, 16);
     Flat_priority_queue source = flat_priority_queue_with_context_capacity(
         int, CCC_ORDER_LESSER, int_order, stack_allocator_allocate, &allocator,
         8);
-    Flat_priority_queue destination = flat_priority_queue_initialize(
+    Flat_priority_queue destination = flat_priority_queue_for(
         int, CCC_ORDER_LESSER, int_order, stack_allocator_allocate, &allocator,
         0, NULL);
     (void)push(&source, &(int){0}, &(int){0});
@@ -266,7 +266,7 @@ check_static_begin(flat_priority_queue_test_copy_allocate_fail) {
 }
 
 check_static_begin(flat_priority_queue_test_init_from) {
-    struct Stack_allocator allocator = stack_allocator_initialize(int, 8);
+    struct Stack_allocator allocator = stack_allocator_for(int, 8);
     CCC_Flat_priority_queue queue = CCC_flat_priority_queue_context_from(
         CCC_ORDER_LESSER, int_order, stack_allocator_allocate, &allocator, 8,
         (int[7]){8, 6, 7, 5, 3, 0, 9});
@@ -306,7 +306,7 @@ check_static_begin(flat_priority_queue_test_init_from_fail) {
 }
 
 check_static_begin(flat_priority_queue_test_init_with_capacity) {
-    struct Stack_allocator allocator = stack_allocator_initialize(int, 8);
+    struct Stack_allocator allocator = stack_allocator_for(int, 8);
     CCC_Flat_priority_queue queue
         = CCC_flat_priority_queue_with_context_capacity(
             int, CCC_ORDER_LESSER, int_order, stack_allocator_allocate,
@@ -334,7 +334,7 @@ check_static_begin(flat_priority_queue_test_with_allocator) {
 }
 
 check_static_begin(flat_priority_queue_test_with_context_allocator) {
-    struct Stack_allocator allocator = stack_allocator_initialize(int, 8);
+    struct Stack_allocator allocator = stack_allocator_for(int, 8);
     CCC_Flat_priority_queue queue
         = CCC_flat_priority_queue_with_context_allocator(
             int, CCC_ORDER_LESSER, int_order, stack_allocator_allocate,

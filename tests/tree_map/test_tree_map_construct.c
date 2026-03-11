@@ -10,13 +10,13 @@
 static CCC_Tree_map
 construct_empty(void) {
     CCC_Tree_map map
-        = CCC_tree_map_initialize(struct Val, elem, key, id_order, NULL, NULL);
+        = CCC_tree_map_for(struct Val, elem, key, id_order, NULL, NULL);
     return map;
 }
 
 check_static_begin(tree_map_test_empty) {
     CCC_Tree_map s
-        = CCC_tree_map_initialize(struct Val, elem, key, id_order, NULL, NULL);
+        = CCC_tree_map_for(struct Val, elem, key, id_order, NULL, NULL);
     check(CCC_tree_map_is_empty(&s), true);
     check_end();
 }
@@ -40,8 +40,7 @@ check_static_begin(tree_map_test_construct) {
 }
 
 check_static_begin(tree_map_test_construct_from) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 3);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
     CCC_Tree_map map = CCC_tree_map_context_from(
         elem, key, id_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[]){
@@ -55,8 +54,7 @@ check_static_begin(tree_map_test_construct_from) {
 }
 
 check_static_begin(tree_map_test_construct_from_overwrite) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 3);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
     CCC_Tree_map map = CCC_tree_map_context_from(
         elem, key, id_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[]){

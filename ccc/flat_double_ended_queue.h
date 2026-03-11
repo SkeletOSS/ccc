@@ -75,11 +75,11 @@ Initialize and create containers with memory, callbacks, and permissions. */
 @param[in] data_pointer a pointer to existing memory or NULL.
 @return the queue on the right hand side of an equality
 operator at runtime or compiletime (e.g. CCC_Flat_double_ended_queue q =
-CCC_flat_double_ended_queue_initialize(...);) */
-#define CCC_flat_double_ended_queue_initialize(                                \
-    type_name, allocate, context, capacity, count, data_pointer...)            \
-    CCC_private_flat_double_ended_queue_initialize(                            \
-        type_name, allocate, context, capacity, count, data_pointer)
+CCC_flat_double_ended_queue_for(...);) */
+#define CCC_flat_double_ended_queue_for(type_name, allocate, context,          \
+                                        capacity, count, data_pointer...)      \
+    CCC_private_flat_double_ended_queue_for(type_name, allocate, context,      \
+                                            capacity, count, data_pointer)
 
 /** @brief Initialize a Flat_double_ended_queue from a compound literal array
 initializer.
@@ -127,7 +127,7 @@ main(void)
 
 Only dynamic flat_double_ended_queues may be initialized this way. For static
 or stack based initialization of fixed flat_double_ended_queues with contents
-known at compile time, see the CCC_flat_double_ended_queue_initialize() macro.
+known at compile time, see the CCC_flat_double_ended_queue_for() macro.
 */
 #define CCC_flat_double_ended_queue_from(allocate, optional_capacity,          \
                                          compound_literal_array...)            \
@@ -181,7 +181,7 @@ main(void)
 
 Only dynamic flat_double_ended_queues may be initialized this way. For static
 or stack based initialization of fixed flat_double_ended_queues with contents
-known at compile time, see the CCC_flat_double_ended_queue_initialize() macro.
+known at compile time, see the CCC_flat_double_ended_queue_for() macro.
 */
 #define CCC_flat_double_ended_queue_context_from(                              \
     allocate, context, optional_capacity, compound_literal_array...)           \
@@ -211,7 +211,7 @@ main(void)
 
 Only dynamic flat_double_ended_queues may be initialized this way. For static or
 stack based initialization of fixed flat_double_ended_queues with contents known
-at compile time, see the CCC_flat_double_ended_queue_initialize() macro. */
+at compile time, see the CCC_flat_double_ended_queue_for() macro. */
 #define CCC_flat_double_ended_queue_with_capacity(type_name, allocate,         \
                                                   capacity)                    \
     CCC_private_flat_double_ended_queue_with_capacity(type_name, allocate,     \
@@ -242,7 +242,7 @@ main(void)
 
 Only dynamic flat_double_ended_queues may be initialized this way. For static or
 stack based initialization of fixed flat_double_ended_queues with contents known
-at compile time, see the CCC_flat_double_ended_queue_initialize() macro. */
+at compile time, see the CCC_flat_double_ended_queue_for() macro. */
 #define CCC_flat_double_ended_queue_with_context_capacity(type_name, allocate, \
                                                           context, capacity)   \
     CCC_private_flat_double_ended_queue_with_context_capacity(                 \
@@ -318,7 +318,7 @@ Manual memory management with no allocation function provided.
 
 ```
 #define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
-Flat_double_ended_queue source = flat_double_ended_queue_initialize(
+Flat_double_ended_queue source = flat_double_ended_queue_for(
     int,
     NULL,
     NULL,
@@ -328,7 +328,7 @@ Flat_double_ended_queue source = flat_double_ended_queue_initialize(
 );
 int *new_data
     = malloc(sizeof(int) * flat_double_ended_queue_capacity(&source).count);
-Flat_double_ended_queue destination = flat_double_ended_queue_initialize(
+Flat_double_ended_queue destination = flat_double_ended_queue_for(
     int,
     NULL,
     NULL,
@@ -344,7 +344,7 @@ capacity. Here is memory management handed over to the copy function.
 
 ```
 #define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
-Flat_double_ended_queue source = flat_double_ended_queue_initialize(
+Flat_double_ended_queue source = flat_double_ended_queue_for(
     int,
     std_allocate,
     NULL,
@@ -357,7 +357,7 @@ Flat_double_ended_queue source = flat_double_ended_queue_initialize(
     5,
     (int[5]){0,1,2,3,4}
 );
-Flat_double_ended_queue destination = flat_double_ended_queue_initialize(
+Flat_double_ended_queue destination = flat_double_ended_queue_for(
     int,
     std_allocate,
     NULL,
@@ -379,7 +379,7 @@ as a fixed size queue (ring buffer).
 
 ```
 #define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
-Flat_double_ended_queue source = flat_double_ended_queue_initialize(
+Flat_double_ended_queue source = flat_double_ended_queue_for(
     int,
     std_allocate,
     NULL,
@@ -392,7 +392,7 @@ Flat_double_ended_queue source = flat_double_ended_queue_initialize(
     5,
     (int[5]){0,1,2,3,4}
 );
-Flat_double_ended_queue destination = flat_double_ended_queue_initialize(
+Flat_double_ended_queue destination = flat_double_ended_queue_for(
     int,
     NULL,
     NULL,
@@ -782,8 +782,8 @@ name shortening. */
 #ifdef FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
 /* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Flat_double_ended_queue Flat_double_ended_queue;
-#    define flat_double_ended_queue_initialize(arguments...)                   \
-        CCC_flat_double_ended_queue_initialize(arguments)
+#    define flat_double_ended_queue_for(arguments...)                          \
+        CCC_flat_double_ended_queue_for(arguments)
 #    define flat_double_ended_queue_from(arguments...)                         \
         CCC_flat_double_ended_queue_from(arguments)
 #    define flat_double_ended_queue_context_from(arguments...)                 \

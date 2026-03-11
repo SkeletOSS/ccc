@@ -139,7 +139,7 @@ removing the same keys across resizes. The resizing logic for handle based
 containers is non-trivial and must be tested. Don't replace with stack
 allocator, which does not allow resizing. */
 check_static_begin(array_adaptive_map_test_insert_erase_cycles_allocate) {
-    CCC_Array_adaptive_map s = array_adaptive_map_initialize(
+    CCC_Array_adaptive_map s = array_adaptive_map_for(
         struct Val, id, id_order, std_allocate, NULL, 0, NULL);
     srand(time(NULL)); /* NOLINT */
     int const num_nodes = 100;

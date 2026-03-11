@@ -167,7 +167,7 @@ check_static_begin(buffer_test_with_allocator) {
 }
 
 check_static_begin(buffer_test_with_context_allocator) {
-    struct Stack_allocator allocator = stack_allocator_initialize(int, 8);
+    struct Stack_allocator allocator = stack_allocator_for(int, 8);
     CCC_Buffer b = CCC_buffer_with_context_allocator(
         int, stack_allocator_allocate, &allocator);
     check(CCC_buffer_is_empty(&b), CCC_TRUE);

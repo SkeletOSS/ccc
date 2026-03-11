@@ -14,9 +14,8 @@
 #include "utility/stack_allocator.h"
 
 check_static_begin(adaptive_map_test_prime_shuffle) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 50);
-    CCC_Adaptive_map s = CCC_adaptive_map_initialize(
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 50);
+    CCC_Adaptive_map s = CCC_adaptive_map_for(
         struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
     size_t const size = 50;
     size_t const prime = 53;
@@ -49,9 +48,8 @@ check_static_begin(adaptive_map_test_prime_shuffle) {
 }
 
 check_static_begin(adaptive_map_test_insert_erase_shuffled) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 50);
-    CCC_Adaptive_map s = CCC_adaptive_map_initialize(
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 50);
+    CCC_Adaptive_map s = CCC_adaptive_map_for(
         struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
     size_t const size = 50;
     int const prime = 53;
@@ -71,9 +69,8 @@ check_static_begin(adaptive_map_test_insert_erase_shuffled) {
 }
 
 check_static_begin(adaptive_map_test_weak_srand) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 100);
-    CCC_Adaptive_map s = CCC_adaptive_map_initialize(
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 100);
+    CCC_Adaptive_map s = CCC_adaptive_map_for(
         struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
@@ -103,9 +100,8 @@ check_static_begin(adaptive_map_test_weak_srand) {
 
 check_static_begin(adaptive_map_test_insert_erase_cycles) {
     /* Over allocate because we do more insertions near the end. */
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 200);
-    CCC_Adaptive_map s = CCC_adaptive_map_initialize(
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 200);
+    CCC_Adaptive_map s = CCC_adaptive_map_for(
         struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
     srand(time(NULL)); /* NOLINT */
     int const num_nodes = 100;

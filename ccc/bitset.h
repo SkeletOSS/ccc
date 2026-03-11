@@ -156,28 +156,26 @@ A fixed size bit set with size equal to capacity.
 
 ```
 #define BITSET_USING_NAMESPACE_CCC
-Bitset bitset = bitset_initialize(NULL, NULL, 9, 9, bitset_storage_for(9));
+Bitset bitset = bitset_for(NULL, NULL, 9, 9, bitset_storage_for(9));
 ```
 
 A fixed size bit set with dynamic push and pop.
 
 ```
 #define BITSET_USING_NAMESPACE_CCC
-Bitset bitset = bitset_initialize(NULL, NULL, 9, 0, bitset_storage_for(9));
+Bitset bitset = bitset_for(NULL, NULL, 9, 0, bitset_storage_for(9));
 ```
 
 A dynamic bit set initialization.
 
 ```
 #define BITSET_USING_NAMESPACE_CCC
-Bitset bitset = bitset_initialize(std_allocate, NULL, 0, 0, NULL);
+Bitset bitset = bitset_for(std_allocate, NULL, 0, 0, NULL);
 ```
 
 See types.h for more on allocation functions. */
-#define CCC_bitset_initialize(allocate, context, cap, count,                   \
-                              bitblock_pointer...)                             \
-    CCC_private_bitset_initialize(allocate, context, cap, count,               \
-                                  bitblock_pointer)
+#define CCC_bitset_for(allocate, context, cap, count, bitblock_pointer...)     \
+    CCC_private_bitset_for(allocate, context, cap, count, bitblock_pointer)
 
 /** @brief Initialize the bit set with a custom input string.
 @param[in] allocate the allocation function for the dynamic bit set.
@@ -448,14 +446,14 @@ Manual memory management with no allocation function provided.
 
 ```
 #define BITSET_USING_NAMESPACE_CCC
-static Bitset source = bitset_initialize(
+static Bitset source = bitset_for(
     bitset_storage_for(11, static),
     NULL,
     NULL,
     11
 );
 set_rand_bits(&source);
-static Bitset source = bitset_initialize(
+static Bitset source = bitset_for(
     bitset_storage_for(13, static),
     NULL,
     NULL,
@@ -469,14 +467,14 @@ capacity. Here is memory management handed over to the copy function.
 
 ```
 #define BITSET_USING_NAMESPACE_CCC
-static Bitset source = bitset_initialize(
+static Bitset source = bitset_for(
     NULL,
     std_allocate,
     NULL,
     0
 );
 push_rand_bits(&source);
-static Bitset source = bitset_initialize(
+static Bitset source = bitset_for(
     NULL,
     std_allocate,
     NULL,
@@ -492,14 +490,14 @@ as a fixed size map.
 
 ```
 #define BITSET_USING_NAMESPACE_CCC
-static Bitset source = bitset_initialize(
+static Bitset source = bitset_for(
     NULL,
     std_allocate,
     NULL,
     0
 );
 push_rand_bits(&source);
-static Bitset source = bitset_initialize(
+static Bitset source = bitset_for(
     NULL,
     NULL,
     NULL,
@@ -1148,7 +1146,7 @@ typedef CCC_Bitset Bitset;
 #    define bitset_block_count(arguments...) CCC_bitset_block_count(arguments)
 #    define bitset_block_bytes(arguments...) CCC_bitset_block_bytes(arguments)
 #    define bitset_storage_for(arguments...) CCC_bitset_storage_for(arguments)
-#    define bitset_initialize(arguments...) CCC_bitset_initialize(arguments)
+#    define bitset_for(arguments...) CCC_bitset_for(arguments)
 #    define bitset_from(arguments...) CCC_bitset_from(arguments)
 #    define bitset_context_from(arguments...) CCC_bitset_context_from(arguments)
 #    define bitset_with_capacity(arguments...)                                 \

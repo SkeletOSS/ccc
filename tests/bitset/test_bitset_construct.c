@@ -14,7 +14,7 @@ typedef typeof(*(CCC_Bitset){}.blocks) Bitblocks;
 
 check_static_begin(bitset_test_construct) {
     CCC_Bitset bs
-        = CCC_bitset_initialize(NULL, NULL, 10, 10, CCC_bitset_storage_for(10));
+        = CCC_bitset_for(NULL, NULL, 10, 10, CCC_bitset_storage_for(10));
     check(CCC_bitset_popcount(&bs).count, 0);
     for (size_t i = 0; i < CCC_bitset_capacity(&bs).count; ++i) {
         check(CCC_bitset_test(&bs, i), CCC_FALSE);
@@ -74,7 +74,7 @@ check_static_begin(bitset_test_copy_no_allocate) {
 
 check_static_begin(bitset_test_copy_allocate) {
     struct Stack_allocator allocator
-        = stack_allocator_initialize(Bitblocks, to_blocks(1024));
+        = stack_allocator_for(Bitblocks, to_blocks(1024));
     CCC_Bitset source = CCC_bitset_with_context_capacity(
         stack_allocator_allocate, &allocator, 512, 0);
     for (size_t i = 0; i < 512; ++i) {
@@ -112,7 +112,7 @@ check_static_begin(bitset_test_copy_allocate) {
 check_static_begin(bitset_test_init_from) {
     SV_Str_view input = SV_from("110110");
     struct Stack_allocator allocator
-        = stack_allocator_initialize(Bitblocks, to_blocks(32));
+        = stack_allocator_for(Bitblocks, to_blocks(32));
     CCC_Bitset b
         = CCC_bitset_context_from(stack_allocator_allocate, &allocator, 0,
                                   SV_len(input), '1', SV_begin(input));
@@ -127,7 +127,7 @@ check_static_begin(bitset_test_init_from) {
 check_static_begin(bitset_test_init_from_cap) {
     SV_Str_view input = SV_from("110110");
     struct Stack_allocator allocator
-        = stack_allocator_initialize(Bitblocks, to_blocks(32));
+        = stack_allocator_for(Bitblocks, to_blocks(32));
     CCC_Bitset b = CCC_bitset_context_from(stack_allocator_allocate, &allocator,
                                            0, SV_len(input), '1',
                                            SV_begin(input), SV_len(input) * 2);
@@ -171,7 +171,7 @@ check_static_begin(bitset_test_init_from_cap_fail) {
 
 check_static_begin(bitset_test_init_with_capacity) {
     struct Stack_allocator allocator
-        = stack_allocator_initialize(Bitblocks, to_blocks(10));
+        = stack_allocator_for(Bitblocks, to_blocks(10));
     CCC_Bitset b = CCC_bitset_with_context_capacity(stack_allocator_allocate,
                                                     &allocator, 10);
     check(CCC_bitset_popcount(&b).count, 0);
@@ -200,7 +200,7 @@ check_static_begin(bitset_test_with_allocator) {
 
 check_static_begin(bitset_test_with_context_allocator) {
     struct Stack_allocator allocator
-        = stack_allocator_initialize(Bitblocks, to_blocks(32));
+        = stack_allocator_for(Bitblocks, to_blocks(32));
     CCC_Bitset b = CCC_bitset_with_context_allocator(stack_allocator_allocate,
                                                      &allocator);
     check(CCC_bitset_popcount(&b).count, 0);

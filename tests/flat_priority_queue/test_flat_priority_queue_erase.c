@@ -13,8 +13,7 @@
 #include "utility/stack_allocator.h"
 
 check_static_begin(flat_priority_queue_test_insert_remove_key_value_four_dups) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 8);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 8);
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_context_capacity(
             struct Val, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
@@ -44,8 +43,7 @@ check_static_begin(flat_priority_queue_test_insert_erase_shuffled) {
     srand(time(NULL));
     size_t const size = 50;
     int const prime = 53;
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 50);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 50);
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_context_capacity(
             struct Val, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
@@ -72,8 +70,7 @@ check_static_begin(flat_priority_queue_test_insert_erase_shuffled) {
 check_static_begin(flat_priority_queue_test_pop_max) {
     size_t const size = 50;
     int const prime = 53;
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 50);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 50);
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_context_capacity(
             struct Val, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
@@ -96,8 +93,7 @@ check_static_begin(flat_priority_queue_test_pop_max) {
 check_static_begin(flat_priority_queue_test_pop_min) {
     size_t const size = 50;
     int const prime = 53;
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 50);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 50);
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_context_capacity(
             struct Val, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
@@ -125,8 +121,7 @@ check_static_begin(flat_priority_queue_test_delete_prime_shuffle_duplicates) {
     int const prime = 101;
     /* Make the prime shuffle shorter than size for many duplicates. */
     int const less = 77;
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 100);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 100);
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_context_capacity(
             struct Val, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
@@ -170,8 +165,7 @@ check_static_begin(flat_priority_queue_test_prime_shuffle) {
     /* We want the tree to have a smattering of duplicates so
        reduce the shuffle range so it will repeat some values. */
     int shuffled_index = prime % (size - less);
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 50);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 50);
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_context_capacity(
             struct Val, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
@@ -213,8 +207,7 @@ check_static_begin(flat_priority_queue_test_weak_srand) {
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
     int const num_stack_nodes = 200;
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 200);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 200);
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_context_capacity(
             struct Val, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,

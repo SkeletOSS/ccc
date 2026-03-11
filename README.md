@@ -210,8 +210,8 @@ int
 main(void) {
     /* doubly linked list l, list elem field e, no allocation permission,
        comparing integers, no context data. */
-    Doubly_linked_list l = doubly_linked_list_initialize(l, struct Int_node, e,
-                                                         int_cmp, NULL, NULL);
+    Doubly_linked_list l = doubly_linked_list_for(l, struct Int_node, e,
+                                                  int_cmp, NULL, NULL);
     struct Int_node elems[3] = {{.i = 3}, {.i = 2}, {.i = 1}};
     (void)push_back(&l, &elems[0].e);
     (void)push_front(&l, &elems[1].e);
@@ -568,8 +568,8 @@ main(void) {
     struct Name nodes[5];
     /* adaptive_map named om, stores struct Name, intrusive field e, key field
        name, no allocation permission, comparison fn, no context */
-    Adaptive_map om = adaptive_map_initialize(struct Name, e, name, Key_val_cmp,
-                                              NULL, NULL);
+    Adaptive_map om = adaptive_map_for(struct Name, e, name, Key_val_cmp,
+                                       NULL, NULL);
     char const *const sorted_names[5]
         = {"Ferris", "Glenda", "Rocky", "Tux", "Ziggy"};
     size_t const size = sizeof(sorted_names) / sizeof(sorted_names[0]);
@@ -625,7 +625,7 @@ int
 main(void) {
     struct Val elems[5]
         = {{.val = 3}, {.val = 3}, {.val = 7}, {.val = -1}, {.val = 5}};
-    Priority_queue priority_queue = priority_queue_initialize(
+    Priority_queue priority_queue = priority_queue_for(
         struct Val, elem, CCC_LES, val_cmp, NULL, NULL);
     for (size_t i = 0; i < (sizeof(elems) / sizeof(elems[0])); ++i) {
         struct Val const *const v = push(&priority_queue, &elems[i].elem);
@@ -673,8 +673,8 @@ main(void) {
     /* stack array of 25 elements with one slot for sentinel, intrusive field
        named elem, key field named key, no allocation permission, key comparison
        function, no context data. */
-    Tree_map s = tree_map_initialize(struct Key_val, elem, key, Key_val_cmp,
-                                     NULL, NULL);
+    Tree_map s = tree_map_for(struct Key_val, elem, key, Key_val_cmp, NULL,
+                              NULL);
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
     for (int i = 0, id = 0; i < num_nodes; ++i, id += 5) {
@@ -737,8 +737,8 @@ int
 main(void) {
     /* singly linked list l, list elem field e, no allocation permission,
        comparing integers, no context data. */
-    Singly_linked_list l = singly_linked_list_initialize(struct Int_node, e,
-                                                         int_cmp, NULL, NULL);
+    Singly_linked_list l = singly_linked_list_for(struct Int_node, e, int_cmp,
+                                                  NULL, NULL);
     struct Int_node elems[3] = {{.i = 3}, {.i = 2}, {.i = 1}};
     (void)push_front(&l, &elems[0].e);
     (void)push_front(&l, &elems[1].e);
@@ -834,7 +834,7 @@ struct Id_val {
 };
 
 CCC_Doubly_linked_list dll
-    = CCC_doubly_linked_list_initialize(struct Id_val, e, val_cmp, NULL, NULL);
+    = CCC_doubly_linked_list_for(struct Id_val, e, val_cmp, NULL, NULL);
 ```
 
 All interface functions now expect the memory containing the intrusive elements to exist with the appropriate scope and lifetime for the programmer's needs. Consider the following classic problem with scoping in C.
@@ -905,7 +905,7 @@ For all containers, the metadata structure that is passed to interface functions
 ```c
 static CCC_Doubly_linked_list
 construct_empty(void) {
-    CCC_Doubly_linked_list this = CCC_doubly_linked_list_initialize(
+    CCC_Doubly_linked_list this = CCC_doubly_linked_list_for(
         struct Val, e, val_order, NULL, NULL);
     return this;
 }
@@ -981,7 +981,7 @@ id_cmp(CCC_Type_comparator_context const cmp) {
 
 int
 main(void) {
-    static CCC_Doubly_linked_list id_list = CCC_doubly_linked_list_initialize(
+    static CCC_Doubly_linked_list id_list = CCC_doubly_linked_list_for(
         struct Id, id_node, id_cmp, NULL, NULL);
     /* ...fill list... */
     struct Id *front = CCC_doubly_linked_list_front(&id_list);

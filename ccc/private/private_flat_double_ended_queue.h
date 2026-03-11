@@ -52,13 +52,13 @@ void *CCC_private_flat_double_ended_queue_allocate_back(
 /*=======================  Macro Implementations   ==========================*/
 
 /** @internal */
-#define CCC_private_flat_double_ended_queue_initialize(                        \
+#define CCC_private_flat_double_ended_queue_for(                               \
     private_type_name, private_allocate, private_context, private_capacity,    \
     private_count, private_data_pointer...)                                    \
     {                                                                          \
-        .buffer = CCC_buffer_initialize(private_type_name, private_allocate,   \
-                                        private_context, private_capacity,     \
-                                        private_count, private_data_pointer),  \
+        .buffer = CCC_buffer_for(private_type_name, private_allocate,          \
+                                 private_context, private_capacity,            \
+                                 private_count, private_data_pointer),         \
         .front = 0,                                                            \
     }
 

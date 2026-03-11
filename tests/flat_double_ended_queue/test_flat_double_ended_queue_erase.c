@@ -81,8 +81,8 @@ check_static_begin(
 check_static_begin(
     flat_double_ended_queue_test_push_pop_front_and_back_singles_dynamic) {
     size_t const sm_dyn_q = 128;
-    Flat_double_ended_queue q = flat_double_ended_queue_initialize(
-        int, std_allocate, NULL, 0, 0, NULL);
+    Flat_double_ended_queue q
+        = flat_double_ended_queue_for(int, std_allocate, NULL, 0, 0, NULL);
     /* Move the front pointer back a bit so that pushing to both sides wraps. */
     (void)CCC_flat_double_ended_queue_push_back_range(
         &q, 20,

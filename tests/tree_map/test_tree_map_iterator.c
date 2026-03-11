@@ -146,10 +146,9 @@ check_static_begin(iterator_check, Tree_map *s) {
 }
 
 check_static_begin(tree_map_test_forward_iterator) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 33);
-    Tree_map s = tree_map_initialize(struct Val, elem, key, id_order,
-                                     stack_allocator_allocate, &allocator);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 33);
+    Tree_map s = tree_map_for(struct Val, elem, key, id_order,
+                              stack_allocator_allocate, &allocator);
     /* We should have the expected behavior iteration over empty tree. */
     int j = 0;
     for (struct Val *e = begin(&s); e != end(&s); e = next(&s, &e->elem), ++j) {
@@ -180,10 +179,9 @@ check_static_begin(tree_map_test_forward_iterator) {
 }
 
 check_static_begin(tree_map_test_iterate_removal) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 100);
-    Tree_map s = tree_map_initialize(struct Val, elem, key, id_order,
-                                     stack_allocator_allocate, &allocator);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 100);
+    Tree_map s = tree_map_for(struct Val, elem, key, id_order,
+                              stack_allocator_allocate, &allocator);
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -212,10 +210,9 @@ check_static_begin(tree_map_test_iterate_removal) {
 }
 
 check_static_begin(tree_map_test_iterate_remove_key_value_reinsert) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 200);
-    Tree_map s = tree_map_initialize(struct Val, elem, key, id_order,
-                                     stack_allocator_allocate, &allocator);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 200);
+    Tree_map s = tree_map_for(struct Val, elem, key, id_order,
+                              stack_allocator_allocate, &allocator);
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -251,10 +248,9 @@ check_static_begin(tree_map_test_iterate_remove_key_value_reinsert) {
 }
 
 check_static_begin(tree_map_test_valid_range) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 25);
-    Tree_map s = tree_map_initialize(struct Val, elem, key, id_order,
-                                     stack_allocator_allocate, &allocator);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 25);
+    Tree_map s = tree_map_for(struct Val, elem, key, id_order,
+                              stack_allocator_allocate, &allocator);
 
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
@@ -284,10 +280,9 @@ check_static_begin(tree_map_test_valid_range) {
 }
 
 check_static_begin(tree_map_test_valid_range_equals) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 25);
-    Tree_map s = tree_map_initialize(struct Val, elem, key, id_order,
-                                     stack_allocator_allocate, &allocator);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 25);
+    Tree_map s = tree_map_for(struct Val, elem, key, id_order,
+                              stack_allocator_allocate, &allocator);
 
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
@@ -316,10 +311,9 @@ check_static_begin(tree_map_test_valid_range_equals) {
 }
 
 check_static_begin(tree_map_test_invalid_range) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 25);
-    Tree_map s = tree_map_initialize(struct Val, elem, key, id_order,
-                                     stack_allocator_allocate, &allocator);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 25);
+    Tree_map s = tree_map_for(struct Val, elem, key, id_order,
+                              stack_allocator_allocate, &allocator);
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
     for (int i = 0, id = 0; i < num_nodes; ++i, id += 5) {
@@ -348,10 +342,9 @@ check_static_begin(tree_map_test_invalid_range) {
 }
 
 check_static_begin(tree_map_test_empty_range) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 25);
-    Tree_map s = tree_map_initialize(struct Val, elem, key, id_order,
-                                     stack_allocator_allocate, &allocator);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 25);
+    Tree_map s = tree_map_for(struct Val, elem, key, id_order,
+                              stack_allocator_allocate, &allocator);
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
     for (int i = 0, id = 0; i < num_nodes; ++i, id += 5) {

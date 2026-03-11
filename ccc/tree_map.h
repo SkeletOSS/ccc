@@ -84,13 +84,11 @@ as key.
 @param[in] context a pointer to any context data for comparison or
 destruction.
 @return the struct initialized tree map for direct assignment
-(i.e. CCC_Tree_map m = CCC_tree_map_initialize(...);). */
-#define CCC_tree_map_initialize(type_name, type_intruder_field_name,           \
-                                type_key_field_name, compare, allocate,        \
-                                context)                                       \
-    CCC_private_tree_map_initialize(type_name, type_intruder_field_name,       \
-                                    type_key_field_name, compare, allocate,    \
-                                    context)
+(i.e. CCC_Tree_map m = CCC_tree_map_for(...);). */
+#define CCC_tree_map_for(type_name, type_intruder_field_name,                  \
+                         type_key_field_name, compare, allocate, context)      \
+    CCC_private_tree_map_for(type_name, type_intruder_field_name,              \
+                             type_key_field_name, compare, allocate, context)
 
 /** @brief Initialize an empty dynamic map at compile or runtime with an
 allocator.
@@ -801,7 +799,7 @@ NULL. */
 typedef CCC_Tree_map_node Tree_map_node;
 typedef CCC_Tree_map Tree_map;
 typedef CCC_Tree_map_entry Tree_map_entry;
-#    define tree_map_initialize(arguments...) CCC_tree_map_initialize(arguments)
+#    define tree_map_for(arguments...) CCC_tree_map_for(arguments)
 #    define tree_map_with_allocator(arguments...)                              \
         CCC_tree_map_with_allocator(arguments)
 #    define tree_map_with_context_allocator(arguments...)                      \

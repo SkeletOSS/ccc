@@ -167,7 +167,7 @@ metadata. */
     }
 
 /** @internal */
-#define CCC_private_array_adaptive_map_initialize(                             \
+#define CCC_private_array_adaptive_map_for(                                    \
     private_type_name, private_key_node_field, private_key_order_fn,           \
     private_allocate, private_context, private_capacity,                       \
     private_memory_pointer)                                                    \
@@ -194,7 +194,7 @@ metadata. */
             *private_array_adaptive_map_initializer_list                       \
             = private_array_compound_literal;                                  \
         struct CCC_Array_adaptive_map private_array_adaptive_map               \
-            = CCC_private_array_adaptive_map_initialize(                       \
+            = CCC_private_array_adaptive_map_for(                              \
                 typeof(*private_array_adaptive_map_initializer_list),          \
                 private_key_field, private_key_compare, private_allocate,      \
                 private_context, 0, NULL);                                     \
@@ -253,7 +253,7 @@ metadata. */
     private_allocate, private_context, private_cap)                            \
     (__extension__({                                                           \
         struct CCC_Array_adaptive_map private_array_adaptive_map               \
-            = CCC_private_array_adaptive_map_initialize(                       \
+            = CCC_private_array_adaptive_map_for(                              \
                 private_type_name, private_key_field, private_key_compare,     \
                 private_allocate, private_context, 0, NULL);                   \
         (void)CCC_array_adaptive_map_reserve(&private_array_adaptive_map,      \
@@ -303,9 +303,9 @@ metadata. */
 #define CCC_private_array_adaptive_map_with_context_allocator(                 \
     private_type_name, private_key_field, private_compare, private_allocate,   \
     private_context)                                                           \
-    CCC_private_array_adaptive_map_initialize(                                 \
-        private_type_name, private_key_field, private_compare,                 \
-        private_allocate, private_context, 0, NULL)
+    CCC_private_array_adaptive_map_for(private_type_name, private_key_field,   \
+                                       private_compare, private_allocate,      \
+                                       private_context, 0, NULL)
 
 /** @internal */
 #define CCC_private_array_adaptive_map_with_allocator(                         \

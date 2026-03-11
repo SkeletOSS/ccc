@@ -124,7 +124,7 @@ main(void)
         sizeof(CCC_array_tree_map_storage_for((struct Val[4096]){}))
     );
     defer free(map);
-    CCC_Array_tree_map map = CCC_array_tree_map_initialize(
+    CCC_Array_tree_map map = CCC_array_tree_map_for(
         struct Val,
         key,
         hash_key,
@@ -157,13 +157,12 @@ destruction.
 @param[in] capacity the capacity at data_pointer or 0.
 @param[in] memory_pointer a pointer to the contiguous user types or NULL.
 @return the struct initialized tree map for direct assignment
-(i.e. CCC_Array_tree_map m = CCC_array_tree_map_initialize(...);). */
-#define CCC_array_tree_map_initialize(type_name, type_key_field, compare,      \
-                                      allocate, context, capacity,             \
-                                      memory_pointer)                          \
-    CCC_private_array_tree_map_initialize(type_name, type_key_field, compare,  \
-                                          allocate, context, capacity,         \
-                                          memory_pointer)
+(i.e. CCC_Array_tree_map m = CCC_array_tree_map_for(...);). */
+#define CCC_array_tree_map_for(type_name, type_key_field, compare, allocate,   \
+                               context, capacity, memory_pointer)              \
+    CCC_private_array_tree_map_for(type_name, type_key_field, compare,         \
+                                   allocate, context, capacity,                \
+                                   memory_pointer)
 
 /** @brief Initialize a dynamic map at runtime from an initializer list.
 @param[in] type_key_field the field of the struct used for key storage.
@@ -555,7 +554,7 @@ struct Val
 };
 CCC_array_tree_map_declare_fixed(Small_fixed_map, struct Val,
 64); static map source =
-array_tree_map_initialize(
+array_tree_map_for(
     struct Val,
     key,
     array_tree_map_key_order,
@@ -565,7 +564,7 @@ array_tree_map_initialize(
     &(static Small_fixed_map){}
 );
 insert_rand_vals(&source);
-static map destination = array_tree_map_initialize(
+static map destination = array_tree_map_for(
     struct Val,
     key,
     array_tree_map_key_order,
@@ -587,7 +586,7 @@ struct Val
     int key;
     int val;
 };
-static Array_adaptive_map source = array_tree_map_initialize(
+static Array_adaptive_map source = array_tree_map_for(
     struct Val,
     key,
     key_order,
@@ -597,7 +596,7 @@ static Array_adaptive_map source = array_tree_map_initialize(
     NULL
 );
 insert_rand_vals(&source);
-static Array_adaptive_map destination = array_tree_map_initialize(
+static Array_adaptive_map destination = array_tree_map_for(
     struct Val,
     key,
     key_order,
@@ -621,7 +620,7 @@ struct Val
     int key;
     int val;
 };
-static Array_adaptive_map source = array_tree_map_initialize(
+static Array_adaptive_map source = array_tree_map_for(
     struct Val,
     key,
     key_order,
@@ -631,7 +630,7 @@ static Array_adaptive_map source = array_tree_map_initialize(
     NULL
 );
 insert_rand_vals(&source);
-static Array_adaptive_map destination = array_tree_map_initialize(
+static Array_adaptive_map destination = array_tree_map_for(
     struct Val,
     key,
     key_order,
@@ -1314,8 +1313,7 @@ typedef CCC_Array_tree_map Array_tree_map;
 typedef CCC_Array_tree_map_handle Array_tree_map_handle;
 #    define array_tree_map_storage_for(arguments...)                           \
         CCC_array_tree_map_storage_for(arguments)
-#    define array_tree_map_initialize(arguments...)                            \
-        CCC_array_tree_map_initialize(arguments)
+#    define array_tree_map_for(arguments...) CCC_array_tree_map_for(arguments)
 #    define array_tree_map_from(arguments...) CCC_array_tree_map_from(arguments)
 #    define array_tree_map_context_from(arguments...)                          \
         CCC_array_tree_map_context_from(arguments)

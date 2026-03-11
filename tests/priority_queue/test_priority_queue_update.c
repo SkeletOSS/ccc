@@ -18,10 +18,10 @@ enum : int {
 
 check_static_begin(priority_queue_test_insert_iterate_pop) {
     struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, HEAP_CAP);
-    CCC_Priority_queue priority_queue = CCC_priority_queue_initialize(
-        struct Val, elem, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
-        &allocator);
+        = stack_allocator_for(struct Val, HEAP_CAP);
+    CCC_Priority_queue priority_queue
+        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER, val_order,
+                                 stack_allocator_allocate, &allocator);
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -49,10 +49,10 @@ check_static_begin(priority_queue_test_insert_iterate_pop) {
 
 check_static_begin(priority_queue_test_priority_removal) {
     struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, HEAP_CAP);
-    CCC_Priority_queue priority_queue = CCC_priority_queue_initialize(
-        struct Val, elem, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
-        &allocator);
+        = stack_allocator_for(struct Val, HEAP_CAP);
+    CCC_Priority_queue priority_queue
+        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER, val_order,
+                                 stack_allocator_allocate, &allocator);
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -82,10 +82,10 @@ check_static_begin(priority_queue_test_priority_removal) {
 
 check_static_begin(priority_queue_test_priority_update) {
     struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, HEAP_CAP);
-    CCC_Priority_queue priority_queue = CCC_priority_queue_initialize(
-        struct Val, elem, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
-        &allocator);
+        = stack_allocator_for(struct Val, HEAP_CAP);
+    CCC_Priority_queue priority_queue
+        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER, val_order,
+                                 stack_allocator_allocate, &allocator);
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -120,10 +120,10 @@ check_static_begin(priority_queue_test_priority_update) {
 
 check_static_begin(priority_queue_test_priority_update_with) {
     struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, HEAP_CAP);
-    CCC_Priority_queue priority_queue = CCC_priority_queue_initialize(
-        struct Val, elem, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
-        &allocator);
+        = stack_allocator_for(struct Val, HEAP_CAP);
+    CCC_Priority_queue priority_queue
+        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER, val_order,
+                                 stack_allocator_allocate, &allocator);
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -157,10 +157,10 @@ check_static_begin(priority_queue_test_priority_update_with) {
 
 check_static_begin(priority_queue_test_priority_increase) {
     struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, HEAP_CAP);
-    CCC_Priority_queue priority_queue = CCC_priority_queue_initialize(
-        struct Val, elem, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
-        &allocator);
+        = stack_allocator_for(struct Val, HEAP_CAP);
+    CCC_Priority_queue priority_queue
+        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER, val_order,
+                                 stack_allocator_allocate, &allocator);
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -202,10 +202,10 @@ check_static_begin(priority_queue_test_priority_increase) {
 
 check_static_begin(priority_queue_test_priority_increase_with) {
     struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, HEAP_CAP);
-    CCC_Priority_queue priority_queue = CCC_priority_queue_initialize(
-        struct Val, elem, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
-        &allocator);
+        = stack_allocator_for(struct Val, HEAP_CAP);
+    CCC_Priority_queue priority_queue
+        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER, val_order,
+                                 stack_allocator_allocate, &allocator);
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -246,10 +246,10 @@ check_static_begin(priority_queue_test_priority_increase_with) {
 
 check_static_begin(priority_queue_test_priority_decrease) {
     struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, HEAP_CAP);
-    CCC_Priority_queue priority_queue = CCC_priority_queue_initialize(
-        struct Val, elem, CCC_ORDER_GREATER, val_order,
-        stack_allocator_allocate, &allocator);
+        = stack_allocator_for(struct Val, HEAP_CAP);
+    CCC_Priority_queue priority_queue
+        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_GREATER, val_order,
+                                 stack_allocator_allocate, &allocator);
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -291,10 +291,10 @@ check_static_begin(priority_queue_test_priority_decrease) {
 
 check_static_begin(priority_queue_test_priority_decrease_with) {
     struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, HEAP_CAP);
-    CCC_Priority_queue priority_queue = CCC_priority_queue_initialize(
-        struct Val, elem, CCC_ORDER_GREATER, val_order,
-        stack_allocator_allocate, &allocator);
+        = stack_allocator_for(struct Val, HEAP_CAP);
+    CCC_Priority_queue priority_queue
+        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_GREATER, val_order,
+                                 stack_allocator_allocate, &allocator);
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));

@@ -8,7 +8,7 @@
 #include "checkers.h"
 
 check_static_begin(bitset_test_set_one) {
-    Bitset bs = bitset_initialize(NULL, NULL, 10, 10, bitset_storage_for(10));
+    Bitset bs = bitset_for(NULL, NULL, 10, 10, bitset_storage_for(10));
     check(bitset_capacity(&bs).count, 10);
     /* Was false before. */
     check(bitset_set(&bs, 5, CCC_TRUE), CCC_FALSE);
@@ -20,7 +20,7 @@ check_static_begin(bitset_test_set_one) {
 }
 
 check_static_begin(bitset_test_set_shuffled) {
-    Bitset bs = bitset_initialize(NULL, NULL, 10, 10, bitset_storage_for(10));
+    Bitset bs = bitset_for(NULL, NULL, 10, 10, bitset_storage_for(10));
     size_t const larger_prime = 11;
     for (size_t i = 0, shuf_i = larger_prime % 10; i < 10;
          ++i, shuf_i = (shuf_i + larger_prime) % 10) {
@@ -37,7 +37,7 @@ check_static_begin(bitset_test_set_shuffled) {
 }
 
 check_static_begin(bitset_test_set_all) {
-    Bitset bs = bitset_initialize(NULL, NULL, 10, 10, bitset_storage_for(10));
+    Bitset bs = bitset_for(NULL, NULL, 10, 10, bitset_storage_for(10));
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(bitset_popcount(&bs).count, 10);
     for (size_t i = 0; i < 10; ++i) {
@@ -84,7 +84,7 @@ check_static_begin(bitset_test_set_range) {
 }
 
 check_static_begin(bitset_test_reset) {
-    Bitset bs = bitset_initialize(NULL, NULL, 10, 10, bitset_storage_for(10));
+    Bitset bs = bitset_for(NULL, NULL, 10, 10, bitset_storage_for(10));
     size_t const larger_prime = 11;
     for (size_t i = 0, shuf_i = larger_prime % 10; i < 10;
          ++i, shuf_i = (shuf_i + larger_prime) % 10) {
@@ -99,7 +99,7 @@ check_static_begin(bitset_test_reset) {
 }
 
 check_static_begin(bitset_test_reset_all) {
-    Bitset bs = bitset_initialize(NULL, NULL, 10, 10, bitset_storage_for(10));
+    Bitset bs = bitset_for(NULL, NULL, 10, 10, bitset_storage_for(10));
     check(bitset_capacity(&bs).count, 10);
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(bitset_popcount(&bs).count, 10);
@@ -144,7 +144,7 @@ check_static_begin(bitset_test_reset_range) {
 }
 
 check_static_begin(bitset_test_flip) {
-    Bitset bs = bitset_initialize(NULL, NULL, 10, 10, bitset_storage_for(10));
+    Bitset bs = bitset_for(NULL, NULL, 10, 10, bitset_storage_for(10));
     check(bitset_capacity(&bs).count, 10);
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(bitset_popcount(&bs).count, 10);
@@ -156,7 +156,7 @@ check_static_begin(bitset_test_flip) {
 }
 
 check_static_begin(bitset_test_flip_all) {
-    Bitset bs = bitset_initialize(NULL, NULL, 10, 10, bitset_storage_for(10));
+    Bitset bs = bitset_for(NULL, NULL, 10, 10, bitset_storage_for(10));
     check(bitset_capacity(&bs).count, 10);
     for (size_t i = 0; i < 10; i += 2) {
         check(bitset_set(&bs, i, CCC_TRUE), CCC_FALSE);
@@ -714,8 +714,7 @@ check_static_begin(bitset_test_first_leading_zero) {
 }
 
 check_static_begin(bitset_test_first_leading_zero_range) {
-    Bitset bs
-        = bitset_initialize(NULL, NULL, 512, 512, bitset_storage_for(512));
+    Bitset bs = bitset_for(NULL, NULL, 512, 512, bitset_storage_for(512));
     (void)bitset_set_all(&bs, CCC_TRUE);
     size_t const bit_of_interest = 4;
     check(bitset_set(&bs, bit_of_interest, CCC_FALSE), CCC_TRUE);
@@ -999,7 +998,7 @@ check_static_begin(bitset_test_shift_left_edgecase) {
 }
 
 check_static_begin(bitset_test_shift_left_edgecase_small) {
-    Bitset bs = bitset_initialize(NULL, NULL, 8, 8, bitset_storage_for(8));
+    Bitset bs = bitset_for(NULL, NULL, 8, 8, bitset_storage_for(8));
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(bitset_popcount(&bs).count, 8);
     check(bitset_shift_left(&bs, 7), CCC_RESULT_OK);
@@ -1043,7 +1042,7 @@ check_static_begin(bitset_test_shift_right_edgecase) {
 }
 
 check_static_begin(bitset_test_shift_right_edgecase_small) {
-    Bitset bs = bitset_initialize(NULL, NULL, 8, 8, bitset_storage_for(8));
+    Bitset bs = bitset_for(NULL, NULL, 8, 8, bitset_storage_for(8));
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(bitset_popcount(&bs).count, 8);
     check(bitset_shift_right(&bs, 7), CCC_RESULT_OK);

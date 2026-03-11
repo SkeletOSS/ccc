@@ -96,10 +96,10 @@ heap, respectively.
 @param[in] data_pointer a pointer to an array of user types or NULL.
 @return the initialized priority queue on the right hand side of an equality
 operator. */
-#define CCC_flat_priority_queue_initialize(                                    \
-    type_name, order, compare, allocate, context, capacity, data_pointer)      \
-    CCC_private_flat_priority_queue_initialize(                                \
-        type_name, order, compare, allocate, context, capacity, data_pointer)
+#define CCC_flat_priority_queue_for(type_name, order, compare, allocate,       \
+                                    context, capacity, data_pointer)           \
+    CCC_private_flat_priority_queue_for(type_name, order, compare, allocate,   \
+                                        context, capacity, data_pointer)
 
 /** @brief Partial order an array of elements as a min or max heap at runtime
 in O(N) time and space equal to the provided data capacity.
@@ -178,7 +178,7 @@ main(void)
 
 Only dynamic priority queues may be initialized this way. For static or stack
 based initialization of fixed buffers with contents known at compile time, see
-the CCC_flat_priority_queue_initialize() macro. */
+the CCC_flat_priority_queue_for() macro. */
 #define CCC_flat_priority_queue_from(                                          \
     order, compare, allocate, optional_capacity, compound_literal_array...)    \
     CCC_private_flat_priority_queue_from(                                      \
@@ -242,7 +242,7 @@ main(void)
 
 Only dynamic priority queues may be initialized this way. For static or stack
 based initialization of fixed buffers with contents known at compile time, see
-the CCC_flat_priority_queue_initialize() macro. */
+the CCC_flat_priority_queue_for() macro. */
 #define CCC_flat_priority_queue_context_from(order, compare, allocate,         \
                                              context, optional_capacity,       \
                                              compound_literal_array...)        \
@@ -280,7 +280,7 @@ main(void)
 
 Only dynamic Flat_priority_queues may be initialized this way. For static or
 stack based initialization of fixed flat_priority_queues with contents known at
-compile time, see the CCC_flat_priority_queue_initialize() macro. */
+compile time, see the CCC_flat_priority_queue_for() macro. */
 #define CCC_flat_priority_queue_with_capacity(type_name, order, compare,       \
                                               allocate, capacity)              \
     CCC_private_flat_priority_queue_with_capacity(type_name, order, compare,   \
@@ -318,7 +318,7 @@ main(void)
 
 Only dynamic Flat_priority_queues may be initialized this way. For static or
 stack based initialization of fixed flat_priority_queues with contents known at
-compile time, see the CCC_flat_priority_queue_initialize() macro. */
+compile time, see the CCC_flat_priority_queue_for() macro. */
 #define CCC_flat_priority_queue_with_context_capacity(                         \
     type_name, order, compare, allocate, context, capacity)                    \
     CCC_private_flat_priority_queue_with_context_capacity(                     \
@@ -417,7 +417,7 @@ Manual memory management with no allocation function provided.
 
 ```
 #define FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC
-Flat_priority_queue source = flat_priority_queue_initialize(
+Flat_priority_queue source = flat_priority_queue_for(
     int,
     CCC_ORDER_LESSER,
     int_order,
@@ -427,7 +427,7 @@ Flat_priority_queue source = flat_priority_queue_initialize(
     (int[10]){}
 );
 push_rand_ints(&source);
-Flat_priority_queue destination = flat_priority_queue_initialize(
+Flat_priority_queue destination = flat_priority_queue_for(
     int,
     CCC_ORDER_LESSER,
     int_order,
@@ -444,7 +444,7 @@ capacity. Here is memory management handed over to the copy function.
 
 ```
 #define FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC
-Flat_priority_queue source = flat_priority_queue_initialize(
+Flat_priority_queue source = flat_priority_queue_for(
     int,
     CCC_ORDER_LESSER,
     int_order,
@@ -454,7 +454,7 @@ Flat_priority_queue source = flat_priority_queue_initialize(
     NULL
 );
 push_rand_ints(&source);
-Flat_priority_queue destination = flat_priority_queue_initialize(
+Flat_priority_queue destination = flat_priority_queue_for(
     int,
     CCC_ORDER_LESSER,
     int_order,
@@ -473,7 +473,7 @@ as a fixed size flat_priority_queue.
 
 ```
 #define FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC
-Flat_priority_queue source = flat_priority_queue_initialize(
+Flat_priority_queue source = flat_priority_queue_for(
     int,
     CCC_ORDER_LESSER,
     int_order,
@@ -483,7 +483,7 @@ Flat_priority_queue source = flat_priority_queue_initialize(
     NULL
 );
 push_rand_ints(&source);
-Flat_priority_queue destination = flat_priority_queue_initialize(
+Flat_priority_queue destination = flat_priority_queue_for(
     int,
     CCC_ORDER_LESSER,
     int_order,
@@ -944,8 +944,8 @@ flat priority queue container. Check for collisions before name shortening. */
 #ifdef FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC
 /* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Flat_priority_queue Flat_priority_queue;
-#    define flat_priority_queue_initialize(arguments...)                       \
-        CCC_flat_priority_queue_initialize(arguments)
+#    define flat_priority_queue_for(arguments...)                              \
+        CCC_flat_priority_queue_for(arguments)
 #    define flat_priority_queue_from(arguments...)                             \
         CCC_flat_priority_queue_from(arguments)
 #    define flat_priority_queue_context_from(arguments...)                     \

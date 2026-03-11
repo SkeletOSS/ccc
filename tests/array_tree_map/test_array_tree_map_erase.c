@@ -135,8 +135,8 @@ check_static_begin(array_tree_map_test_insert_erase_cycles_no_allocate) {
 /** Make sure this test uses standard library allocator. Resizing is important
 to test for handle maps. Stack allocator does not allow resizing. */
 check_static_begin(array_tree_map_test_insert_erase_cycles_allocate) {
-    CCC_Array_tree_map s = array_tree_map_initialize(
-        struct Val, id, id_order, std_allocate, NULL, 0, NULL);
+    CCC_Array_tree_map s = array_tree_map_for(struct Val, id, id_order,
+                                              std_allocate, NULL, 0, NULL);
     srand(time(NULL)); /* NOLINT */
     int const num_nodes = 1000;
     int id_keys[1000];

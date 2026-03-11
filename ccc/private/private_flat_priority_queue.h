@@ -59,13 +59,13 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
 /*======================    Macro Implementations    ========================*/
 
 /** @internal */
-#define CCC_private_flat_priority_queue_initialize(                            \
+#define CCC_private_flat_priority_queue_for(                                   \
     private_type_name, private_order, private_compare, private_allocate,       \
     private_context, private_capacity, private_data_pointer)                   \
     {                                                                          \
-        .buffer = CCC_buffer_initialize(private_type_name, private_allocate,   \
-                                        private_context, private_capacity, 0,  \
-                                        private_data_pointer),                 \
+        .buffer                                                                \
+        = CCC_buffer_for(private_type_name, private_allocate, private_context, \
+                         private_capacity, 0, private_data_pointer),           \
         .order = (private_order),                                              \
         .compare = (private_compare),                                          \
     }
@@ -79,7 +79,7 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
             private_data_pointer)) *private_flat_priority_queue_heapify_data   \
             = (private_data_pointer);                                          \
         struct CCC_Flat_priority_queue private_flat_priority_queue_heapify_res \
-            = CCC_private_flat_priority_queue_initialize(                      \
+            = CCC_private_flat_priority_queue_for(                             \
                 private_type_name, private_order, private_compare,             \
                 private_allocate, private_context, private_capacity,           \
                 private_flat_priority_queue_heapify_data);                     \

@@ -385,7 +385,7 @@ check_static_begin(flat_hash_map_test_longest_consecutive_sequence) {
 }
 
 check_static_begin(flat_hash_map_test_resize) {
-    Flat_hash_map fh = flat_hash_map_initialize(
+    Flat_hash_map fh = flat_hash_map_for(
         struct Val, key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         std_allocate, NULL, 0, NULL);
     int const to_insert = 1000;
@@ -414,7 +414,7 @@ check_static_begin(flat_hash_map_test_resize) {
 }
 
 check_static_begin(flat_hash_map_test_resize_macros) {
-    Flat_hash_map fh = flat_hash_map_initialize(
+    Flat_hash_map fh = flat_hash_map_for(
         struct Val, key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         std_allocate, NULL, 0, NULL);
     int const to_insert = 1000;
@@ -450,7 +450,7 @@ check_static_begin(flat_hash_map_test_resize_macros) {
 }
 
 check_static_begin(flat_hash_map_test_resize_from_null) {
-    Flat_hash_map fh = flat_hash_map_initialize(
+    Flat_hash_map fh = flat_hash_map_for(
         struct Val, key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         std_allocate, NULL, 0, NULL);
     int const to_insert = 1000;
@@ -477,7 +477,7 @@ check_static_begin(flat_hash_map_test_resize_from_null) {
 }
 
 check_static_begin(flat_hash_map_test_resize_from_null_macros) {
-    Flat_hash_map fh = flat_hash_map_initialize(
+    Flat_hash_map fh = flat_hash_map_for(
         struct Val, key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         std_allocate, NULL, 0, NULL);
     int const to_insert = 1000;
@@ -603,8 +603,8 @@ check_static_begin(flat_hash_map_test_insert_and_find) {
 
 check_static_begin(flat_hash_map_test_reserve_without_permissions) {
     Flat_hash_map fh
-        = flat_hash_map_initialize(struct Val, key, flat_hash_map_int_to_u64,
-                                   flat_hash_map_id_order, NULL, NULL, 0, NULL);
+        = flat_hash_map_for(struct Val, key, flat_hash_map_int_to_u64,
+                            flat_hash_map_id_order, NULL, NULL, 0, NULL);
     /* The map must insert all of the requested elements but has no permission
        to resize. This ensures the reserve function works as expected. */
     int const to_insert = 1000;

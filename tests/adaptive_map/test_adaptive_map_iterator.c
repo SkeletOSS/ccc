@@ -140,9 +140,8 @@ check_static_begin(iterator_check, CCC_Adaptive_map *s) {
 }
 
 check_static_begin(adaptive_map_test_forward_iterator) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 33);
-    CCC_Adaptive_map s = CCC_adaptive_map_initialize(
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 33);
+    CCC_Adaptive_map s = CCC_adaptive_map_for(
         struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
     /* We should have the expected behavior iteration over empty tree. */
     int j = 0;
@@ -173,9 +172,8 @@ check_static_begin(adaptive_map_test_forward_iterator) {
 }
 
 check_static_begin(adaptive_map_test_iterate_removal) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 100);
-    CCC_Adaptive_map s = CCC_adaptive_map_initialize(
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 100);
+    CCC_Adaptive_map s = CCC_adaptive_map_for(
         struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
@@ -205,9 +203,8 @@ check_static_begin(adaptive_map_test_iterate_removal) {
 }
 
 check_static_begin(adaptive_map_test_iterate_remove_key_value_reinsert) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 200);
-    CCC_Adaptive_map s = CCC_adaptive_map_initialize(
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 200);
+    CCC_Adaptive_map s = CCC_adaptive_map_for(
         struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
@@ -244,9 +241,8 @@ check_static_begin(adaptive_map_test_iterate_remove_key_value_reinsert) {
 }
 
 check_static_begin(adaptive_map_test_valid_range) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 25);
-    CCC_Adaptive_map s = CCC_adaptive_map_initialize(
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 25);
+    CCC_Adaptive_map s = CCC_adaptive_map_for(
         struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
@@ -276,9 +272,8 @@ check_static_begin(adaptive_map_test_valid_range) {
 }
 
 check_static_begin(adaptive_map_test_valid_range_equals) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 25);
-    CCC_Adaptive_map s = CCC_adaptive_map_initialize(
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 25);
+    CCC_Adaptive_map s = CCC_adaptive_map_for(
         struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
@@ -302,9 +297,8 @@ check_static_begin(adaptive_map_test_valid_range_equals) {
 }
 
 check_static_begin(adaptive_map_test_invalid_range) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 25);
-    CCC_Adaptive_map s = CCC_adaptive_map_initialize(
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 25);
+    CCC_Adaptive_map s = CCC_adaptive_map_for(
         struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
@@ -334,9 +328,8 @@ check_static_begin(adaptive_map_test_invalid_range) {
 }
 
 check_static_begin(adaptive_map_test_empty_range) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 25);
-    CCC_Adaptive_map s = CCC_adaptive_map_initialize(
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 25);
+    CCC_Adaptive_map s = CCC_adaptive_map_for(
         struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */

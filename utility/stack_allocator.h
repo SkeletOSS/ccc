@@ -40,8 +40,7 @@ capacity desired for this stack buffer of user provided types.
 @return an initialized stack allocator with the appropriately sized stack buffer
 and capacity record. The allocator starts empty, assuming no allocations yet
 exist. */
-#define stack_allocator_initialize(type_name,                                  \
-                                   type_compile_time_known_capacity)           \
+#define stack_allocator_for(type_name, type_compile_time_known_capacity)       \
     {                                                                          \
         .blocks = (type_name[type_compile_time_known_capacity]){}, /*NOLINT*/  \
         .sizeof_type = sizeof(type_name),                                      \

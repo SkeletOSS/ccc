@@ -42,7 +42,7 @@ should be used. */
             && CCC_priority_queue_count(check_priority_queue_pointer).count    \
                    == (priority_queue_size_integer_literal)) {                 \
             check_inorder_result = private_inorder_fill(                       \
-                &(struct Stack_allocator)stack_allocator_initialize(           \
+                &(struct Stack_allocator)stack_allocator_for(                  \
                     struct Val, priority_queue_size_integer_literal),          \
                 (int[priority_queue_size_integer_literal]){},                  \
                 priority_queue_size_integer_literal, priority_queue_pointer);  \

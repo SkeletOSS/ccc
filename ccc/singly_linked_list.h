@@ -86,11 +86,11 @@ the intrusive list elem.
 @param[in] context a pointer to any context data needed for comparison or
 destruction.
 @return a stuct initializer for the singly linked list to be assigned
-(e.g. CCC_Singly_linked_list l = CCC_singly_linked_list_initialize(...);). */
-#define CCC_singly_linked_list_initialize(type_name, type_intruder_field,      \
-                                          compare, allocate, context)          \
-    CCC_private_singly_linked_list_initialize(type_name, type_intruder_field,  \
-                                              compare, allocate, context)
+(e.g. CCC_Singly_linked_list l = CCC_singly_linked_list_for(...);). */
+#define CCC_singly_linked_list_for(type_name, type_intruder_field, compare,    \
+                                   allocate, context)                          \
+    CCC_private_singly_linked_list_for(type_name, type_intruder_field,         \
+                                       compare, allocate, context)
 
 /** @brief Initialize an empty list at compile or runtime with an allocator.
 @param[in] type_name the user defined type stored in the list.
@@ -485,8 +485,8 @@ linked list container. Check for namespace clashes before name shortening. */
 /* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Singly_linked_list_node singly_linked_list_node;
 typedef CCC_Singly_linked_list Singly_linked_list;
-#    define singly_linked_list_initialize(arguments...)                        \
-        CCC_singly_linked_list_initialize(arguments)
+#    define singly_linked_list_for(arguments...)                               \
+        CCC_singly_linked_list_for(arguments)
 #    define singly_linked_list_from(arguments...)                              \
         CCC_singly_linked_list_from(arguments)
 #    define singly_linked_list_context_from(arguments...)                      \

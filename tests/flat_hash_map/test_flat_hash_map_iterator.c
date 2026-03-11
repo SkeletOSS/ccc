@@ -68,8 +68,8 @@ efficient iterator is able to free all elements allocated with no leaks when
 run under sanitizers. */
 check_static_begin(flat_hash_map_test_insert_allocate_clear_free) {
     CCC_Flat_hash_map fh
-        = flat_hash_map_initialize(struct Owner, key, flat_hash_map_int_to_u64,
-                                   owners_eq, std_allocate, NULL, 0, NULL);
+        = flat_hash_map_for(struct Owner, key, flat_hash_map_int_to_u64,
+                            owners_eq, std_allocate, NULL, 0, NULL);
     int const size = 32;
     for (int i = 0; i < size; ++i) {
         CCC_Entry *e = flat_hash_map_try_insert_with(

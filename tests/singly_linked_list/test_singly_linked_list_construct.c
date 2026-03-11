@@ -12,14 +12,14 @@
 
 static CCC_Singly_linked_list
 construct_empty(void) {
-    CCC_Singly_linked_list return_this = CCC_singly_linked_list_initialize(
-        struct Val, e, val_order, NULL, NULL);
+    CCC_Singly_linked_list return_this
+        = CCC_singly_linked_list_for(struct Val, e, val_order, NULL, NULL);
     return return_this;
 }
 
 check_static_begin(singly_linked_list_test_construct) {
     CCC_Singly_linked_list singly_linked_list
-        = singly_linked_list_initialize(struct Val, e, val_order, NULL, NULL);
+        = singly_linked_list_for(struct Val, e, val_order, NULL, NULL);
     check(is_empty(&singly_linked_list), true);
     check_end();
 }
@@ -33,8 +33,7 @@ check_static_begin(singly_linked_list_test_with_allocator) {
 }
 
 check_static_begin(singly_linked_list_test_with_context_allocator) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 3);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
     CCC_Singly_linked_list list = singly_linked_list_with_context_allocator(
         struct Val, e, val_order, stack_allocator_allocate, &allocator);
     check(CCC_singly_linked_list_validate(&list), true);
@@ -65,8 +64,7 @@ check_static_begin(singly_linked_list_test_constructor_copy) {
 }
 
 check_static_begin(singly_linked_list_test_construct_from) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 3);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
     CCC_Singly_linked_list list = CCC_singly_linked_list_context_from(
         e, val_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[]){

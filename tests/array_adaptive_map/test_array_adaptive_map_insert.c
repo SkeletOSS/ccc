@@ -386,7 +386,7 @@ check_static_begin(array_adaptive_map_test_two_sum) {
 }
 
 check_static_begin(array_adaptive_map_test_resize) {
-    CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_initialize(
+    CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_for(
         struct Val, id, id_order, std_allocate, NULL, 0, NULL);
     int const to_insert = 1000;
     int const larger_prime = 1009;
@@ -418,9 +418,9 @@ check_static_begin(array_adaptive_map_test_resize) {
 
 check_static_begin(array_adaptive_map_test_reserve) {
     struct Stack_allocator allocator
-        = stack_allocator_initialize(typeof(array_adaptive_map_storage_for(
-                                         (struct Val[STANDARD_FIXED_CAP]){})),
-                                     1);
+        = stack_allocator_for(typeof(array_adaptive_map_storage_for(
+                                  (struct Val[STANDARD_FIXED_CAP]){})),
+                              1);
     int const to_insert = 1000;
     CCC_Array_adaptive_map array_adaptive_map
         = array_adaptive_map_with_context_capacity(
@@ -458,7 +458,7 @@ check_static_begin(array_adaptive_map_test_reserve) {
 }
 
 check_static_begin(array_adaptive_map_test_resize_macros) {
-    CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_initialize(
+    CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_for(
         struct Val, id, id_order, std_allocate, NULL, 0, NULL);
     int const to_insert = 1000;
     int const larger_prime = 1009;
@@ -502,7 +502,7 @@ check_static_begin(array_adaptive_map_test_resize_macros) {
 }
 
 check_static_begin(array_adaptive_map_test_resize_from_null) {
-    CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_initialize(
+    CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_for(
         struct Val, id, id_order, std_allocate, NULL, 0, NULL);
     int const to_insert = 1000;
     int const larger_prime = 1009;
@@ -532,7 +532,7 @@ check_static_begin(array_adaptive_map_test_resize_from_null) {
 }
 
 check_static_begin(array_adaptive_map_test_resize_from_null_macros) {
-    CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_initialize(
+    CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_for(
         struct Val, id, id_order, std_allocate, NULL, 0, NULL);
     int const to_insert = 1000;
     int const larger_prime = 1009;

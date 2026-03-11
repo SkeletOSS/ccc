@@ -92,7 +92,7 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
 /*======================   Macro Implementations     ========================*/
 
 /** @internal */
-#define CCC_private_singly_linked_list_initialize(                             \
+#define CCC_private_singly_linked_list_for(                                    \
     private_struct_name, private_singly_linked_list_node_field,                \
     private_compare, private_allocate, private_context)                        \
     {                                                                          \
@@ -110,7 +110,7 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
 #define CCC_private_singly_linked_list_with_context_allocator(                 \
     private_struct_name, private_type_intruder_field, private_compare,         \
     private_allocate, private_context)                                         \
-    CCC_private_singly_linked_list_initialize(                                 \
+    CCC_private_singly_linked_list_for(                                        \
         private_struct_name, private_type_intruder_field, private_compare,     \
         private_allocate, private_context)
 
@@ -118,7 +118,7 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
 #define CCC_private_singly_linked_list_with_allocator(                         \
     private_struct_name, private_type_intruder_field, private_compare,         \
     private_allocate)                                                          \
-    CCC_private_singly_linked_list_initialize(                                 \
+    CCC_private_singly_linked_list_for(                                        \
         private_struct_name, private_type_intruder_field, private_compare,     \
         private_allocate, NULL)
 
@@ -131,7 +131,7 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
             *private_singly_linked_list_type_array                             \
             = private_compound_literal_array;                                  \
         struct CCC_Singly_linked_list private_singly_linked_list               \
-            = CCC_private_singly_linked_list_initialize(                       \
+            = CCC_private_singly_linked_list_for(                              \
                 typeof(*private_singly_linked_list_type_array),                \
                 private_type_intruder_field, private_compare,                  \
                 private_allocate, private_context);                            \
