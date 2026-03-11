@@ -92,20 +92,22 @@ enum : size_t {
 };
 
 /** @brief Get the number of bit blocks needed for the desired bit set capacity.
-@param[in] bit_cap the number of bits representing this bit set.
+@param[in] bit_capacity the number of bits representing this bit set.
 @return the number of blocks needed for the desired bit set.
-@warning bit_cap must be >= 1. */
-#define CCC_bitset_block_count(bit_cap) CCC_private_bitset_block_count(bit_cap)
+@warning bit_capacity must be >= 1. */
+#define CCC_bitset_block_count(bit_capacity)                                   \
+    CCC_private_bitset_block_count(bit_capacity)
 
 /** @brief Get the number of bytes needed for the desired bit set capacity.
-@param[in] bit_cap the number of bits representing this bit set.
+@param[in] bit_capacity the number of bits representing this bit set.
 @return the number of bytes needed to support the bit capacity. This is the
 number of bytes occupied by the number of bit blocks that must be allocated. */
-#define CCC_bitset_block_bytes(bit_cap) CCC_private_bitset_block_bytes(bit_cap)
+#define CCC_bitset_block_bytes(bit_capacity)                                   \
+    CCC_private_bitset_block_bytes(bit_capacity)
 
 /** @brief Allocate the necessary number of blocks at compile or runtime on the
 stack or data segment.
-@param[in] bit_cap the desired number of bits to store in the bit set.
+@param[in] bit_capacity the desired number of bits to store in the bit set.
 @param[in] optional_storage_specifier an optional storage specifier specifier
 such as static or automatic.
 @return a compound literal array of the necessary bit block type allocated in
@@ -140,8 +142,8 @@ This macro is required for any initialization where the bit block memory comes
 from the stack or data segment. For one time dynamic reservations of bit block
 memory see the CCC_bitset_reserve and CCC_bitset_clear_and_free_reserve
 interface. */
-#define CCC_bitset_storage_for(bit_cap, optional_storage_specifier...)         \
-    CCC_private_bitset_storage_for(bit_cap, optional_storage_specifier)
+#define CCC_bitset_storage_for(bit_capacity, optional_storage_specifier...)    \
+    CCC_private_bitset_storage_for(bit_capacity, optional_storage_specifier)
 
 /** @brief Initialize the bit set with memory and allocation permissions.
 @param[in] allocate the allocation function for a dynamic bit set or NULL.

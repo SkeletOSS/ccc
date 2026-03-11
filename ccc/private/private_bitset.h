@@ -58,21 +58,21 @@ CCC_Tribool CCC_private_bitset_set(struct CCC_Bitset *, size_t, CCC_Tribool);
 
 /** @internal Returns the number of blocks needed to support a given capacity
 of bits. Assumes the given capacity is greater than 0. Classic div round up. */
-#define CCC_private_bitset_block_count(private_bit_cap)                        \
-    (((private_bit_cap) + (CCC_PRIVATE_BITSET_BLOCK_BITS - 1))                 \
+#define CCC_private_bitset_block_count(private_bit_capacity)                   \
+    (((private_bit_capacity) + (CCC_PRIVATE_BITSET_BLOCK_BITS - 1))            \
      / CCC_PRIVATE_BITSET_BLOCK_BITS)
 
 /** @internal Returns the number of bytes needed for the required blocks. */
-#define CCC_private_bitset_block_bytes(private_bit_cap)                        \
-    (sizeof(*(struct CCC_Bitset){}.blocks) * (private_bit_cap))
+#define CCC_private_bitset_block_bytes(private_bit_capacity)                   \
+    (sizeof(*(struct CCC_Bitset){}.blocks) * (private_bit_capacity))
 
 /** @internal Allocates a compound literal bit block array in the scope at which
 the macro is used. However, the optional parameter supports storage duration
 specifiers which is a feature of C23. Not all compilers support this yet. */
-#define CCC_private_bitset_storage_for(private_bit_cap, ...)                   \
+#define CCC_private_bitset_storage_for(private_bit_capacity, ...)              \
     (__VA_OPT__(__VA_ARGS__) typeof (                                          \
         *(struct CCC_Bitset){}                                                 \
-             .blocks)[CCC_private_bitset_block_count(private_bit_cap)]) {      \
+             .blocks)[CCC_private_bitset_block_count(private_bit_capacity)]) { \
     }
 
 /** @internal NOLINTNEXTLINE */
