@@ -1,4 +1,4 @@
-.PHONY: gcc-ccc clang-ccc default build gcc-release gcc-debug clang-release clang-debug sanitize-debug sanitize-release clean tests samples all-gcc-debug all-gcc-release all-sanitize-debug all-sanitize-release all-clang-debug all-clang-release dtest rtest utility tidy format fanalyze
+.PHONY: gcc-ccc clang-ccc default build gcc-release gcc-debug clang-release clang-debug sanitize-debug sanitize-release clean tests samples all-gcc-debug all-gcc-release all-sanitize-debug all-sanitize-release all-clang-debug all-clang-release test utility tidy format fanalyze
 
 MAKE := $(MAKE)
 MAKEFLAGS += --no-print-directory
