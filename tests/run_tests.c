@@ -32,7 +32,7 @@ See checkers.h for the testing framework all tests agree to use. */
 #endif
 #ifdef __APPLE__
 #    include <sys/syslimits.h>
-#    define FILESYS_MAX_PATH NAME_MAX
+#    define FILESYS_MAX_PATH PATH_MAX
 #    include <_string.h>
 #    include <sys/_types/_pid_t.h>
 #    include <sys/dirent.h>
