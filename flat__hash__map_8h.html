@@ -919,7 +919,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <div class="line">    NULL,</div>
 <div class="line">    NULL,</div>
 <div class="line">    64,</div>
-<div class="line">    &amp;flat_hash_map_storage_for((<span class="keyword">struct</span> Val[64]){}, <span class="keyword">static</span>)</div>
+<div class="line">    &amp;flat_hash_map_storage_for((<span class="keyword">struct</span> Val[64]){})</div>
 <div class="line">);</div>
 </div><!-- fragment --><p>Initialize a dynamic hash table at compile time with allocation permission and no context data. Use the same type as the previous example.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define FLAT_HASH_MAP_USING_NAMESPACE_CCC</span></div>
@@ -938,7 +938,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <div class="line">    0,</div>
 <div class="line">    NULL</div>
 <div class="line">);</div>
-</div><!-- fragment --><p>Initialization at runtime is also possible. Stack-based or dynamic maps are identical to the provided examples. Omit <code>static</code> in a runtime context. </p>
+</div><!-- fragment --><p>Initialization at runtime is also possible. Stack-based or dynamic maps are identical to the provided examples. Omit <code>static</code> in a runtime context. See other more specific initializers to reduce the number of arguments or boilerplate for construction. </p>
 
 </div>
 </div>
@@ -1332,10 +1332,10 @@ If initialization fails, the map will be returned empty. All subsequent queries,
 <div class="line"><span class="keywordtype">int</span></div>
 <div class="line">main(<span class="keywordtype">void</span>)</div>
 <div class="line">{</div>
-<div class="line">    <span class="keywordtype">void</span> *<span class="keyword">const</span> map = malloc(</div>
+<div class="line">    <span class="keywordtype">void</span> *<span class="keyword">const</span> storage = malloc(</div>
 <div class="line">        <span class="keyword">sizeof</span>(<a class="code hl_define" href="flat__hash__map_8h.html#aef0cc74007bbdab507c0c3cf0b36351e">CCC_flat_hash_map_storage_for</a>((<span class="keyword">struct</span> Val[4096]){}))</div>
 <div class="line">    );</div>
-<div class="line">    defer free(map);</div>
+<div class="line">    defer free(storage);</div>
 <div class="line">    <a class="code hl_struct" href="structCCC__Flat__hash__map.html">CCC_Flat_hash_map</a> hash_map = <a class="code hl_define" href="flat__hash__map_8h.html#a7e7fd71f7918b37c8a572cae1f443ab8">CCC_flat_hash_map_for</a>(</div>
 <div class="line">        <span class="keyword">struct</span> Val,</div>
 <div class="line">        key,</div>
@@ -1344,10 +1344,10 @@ If initialization fails, the map will be returned empty. All subsequent queries,
 <div class="line">        NULL,</div>
 <div class="line">        NULL,</div>
 <div class="line">        4096,</div>
-<div class="line">        map</div>
+<div class="line">        storage</div>
 <div class="line">    );</div>
 <div class="line">}</div>
-<div class="ttc" id="aflat__hash__map_8h_html_a7e7fd71f7918b37c8a572cae1f443ab8"><div class="ttname"><a href="flat__hash__map_8h.html#a7e7fd71f7918b37c8a572cae1f443ab8">CCC_flat_hash_map_for</a></div><div class="ttdeci">#define CCC_flat_hash_map_for(type_name, key_field, hash, compare, allocate, context, capacity, map_pointer)</div><div class="ttdoc">Initialize a map of types at compile time or runtime.</div><div class="ttdef"><b>Definition:</b> flat_hash_map.h:243</div></div>
+<div class="ttc" id="aflat__hash__map_8h_html_a7e7fd71f7918b37c8a572cae1f443ab8"><div class="ttname"><a href="flat__hash__map_8h.html#a7e7fd71f7918b37c8a572cae1f443ab8">CCC_flat_hash_map_for</a></div><div class="ttdeci">#define CCC_flat_hash_map_for(type_name, key_field, hash, compare, allocate, context, capacity, map_pointer)</div><div class="ttdoc">Initialize a map of types at compile time or runtime.</div><div class="ttdef"><b>Definition:</b> flat_hash_map.h:245</div></div>
 <div class="ttc" id="aflat__hash__map_8h_html_aef0cc74007bbdab507c0c3cf0b36351e"><div class="ttname"><a href="flat__hash__map_8h.html#aef0cc74007bbdab507c0c3cf0b36351e">CCC_flat_hash_map_storage_for</a></div><div class="ttdeci">#define CCC_flat_hash_map_storage_for(user_type_compound_literal_array, optional_storage_specifier...)</div><div class="ttdoc">Create the underlying fixed size storage for a user declared compound literal array of the type the u...</div><div class="ttdef"><b>Definition:</b> flat_hash_map.h:177</div></div>
 <div class="ttc" id="astructCCC__Flat__hash__map_html"><div class="ttname"><a href="structCCC__Flat__hash__map.html">CCC_Flat_hash_map</a></div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:139</div></div>
 </div><!-- fragment --><p>Usually, using a dynamic map and the reserve interface would be sufficient. However, the reserve interface only guarantees that at least the needed bytes are allocated. When the user must know the exact size of the backing object due to strict memory requirements, this is helpful. Such a use case may be rare, but must be supported by this container. </p>

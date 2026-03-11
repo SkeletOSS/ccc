@@ -682,7 +682,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line"><span class="keyword">static</span> Bitset bitset = bitset_context_with_storage(</div>
 <div class="line">    &amp;module_context,</div>
 <div class="line">    4096,</div>
-<div class="line">    bitset_storage_for(4096, <span class="keyword">static</span>)</div>
+<div class="line">    bitset_storage_for(4096)</div>
 <div class="line">);</div>
 </div><!-- fragment --><p>This saves some initialization boilerplate. </p>
 
@@ -870,17 +870,21 @@ This graph shows which files directly or indirectly include this file:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a compound literal array of the necessary bit block type allocated in the scope it is created with any storage specifier specifiers added.</dd></dl>
 <p>This method can be used for compile time initialization of bit set. For example:</p>
-<div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code hl_struct" href="structCCC__Bitset.html">CCC_Bitset</a> b = <a class="code hl_define" href="bitset_8h.html#a5ea397e263d4d2098a6b44a9a69c9538">CCC_bitset_with_storage</a>(</div>
-<div class="line">    256,</div>
-<div class="line">    <a class="code hl_define" href="bitset_8h.html#a99f5b0f3cd196bbb38368fae3f609a57">CCC_bitset_storage_for</a>(256, <span class="keyword">static</span>),</div>
-<div class="line">);</div>
-<div class="ttc" id="abitset_8h_html_a5ea397e263d4d2098a6b44a9a69c9538"><div class="ttname"><a href="bitset_8h.html#a5ea397e263d4d2098a6b44a9a69c9538">CCC_bitset_with_storage</a></div><div class="ttdeci">#define CCC_bitset_with_storage(count, compound_literal_array)</div><div class="ttdoc">Initialize the bit set with a starting capacity and size at runtime or compile time with no allocatio...</div><div class="ttdef"><b>Definition:</b> bitset.h:363</div></div>
-<div class="ttc" id="abitset_8h_html_a99f5b0f3cd196bbb38368fae3f609a57"><div class="ttname"><a href="bitset_8h.html#a99f5b0f3cd196bbb38368fae3f609a57">CCC_bitset_storage_for</a></div><div class="ttdeci">#define CCC_bitset_storage_for(bit_cap, optional_storage_specifier...)</div><div class="ttdoc">Allocate the necessary number of blocks at compile or runtime on the stack or data segment.</div><div class="ttdef"><b>Definition:</b> bitset.h:139</div></div>
+<div class="fragment"><div class="line"><span class="keywordtype">int</span></div>
+<div class="line">main(<span class="keywordtype">void</span>) {</div>
+<div class="line">    <span class="keyword">static</span> <a class="code hl_struct" href="structCCC__Bitset.html">CCC_Bitset</a> b = <a class="code hl_define" href="bitset_8h.html#a5ea397e263d4d2098a6b44a9a69c9538">CCC_bitset_with_storage</a>(</div>
+<div class="line">        256,</div>
+<div class="line">        <a class="code hl_define" href="bitset_8h.html#a99f5b0f3cd196bbb38368fae3f609a57">CCC_bitset_storage_for</a>(256, <span class="keyword">static</span>)</div>
+<div class="line">    );</div>
+<div class="line">    <span class="keywordflow">return</span> 0;</div>
+<div class="line">}</div>
+<div class="ttc" id="abitset_8h_html_a5ea397e263d4d2098a6b44a9a69c9538"><div class="ttname"><a href="bitset_8h.html#a5ea397e263d4d2098a6b44a9a69c9538">CCC_bitset_with_storage</a></div><div class="ttdeci">#define CCC_bitset_with_storage(count, compound_literal_array)</div><div class="ttdoc">Initialize the bit set with a starting capacity and size at runtime or compile time with no allocatio...</div><div class="ttdef"><b>Definition:</b> bitset.h:367</div></div>
+<div class="ttc" id="abitset_8h_html_a99f5b0f3cd196bbb38368fae3f609a57"><div class="ttname"><a href="bitset_8h.html#a99f5b0f3cd196bbb38368fae3f609a57">CCC_bitset_storage_for</a></div><div class="ttdeci">#define CCC_bitset_storage_for(bit_cap, optional_storage_specifier...)</div><div class="ttdoc">Allocate the necessary number of blocks at compile or runtime on the stack or data segment.</div><div class="ttdef"><b>Definition:</b> bitset.h:143</div></div>
 <div class="ttc" id="astructCCC__Bitset_html"><div class="ttname"><a href="structCCC__Bitset.html">CCC_Bitset</a></div><div class="ttdef"><b>Definition:</b> private_bitset.h:32</div></div>
-</div><!-- fragment --><p>The above example also illustrates the benefits of a static compound literal to encapsulate the bits within the bit set array to prevent dangling references. If the compiler does not support storage specifier of compound literals the more traditional example follows:</p>
+</div><!-- fragment --><p>The above example allows the duration of the underlying storage to be declared in any context with the new C23 storage duration in compound literals feature. If the compiler does not support storage specifier of compound literals the more traditional example follows:</p>
 <div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code hl_struct" href="structCCC__Bitset.html">CCC_Bitset</a> b = <a class="code hl_define" href="bitset_8h.html#a5ea397e263d4d2098a6b44a9a69c9538">CCC_bitset_with_storage</a>(</div>
 <div class="line">    256,</div>
-<div class="line">    <a class="code hl_define" href="bitset_8h.html#a99f5b0f3cd196bbb38368fae3f609a57">CCC_bitset_storage_for</a>(256),</div>
+<div class="line">    <a class="code hl_define" href="bitset_8h.html#a99f5b0f3cd196bbb38368fae3f609a57">CCC_bitset_storage_for</a>(256)</div>
 <div class="line">);</div>
 </div><!-- fragment --><p>This macro is required for any initialization where the bit block memory comes from the stack or data segment. For one time dynamic reservations of bit block memory see the CCC_bitset_reserve and CCC_bitset_clear_and_free_reserve interface. </p>
 
@@ -1017,7 +1021,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="fragment"><div class="line"><span class="preprocessor">#define BITSET_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="keyword">static</span> Bitset bitset = bitset_with_storage(</div>
 <div class="line">    4096,</div>
-<div class="line">    bitset_storage_for(4096, <span class="keyword">static</span>)</div>
+<div class="line">    bitset_storage_for(4096)</div>
 <div class="line">);</div>
 </div><!-- fragment --><p>This saves some initialization boilerplate. </p>
 
@@ -1471,17 +1475,17 @@ This graph shows which files directly or indirectly include this file:</div>
 <p>Manual memory management with no allocation function provided.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define BITSET_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="keyword">static</span> Bitset source = bitset_for(</div>
-<div class="line">    bitset_storage_for(11, <span class="keyword">static</span>),</div>
 <div class="line">    NULL,</div>
 <div class="line">    NULL,</div>
-<div class="line">    11</div>
+<div class="line">    11,</div>
+<div class="line">    bitset_storage_for(11),</div>
 <div class="line">);</div>
 <div class="line">set_rand_bits(&amp;source);</div>
 <div class="line"><span class="keyword">static</span> Bitset source = bitset_for(</div>
-<div class="line">    bitset_storage_for(13, <span class="keyword">static</span>),</div>
 <div class="line">    NULL,</div>
 <div class="line">    NULL,</div>
 <div class="line">    13</div>
+<div class="line">    bitset_storage_for(13),</div>
 <div class="line">);</div>
 <div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res = bitset_copy(&amp;destination, &amp;source, NULL);</div>
 <div class="ttc" id="atypes_8h_html_aa1ded61d294b114942f11e711b331dcf"><div class="ttname"><a href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a></div><div class="ttdeci">CCC_Result</div><div class="ttdoc">A result of actions on containers.</div><div class="ttdef"><b>Definition:</b> types.h:146</div></div>
