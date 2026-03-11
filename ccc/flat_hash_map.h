@@ -152,10 +152,10 @@ struct Val
 int
 main(void)
 {
-    void *const map = malloc(
+    void *const storage = malloc(
         sizeof(CCC_flat_hash_map_storage_for((struct Val[4096]){}))
     );
-    defer free(map);
+    defer free(storage);
     CCC_Flat_hash_map hash_map = CCC_flat_hash_map_for(
         struct Val,
         key,
@@ -164,7 +164,7 @@ main(void)
         NULL,
         NULL,
         4096,
-        map
+        storage
     );
 }
 ```
@@ -194,8 +194,8 @@ equality operator (i.e. CCC_Flat_hash_map map =
 CCC_flat_hash_map_for(...);)
 @note if a dynamic resizing map is required provide NULL as the map_pointer.
 
-Initialize a static fixed size hash map at compile time that has
-no allocation permission or context data needed.
+Initialize a static fixed size hash map at compile time that has no allocation
+permission or context data needed.
 
 ```
 #define FLAT_HASH_MAP_USING_NAMESPACE_CCC
@@ -212,7 +212,7 @@ static Flat_hash_map static_map = flat_hash_map_for(
     NULL,
     NULL,
     64,
-    &flat_hash_map_storage_for((struct Val[64]){}, static)
+    &flat_hash_map_storage_for((struct Val[64]){})
 );
 ```
 
@@ -239,7 +239,9 @@ static Flat_hash_map static_map = flat_hash_map_for(
 ```
 
 Initialization at runtime is also possible. Stack-based or dynamic maps are
-identical to the provided examples. Omit `static` in a runtime context. */
+identical to the provided examples. Omit `static` in a runtime context. See
+other more specific initializers to reduce the number of arguments or
+boilerplate for construction. */
 #define CCC_flat_hash_map_for(type_name, key_field, hash, compare, allocate,   \
                               context, capacity, map_pointer)                  \
     CCC_private_flat_hash_map_for(type_name, key_field, hash, compare,         \

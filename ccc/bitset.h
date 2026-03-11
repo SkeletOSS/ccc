@@ -114,21 +114,25 @@ the scope it is created with any storage specifier specifiers added.
 This method can be used for compile time initialization of bit set. For example:
 
 ```
-static CCC_Bitset b = CCC_bitset_with_storage(
-    256,
-    CCC_bitset_storage_for(256, static),
-);
+int
+main(void) {
+    static CCC_Bitset b = CCC_bitset_with_storage(
+        256,
+        CCC_bitset_storage_for(256, static)
+    );
+    return 0;
+}
 ```
 
-The above example also illustrates the benefits of a static compound literal
-to encapsulate the bits within the bit set array to prevent dangling references.
+The above example allows the duration of the underlying storage to be declared
+in any context with the new C23 storage duration in compound literals feature.
 If the compiler does not support storage specifier of compound literals the more
 traditional example follows:
 
 ```
 static CCC_Bitset b = CCC_bitset_with_storage(
     256,
-    CCC_bitset_storage_for(256),
+    CCC_bitset_storage_for(256)
 );
 ```
 
@@ -355,7 +359,7 @@ A fixed size bit set.
 #define BITSET_USING_NAMESPACE_CCC
 static Bitset bitset = bitset_with_storage(
     4096,
-    bitset_storage_for(4096, static)
+    bitset_storage_for(4096)
 );
 ```
 
@@ -382,7 +386,7 @@ A fixed size bit set.
 static Bitset bitset = bitset_context_with_storage(
     &module_context,
     4096,
-    bitset_storage_for(4096, static)
+    bitset_storage_for(4096)
 );
 ```
 
@@ -447,17 +451,17 @@ Manual memory management with no allocation function provided.
 ```
 #define BITSET_USING_NAMESPACE_CCC
 static Bitset source = bitset_for(
-    bitset_storage_for(11, static),
     NULL,
     NULL,
-    11
+    11,
+    bitset_storage_for(11),
 );
 set_rand_bits(&source);
 static Bitset source = bitset_for(
-    bitset_storage_for(13, static),
     NULL,
     NULL,
     13
+    bitset_storage_for(13),
 );
 CCC_Result res = bitset_copy(&destination, &source, NULL);
 ```
