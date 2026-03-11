@@ -196,13 +196,7 @@ to inline function for bit set construction. */
 /** @internal */
 #define CCC_private_bitset_context_with_allocator(private_allocate,            \
                                                   private_context)             \
-    {                                                                          \
-        .blocks = NULL,                                                        \
-        .count = 0,                                                            \
-        .capacity = 0,                                                         \
-        .allocate = (private_allocate),                                        \
-        .context = (private_context),                                          \
-    }
+    CCC_private_bitset_for(private_allocate, private_context, 0, 0, NULL)
 
 /** @internal */
 #define CCC_private_bitset_with_allocator(private_allocate)                    \
