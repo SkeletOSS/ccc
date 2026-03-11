@@ -11,9 +11,8 @@
 #include "utility/stack_allocator.h"
 
 check_static_begin(singly_linked_list_test_insert_three) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 3);
-    Singly_linked_list singly_linked_list = singly_linked_list_initialize(
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
+    Singly_linked_list singly_linked_list = singly_linked_list_for(
         struct Val, e, val_order, stack_allocator_allocate, &allocator);
     check(push_front(&singly_linked_list, &(struct Val){}.e) != NULL, true);
     struct Val *v = front(&singly_linked_list);
@@ -39,7 +38,7 @@ check_static_begin(singly_linked_list_test_insert_three) {
 
 check_static_begin(singly_linked_list_test_push_and_splice) {
     Singly_linked_list singly_linked_list
-        = singly_linked_list_initialize(struct Val, e, val_order, NULL, NULL);
+        = singly_linked_list_for(struct Val, e, val_order, NULL, NULL);
     struct Val vals[4] = {{.val = 0}, {.val = 1}, {.val = 2}, {.val = 3}};
     enum Check_result const t = push_list(&singly_linked_list, 4, vals);
     check(t, CHECK_PASS);
@@ -69,7 +68,7 @@ check_static_begin(singly_linked_list_test_push_and_splice) {
 
 check_static_begin(singly_linked_list_test_push_and_splice_range) {
     Singly_linked_list singly_linked_list
-        = singly_linked_list_initialize(struct Val, e, val_order, NULL, NULL);
+        = singly_linked_list_for(struct Val, e, val_order, NULL, NULL);
     struct Val vals[5]
         = {{.val = 0}, {.val = 1}, {.val = 2}, {.val = 3}, {.val = 4}};
     enum Check_result const t = push_list(&singly_linked_list, 5, vals);
@@ -115,7 +114,7 @@ check_static_begin(singly_linked_list_test_push_and_splice_range) {
 
 check_static_begin(singly_linked_list_test_push_and_splice_range_no_ops) {
     Singly_linked_list singly_linked_list
-        = singly_linked_list_initialize(struct Val, e, val_order, NULL, NULL);
+        = singly_linked_list_for(struct Val, e, val_order, NULL, NULL);
     struct Val vals[5]
         = {{.val = 0}, {.val = 1}, {.val = 2}, {.val = 3}, {.val = 4}};
     enum Check_result const t = push_list(&singly_linked_list, 5, vals);
@@ -146,8 +145,7 @@ check_static_begin(singly_linked_list_test_push_and_splice_range_no_ops) {
 }
 
 check_static_begin(singly_linked_list_test_sort_reverse) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 6);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 6);
     Singly_linked_list singly_linked_list = singly_linked_list_context_from(
         e, val_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[6]){
@@ -171,8 +169,7 @@ check_static_begin(singly_linked_list_test_sort_reverse) {
 }
 
 check_static_begin(singly_linked_list_test_sort_even) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 8);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 8);
     Singly_linked_list singly_linked_list = singly_linked_list_context_from(
         e, val_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[8]){
@@ -201,8 +198,7 @@ check_static_begin(singly_linked_list_test_sort_even) {
 }
 
 check_static_begin(singly_linked_list_test_sort_odd) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 9);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 9);
     Singly_linked_list singly_linked_list = singly_linked_list_context_from(
         e, val_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[9]){
@@ -232,8 +228,7 @@ check_static_begin(singly_linked_list_test_sort_odd) {
 }
 
 check_static_begin(singly_linked_list_test_sort_runs) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 12);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 12);
     Singly_linked_list singly_linked_list = singly_linked_list_context_from(
         e, val_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[12]){
@@ -267,8 +262,7 @@ check_static_begin(singly_linked_list_test_sort_runs) {
 }
 
 check_static_begin(singly_linked_list_test_sort_halves) {
-    struct Stack_allocator allocator
-        = stack_allocator_initialize(struct Val, 12);
+    struct Stack_allocator allocator = stack_allocator_for(struct Val, 12);
     Singly_linked_list singly_linked_list = singly_linked_list_context_from(
         e, val_order, stack_allocator_allocate, NULL, &allocator,
         (struct Val[12]){
@@ -303,7 +297,7 @@ check_static_begin(singly_linked_list_test_sort_halves) {
 
 check_static_begin(singly_linked_list_test_sort_insert) {
     Singly_linked_list singly_linked_list
-        = singly_linked_list_initialize(struct Val, e, val_order, NULL, NULL);
+        = singly_linked_list_for(struct Val, e, val_order, NULL, NULL);
     struct Val *inserted = singly_linked_list_insert_sorted(
         &singly_linked_list, &(struct Val){.val = -99999}.e);
     check(inserted->val, -99999);

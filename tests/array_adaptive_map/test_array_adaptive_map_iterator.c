@@ -128,7 +128,7 @@ check_static_begin(iterator_check, Array_adaptive_map *s) {
 }
 
 check_static_begin(array_adaptive_map_test_forward_iterator) {
-    CCC_Array_adaptive_map s = array_adaptive_map_with_compound_literal(
+    CCC_Array_adaptive_map s = array_adaptive_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     /* We should have the expected behavior iteration over empty tree. */
     int j = 0;
@@ -155,7 +155,7 @@ check_static_begin(array_adaptive_map_test_forward_iterator) {
 }
 
 check_static_begin(array_adaptive_map_test_iterate_removal) {
-    CCC_Array_adaptive_map s = array_adaptive_map_with_compound_literal(
+    CCC_Array_adaptive_map s = array_adaptive_map_with_storage(
         id, id_order, (struct Val[STANDARD_FIXED_CAP]){});
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
@@ -183,7 +183,7 @@ check_static_begin(array_adaptive_map_test_iterate_removal) {
 }
 
 check_static_begin(array_adaptive_map_test_iterate_remove_key_value_reinsert) {
-    CCC_Array_adaptive_map s = array_adaptive_map_with_compound_literal(
+    CCC_Array_adaptive_map s = array_adaptive_map_with_storage(
         id, id_order, (struct Val[STANDARD_FIXED_CAP]){});
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
@@ -217,7 +217,7 @@ check_static_begin(array_adaptive_map_test_iterate_remove_key_value_reinsert) {
 }
 
 check_static_begin(array_adaptive_map_test_valid_range) {
-    CCC_Array_adaptive_map s = array_adaptive_map_with_compound_literal(
+    CCC_Array_adaptive_map s = array_adaptive_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
 
     int const num_nodes = 25;
@@ -243,7 +243,7 @@ check_static_begin(array_adaptive_map_test_valid_range) {
 }
 
 check_static_begin(array_adaptive_map_test_valid_range_equals) {
-    CCC_Array_adaptive_map s = array_adaptive_map_with_compound_literal(
+    CCC_Array_adaptive_map s = array_adaptive_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
@@ -267,7 +267,7 @@ check_static_begin(array_adaptive_map_test_valid_range_equals) {
 }
 
 check_static_begin(array_adaptive_map_test_invalid_range) {
-    CCC_Array_adaptive_map s = array_adaptive_map_with_compound_literal(
+    CCC_Array_adaptive_map s = array_adaptive_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
@@ -292,7 +292,7 @@ check_static_begin(array_adaptive_map_test_invalid_range) {
 }
 
 check_static_begin(array_adaptive_map_test_empty_range) {
-    CCC_Array_adaptive_map s = array_adaptive_map_with_compound_literal(
+    CCC_Array_adaptive_map s = array_adaptive_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     int const num_nodes = 25;
     int const step = 5;

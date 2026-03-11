@@ -102,7 +102,7 @@ CCC_private_doubly_linked_list_node_in(struct CCC_Doubly_linked_list const *,
 
 /** @internal Initialization at compile time is allowed in C due to the provided
 name of the list being on the left hand side of the assignment operator. */
-#define CCC_private_doubly_linked_list_initialize(                             \
+#define CCC_private_doubly_linked_list_for(                                    \
     private_struct_name, private_type_intruder_field, private_compare,         \
     private_allocate, private_context)                                         \
     {                                                                          \
@@ -118,10 +118,10 @@ name of the list being on the left hand side of the assignment operator. */
     }
 
 /** @internal */
-#define CCC_private_doubly_linked_list_with_context_allocator(                 \
+#define CCC_private_doubly_linked_list_context_with_allocator(                 \
     private_struct_name, private_type_intruder_field, private_compare,         \
     private_allocate, private_context)                                         \
-    CCC_private_doubly_linked_list_initialize(                                 \
+    CCC_private_doubly_linked_list_for(                                        \
         private_struct_name, private_type_intruder_field, private_compare,     \
         private_allocate, private_context)
 
@@ -129,7 +129,7 @@ name of the list being on the left hand side of the assignment operator. */
 #define CCC_private_doubly_linked_list_with_allocator(                         \
     private_struct_name, private_type_intruder_field, private_compare,         \
     private_allocate)                                                          \
-    CCC_private_doubly_linked_list_initialize(                                 \
+    CCC_private_doubly_linked_list_for(                                        \
         private_struct_name, private_type_intruder_field, private_compare,     \
         private_allocate, NULL)
 
@@ -142,7 +142,7 @@ name of the list being on the left hand side of the assignment operator. */
             *private_doubly_linked_list_type_array                             \
             = private_compound_literal_array;                                  \
         struct CCC_Doubly_linked_list private_doubly_linked_list               \
-            = CCC_private_doubly_linked_list_initialize(                       \
+            = CCC_private_doubly_linked_list_for(                              \
                 typeof(*private_doubly_linked_list_type_array),                \
                 private_type_intruder_field, private_compare,                  \
                 private_allocate, private_context);                            \

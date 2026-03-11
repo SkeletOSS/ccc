@@ -137,7 +137,7 @@ CCC_private_priority_queue_struct_base(struct CCC_Priority_queue const *,
 /*=========================  Macro Implementations     ======================*/
 
 /** @internal */
-#define CCC_private_priority_queue_initialize(                                 \
+#define CCC_private_priority_queue_for(                                        \
     private_struct_name, private_type_intruder_field,                          \
     private_priority_queue_order, private_compare, private_allocate,           \
     private_context)                                                           \
@@ -154,11 +154,11 @@ CCC_private_priority_queue_struct_base(struct CCC_Priority_queue const *,
     }
 
 /** @internal */
-#define CCC_private_priority_queue_with_context_allocator(                     \
+#define CCC_private_priority_queue_context_with_allocator(                     \
     private_struct_name, private_type_intruder_field,                          \
     private_priority_queue_order, private_compare, private_allocate,           \
     private_context)                                                           \
-    CCC_private_priority_queue_initialize(                                     \
+    CCC_private_priority_queue_for(                                            \
         private_struct_name, private_type_intruder_field,                      \
         private_priority_queue_order, private_compare, private_allocate,       \
         private_context)
@@ -167,7 +167,7 @@ CCC_private_priority_queue_struct_base(struct CCC_Priority_queue const *,
 #define CCC_private_priority_queue_with_allocator(                             \
     private_struct_name, private_type_intruder_field,                          \
     private_priority_queue_order, private_compare, private_allocate)           \
-    CCC_private_priority_queue_initialize(                                     \
+    CCC_private_priority_queue_for(                                            \
         private_struct_name, private_type_intruder_field,                      \
         private_priority_queue_order, private_compare, private_allocate, NULL)
 
@@ -181,7 +181,7 @@ CCC_private_priority_queue_struct_base(struct CCC_Priority_queue const *,
             *private_priority_queue_type_array                                 \
             = private_compound_literal_array;                                  \
         struct CCC_Priority_queue private_priority_queue                       \
-            = CCC_private_priority_queue_initialize(                           \
+            = CCC_private_priority_queue_for(                                  \
                 typeof(*private_priority_queue_type_array),                    \
                 private_type_intruder_field, private_priority_queue_order,     \
                 private_compare, private_allocate, private_context);           \

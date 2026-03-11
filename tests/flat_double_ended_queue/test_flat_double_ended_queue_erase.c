@@ -26,7 +26,7 @@ check_static_begin(pop_back_n, Flat_double_ended_queue *const q, size_t n) {
 
 check_static_begin(flat_double_ended_queue_test_push_pop_back_three) {
     Flat_double_ended_queue q
-        = flat_double_ended_queue_with_compound_literal(0, (int[3]){});
+        = flat_double_ended_queue_with_storage(0, (int[3]){});
     check(create_queue(&q, 3, (int[3]){0, 1, 2}), CHECK_PASS);
     while (!is_empty(&q)) {
         (void)pop_back(&q);
@@ -43,7 +43,7 @@ check_static_begin(
         SM_FIXED_Q = 64,
     };
     Flat_double_ended_queue q
-        = flat_double_ended_queue_with_compound_literal(0, (int[SM_FIXED_Q]){});
+        = flat_double_ended_queue_with_storage(0, (int[SM_FIXED_Q]){});
     /* Move the front pointer back a bit so that pushing to both sides wraps. */
     (void)CCC_flat_double_ended_queue_push_back_range(
         &q, 20,
@@ -81,8 +81,8 @@ check_static_begin(
 check_static_begin(
     flat_double_ended_queue_test_push_pop_front_and_back_singles_dynamic) {
     size_t const sm_dyn_q = 128;
-    Flat_double_ended_queue q = flat_double_ended_queue_initialize(
-        int, std_allocate, NULL, 0, 0, NULL);
+    Flat_double_ended_queue q
+        = flat_double_ended_queue_for(int, std_allocate, NULL, 0, 0, NULL);
     /* Move the front pointer back a bit so that pushing to both sides wraps. */
     (void)CCC_flat_double_ended_queue_push_back_range(
         &q, 20,
@@ -119,7 +119,7 @@ check_static_begin(
 
 check_static_begin(flat_double_ended_queue_test_push_pop_front_three) {
     Flat_double_ended_queue q
-        = flat_double_ended_queue_with_compound_literal(0, (int[3]){});
+        = flat_double_ended_queue_with_storage(0, (int[3]){});
     check(create_queue(&q, 3, (int[3]){0, 1, 2}), CHECK_PASS);
     while (!is_empty(&q)) {
         (void)pop_front(&q);
@@ -131,7 +131,7 @@ check_static_begin(flat_double_ended_queue_test_push_pop_front_three) {
 
 check_static_begin(flat_double_ended_queue_test_push_pop_front_back) {
     Flat_double_ended_queue q
-        = flat_double_ended_queue_with_compound_literal(0, (int[6]){});
+        = flat_double_ended_queue_with_storage(0, (int[6]){});
     check(create_queue(&q, 6, (int[6]){0, 1, 2, 3, 4, 5}), CHECK_PASS);
     while (!is_empty(&q)) {
         if (count(&q).count % 2) {
@@ -147,7 +147,7 @@ check_static_begin(flat_double_ended_queue_test_push_pop_front_back) {
 
 check_static_begin(flat_double_ended_queue_test_push_pop_front_ranges) {
     Flat_double_ended_queue q
-        = flat_double_ended_queue_with_compound_literal(0, (int[10]){});
+        = flat_double_ended_queue_with_storage(0, (int[10]){});
     check(create_queue(&q, 6, (int[6]){0, 1, 2, 3, 4, 5}), CHECK_PASS);
     check(pop_back_n(&q, 4), CHECK_PASS);
     CCC_Result res
@@ -171,7 +171,7 @@ check_static_begin(flat_double_ended_queue_test_push_pop_front_ranges) {
 
 check_static_begin(flat_double_ended_queue_test_push_pop_back_ranges) {
     Flat_double_ended_queue q
-        = flat_double_ended_queue_with_compound_literal(0, (int[10]){});
+        = flat_double_ended_queue_with_storage(0, (int[10]){});
     check(create_queue(&q, 6, (int[6]){0, 1, 2, 3, 4, 5}), CHECK_PASS);
     check(pop_front_n(&q, 4), CHECK_PASS);
     CCC_Result res
@@ -195,7 +195,7 @@ check_static_begin(flat_double_ended_queue_test_push_pop_back_ranges) {
 
 check_static_begin(flat_double_ended_queue_test_push_pop_middle_ranges) {
     Flat_double_ended_queue q
-        = flat_double_ended_queue_with_compound_literal(0, (int[10]){});
+        = flat_double_ended_queue_with_storage(0, (int[10]){});
     check(create_queue(&q, 6, (int[6]){0, 1, 2, 3, 4, 5}), CHECK_PASS);
     check(pop_front_n(&q, 3), CHECK_PASS);
     int *ins = flat_double_ended_queue_insert_range(

@@ -369,7 +369,7 @@ create_frequency_map(struct String_arena *const a, FILE *const f) {
     size_t len = 0;
     ptrdiff_t read = 0;
     Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_with_context_allocator(
+        = array_adaptive_map_context_with_allocator(
             Word, ofs, order_string_keys, std_allocate, a);
     while ((read = getline(&linepointer, &len, f)) > 0) {
         SV_Str_view const line = {.str = linepointer, .len = read - 1};

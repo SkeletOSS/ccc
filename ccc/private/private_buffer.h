@@ -49,9 +49,9 @@ struct CCC_Buffer {
 can specify that the Buffer has some count of elements from index
 `[0, capacity - 1)` at initialization time. The Buffer assumes these elements
 are contiguous. */
-#define CCC_private_buffer_initialize(private_type_name, private_allocate,     \
-                                      private_context, private_capacity,       \
-                                      private_count, private_data...)          \
+#define CCC_private_buffer_for(private_type_name, private_allocate,            \
+                               private_context, private_capacity,              \
+                               private_count, private_data...)                 \
     {                                                                          \
         .data = (private_data),                                                \
         .sizeof_type = sizeof(private_type_name),                              \
@@ -69,7 +69,7 @@ initialization in one convenient step for user. */
     (__extension__({                                                           \
         typeof(*private_compound_literal_array)                                \
             *private_buffer_initializer_list = private_compound_literal_array; \
-        struct CCC_Buffer private_buf = CCC_private_buffer_initialize(         \
+        struct CCC_Buffer private_buf = CCC_private_buffer_for(                \
             typeof(*private_buffer_initializer_list), private_allocate,        \
             private_context, 0, 0, NULL);                                      \
         size_t const private_n = sizeof(private_compound_literal_array)        \
@@ -98,10 +98,10 @@ initialization in one convenient step for user. */
 
 /** @internal For dynamic containers to perform initialization and reservation
 of memory in one step. */
-#define CCC_private_buffer_with_context_capacity(                              \
+#define CCC_private_buffer_context_with_capacity(                              \
     private_type_name, private_allocate, private_context, private_capacity)    \
     (__extension__({                                                           \
-        struct CCC_Buffer private_buf = CCC_private_buffer_initialize(         \
+        struct CCC_Buffer private_buf = CCC_private_buffer_for(                \
             private_type_name, private_allocate, private_context, 0, 0, NULL); \
         (void)CCC_buffer_reserve(&private_buf, (private_capacity),             \
                                  private_allocate);                            \
@@ -111,12 +111,12 @@ of memory in one step. */
 /** @internal */
 #define CCC_private_buffer_with_capacity(private_type_name, private_allocate,  \
                                          private_capacity)                     \
-    CCC_private_buffer_with_context_capacity(                                  \
+    CCC_private_buffer_context_with_capacity(                                  \
         private_type_name, private_allocate, NULL, private_capacity)
 
 /** @internal Initializes a fixed size buffer with no allocation or context. */
-#define CCC_private_buffer_with_compound_literal(                              \
-    private_count, private_compound_literal_array...)                          \
+#define CCC_private_buffer_with_storage(private_count,                         \
+                                        private_compound_literal_array...)     \
                                                                                \
     {                                                                          \
         .data = (private_compound_literal_array),                              \
@@ -129,7 +129,7 @@ of memory in one step. */
     }
 
 /** @internal Initializes a fixed size buffer with no allocation or context. */
-#define CCC_private_buffer_with_context_compound_literal(                      \
+#define CCC_private_buffer_context_with_storage(                               \
     private_context, private_count, private_compound_literal_array...)         \
                                                                                \
     {                                                                          \
@@ -154,7 +154,7 @@ of memory in one step. */
     }
 
 /** @internal */
-#define CCC_private_buffer_with_context_allocator(                             \
+#define CCC_private_buffer_context_with_allocator(                             \
     private_type_name, private_allocate, private_context)                      \
     {                                                                          \
         .data = NULL,                                                          \

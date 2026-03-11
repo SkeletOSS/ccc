@@ -76,7 +76,7 @@ validate_sudoku_box(int const board[9][9], Bitset *const row_check,
                     Bitset *const col_check, size_t const row_start,
                     size_t const col_start) {
     Bitset box_check
-        = bitset_with_compound_literal(DIGITS, bitset_storage_for(DIGITS));
+        = bitset_with_storage(DIGITS, bitset_storage_for(DIGITS));
     CCC_Tribool was_on = CCC_FALSE;
     for (size_t r = row_start; r < row_start + BOX_SIZE; ++r) {
         for (size_t c = col_start; c < col_start + BOX_SIZE; ++c) {
@@ -108,9 +108,9 @@ validate_sudoku_box(int const board[9][9], Bitset *const row_check,
 
 static CCC_Tribool
 is_valid_sudoku(int const board[9][9]) {
-    Bitset row_check = bitset_with_compound_literal(
+    Bitset row_check = bitset_with_storage(
         ROWS * DIGITS, bitset_storage_for(ROWS * DIGITS));
-    Bitset col_check = bitset_with_compound_literal(
+    Bitset col_check = bitset_with_storage(
         COLS * DIGITS, bitset_storage_for(COLS * DIGITS));
     for (size_t row = 0; row < ROWS; row += BOX_SIZE) {
         for (size_t col = 0; col < COLS; col += BOX_SIZE) {
@@ -156,7 +156,7 @@ maxint(int const a, int const b) {
 /* Trapping rainwater Leetcode problem with iterators */
 int
 main(void) {
-    Buffer const heights = buffer_with_compound_literal(
+    Buffer const heights = buffer_with_storage(
         HCAP, (int[HCAP]){0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1});
     int const correct_trapped = 6;
     int trapped = 0;
@@ -210,8 +210,8 @@ int
 main(void) {
     /* doubly linked list l, list elem field e, no allocation permission,
        comparing integers, no context data. */
-    Doubly_linked_list l = doubly_linked_list_initialize(l, struct Int_node, e,
-                                                         int_cmp, NULL, NULL);
+    Doubly_linked_list l = doubly_linked_list_for(l, struct Int_node, e,
+                                                  int_cmp, NULL, NULL);
     struct Int_node elems[3] = {{.i = 3}, {.i = 2}, {.i = 1}};
     (void)push_back(&l, &elems[0].e);
     (void)push_front(&l, &elems[1].e);
@@ -240,7 +240,7 @@ int
 main(void) {
     /* stack array, no allocation permission, no context data, capacity 2 */
     Flat_doubled_ended_queue q
-        = flat_doubled_ended_queue_with_compound_literal(2, (int[2]){});
+        = flat_doubled_ended_queue_with_storage(2, (int[2]){});
     (void)push_back(&q, &(int){3});
     (void)push_front(&q, &(int){2});
     (void)push_back(&q, &(int){1}); /* Overwrite 2. */
@@ -301,7 +301,7 @@ enum : size_t {
 /* Longest Consecutive Sequence Leetcode Problem */
 int
 main(void) {
-    CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
+    CCC_Flat_hash_map fh = flat_hash_map_with_storage(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_cmp,
         (struct Key_val[STANDARD_FIXED_CAP]){});
     /* Longest sequence is 1,2,3,4,5,6,7,8,9,10 of length 10. */
@@ -429,7 +429,7 @@ main(void) {
     /* stack array of 25 elements with one slot for sentinel, intrusive field
        named elem, key field named key, no allocation permission, key comparison
        function, no context data. */
-    Array_adaptive_map s = array_adaptive_map_with_compound_literal(
+    Array_adaptive_map s = array_adaptive_map_with_storage(
         key, Key_val_cmp, (struct Key_val[26]){});
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
@@ -495,7 +495,7 @@ int
 main(void) {
     /* stack array, user defined type, key field named key, no allocation
        permission, key comparison function, no context data. */
-    Array_tree_map s = array_tree_map_with_compound_literal(
+    Array_tree_map s = array_tree_map_with_storage(
         key, hrmap_key_cmp, (struct Kay_val[64]){});
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
@@ -568,8 +568,8 @@ main(void) {
     struct Name nodes[5];
     /* adaptive_map named om, stores struct Name, intrusive field e, key field
        name, no allocation permission, comparison fn, no context */
-    Adaptive_map om = adaptive_map_initialize(struct Name, e, name, Key_val_cmp,
-                                              NULL, NULL);
+    Adaptive_map om = adaptive_map_for(struct Name, e, name, Key_val_cmp,
+                                       NULL, NULL);
     char const *const sorted_names[5]
         = {"Ferris", "Glenda", "Rocky", "Tux", "Ziggy"};
     size_t const size = sizeof(sorted_names) / sizeof(sorted_names[0]);
@@ -625,7 +625,7 @@ int
 main(void) {
     struct Val elems[5]
         = {{.val = 3}, {.val = 3}, {.val = 7}, {.val = -1}, {.val = 5}};
-    Priority_queue priority_queue = priority_queue_initialize(
+    Priority_queue priority_queue = priority_queue_for(
         struct Val, elem, CCC_LES, val_cmp, NULL, NULL);
     for (size_t i = 0; i < (sizeof(elems) / sizeof(elems[0])); ++i) {
         struct Val const *const v = push(&priority_queue, &elems[i].elem);
@@ -673,8 +673,8 @@ main(void) {
     /* stack array of 25 elements with one slot for sentinel, intrusive field
        named elem, key field named key, no allocation permission, key comparison
        function, no context data. */
-    Tree_map s = tree_map_initialize(struct Key_val, elem, key, Key_val_cmp,
-                                     NULL, NULL);
+    Tree_map s = tree_map_for(struct Key_val, elem, key, Key_val_cmp, NULL,
+                              NULL);
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
     for (int i = 0, id = 0; i < num_nodes; ++i, id += 5) {
@@ -737,8 +737,8 @@ int
 main(void) {
     /* singly linked list l, list elem field e, no allocation permission,
        comparing integers, no context data. */
-    Singly_linked_list l = singly_linked_list_initialize(struct Int_node, e,
-                                                         int_cmp, NULL, NULL);
+    Singly_linked_list l = singly_linked_list_for(struct Int_node, e, int_cmp,
+                                                  NULL, NULL);
     struct Int_node elems[3] = {{.i = 3}, {.i = 2}, {.i = 1}};
     (void)push_front(&l, &elems[0].e);
     (void)push_front(&l, &elems[1].e);
@@ -789,7 +789,7 @@ Non-Intrusive containers exist when a flat container can operate without such he
 
 ```c
 CCC_Flat_priority_queue flat_priority_queue
-    = CCC_flat_priority_queue_with_compound_literal(CCC_LESSER, int_cmp,
+    = CCC_flat_priority_queue_with_storage(CCC_LESSER, int_cmp,
                                                     (int[40]){});
 ```
 
@@ -816,7 +816,7 @@ As was mentioned in the previous section, all containers can be forbidden from a
 
 ```c
 CCC_Flat_priority_queue flat_priority_queue
-    = CCC_flat_priority_queue_with_compound_literal(CCC_LES, int_cmp,
+    = CCC_flat_priority_queue_with_storage(CCC_LES, int_cmp,
                                                     (int[40]){});
 ```
 
@@ -834,7 +834,7 @@ struct Id_val {
 };
 
 CCC_Doubly_linked_list dll
-    = CCC_doubly_linked_list_initialize(struct Id_val, e, val_cmp, NULL, NULL);
+    = CCC_doubly_linked_list_for(struct Id_val, e, val_cmp, NULL, NULL);
 ```
 
 All interface functions now expect the memory containing the intrusive elements to exist with the appropriate scope and lifetime for the programmer's needs. Consider the following classic problem with scoping in C.
@@ -870,7 +870,7 @@ struct Val {
     int key;
     int val;
 };
-static Flat_hash_map static_fh = flat_hash_map_with_compound_literal(
+static Flat_hash_map static_fh = flat_hash_map_with_storage(
     key, flat_hash_map_int_to_u64, flat_hash_map_id_cmp,
     (struct Val[64]){});
 ```
@@ -893,7 +893,7 @@ All other containers provide default initialization macros that can be used at c
 ```c
 #define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
 static Flat_doubled_ended_queue ring_buffer
-    = flat_doubled_ended_queue_with_compound_literal(0, (static int[4096]){});
+    = flat_doubled_ended_queue_with_storage(0, (static int[4096]){});
 ```
 
 In all the preceding examples initializing at compile time simplifies the code, eliminates the need for initialization functions, and ensures that all containers are ready to operate when execution begins. Using compound literal initialization also helps create better ownership of memory for each container, eliminating named references to a container's memory that could be accessed by mistake.
@@ -905,7 +905,7 @@ For all containers, the metadata structure that is passed to interface functions
 ```c
 static CCC_Doubly_linked_list
 construct_empty(void) {
-    CCC_Doubly_linked_list this = CCC_doubly_linked_list_initialize(
+    CCC_Doubly_linked_list this = CCC_doubly_linked_list_for(
         struct Val, e, val_order, NULL, NULL);
     return this;
 }
@@ -981,7 +981,7 @@ id_cmp(CCC_Type_comparator_context const cmp) {
 
 int
 main(void) {
-    static CCC_Doubly_linked_list id_list = CCC_doubly_linked_list_initialize(
+    static CCC_Doubly_linked_list id_list = CCC_doubly_linked_list_for(
         struct Id, id_node, id_cmp, NULL, NULL);
     /* ...fill list... */
     struct Id *front = CCC_doubly_linked_list_front(&id_list);

@@ -122,7 +122,7 @@ void *CCC_private_adaptive_map_insert(struct CCC_Adaptive_map *,
 /*======================   Macro Implementations     ========================*/
 
 /** @internal */
-#define CCC_private_adaptive_map_initialize(                                   \
+#define CCC_private_adaptive_map_for(                                          \
     private_struct_name, private_node_node_field, private_key_node_field,      \
     private_key_comparator, private_allocate, private_context)                 \
     {                                                                          \
@@ -145,11 +145,10 @@ void *CCC_private_adaptive_map_insert(struct CCC_Adaptive_map *,
     (__extension__({                                                           \
         typeof(*private_compound_literal_array)                                \
             *private_adaptive_map_type_array = private_compound_literal_array; \
-        struct CCC_Adaptive_map private_map                                    \
-            = CCC_private_adaptive_map_initialize(                             \
-                typeof(*private_adaptive_map_type_array),                      \
-                private_type_intruder_field_name, private_key_field_name,      \
-                private_compare, private_allocate, private_context);           \
+        struct CCC_Adaptive_map private_map = CCC_private_adaptive_map_for(    \
+            typeof(*private_adaptive_map_type_array),                          \
+            private_type_intruder_field_name, private_key_field_name,          \
+            private_compare, private_allocate, private_context);               \
         if (private_map.allocate) {                                            \
             size_t const private_count                                         \
                 = sizeof(private_compound_literal_array)                       \
@@ -207,10 +206,10 @@ void *CCC_private_adaptive_map_insert(struct CCC_Adaptive_map *,
         private_compound_literal_array)
 
 /** @internal */
-#define CCC_private_adaptive_map_with_context_allocator(                       \
+#define CCC_private_adaptive_map_context_with_allocator(                       \
     private_struct_name, private_node_node_field, private_key_node_field,      \
     private_key_comparator, private_allocate, private_context)                 \
-    CCC_private_adaptive_map_initialize(                                       \
+    CCC_private_adaptive_map_for(                                              \
         private_struct_name, private_node_node_field, private_key_node_field,  \
         private_key_comparator, private_allocate, private_context)
 
@@ -218,7 +217,7 @@ void *CCC_private_adaptive_map_insert(struct CCC_Adaptive_map *,
 #define CCC_private_adaptive_map_with_allocator(                               \
     private_struct_name, private_node_node_field, private_key_node_field,      \
     private_key_comparator, private_allocate)                                  \
-    CCC_private_adaptive_map_initialize(                                       \
+    CCC_private_adaptive_map_for(                                              \
         private_struct_name, private_node_node_field, private_key_node_field,  \
         private_key_comparator, private_allocate, NULL)
 

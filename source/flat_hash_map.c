@@ -284,8 +284,8 @@ static CCC_Result maybe_rehash(struct CCC_Flat_hash_map *, size_t,
 static void insert_and_copy(struct CCC_Flat_hash_map *, void const *,
                             struct CCC_Flat_hash_map_tag, size_t);
 static void erase(struct CCC_Flat_hash_map *, size_t);
-static CCC_Result check_initialize(struct CCC_Flat_hash_map *, size_t,
-                                   CCC_Allocator *);
+static CCC_Result lazy_initialize(struct CCC_Flat_hash_map *, size_t,
+                                  CCC_Allocator *);
 static void rehash_in_place(struct CCC_Flat_hash_map *);
 static CCC_Tribool is_same_group(size_t, size_t, uint64_t, size_t);
 static CCC_Result rehash_resize(struct CCC_Flat_hash_map *, size_t,
@@ -723,7 +723,7 @@ CCC_flat_hash_map_copy(CCC_Flat_hash_map *const destination,
     if (destination->mask < source->mask && !allocate) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
-    CCC_Result check = check_initialize(destination, 0, allocate);
+    CCC_Result check = lazy_initialize(destination, 0, allocate);
     if (check != CCC_RESULT_OK) {
         return check;
     }
@@ -1195,7 +1195,7 @@ maybe_rehash(struct CCC_Flat_hash_map *const map, size_t const to_add,
     if (!required_total_cap) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
-    CCC_Result const init = check_initialize(map, required_total_cap, fn);
+    CCC_Result const init = lazy_initialize(map, required_total_cap, fn);
     if (init != CCC_RESULT_OK) {
         return init;
     }
@@ -1367,8 +1367,8 @@ rehash_resize(struct CCC_Flat_hash_map *const map, size_t const to_add,
 /** Ensures the map is initialized due to our allowance of lazy initialization
 to support various sources of memory at compile and runtime. */
 static inline CCC_Result
-check_initialize(struct CCC_Flat_hash_map *const map, size_t required_total_cap,
-                 CCC_Allocator *const allocate) {
+lazy_initialize(struct CCC_Flat_hash_map *const map, size_t required_total_cap,
+                CCC_Allocator *const allocate) {
     if (likely(!is_uninitialized(map))) {
         return CCC_RESULT_OK;
     }

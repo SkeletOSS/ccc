@@ -57,7 +57,7 @@ check_static_begin(fill_n, CCC_Flat_hash_map *const fh, size_t const n,
 /* Internally there is some maintenance to perform when swapping values for
    the user on insert. Leave this test here to always catch this. */
 check_static_begin(flat_hash_map_test_validate) {
-    CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
+    CCC_Flat_hash_map fh = flat_hash_map_with_storage(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         (struct Val[SMALL_FIXED_CAP]){});
 
@@ -79,7 +79,7 @@ check_static_begin(flat_hash_map_test_validate) {
 
 check_static_begin(flat_hash_map_test_insert) {
     int const size = 30;
-    CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
+    CCC_Flat_hash_map fh = flat_hash_map_with_storage(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         (struct Val[SMALL_FIXED_CAP]){});
     CCC_Entry ent = swap_entry(&fh, &(struct Val){.key = -1, .val = -1});
@@ -136,7 +136,7 @@ check_static_begin(flat_hash_map_test_insert) {
 
 check_static_begin(flat_hash_map_test_remove_key_value) {
     int const size = 30;
-    CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
+    CCC_Flat_hash_map fh = flat_hash_map_with_storage(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         (struct Val[SMALL_FIXED_CAP]){});
     CCC_Entry ent
@@ -206,7 +206,7 @@ check_static_begin(flat_hash_map_test_remove_key_value) {
 
 check_static_begin(flat_hash_map_test_try_insert) {
     int const size = 30;
-    CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
+    CCC_Flat_hash_map fh = flat_hash_map_with_storage(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         (struct Val[SMALL_FIXED_CAP]){});
     CCC_Entry ent = try_insert(&fh, &(struct Val){.key = -1, .val = -1});
@@ -262,7 +262,7 @@ check_static_begin(flat_hash_map_test_try_insert) {
 
 check_static_begin(flat_hash_map_test_try_insert_with) {
     int const size = 30;
-    CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
+    CCC_Flat_hash_map fh = flat_hash_map_with_storage(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         (struct Val[SMALL_FIXED_CAP]){});
     CCC_Entry *ent = flat_hash_map_try_insert_with(&fh, -1, val(-1));
@@ -319,7 +319,7 @@ check_static_begin(flat_hash_map_test_try_insert_with) {
 
 check_static_begin(flat_hash_map_test_insert_or_assign) {
     int const size = 30;
-    CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
+    CCC_Flat_hash_map fh = flat_hash_map_with_storage(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         (struct Val[SMALL_FIXED_CAP]){});
     CCC_Entry ent = insert_or_assign(&fh, &(struct Val){.key = -1, .val = -1});
@@ -375,7 +375,7 @@ check_static_begin(flat_hash_map_test_insert_or_assign) {
 
 check_static_begin(flat_hash_map_test_insert_or_assign_with) {
     int const size = 30;
-    CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
+    CCC_Flat_hash_map fh = flat_hash_map_with_storage(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         (struct Val[SMALL_FIXED_CAP]){});
     CCC_Entry *ent = flat_hash_map_insert_or_assign_with(&fh, -1, val(-1));
@@ -431,7 +431,7 @@ check_static_begin(flat_hash_map_test_insert_or_assign_with) {
 
 check_static_begin(flat_hash_map_test_entry_and_modify) {
     int const size = 30;
-    CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
+    CCC_Flat_hash_map fh = flat_hash_map_with_storage(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         (struct Val[SMALL_FIXED_CAP]){});
     CCC_Flat_hash_map_entry *ent = entry_wrap(&fh, &(int){-1});
@@ -500,7 +500,7 @@ check_static_begin(flat_hash_map_test_entry_and_modify) {
 
 check_static_begin(flat_hash_map_test_entry_and_context_modify) {
     int const size = 30;
-    CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
+    CCC_Flat_hash_map fh = flat_hash_map_with_storage(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         (struct Val[SMALL_FIXED_CAP]){});
     int context = 1;
@@ -566,7 +566,7 @@ check_static_begin(flat_hash_map_test_entry_and_context_modify) {
 
 check_static_begin(flat_hash_map_test_entry_and_modify_with) {
     int const size = 30;
-    CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
+    CCC_Flat_hash_map fh = flat_hash_map_with_storage(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         (struct Val[SMALL_FIXED_CAP]){});
     CCC_Flat_hash_map_entry *ent = entry_wrap(&fh, &(int){-1});
@@ -631,7 +631,7 @@ check_static_begin(flat_hash_map_test_entry_and_modify_with) {
 
 check_static_begin(flat_hash_map_test_or_insert) {
     int const size = 30;
-    CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
+    CCC_Flat_hash_map fh = flat_hash_map_with_storage(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         (struct Val[SMALL_FIXED_CAP]){});
     struct Val *v = or_insert(entry_wrap(&fh, &(int){-1}),
@@ -684,7 +684,7 @@ check_static_begin(flat_hash_map_test_or_insert) {
 
 check_static_begin(flat_hash_map_test_or_insert_with) {
     int const size = 30;
-    CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
+    CCC_Flat_hash_map fh = flat_hash_map_with_storage(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         (struct Val[SMALL_FIXED_CAP]){});
     struct Val *v = flat_hash_map_or_insert_with(entry_wrap(&fh, &(int){-1}),
@@ -737,7 +737,7 @@ check_static_begin(flat_hash_map_test_or_insert_with) {
 
 check_static_begin(flat_hash_map_test_insert_entry) {
     int const size = 30;
-    CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
+    CCC_Flat_hash_map fh = flat_hash_map_with_storage(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         (struct Val[SMALL_FIXED_CAP]){});
     struct Val *v = insert_entry(entry_wrap(&fh, &(int){-1}),
@@ -792,7 +792,7 @@ check_static_begin(flat_hash_map_test_insert_entry) {
 
 check_static_begin(flat_hash_map_test_insert_entry_with) {
     int const size = 30;
-    CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
+    CCC_Flat_hash_map fh = flat_hash_map_with_storage(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         (struct Val[SMALL_FIXED_CAP]){});
     struct Val *v = flat_hash_map_insert_entry_with(entry_wrap(&fh, &(int){-1}),
@@ -845,7 +845,7 @@ check_static_begin(flat_hash_map_test_insert_entry_with) {
 
 check_static_begin(flat_hash_map_test_remove_entry) {
     int const size = 30;
-    CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
+    CCC_Flat_hash_map fh = flat_hash_map_with_storage(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         (struct Val[SMALL_FIXED_CAP]){});
     struct Val *v = or_insert(entry_wrap(&fh, &(int){-1}),

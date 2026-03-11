@@ -80,12 +80,12 @@ CCC_ORDER_GREATER for a max priority_queue.
 @param[in] allocate the allocation function or NULL if allocation is banned.
 @param[in] context context data needed for comparison or destruction.
 @return the initialized priority_queue on the right side of an equality operator
-(e.g. CCC_Priority_queue priority_queue = CCC_priority_queue_initialize(...);)
+(e.g. CCC_Priority_queue priority_queue = CCC_priority_queue_for(...);)
 */
-#define CCC_priority_queue_initialize(type_name, type_intruder_field, order,   \
-                                      compare, allocate, context)              \
-    CCC_private_priority_queue_initialize(type_name, type_intruder_field,      \
-                                          order, compare, allocate, context)
+#define CCC_priority_queue_for(type_name, type_intruder_field, order, compare, \
+                               allocate, context)                              \
+    CCC_private_priority_queue_for(type_name, type_intruder_field, order,      \
+                                   compare, allocate, context)
 
 /** @brief Initialize a priority queue at runtime or compile time with an
 allocator.
@@ -113,9 +113,9 @@ CCC_ORDER_GREATER for a max priority_queue.
 @param[in] allocate the allocation function or NULL if allocation is banned.
 @param[in] context context data needed for comparison or destruction.
 @return the initialized queue on the right side of an equality operator. */
-#define CCC_priority_queue_with_context_allocator(                             \
+#define CCC_priority_queue_context_with_allocator(                             \
     type_name, type_intruder_field, order, compare, allocate, context)         \
-    CCC_private_priority_queue_with_context_allocator(                         \
+    CCC_private_priority_queue_context_with_allocator(                         \
         type_name, type_intruder_field, order, compare, allocate, context)
 
 /** @brief Initialize a priority queue at runtime or compile time with an
@@ -476,12 +476,11 @@ priority queue container. Check for collisions before name shortening. */
 /* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Priority_queue_node priority_queue_node;
 typedef CCC_Priority_queue Priority_queue;
-#    define priority_queue_initialize(arguments...)                            \
-        CCC_priority_queue_initialize(arguments)
+#    define priority_queue_for(arguments...) CCC_priority_queue_for(arguments)
 #    define priority_queue_with_allocator(arguments...)                        \
         CCC_priority_queue_with_allocator(arguments)
-#    define priority_queue_with_context_allocator(arguments...)                \
-        CCC_priority_queue_with_context_allocator(arguments)
+#    define priority_queue_context_with_allocator(arguments...)                \
+        CCC_priority_queue_context_with_allocator(arguments)
 #    define priority_queue_from(arguments...) CCC_priority_queue_from(arguments)
 #    define priority_queue_context_from(arguments...)                          \
         CCC_priority_queue_context_from(arguments)

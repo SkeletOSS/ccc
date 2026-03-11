@@ -48,7 +48,7 @@ check_begin(private_inorder_fill, struct Stack_allocator *const allocator,
             CCC_Priority_queue *const queue) {
     check(count(queue).count, size);
     size_t i = 0;
-    CCC_Priority_queue copy = CCC_priority_queue_initialize(
+    CCC_Priority_queue copy = CCC_priority_queue_for(
         struct Val, elem, CCC_priority_queue_order(queue), val_order,
         stack_allocator_allocate, allocator);
     int prev_val = queue->order == CCC_ORDER_LESSER ? INT_MIN : INT_MAX;

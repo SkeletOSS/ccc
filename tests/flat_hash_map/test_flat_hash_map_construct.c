@@ -30,7 +30,7 @@ flat_hash_map_int_order(CCC_Key_comparator_context const order) {
     return (left > *right) - (left < *right);
 }
 
-static CCC_Flat_hash_map static_fh = flat_hash_map_with_compound_literal(
+static CCC_Flat_hash_map static_fh = flat_hash_map_with_storage(
     key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
     (struct Val[SMALL_FIXED_CAP]){});
 
@@ -76,7 +76,7 @@ check_static_begin(flat_hash_map_test_static_initialize) {
 }
 
 check_static_begin(flat_hash_map_test_with_literal) {
-    Flat_hash_map fh = flat_hash_map_with_compound_literal(
+    Flat_hash_map fh = flat_hash_map_with_storage(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         (struct Val[SMALL_FIXED_CAP]){});
     check(flat_hash_map_capacity(&fh).count, SMALL_FIXED_CAP);
@@ -118,10 +118,10 @@ check_static_begin(flat_hash_map_test_with_literal) {
 }
 
 check_static_begin(flat_hash_map_test_copy_no_allocate) {
-    Flat_hash_map source = flat_hash_map_with_compound_literal(
+    Flat_hash_map source = flat_hash_map_with_storage(
         key, flat_hash_map_int_zero, flat_hash_map_id_order,
         (struct Val[SMALL_FIXED_CAP]){});
-    Flat_hash_map destination = flat_hash_map_initialize(
+    Flat_hash_map destination = flat_hash_map_for(
         struct Val, key, flat_hash_map_int_zero, flat_hash_map_id_order, NULL,
         NULL, STANDARD_FIXED_CAP,
         &flat_hash_map_storage_for((struct Val[STANDARD_FIXED_CAP]){}));
@@ -146,10 +146,10 @@ check_static_begin(flat_hash_map_test_copy_no_allocate) {
 }
 
 check_static_begin(flat_hash_map_test_copy_no_allocate_fail) {
-    Flat_hash_map source = flat_hash_map_with_compound_literal(
+    Flat_hash_map source = flat_hash_map_with_storage(
         key, flat_hash_map_int_zero, flat_hash_map_id_order,
         (struct Val[STANDARD_FIXED_CAP]){});
-    Flat_hash_map destination = flat_hash_map_with_compound_literal(
+    Flat_hash_map destination = flat_hash_map_with_storage(
         key, flat_hash_map_int_zero, flat_hash_map_id_order,
         (struct Val[SMALL_FIXED_CAP]){});
     (void)swap_entry(&source, &(struct Val){.key = 0});
@@ -163,7 +163,7 @@ check_static_begin(flat_hash_map_test_copy_no_allocate_fail) {
 }
 
 check_static_begin(flat_hash_map_test_copy_allocate) {
-    Flat_hash_map destination = flat_hash_map_initialize(
+    Flat_hash_map destination = flat_hash_map_for(
         struct Val, key, flat_hash_map_int_zero, flat_hash_map_id_order,
         std_allocate, NULL, 0, NULL);
     Flat_hash_map source = flat_hash_map_from(
@@ -194,10 +194,10 @@ check_static_begin(flat_hash_map_test_copy_allocate) {
 }
 
 check_static_begin(flat_hash_map_test_copy_allocate_fail) {
-    Flat_hash_map source = flat_hash_map_initialize(
+    Flat_hash_map source = flat_hash_map_for(
         struct Val, key, flat_hash_map_int_zero, flat_hash_map_id_order,
         std_allocate, NULL, 0, NULL);
-    Flat_hash_map destination = flat_hash_map_initialize(
+    Flat_hash_map destination = flat_hash_map_for(
         struct Val, key, flat_hash_map_int_zero, flat_hash_map_id_order,
         std_allocate, NULL, 0, NULL);
     (void)swap_entry(&source, &(struct Val){.key = 0});
@@ -211,7 +211,7 @@ check_static_begin(flat_hash_map_test_copy_allocate_fail) {
 }
 
 check_static_begin(flat_hash_map_test_empty) {
-    Flat_hash_map fh = flat_hash_map_initialize(
+    Flat_hash_map fh = flat_hash_map_for(
         struct Val, key, flat_hash_map_int_zero, flat_hash_map_id_order, NULL,
         NULL, SMALL_FIXED_CAP,
         &flat_hash_map_storage_for((struct Val[SMALL_FIXED_CAP]){}));
@@ -365,9 +365,9 @@ check_static_begin(flat_hash_map_test_with_allocator) {
     check_end(flat_hash_map_clear_and_free(&fh, NULL););
 }
 
-check_static_begin(flat_hash_map_test_with_context_allocator) {
+check_static_begin(flat_hash_map_test_context_with_allocator) {
     int context = 0;
-    Flat_hash_map fh = flat_hash_map_with_context_allocator(
+    Flat_hash_map fh = flat_hash_map_context_with_allocator(
         struct Val, key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         std_allocate, &context);
     check(validate(&fh), CCC_TRUE);
@@ -387,7 +387,7 @@ check_static_begin(flat_hash_map_test_with_anonymous_struct) {
     static_assert(
         sizeof(struct { int _; }) == sizeof(int),
         "anonymous single field structs match the size of the type they wrap.");
-    Flat_hash_map fh = flat_hash_map_with_compound_literal(
+    Flat_hash_map fh = flat_hash_map_with_storage(
         _, flat_hash_map_int_to_u64, flat_hash_map_int_order,
         (struct { int _; }[SMALL_FIXED_CAP]){});
     check(validate(&fh), CCC_TRUE);
@@ -416,7 +416,7 @@ main(void) {
                      flat_hash_map_test_init_with_capacity(),
                      flat_hash_map_test_init_with_capacity_no_op(),
                      flat_hash_map_test_with_allocator(),
-                     flat_hash_map_test_with_context_allocator(),
+                     flat_hash_map_test_context_with_allocator(),
                      flat_hash_map_test_with_anonymous_struct(),
                      flat_hash_map_test_init_with_capacity_fail());
 }

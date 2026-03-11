@@ -11,7 +11,7 @@
 
 check_static_begin(bitset_test_push_back_no_reallocate) {
     CCC_Bitset bs
-        = CCC_bitset_initialize(NULL, NULL, 16, 0, CCC_bitset_storage_for(16));
+        = CCC_bitset_for(NULL, NULL, 16, 0, CCC_bitset_storage_for(16));
     check(CCC_bitset_capacity(&bs).count, 16);
     check(CCC_bitset_count(&bs).count, 0);
     CCC_Result push_status = CCC_RESULT_OK;
@@ -36,7 +36,7 @@ check_static_begin(bitset_test_push_back_no_reallocate) {
 }
 
 check_static_begin(bitset_test_push_back_allocate) {
-    CCC_Bitset bs = CCC_bitset_initialize(std_allocate, NULL, 0, 0, NULL);
+    CCC_Bitset bs = CCC_bitset_for(std_allocate, NULL, 0, 0, NULL);
     check(CCC_bitset_capacity(&bs).count, 0);
     check(CCC_bitset_count(&bs).count, 0);
     for (size_t i = 0; CCC_bitset_count(&bs).count < 16; ++i) {
@@ -59,7 +59,7 @@ check_static_begin(bitset_test_push_back_allocate) {
 }
 
 check_static_begin(bitset_test_push_back_reserve) {
-    CCC_Bitset bs = CCC_bitset_initialize(NULL, NULL, 0, 0, NULL);
+    CCC_Bitset bs = CCC_bitset_for(NULL, NULL, 0, 0, NULL);
     CCC_Result const r = reserve(&bs, 512, std_allocate);
     check(r, CCC_RESULT_OK);
     check(CCC_bitset_count(&bs).count, 0);
