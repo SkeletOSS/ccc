@@ -136,7 +136,7 @@ void *CCC_private_tree_map_insert(
                              private_allocate, NULL)
 
 /** @internal */
-#define CCC_private_tree_map_with_context_allocator(                           \
+#define CCC_private_tree_map_context_with_allocator(                           \
     private_struct_name, private_node_field, private_key_node_field,           \
     private_key_order_fn, private_allocate, private_context)                   \
     CCC_private_tree_map_for(private_struct_name, private_node_field,          \

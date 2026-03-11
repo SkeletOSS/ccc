@@ -195,9 +195,9 @@ static Doubly_linked_list list = doubly_linked_list_with_allocator(
 ```
 
 This can help eliminate boilerplate in initializers. */
-#define CCC_doubly_linked_list_with_context_allocator(                         \
+#define CCC_doubly_linked_list_context_with_allocator(                         \
     type_name, type_intruder_field, compare, allocate, context)                \
-    CCC_private_doubly_linked_list_with_context_allocator(                     \
+    CCC_private_doubly_linked_list_context_with_allocator(                     \
         type_name, type_intruder_field, compare, allocate, context)
 
 /**@}*/
@@ -554,8 +554,8 @@ typedef CCC_Doubly_linked_list Doubly_linked_list;
         CCC_doubly_linked_list_context_from(arguments)
 #    define doubly_linked_list_with_allocator(arguments...)                    \
         CCC_doubly_linked_list_with_allocator(arguments)
-#    define doubly_linked_list_with_context_allocator(arguments...)            \
-        CCC_doubly_linked_list_with_context_allocator(arguments)
+#    define doubly_linked_list_context_with_allocator(arguments...)            \
+        CCC_doubly_linked_list_context_with_allocator(arguments)
 #    define doubly_linked_list_emplace_back(arguments...)                      \
         CCC_doubly_linked_list_emplace_back(arguments)
 #    define doubly_linked_list_emplace_front(arguments...)                     \

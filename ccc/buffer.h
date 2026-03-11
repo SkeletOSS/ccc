@@ -251,7 +251,7 @@ CCC_buffer_for() macro. */
 @param[in] capacity the capacity of the Buffer to reserve.
 @return the initialized buffer. Directly assign to Buffer on the right hand
 side of the equality operator (e.g. CCC_Buffer b =
-CCC_buffer_with_context_capacity(...);).
+CCC_buffer_context_with_capacity(...);).
 
 Initialize a dynamic buffer.
 
@@ -260,7 +260,7 @@ Initialize a dynamic buffer.
 int
 main(void)
 {
-    Buffer b = buffer_with_context_capacity(int, arena_allocate, &arena, 4096);
+    Buffer b = buffer_context_with_capacity(int, arena_allocate, &arena, 4096);
     return 0;
 }
 ```
@@ -268,9 +268,9 @@ main(void)
 Only dynamic buffers may be initialized this way. For static or stack based
 initialization of fixed buffers with contents known at compile time, see the
 CCC_buffer_for() macro. */
-#define CCC_buffer_with_context_capacity(type_name, allocate, context,         \
+#define CCC_buffer_context_with_capacity(type_name, allocate, context,         \
                                          capacity)                             \
-    CCC_private_buffer_with_context_capacity(type_name, allocate, context,     \
+    CCC_private_buffer_context_with_capacity(type_name, allocate, context,     \
                                              capacity)
 
 /** @brief Initialize a contiguous Buffer of user a specified type of fixed
@@ -279,7 +279,7 @@ capacity with no allocation permission or context.
 @param[in] compound_literal_array the compound literal array of types.
 @return the initialized buffer. Directly assign to Buffer on the right hand
 side of the equality operator
-(e.g. CCC_Buffer b = CCC_buffer_with_compound_literal(...);).
+(e.g. CCC_Buffer b = CCC_buffer_with_storage(...);).
 
 Initialization of a Buffer can occur at compile time or run time but always
 lacks any allocation permissions. The memory pointer should be
@@ -287,13 +287,13 @@ of the same type one intends to store in the buffer.
 
 ```
 #define BUFFER_USING_NAMESPACE_CCC
-static Buffer stack = buffer_with_compound_literal(0, (static int[4096]){});
+static Buffer stack = buffer_with_storage(0, (static int[4096]){});
 ```
 
 Compile time creation of fixed capacity buffers can be a helpful use case when
 wrapping static or stack based arrays. */
-#define CCC_buffer_with_compound_literal(count, compound_literal_array...)     \
-    CCC_private_buffer_with_compound_literal(count, compound_literal_array)
+#define CCC_buffer_with_storage(count, compound_literal_array...)              \
+    CCC_private_buffer_with_storage(count, compound_literal_array)
 
 /** @brief Initialize a contiguous Buffer of user a specified type of fixed
 capacity with no allocation permission.
@@ -302,7 +302,7 @@ capacity with no allocation permission.
 @param[in] compound_literal_array the compound literal array of types.
 @return the initialized buffer. Directly assign to Buffer on the right hand
 side of the equality operator
-(e.g. CCC_Buffer b = CCC_buffer_with_context_compound_literal(...);).
+(e.g. CCC_Buffer b = CCC_buffer_context_with_storage(...);).
 
 Initialization of a Buffer can occur at compile time or run time but always
 lacks any allocation permissions. The memory pointer should be
@@ -310,7 +310,7 @@ of the same type one intends to store in the buffer.
 
 ```
 #define BUFFER_USING_NAMESPACE_CCC
-static Buffer stack = buffer_with_context_compound_literal(
+static Buffer stack = buffer_context_with_storage(
     &module_context,
     0,
     (static int[5]){0, 1, 2, 3, 4}
@@ -319,10 +319,10 @@ static Buffer stack = buffer_with_context_compound_literal(
 
 Compile time creation of fixed capacity buffers can be a helpful use case when
 wrapping static or stack based arrays. */
-#define CCC_buffer_with_context_compound_literal(context, count,               \
-                                                 compound_literal_array...)    \
-    CCC_private_buffer_with_context_compound_literal(context, count,           \
-                                                     compound_literal_array)
+#define CCC_buffer_context_with_storage(context, count,                        \
+                                        compound_literal_array...)             \
+    CCC_private_buffer_context_with_storage(context, count,                    \
+                                            compound_literal_array)
 
 /** @brief Initialize an empty Buffer at compile or runtime with an allocator
 function.
@@ -350,7 +350,7 @@ capacity with no allocation permission.
 @param[in] context a pointer to any context needed for each element.
 @return the initialized buffer. Directly assign to Buffer on the right hand
 side of the equality operator
-(e.g. CCC_Buffer b = CCC_buffer_with_context_allocator(...);).
+(e.g. CCC_Buffer b = CCC_buffer_context_with_allocator(...);).
 
 Initialization of a Buffer can occur at compile time or run time but always
 lacks any allocation permissions. The memory pointer should be
@@ -358,7 +358,7 @@ of the same type one intends to store in the buffer.
 
 ```
 #define BUFFER_USING_NAMESPACE_CCC
-static Buffer stack = buffer_with_context_allocator(
+static Buffer stack = buffer_context_with_allocator(
     int,
     arena_allocate,
     &arena,
@@ -367,8 +367,8 @@ static Buffer stack = buffer_with_context_allocator(
 
 Compile time creation of fixed capacity buffers can be a helpful use case when
 wrapping static or stack based arrays. */
-#define CCC_buffer_with_context_allocator(type_name, allocator, context)       \
-    CCC_private_buffer_with_context_allocator(type_name, allocator, context)
+#define CCC_buffer_context_with_allocator(type_name, allocator, context)       \
+    CCC_private_buffer_context_with_allocator(type_name, allocator, context)
 
 /** @brief Reserves space for at least to_add more elements.
 @param[in] buffer a pointer to the buffer.
@@ -911,18 +911,17 @@ dropped with this directive if one is sure no namespace collisions occur. */
 /* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Buffer Buffer;
 #    define buffer_for(arguments...) CCC_buffer_for(arguments)
-#    define buffer_with_compound_literal(arguments...)                         \
-        CCC_buffer_with_compound_literal(arguments)
-#    define buffer_with_context_compound_literal(arguments...)                 \
-        CCC_buffer_with_context_compound_literal(arguments)
+#    define buffer_with_storage(arguments...) CCC_buffer_with_storage(arguments)
+#    define buffer_context_with_storage(arguments...)                          \
+        CCC_buffer_context_with_storage(arguments)
 #    define buffer_with_allocator(arguments...)                                \
         CCC_buffer_with_allocator(arguments)
-#    define buffer_with_context_allocator(arguments...)                        \
-        CCC_buffer_with_context_allocator(arguments)
+#    define buffer_context_with_allocator(arguments...)                        \
+        CCC_buffer_context_with_allocator(arguments)
 #    define buffer_with_capacity(arguments...)                                 \
         CCC_buffer_with_capacity(arguments)
-#    define buffer_with_context_capacity(arguments...)                         \
-        CCC_buffer_with_context_capacity(arguments)
+#    define buffer_context_with_capacity(arguments...)                         \
+        CCC_buffer_context_with_capacity(arguments)
 #    define buffer_from(arguments...) CCC_buffer_from(arguments)
 #    define buffer_context_from(arguments...) CCC_buffer_context_from(arguments)
 #    define buffer_allocate(arguments...) CCC_buffer_allocate(arguments)

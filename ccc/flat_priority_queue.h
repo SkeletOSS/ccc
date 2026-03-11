@@ -304,7 +304,7 @@ Initialize a dynamic Flat_priority_queue.
 int
 main(void)
 {
-    Flat_priority_queue f = flat_priority_queue_with_context_capacity(
+    Flat_priority_queue f = flat_priority_queue_context_with_capacity(
         int,
         CCC_ORDER_LESSER,
         compare_ints,
@@ -319,9 +319,9 @@ main(void)
 Only dynamic Flat_priority_queues may be initialized this way. For static or
 stack based initialization of fixed flat_priority_queues with contents known at
 compile time, see the CCC_flat_priority_queue_for() macro. */
-#define CCC_flat_priority_queue_with_context_capacity(                         \
+#define CCC_flat_priority_queue_context_with_capacity(                         \
     type_name, order, compare, allocate, context, capacity)                    \
-    CCC_private_flat_priority_queue_with_context_capacity(                     \
+    CCC_private_flat_priority_queue_context_with_capacity(                     \
         type_name, order, compare, allocate, context, capacity)
 
 /** @brief Initialize a priority_queue as a min or max heap with no allocation
@@ -339,10 +339,10 @@ unsorted elements that must be swapped into heap order, use the provided
 `CCC_flat_priority_queue_in_place_heapify()` operation at runtime on this
 priority queue. The size count of elements to be sorted must be less than or
 equal to the capacity of the compound literal. */
-#define CCC_flat_priority_queue_with_compound_literal(order, compare,          \
-                                                      compound_literal_array)  \
-    CCC_private_flat_priority_queue_with_compound_literal(                     \
-        order, compare, compound_literal_array)
+#define CCC_flat_priority_queue_with_storage(order, compare,                   \
+                                             compound_literal_array)           \
+    CCC_private_flat_priority_queue_with_storage(order, compare,               \
+                                                 compound_literal_array)
 
 /** @brief Initialize a priority_queue as a min or max heap with no allocation
 permission, context data, and a compound literal as backing storage.
@@ -360,9 +360,9 @@ unsorted elements that must be swapped into heap order, use the provided
 `CCC_flat_priority_queue_in_place_heapify()` operation at runtime on this
 priority queue. The size count of elements to be sorted must be less than or
 equal to the capacity of the compound literal. */
-#define CCC_flat_priority_queue_with_context_compound_literal(                 \
-    order, compare, context, compound_literal_array)                           \
-    CCC_private_flat_priority_queue_with_context_compound_literal(             \
+#define CCC_flat_priority_queue_context_with_storage(order, compare, context,  \
+                                                     compound_literal_array)   \
+    CCC_private_flat_priority_queue_context_with_storage(                      \
         order, compare, context, compound_literal_array)
 
 /** @brief Initialize an empty dynamic queue at compile or runtime with an
@@ -389,9 +389,9 @@ respectively.
 @param[in] context the context for allocator.
 @return the initialized priority queue on the right hand side of an equality
 operator. */
-#define CCC_flat_priority_queue_with_context_allocator(                        \
+#define CCC_flat_priority_queue_context_with_allocator(                        \
     type_name, order, compare, allocate, context)                              \
-    CCC_private_flat_priority_queue_with_context_allocator(                    \
+    CCC_private_flat_priority_queue_context_with_allocator(                    \
         type_name, order, compare, allocate, context)
 
 /** @brief Copy the priority_queue from source to newly initialized
@@ -583,7 +583,7 @@ A simple way to provide a temp for swapping is with an inline compound literal
 reference provided directly to the function argument `&(name_of_type){}`.
 
 This function is helpful to use in conjunction with a priority queue initialized
-with `CCC_flat_priority_queue_with_compound_literal()`. It is is another method
+with `CCC_flat_priority_queue_with_storage()`. It is is another method
 to order a heap that already has all the elements one needs sorted. The
 underlying Buffer will be interpreted to have valid elements to order in the
 range `[0, count)`. */
@@ -952,16 +952,16 @@ typedef CCC_Flat_priority_queue Flat_priority_queue;
         CCC_flat_priority_queue_context_from(arguments)
 #    define flat_priority_queue_with_capacity(arguments...)                    \
         CCC_flat_priority_queue_with_capacity(arguments)
-#    define flat_priority_queue_with_context_capacity(arguments...)            \
-        CCC_flat_priority_queue_with_context_capacity(arguments)
-#    define flat_priority_queue_with_compound_literal(arguments...)            \
-        CCC_flat_priority_queue_with_compound_literal(arguments)
-#    define flat_priority_queue_with_context_compound_literal(arguments...)    \
-        CCC_flat_priority_queue_with_context_compound_literal(arguments)
+#    define flat_priority_queue_context_with_capacity(arguments...)            \
+        CCC_flat_priority_queue_context_with_capacity(arguments)
+#    define flat_priority_queue_with_storage(arguments...)                     \
+        CCC_flat_priority_queue_with_storage(arguments)
+#    define flat_priority_queue_context_with_storage(arguments...)             \
+        CCC_flat_priority_queue_context_with_storage(arguments)
 #    define flat_priority_queue_with_allocator(arguments...)                   \
         CCC_flat_priority_queue_with_allocator(arguments)
-#    define flat_priority_queue_with_context_allocator(arguments...)           \
-        CCC_flat_priority_queue_with_context_allocator(arguments)
+#    define flat_priority_queue_context_with_allocator(arguments...)           \
+        CCC_flat_priority_queue_context_with_allocator(arguments)
 #    define flat_priority_queue_heapify(arguments...)                          \
         CCC_flat_priority_queue_heapify(arguments)
 #    define flat_priority_queue_copy(arguments...)                             \

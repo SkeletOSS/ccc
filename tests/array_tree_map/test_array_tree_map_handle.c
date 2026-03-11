@@ -57,7 +57,7 @@ check_static_begin(fill_n, CCC_Array_tree_map *const array_tree_map,
 /* Internally there is some maintenance to perform when swapping values for
    the user on insert. Leave this test here to always catch this. */
 check_static_begin(array_tree_map_test_validate) {
-    CCC_Array_tree_map array_tree_map = array_tree_map_with_compound_literal(
+    CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     CCC_Handle hndl
         = swap_handle(&array_tree_map, &(struct Val){.id = -1, .val = -1});
@@ -76,7 +76,7 @@ check_static_begin(array_tree_map_test_validate) {
 }
 
 check_static_begin(array_tree_map_test_insert) {
-    CCC_Array_tree_map array_tree_map = array_tree_map_with_compound_literal(
+    CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     int size = 30;
     CCC_Handle hndl
@@ -130,7 +130,7 @@ check_static_begin(array_tree_map_test_insert) {
 }
 
 check_static_begin(array_tree_map_test_remove_key_value) {
-    CCC_Array_tree_map array_tree_map = array_tree_map_with_compound_literal(
+    CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     int size = 30;
     CCC_Handle hndl = CCC_remove_key_value(&array_tree_map,
@@ -193,7 +193,7 @@ check_static_begin(array_tree_map_test_remove_key_value) {
 }
 
 check_static_begin(array_tree_map_test_try_insert) {
-    CCC_Array_tree_map array_tree_map = array_tree_map_with_compound_literal(
+    CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     int size = 30;
     CCC_Handle hndl
@@ -246,7 +246,7 @@ check_static_begin(array_tree_map_test_try_insert) {
 }
 
 check_static_begin(array_tree_map_test_try_insert_with) {
-    CCC_Array_tree_map array_tree_map = array_tree_map_with_compound_literal(
+    CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     int size = 30;
     CCC_Handle *hndl
@@ -300,7 +300,7 @@ check_static_begin(array_tree_map_test_try_insert_with) {
 }
 
 check_static_begin(array_tree_map_test_insert_or_assign) {
-    CCC_Array_tree_map array_tree_map = array_tree_map_with_compound_literal(
+    CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     int size = 30;
     CCC_Handle hndl
@@ -356,7 +356,7 @@ check_static_begin(array_tree_map_test_insert_or_assign) {
 }
 
 check_static_begin(array_tree_map_test_insert_or_assign_with) {
-    CCC_Array_tree_map array_tree_map = array_tree_map_with_compound_literal(
+    CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     int size = 30;
     CCC_Handle *hndl
@@ -409,7 +409,7 @@ check_static_begin(array_tree_map_test_insert_or_assign_with) {
 }
 
 check_static_begin(array_tree_map_test_array_and_modify) {
-    CCC_Array_tree_map array_tree_map = array_tree_map_with_compound_literal(
+    CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     int size = 30;
     CCC_Array_tree_map_handle *hndl = handle_wrap(&array_tree_map, &(int){-1});
@@ -473,7 +473,7 @@ check_static_begin(array_tree_map_test_array_and_modify) {
 }
 
 check_static_begin(array_tree_map_test_array_and_context_modify) {
-    CCC_Array_tree_map array_tree_map = array_tree_map_with_compound_literal(
+    CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     int size = 30;
     int context = 1;
@@ -535,7 +535,7 @@ check_static_begin(array_tree_map_test_array_and_context_modify) {
 }
 
 check_static_begin(array_tree_map_test_array_and_modify_with) {
-    CCC_Array_tree_map array_tree_map = array_tree_map_with_compound_literal(
+    CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     int size = 30;
     CCC_Array_tree_map_handle *hndl = handle_wrap(&array_tree_map, &(int){-1});
@@ -596,7 +596,7 @@ check_static_begin(array_tree_map_test_array_and_modify_with) {
 }
 
 check_static_begin(array_tree_map_test_or_insert) {
-    CCC_Array_tree_map array_tree_map = array_tree_map_with_compound_literal(
+    CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     int size = 30;
     struct Val *v = array_tree_map_at(
@@ -658,7 +658,7 @@ check_static_begin(array_tree_map_test_or_insert) {
 }
 
 check_static_begin(array_tree_map_test_or_insert_with) {
-    CCC_Array_tree_map array_tree_map = array_tree_map_with_compound_literal(
+    CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     int size = 30;
     struct Val *v = array_tree_map_at(
@@ -722,7 +722,7 @@ check_static_begin(array_tree_map_test_or_insert_with) {
 }
 
 check_static_begin(array_tree_map_test_insert_handle) {
-    CCC_Array_tree_map array_tree_map = array_tree_map_with_compound_literal(
+    CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     int size = 30;
     struct Val *v = array_tree_map_at(
@@ -784,7 +784,7 @@ check_static_begin(array_tree_map_test_insert_handle) {
 }
 
 check_static_begin(array_tree_map_test_insert_array_with) {
-    CCC_Array_tree_map array_tree_map = array_tree_map_with_compound_literal(
+    CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     int size = 30;
     struct Val *v = array_tree_map_at(
@@ -848,7 +848,7 @@ check_static_begin(array_tree_map_test_insert_array_with) {
 }
 
 check_static_begin(array_tree_map_test_remove_handle) {
-    CCC_Array_tree_map array_tree_map = array_tree_map_with_compound_literal(
+    CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     int size = 30;
     struct Val *v = array_tree_map_at(

@@ -55,7 +55,7 @@ check_static_begin(flat_double_ended_queue_test_copy_no_allocate_fail) {
 
 check_static_begin(flat_double_ended_queue_test_copy_allocate) {
     struct Stack_allocator allocator = stack_allocator_for(int, 16);
-    Flat_double_ended_queue q1 = flat_double_ended_queue_with_context_capacity(
+    Flat_double_ended_queue q1 = flat_double_ended_queue_context_with_capacity(
         int, stack_allocator_allocate, &allocator, 8);
     Flat_double_ended_queue q2
         = CCC_flat_double_ended_queue_for(int, NULL, &allocator, 0, 0, NULL);
@@ -84,7 +84,7 @@ check_static_begin(flat_double_ended_queue_test_copy_allocate) {
 
 check_static_begin(flat_double_ended_queue_test_copy_allocate_fail) {
     struct Stack_allocator allocator = stack_allocator_for(int, 16);
-    Flat_double_ended_queue q1 = flat_double_ended_queue_with_context_capacity(
+    Flat_double_ended_queue q1 = flat_double_ended_queue_context_with_capacity(
         int, stack_allocator_allocate, &allocator, 8);
     Flat_double_ended_queue q2
         = CCC_flat_double_ended_queue_for(int, NULL, &allocator, 0, 0, NULL);
@@ -138,7 +138,7 @@ check_static_begin(flat_double_ended_queue_test_init_from_fail) {
 check_static_begin(flat_double_ended_queue_test_init_with_capacity) {
     struct Stack_allocator allocator = stack_allocator_for(int, 8);
     CCC_Flat_double_ended_queue queue
-        = CCC_flat_double_ended_queue_with_context_capacity(
+        = CCC_flat_double_ended_queue_context_with_capacity(
             int, stack_allocator_allocate, &allocator, 8);
     check(CCC_flat_double_ended_queue_capacity(&queue).count, 8);
     check(CCC_flat_double_ended_queue_push_back(&queue, &(int){9}) != NULL,
@@ -162,10 +162,10 @@ check_static_begin(flat_double_ended_queue_test_init_with_allocator) {
     check_end(CCC_flat_double_ended_queue_clear_and_free(&queue, NULL););
 }
 
-check_static_begin(flat_double_ended_queue_test_init_with_context_allocator) {
+check_static_begin(flat_double_ended_queue_test_init_context_with_allocator) {
     struct Stack_allocator allocator = stack_allocator_for(int, 8);
     CCC_Flat_double_ended_queue queue
-        = CCC_flat_double_ended_queue_with_context_allocator(
+        = CCC_flat_double_ended_queue_context_with_allocator(
             int, stack_allocator_allocate, &allocator);
     check(CCC_flat_double_ended_queue_reserve(&queue, 8,
                                               stack_allocator_allocate),
@@ -186,7 +186,7 @@ main(void) {
                      flat_double_ended_queue_test_init_from(),
                      flat_double_ended_queue_test_init_from_fail(),
                      flat_double_ended_queue_test_init_with_allocator(),
-                     flat_double_ended_queue_test_init_with_context_allocator(),
+                     flat_double_ended_queue_test_init_context_with_allocator(),
                      flat_double_ended_queue_test_init_with_capacity(),
                      flat_double_ended_queue_test_init_with_capacity_fail());
 }

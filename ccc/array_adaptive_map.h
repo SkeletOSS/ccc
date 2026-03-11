@@ -95,7 +95,7 @@ around which the map will be built.
 @param[in] optional_storage_specifier a storage specifier for the backing struct
 of array storage may be added on newer compilers such as static.
 @warning This should rarely be used. If a fixed size map is desired simply use
-the CCC_array_adaptive_map_with_compound_literal() initializer. For dynamic
+the CCC_array_adaptive_map_with_storage() initializer. For dynamic
 maps, there are also many other options.
 
 This macro is required to support the edge case for the user allocating a fixed
@@ -361,7 +361,7 @@ struct Val
 int
 main(void)
 {
-    Array_adaptive_map map = array_adaptive_map_with_context_capacity(
+    Array_adaptive_map map = array_adaptive_map_context_with_capacity(
         struct Val,
         key,
         array_adaptive_map_key_order,
@@ -375,9 +375,9 @@ main(void)
 
 Only dynamic maps may be initialized this way as it simply combines the steps
 of initialization and reservation. */
-#define CCC_array_adaptive_map_with_context_capacity(                          \
+#define CCC_array_adaptive_map_context_with_capacity(                          \
     type_name, type_key_field, compare, allocate, context, capacity)           \
-    CCC_private_array_adaptive_map_with_context_capacity(                      \
+    CCC_private_array_adaptive_map_context_with_capacity(                      \
         type_name, type_key_field, compare, allocate, context, capacity)
 
 /** @brief Initialize a fixed map at compile or runtime from any user chosen
@@ -401,7 +401,7 @@ struct Val
     int key;
     int val;
 };
-static Array_adaptive_map map = array_adaptive_map_with_compound_literal(
+static Array_adaptive_map map = array_adaptive_map_with_storage(
     key,
     array_adaptive_map_key_order,
     (struct Val[4096]){}
@@ -409,9 +409,9 @@ static Array_adaptive_map map = array_adaptive_map_with_compound_literal(
 ```
 
 This can help eliminate boilerplate in initializers. */
-#define CCC_array_adaptive_map_with_compound_literal(                          \
+#define CCC_array_adaptive_map_with_storage(                                   \
     type_key_field, compare, compound_literal, optional_storage_specifier...)  \
-    CCC_private_array_adaptive_map_with_compound_literal(                      \
+    CCC_private_array_adaptive_map_with_storage(                               \
         type_key_field, compare, compound_literal, optional_storage_specifier)
 
 /** @brief Initialize a fixed map at compile or runtime from any user chosen
@@ -436,7 +436,7 @@ struct Val
     int key;
     int val;
 };
-static Array_adaptive_map map = array_adaptive_map_with_compound_literal(
+static Array_adaptive_map map = array_adaptive_map_with_storage(
     key,
     array_adaptive_map_key_order,
     &module_context,
@@ -445,10 +445,10 @@ static Array_adaptive_map map = array_adaptive_map_with_compound_literal(
 ```
 
 This can help eliminate boilerplate in initializers. */
-#define CCC_array_adaptive_map_with_context_compound_literal(                  \
+#define CCC_array_adaptive_map_context_with_storage(                           \
     type_key_field, compare, context, compound_literal,                        \
     optional_storage_specifier...)                                             \
-    CCC_private_array_adaptive_map_with_context_compound_literal(              \
+    CCC_private_array_adaptive_map_context_with_storage(                       \
         type_key_field, compare, context, compound_literal,                    \
         optional_storage_specifier)
 
@@ -494,7 +494,7 @@ allocator and supplementary context.
 @param[in] context any additional context needed for comparison or allocation.
 @return the map directly initialized on the right hand side of the equality
 operator (e.g. CCC_Array_adaptive_map map =
-CCC_array_adaptive_map_with_context_allocator(...);)
+CCC_array_adaptive_map_context_with_allocator(...);)
 
 Initialize a dynamic map at compile time.
 
@@ -505,7 +505,7 @@ struct Val
     int key;
     int val;
 };
-static Array_adaptive_map map = array_adaptive_map_with_context_allocator(
+static Array_adaptive_map map = array_adaptive_map_context_with_allocator(
     struct Val,
     key,
     array_adaptive_map_key_order,
@@ -515,9 +515,9 @@ static Array_adaptive_map map = array_adaptive_map_with_context_allocator(
 ```
 
 This can help eliminate boilerplate in initializers. */
-#define CCC_array_adaptive_map_with_context_allocator(                         \
+#define CCC_array_adaptive_map_context_with_allocator(                         \
     type_name, type_key_field, compare, allocate, context)                     \
-    CCC_private_array_adaptive_map_with_context_allocator(                     \
+    CCC_private_array_adaptive_map_context_with_allocator(                     \
         type_name, type_key_field, compare, allocate, context)
 
 /** @brief Copy the map at source to destination.
@@ -1310,16 +1310,16 @@ typedef CCC_Array_adaptive_map_handle Array_adaptive_map_handle;
         CCC_array_adaptive_map_context_from(arguments)
 #    define array_adaptive_map_with_capacity(arguments...)                     \
         CCC_array_adaptive_map_with_capacity(arguments)
-#    define array_adaptive_map_with_context_capacity(arguments...)             \
-        CCC_array_adaptive_map_with_context_capacity(arguments)
-#    define array_adaptive_map_with_compound_literal(arguments...)             \
-        CCC_array_adaptive_map_with_compound_literal(arguments)
-#    define array_adaptive_map_with_context_compound_literal(arguments...)     \
-        CCC_array_adaptive_map_with_context_compound_literal(arguments)
+#    define array_adaptive_map_context_with_capacity(arguments...)             \
+        CCC_array_adaptive_map_context_with_capacity(arguments)
+#    define array_adaptive_map_with_storage(arguments...)                      \
+        CCC_array_adaptive_map_with_storage(arguments)
+#    define array_adaptive_map_context_with_storage(arguments...)              \
+        CCC_array_adaptive_map_context_with_storage(arguments)
 #    define array_adaptive_map_with_allocator(arguments...)                    \
         CCC_array_adaptive_map_with_allocator(arguments)
-#    define array_adaptive_map_with_context_allocator(arguments...)            \
-        CCC_array_adaptive_map_with_context_allocator(arguments)
+#    define array_adaptive_map_context_with_allocator(arguments...)            \
+        CCC_array_adaptive_map_context_with_allocator(arguments)
 #    define array_adaptive_map_at(arguments...)                                \
         CCC_array_adaptive_map_at(arguments)
 #    define array_adaptive_map_as(arguments...)                                \

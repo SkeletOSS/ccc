@@ -76,7 +76,7 @@ validate_sudoku_box(int const board[9][9], Bitset *const row_check,
                     Bitset *const col_check, size_t const row_start,
                     size_t const col_start) {
     Bitset box_check
-        = bitset_with_compound_literal(DIGITS, bitset_storage_for(DIGITS));
+        = bitset_with_storage(DIGITS, bitset_storage_for(DIGITS));
     CCC_Tribool was_on = CCC_FALSE;
     for (size_t r = row_start; r < row_start + BOX_SIZE; ++r) {
         for (size_t c = col_start; c < col_start + BOX_SIZE; ++c) {
@@ -108,9 +108,9 @@ validate_sudoku_box(int const board[9][9], Bitset *const row_check,
 
 static CCC_Tribool
 is_valid_sudoku(int const board[9][9]) {
-    Bitset row_check = bitset_with_compound_literal(
+    Bitset row_check = bitset_with_storage(
         ROWS * DIGITS, bitset_storage_for(ROWS * DIGITS));
-    Bitset col_check = bitset_with_compound_literal(
+    Bitset col_check = bitset_with_storage(
         COLS * DIGITS, bitset_storage_for(COLS * DIGITS));
     for (size_t row = 0; row < ROWS; row += BOX_SIZE) {
         for (size_t col = 0; col < COLS; col += BOX_SIZE) {
@@ -156,7 +156,7 @@ maxint(int const a, int const b) {
 /* Trapping rainwater Leetcode problem with iterators */
 int
 main(void) {
-    Buffer const heights = buffer_with_compound_literal(
+    Buffer const heights = buffer_with_storage(
         HCAP, (int[HCAP]){0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1});
     int const correct_trapped = 6;
     int trapped = 0;
@@ -240,7 +240,7 @@ int
 main(void) {
     /* stack array, no allocation permission, no context data, capacity 2 */
     Flat_doubled_ended_queue q
-        = flat_doubled_ended_queue_with_compound_literal(2, (int[2]){});
+        = flat_doubled_ended_queue_with_storage(2, (int[2]){});
     (void)push_back(&q, &(int){3});
     (void)push_front(&q, &(int){2});
     (void)push_back(&q, &(int){1}); /* Overwrite 2. */
@@ -301,7 +301,7 @@ enum : size_t {
 /* Longest Consecutive Sequence Leetcode Problem */
 int
 main(void) {
-    CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
+    CCC_Flat_hash_map fh = flat_hash_map_with_storage(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_cmp,
         (struct Key_val[STANDARD_FIXED_CAP]){});
     /* Longest sequence is 1,2,3,4,5,6,7,8,9,10 of length 10. */
@@ -429,7 +429,7 @@ main(void) {
     /* stack array of 25 elements with one slot for sentinel, intrusive field
        named elem, key field named key, no allocation permission, key comparison
        function, no context data. */
-    Array_adaptive_map s = array_adaptive_map_with_compound_literal(
+    Array_adaptive_map s = array_adaptive_map_with_storage(
         key, Key_val_cmp, (struct Key_val[26]){});
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
@@ -495,7 +495,7 @@ int
 main(void) {
     /* stack array, user defined type, key field named key, no allocation
        permission, key comparison function, no context data. */
-    Array_tree_map s = array_tree_map_with_compound_literal(
+    Array_tree_map s = array_tree_map_with_storage(
         key, hrmap_key_cmp, (struct Kay_val[64]){});
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
@@ -789,7 +789,7 @@ Non-Intrusive containers exist when a flat container can operate without such he
 
 ```c
 CCC_Flat_priority_queue flat_priority_queue
-    = CCC_flat_priority_queue_with_compound_literal(CCC_LESSER, int_cmp,
+    = CCC_flat_priority_queue_with_storage(CCC_LESSER, int_cmp,
                                                     (int[40]){});
 ```
 
@@ -816,7 +816,7 @@ As was mentioned in the previous section, all containers can be forbidden from a
 
 ```c
 CCC_Flat_priority_queue flat_priority_queue
-    = CCC_flat_priority_queue_with_compound_literal(CCC_LES, int_cmp,
+    = CCC_flat_priority_queue_with_storage(CCC_LES, int_cmp,
                                                     (int[40]){});
 ```
 
@@ -870,7 +870,7 @@ struct Val {
     int key;
     int val;
 };
-static Flat_hash_map static_fh = flat_hash_map_with_compound_literal(
+static Flat_hash_map static_fh = flat_hash_map_with_storage(
     key, flat_hash_map_int_to_u64, flat_hash_map_id_cmp,
     (struct Val[64]){});
 ```
@@ -893,7 +893,7 @@ All other containers provide default initialization macros that can be used at c
 ```c
 #define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
 static Flat_doubled_ended_queue ring_buffer
-    = flat_doubled_ended_queue_with_compound_literal(0, (static int[4096]){});
+    = flat_doubled_ended_queue_with_storage(0, (static int[4096]){});
 ```
 
 In all the preceding examples initializing at compile time simplifies the code, eliminates the need for initialization functions, and ensures that all containers are ready to operate when execution begins. Using compound literal initialization also helps create better ownership of memory for each container, eliminating named references to a container's memory that could be accessed by mistake.

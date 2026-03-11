@@ -152,9 +152,9 @@ static singly_linked_list list = singly_linked_list_with_allocator(
 ```
 
 This can help eliminate boilerplate in initializers. */
-#define CCC_singly_linked_list_with_context_allocator(                         \
+#define CCC_singly_linked_list_context_with_allocator(                         \
     type_name, type_intruder_field, compare, allocate, context)                \
-    CCC_private_singly_linked_list_with_context_allocator(                     \
+    CCC_private_singly_linked_list_context_with_allocator(                     \
         type_name, type_intruder_field, compare, allocate, context)
 
 /** @brief Initialize a singly linked list at runtime from a compound literal
@@ -493,8 +493,8 @@ typedef CCC_Singly_linked_list Singly_linked_list;
         CCC_singly_linked_list_context_from(arguments)
 #    define singly_linked_list_with_allocator(arguments...)                    \
         CCC_singly_linked_list_with_allocator(arguments)
-#    define singly_linked_list_with_context_allocator(arguments...)            \
-        CCC_singly_linked_list_with_context_allocator(arguments)
+#    define singly_linked_list_context_with_allocator(arguments...)            \
+        CCC_singly_linked_list_context_with_allocator(arguments)
 #    define singly_linked_list_emplace_front(arguments...)                     \
         CCC_singly_linked_list_emplace_front(arguments)
 #    define singly_linked_list_push_front(arguments...)                        \

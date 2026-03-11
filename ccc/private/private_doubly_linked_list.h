@@ -118,7 +118,7 @@ name of the list being on the left hand side of the assignment operator. */
     }
 
 /** @internal */
-#define CCC_private_doubly_linked_list_with_context_allocator(                 \
+#define CCC_private_doubly_linked_list_context_with_allocator(                 \
     private_struct_name, private_type_intruder_field, private_compare,         \
     private_allocate, private_context)                                         \
     CCC_private_doubly_linked_list_for(                                        \

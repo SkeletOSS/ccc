@@ -107,7 +107,7 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
     }
 
 /** @internal */
-#define CCC_private_singly_linked_list_with_context_allocator(                 \
+#define CCC_private_singly_linked_list_context_with_allocator(                 \
     private_struct_name, private_type_intruder_field, private_compare,         \
     private_allocate, private_context)                                         \
     CCC_private_singly_linked_list_for(                                        \

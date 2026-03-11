@@ -159,10 +159,10 @@ static Tree_map map = tree_map_with_allocator(
 ```
 
 This can help eliminate boilerplate in initializers. */
-#define CCC_tree_map_with_context_allocator(type_name, type_intruder_field,    \
+#define CCC_tree_map_context_with_allocator(type_name, type_intruder_field,    \
                                             type_key_field, compare, allocate, \
                                             context)                           \
-    CCC_private_tree_map_with_context_allocator(                               \
+    CCC_private_tree_map_context_with_allocator(                               \
         type_name, type_intruder_field, type_key_field, compare, allocate,     \
         context)
 
@@ -802,8 +802,8 @@ typedef CCC_Tree_map_entry Tree_map_entry;
 #    define tree_map_for(arguments...) CCC_tree_map_for(arguments)
 #    define tree_map_with_allocator(arguments...)                              \
         CCC_tree_map_with_allocator(arguments)
-#    define tree_map_with_context_allocator(arguments...)                      \
-        CCC_tree_map_with_context_allocator(arguments)
+#    define tree_map_context_with_allocator(arguments...)                      \
+        CCC_tree_map_context_with_allocator(arguments)
 #    define tree_map_from(arguments...) CCC_tree_map_from(arguments)
 #    define tree_map_context_from(arguments...)                                \
         CCC_tree_map_context_from(arguments)

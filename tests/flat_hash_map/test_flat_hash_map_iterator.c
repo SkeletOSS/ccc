@@ -30,7 +30,7 @@ destroy_owner_allocation(CCC_Type_context const t) {
 }
 
 check_static_begin(flat_hash_map_test_insert_then_iterate) {
-    CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
+    CCC_Flat_hash_map fh = flat_hash_map_with_storage(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         (struct Val[STANDARD_FIXED_CAP]){});
     int const size = STANDARD_FIXED_CAP;

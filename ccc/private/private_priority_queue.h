@@ -154,7 +154,7 @@ CCC_private_priority_queue_struct_base(struct CCC_Priority_queue const *,
     }
 
 /** @internal */
-#define CCC_private_priority_queue_with_context_allocator(                     \
+#define CCC_private_priority_queue_context_with_allocator(                     \
     private_struct_name, private_type_intruder_field,                          \
     private_priority_queue_order, private_compare, private_allocate,           \
     private_context)                                                           \

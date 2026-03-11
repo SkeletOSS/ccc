@@ -51,9 +51,9 @@ check_static_begin(adaptive_map_test_with_allocator) {
     check_end();
 }
 
-check_static_begin(adaptive_map_test_with_context_allocator) {
+check_static_begin(adaptive_map_test_context_with_allocator) {
     struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
-    CCC_Adaptive_map map = CCC_adaptive_map_with_context_allocator(
+    CCC_Adaptive_map map = CCC_adaptive_map_context_with_allocator(
         struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
     check(CCC_adaptive_map_validate(&map), true);
     check(CCC_adaptive_map_is_empty(&map), true);
@@ -113,7 +113,7 @@ int
 main(void) {
     return check_run(adaptive_map_test_empty(), adaptive_map_test_construct(),
                      adaptive_map_test_with_allocator(),
-                     adaptive_map_test_with_context_allocator(),
+                     adaptive_map_test_context_with_allocator(),
                      adaptive_map_test_construct_from(),
                      adaptive_map_test_construct_from_overwrite(),
                      adaptive_map_test_construct_from_fail());

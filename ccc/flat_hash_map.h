@@ -134,7 +134,7 @@ around which the map will be built. Must be a power of 2 capacity array.
 @param[in] optional_storage_specifier a storage specifier for the backing struct
 of array storage may be added on newer compilers such as static.
 @warning This should rarely be used. If a fixed size map is desired simply use
-the CCC_flat_hash_map_with_compound_literal() initializer. For dynamic maps,
+the CCC_flat_hash_map_with_storage() initializer. For dynamic maps,
 there are also many other options.
 
 This macro is required to support the edge case for the user allocating a fixed
@@ -433,7 +433,7 @@ capacity.
 in an argument error and is a no-op after the map is initialized empty.
 @return the flat hash map directly initialized on the right hand side of the
 equality operator (i.e. CCC_Flat_hash_map map =
-CCC_flat_hash_map_with_context_capacity(...);)
+CCC_flat_hash_map_context_with_capacity(...);)
 @warning An allocation function is required. This initializer is only available
 for dynamic maps.
 @warning If initialization fails all subsequent queries, insertions, or
@@ -453,7 +453,7 @@ struct Val
 int
 main(void)
 {
-    Flat_hash_map map = flat_hash_map_with_context_capacity(
+    Flat_hash_map map = flat_hash_map_context_with_capacity(
         struct Val,
         key,
         flat_hash_map_int_to_u64,
@@ -468,9 +468,9 @@ main(void)
 
 Only dynamic maps may be initialized this way as it simply combines the steps
 of initialization and reservation. */
-#define CCC_flat_hash_map_with_context_capacity(                               \
+#define CCC_flat_hash_map_context_with_capacity(                               \
     type_name, key_field, hash, compare, allocate, context, capacity)          \
-    CCC_private_flat_hash_map_with_context_capacity(                           \
+    CCC_private_flat_hash_map_context_with_capacity(                           \
         type_name, key_field, hash, compare, allocate, context, capacity)
 
 /** @brief Initialize a fixed map at compile time or runtime from its previously
@@ -486,7 +486,7 @@ of array storage, such as static, for the fixed size map in the scope at which
 it is allocated or declared.
 @return the flat hash map directly initialized on the right hand side of the
 equality operator
-(e.g. CCC_Flat_hash_map map = flat_hash_map_with_compound_literal(...);)
+(e.g. CCC_Flat_hash_map map = flat_hash_map_with_storage(...);)
 @note This initializer will warn the user if the compound literal provided is
 not a power of two capacity.
 
@@ -500,7 +500,7 @@ struct Val
     int key;
     int val;
 };
-static Flat_hash_map static_map = flat_hash_map_with_compound_literal(
+static Flat_hash_map static_map = flat_hash_map_with_storage(
     key,
     flat_hash_map_int_to_u64,
     flat_hash_map_key_order,
@@ -509,11 +509,11 @@ static Flat_hash_map static_map = flat_hash_map_with_compound_literal(
 ```
 
 This saves on boilerplate compared to the raw initializer. */
-#define CCC_flat_hash_map_with_compound_literal(                               \
+#define CCC_flat_hash_map_with_storage(                                        \
     key_field, hash, compare, compound_literal, optional_storage_specifier...) \
-    CCC_private_flat_hash_map_with_compound_literal(                           \
-        key_field, hash, compare, compound_literal,                            \
-        optional_storage_specifier)
+    CCC_private_flat_hash_map_with_storage(key_field, hash, compare,           \
+                                           compound_literal,                   \
+                                           optional_storage_specifier)
 
 /** @brief Initialize a fixed map at compile time or runtime from any user
 chosen type using a compound literal with no allocation permissions.
@@ -528,7 +528,7 @@ of array storage, such as static, for the fixed size map in the scope at which
 it is allocated or declared.
 @return the flat hash map directly initialized on the right hand side of the
 equality operator
-(e.g. CCC_Flat_hash_map map = flat_hash_map_with_context_compound_literal(...);)
+(e.g. CCC_Flat_hash_map map = flat_hash_map_context_with_storage(...);)
 @note This initializer will warn the user if the compound literal provided is
 not a power of two capacity.
 
@@ -542,7 +542,7 @@ struct Val
     int key;
     int val;
 };
-static Flat_hash_map static_map = flat_hash_map_with_context_compound_literal(
+static Flat_hash_map static_map = flat_hash_map_context_with_storage(
     key,
     flat_hash_map_int_to_u64,
     flat_hash_map_key_order,
@@ -552,12 +552,12 @@ static Flat_hash_map static_map = flat_hash_map_with_context_compound_literal(
 ```
 
 This saves on boilerplate compared to the raw initializer. */
-#define CCC_flat_hash_map_with_context_compound_literal(                       \
-    key_field, hash, compare, context, compound_literal,                       \
-    optional_storage_specifier...)                                             \
-    CCC_private_flat_hash_map_with_context_compound_literal(                   \
-        key_field, hash, compare, context, compound_literal,                   \
-        optional_storage_specifier)
+#define CCC_flat_hash_map_context_with_storage(key_field, hash, compare,       \
+                                               context, compound_literal,      \
+                                               optional_storage_specifier...)  \
+    CCC_private_flat_hash_map_context_with_storage(key_field, hash, compare,   \
+                                                   context, compound_literal,  \
+                                                   optional_storage_specifier)
 
 /** @brief Initialize an empty dynamic map at compile or runtime with an
 allocator.
@@ -616,7 +616,7 @@ struct Val
     int key;
     int val;
 };
-static Flat_hash_map static_map = flat_hash_map_with_context_allocator(
+static Flat_hash_map static_map = flat_hash_map_context_with_allocator(
     struct Val,
     key,
     flat_hash_map_int_to_u64,
@@ -627,9 +627,9 @@ static Flat_hash_map static_map = flat_hash_map_with_context_allocator(
 ```
 
 This saves on boilerplate compared to the raw initializer. */
-#define CCC_flat_hash_map_with_context_allocator(type_name, key_field, hash,   \
+#define CCC_flat_hash_map_context_with_allocator(type_name, key_field, hash,   \
                                                  compare, allocate, context)   \
-    CCC_private_flat_hash_map_with_context_allocator(                          \
+    CCC_private_flat_hash_map_context_with_allocator(                          \
         type_name, key_field, hash, compare, allocate, context)
 
 /** @brief Copy the map at source to destination.
@@ -658,14 +658,14 @@ struct Val
     int key;
     int val;
 };
-Flat_hash_map source = flat_hash_map_with_compound_literal(
+Flat_hash_map source = flat_hash_map_with_storage(
     key,
     flat_hash_map_int_to_u64,
     flat_hash_map_key_order,
     (struct Val[64]){}
 );
 insert_rand_vals(&source);
-Flat_hash_map destination = flat_hash_map_with_compound_literal(
+Flat_hash_map destination = flat_hash_map_with_storage(
     key,
     flat_hash_map_int_to_u64,
     flat_hash_map_key_order,
@@ -1311,16 +1311,16 @@ typedef CCC_Flat_hash_map_entry Flat_hash_map_entry;
         CCC_flat_hash_map_context_from(arguments)
 #    define flat_hash_map_with_capacity(arguments...)                          \
         CCC_flat_hash_map_with_capacity(arguments)
-#    define flat_hash_map_with_context_capacity(arguments...)                  \
-        CCC_flat_hash_map_with_context_capacity(arguments)
-#    define flat_hash_map_with_compound_literal(arguments...)                  \
-        CCC_flat_hash_map_with_compound_literal(arguments)
-#    define flat_hash_map_with_context_compound_literal(arguments...)          \
-        CCC_flat_hash_map_with_context_compound_literal(arguments)
+#    define flat_hash_map_context_with_capacity(arguments...)                  \
+        CCC_flat_hash_map_context_with_capacity(arguments)
+#    define flat_hash_map_with_storage(arguments...)                           \
+        CCC_flat_hash_map_with_storage(arguments)
+#    define flat_hash_map_context_with_storage(arguments...)                   \
+        CCC_flat_hash_map_context_with_storage(arguments)
 #    define flat_hash_map_with_allocator(arguments...)                         \
         CCC_flat_hash_map_with_allocator(arguments)
-#    define flat_hash_map_with_context_allocator(arguments...)                 \
-        CCC_flat_hash_map_with_context_allocator(arguments)
+#    define flat_hash_map_context_with_allocator(arguments...)                 \
+        CCC_flat_hash_map_context_with_allocator(arguments)
 #    define flat_hash_map_copy(arguments...) CCC_flat_hash_map_copy(arguments)
 #    define flat_hash_map_and_modify_with(arguments...)                        \
         CCC_flat_hash_map_and_modify_with(arguments)

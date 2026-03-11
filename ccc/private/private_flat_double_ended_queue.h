@@ -72,10 +72,10 @@ void *CCC_private_flat_double_ended_queue_allocate_back(
     }
 
 /** @internal */
-#define CCC_private_flat_double_ended_queue_with_context_allocator(            \
+#define CCC_private_flat_double_ended_queue_context_with_allocator(            \
     private_type_name, private_allocate, private_context)                      \
     {                                                                          \
-        .buffer = CCC_buffer_with_context_allocator(                           \
+        .buffer = CCC_buffer_context_with_allocator(                           \
             private_type_name, private_allocate, private_context),             \
         .front = 0,                                                            \
     }
@@ -121,11 +121,11 @@ void *CCC_private_flat_double_ended_queue_allocate_back(
     }))
 
 /** @internal */
-#define CCC_private_flat_double_ended_queue_with_context_capacity(             \
+#define CCC_private_flat_double_ended_queue_context_with_capacity(             \
     private_type_name, private_allocate, private_context, private_capacity)    \
     (__extension__({                                                           \
         struct CCC_Flat_double_ended_queue private_flat_double_ended_queue = { \
-            .buffer = CCC_buffer_with_context_capacity(                        \
+            .buffer = CCC_buffer_context_with_capacity(                        \
                 private_type_name, private_allocate, private_context,          \
                 private_capacity),                                             \
             .front = 0,                                                        \
@@ -134,19 +134,19 @@ void *CCC_private_flat_double_ended_queue_allocate_back(
     }))
 
 /** @internal */
-#define CCC_private_flat_double_ended_queue_with_compound_literal(             \
+#define CCC_private_flat_double_ended_queue_with_storage(                      \
     private_count, private_compound_literal...)                                \
     {                                                                          \
-        .buffer = CCC_buffer_with_compound_literal(private_count,              \
-                                                   private_compound_literal),  \
+        .buffer                                                                \
+        = CCC_buffer_with_storage(private_count, private_compound_literal),    \
         .front = 0,                                                            \
     }
 
 /** @internal */
-#define CCC_private_flat_double_ended_queue_with_context_compound_literal(     \
+#define CCC_private_flat_double_ended_queue_context_with_storage(              \
     private_context, private_count, private_compound_literal...)               \
     {                                                                          \
-        .buffer = CCC_buffer_with_context_compound_literal(                    \
+        .buffer = CCC_buffer_context_with_storage(                             \
             private_context, private_count, private_compound_literal),         \
         .front = 0,                                                            \
     }

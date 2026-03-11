@@ -15,7 +15,7 @@
 check_static_begin(flat_priority_queue_test_insert_remove_key_value_four_dups) {
     struct Stack_allocator allocator = stack_allocator_for(struct Val, 8);
     CCC_Flat_priority_queue flat_priority_queue
-        = CCC_flat_priority_queue_with_context_capacity(
+        = CCC_flat_priority_queue_context_with_capacity(
             struct Val, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
             &allocator, 8);
     for (int i = 0; i < 4; ++i) {
@@ -45,7 +45,7 @@ check_static_begin(flat_priority_queue_test_insert_erase_shuffled) {
     int const prime = 53;
     struct Stack_allocator allocator = stack_allocator_for(struct Val, 50);
     CCC_Flat_priority_queue flat_priority_queue
-        = CCC_flat_priority_queue_with_context_capacity(
+        = CCC_flat_priority_queue_context_with_capacity(
             struct Val, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
             &allocator, 50);
     check(insert_shuffled(&flat_priority_queue, size, prime), CHECK_PASS);
@@ -72,7 +72,7 @@ check_static_begin(flat_priority_queue_test_pop_max) {
     int const prime = 53;
     struct Stack_allocator allocator = stack_allocator_for(struct Val, 50);
     CCC_Flat_priority_queue flat_priority_queue
-        = CCC_flat_priority_queue_with_context_capacity(
+        = CCC_flat_priority_queue_context_with_capacity(
             struct Val, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
             &allocator, 50);
     check(insert_shuffled(&flat_priority_queue, size, prime), CHECK_PASS);
@@ -95,7 +95,7 @@ check_static_begin(flat_priority_queue_test_pop_min) {
     int const prime = 53;
     struct Stack_allocator allocator = stack_allocator_for(struct Val, 50);
     CCC_Flat_priority_queue flat_priority_queue
-        = CCC_flat_priority_queue_with_context_capacity(
+        = CCC_flat_priority_queue_context_with_capacity(
             struct Val, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
             &allocator, 50);
     check(insert_shuffled(&flat_priority_queue, size, prime), CHECK_PASS);
@@ -123,7 +123,7 @@ check_static_begin(flat_priority_queue_test_delete_prime_shuffle_duplicates) {
     int const less = 77;
     struct Stack_allocator allocator = stack_allocator_for(struct Val, 100);
     CCC_Flat_priority_queue flat_priority_queue
-        = CCC_flat_priority_queue_with_context_capacity(
+        = CCC_flat_priority_queue_context_with_capacity(
             struct Val, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
             &allocator, 100);
     int shuffled_index = prime % (size - less);
@@ -167,7 +167,7 @@ check_static_begin(flat_priority_queue_test_prime_shuffle) {
     int shuffled_index = prime % (size - less);
     struct Stack_allocator allocator = stack_allocator_for(struct Val, 50);
     CCC_Flat_priority_queue flat_priority_queue
-        = CCC_flat_priority_queue_with_context_capacity(
+        = CCC_flat_priority_queue_context_with_capacity(
             struct Val, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
             &allocator, 50);
     for (int i = 0; i < size; ++i) {
@@ -209,7 +209,7 @@ check_static_begin(flat_priority_queue_test_weak_srand) {
     int const num_stack_nodes = 200;
     struct Stack_allocator allocator = stack_allocator_for(struct Val, 200);
     CCC_Flat_priority_queue flat_priority_queue
-        = CCC_flat_priority_queue_with_context_capacity(
+        = CCC_flat_priority_queue_context_with_capacity(
             struct Val, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
             &allocator, 200);
     for (int i = 0; i < num_stack_nodes; ++i) {

@@ -28,7 +28,7 @@ ccc_order_ints(CCC_Type_comparator_context const order) {
 }
 
 check_static_begin(buffer_test_push_fixed) {
-    Buffer b = buffer_with_compound_literal(0, (int[8]){});
+    Buffer b = buffer_with_storage(0, (int[8]){});
     int const push[8] = {7, 6, 5, 4, 3, 2, 1, 0};
     for (size_t i = 0; i < sizeof(push) / sizeof(*push); ++i) {
         int *p = buffer_push_back(&b, &push[i]);
@@ -63,8 +63,7 @@ check_static_begin(buffer_test_push_qsort) {
     enum : size_t {
         BUF_SORT_CAP = 32,
     };
-    Buffer b
-        = buffer_with_compound_literal(BUF_SORT_CAP, (int[BUF_SORT_CAP]){});
+    Buffer b = buffer_with_storage(BUF_SORT_CAP, (int[BUF_SORT_CAP]){});
     int ref[BUF_SORT_CAP] = {};
     iota(ref, BUF_SORT_CAP, 0);
     iota(buffer_begin(&b), BUF_SORT_CAP, 0);
@@ -95,8 +94,7 @@ check_static_begin(buffer_test_push_sort) {
     enum : size_t {
         BUF_SORT_CAP = 32,
     };
-    Buffer b
-        = buffer_with_compound_literal(BUF_SORT_CAP, (int[BUF_SORT_CAP]){});
+    Buffer b = buffer_with_storage(BUF_SORT_CAP, (int[BUF_SORT_CAP]){});
     iota(buffer_begin(&b), BUF_SORT_CAP, 0);
     rand_shuffle(buffer_sizeof_type(&b).count, buffer_begin(&b),
                  buffer_count(&b).count, &(int){0});
@@ -118,8 +116,7 @@ check_static_begin(buffer_test_insert_no_allocate) {
     enum : size_t {
         BUFINSCAP = 8,
     };
-    Buffer b = buffer_with_compound_literal(BUFINSCAP - 3,
-                                            (int[BUFINSCAP]){1, 2, 4, 5});
+    Buffer b = buffer_with_storage(BUFINSCAP - 3, (int[BUFINSCAP]){1, 2, 4, 5});
     check(buffer_count(&b).count, BUFINSCAP - 3);
     int const *const three = buffer_insert(&b, 2, &(int){3});
     check(three != NULL, CCC_TRUE);
@@ -147,8 +144,8 @@ check_static_begin(buffer_test_insert_no_allocate_fail) {
     enum : size_t {
         BUFINSCAP = 8,
     };
-    Buffer b = buffer_with_compound_literal(
-        BUFINSCAP, (int[BUFINSCAP]){0, 1, 2, 3, 4, 5, 6});
+    Buffer b
+        = buffer_with_storage(BUFINSCAP, (int[BUFINSCAP]){0, 1, 2, 3, 4, 5, 6});
     check(buffer_count(&b).count, BUFINSCAP);
     int const *const three = buffer_insert(&b, 3, &(int){3});
     check(three == NULL, CCC_TRUE);

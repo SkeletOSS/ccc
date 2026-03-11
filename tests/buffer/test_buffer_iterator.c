@@ -10,8 +10,7 @@
 #include "checkers.h"
 
 check_static_begin(buffer_test_iterator_forward) {
-    Buffer const b
-        = buffer_with_compound_literal(6, (int[6]){1, 2, 3, 4, 5, 6});
+    Buffer const b = buffer_with_storage(6, (int[6]){1, 2, 3, 4, 5, 6});
     size_t count = 0;
     int prev = 0;
     for (int const *i = buffer_begin(&b); i != buffer_end(&b);
@@ -25,8 +24,7 @@ check_static_begin(buffer_test_iterator_forward) {
 }
 
 check_static_begin(buffer_test_iterator_reverse) {
-    Buffer const b
-        = buffer_with_compound_literal(6, (int[6]){1, 2, 3, 4, 5, 6});
+    Buffer const b = buffer_with_storage(6, (int[6]){1, 2, 3, 4, 5, 6});
     size_t count = 0;
     int prev = 7;
     for (int const *i = buffer_reverse_begin(&b); i != buffer_reverse_end(&b);
@@ -40,7 +38,7 @@ check_static_begin(buffer_test_iterator_reverse) {
 }
 
 check_static_begin(buffer_test_reverse_buf) {
-    Buffer b = buffer_with_compound_literal(6, (int[6]){1, 2, 3, 4, 5, 6});
+    Buffer b = buffer_with_storage(6, (int[6]){1, 2, 3, 4, 5, 6});
     int prev = 0;
     for (int const *i = buffer_begin(&b); i != buffer_end(&b);
          i = buffer_next(&b, i)) {
@@ -70,7 +68,7 @@ check_static_begin(buffer_test_trap_rainwater_two_pointers) {
     enum : size_t {
         HCAP = 12,
     };
-    Buffer const heights = buffer_with_compound_literal(
+    Buffer const heights = buffer_with_storage(
         HCAP, (int[HCAP]){0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1});
     int const correct_trapped = 6;
     int trapped = 0;

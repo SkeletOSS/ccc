@@ -13,14 +13,14 @@
 #include "utility/stack_allocator.h"
 
 check_static_begin(array_adaptive_map_test_empty) {
-    Array_adaptive_map s = array_adaptive_map_with_compound_literal(
+    Array_adaptive_map s = array_adaptive_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     check(is_empty(&s), true);
     check_end();
 }
 
 check_static_begin(array_adaptive_map_test_with_literal) {
-    Array_adaptive_map s = array_adaptive_map_with_compound_literal(
+    Array_adaptive_map s = array_adaptive_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     check(is_empty(&s), true);
     check(capacity(&s).count, SMALL_FIXED_CAP);
@@ -28,9 +28,9 @@ check_static_begin(array_adaptive_map_test_with_literal) {
 }
 
 check_static_begin(array_adaptive_map_test_copy_no_allocate) {
-    Array_adaptive_map source = array_adaptive_map_with_compound_literal(
+    Array_adaptive_map source = array_adaptive_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
-    Array_adaptive_map destination = array_adaptive_map_with_compound_literal(
+    Array_adaptive_map destination = array_adaptive_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     (void)swap_handle(&source, &(struct Val){.id = 0});
     (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1});
@@ -56,9 +56,9 @@ check_static_begin(array_adaptive_map_test_copy_no_allocate) {
 }
 
 check_static_begin(array_adaptive_map_test_copy_no_allocate_fail) {
-    Array_adaptive_map source = array_adaptive_map_with_compound_literal(
+    Array_adaptive_map source = array_adaptive_map_with_storage(
         id, id_order, (struct Val[STANDARD_FIXED_CAP]){});
-    Array_adaptive_map destination = array_adaptive_map_with_compound_literal(
+    Array_adaptive_map destination = array_adaptive_map_with_storage(
         id, id_order, (struct Val[SMALL_FIXED_CAP]){});
     (void)swap_handle(&source, &(struct Val){.id = 0});
     (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1});
@@ -74,7 +74,7 @@ check_static_begin(array_adaptive_map_test_copy_allocate) {
     struct Stack_allocator allocator = stack_allocator_for(
         typeof(array_adaptive_map_storage_for((struct Val[SMALL_FIXED_CAP]){})),
         2);
-    Array_adaptive_map source = array_adaptive_map_with_context_capacity(
+    Array_adaptive_map source = array_adaptive_map_context_with_capacity(
         struct Val, id, id_order, stack_allocator_allocate, &allocator,
         SMALL_FIXED_CAP - 1);
     Array_adaptive_map destination
@@ -111,7 +111,7 @@ check_static_begin(array_adaptive_map_test_copy_allocate_fail) {
     struct Stack_allocator allocator = stack_allocator_for(
         typeof(array_adaptive_map_storage_for((struct Val[SMALL_FIXED_CAP]){})),
         2);
-    Array_adaptive_map source = array_adaptive_map_with_context_capacity(
+    Array_adaptive_map source = array_adaptive_map_context_with_capacity(
         struct Val, id, id_order, stack_allocator_allocate, &allocator,
         SMALL_FIXED_CAP - 1);
     Array_adaptive_map destination
@@ -207,7 +207,7 @@ check_static_begin(array_adaptive_map_test_init_with_capacity) {
     struct Stack_allocator allocator = stack_allocator_for(
         typeof(array_adaptive_map_storage_for((struct Val[SMALL_FIXED_CAP]){})),
         1);
-    Array_adaptive_map map = array_adaptive_map_with_context_capacity(
+    Array_adaptive_map map = array_adaptive_map_context_with_capacity(
         struct Val, id, id_order, stack_allocator_allocate, &allocator,
         SMALL_FIXED_CAP - 1);
     check(validate(&map), true);
@@ -239,11 +239,11 @@ check_static_begin(array_adaptive_map_test_with_allocator) {
     check_end();
 }
 
-check_static_begin(array_adaptive_map_test_with_context_allocator) {
+check_static_begin(array_adaptive_map_test_context_with_allocator) {
     struct Stack_allocator allocator = stack_allocator_for(
         typeof(array_adaptive_map_storage_for((struct Val[SMALL_FIXED_CAP]){})),
         1);
-    Array_adaptive_map map = CCC_array_adaptive_map_with_context_allocator(
+    Array_adaptive_map map = CCC_array_adaptive_map_context_with_allocator(
         struct Val, id, id_order, stack_allocator_allocate, &allocator);
     check(validate(&map), true);
     check(array_adaptive_map_reserve(&map, SMALL_FIXED_CAP - 1,
@@ -274,7 +274,7 @@ check_static_begin(array_adaptive_map_test_init_with_capacity_no_op) {
     struct Stack_allocator allocator = stack_allocator_for(
         typeof(array_adaptive_map_storage_for((struct Val[SMALL_FIXED_CAP]){})),
         1);
-    Array_adaptive_map map = array_adaptive_map_with_context_capacity(
+    Array_adaptive_map map = array_adaptive_map_context_with_capacity(
         struct Val, id, id_order, stack_allocator_allocate, &allocator, 0);
     check(validate(&map), true);
     check(array_adaptive_map_capacity(&map).count, 0);
@@ -326,7 +326,7 @@ main(void) {
     return check_run(array_adaptive_map_test_empty(),
                      array_adaptive_map_test_with_literal(),
                      array_adaptive_map_test_with_allocator(),
-                     array_adaptive_map_test_with_context_allocator(),
+                     array_adaptive_map_test_context_with_allocator(),
                      array_adaptive_map_test_copy_no_allocate(),
                      array_adaptive_map_test_copy_no_allocate_fail(),
                      array_adaptive_map_test_copy_allocate(),

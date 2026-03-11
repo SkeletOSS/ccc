@@ -338,7 +338,7 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
         private_array_compound_literal)
 
 /** @internal Initializes the flat hash map with the specified capacity. */
-#define CCC_private_flat_hash_map_with_context_capacity(                       \
+#define CCC_private_flat_hash_map_context_with_capacity(                       \
     private_type_name, private_key_field, private_hash, private_key_compare,   \
     private_allocate, private_context, private_cap)                            \
     (__extension__({                                                           \
@@ -354,12 +354,12 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
 #define CCC_private_flat_hash_map_with_capacity(                               \
     private_type_name, private_key_field, private_hash, private_key_compare,   \
     private_allocate, private_cap)                                             \
-    CCC_private_flat_hash_map_with_context_capacity(                           \
+    CCC_private_flat_hash_map_context_with_capacity(                           \
         private_type_name, private_key_field, private_hash,                    \
         private_key_compare, private_allocate, NULL, private_cap)
 
 /** @internal We can cut out boilerplate by assuming fixed size map. */
-#define CCC_private_flat_hash_map_with_context_compound_literal(               \
+#define CCC_private_flat_hash_map_context_with_storage(                        \
     private_key_field, private_hash, private_key_compare, private_context,     \
     private_compound_literal, private_optional_storage_specifier...)           \
     {                                                                          \
@@ -384,15 +384,15 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
     }
 
 /** @internal We can cut out boilerplate by assuming fixed size map. */
-#define CCC_private_flat_hash_map_with_compound_literal(                       \
+#define CCC_private_flat_hash_map_with_storage(                                \
     private_key_field, private_hash, private_key_compare,                      \
     private_compound_literal, private_optional_storage_specifier...)           \
-    CCC_private_flat_hash_map_with_context_compound_literal(                   \
+    CCC_private_flat_hash_map_context_with_storage(                            \
         private_key_field, private_hash, private_key_compare, NULL,            \
         private_compound_literal, private_optional_storage_specifier)
 
 /** @internal */
-#define CCC_private_flat_hash_map_with_context_allocator(                      \
+#define CCC_private_flat_hash_map_context_with_allocator(                      \
     private_type_name, private_key_field, private_hash, private_key_compare,   \
     private_allocate, private_context)                                         \
     CCC_private_flat_hash_map_for(private_type_name, private_key_field,        \
@@ -403,7 +403,7 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
 #define CCC_private_flat_hash_map_with_allocator(                              \
     private_type_name, private_key_field, private_hash, private_key_compare,   \
     private_allocate)                                                          \
-    CCC_private_flat_hash_map_with_context_allocator(                          \
+    CCC_private_flat_hash_map_context_with_allocator(                          \
         private_type_name, private_key_field, private_hash,                    \
         private_key_compare, private_allocate, NULL)
 

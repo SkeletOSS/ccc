@@ -32,9 +32,9 @@ check_static_begin(singly_linked_list_test_with_allocator) {
     check_end();
 }
 
-check_static_begin(singly_linked_list_test_with_context_allocator) {
+check_static_begin(singly_linked_list_test_context_with_allocator) {
     struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
-    CCC_Singly_linked_list list = singly_linked_list_with_context_allocator(
+    CCC_Singly_linked_list list = singly_linked_list_context_with_allocator(
         struct Val, e, val_order, stack_allocator_allocate, &allocator);
     check(CCC_singly_linked_list_validate(&list), true);
     struct Val const *const v
@@ -99,6 +99,6 @@ main(void) {
                      singly_linked_list_test_constructor_copy(),
                      singly_linked_list_test_construct_from(),
                      singly_linked_list_test_with_allocator(),
-                     singly_linked_list_test_with_context_allocator(),
+                     singly_linked_list_test_context_with_allocator(),
                      singly_linked_list_test_construct_from_fail());
 }

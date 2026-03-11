@@ -12,7 +12,7 @@
 #include "utility/random.h"
 
 check_static_begin(buffer_test_push_pop_fixed) {
-    Buffer b = buffer_with_compound_literal(0, (int[8]){});
+    Buffer b = buffer_with_storage(0, (int[8]){});
     int const push[8] = {7, 6, 5, 4, 3, 2, 1, 0};
     size_t count = 0;
     for (size_t i = 0; i < sizeof(push) / sizeof(*push); ++i) {
@@ -69,12 +69,12 @@ check_static_begin(buffer_test_daily_temperatures) {
     enum : size_t {
         TMPCAP = 8,
     };
-    Buffer const temps = buffer_with_compound_literal(
+    Buffer const temps = buffer_with_storage(
         TMPCAP, (int[TMPCAP]){73, 74, 75, 71, 69, 72, 76, 73});
-    Buffer const correct = buffer_with_compound_literal(
-        TMPCAP, (int[TMPCAP]){1, 1, 4, 2, 1, 1, 0, 0});
-    Buffer res = buffer_with_compound_literal(TMPCAP, (int[TMPCAP]){});
-    Buffer idx_stack = buffer_with_compound_literal(0, (int[TMPCAP]){});
+    Buffer const correct
+        = buffer_with_storage(TMPCAP, (int[TMPCAP]){1, 1, 4, 2, 1, 1, 0, 0});
+    Buffer res = buffer_with_storage(TMPCAP, (int[TMPCAP]){});
+    Buffer idx_stack = buffer_with_storage(0, (int[TMPCAP]){});
     for (int i = 0, end = (int)buffer_count(&temps).count; i < end; ++i) {
         while (!buffer_is_empty(&idx_stack)
                && *buffer_as(&temps, int, i) > *buffer_as(
@@ -113,12 +113,12 @@ check_static_begin(buffer_test_car_fleet) {
         CARCAP = 5,
     };
     Buffer positions
-        = buffer_with_compound_literal(CARCAP, (int[CARCAP]){10, 8, 0, 5, 3});
+        = buffer_with_storage(CARCAP, (int[CARCAP]){10, 8, 0, 5, 3});
     Buffer const speeds
-        = buffer_with_compound_literal(CARCAP, (int[CARCAP]){2, 4, 1, 1, 3});
+        = buffer_with_storage(CARCAP, (int[CARCAP]){2, 4, 1, 1, 3});
     int const correct_fleet_count = 3;
-    Buffer car_idx = buffer_with_context_compound_literal(&positions, CARCAP,
-                                                          (int[CARCAP]){});
+    Buffer car_idx
+        = buffer_context_with_storage(&positions, CARCAP, (int[CARCAP]){});
     iota(buffer_begin(&car_idx), CARCAP, 0);
     sort(&car_idx, order_car_idx, &(int){0});
     int target = 12;
@@ -146,10 +146,10 @@ check_static_begin(buffer_test_largest_rectangle_in_histogram) {
         HCAP = 6,
     };
     Buffer const heights
-        = buffer_with_compound_literal(HCAP, (int[HCAP]){2, 1, 5, 6, 2, 3});
+        = buffer_with_storage(HCAP, (int[HCAP]){2, 1, 5, 6, 2, 3});
     int const correct_max_rectangle = 10;
     int max_rectangle = 0;
-    Buffer bar_indices = buffer_with_compound_literal(0, (int[HCAP]){});
+    Buffer bar_indices = buffer_with_storage(0, (int[HCAP]){});
     for (int i = 0, end = buffer_count(&heights).count; i <= end; ++i) {
         while (!buffer_is_empty(&bar_indices)
                && (i == end
@@ -175,8 +175,7 @@ check_static_begin(buffer_test_erase) {
     enum : size_t {
         BECAP = 8,
     };
-    Buffer b = buffer_with_compound_literal(
-        BECAP, (int[BECAP]){0, 1, 2, 3, 4, 5, 6, 7});
+    Buffer b = buffer_with_storage(BECAP, (int[BECAP]){0, 1, 2, 3, 4, 5, 6, 7});
     check(buffer_count(&b).count, BECAP);
     CCC_Result r = buffer_erase(&b, 4);
     check(r, CCC_RESULT_OK);

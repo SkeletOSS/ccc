@@ -13,7 +13,7 @@
 #include "utility/random.h"
 
 check_static_begin(flat_hash_map_test_erase) {
-    CCC_Flat_hash_map fh = flat_hash_map_with_compound_literal(
+    CCC_Flat_hash_map fh = flat_hash_map_with_storage(
         key, flat_hash_map_int_zero, flat_hash_map_id_order,
         (struct Val[SMALL_FIXED_CAP]){});
     struct Val query = {.key = 137, .val = 99};
@@ -81,7 +81,7 @@ check_static_begin(flat_hash_map_test_shuffle_insert_erase) {
 
 /* This test will force us to test our in place hashing algorithm. */
 check_static_begin(flat_hash_map_test_shuffle_erase_fixed) {
-    CCC_Flat_hash_map h = flat_hash_map_with_compound_literal(
+    CCC_Flat_hash_map h = flat_hash_map_with_storage(
         key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
         (struct Val[STANDARD_FIXED_CAP]){});
     int to_insert[STANDARD_FIXED_CAP];

@@ -195,7 +195,7 @@ allocator and supplementary context.
 @param[in] context any additional context needed for comparison or allocation.
 @return the map directly initialized on the right hand side of the equality
 operator (e.g. CCC_Adaptive_map map =
-CCC_adaptive_map_with_context_allocator(...);)
+CCC_adaptive_map_context_with_allocator(...);)
 
 Initialize a dynamic map at compile time.
 
@@ -207,7 +207,7 @@ struct Val
     int key;
     int val;
 };
-static Adaptive_map map = adaptive_map_with_context_allocator(
+static Adaptive_map map = adaptive_map_context_with_allocator(
     struct Val,
     node,
     key,
@@ -218,10 +218,10 @@ static Adaptive_map map = adaptive_map_with_context_allocator(
 ```
 
 This can help eliminate boilerplate in initializers. */
-#define CCC_adaptive_map_with_context_allocator(                               \
+#define CCC_adaptive_map_context_with_allocator(                               \
     type_name, type_intruder_field, type_key_field, compare, allocate,         \
     context)                                                                   \
-    CCC_private_adaptive_map_with_context_allocator(                           \
+    CCC_private_adaptive_map_context_with_allocator(                           \
         type_name, type_intruder_field, type_key_field, compare, allocate,     \
         context)
 
@@ -809,8 +809,8 @@ typedef CCC_Adaptive_map_entry Adaptive_map_entry;
 #    define adaptive_map_for(arguments...) CCC_adaptive_map_for(arguments)
 #    define adaptive_map_with_allocator(arguments...)                          \
         CCC_adaptive_map_with_allocator(arguments)
-#    define adaptive_map_with_context_allocator(arguments...)                  \
-        CCC_adaptive_map_with_context_allocator(arguments)
+#    define adaptive_map_context_with_allocator(arguments...)                  \
+        CCC_adaptive_map_context_with_allocator(arguments)
 #    define adaptive_map_from(arguments...) CCC_adaptive_map_from(arguments)
 #    define adaptive_map_context_from(arguments...)                            \
         CCC_adaptive_map_context_from(arguments)

@@ -9,7 +9,7 @@
 #include "utility/stack_allocator.h"
 
 check_static_begin(buffer_test_empty) {
-    Buffer b = buffer_with_compound_literal(0, (int[5]){});
+    Buffer b = buffer_with_storage(0, (int[5]){});
     check(buffer_count(&b).count, 0);
     check(buffer_capacity(&b).count, 5);
     int const *const i = buffer_at(&b, 0);
@@ -19,7 +19,7 @@ check_static_begin(buffer_test_empty) {
 }
 
 check_static_begin(buffer_test_fixed) {
-    Buffer b = buffer_with_compound_literal(0, (int[5]){});
+    Buffer b = buffer_with_storage(0, (int[5]){});
     check(buffer_count(&b).count, 0);
     check(buffer_capacity(&b).count, 5);
     int const *const i = buffer_at(&b, 0);
@@ -29,7 +29,7 @@ check_static_begin(buffer_test_fixed) {
 }
 
 check_static_begin(buffer_test_full) {
-    Buffer b = buffer_with_compound_literal(5, (int[5]){0, 1, 2, 3, 4});
+    Buffer b = buffer_with_storage(5, (int[5]){0, 1, 2, 3, 4});
     check(buffer_count(&b).count, 5);
     check(buffer_capacity(&b).count, 5);
     int const *const i = buffer_at(&b, 2);
@@ -39,7 +39,7 @@ check_static_begin(buffer_test_full) {
 }
 
 check_static_begin(buffer_test_fixed_full) {
-    Buffer b = buffer_with_compound_literal(5, (int[5]){0, 1, 2, 3, 4});
+    Buffer b = buffer_with_storage(5, (int[5]){0, 1, 2, 3, 4});
     check(buffer_count(&b).count, 5);
     check(buffer_capacity(&b).count, 5);
     int const *const i = buffer_at(&b, 2);
@@ -57,8 +57,8 @@ check_static_begin(buffer_test_reserve) {
 }
 
 check_static_begin(buffer_test_copy_no_allocate) {
-    Buffer source = buffer_with_compound_literal(5, (int[5]){0, 1, 2, 3, 4});
-    Buffer destination = buffer_with_compound_literal(0, (int[10]){});
+    Buffer source = buffer_with_storage(5, (int[5]){0, 1, 2, 3, 4});
+    Buffer destination = buffer_with_storage(0, (int[10]){});
     check(buffer_count(&destination).count, 0);
     check(buffer_capacity(&destination).count, 10);
     CCC_Result const r = buffer_copy(&destination, &source, NULL);
@@ -69,8 +69,8 @@ check_static_begin(buffer_test_copy_no_allocate) {
 }
 
 check_static_begin(buffer_test_copy_no_allocate_fail) {
-    Buffer source = buffer_with_compound_literal(3, (int[3]){0, 1, 2});
-    Buffer bad_destination = buffer_with_compound_literal(0, (int[2]){});
+    Buffer source = buffer_with_storage(3, (int[3]){0, 1, 2});
+    Buffer bad_destination = buffer_with_storage(0, (int[2]){});
     check(buffer_count(&source).count, 3);
     check(buffer_is_empty(&bad_destination), CCC_TRUE);
     CCC_Result res = buffer_copy(&bad_destination, &source, NULL);
@@ -166,9 +166,9 @@ check_static_begin(buffer_test_with_allocator) {
     check_end();
 }
 
-check_static_begin(buffer_test_with_context_allocator) {
+check_static_begin(buffer_test_context_with_allocator) {
     struct Stack_allocator allocator = stack_allocator_for(int, 8);
-    CCC_Buffer b = CCC_buffer_with_context_allocator(
+    CCC_Buffer b = CCC_buffer_context_with_allocator(
         int, stack_allocator_allocate, &allocator);
     check(CCC_buffer_is_empty(&b), CCC_TRUE);
     check(CCC_buffer_reserve(&b, 8, stack_allocator_allocate), CCC_RESULT_OK);
@@ -202,5 +202,5 @@ main(void) {
         buffer_test_copy_allocate(), buffer_test_copy_allocate_fail(),
         buffer_test_init_from(), buffer_test_init_from_fail(),
         buffer_test_init_with_capacity(), buffer_test_init_with_capacity_fail(),
-        buffer_test_with_allocator(), buffer_test_with_context_allocator());
+        buffer_test_with_allocator(), buffer_test_context_with_allocator());
 }

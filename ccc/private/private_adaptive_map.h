@@ -206,7 +206,7 @@ void *CCC_private_adaptive_map_insert(struct CCC_Adaptive_map *,
         private_compound_literal_array)
 
 /** @internal */
-#define CCC_private_adaptive_map_with_context_allocator(                       \
+#define CCC_private_adaptive_map_context_with_allocator(                       \
     private_struct_name, private_node_node_field, private_key_node_field,      \
     private_key_comparator, private_allocate, private_context)                 \
     CCC_private_adaptive_map_for(                                              \

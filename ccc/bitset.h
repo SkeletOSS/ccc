@@ -114,7 +114,7 @@ the scope it is created with any storage specifier specifiers added.
 This method can be used for compile time initialization of bit set. For example:
 
 ```
-static CCC_Bitset b = CCC_bitset_with_compound_literal(
+static CCC_Bitset b = CCC_bitset_with_storage(
     256,
     CCC_bitset_storage_for(256, static),
 );
@@ -126,7 +126,7 @@ If the compiler does not support storage specifier of compound literals the more
 traditional example follows:
 
 ```
-static CCC_Bitset b = CCC_bitset_with_compound_literal(
+static CCC_Bitset b = CCC_bitset_with_storage(
     256,
     CCC_bitset_storage_for(256),
 );
@@ -315,7 +315,7 @@ A fixed size bit set with size equal to capacity.
 int
 main(void)
 {
-    Bitset bitset = bitset_with_context_capacity(arena_allocate, &arena, 4096);
+    Bitset bitset = bitset_context_with_capacity(arena_allocate, &arena, 4096);
 }
 ```
 A bit set with dynamic push and pop.
@@ -326,15 +326,15 @@ int
 main(void)
 {
     Bitset bitset
-        = bitset_with_context_capacity(arena_allocate, &arena, 4096, 0);
+        = bitset_context_with_capacity(arena_allocate, &arena, 4096, 0);
 }
 ```
 
 This initialization can only be used at runtime. See the normal initializer for
 static and stack based initialization options. */
-#define CCC_bitset_with_context_capacity(allocate, context, capacity,          \
+#define CCC_bitset_context_with_capacity(allocate, context, capacity,          \
                                          optional_count...)                    \
-    CCC_private_bitset_with_context_capacity(allocate, context, capacity,      \
+    CCC_private_bitset_context_with_capacity(allocate, context, capacity,      \
                                              optional_count)
 
 /** @brief Initialize the bit set with a starting capacity and size at runtime
@@ -353,15 +353,15 @@ A fixed size bit set.
 
 ```
 #define BITSET_USING_NAMESPACE_CCC
-static Bitset bitset = bitset_with_compound_literal(
+static Bitset bitset = bitset_with_storage(
     4096,
     bitset_storage_for(4096, static)
 );
 ```
 
 This saves some initialization boilerplate. */
-#define CCC_bitset_with_compound_literal(count, compound_literal_array)        \
-    CCC_private_bitset_with_compound_literal(count, compound_literal_array)
+#define CCC_bitset_with_storage(count, compound_literal_array)                 \
+    CCC_private_bitset_with_storage(count, compound_literal_array)
 
 /** @brief Initialize the bit set with a starting capacity and size at runtime
 or compile time with no allocation permissions from a compound literal of bitset
@@ -379,7 +379,7 @@ A fixed size bit set.
 
 ```
 #define BITSET_USING_NAMESPACE_CCC
-static Bitset bitset = bitset_with_context_compound_literal(
+static Bitset bitset = bitset_context_with_storage(
     &module_context,
     4096,
     bitset_storage_for(4096, static)
@@ -387,10 +387,10 @@ static Bitset bitset = bitset_with_context_compound_literal(
 ```
 
 This saves some initialization boilerplate. */
-#define CCC_bitset_with_context_compound_literal(context, count,               \
-                                                 compound_literal_array)       \
-    CCC_private_bitset_with_context_compound_literal(context, count,           \
-                                                     compound_literal_array)
+#define CCC_bitset_context_with_storage(context, count,                        \
+                                        compound_literal_array)                \
+    CCC_private_bitset_context_with_storage(context, count,                    \
+                                            compound_literal_array)
 
 /** @brief Initialize an empty dynamic bit set at compile or runtime with an
 allocator.
@@ -422,8 +422,8 @@ static Bitset bitset = bitset_with_allocator(arena_allocate, &arena);
 ```
 
 This saves some initialization boilerplate. */
-#define CCC_bitset_with_context_allocator(allocator, context)                  \
-    CCC_private_bitset_with_context_allocator(allocator, context)
+#define CCC_bitset_context_with_allocator(allocator, context)                  \
+    CCC_private_bitset_context_with_allocator(allocator, context)
 
 /** @brief Copy the bit set at source to destination.
 @param[in] destination the initialized destination for the copy of the source
@@ -1151,16 +1151,15 @@ typedef CCC_Bitset Bitset;
 #    define bitset_context_from(arguments...) CCC_bitset_context_from(arguments)
 #    define bitset_with_capacity(arguments...)                                 \
         CCC_bitset_with_capacity(arguments)
-#    define bitset_with_context_capacity(arguments...)                         \
-        CCC_bitset_with_context_capacity(arguments)
-#    define bitset_with_compound_literal(arguments...)                         \
-        CCC_bitset_with_compound_literal(arguments)
-#    define bitset_with_context_compound_literal(arguments...)                 \
-        CCC_bitset_with_context_compound_literal(arguments)
+#    define bitset_context_with_capacity(arguments...)                         \
+        CCC_bitset_context_with_capacity(arguments)
+#    define bitset_with_storage(arguments...) CCC_bitset_with_storage(arguments)
+#    define bitset_context_with_storage(arguments...)                          \
+        CCC_bitset_context_with_storage(arguments)
 #    define bitset_with_allocator(arguments...)                                \
         CCC_bitset_with_allocator(arguments)
-#    define bitset_with_context_allocator(arguments...)                        \
-        CCC_bitset_with_context_allocator(arguments)
+#    define bitset_context_with_allocator(arguments...)                        \
+        CCC_bitset_context_with_allocator(arguments)
 #    define bitset_copy(arguments...) CCC_bitset_copy(arguments)
 #    define bitset_reserve(arguments...) CCC_bitset_reserve(arguments)
 #    define bitset_test(arguments...) CCC_bitset_test(arguments)
