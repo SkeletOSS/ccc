@@ -143,14 +143,14 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a37b97874955113b929e6d121fd63f52e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__adaptive__map_8h.html#a37b97874955113b929e6d121fd63f52e">CCC_private_adaptive_map_initialize</a>( private_struct_name,  private_node_node_field,  private_key_node_field,  private_key_comparator,  private_allocate,  private_context)</td></tr>
-<tr class="separator:a37b97874955113b929e6d121fd63f52e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19d826722542ce833d9fe42ee35b9deb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__adaptive__map_8h.html#a19d826722542ce833d9fe42ee35b9deb">CCC_private_adaptive_map_for</a>( private_struct_name,  private_node_node_field,  private_key_node_field,  private_key_comparator,  private_allocate,  private_context)</td></tr>
+<tr class="separator:a19d826722542ce833d9fe42ee35b9deb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a720115f5638639aa5b727b7a1585b784"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__adaptive__map_8h.html#a720115f5638639aa5b727b7a1585b784">CCC_private_adaptive_map_context_from</a>( private_type_intruder_field_name,  private_key_field_name,  private_compare,  private_allocate,  private_destroy,  private_context,  private_compound_literal_array...)</td></tr>
 <tr class="separator:a720115f5638639aa5b727b7a1585b784"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f6838fb96097c835fb4e9c6ff304a02"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__adaptive__map_8h.html#a6f6838fb96097c835fb4e9c6ff304a02">CCC_private_adaptive_map_from</a>( private_type_intruder_field_name,  private_key_field_name,  private_compare,  private_allocate,  private_destroy,  private_compound_literal_array...)</td></tr>
 <tr class="separator:a6f6838fb96097c835fb4e9c6ff304a02"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af95c16ab99b7b5d18e20bf62abd99886"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__adaptive__map_8h.html#af95c16ab99b7b5d18e20bf62abd99886">CCC_private_adaptive_map_with_context_allocator</a>( private_struct_name,  private_node_node_field,  private_key_node_field,  private_key_comparator,  private_allocate,  private_context)</td></tr>
-<tr class="separator:af95c16ab99b7b5d18e20bf62abd99886"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8534f542ec92e4711e438607406ec399"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__adaptive__map_8h.html#a8534f542ec92e4711e438607406ec399">CCC_private_adaptive_map_context_with_allocator</a>( private_struct_name,  private_node_node_field,  private_key_node_field,  private_key_comparator,  private_allocate,  private_context)</td></tr>
+<tr class="separator:a8534f542ec92e4711e438607406ec399"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad3036ea1c1fc7b3c2728da8b77ed6bc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__adaptive__map_8h.html#aad3036ea1c1fc7b3c2728da8b77ed6bc">CCC_private_adaptive_map_with_allocator</a>( private_struct_name,  private_node_node_field,  private_key_node_field,  private_key_comparator,  private_allocate)</td></tr>
 <tr class="separator:aad3036ea1c1fc7b3c2728da8b77ed6bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a4c337ed65179dea6fab8147c89e4b3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__adaptive__map_8h.html#a3a4c337ed65179dea6fab8147c89e4b3">CCC_private_adaptive_map_new</a>(adaptive_map_entry)</td></tr>
@@ -296,6 +296,125 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a8534f542ec92e4711e438607406ec399" name="a8534f542ec92e4711e438607406ec399"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8534f542ec92e4711e438607406ec399">&#9670;&#160;</a></span>CCC_private_adaptive_map_context_with_allocator</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CCC_private_adaptive_map_context_with_allocator</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_struct_name, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_node_node_field, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_key_node_field, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_key_comparator, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_allocate, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_context&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__adaptive__map_8h.html#a19d826722542ce833d9fe42ee35b9deb">CCC_private_adaptive_map_for</a>(                                              \</div>
+<div class="line">        private_struct_name, private_node_node_field, private_key_node_field,  \</div>
+<div class="line">        private_key_comparator, private_allocate, private_context)</div>
+<div class="ttc" id="aprivate__adaptive__map_8h_html_a19d826722542ce833d9fe42ee35b9deb"><div class="ttname"><a href="private__adaptive__map_8h.html#a19d826722542ce833d9fe42ee35b9deb">CCC_private_adaptive_map_for</a></div><div class="ttdeci">#define CCC_private_adaptive_map_for( private_struct_name, private_node_node_field, private_key_node_field, private_key_comparator, private_allocate, private_context)</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:125</div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a19d826722542ce833d9fe42ee35b9deb" name="a19d826722542ce833d9fe42ee35b9deb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19d826722542ce833d9fe42ee35b9deb">&#9670;&#160;</a></span>CCC_private_adaptive_map_for</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CCC_private_adaptive_map_for</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_struct_name, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_node_node_field, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_key_node_field, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_key_comparator, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_allocate, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">private_context&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    {                                                                          \</div>
+<div class="line">        .root = NULL,                                                          \</div>
+<div class="line">        .compare = (private_key_comparator),                                   \</div>
+<div class="line">        .allocate = (private_allocate),                                        \</div>
+<div class="line">        .context = (private_context),                                          \</div>
+<div class="line">        .size = 0,                                                             \</div>
+<div class="line">        .sizeof_type = <span class="keyword">sizeof</span>(private_struct_name),                            \</div>
+<div class="line">        .type_intruder_offset                                                  \</div>
+<div class="line">        = offsetof(private_struct_name, private_node_node_field),              \</div>
+<div class="line">        .key_offset = offsetof(private_struct_name, private_key_node_field),   \</div>
+<div class="line">    }</div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="a6f6838fb96097c835fb4e9c6ff304a02" name="a6f6838fb96097c835fb4e9c6ff304a02"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6f6838fb96097c835fb4e9c6ff304a02">&#9670;&#160;</a></span>CCC_private_adaptive_map_from</h2>
 
@@ -350,69 +469,6 @@ Functions</h2></td></tr>
 <div class="line">        private_compare, private_allocate, private_destroy, NULL,              \</div>
 <div class="line">        private_compound_literal_array)</div>
 <div class="ttc" id="aprivate__adaptive__map_8h_html_a720115f5638639aa5b727b7a1585b784"><div class="ttname"><a href="private__adaptive__map_8h.html#a720115f5638639aa5b727b7a1585b784">CCC_private_adaptive_map_context_from</a></div><div class="ttdeci">#define CCC_private_adaptive_map_context_from( private_type_intruder_field_name, private_key_field_name, private_compare, private_allocate, private_destroy, private_context, private_compound_literal_array...)</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:141</div></div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a37b97874955113b929e6d121fd63f52e" name="a37b97874955113b929e6d121fd63f52e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a37b97874955113b929e6d121fd63f52e">&#9670;&#160;</a></span>CCC_private_adaptive_map_initialize</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_private_adaptive_map_initialize</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">private_struct_name, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">private_node_node_field, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">private_key_node_field, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">private_key_comparator, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">private_allocate, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">private_context&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    {                                                                          \</div>
-<div class="line">        .root = NULL,                                                          \</div>
-<div class="line">        .compare = (private_key_comparator),                                   \</div>
-<div class="line">        .allocate = (private_allocate),                                        \</div>
-<div class="line">        .context = (private_context),                                          \</div>
-<div class="line">        .size = 0,                                                             \</div>
-<div class="line">        .sizeof_type = <span class="keyword">sizeof</span>(private_struct_name),                            \</div>
-<div class="line">        .type_intruder_offset                                                  \</div>
-<div class="line">        = offsetof(private_struct_name, private_node_node_field),              \</div>
-<div class="line">        .key_offset = offsetof(private_struct_name, private_key_node_field),   \</div>
-<div class="line">    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -472,7 +528,7 @@ Functions</h2></td></tr>
 <div class="line">                    om_insert_entry.map, private_adaptive_map_new_ins_base));  \</div>
 <div class="line">        }                                                                      \</div>
 <div class="line">    }))</div>
-<div class="ttc" id="aprivate__adaptive__map_8h_html_a3a4c337ed65179dea6fab8147c89e4b3"><div class="ttname"><a href="private__adaptive__map_8h.html#a3a4c337ed65179dea6fab8147c89e4b3">CCC_private_adaptive_map_new</a></div><div class="ttdeci">#define CCC_private_adaptive_map_new(adaptive_map_entry)</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:226</div></div>
+<div class="ttc" id="aprivate__adaptive__map_8h_html_a3a4c337ed65179dea6fab8147c89e4b3"><div class="ttname"><a href="private__adaptive__map_8h.html#a3a4c337ed65179dea6fab8147c89e4b3">CCC_private_adaptive_map_new</a></div><div class="ttdeci">#define CCC_private_adaptive_map_new(adaptive_map_entry)</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:225</div></div>
 <div class="ttc" id="aprivate__adaptive__map_8h_html_a7591c171cc0734ef8837b6284a96631a"><div class="ttname"><a href="private__adaptive__map_8h.html#a7591c171cc0734ef8837b6284a96631a">CCC_private_adaptive_map_insert</a></div><div class="ttdeci">void * CCC_private_adaptive_map_insert(struct CCC_Adaptive_map *, struct CCC_Adaptive_map_node *)</div></div>
 <div class="ttc" id="aprivate__adaptive__map_8h_html_a941a7bd43f42767fdd51c1c33d422926"><div class="ttname"><a href="private__adaptive__map_8h.html#a941a7bd43f42767fdd51c1c33d422926">CCC_private_adaptive_map_key_in_slot</a></div><div class="ttdeci">void * CCC_private_adaptive_map_key_in_slot(struct CCC_Adaptive_map const *, void const *)</div></div>
 <div class="ttc" id="aprivate__adaptive__map_8h_html_abcdf48400d9282e86637fd230b82e224"><div class="ttname"><a href="private__adaptive__map_8h.html#abcdf48400d9282e86637fd230b82e224">CCC_private_adaptive_map_node_in_slot</a></div><div class="ttdeci">struct CCC_Adaptive_map_node * CCC_private_adaptive_map_node_in_slot(struct CCC_Adaptive_map const *, void const *)</div></div>
@@ -766,65 +822,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__adaptive__map_8h.html#a37b97874955113b929e6d121fd63f52e">CCC_private_adaptive_map_initialize</a>(                                       \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__adaptive__map_8h.html#a19d826722542ce833d9fe42ee35b9deb">CCC_private_adaptive_map_for</a>(                                              \</div>
 <div class="line">        private_struct_name, private_node_node_field, private_key_node_field,  \</div>
 <div class="line">        private_key_comparator, private_allocate, NULL)</div>
-<div class="ttc" id="aprivate__adaptive__map_8h_html_a37b97874955113b929e6d121fd63f52e"><div class="ttname"><a href="private__adaptive__map_8h.html#a37b97874955113b929e6d121fd63f52e">CCC_private_adaptive_map_initialize</a></div><div class="ttdeci">#define CCC_private_adaptive_map_initialize( private_struct_name, private_node_node_field, private_key_node_field, private_key_comparator, private_allocate, private_context)</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:125</div></div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="af95c16ab99b7b5d18e20bf62abd99886" name="af95c16ab99b7b5d18e20bf62abd99886"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af95c16ab99b7b5d18e20bf62abd99886">&#9670;&#160;</a></span>CCC_private_adaptive_map_with_context_allocator</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_private_adaptive_map_with_context_allocator</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">private_struct_name, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">private_node_node_field, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">private_key_node_field, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">private_key_comparator, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">private_allocate, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">private_context&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__adaptive__map_8h.html#a37b97874955113b929e6d121fd63f52e">CCC_private_adaptive_map_initialize</a>(                                       \</div>
-<div class="line">        private_struct_name, private_node_node_field, private_key_node_field,  \</div>
-<div class="line">        private_key_comparator, private_allocate, private_context)</div>
 </div><!-- fragment -->
 </div>
 </div>

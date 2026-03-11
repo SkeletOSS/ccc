@@ -139,9 +139,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Initialization Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Initialize the container with memory, callbacks, and permissions. </p>
 </td></tr>
-<tr class="memitem:aa8f825bc58415d1b89ae99c7a44dec85"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#aa8f825bc58415d1b89ae99c7a44dec85">CCC_buffer_initialize</a>(type_name,  allocate,  context,  capacity,  count,  data_pointer...)</td></tr>
-<tr class="memdesc:aa8f825bc58415d1b89ae99c7a44dec85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a contiguous Buffer of user a specified type, allocation policy, capacity, and optional starting size.  <br /></td></tr>
-<tr class="separator:aa8f825bc58415d1b89ae99c7a44dec85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86513108202eb0dd7f87fa0237a9e371"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a86513108202eb0dd7f87fa0237a9e371">CCC_buffer_for</a>(type_name,  allocate,  context,  capacity,  count,  data_pointer...)</td></tr>
+<tr class="memdesc:a86513108202eb0dd7f87fa0237a9e371"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a contiguous Buffer of user a specified type, allocation policy, capacity, and optional starting size.  <br /></td></tr>
+<tr class="separator:a86513108202eb0dd7f87fa0237a9e371"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb6971f97fa83e1a45a955aeec86dd6e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#adb6971f97fa83e1a45a955aeec86dd6e">CCC_buffer_from</a>(allocate,  optional_capacity,  compound_literal_array...)&#160;&#160;&#160;    CCC_private_buffer_from(allocate, optional_capacity, compound_literal_array)</td></tr>
 <tr class="memdesc:adb6971f97fa83e1a45a955aeec86dd6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a Buffer from a compound literal array initializer.  <br /></td></tr>
 <tr class="separator:adb6971f97fa83e1a45a955aeec86dd6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -151,21 +151,21 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:adb20e5d248069330702b80c19c0f9c58"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#adb20e5d248069330702b80c19c0f9c58">CCC_buffer_with_capacity</a>(type_name,  allocate,  capacity)&#160;&#160;&#160;    CCC_private_buffer_with_capacity(type_name, allocate, capacity)</td></tr>
 <tr class="memdesc:adb20e5d248069330702b80c19c0f9c58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a Buffer with a capacity.  <br /></td></tr>
 <tr class="separator:adb20e5d248069330702b80c19c0f9c58"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6859367074baf5c4995f9ae30b950311"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a6859367074baf5c4995f9ae30b950311">CCC_buffer_with_context_capacity</a>(type_name,  allocate,  context,  capacity)</td></tr>
-<tr class="memdesc:a6859367074baf5c4995f9ae30b950311"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a Buffer with a capacity.  <br /></td></tr>
-<tr class="separator:a6859367074baf5c4995f9ae30b950311"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ccfcf4af060e2069d711f7933925fa8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a9ccfcf4af060e2069d711f7933925fa8">CCC_buffer_with_compound_literal</a>(count,  compound_literal_array...)&#160;&#160;&#160;    CCC_private_buffer_with_compound_literal(count, compound_literal_array)</td></tr>
-<tr class="memdesc:a9ccfcf4af060e2069d711f7933925fa8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a contiguous Buffer of user a specified type of fixed capacity with no allocation permission or context.  <br /></td></tr>
-<tr class="separator:a9ccfcf4af060e2069d711f7933925fa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93ecd88b73c7b78721aaee93c1983647"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a93ecd88b73c7b78721aaee93c1983647">CCC_buffer_with_context_compound_literal</a>(context,  count,  compound_literal_array...)</td></tr>
-<tr class="memdesc:a93ecd88b73c7b78721aaee93c1983647"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a contiguous Buffer of user a specified type of fixed capacity with no allocation permission.  <br /></td></tr>
-<tr class="separator:a93ecd88b73c7b78721aaee93c1983647"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c321cf5311ef57f693fda5f3ba71a33"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a8c321cf5311ef57f693fda5f3ba71a33">CCC_buffer_context_with_capacity</a>(type_name,  allocate,  context,  capacity)</td></tr>
+<tr class="memdesc:a8c321cf5311ef57f693fda5f3ba71a33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a Buffer with a capacity.  <br /></td></tr>
+<tr class="separator:a8c321cf5311ef57f693fda5f3ba71a33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6284aa558aec89f87298c459176b595"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#ad6284aa558aec89f87298c459176b595">CCC_buffer_with_storage</a>(count,  compound_literal_array...)&#160;&#160;&#160;    CCC_private_buffer_with_storage(count, compound_literal_array)</td></tr>
+<tr class="memdesc:ad6284aa558aec89f87298c459176b595"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a contiguous Buffer of user a specified type of fixed capacity with no allocation permission or context.  <br /></td></tr>
+<tr class="separator:ad6284aa558aec89f87298c459176b595"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a7925915d15619fc97c71503c1a7af8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a0a7925915d15619fc97c71503c1a7af8">CCC_buffer_context_with_storage</a>(context,  count,  compound_literal_array...)</td></tr>
+<tr class="memdesc:a0a7925915d15619fc97c71503c1a7af8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a contiguous Buffer of user a specified type of fixed capacity with no allocation permission.  <br /></td></tr>
+<tr class="separator:a0a7925915d15619fc97c71503c1a7af8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54f4d46de712323bb67cc72b74e4158b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a54f4d46de712323bb67cc72b74e4158b">CCC_buffer_with_allocator</a>(type_name,  allocator)&#160;&#160;&#160;    CCC_private_buffer_with_allocator(type_name, allocator)</td></tr>
 <tr class="memdesc:a54f4d46de712323bb67cc72b74e4158b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an empty Buffer at compile or runtime with an allocator function.  <br /></td></tr>
 <tr class="separator:a54f4d46de712323bb67cc72b74e4158b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb5cc6b2fec791c7146e18cdd8040ad6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#afb5cc6b2fec791c7146e18cdd8040ad6">CCC_buffer_with_context_allocator</a>(type_name,  allocator,  context)&#160;&#160;&#160;    CCC_private_buffer_with_context_allocator(type_name, allocator, context)</td></tr>
-<tr class="memdesc:afb5cc6b2fec791c7146e18cdd8040ad6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a contiguous Buffer of user a specified type of fixed capacity with no allocation permission.  <br /></td></tr>
-<tr class="separator:afb5cc6b2fec791c7146e18cdd8040ad6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9a4a16be2f8b592222f535bdcb44475"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#ad9a4a16be2f8b592222f535bdcb44475">CCC_buffer_context_with_allocator</a>(type_name,  allocator,  context)&#160;&#160;&#160;    CCC_private_buffer_context_with_allocator(type_name, allocator, context)</td></tr>
+<tr class="memdesc:ad9a4a16be2f8b592222f535bdcb44475"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a contiguous Buffer of user a specified type of fixed capacity with no allocation permission.  <br /></td></tr>
+<tr class="separator:ad9a4a16be2f8b592222f535bdcb44475"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f96119efe2724e34ee6e879e511154c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a7f96119efe2724e34ee6e879e511154c">CCC_buffer_reserve</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, size_t to_add, <a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a> *allocate)</td></tr>
 <tr class="memdesc:a7f96119efe2724e34ee6e879e511154c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reserves space for at least to_add more elements.  <br /></td></tr>
 <tr class="separator:a7f96119efe2724e34ee6e879e511154c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -473,7 +473,178 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">    );</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>Only dynamic buffers may be initialized this way. For static or stack based initialization of fixed buffers with contents known at compile time, see the <a class="el" href="buffer_8h.html#aa8f825bc58415d1b89ae99c7a44dec85" title="Initialize a contiguous Buffer of user a specified type, allocation policy, capacity,...">CCC_buffer_initialize()</a> macro. </p>
+</div><!-- fragment --><p>Only dynamic buffers may be initialized this way. For static or stack based initialization of fixed buffers with contents known at compile time, see the <a class="el" href="buffer_8h.html#a86513108202eb0dd7f87fa0237a9e371" title="Initialize a contiguous Buffer of user a specified type, allocation policy, capacity,...">CCC_buffer_for()</a> macro. </p>
+
+</div>
+</div>
+<a id="ad9a4a16be2f8b592222f535bdcb44475" name="ad9a4a16be2f8b592222f535bdcb44475"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9a4a16be2f8b592222f535bdcb44475">&#9670;&#160;</a></span>CCC_buffer_context_with_allocator</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CCC_buffer_context_with_allocator</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">type_name, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">allocator, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">context&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;    CCC_private_buffer_context_with_allocator(type_name, allocator, context)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initialize a contiguous Buffer of user a specified type of fixed capacity with no allocation permission. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the name of the type stored in this buffer. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the CCC_Allocator function. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>a pointer to any context needed for each element. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> b = <a class="el" href="buffer_8h.html#ad9a4a16be2f8b592222f535bdcb44475" title="Initialize a contiguous Buffer of user a specified type of fixed capacity with no allocation permissi...">CCC_buffer_context_with_allocator(...)</a>;).</dd></dl>
+<p>Initialization of a Buffer can occur at compile time or run time but always lacks any allocation permissions. The memory pointer should be of the same type one intends to store in the buffer.</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
+<div class="line"><span class="keyword">static</span> Buffer stack = buffer_context_with_allocator(</div>
+<div class="line">    <span class="keywordtype">int</span>,</div>
+<div class="line">    arena_allocate,</div>
+<div class="line">    &amp;arena,</div>
+<div class="line">);</div>
+</div><!-- fragment --><p>Compile time creation of fixed capacity buffers can be a helpful use case when wrapping static or stack based arrays. </p>
+
+</div>
+</div>
+<a id="a8c321cf5311ef57f693fda5f3ba71a33" name="a8c321cf5311ef57f693fda5f3ba71a33"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c321cf5311ef57f693fda5f3ba71a33">&#9670;&#160;</a></span>CCC_buffer_context_with_capacity</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CCC_buffer_context_with_capacity</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">type_name, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">allocate, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">context, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">capacity&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_buffer_context_with_capacity(type_name, allocate, context,     \</div>
+<div class="line">                                             capacity)</div>
+</div><!-- fragment -->
+<p>Initialize a Buffer with a capacity. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>any user or language standard type name. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>CCC_Allocator or NULL if no allocation is permitted. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>any context data needed for managing Buffer memory. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">capacity</td><td>the capacity of the Buffer to reserve. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> b = <a class="el" href="buffer_8h.html#a8c321cf5311ef57f693fda5f3ba71a33" title="Initialize a Buffer with a capacity.">CCC_buffer_context_with_capacity(...)</a>;).</dd></dl>
+<p>Initialize a dynamic buffer.</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
+<div class="line"><span class="keywordtype">int</span></div>
+<div class="line">main(<span class="keywordtype">void</span>)</div>
+<div class="line">{</div>
+<div class="line">    Buffer b = buffer_context_with_capacity(<span class="keywordtype">int</span>, arena_allocate, &amp;arena, 4096);</div>
+<div class="line">    <span class="keywordflow">return</span> 0;</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>Only dynamic buffers may be initialized this way. For static or stack based initialization of fixed buffers with contents known at compile time, see the <a class="el" href="buffer_8h.html#a86513108202eb0dd7f87fa0237a9e371" title="Initialize a contiguous Buffer of user a specified type, allocation policy, capacity,...">CCC_buffer_for()</a> macro. </p>
+
+</div>
+</div>
+<a id="a0a7925915d15619fc97c71503c1a7af8" name="a0a7925915d15619fc97c71503c1a7af8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a7925915d15619fc97c71503c1a7af8">&#9670;&#160;</a></span>CCC_buffer_context_with_storage</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CCC_buffer_context_with_storage</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">context, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">count, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">compound_literal_array...&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_buffer_context_with_storage(context, count,                    \</div>
+<div class="line">                                            compound_literal_array)</div>
+</div><!-- fragment -->
+<p>Initialize a contiguous Buffer of user a specified type of fixed capacity with no allocation permission. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>a pointer to any context needed for each element. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>starting count of the Buffer &lt;= capacity of input literal. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal_array</td><td>the compound literal array of types. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> b = <a class="el" href="buffer_8h.html#a0a7925915d15619fc97c71503c1a7af8" title="Initialize a contiguous Buffer of user a specified type of fixed capacity with no allocation permissi...">CCC_buffer_context_with_storage(...)</a>;).</dd></dl>
+<p>Initialization of a Buffer can occur at compile time or run time but always lacks any allocation permissions. The memory pointer should be of the same type one intends to store in the buffer.</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
+<div class="line"><span class="keyword">static</span> Buffer stack = buffer_context_with_storage(</div>
+<div class="line">    &amp;module_context,</div>
+<div class="line">    0,</div>
+<div class="line">    (<span class="keyword">static</span> <span class="keywordtype">int</span>[5]){0, 1, 2, 3, 4}</div>
+<div class="line">);</div>
+</div><!-- fragment --><p>Compile time creation of fixed capacity buffers can be a helpful use case when wrapping static or stack based arrays. </p>
 
 </div>
 </div>
@@ -563,6 +734,85 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
+<a id="a86513108202eb0dd7f87fa0237a9e371" name="a86513108202eb0dd7f87fa0237a9e371"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86513108202eb0dd7f87fa0237a9e371">&#9670;&#160;</a></span>CCC_buffer_for</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CCC_buffer_for</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">type_name, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">allocate, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">context, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">capacity, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">count, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">data_pointer...&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_buffer_for(type_name, allocate, context, capacity, count,      \</div>
+<div class="line">                           data_pointer)</div>
+</div><!-- fragment -->
+<p>Initialize a contiguous Buffer of user a specified type, allocation policy, capacity, and optional starting size. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the name of the user type in the buffer. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>CCC_Allocator or NULL if no allocation is permitted. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>any context data needed for managing Buffer memory. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">capacity</td><td>the capacity of memory at data_pointer. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>optional starting size of the Buffer &lt;= capacity. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">data_pointer</td><td>the pointer to existing memory or NULL. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> b = <a class="el" href="buffer_8h.html#a86513108202eb0dd7f87fa0237a9e371" title="Initialize a contiguous Buffer of user a specified type, allocation policy, capacity,...">CCC_buffer_for(...)</a>;).</dd></dl>
+<p>Initialization of a Buffer can occur at compile time or run time depending on the arguments. The memory pointer should be of the same type one intends to store in the buffer.</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
+<div class="line"><span class="keyword">static</span> Buffer stack = buffer_for(</div>
+<div class="line">    <span class="keywordtype">int</span>, NULL, NULL, 4096, 0, &amp;(<span class="keyword">static</span> <span class="keywordtype">int</span>[4096]){}</div>
+<div class="line">);</div>
+</div><!-- fragment --><p>Initialize a fixed Buffer with some elements occupied.</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
+<div class="line"><span class="keyword">static</span> Buffer stack = buffer_for(</div>
+<div class="line">    <span class="keywordtype">int</span>, NULL, NULL, 4096, 4, &amp;(<span class="keyword">static</span> <span class="keywordtype">int</span>[4096]){0, 1, 2, 3}</div>
+<div class="line">);</div>
+</div><!-- fragment --><p>This initializer determines memory control for the lifetime of the buffer. If the Buffer points to memory of a predetermined and fixed capacity do not provide an allocation function. If a dynamic Buffer is preferred, provide the allocation function as defined by the signature in <a class="el" href="types_8h.html" title="The C Container Collection Fundamental Types.">types.h</a>. If resizing is desired on memory that has already been allocated, ensure allocation has occurred with the provided allocation function. </p>
+
+</div>
+</div>
 <a id="adb6971f97fa83e1a45a955aeec86dd6e" name="adb6971f97fa83e1a45a955aeec86dd6e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adb6971f97fa83e1a45a955aeec86dd6e">&#9670;&#160;</a></span>CCC_buffer_from</h2>
 
@@ -625,7 +875,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">    );</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>Only dynamic buffers may be initialized this way. For static or stack based initialization of fixed buffers with contents known at compile time, see the <a class="el" href="buffer_8h.html#aa8f825bc58415d1b89ae99c7a44dec85" title="Initialize a contiguous Buffer of user a specified type, allocation policy, capacity,...">CCC_buffer_initialize()</a> macro. </p>
+</div><!-- fragment --><p>Only dynamic buffers may be initialized this way. For static or stack based initialization of fixed buffers with contents known at compile time, see the <a class="el" href="buffer_8h.html#a86513108202eb0dd7f87fa0237a9e371" title="Initialize a contiguous Buffer of user a specified type, allocation policy, capacity,...">CCC_buffer_for()</a> macro. </p>
 
 </div>
 </div>
@@ -664,85 +914,6 @@ This graph shows which files directly or indirectly include this file:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the pointer to the front element or NULL if the Buffer does not exist or is empty. </dd></dl>
-
-</div>
-</div>
-<a id="aa8f825bc58415d1b89ae99c7a44dec85" name="aa8f825bc58415d1b89ae99c7a44dec85"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa8f825bc58415d1b89ae99c7a44dec85">&#9670;&#160;</a></span>CCC_buffer_initialize</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_buffer_initialize</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_name, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">context, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">capacity, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">count, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">data_pointer...&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_buffer_initialize(type_name, allocate, context, capacity,      \</div>
-<div class="line">                                  count, data_pointer)</div>
-</div><!-- fragment -->
-<p>Initialize a contiguous Buffer of user a specified type, allocation policy, capacity, and optional starting size. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the name of the user type in the buffer. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>CCC_Allocator or NULL if no allocation is permitted. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>any context data needed for managing Buffer memory. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">capacity</td><td>the capacity of memory at data_pointer. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>optional starting size of the Buffer &lt;= capacity. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">data_pointer</td><td>the pointer to existing memory or NULL. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> b = <a class="el" href="buffer_8h.html#aa8f825bc58415d1b89ae99c7a44dec85" title="Initialize a contiguous Buffer of user a specified type, allocation policy, capacity,...">CCC_buffer_initialize(...)</a>;).</dd></dl>
-<p>Initialization of a Buffer can occur at compile time or run time depending on the arguments. The memory pointer should be of the same type one intends to store in the buffer.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keyword">static</span> Buffer stack = buffer_initialize(</div>
-<div class="line">    <span class="keywordtype">int</span>, NULL, NULL, 4096, 0, &amp;(<span class="keyword">static</span> <span class="keywordtype">int</span>[4096]){}</div>
-<div class="line">);</div>
-</div><!-- fragment --><p>Initialize a fixed Buffer with some elements occupied.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keyword">static</span> Buffer stack = buffer_initialize(</div>
-<div class="line">    <span class="keywordtype">int</span>, NULL, NULL, 4096, 4, &amp;(<span class="keyword">static</span> <span class="keywordtype">int</span>[4096]){0, 1, 2, 3}</div>
-<div class="line">);</div>
-</div><!-- fragment --><p>This initializer determines memory control for the lifetime of the buffer. If the Buffer points to memory of a predetermined and fixed capacity do not provide an allocation function. If a dynamic Buffer is preferred, provide the allocation function as defined by the signature in <a class="el" href="types_8h.html" title="The C Container Collection Fundamental Types.">types.h</a>. If resizing is desired on memory that has already been allocated, ensure allocation has occurred with the provided allocation function. </p>
 
 </div>
 </div>
@@ -838,18 +1009,18 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">    Buffer b = buffer_with_capacity(<span class="keywordtype">int</span>, std_allocate, 4096);</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>Only dynamic buffers may be initialized this way. For static or stack based initialization of fixed buffers with contents known at compile time, see the <a class="el" href="buffer_8h.html#aa8f825bc58415d1b89ae99c7a44dec85" title="Initialize a contiguous Buffer of user a specified type, allocation policy, capacity,...">CCC_buffer_initialize()</a> macro. </p>
+</div><!-- fragment --><p>Only dynamic buffers may be initialized this way. For static or stack based initialization of fixed buffers with contents known at compile time, see the <a class="el" href="buffer_8h.html#a86513108202eb0dd7f87fa0237a9e371" title="Initialize a contiguous Buffer of user a specified type, allocation policy, capacity,...">CCC_buffer_for()</a> macro. </p>
 
 </div>
 </div>
-<a id="a9ccfcf4af060e2069d711f7933925fa8" name="a9ccfcf4af060e2069d711f7933925fa8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9ccfcf4af060e2069d711f7933925fa8">&#9670;&#160;</a></span>CCC_buffer_with_compound_literal</h2>
+<a id="ad6284aa558aec89f87298c459176b595" name="ad6284aa558aec89f87298c459176b595"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6284aa558aec89f87298c459176b595">&#9670;&#160;</a></span>CCC_buffer_with_storage</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define CCC_buffer_with_compound_literal</td>
+          <td class="memname">#define CCC_buffer_with_storage</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">count, </td>
@@ -863,7 +1034,7 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;    CCC_private_buffer_with_compound_literal(count, compound_literal_array)</td>
+          <td></td><td>&#160;&#160;&#160;    CCC_private_buffer_with_storage(count, compound_literal_array)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -876,181 +1047,10 @@ This graph shows which files directly or indirectly include this file:</div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> b = <a class="el" href="buffer_8h.html#a9ccfcf4af060e2069d711f7933925fa8" title="Initialize a contiguous Buffer of user a specified type of fixed capacity with no allocation permissi...">CCC_buffer_with_compound_literal(...)</a>;).</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> b = <a class="el" href="buffer_8h.html#ad6284aa558aec89f87298c459176b595" title="Initialize a contiguous Buffer of user a specified type of fixed capacity with no allocation permissi...">CCC_buffer_with_storage(...)</a>;).</dd></dl>
 <p>Initialization of a Buffer can occur at compile time or run time but always lacks any allocation permissions. The memory pointer should be of the same type one intends to store in the buffer.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keyword">static</span> Buffer stack = buffer_with_compound_literal(0, (<span class="keyword">static</span> <span class="keywordtype">int</span>[4096]){});</div>
-</div><!-- fragment --><p>Compile time creation of fixed capacity buffers can be a helpful use case when wrapping static or stack based arrays. </p>
-
-</div>
-</div>
-<a id="afb5cc6b2fec791c7146e18cdd8040ad6" name="afb5cc6b2fec791c7146e18cdd8040ad6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afb5cc6b2fec791c7146e18cdd8040ad6">&#9670;&#160;</a></span>CCC_buffer_with_context_allocator</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_buffer_with_context_allocator</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_name, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">allocator, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">context&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;    CCC_private_buffer_with_context_allocator(type_name, allocator, context)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Initialize a contiguous Buffer of user a specified type of fixed capacity with no allocation permission. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the name of the type stored in this buffer. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the CCC_Allocator function. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>a pointer to any context needed for each element. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> b = <a class="el" href="buffer_8h.html#afb5cc6b2fec791c7146e18cdd8040ad6" title="Initialize a contiguous Buffer of user a specified type of fixed capacity with no allocation permissi...">CCC_buffer_with_context_allocator(...)</a>;).</dd></dl>
-<p>Initialization of a Buffer can occur at compile time or run time but always lacks any allocation permissions. The memory pointer should be of the same type one intends to store in the buffer.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keyword">static</span> Buffer stack = buffer_with_context_allocator(</div>
-<div class="line">    <span class="keywordtype">int</span>,</div>
-<div class="line">    arena_allocate,</div>
-<div class="line">    &amp;arena,</div>
-<div class="line">);</div>
-</div><!-- fragment --><p>Compile time creation of fixed capacity buffers can be a helpful use case when wrapping static or stack based arrays. </p>
-
-</div>
-</div>
-<a id="a6859367074baf5c4995f9ae30b950311" name="a6859367074baf5c4995f9ae30b950311"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6859367074baf5c4995f9ae30b950311">&#9670;&#160;</a></span>CCC_buffer_with_context_capacity</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_buffer_with_context_capacity</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_name, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">context, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">capacity&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_buffer_with_context_capacity(type_name, allocate, context,     \</div>
-<div class="line">                                             capacity)</div>
-</div><!-- fragment -->
-<p>Initialize a Buffer with a capacity. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>any user or language standard type name. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>CCC_Allocator or NULL if no allocation is permitted. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>any context data needed for managing Buffer memory. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">capacity</td><td>the capacity of the Buffer to reserve. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> b = <a class="el" href="buffer_8h.html#a6859367074baf5c4995f9ae30b950311" title="Initialize a Buffer with a capacity.">CCC_buffer_with_context_capacity(...)</a>;).</dd></dl>
-<p>Initialize a dynamic buffer.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keywordtype">int</span></div>
-<div class="line">main(<span class="keywordtype">void</span>)</div>
-<div class="line">{</div>
-<div class="line">    Buffer b = buffer_with_context_capacity(<span class="keywordtype">int</span>, arena_allocate, &amp;arena, 4096);</div>
-<div class="line">    <span class="keywordflow">return</span> 0;</div>
-<div class="line">}</div>
-</div><!-- fragment --><p>Only dynamic buffers may be initialized this way. For static or stack based initialization of fixed buffers with contents known at compile time, see the <a class="el" href="buffer_8h.html#aa8f825bc58415d1b89ae99c7a44dec85" title="Initialize a contiguous Buffer of user a specified type, allocation policy, capacity,...">CCC_buffer_initialize()</a> macro. </p>
-
-</div>
-</div>
-<a id="a93ecd88b73c7b78721aaee93c1983647" name="a93ecd88b73c7b78721aaee93c1983647"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a93ecd88b73c7b78721aaee93c1983647">&#9670;&#160;</a></span>CCC_buffer_with_context_compound_literal</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_buffer_with_context_compound_literal</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">context, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">count, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">compound_literal_array...&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_buffer_with_context_compound_literal(context, count,           \</div>
-<div class="line">                                                     compound_literal_array)</div>
-</div><!-- fragment -->
-<p>Initialize a contiguous Buffer of user a specified type of fixed capacity with no allocation permission. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>a pointer to any context needed for each element. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>starting count of the Buffer &lt;= capacity of input literal. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal_array</td><td>the compound literal array of types. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> b = <a class="el" href="buffer_8h.html#a93ecd88b73c7b78721aaee93c1983647" title="Initialize a contiguous Buffer of user a specified type of fixed capacity with no allocation permissi...">CCC_buffer_with_context_compound_literal(...)</a>;).</dd></dl>
-<p>Initialization of a Buffer can occur at compile time or run time but always lacks any allocation permissions. The memory pointer should be of the same type one intends to store in the buffer.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keyword">static</span> Buffer stack = buffer_with_context_compound_literal(</div>
-<div class="line">    &amp;module_context,</div>
-<div class="line">    0,</div>
-<div class="line">    (<span class="keyword">static</span> <span class="keywordtype">int</span>[5]){0, 1, 2, 3, 4}</div>
-<div class="line">);</div>
+<div class="line"><span class="keyword">static</span> Buffer stack = buffer_with_storage(0, (<span class="keyword">static</span> <span class="keywordtype">int</span>[4096]){});</div>
 </div><!-- fragment --><p>Compile time creation of fixed capacity buffers can be a helpful use case when wrapping static or stack based arrays. </p>
 
 </div>
@@ -1497,24 +1497,24 @@ This graph shows which files directly or indirectly include this file:</div>
 <p>Note that there are two ways to copy data from source to destination: provide sufficient memory and pass NULL as allocate, or allow the copy function to take care of allocation for the copy.</p>
 <p>Manual memory management with no allocation function provided.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
-<div class="line">Buffer source = buffer_initialize((<span class="keywordtype">int</span>[10]){}, int, NULL, NULL, 10);</div>
+<div class="line">Buffer source = buffer_for((<span class="keywordtype">int</span>[10]){}, int, NULL, NULL, 10);</div>
 <div class="line"><span class="keywordtype">int</span> *new_data = malloc(<span class="keyword">sizeof</span>(<span class="keywordtype">int</span>) * buffer_capacity(&amp;source).count);</div>
 <div class="line">Buffer destination</div>
-<div class="line">    = buffer_initialize(new_data, <span class="keywordtype">int</span>, NULL, NULL,</div>
+<div class="line">    = buffer_for(new_data, <span class="keywordtype">int</span>, NULL, NULL,</div>
 <div class="line">buffer_capacity(&amp;source).count); <a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res = buffer_copy(&amp;destination,</div>
 <div class="line">&amp;source, NULL);</div>
 <div class="ttc" id="atypes_8h_html_aa1ded61d294b114942f11e711b331dcf"><div class="ttname"><a href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a></div><div class="ttdeci">CCC_Result</div><div class="ttdoc">A result of actions on containers.</div><div class="ttdef"><b>Definition:</b> types.h:146</div></div>
 </div><!-- fragment --><p>The above requires destination capacity be greater than or equal to source capacity. Here is memory management handed over to the copy function.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
-<div class="line">Buffer source = buffer_initialize(NULL, <span class="keywordtype">int</span>, std_allocate, NULL, 0);</div>
+<div class="line">Buffer source = buffer_for(NULL, <span class="keywordtype">int</span>, std_allocate, NULL, 0);</div>
 <div class="line">(void)CCC_buffer_push_back_range(&amp;source, 5, (<span class="keywordtype">int</span>[5]){0,1,2,3,4});</div>
-<div class="line">Buffer destination = buffer_initialize(NULL, <span class="keywordtype">int</span>, std_allocate, NULL, 0);</div>
+<div class="line">Buffer destination = buffer_for(NULL, <span class="keywordtype">int</span>, std_allocate, NULL, 0);</div>
 <div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res = buffer_copy(&amp;destination, &amp;source, std_allocate);</div>
 </div><!-- fragment --><p>The above allows destination to have a capacity less than that of the source as long as copy has been provided an allocation function to resize destination. Note that this would still work if copying to a destination that the user wants as a fixed size buffer (ring buffer).</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
-<div class="line">Buffer source = buffer_initialize(NULL, <span class="keywordtype">int</span>, std_allocate, NULL, 0);</div>
+<div class="line">Buffer source = buffer_for(NULL, <span class="keywordtype">int</span>, std_allocate, NULL, 0);</div>
 <div class="line">(void)CCC_buffer_push_back_range(&amp;source, 5, (<span class="keywordtype">int</span>[5]){0,1,2,3,4});</div>
-<div class="line">Buffer destination = buffer_initialize(NULL, <span class="keywordtype">int</span>, NULL, NULL, 0);</div>
+<div class="line">Buffer destination = buffer_for(NULL, <span class="keywordtype">int</span>, NULL, NULL, 0);</div>
 <div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res = buffer_copy(&amp;destination, &amp;source, std_allocate);</div>
 </div><!-- fragment --><p>Because an allocation function is provided, the destination is resized once for the copy and retains its fixed size after the copy is complete. This would require the user to manually free the underlying Buffer at destination eventually if this method is used. Usually it is better to allocate the memory explicitly before the copy if copying between ring buffers.</p>
 <p>These options allow users to stay consistent across containers with their memory management strategies. </p>

@@ -107,12 +107,12 @@ $(document).ready(function(){initNavTree('adaptive__map_8h_source.html',''); ini
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="adaptive__map_8h.html#a6634e04a00bfa7e2b4b274dd7e6aec61">   74</a></span><span class="keyword">typedef</span> <span class="keyword">union </span><a class="code hl_union" href="unionCCC__Adaptive__map__entry__wrap.html">CCC_Adaptive_map_entry_wrap</a> <a class="code hl_struct" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a>;</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="adaptive__map_8h.html#ab34ca82a0748237e96162762b9d7d2fb">   91</a></span><span class="preprocessor">#define CCC_adaptive_map_initialize(struct_name, type_intruder_field_name,     \</span></div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="preprocessor">                                    type_key_field_name, key_order, allocate,  \</span></div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="preprocessor">                                    context)                                   \</span></div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="preprocessor">    CCC_private_adaptive_map_initialize(struct_name, type_intruder_field_name, \</span></div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="preprocessor">                                        type_key_field_name, key_order,        \</span></div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="preprocessor">                                        allocate, context)</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="adaptive__map_8h.html#a30c9bdcc00b6d504e624ae9b59ff917a">   91</a></span><span class="preprocessor">#define CCC_adaptive_map_for(struct_name, type_intruder_field_name,            \</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="preprocessor">                             type_key_field_name, key_order, allocate,         \</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="preprocessor">                             context)                                          \</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="preprocessor">    CCC_private_adaptive_map_for(struct_name, type_intruder_field_name,        \</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="preprocessor">                                 type_key_field_name, key_order, allocate,     \</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="preprocessor">                                 context)</span></div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno"><a class="line" href="adaptive__map_8h.html#a4f6b0d06cb0dad028160dc21dcf819e8">  117</a></span><span class="preprocessor">#define CCC_adaptive_map_from(type_intruder_field_name, type_key_field_name,   \</span></div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="preprocessor">                              compare, allocate, destroy,                      \</span></div>
@@ -133,10 +133,10 @@ $(document).ready(function(){initNavTree('adaptive__map_8h_source.html',''); ini
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span><span class="preprocessor">    CCC_private_adaptive_map_with_allocator(type_name, type_intruder_field,    \</span></div>
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span><span class="preprocessor">                                            type_key_field, compare, allocate)</span></div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span> </div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno"><a class="line" href="adaptive__map_8h.html#a8eff36bc12f00df11d5d14a00c53d754">  221</a></span><span class="preprocessor">#define CCC_adaptive_map_with_context_allocator(                               \</span></div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno"><a class="line" href="adaptive__map_8h.html#a4419fcaa55946185c917fcac58a5193e">  221</a></span><span class="preprocessor">#define CCC_adaptive_map_context_with_allocator(                               \</span></div>
 <div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span><span class="preprocessor">    type_name, type_intruder_field, type_key_field, compare, allocate,         \</span></div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span><span class="preprocessor">    context)                                                                   \</span></div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span><span class="preprocessor">    CCC_private_adaptive_map_with_context_allocator(                           \</span></div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span><span class="preprocessor">    CCC_private_adaptive_map_context_with_allocator(                           \</span></div>
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span><span class="preprocessor">        type_name, type_intruder_field, type_key_field, compare, allocate,     \</span></div>
 <div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span><span class="preprocessor">        context)</span></div>
 <div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span> </div>
@@ -302,76 +302,75 @@ $(document).ready(function(){initNavTree('adaptive__map_8h_source.html',''); ini
 <div class="line"><a id="l00806" name="l00806"></a><span class="lineno">  806</span><span class="keyword">typedef</span> <a class="code hl_struct" href="structCCC__Adaptive__map__node.html">CCC_Adaptive_map_node</a> Adaptive_map_node;</div>
 <div class="line"><a id="l00807" name="l00807"></a><span class="lineno">  807</span><span class="keyword">typedef</span> <a class="code hl_struct" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a> Adaptive_map;</div>
 <div class="line"><a id="l00808" name="l00808"></a><span class="lineno">  808</span><span class="keyword">typedef</span> <a class="code hl_struct" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> Adaptive_map_entry;</div>
-<div class="line"><a id="l00809" name="l00809"></a><span class="lineno">  809</span><span class="preprocessor">#    define adaptive_map_initialize(arguments...)                              \</span></div>
-<div class="line"><a id="l00810" name="l00810"></a><span class="lineno">  810</span><span class="preprocessor">        CCC_adaptive_map_initialize(arguments)</span></div>
-<div class="line"><a id="l00811" name="l00811"></a><span class="lineno">  811</span><span class="preprocessor">#    define adaptive_map_with_allocator(arguments...)                          \</span></div>
-<div class="line"><a id="l00812" name="l00812"></a><span class="lineno">  812</span><span class="preprocessor">        CCC_adaptive_map_with_allocator(arguments)</span></div>
-<div class="line"><a id="l00813" name="l00813"></a><span class="lineno">  813</span><span class="preprocessor">#    define adaptive_map_with_context_allocator(arguments...)                  \</span></div>
-<div class="line"><a id="l00814" name="l00814"></a><span class="lineno">  814</span><span class="preprocessor">        CCC_adaptive_map_with_context_allocator(arguments)</span></div>
-<div class="line"><a id="l00815" name="l00815"></a><span class="lineno">  815</span><span class="preprocessor">#    define adaptive_map_from(arguments...) CCC_adaptive_map_from(arguments)</span></div>
-<div class="line"><a id="l00816" name="l00816"></a><span class="lineno">  816</span><span class="preprocessor">#    define adaptive_map_context_from(arguments...)                            \</span></div>
-<div class="line"><a id="l00817" name="l00817"></a><span class="lineno">  817</span><span class="preprocessor">        CCC_adaptive_map_context_from(arguments)</span></div>
-<div class="line"><a id="l00818" name="l00818"></a><span class="lineno">  818</span><span class="preprocessor">#    define adaptive_map_and_modify_with(arguments...)                         \</span></div>
-<div class="line"><a id="l00819" name="l00819"></a><span class="lineno">  819</span><span class="preprocessor">        CCC_adaptive_map_and_modify_with(arguments)</span></div>
-<div class="line"><a id="l00820" name="l00820"></a><span class="lineno">  820</span><span class="preprocessor">#    define adaptive_map_or_insert_with(arguments...)                          \</span></div>
-<div class="line"><a id="l00821" name="l00821"></a><span class="lineno">  821</span><span class="preprocessor">        CCC_adaptive_map_or_insert_with(arguments)</span></div>
-<div class="line"><a id="l00822" name="l00822"></a><span class="lineno">  822</span><span class="preprocessor">#    define adaptive_map_insert_entry_with(arguments...)                       \</span></div>
-<div class="line"><a id="l00823" name="l00823"></a><span class="lineno">  823</span><span class="preprocessor">        CCC_adaptive_map_insert_entry_with(arguments)</span></div>
-<div class="line"><a id="l00824" name="l00824"></a><span class="lineno">  824</span><span class="preprocessor">#    define adaptive_map_try_insert_with(arguments...)                         \</span></div>
-<div class="line"><a id="l00825" name="l00825"></a><span class="lineno">  825</span><span class="preprocessor">        CCC_adaptive_map_try_insert_with(arguments)</span></div>
-<div class="line"><a id="l00826" name="l00826"></a><span class="lineno">  826</span><span class="preprocessor">#    define adaptive_map_insert_or_assign_with(arguments...)                   \</span></div>
-<div class="line"><a id="l00827" name="l00827"></a><span class="lineno">  827</span><span class="preprocessor">        CCC_adaptive_map_insert_or_assign_with(arguments)</span></div>
-<div class="line"><a id="l00828" name="l00828"></a><span class="lineno">  828</span><span class="preprocessor">#    define adaptive_map_swap_entry_wrap(arguments...)                         \</span></div>
-<div class="line"><a id="l00829" name="l00829"></a><span class="lineno">  829</span><span class="preprocessor">        CCC_adaptive_map_swap_entry_wrap(arguments)</span></div>
-<div class="line"><a id="l00830" name="l00830"></a><span class="lineno">  830</span><span class="preprocessor">#    define adaptive_map_remove_key_value_wrap(arguments...)                   \</span></div>
-<div class="line"><a id="l00831" name="l00831"></a><span class="lineno">  831</span><span class="preprocessor">        CCC_adaptive_map_remove_key_value_wrap(arguments)</span></div>
-<div class="line"><a id="l00832" name="l00832"></a><span class="lineno">  832</span><span class="preprocessor">#    define adaptive_map_remove_entry_wrap(arguments...)                       \</span></div>
-<div class="line"><a id="l00833" name="l00833"></a><span class="lineno">  833</span><span class="preprocessor">        CCC_adaptive_map_remove_entry_wrap(arguments)</span></div>
-<div class="line"><a id="l00834" name="l00834"></a><span class="lineno">  834</span><span class="preprocessor">#    define adaptive_map_entry_wrap(arguments...)                              \</span></div>
-<div class="line"><a id="l00835" name="l00835"></a><span class="lineno">  835</span><span class="preprocessor">        CCC_adaptive_map_entry_wrap(arguments)</span></div>
-<div class="line"><a id="l00836" name="l00836"></a><span class="lineno">  836</span><span class="preprocessor">#    define adaptive_map_and_modify_wrap(arguments...)                         \</span></div>
-<div class="line"><a id="l00837" name="l00837"></a><span class="lineno">  837</span><span class="preprocessor">        CCC_adaptive_map_and_modify_wrap(arguments)</span></div>
-<div class="line"><a id="l00838" name="l00838"></a><span class="lineno">  838</span><span class="preprocessor">#    define adaptive_map_and_context_modify_wrap(arguments...)                 \</span></div>
-<div class="line"><a id="l00839" name="l00839"></a><span class="lineno">  839</span><span class="preprocessor">        CCC_adaptive_map_and_context_modify_wrap(arguments)</span></div>
-<div class="line"><a id="l00840" name="l00840"></a><span class="lineno">  840</span><span class="preprocessor">#    define adaptive_map_contains(arguments...)                                \</span></div>
-<div class="line"><a id="l00841" name="l00841"></a><span class="lineno">  841</span><span class="preprocessor">        CCC_adaptive_map_contains(arguments)</span></div>
-<div class="line"><a id="l00842" name="l00842"></a><span class="lineno">  842</span><span class="preprocessor">#    define adaptive_map_get_key_value(arguments...)                           \</span></div>
-<div class="line"><a id="l00843" name="l00843"></a><span class="lineno">  843</span><span class="preprocessor">        CCC_adaptive_map_get_key_value(arguments)</span></div>
-<div class="line"><a id="l00844" name="l00844"></a><span class="lineno">  844</span><span class="preprocessor">#    define adaptive_map_get_mut(arguments...)                                 \</span></div>
-<div class="line"><a id="l00845" name="l00845"></a><span class="lineno">  845</span><span class="preprocessor">        CCC_adaptive_map_get_mut(arguments)</span></div>
-<div class="line"><a id="l00846" name="l00846"></a><span class="lineno">  846</span><span class="preprocessor">#    define adaptive_map_swap_entry(arguments...)                              \</span></div>
-<div class="line"><a id="l00847" name="l00847"></a><span class="lineno">  847</span><span class="preprocessor">        CCC_adaptive_map_swap_entry(arguments)</span></div>
-<div class="line"><a id="l00848" name="l00848"></a><span class="lineno">  848</span><span class="preprocessor">#    define adaptive_map_remove_key_value(arguments...)                        \</span></div>
-<div class="line"><a id="l00849" name="l00849"></a><span class="lineno">  849</span><span class="preprocessor">        CCC_adaptive_map_remove_key_value(arguments)</span></div>
-<div class="line"><a id="l00850" name="l00850"></a><span class="lineno">  850</span><span class="preprocessor">#    define adaptive_map_entry(arguments...) CCC_adaptive_map_entry(arguments)</span></div>
-<div class="line"><a id="l00851" name="l00851"></a><span class="lineno">  851</span><span class="preprocessor">#    define adaptive_map_remove_entry(arguments...)                            \</span></div>
-<div class="line"><a id="l00852" name="l00852"></a><span class="lineno">  852</span><span class="preprocessor">        CCC_adaptive_map_remove_entry(arguments)</span></div>
-<div class="line"><a id="l00853" name="l00853"></a><span class="lineno">  853</span><span class="preprocessor">#    define adaptive_map_or_insert(arguments...)                               \</span></div>
-<div class="line"><a id="l00854" name="l00854"></a><span class="lineno">  854</span><span class="preprocessor">        CCC_adaptive_map_or_insert(arguments)</span></div>
-<div class="line"><a id="l00855" name="l00855"></a><span class="lineno">  855</span><span class="preprocessor">#    define adaptive_map_insert_entry(arguments...)                            \</span></div>
-<div class="line"><a id="l00856" name="l00856"></a><span class="lineno">  856</span><span class="preprocessor">        CCC_adaptive_map_insert_entry(arguments)</span></div>
-<div class="line"><a id="l00857" name="l00857"></a><span class="lineno">  857</span><span class="preprocessor">#    define adaptive_map_unwrap(arguments...) CCC_adaptive_map_unwrap(arguments)</span></div>
-<div class="line"><a id="l00858" name="l00858"></a><span class="lineno">  858</span><span class="preprocessor">#    define adaptive_map_unwrap_mut(arguments...)                              \</span></div>
-<div class="line"><a id="l00859" name="l00859"></a><span class="lineno">  859</span><span class="preprocessor">        CCC_adaptive_map_unwrap_mut(arguments)</span></div>
-<div class="line"><a id="l00860" name="l00860"></a><span class="lineno">  860</span><span class="preprocessor">#    define adaptive_map_begin(arguments...) CCC_adaptive_map_begin(arguments)</span></div>
-<div class="line"><a id="l00861" name="l00861"></a><span class="lineno">  861</span><span class="preprocessor">#    define adaptive_map_next(arguments...) CCC_adaptive_map_next(arguments)</span></div>
-<div class="line"><a id="l00862" name="l00862"></a><span class="lineno">  862</span><span class="preprocessor">#    define adaptive_map_reverse_begin(arguments...)                           \</span></div>
-<div class="line"><a id="l00863" name="l00863"></a><span class="lineno">  863</span><span class="preprocessor">        CCC_adaptive_map_reverse_begin(arguments)</span></div>
-<div class="line"><a id="l00864" name="l00864"></a><span class="lineno">  864</span><span class="preprocessor">#    define adaptive_map_reverse_next(arguments...)                            \</span></div>
-<div class="line"><a id="l00865" name="l00865"></a><span class="lineno">  865</span><span class="preprocessor">        CCC_adaptive_map_reverse_next(arguments)</span></div>
-<div class="line"><a id="l00866" name="l00866"></a><span class="lineno">  866</span><span class="preprocessor">#    define adaptive_map_end(arguments...) CCC_adaptive_map_end(arguments)</span></div>
-<div class="line"><a id="l00867" name="l00867"></a><span class="lineno">  867</span><span class="preprocessor">#    define adaptive_map_reverse_end(arguments...)                             \</span></div>
-<div class="line"><a id="l00868" name="l00868"></a><span class="lineno">  868</span><span class="preprocessor">        CCC_adaptive_map_reverse_end(arguments)</span></div>
-<div class="line"><a id="l00869" name="l00869"></a><span class="lineno">  869</span><span class="preprocessor">#    define adaptive_map_count(arguments...) CCC_adaptive_map_count(arguments)</span></div>
-<div class="line"><a id="l00870" name="l00870"></a><span class="lineno">  870</span><span class="preprocessor">#    define adaptive_map_is_empty(arguments...)                                \</span></div>
-<div class="line"><a id="l00871" name="l00871"></a><span class="lineno">  871</span><span class="preprocessor">        CCC_adaptive_map_is_empty(arguments)</span></div>
-<div class="line"><a id="l00872" name="l00872"></a><span class="lineno">  872</span><span class="preprocessor">#    define adaptive_map_clear(arguments...) CCC_adaptive_map_clear(arguments)</span></div>
-<div class="line"><a id="l00873" name="l00873"></a><span class="lineno">  873</span><span class="preprocessor">#    define adaptive_map_validate(arguments...)                                \</span></div>
-<div class="line"><a id="l00874" name="l00874"></a><span class="lineno">  874</span><span class="preprocessor">        CCC_adaptive_map_validate(arguments)</span></div>
-<div class="line"><a id="l00875" name="l00875"></a><span class="lineno">  875</span><span class="comment">/* NOLINTEND(readability-identifier-naming) */</span></div>
-<div class="line"><a id="l00876" name="l00876"></a><span class="lineno">  876</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00877" name="l00877"></a><span class="lineno">  877</span> </div>
-<div class="line"><a id="l00878" name="l00878"></a><span class="lineno">  878</span><span class="preprocessor">#endif </span><span class="comment">/* CCC_ADAPTIVE_MAP_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00809" name="l00809"></a><span class="lineno">  809</span><span class="preprocessor">#    define adaptive_map_for(arguments...) CCC_adaptive_map_for(arguments)</span></div>
+<div class="line"><a id="l00810" name="l00810"></a><span class="lineno">  810</span><span class="preprocessor">#    define adaptive_map_with_allocator(arguments...)                          \</span></div>
+<div class="line"><a id="l00811" name="l00811"></a><span class="lineno">  811</span><span class="preprocessor">        CCC_adaptive_map_with_allocator(arguments)</span></div>
+<div class="line"><a id="l00812" name="l00812"></a><span class="lineno">  812</span><span class="preprocessor">#    define adaptive_map_context_with_allocator(arguments...)                  \</span></div>
+<div class="line"><a id="l00813" name="l00813"></a><span class="lineno">  813</span><span class="preprocessor">        CCC_adaptive_map_context_with_allocator(arguments)</span></div>
+<div class="line"><a id="l00814" name="l00814"></a><span class="lineno">  814</span><span class="preprocessor">#    define adaptive_map_from(arguments...) CCC_adaptive_map_from(arguments)</span></div>
+<div class="line"><a id="l00815" name="l00815"></a><span class="lineno">  815</span><span class="preprocessor">#    define adaptive_map_context_from(arguments...)                            \</span></div>
+<div class="line"><a id="l00816" name="l00816"></a><span class="lineno">  816</span><span class="preprocessor">        CCC_adaptive_map_context_from(arguments)</span></div>
+<div class="line"><a id="l00817" name="l00817"></a><span class="lineno">  817</span><span class="preprocessor">#    define adaptive_map_and_modify_with(arguments...)                         \</span></div>
+<div class="line"><a id="l00818" name="l00818"></a><span class="lineno">  818</span><span class="preprocessor">        CCC_adaptive_map_and_modify_with(arguments)</span></div>
+<div class="line"><a id="l00819" name="l00819"></a><span class="lineno">  819</span><span class="preprocessor">#    define adaptive_map_or_insert_with(arguments...)                          \</span></div>
+<div class="line"><a id="l00820" name="l00820"></a><span class="lineno">  820</span><span class="preprocessor">        CCC_adaptive_map_or_insert_with(arguments)</span></div>
+<div class="line"><a id="l00821" name="l00821"></a><span class="lineno">  821</span><span class="preprocessor">#    define adaptive_map_insert_entry_with(arguments...)                       \</span></div>
+<div class="line"><a id="l00822" name="l00822"></a><span class="lineno">  822</span><span class="preprocessor">        CCC_adaptive_map_insert_entry_with(arguments)</span></div>
+<div class="line"><a id="l00823" name="l00823"></a><span class="lineno">  823</span><span class="preprocessor">#    define adaptive_map_try_insert_with(arguments...)                         \</span></div>
+<div class="line"><a id="l00824" name="l00824"></a><span class="lineno">  824</span><span class="preprocessor">        CCC_adaptive_map_try_insert_with(arguments)</span></div>
+<div class="line"><a id="l00825" name="l00825"></a><span class="lineno">  825</span><span class="preprocessor">#    define adaptive_map_insert_or_assign_with(arguments...)                   \</span></div>
+<div class="line"><a id="l00826" name="l00826"></a><span class="lineno">  826</span><span class="preprocessor">        CCC_adaptive_map_insert_or_assign_with(arguments)</span></div>
+<div class="line"><a id="l00827" name="l00827"></a><span class="lineno">  827</span><span class="preprocessor">#    define adaptive_map_swap_entry_wrap(arguments...)                         \</span></div>
+<div class="line"><a id="l00828" name="l00828"></a><span class="lineno">  828</span><span class="preprocessor">        CCC_adaptive_map_swap_entry_wrap(arguments)</span></div>
+<div class="line"><a id="l00829" name="l00829"></a><span class="lineno">  829</span><span class="preprocessor">#    define adaptive_map_remove_key_value_wrap(arguments...)                   \</span></div>
+<div class="line"><a id="l00830" name="l00830"></a><span class="lineno">  830</span><span class="preprocessor">        CCC_adaptive_map_remove_key_value_wrap(arguments)</span></div>
+<div class="line"><a id="l00831" name="l00831"></a><span class="lineno">  831</span><span class="preprocessor">#    define adaptive_map_remove_entry_wrap(arguments...)                       \</span></div>
+<div class="line"><a id="l00832" name="l00832"></a><span class="lineno">  832</span><span class="preprocessor">        CCC_adaptive_map_remove_entry_wrap(arguments)</span></div>
+<div class="line"><a id="l00833" name="l00833"></a><span class="lineno">  833</span><span class="preprocessor">#    define adaptive_map_entry_wrap(arguments...)                              \</span></div>
+<div class="line"><a id="l00834" name="l00834"></a><span class="lineno">  834</span><span class="preprocessor">        CCC_adaptive_map_entry_wrap(arguments)</span></div>
+<div class="line"><a id="l00835" name="l00835"></a><span class="lineno">  835</span><span class="preprocessor">#    define adaptive_map_and_modify_wrap(arguments...)                         \</span></div>
+<div class="line"><a id="l00836" name="l00836"></a><span class="lineno">  836</span><span class="preprocessor">        CCC_adaptive_map_and_modify_wrap(arguments)</span></div>
+<div class="line"><a id="l00837" name="l00837"></a><span class="lineno">  837</span><span class="preprocessor">#    define adaptive_map_and_context_modify_wrap(arguments...)                 \</span></div>
+<div class="line"><a id="l00838" name="l00838"></a><span class="lineno">  838</span><span class="preprocessor">        CCC_adaptive_map_and_context_modify_wrap(arguments)</span></div>
+<div class="line"><a id="l00839" name="l00839"></a><span class="lineno">  839</span><span class="preprocessor">#    define adaptive_map_contains(arguments...)                                \</span></div>
+<div class="line"><a id="l00840" name="l00840"></a><span class="lineno">  840</span><span class="preprocessor">        CCC_adaptive_map_contains(arguments)</span></div>
+<div class="line"><a id="l00841" name="l00841"></a><span class="lineno">  841</span><span class="preprocessor">#    define adaptive_map_get_key_value(arguments...)                           \</span></div>
+<div class="line"><a id="l00842" name="l00842"></a><span class="lineno">  842</span><span class="preprocessor">        CCC_adaptive_map_get_key_value(arguments)</span></div>
+<div class="line"><a id="l00843" name="l00843"></a><span class="lineno">  843</span><span class="preprocessor">#    define adaptive_map_get_mut(arguments...)                                 \</span></div>
+<div class="line"><a id="l00844" name="l00844"></a><span class="lineno">  844</span><span class="preprocessor">        CCC_adaptive_map_get_mut(arguments)</span></div>
+<div class="line"><a id="l00845" name="l00845"></a><span class="lineno">  845</span><span class="preprocessor">#    define adaptive_map_swap_entry(arguments...)                              \</span></div>
+<div class="line"><a id="l00846" name="l00846"></a><span class="lineno">  846</span><span class="preprocessor">        CCC_adaptive_map_swap_entry(arguments)</span></div>
+<div class="line"><a id="l00847" name="l00847"></a><span class="lineno">  847</span><span class="preprocessor">#    define adaptive_map_remove_key_value(arguments...)                        \</span></div>
+<div class="line"><a id="l00848" name="l00848"></a><span class="lineno">  848</span><span class="preprocessor">        CCC_adaptive_map_remove_key_value(arguments)</span></div>
+<div class="line"><a id="l00849" name="l00849"></a><span class="lineno">  849</span><span class="preprocessor">#    define adaptive_map_entry(arguments...) CCC_adaptive_map_entry(arguments)</span></div>
+<div class="line"><a id="l00850" name="l00850"></a><span class="lineno">  850</span><span class="preprocessor">#    define adaptive_map_remove_entry(arguments...)                            \</span></div>
+<div class="line"><a id="l00851" name="l00851"></a><span class="lineno">  851</span><span class="preprocessor">        CCC_adaptive_map_remove_entry(arguments)</span></div>
+<div class="line"><a id="l00852" name="l00852"></a><span class="lineno">  852</span><span class="preprocessor">#    define adaptive_map_or_insert(arguments...)                               \</span></div>
+<div class="line"><a id="l00853" name="l00853"></a><span class="lineno">  853</span><span class="preprocessor">        CCC_adaptive_map_or_insert(arguments)</span></div>
+<div class="line"><a id="l00854" name="l00854"></a><span class="lineno">  854</span><span class="preprocessor">#    define adaptive_map_insert_entry(arguments...)                            \</span></div>
+<div class="line"><a id="l00855" name="l00855"></a><span class="lineno">  855</span><span class="preprocessor">        CCC_adaptive_map_insert_entry(arguments)</span></div>
+<div class="line"><a id="l00856" name="l00856"></a><span class="lineno">  856</span><span class="preprocessor">#    define adaptive_map_unwrap(arguments...) CCC_adaptive_map_unwrap(arguments)</span></div>
+<div class="line"><a id="l00857" name="l00857"></a><span class="lineno">  857</span><span class="preprocessor">#    define adaptive_map_unwrap_mut(arguments...)                              \</span></div>
+<div class="line"><a id="l00858" name="l00858"></a><span class="lineno">  858</span><span class="preprocessor">        CCC_adaptive_map_unwrap_mut(arguments)</span></div>
+<div class="line"><a id="l00859" name="l00859"></a><span class="lineno">  859</span><span class="preprocessor">#    define adaptive_map_begin(arguments...) CCC_adaptive_map_begin(arguments)</span></div>
+<div class="line"><a id="l00860" name="l00860"></a><span class="lineno">  860</span><span class="preprocessor">#    define adaptive_map_next(arguments...) CCC_adaptive_map_next(arguments)</span></div>
+<div class="line"><a id="l00861" name="l00861"></a><span class="lineno">  861</span><span class="preprocessor">#    define adaptive_map_reverse_begin(arguments...)                           \</span></div>
+<div class="line"><a id="l00862" name="l00862"></a><span class="lineno">  862</span><span class="preprocessor">        CCC_adaptive_map_reverse_begin(arguments)</span></div>
+<div class="line"><a id="l00863" name="l00863"></a><span class="lineno">  863</span><span class="preprocessor">#    define adaptive_map_reverse_next(arguments...)                            \</span></div>
+<div class="line"><a id="l00864" name="l00864"></a><span class="lineno">  864</span><span class="preprocessor">        CCC_adaptive_map_reverse_next(arguments)</span></div>
+<div class="line"><a id="l00865" name="l00865"></a><span class="lineno">  865</span><span class="preprocessor">#    define adaptive_map_end(arguments...) CCC_adaptive_map_end(arguments)</span></div>
+<div class="line"><a id="l00866" name="l00866"></a><span class="lineno">  866</span><span class="preprocessor">#    define adaptive_map_reverse_end(arguments...)                             \</span></div>
+<div class="line"><a id="l00867" name="l00867"></a><span class="lineno">  867</span><span class="preprocessor">        CCC_adaptive_map_reverse_end(arguments)</span></div>
+<div class="line"><a id="l00868" name="l00868"></a><span class="lineno">  868</span><span class="preprocessor">#    define adaptive_map_count(arguments...) CCC_adaptive_map_count(arguments)</span></div>
+<div class="line"><a id="l00869" name="l00869"></a><span class="lineno">  869</span><span class="preprocessor">#    define adaptive_map_is_empty(arguments...)                                \</span></div>
+<div class="line"><a id="l00870" name="l00870"></a><span class="lineno">  870</span><span class="preprocessor">        CCC_adaptive_map_is_empty(arguments)</span></div>
+<div class="line"><a id="l00871" name="l00871"></a><span class="lineno">  871</span><span class="preprocessor">#    define adaptive_map_clear(arguments...) CCC_adaptive_map_clear(arguments)</span></div>
+<div class="line"><a id="l00872" name="l00872"></a><span class="lineno">  872</span><span class="preprocessor">#    define adaptive_map_validate(arguments...)                                \</span></div>
+<div class="line"><a id="l00873" name="l00873"></a><span class="lineno">  873</span><span class="preprocessor">        CCC_adaptive_map_validate(arguments)</span></div>
+<div class="line"><a id="l00874" name="l00874"></a><span class="lineno">  874</span><span class="comment">/* NOLINTEND(readability-identifier-naming) */</span></div>
+<div class="line"><a id="l00875" name="l00875"></a><span class="lineno">  875</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00876" name="l00876"></a><span class="lineno">  876</span> </div>
+<div class="line"><a id="l00877" name="l00877"></a><span class="lineno">  877</span><span class="preprocessor">#endif </span><span class="comment">/* CCC_ADAPTIVE_MAP_H */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aadaptive__map_8h_html_a15221b12d38837d3b5f7020c8edb4821"><div class="ttname"><a href="adaptive__map_8h.html#a15221b12d38837d3b5f7020c8edb4821">CCC_adaptive_map_equal_range</a></div><div class="ttdeci">CCC_Range CCC_adaptive_map_equal_range(CCC_Adaptive_map *map, void const *begin_key, void const *end_key)</div><div class="ttdoc">Return an iterable range of values from [begin_key, end_key). Amortized O(lg N).</div></div>
 <div class="ttc" id="aadaptive__map_8h_html_a18b468c4dd150937d2a29bdda06c787a"><div class="ttname"><a href="adaptive__map_8h.html#a18b468c4dd150937d2a29bdda06c787a">CCC_adaptive_map_reverse_end</a></div><div class="ttdeci">void * CCC_adaptive_map_reverse_end(CCC_Adaptive_map const *map)</div><div class="ttdoc">Return the reverse_end of a reverse inorder traversal of the map. O(1).</div></div>
 <div class="ttc" id="aadaptive__map_8h_html_a1a1afeb764311ed566533db8b28312c7"><div class="ttname"><a href="adaptive__map_8h.html#a1a1afeb764311ed566533db8b28312c7">CCC_adaptive_map_or_insert</a></div><div class="ttdeci">void * CCC_adaptive_map_or_insert(CCC_Adaptive_map_entry const *entry, CCC_Adaptive_map_node *type_intruder)</div><div class="ttdoc">Inserts the struct with handle type_intruder if the entry is Vacant.</div></div>

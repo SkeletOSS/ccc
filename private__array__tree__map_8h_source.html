@@ -191,10 +191,10 @@ $(document).ready(function(){initNavTree('private__array__tree__map_8h_source.ht
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    }) {                                                                       \</div>
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    }</div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span> </div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span><span class="preprocessor">#define CCC_private_array_tree_map_initialize(                                 \</span></div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span><span class="preprocessor">    private_type_name, private_key_field, private_key_compare,                 \</span></div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span><span class="preprocessor">    private_allocate, private_context, private_capacity,                       \</span></div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span><span class="preprocessor">    private_memory_pointer)                                                    \</span></div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span><span class="preprocessor">#define CCC_private_array_tree_map_for(private_type_name, private_key_field,   \</span></div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span><span class="preprocessor">                                       private_key_compare, private_allocate,  \</span></div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span><span class="preprocessor">                                       private_context, private_capacity,      \</span></div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span><span class="preprocessor">                                       private_memory_pointer)                 \</span></div>
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span><span class="preprocessor">    {                                                                          \</span></div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span><span class="preprocessor">        .data = (private_memory_pointer),                                      \</span></div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span><span class="preprocessor">        .nodes = NULL,                                                         \</span></div>
@@ -218,7 +218,7 @@ $(document).ready(function(){initNavTree('private__array__tree__map_8h_source.ht
 <div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span><span class="preprocessor">            *private_array_tree_map_initializer_list                           \</span></div>
 <div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span><span class="preprocessor">            = private_array_compound_literal;                                  \</span></div>
 <div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span><span class="preprocessor">        struct CCC_Array_tree_map private_array_tree_map                       \</span></div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span><span class="preprocessor">            = CCC_private_array_tree_map_initialize(                           \</span></div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span><span class="preprocessor">            = CCC_private_array_tree_map_for(                                  \</span></div>
 <div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span><span class="preprocessor">                typeof(*private_array_tree_map_initializer_list),              \</span></div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span><span class="preprocessor">                private_key_field, private_key_compare, private_allocate,      \</span></div>
 <div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span><span class="preprocessor">                private_context, 0, NULL);                                     \</span></div>
@@ -267,12 +267,12 @@ $(document).ready(function(){initNavTree('private__array__tree__map_8h_source.ht
 <div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span><span class="preprocessor">        private_key_field, private_key_compare, private_allocate, NULL,        \</span></div>
 <div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span><span class="preprocessor">        private_optional_cap, private_array_compound_literal)</span></div>
 <div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span> </div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span><span class="preprocessor">#define CCC_private_array_tree_map_with_context_capacity(                      \</span></div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span><span class="preprocessor">#define CCC_private_array_tree_map_context_with_capacity(                      \</span></div>
 <div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span><span class="preprocessor">    private_type_name, private_key_field, private_key_compare,                 \</span></div>
 <div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span><span class="preprocessor">    private_allocate, private_context, private_cap)                            \</span></div>
 <div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span><span class="preprocessor">    (__extension__({                                                           \</span></div>
 <div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span><span class="preprocessor">        struct CCC_Array_tree_map private_array_tree_map                       \</span></div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span><span class="preprocessor">            = CCC_private_array_tree_map_initialize(                           \</span></div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span><span class="preprocessor">            = CCC_private_array_tree_map_for(                                  \</span></div>
 <div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span><span class="preprocessor">                private_type_name, private_key_field, private_key_compare,     \</span></div>
 <div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span><span class="preprocessor">                private_allocate, private_context, 0, NULL);                   \</span></div>
 <div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span><span class="preprocessor">        (void)CCC_array_tree_map_reserve(&amp;private_array_tree_map, private_cap, \</span></div>
@@ -283,11 +283,11 @@ $(document).ready(function(){initNavTree('private__array__tree__map_8h_source.ht
 <div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span><span class="preprocessor">#define CCC_private_array_tree_map_with_capacity(                              \</span></div>
 <div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span><span class="preprocessor">    private_type_name, private_key_field, private_key_compare,                 \</span></div>
 <div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span><span class="preprocessor">    private_allocate, private_cap)                                             \</span></div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span><span class="preprocessor">    CCC_private_array_tree_map_with_context_capacity(                          \</span></div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span><span class="preprocessor">    CCC_private_array_tree_map_context_with_capacity(                          \</span></div>
 <div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span><span class="preprocessor">        private_type_name, private_key_field, private_key_compare,             \</span></div>
 <div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span><span class="preprocessor">        private_allocate, NULL, private_cap)</span></div>
 <div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span> </div>
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span><span class="preprocessor">#define CCC_private_array_tree_map_with_context_compound_literal(              \</span></div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span><span class="preprocessor">#define CCC_private_array_tree_map_context_with_storage(                       \</span></div>
 <div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span><span class="preprocessor">    private_key_node_field, private_key_order_fn, private_context,             \</span></div>
 <div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span><span class="preprocessor">    private_compound_literal, private_optional_storage_specifier...)           \</span></div>
 <div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span><span class="preprocessor">    {                                                                          \</span></div>
@@ -309,24 +309,24 @@ $(document).ready(function(){initNavTree('private__array__tree__map_8h_source.ht
 <div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span><span class="preprocessor">        .context = (private_context),                                          \</span></div>
 <div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span><span class="preprocessor">    }</span></div>
 <div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span> </div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span><span class="preprocessor">#define CCC_private_array_tree_map_with_compound_literal(                      \</span></div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span><span class="preprocessor">#define CCC_private_array_tree_map_with_storage(                               \</span></div>
 <div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span><span class="preprocessor">    private_key_node_field, private_key_order_fn, private_compound_literal,    \</span></div>
 <div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span><span class="preprocessor">    private_optional_storage_specifier...)                                     \</span></div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span><span class="preprocessor">    CCC_private_array_tree_map_with_context_compound_literal(                  \</span></div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span><span class="preprocessor">    CCC_private_array_tree_map_context_with_storage(                           \</span></div>
 <div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span><span class="preprocessor">        private_key_node_field, private_key_order_fn, NULL,                    \</span></div>
 <div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span><span class="preprocessor">        private_compound_literal, private_optional_storage_specifier)</span></div>
 <div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span> </div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span><span class="preprocessor">#define CCC_private_array_tree_map_with_context_allocator(                     \</span></div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span><span class="preprocessor">#define CCC_private_array_tree_map_context_with_allocator(                     \</span></div>
 <div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span><span class="preprocessor">    private_type_name, private_key_field, private_key_compare,                 \</span></div>
 <div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span><span class="preprocessor">    private_allocate, private_context)                                         \</span></div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span><span class="preprocessor">    CCC_private_array_tree_map_initialize(                                     \</span></div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span><span class="preprocessor">        private_type_name, private_key_field, private_key_compare,             \</span></div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span><span class="preprocessor">        private_allocate, private_context, 0, NULL)</span></div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span><span class="preprocessor">    CCC_private_array_tree_map_for(private_type_name, private_key_field,       \</span></div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span><span class="preprocessor">                                   private_key_compare, private_allocate,      \</span></div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span><span class="preprocessor">                                   private_context, 0, NULL)</span></div>
 <div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span> </div>
 <div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span><span class="preprocessor">#define CCC_private_array_tree_map_with_allocator(                             \</span></div>
 <div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span><span class="preprocessor">    private_type_name, private_key_field, private_key_compare,                 \</span></div>
 <div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span><span class="preprocessor">    private_allocate)                                                          \</span></div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span><span class="preprocessor">    CCC_private_array_tree_map_with_context_allocator(                         \</span></div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span><span class="preprocessor">    CCC_private_array_tree_map_context_with_allocator(                         \</span></div>
 <div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span><span class="preprocessor">        private_type_name, private_key_field, private_key_compare,             \</span></div>
 <div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span><span class="preprocessor">        private_allocate, NULL)</span></div>
 <div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span> </div>

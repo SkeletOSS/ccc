@@ -131,15 +131,15 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Initialization Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Initialize the container with memory, callbacks, and permissions. </p>
 </td></tr>
-<tr class="memitem:acc15249a44ea8a27e643f60daf519e99"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tree__map_8h.html#acc15249a44ea8a27e643f60daf519e99">CCC_tree_map_initialize</a>(type_name,  type_intruder_field_name,  type_key_field_name,  compare,  allocate,  context)</td></tr>
-<tr class="memdesc:acc15249a44ea8a27e643f60daf519e99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the tree map at runtime or compile time.  <br /></td></tr>
-<tr class="separator:acc15249a44ea8a27e643f60daf519e99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6fe7bce480ef8fd279b935cb858a01f7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tree__map_8h.html#a6fe7bce480ef8fd279b935cb858a01f7">CCC_tree_map_for</a>(type_name,  type_intruder_field_name,  type_key_field_name,  compare,  allocate,  context)</td></tr>
+<tr class="memdesc:a6fe7bce480ef8fd279b935cb858a01f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the tree map at runtime or compile time.  <br /></td></tr>
+<tr class="separator:a6fe7bce480ef8fd279b935cb858a01f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77ef14f911f76cfe985b746439d86429"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tree__map_8h.html#a77ef14f911f76cfe985b746439d86429">CCC_tree_map_with_allocator</a>(type_name,  type_intruder_field,  type_key_field,  compare,  allocate)</td></tr>
 <tr class="memdesc:a77ef14f911f76cfe985b746439d86429"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an empty dynamic map at compile or runtime with an allocator.  <br /></td></tr>
 <tr class="separator:a77ef14f911f76cfe985b746439d86429"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08876a7e1f0cc6a314e2baff6a10bb18"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tree__map_8h.html#a08876a7e1f0cc6a314e2baff6a10bb18">CCC_tree_map_with_context_allocator</a>(type_name,  type_intruder_field,  type_key_field,  compare,  allocate,  context)</td></tr>
-<tr class="memdesc:a08876a7e1f0cc6a314e2baff6a10bb18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an empty dynamic map at compile or runtime with an allocator.  <br /></td></tr>
-<tr class="separator:a08876a7e1f0cc6a314e2baff6a10bb18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ab882825f7de0af42be8ad71c199a00"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tree__map_8h.html#a5ab882825f7de0af42be8ad71c199a00">CCC_tree_map_context_with_allocator</a>(type_name,  type_intruder_field,  type_key_field,  compare,  allocate,  context)</td></tr>
+<tr class="memdesc:a5ab882825f7de0af42be8ad71c199a00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an empty dynamic map at compile or runtime with an allocator.  <br /></td></tr>
+<tr class="separator:a5ab882825f7de0af42be8ad71c199a00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85ade21ce1d4cbc66f7a8528bcae4d45"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tree__map_8h.html#a85ade21ce1d4cbc66f7a8528bcae4d45">CCC_tree_map_from</a>(type_intruder_field_name,  type_key_field_name,  compare,  allocate,  destroy,  compound_literal_array...)</td></tr>
 <tr class="memdesc:a85ade21ce1d4cbc66f7a8528bcae4d45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a dynamic tree map at runtime.  <br /></td></tr>
 <tr class="separator:a85ade21ce1d4cbc66f7a8528bcae4d45"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -449,6 +449,92 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
+<a id="a5ab882825f7de0af42be8ad71c199a00" name="a5ab882825f7de0af42be8ad71c199a00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ab882825f7de0af42be8ad71c199a00">&#9670;&#160;</a></span>CCC_tree_map_context_with_allocator</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CCC_tree_map_context_with_allocator</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">type_name, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">type_intruder_field, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">type_key_field, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">compare, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">allocate, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">context&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_tree_map_context_with_allocator(                               \</div>
+<div class="line">        type_name, type_intruder_field, type_key_field, compare, allocate,     \</div>
+<div class="line">        context)</div>
+</div><!-- fragment -->
+<p>Initialize an empty dynamic map at compile or runtime with an allocator. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the user defined type stored in the map. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_field</td><td>the name of the intrusive map node element. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_key_field</td><td>the field of the struct used for key storage. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the CCC_Key_comparator the user intends to use. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the CCC_Allocator function used to manage map memory. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>any additional context needed for comparison or allocation. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the map directly initialized on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Tree__map.html">CCC_Tree_map</a> map = <a class="el" href="tree__map_8h.html#a77ef14f911f76cfe985b746439d86429" title="Initialize an empty dynamic map at compile or runtime with an allocator.">CCC_tree_map_with_allocator(...)</a>;)</dd></dl>
+<p>Initialize a dynamic map at compile time.</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TREE_MAP_USING_NAMESPACE_CCC</span></div>
+<div class="line"><span class="keyword">struct </span>Val</div>
+<div class="line">{</div>
+<div class="line">    tree_map_node node;</div>
+<div class="line">    <span class="keywordtype">int</span> key;</div>
+<div class="line">    <span class="keywordtype">int</span> val;</div>
+<div class="line">};</div>
+<div class="line"><span class="keyword">static</span> Tree_map map = tree_map_with_allocator(</div>
+<div class="line">    <span class="keyword">struct</span> Val,</div>
+<div class="line">    node,</div>
+<div class="line">    key,</div>
+<div class="line">    map_key_order,</div>
+<div class="line">    arena_allocate,</div>
+<div class="line">    &amp;arena</div>
+<div class="line">);</div>
+</div><!-- fragment --><p>This can help eliminate boilerplate in initializers. </p>
+
+</div>
+</div>
 <a id="ae9abff7681fd73cdcfcdf87802a83605" name="ae9abff7681fd73cdcfcdf87802a83605"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae9abff7681fd73cdcfcdf87802a83605">&#9670;&#160;</a></span>CCC_tree_map_entry_wrap</h2>
 
@@ -577,6 +663,74 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
+<a id="a6fe7bce480ef8fd279b935cb858a01f7" name="a6fe7bce480ef8fd279b935cb858a01f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6fe7bce480ef8fd279b935cb858a01f7">&#9670;&#160;</a></span>CCC_tree_map_for</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CCC_tree_map_for</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">type_name, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">type_intruder_field_name, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">type_key_field_name, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">compare, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">allocate, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">context&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_tree_map_for(type_name, type_intruder_field_name,              \</div>
+<div class="line">                             type_key_field_name, compare, allocate, context)</div>
+</div><!-- fragment -->
+<p>Initializes the tree map at runtime or compile time. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the user type wrapping the intrusive element. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_field_name</td><td>the name of the intrusive map elem field. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_key_field_name</td><td>the name of the field in user type used as key. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the key comparison function (see <a class="el" href="types_8h.html" title="The C Container Collection Fundamental Types.">types.h</a>). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the allocation function or NULL if allocation is banned. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>a pointer to any context data for comparison or destruction. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the struct initialized tree map for direct assignment (i.e. <a class="el" href="structCCC__Tree__map.html">CCC_Tree_map</a> m = <a class="el" href="tree__map_8h.html#a6fe7bce480ef8fd279b935cb858a01f7" title="Initializes the tree map at runtime or compile time.">CCC_tree_map_for(...)</a>;). </dd></dl>
+
+</div>
+</div>
 <a id="a85ade21ce1d4cbc66f7a8528bcae4d45" name="a85ade21ce1d4cbc66f7a8528bcae4d45"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a85ade21ce1d4cbc66f7a8528bcae4d45">&#9670;&#160;</a></span>CCC_tree_map_from</h2>
 
@@ -644,75 +798,6 @@ This graph shows which files directly or indirectly include this file:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the struct initialized tree map for direct assignment (e.g. <a class="el" href="structCCC__Tree__map.html">CCC_Tree_map</a> m = <a class="el" href="tree__map_8h.html#a85ade21ce1d4cbc66f7a8528bcae4d45" title="Initializes a dynamic tree map at runtime.">CCC_tree_map_from(...)</a>;) or an empty map if allocation fails.</dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>If any node allocation fails while copying in the values in the compound literal array of user types, the map is cleared; if a destructor is provided, it is called on each node and they are freed using the provided allocate function. </dd></dl>
-
-</div>
-</div>
-<a id="acc15249a44ea8a27e643f60daf519e99" name="acc15249a44ea8a27e643f60daf519e99"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acc15249a44ea8a27e643f60daf519e99">&#9670;&#160;</a></span>CCC_tree_map_initialize</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_tree_map_initialize</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_name, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_intruder_field_name, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_key_field_name, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">compare, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">context&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_tree_map_initialize(type_name, type_intruder_field_name,       \</div>
-<div class="line">                                    type_key_field_name, compare, allocate,    \</div>
-<div class="line">                                    context)</div>
-</div><!-- fragment -->
-<p>Initializes the tree map at runtime or compile time. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the user type wrapping the intrusive element. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_field_name</td><td>the name of the intrusive map elem field. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_key_field_name</td><td>the name of the field in user type used as key. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the key comparison function (see <a class="el" href="types_8h.html" title="The C Container Collection Fundamental Types.">types.h</a>). </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the allocation function or NULL if allocation is banned. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>a pointer to any context data for comparison or destruction. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the struct initialized tree map for direct assignment (i.e. <a class="el" href="structCCC__Tree__map.html">CCC_Tree_map</a> m = <a class="el" href="tree__map_8h.html#acc15249a44ea8a27e643f60daf519e99" title="Initializes the tree map at runtime or compile time.">CCC_tree_map_initialize(...)</a>;). </dd></dl>
 
 </div>
 </div>
@@ -1168,92 +1253,6 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">    key,</div>
 <div class="line">    map_key_order,</div>
 <div class="line">    stdlib_allocate,</div>
-<div class="line">);</div>
-</div><!-- fragment --><p>This can help eliminate boilerplate in initializers. </p>
-
-</div>
-</div>
-<a id="a08876a7e1f0cc6a314e2baff6a10bb18" name="a08876a7e1f0cc6a314e2baff6a10bb18"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a08876a7e1f0cc6a314e2baff6a10bb18">&#9670;&#160;</a></span>CCC_tree_map_with_context_allocator</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_tree_map_with_context_allocator</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_name, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_intruder_field, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_key_field, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">compare, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">context&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_tree_map_with_context_allocator(                               \</div>
-<div class="line">        type_name, type_intruder_field, type_key_field, compare, allocate,     \</div>
-<div class="line">        context)</div>
-</div><!-- fragment -->
-<p>Initialize an empty dynamic map at compile or runtime with an allocator. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the user defined type stored in the map. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_field</td><td>the name of the intrusive map node element. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_key_field</td><td>the field of the struct used for key storage. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the CCC_Key_comparator the user intends to use. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the CCC_Allocator function used to manage map memory. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>any additional context needed for comparison or allocation. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the map directly initialized on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Tree__map.html">CCC_Tree_map</a> map = <a class="el" href="tree__map_8h.html#a77ef14f911f76cfe985b746439d86429" title="Initialize an empty dynamic map at compile or runtime with an allocator.">CCC_tree_map_with_allocator(...)</a>;)</dd></dl>
-<p>Initialize a dynamic map at compile time.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TREE_MAP_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keyword">struct </span>Val</div>
-<div class="line">{</div>
-<div class="line">    tree_map_node node;</div>
-<div class="line">    <span class="keywordtype">int</span> key;</div>
-<div class="line">    <span class="keywordtype">int</span> val;</div>
-<div class="line">};</div>
-<div class="line"><span class="keyword">static</span> Tree_map map = tree_map_with_allocator(</div>
-<div class="line">    <span class="keyword">struct</span> Val,</div>
-<div class="line">    node,</div>
-<div class="line">    key,</div>
-<div class="line">    map_key_order,</div>
-<div class="line">    arena_allocate,</div>
-<div class="line">    &amp;arena</div>
 <div class="line">);</div>
 </div><!-- fragment --><p>This can help eliminate boilerplate in initializers. </p>
 

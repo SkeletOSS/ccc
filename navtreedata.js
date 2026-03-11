@@ -61,7 +61,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "adaptive__map_8h.html",
-"buffer_8h.html#a3d1cc37e0625a8420ac15f4890e32233",
+"buffer_8h.html#a3974ff2704b82ff5c05f3f379ada7b04",
 "priority__queue_8h.html#a5a592eb95b28d9aaa1c845c0bb935fcc",
 "structCCC__Priority__queue__node.html"
 ];

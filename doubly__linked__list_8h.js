@@ -1,12 +1,12 @@
 var doubly__linked__list_8h =
 [
     [ "CCC_doubly_linked_list_context_from", "doubly__linked__list_8h.html#a3a7534200ee35d37d1f5b14ec57f7bea", null ],
+    [ "CCC_doubly_linked_list_context_with_allocator", "doubly__linked__list_8h.html#aa40eac2b4e536b654a6856a2ca5524c8", null ],
     [ "CCC_doubly_linked_list_emplace_back", "doubly__linked__list_8h.html#a9941eb735f16c63e23263db562ef0de5", null ],
     [ "CCC_doubly_linked_list_emplace_front", "doubly__linked__list_8h.html#a2392274160b41a54c4398f44bb24eab6", null ],
+    [ "CCC_doubly_linked_list_for", "doubly__linked__list_8h.html#a66280457e03b5e8291986a1110a10e2f", null ],
     [ "CCC_doubly_linked_list_from", "doubly__linked__list_8h.html#a46b9061542a492d317f30916557d9db8", null ],
-    [ "CCC_doubly_linked_list_initialize", "doubly__linked__list_8h.html#a8d313a84494c1c4a74951622cc5f5fcf", null ],
     [ "CCC_doubly_linked_list_with_allocator", "doubly__linked__list_8h.html#a24ece8c3ca52c321fe9ab581590a1cb5", null ],
-    [ "CCC_doubly_linked_list_with_context_allocator", "doubly__linked__list_8h.html#a11b2318cf022842c7df83ba07a1526a7", null ],
     [ "CCC_Doubly_linked_list", "doubly__linked__list_8h.html#ad6cd73913a91a783faf9a65052916d68", null ],
     [ "CCC_Doubly_linked_list_node", "doubly__linked__list_8h.html#a5f30aec8c3f4beaa578a6f6807eba859", null ],
     [ "CCC_doubly_linked_list_back", "doubly__linked__list_8h.html#af5d1c37ca1615da500ed00f0f2043572", null ],

@@ -103,10 +103,10 @@ $(document).ready(function(){initNavTree('buffer_8h_source.html',''); initResiza
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="buffer_8h.html#af21c5e9b99c8ee4bb14f827f07b8a5af">   73</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structCCC__Buffer.html">CCC_Buffer</a> <a class="code hl_struct" href="structCCC__Buffer.html">CCC_Buffer</a>;</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno"><a class="line" href="buffer_8h.html#aa8f825bc58415d1b89ae99c7a44dec85">  118</a></span><span class="preprocessor">#define CCC_buffer_initialize(type_name, allocate, context, capacity, count,   \</span></div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="preprocessor">                              data_pointer...)                                 \</span></div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="preprocessor">    CCC_private_buffer_initialize(type_name, allocate, context, capacity,      \</span></div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="preprocessor">                                  count, data_pointer)</span></div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno"><a class="line" href="buffer_8h.html#a86513108202eb0dd7f87fa0237a9e371">  118</a></span><span class="preprocessor">#define CCC_buffer_for(type_name, allocate, context, capacity, count,          \</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="preprocessor">                       data_pointer...)                                        \</span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="preprocessor">    CCC_private_buffer_for(type_name, allocate, context, capacity, count,      \</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="preprocessor">                           data_pointer)</span></div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno"><a class="line" href="buffer_8h.html#adb6971f97fa83e1a45a955aeec86dd6e">  167</a></span><span class="preprocessor">#define CCC_buffer_from(allocate, optional_capacity,                           \</span></div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span><span class="preprocessor">                        compound_literal_array...)                             \</span></div>
@@ -120,24 +120,24 @@ $(document).ready(function(){initNavTree('buffer_8h_source.html',''); initResiza
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno"><a class="line" href="buffer_8h.html#adb20e5d248069330702b80c19c0f9c58">  244</a></span><span class="preprocessor">#define CCC_buffer_with_capacity(type_name, allocate, capacity)                \</span></div>
 <div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span><span class="preprocessor">    CCC_private_buffer_with_capacity(type_name, allocate, capacity)</span></div>
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span> </div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno"><a class="line" href="buffer_8h.html#a6859367074baf5c4995f9ae30b950311">  271</a></span><span class="preprocessor">#define CCC_buffer_with_context_capacity(type_name, allocate, context,         \</span></div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno"><a class="line" href="buffer_8h.html#a8c321cf5311ef57f693fda5f3ba71a33">  271</a></span><span class="preprocessor">#define CCC_buffer_context_with_capacity(type_name, allocate, context,         \</span></div>
 <div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span><span class="preprocessor">                                         capacity)                             \</span></div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span><span class="preprocessor">    CCC_private_buffer_with_context_capacity(type_name, allocate, context,     \</span></div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span><span class="preprocessor">    CCC_private_buffer_context_with_capacity(type_name, allocate, context,     \</span></div>
 <div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span><span class="preprocessor">                                             capacity)</span></div>
 <div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span> </div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno"><a class="line" href="buffer_8h.html#a9ccfcf4af060e2069d711f7933925fa8">  295</a></span><span class="preprocessor">#define CCC_buffer_with_compound_literal(count, compound_literal_array...)     \</span></div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span><span class="preprocessor">    CCC_private_buffer_with_compound_literal(count, compound_literal_array)</span></div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno"><a class="line" href="buffer_8h.html#ad6284aa558aec89f87298c459176b595">  295</a></span><span class="preprocessor">#define CCC_buffer_with_storage(count, compound_literal_array...)              \</span></div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span><span class="preprocessor">    CCC_private_buffer_with_storage(count, compound_literal_array)</span></div>
 <div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span> </div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno"><a class="line" href="buffer_8h.html#a93ecd88b73c7b78721aaee93c1983647">  322</a></span><span class="preprocessor">#define CCC_buffer_with_context_compound_literal(context, count,               \</span></div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span><span class="preprocessor">                                                 compound_literal_array...)    \</span></div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span><span class="preprocessor">    CCC_private_buffer_with_context_compound_literal(context, count,           \</span></div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span><span class="preprocessor">                                                     compound_literal_array)</span></div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno"><a class="line" href="buffer_8h.html#a0a7925915d15619fc97c71503c1a7af8">  322</a></span><span class="preprocessor">#define CCC_buffer_context_with_storage(context, count,                        \</span></div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span><span class="preprocessor">                                        compound_literal_array...)             \</span></div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span><span class="preprocessor">    CCC_private_buffer_context_with_storage(context, count,                    \</span></div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span><span class="preprocessor">                                            compound_literal_array)</span></div>
 <div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span> </div>
 <div class="line"><a id="l00343" name="l00343"></a><span class="lineno"><a class="line" href="buffer_8h.html#a54f4d46de712323bb67cc72b74e4158b">  343</a></span><span class="preprocessor">#define CCC_buffer_with_allocator(type_name, allocator)                        \</span></div>
 <div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span><span class="preprocessor">    CCC_private_buffer_with_allocator(type_name, allocator)</span></div>
 <div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span> </div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno"><a class="line" href="buffer_8h.html#afb5cc6b2fec791c7146e18cdd8040ad6">  370</a></span><span class="preprocessor">#define CCC_buffer_with_context_allocator(type_name, allocator, context)       \</span></div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span><span class="preprocessor">    CCC_private_buffer_with_context_allocator(type_name, allocator, context)</span></div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno"><a class="line" href="buffer_8h.html#ad9a4a16be2f8b592222f535bdcb44475">  370</a></span><span class="preprocessor">#define CCC_buffer_context_with_allocator(type_name, allocator, context)       \</span></div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span><span class="preprocessor">    CCC_private_buffer_context_with_allocator(type_name, allocator, context)</span></div>
 <div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span> </div>
 <div class="line"><a id="l00389" name="l00389"></a><span class="lineno"><a class="line" href="buffer_8h.html#a7f96119efe2724e34ee6e879e511154c">  389</a></span>[[nodiscard]] <a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> <a class="code hl_function" href="buffer_8h.html#a7f96119efe2724e34ee6e879e511154c">CCC_buffer_reserve</a>(<a class="code hl_struct" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, <span class="keywordtype">size_t</span> to_add,</div>
 <div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>                                            <a class="code hl_typedef" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a> *<a class="code hl_variable" href="structCCC__Buffer.html#abdc2e24bd3b2b66e2488163b57ee8e8a">allocate</a>);</div>
@@ -242,71 +242,70 @@ $(document).ready(function(){initNavTree('buffer_8h_source.html',''); initResiza
 <div class="line"><a id="l00910" name="l00910"></a><span class="lineno">  910</span><span class="preprocessor">#ifdef BUFFER_USING_NAMESPACE_CCC</span></div>
 <div class="line"><a id="l00911" name="l00911"></a><span class="lineno">  911</span><span class="comment">/* NOLINTBEGIN(readability-identifier-naming) */</span></div>
 <div class="line"><a id="l00912" name="l00912"></a><span class="lineno">  912</span><span class="keyword">typedef</span> <a class="code hl_struct" href="structCCC__Buffer.html">CCC_Buffer</a> Buffer;</div>
-<div class="line"><a id="l00913" name="l00913"></a><span class="lineno">  913</span><span class="preprocessor">#    define buffer_initialize(arguments...) CCC_buffer_initialize(arguments)</span></div>
-<div class="line"><a id="l00914" name="l00914"></a><span class="lineno">  914</span><span class="preprocessor">#    define buffer_with_compound_literal(arguments...)                         \</span></div>
-<div class="line"><a id="l00915" name="l00915"></a><span class="lineno">  915</span><span class="preprocessor">        CCC_buffer_with_compound_literal(arguments)</span></div>
-<div class="line"><a id="l00916" name="l00916"></a><span class="lineno">  916</span><span class="preprocessor">#    define buffer_with_context_compound_literal(arguments...)                 \</span></div>
-<div class="line"><a id="l00917" name="l00917"></a><span class="lineno">  917</span><span class="preprocessor">        CCC_buffer_with_context_compound_literal(arguments)</span></div>
-<div class="line"><a id="l00918" name="l00918"></a><span class="lineno">  918</span><span class="preprocessor">#    define buffer_with_allocator(arguments...)                                \</span></div>
-<div class="line"><a id="l00919" name="l00919"></a><span class="lineno">  919</span><span class="preprocessor">        CCC_buffer_with_allocator(arguments)</span></div>
-<div class="line"><a id="l00920" name="l00920"></a><span class="lineno">  920</span><span class="preprocessor">#    define buffer_with_context_allocator(arguments...)                        \</span></div>
-<div class="line"><a id="l00921" name="l00921"></a><span class="lineno">  921</span><span class="preprocessor">        CCC_buffer_with_context_allocator(arguments)</span></div>
-<div class="line"><a id="l00922" name="l00922"></a><span class="lineno">  922</span><span class="preprocessor">#    define buffer_with_capacity(arguments...)                                 \</span></div>
-<div class="line"><a id="l00923" name="l00923"></a><span class="lineno">  923</span><span class="preprocessor">        CCC_buffer_with_capacity(arguments)</span></div>
-<div class="line"><a id="l00924" name="l00924"></a><span class="lineno">  924</span><span class="preprocessor">#    define buffer_with_context_capacity(arguments...)                         \</span></div>
-<div class="line"><a id="l00925" name="l00925"></a><span class="lineno">  925</span><span class="preprocessor">        CCC_buffer_with_context_capacity(arguments)</span></div>
-<div class="line"><a id="l00926" name="l00926"></a><span class="lineno">  926</span><span class="preprocessor">#    define buffer_from(arguments...) CCC_buffer_from(arguments)</span></div>
-<div class="line"><a id="l00927" name="l00927"></a><span class="lineno">  927</span><span class="preprocessor">#    define buffer_context_from(arguments...) CCC_buffer_context_from(arguments)</span></div>
-<div class="line"><a id="l00928" name="l00928"></a><span class="lineno">  928</span><span class="preprocessor">#    define buffer_allocate(arguments...) CCC_buffer_allocate(arguments)</span></div>
-<div class="line"><a id="l00929" name="l00929"></a><span class="lineno">  929</span><span class="preprocessor">#    define buffer_reserve(arguments...) CCC_buffer_reserve(arguments)</span></div>
-<div class="line"><a id="l00930" name="l00930"></a><span class="lineno">  930</span><span class="preprocessor">#    define buffer_copy(arguments...) CCC_buffer_copy(arguments)</span></div>
-<div class="line"><a id="l00931" name="l00931"></a><span class="lineno">  931</span><span class="preprocessor">#    define buffer_clear(arguments...) CCC_buffer_clear(arguments)</span></div>
-<div class="line"><a id="l00932" name="l00932"></a><span class="lineno">  932</span><span class="preprocessor">#    define buffer_clear_and_free(arguments...)                                \</span></div>
-<div class="line"><a id="l00933" name="l00933"></a><span class="lineno">  933</span><span class="preprocessor">        CCC_buffer_clear_and_free(arguments)</span></div>
-<div class="line"><a id="l00934" name="l00934"></a><span class="lineno">  934</span><span class="preprocessor">#    define buffer_clear_and_free_reserve(arguments...)                        \</span></div>
-<div class="line"><a id="l00935" name="l00935"></a><span class="lineno">  935</span><span class="preprocessor">        CCC_buffer_clear_and_free_reserve(arguments)</span></div>
-<div class="line"><a id="l00936" name="l00936"></a><span class="lineno">  936</span><span class="preprocessor">#    define buffer_count(arguments...) CCC_buffer_count(arguments)</span></div>
-<div class="line"><a id="l00937" name="l00937"></a><span class="lineno">  937</span><span class="preprocessor">#    define buffer_count_bytes(arguments...) CCC_buffer_count_bytes(arguments)</span></div>
-<div class="line"><a id="l00938" name="l00938"></a><span class="lineno">  938</span><span class="preprocessor">#    define buffer_size_plus(arguments...) CCC_buffer_size_plus(arguments)</span></div>
-<div class="line"><a id="l00939" name="l00939"></a><span class="lineno">  939</span><span class="preprocessor">#    define buffer_size_minus(arguments...) CCC_buffer_size_minus(arguments)</span></div>
-<div class="line"><a id="l00940" name="l00940"></a><span class="lineno">  940</span><span class="preprocessor">#    define buffer_size_set(arguments...) CCC_buffer_size_set(arguments)</span></div>
-<div class="line"><a id="l00941" name="l00941"></a><span class="lineno">  941</span><span class="preprocessor">#    define buffer_capacity(arguments...) CCC_buffer_capacity(arguments)</span></div>
-<div class="line"><a id="l00942" name="l00942"></a><span class="lineno">  942</span><span class="preprocessor">#    define buffer_capacity_bytes(arguments...)                                \</span></div>
-<div class="line"><a id="l00943" name="l00943"></a><span class="lineno">  943</span><span class="preprocessor">        CCC_buffer_capacity_bytes(arguments)</span></div>
-<div class="line"><a id="l00944" name="l00944"></a><span class="lineno">  944</span><span class="preprocessor">#    define buffer_sizeof_type(arguments...) CCC_buffer_sizeof_type(arguments)</span></div>
-<div class="line"><a id="l00945" name="l00945"></a><span class="lineno">  945</span><span class="preprocessor">#    define buffer_index(arguments...) CCC_buffer_index(arguments)</span></div>
-<div class="line"><a id="l00946" name="l00946"></a><span class="lineno">  946</span><span class="preprocessor">#    define buffer_is_full(arguments...) CCC_buffer_is_full(arguments)</span></div>
-<div class="line"><a id="l00947" name="l00947"></a><span class="lineno">  947</span><span class="preprocessor">#    define buffer_is_empty(arguments...) CCC_buffer_is_empty(arguments)</span></div>
-<div class="line"><a id="l00948" name="l00948"></a><span class="lineno">  948</span><span class="preprocessor">#    define buffer_at(arguments...) CCC_buffer_at(arguments)</span></div>
-<div class="line"><a id="l00949" name="l00949"></a><span class="lineno">  949</span><span class="preprocessor">#    define buffer_as(arguments...) CCC_buffer_as(arguments)</span></div>
-<div class="line"><a id="l00950" name="l00950"></a><span class="lineno">  950</span><span class="preprocessor">#    define buffer_back(arguments...) CCC_buffer_back(arguments)</span></div>
-<div class="line"><a id="l00951" name="l00951"></a><span class="lineno">  951</span><span class="preprocessor">#    define buffer_back_as(arguments...) CCC_buffer_back_as(arguments)</span></div>
-<div class="line"><a id="l00952" name="l00952"></a><span class="lineno">  952</span><span class="preprocessor">#    define buffer_front(arguments...) CCC_buffer_front(arguments)</span></div>
-<div class="line"><a id="l00953" name="l00953"></a><span class="lineno">  953</span><span class="preprocessor">#    define buffer_front_as(arguments...) CCC_buffer_front_as(arguments)</span></div>
-<div class="line"><a id="l00954" name="l00954"></a><span class="lineno">  954</span><span class="preprocessor">#    define buffer_allocate_back(arguments...)                                 \</span></div>
-<div class="line"><a id="l00955" name="l00955"></a><span class="lineno">  955</span><span class="preprocessor">        CCC_buffer_allocate_back(arguments)</span></div>
-<div class="line"><a id="l00956" name="l00956"></a><span class="lineno">  956</span><span class="preprocessor">#    define buffer_emplace(arguments...) CCC_buffer_emplace(arguments)</span></div>
-<div class="line"><a id="l00957" name="l00957"></a><span class="lineno">  957</span><span class="preprocessor">#    define buffer_emplace_back(arguments...) CCC_buffer_emplace_back(arguments)</span></div>
-<div class="line"><a id="l00958" name="l00958"></a><span class="lineno">  958</span><span class="preprocessor">#    define buffer_push_back(arguments...) CCC_buffer_push_back(arguments)</span></div>
-<div class="line"><a id="l00959" name="l00959"></a><span class="lineno">  959</span><span class="preprocessor">#    define buffer_pop_back(arguments...) CCC_buffer_pop_back(arguments)</span></div>
-<div class="line"><a id="l00960" name="l00960"></a><span class="lineno">  960</span><span class="preprocessor">#    define buffer_pop_back_n(arguments...) CCC_buffer_pop_back_n(arguments)</span></div>
-<div class="line"><a id="l00961" name="l00961"></a><span class="lineno">  961</span><span class="preprocessor">#    define buffer_move(arguments...) CCC_buffer_move(arguments)</span></div>
-<div class="line"><a id="l00962" name="l00962"></a><span class="lineno">  962</span><span class="preprocessor">#    define buffer_swap(arguments...) CCC_buffer_swap(arguments)</span></div>
-<div class="line"><a id="l00963" name="l00963"></a><span class="lineno">  963</span><span class="preprocessor">#    define buffer_write(arguments...) CCC_buffer_write(arguments)</span></div>
-<div class="line"><a id="l00964" name="l00964"></a><span class="lineno">  964</span><span class="preprocessor">#    define buffer_erase(arguments...) CCC_buffer_erase(arguments)</span></div>
-<div class="line"><a id="l00965" name="l00965"></a><span class="lineno">  965</span><span class="preprocessor">#    define buffer_insert(arguments...) CCC_buffer_insert(arguments)</span></div>
-<div class="line"><a id="l00966" name="l00966"></a><span class="lineno">  966</span><span class="preprocessor">#    define buffer_begin(arguments...) CCC_buffer_begin(arguments)</span></div>
-<div class="line"><a id="l00967" name="l00967"></a><span class="lineno">  967</span><span class="preprocessor">#    define buffer_next(arguments...) CCC_buffer_next(arguments)</span></div>
-<div class="line"><a id="l00968" name="l00968"></a><span class="lineno">  968</span><span class="preprocessor">#    define buffer_end(arguments...) CCC_buffer_end(arguments)</span></div>
-<div class="line"><a id="l00969" name="l00969"></a><span class="lineno">  969</span><span class="preprocessor">#    define buffer_reverse_begin(arguments...)                                 \</span></div>
-<div class="line"><a id="l00970" name="l00970"></a><span class="lineno">  970</span><span class="preprocessor">        CCC_buffer_reverse_begin(arguments)</span></div>
-<div class="line"><a id="l00971" name="l00971"></a><span class="lineno">  971</span><span class="preprocessor">#    define buffer_reverse_next(arguments...) CCC_buffer_reverse_next(arguments)</span></div>
-<div class="line"><a id="l00972" name="l00972"></a><span class="lineno">  972</span><span class="preprocessor">#    define buffer_reverse_end(arguments...) CCC_buffer_reverse_end(arguments)</span></div>
-<div class="line"><a id="l00973" name="l00973"></a><span class="lineno">  973</span><span class="preprocessor">#    define buffer_capacity_end(arguments...) CCC_buffer_capacity_end(arguments)</span></div>
-<div class="line"><a id="l00974" name="l00974"></a><span class="lineno">  974</span><span class="comment">/* NOLINTEND(readability-identifier-naming) */</span></div>
-<div class="line"><a id="l00975" name="l00975"></a><span class="lineno">  975</span><span class="preprocessor">#endif </span><span class="comment">/* BUFFER_USING_NAMESPACE_CCC */</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00976" name="l00976"></a><span class="lineno">  976</span> </div>
-<div class="line"><a id="l00977" name="l00977"></a><span class="lineno">  977</span><span class="preprocessor">#endif </span><span class="comment">/* CCC_BUFFER_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00913" name="l00913"></a><span class="lineno">  913</span><span class="preprocessor">#    define buffer_for(arguments...) CCC_buffer_for(arguments)</span></div>
+<div class="line"><a id="l00914" name="l00914"></a><span class="lineno">  914</span><span class="preprocessor">#    define buffer_with_storage(arguments...) CCC_buffer_with_storage(arguments)</span></div>
+<div class="line"><a id="l00915" name="l00915"></a><span class="lineno">  915</span><span class="preprocessor">#    define buffer_context_with_storage(arguments...)                          \</span></div>
+<div class="line"><a id="l00916" name="l00916"></a><span class="lineno">  916</span><span class="preprocessor">        CCC_buffer_context_with_storage(arguments)</span></div>
+<div class="line"><a id="l00917" name="l00917"></a><span class="lineno">  917</span><span class="preprocessor">#    define buffer_with_allocator(arguments...)                                \</span></div>
+<div class="line"><a id="l00918" name="l00918"></a><span class="lineno">  918</span><span class="preprocessor">        CCC_buffer_with_allocator(arguments)</span></div>
+<div class="line"><a id="l00919" name="l00919"></a><span class="lineno">  919</span><span class="preprocessor">#    define buffer_context_with_allocator(arguments...)                        \</span></div>
+<div class="line"><a id="l00920" name="l00920"></a><span class="lineno">  920</span><span class="preprocessor">        CCC_buffer_context_with_allocator(arguments)</span></div>
+<div class="line"><a id="l00921" name="l00921"></a><span class="lineno">  921</span><span class="preprocessor">#    define buffer_with_capacity(arguments...)                                 \</span></div>
+<div class="line"><a id="l00922" name="l00922"></a><span class="lineno">  922</span><span class="preprocessor">        CCC_buffer_with_capacity(arguments)</span></div>
+<div class="line"><a id="l00923" name="l00923"></a><span class="lineno">  923</span><span class="preprocessor">#    define buffer_context_with_capacity(arguments...)                         \</span></div>
+<div class="line"><a id="l00924" name="l00924"></a><span class="lineno">  924</span><span class="preprocessor">        CCC_buffer_context_with_capacity(arguments)</span></div>
+<div class="line"><a id="l00925" name="l00925"></a><span class="lineno">  925</span><span class="preprocessor">#    define buffer_from(arguments...) CCC_buffer_from(arguments)</span></div>
+<div class="line"><a id="l00926" name="l00926"></a><span class="lineno">  926</span><span class="preprocessor">#    define buffer_context_from(arguments...) CCC_buffer_context_from(arguments)</span></div>
+<div class="line"><a id="l00927" name="l00927"></a><span class="lineno">  927</span><span class="preprocessor">#    define buffer_allocate(arguments...) CCC_buffer_allocate(arguments)</span></div>
+<div class="line"><a id="l00928" name="l00928"></a><span class="lineno">  928</span><span class="preprocessor">#    define buffer_reserve(arguments...) CCC_buffer_reserve(arguments)</span></div>
+<div class="line"><a id="l00929" name="l00929"></a><span class="lineno">  929</span><span class="preprocessor">#    define buffer_copy(arguments...) CCC_buffer_copy(arguments)</span></div>
+<div class="line"><a id="l00930" name="l00930"></a><span class="lineno">  930</span><span class="preprocessor">#    define buffer_clear(arguments...) CCC_buffer_clear(arguments)</span></div>
+<div class="line"><a id="l00931" name="l00931"></a><span class="lineno">  931</span><span class="preprocessor">#    define buffer_clear_and_free(arguments...)                                \</span></div>
+<div class="line"><a id="l00932" name="l00932"></a><span class="lineno">  932</span><span class="preprocessor">        CCC_buffer_clear_and_free(arguments)</span></div>
+<div class="line"><a id="l00933" name="l00933"></a><span class="lineno">  933</span><span class="preprocessor">#    define buffer_clear_and_free_reserve(arguments...)                        \</span></div>
+<div class="line"><a id="l00934" name="l00934"></a><span class="lineno">  934</span><span class="preprocessor">        CCC_buffer_clear_and_free_reserve(arguments)</span></div>
+<div class="line"><a id="l00935" name="l00935"></a><span class="lineno">  935</span><span class="preprocessor">#    define buffer_count(arguments...) CCC_buffer_count(arguments)</span></div>
+<div class="line"><a id="l00936" name="l00936"></a><span class="lineno">  936</span><span class="preprocessor">#    define buffer_count_bytes(arguments...) CCC_buffer_count_bytes(arguments)</span></div>
+<div class="line"><a id="l00937" name="l00937"></a><span class="lineno">  937</span><span class="preprocessor">#    define buffer_size_plus(arguments...) CCC_buffer_size_plus(arguments)</span></div>
+<div class="line"><a id="l00938" name="l00938"></a><span class="lineno">  938</span><span class="preprocessor">#    define buffer_size_minus(arguments...) CCC_buffer_size_minus(arguments)</span></div>
+<div class="line"><a id="l00939" name="l00939"></a><span class="lineno">  939</span><span class="preprocessor">#    define buffer_size_set(arguments...) CCC_buffer_size_set(arguments)</span></div>
+<div class="line"><a id="l00940" name="l00940"></a><span class="lineno">  940</span><span class="preprocessor">#    define buffer_capacity(arguments...) CCC_buffer_capacity(arguments)</span></div>
+<div class="line"><a id="l00941" name="l00941"></a><span class="lineno">  941</span><span class="preprocessor">#    define buffer_capacity_bytes(arguments...)                                \</span></div>
+<div class="line"><a id="l00942" name="l00942"></a><span class="lineno">  942</span><span class="preprocessor">        CCC_buffer_capacity_bytes(arguments)</span></div>
+<div class="line"><a id="l00943" name="l00943"></a><span class="lineno">  943</span><span class="preprocessor">#    define buffer_sizeof_type(arguments...) CCC_buffer_sizeof_type(arguments)</span></div>
+<div class="line"><a id="l00944" name="l00944"></a><span class="lineno">  944</span><span class="preprocessor">#    define buffer_index(arguments...) CCC_buffer_index(arguments)</span></div>
+<div class="line"><a id="l00945" name="l00945"></a><span class="lineno">  945</span><span class="preprocessor">#    define buffer_is_full(arguments...) CCC_buffer_is_full(arguments)</span></div>
+<div class="line"><a id="l00946" name="l00946"></a><span class="lineno">  946</span><span class="preprocessor">#    define buffer_is_empty(arguments...) CCC_buffer_is_empty(arguments)</span></div>
+<div class="line"><a id="l00947" name="l00947"></a><span class="lineno">  947</span><span class="preprocessor">#    define buffer_at(arguments...) CCC_buffer_at(arguments)</span></div>
+<div class="line"><a id="l00948" name="l00948"></a><span class="lineno">  948</span><span class="preprocessor">#    define buffer_as(arguments...) CCC_buffer_as(arguments)</span></div>
+<div class="line"><a id="l00949" name="l00949"></a><span class="lineno">  949</span><span class="preprocessor">#    define buffer_back(arguments...) CCC_buffer_back(arguments)</span></div>
+<div class="line"><a id="l00950" name="l00950"></a><span class="lineno">  950</span><span class="preprocessor">#    define buffer_back_as(arguments...) CCC_buffer_back_as(arguments)</span></div>
+<div class="line"><a id="l00951" name="l00951"></a><span class="lineno">  951</span><span class="preprocessor">#    define buffer_front(arguments...) CCC_buffer_front(arguments)</span></div>
+<div class="line"><a id="l00952" name="l00952"></a><span class="lineno">  952</span><span class="preprocessor">#    define buffer_front_as(arguments...) CCC_buffer_front_as(arguments)</span></div>
+<div class="line"><a id="l00953" name="l00953"></a><span class="lineno">  953</span><span class="preprocessor">#    define buffer_allocate_back(arguments...)                                 \</span></div>
+<div class="line"><a id="l00954" name="l00954"></a><span class="lineno">  954</span><span class="preprocessor">        CCC_buffer_allocate_back(arguments)</span></div>
+<div class="line"><a id="l00955" name="l00955"></a><span class="lineno">  955</span><span class="preprocessor">#    define buffer_emplace(arguments...) CCC_buffer_emplace(arguments)</span></div>
+<div class="line"><a id="l00956" name="l00956"></a><span class="lineno">  956</span><span class="preprocessor">#    define buffer_emplace_back(arguments...) CCC_buffer_emplace_back(arguments)</span></div>
+<div class="line"><a id="l00957" name="l00957"></a><span class="lineno">  957</span><span class="preprocessor">#    define buffer_push_back(arguments...) CCC_buffer_push_back(arguments)</span></div>
+<div class="line"><a id="l00958" name="l00958"></a><span class="lineno">  958</span><span class="preprocessor">#    define buffer_pop_back(arguments...) CCC_buffer_pop_back(arguments)</span></div>
+<div class="line"><a id="l00959" name="l00959"></a><span class="lineno">  959</span><span class="preprocessor">#    define buffer_pop_back_n(arguments...) CCC_buffer_pop_back_n(arguments)</span></div>
+<div class="line"><a id="l00960" name="l00960"></a><span class="lineno">  960</span><span class="preprocessor">#    define buffer_move(arguments...) CCC_buffer_move(arguments)</span></div>
+<div class="line"><a id="l00961" name="l00961"></a><span class="lineno">  961</span><span class="preprocessor">#    define buffer_swap(arguments...) CCC_buffer_swap(arguments)</span></div>
+<div class="line"><a id="l00962" name="l00962"></a><span class="lineno">  962</span><span class="preprocessor">#    define buffer_write(arguments...) CCC_buffer_write(arguments)</span></div>
+<div class="line"><a id="l00963" name="l00963"></a><span class="lineno">  963</span><span class="preprocessor">#    define buffer_erase(arguments...) CCC_buffer_erase(arguments)</span></div>
+<div class="line"><a id="l00964" name="l00964"></a><span class="lineno">  964</span><span class="preprocessor">#    define buffer_insert(arguments...) CCC_buffer_insert(arguments)</span></div>
+<div class="line"><a id="l00965" name="l00965"></a><span class="lineno">  965</span><span class="preprocessor">#    define buffer_begin(arguments...) CCC_buffer_begin(arguments)</span></div>
+<div class="line"><a id="l00966" name="l00966"></a><span class="lineno">  966</span><span class="preprocessor">#    define buffer_next(arguments...) CCC_buffer_next(arguments)</span></div>
+<div class="line"><a id="l00967" name="l00967"></a><span class="lineno">  967</span><span class="preprocessor">#    define buffer_end(arguments...) CCC_buffer_end(arguments)</span></div>
+<div class="line"><a id="l00968" name="l00968"></a><span class="lineno">  968</span><span class="preprocessor">#    define buffer_reverse_begin(arguments...)                                 \</span></div>
+<div class="line"><a id="l00969" name="l00969"></a><span class="lineno">  969</span><span class="preprocessor">        CCC_buffer_reverse_begin(arguments)</span></div>
+<div class="line"><a id="l00970" name="l00970"></a><span class="lineno">  970</span><span class="preprocessor">#    define buffer_reverse_next(arguments...) CCC_buffer_reverse_next(arguments)</span></div>
+<div class="line"><a id="l00971" name="l00971"></a><span class="lineno">  971</span><span class="preprocessor">#    define buffer_reverse_end(arguments...) CCC_buffer_reverse_end(arguments)</span></div>
+<div class="line"><a id="l00972" name="l00972"></a><span class="lineno">  972</span><span class="preprocessor">#    define buffer_capacity_end(arguments...) CCC_buffer_capacity_end(arguments)</span></div>
+<div class="line"><a id="l00973" name="l00973"></a><span class="lineno">  973</span><span class="comment">/* NOLINTEND(readability-identifier-naming) */</span></div>
+<div class="line"><a id="l00974" name="l00974"></a><span class="lineno">  974</span><span class="preprocessor">#endif </span><span class="comment">/* BUFFER_USING_NAMESPACE_CCC */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00975" name="l00975"></a><span class="lineno">  975</span> </div>
+<div class="line"><a id="l00976" name="l00976"></a><span class="lineno">  976</span><span class="preprocessor">#endif </span><span class="comment">/* CCC_BUFFER_H */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="abuffer_8h_html_a1508cf027ec63833d14f1e4e01aa225f"><div class="ttname"><a href="buffer_8h.html#a1508cf027ec63833d14f1e4e01aa225f">CCC_buffer_count_bytes</a></div><div class="ttdeci">CCC_Count CCC_buffer_count_bytes(CCC_Buffer const *buffer)</div><div class="ttdoc">Return the bytes in the Buffer given the current count of active elements.</div></div>
 <div class="ttc" id="abuffer_8h_html_a1e46fb13f61b8ac0af8e8bc0de2c2a3d"><div class="ttname"><a href="buffer_8h.html#a1e46fb13f61b8ac0af8e8bc0de2c2a3d">CCC_buffer_allocate</a></div><div class="ttdeci">CCC_Result CCC_buffer_allocate(CCC_Buffer *buffer, size_t capacity, CCC_Allocator *allocate)</div><div class="ttdoc">allocates the Buffer to the specified size according to the user defined allocation function.</div></div>
 <div class="ttc" id="abuffer_8h_html_a27d4f58159938cfb550a76f9e085c5ff"><div class="ttname"><a href="buffer_8h.html#a27d4f58159938cfb550a76f9e085c5ff">CCC_buffer_at</a></div><div class="ttdeci">void * CCC_buffer_at(CCC_Buffer const *buffer, size_t index)</div><div class="ttdoc">return the element at slot index in buf.</div></div>
