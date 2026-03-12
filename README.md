@@ -892,7 +892,7 @@ static CCC_Bitset bitset
     1024, (CCC_Bit[1024]){});
 ```
 
-All of these containers can also be initialized in preparation for dynamic allocation at compile time if an allocation function is provided (see [allocation](#allocation) for more on `std_alloc`). Here is
+All of these containers can also be initialized in preparation for dynamic allocation at compile time if an allocation function is provided (see [allocation](#allocation) for more on `std_alloc`). Here is the flat hash map as an example.
 
 ```c
 #define FLAT_HASH_MAP_USING_NAMESPACE_CCC
