@@ -285,7 +285,7 @@ run such input code at compile time. */
 @param[in] optional_count an optional starting size <= capacity. This value
 defaults to the same value as capacity which is appropriate for most cases. For
 any case where this is not desirable, set the size manually (for example, a
-bit set that will push bits back would have a non-zero capacity and 0 size).
+bit set that will push bits back would have a non-zero capacity and 0 count).
 @return the initialized bit set on the right hand side of an equality operator
 
 A fixed size bit set with size equal to capacity.
@@ -321,7 +321,7 @@ static and stack based initialization options. */
 @param[in] optional_count an optional starting size <= capacity. This value
 defaults to the same value as capacity which is appropriate for most cases. For
 any case where this is not desirable, set the size manually (for example, a
-bit set that will push bits back would have a non-zero capacity and 0 size).
+bit set that will push bits back would have a non-zero capacity and 0 count).
 @return the initialized bit set on the right hand side of an equality operator
 
 A fixed size bit set with size equal to capacity.
