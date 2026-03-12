@@ -862,7 +862,7 @@ Here, the container pushes stack allocated structs directly into the list. The c
 
 Because the user may choose the source of memory for a container, initialization at compile time is possible for all intrusive and non-intrusive containers.
 
-This is especially helpful for the containers that use buffers, arrays, and flat layouts as the underlying storage abstraction. These containers can be prepared at compile time.
+This is especially helpful for the containers that use buffer, arras, and flat memory layouts when their capacity will be fixed for their lifetime. These containers can be prepared at compile time.
 
 ```c
 struct Key_val {
