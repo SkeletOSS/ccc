@@ -79,6 +79,8 @@ specifiers which is a feature of C23. Not all compilers support this yet. */
                 typeof(&(private_bit_compound_literal)[0])),                   \
             "CCC_bitset_storage_for and CCC_bitset_with_storage only accept "  \
             "(CCC_Bit[N]){} compound literal array as an argument.");          \
+        static_assert(sizeof(private_bit_compound_literal) > 0,                \
+                      "Specify non-zero capacity of bits.");                   \
         static_assert(                                                         \
             sizeof(*(private_bit_compound_literal)) == sizeof(CCC_Bit),        \
             "CCC_bitset_storage_for and CCC_bitset_with_storage only accept "  \
@@ -185,9 +187,9 @@ to inline function for bit set construction. */
         = CCC_private_bitset_storage_for(private_compound_literal_array,       \
                                          private_optional_storage_specifier),  \
         .count = (private_count),                                              \
-        .capacity = sizeof(CCC_private_bitset_storage_for(                     \
-                        private_compound_literal_array))                       \
-                  * CHAR_BIT,                                                  \
+        .capacity = CCC_private_bitset_block_count(                            \
+                        sizeof(private_compound_literal_array))                \
+                  * sizeof(*(struct CCC_Bitset){}.blocks) * CHAR_BIT,          \
         .allocate = NULL,                                                      \
         .context = (private_context),                                          \
     }
