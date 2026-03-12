@@ -860,43 +860,46 @@ Here, the container pushes stack allocated structs directly into the list. The c
 
 ### Compile Time Initialization
 
-Because the user may choose the source of memory for a container, initialization at compile time is possible for all containers.
+Because the user may choose the source of memory for a container, initialization at compile time is possible for all intrusive and non-intrusive containers.
 
-A flat hash map may be initialized at compile time if the maximum size is fixed and no allocation permission is needed.
+This is especially helpful for the containers that use buffers, arrays, and flat layouts as the underlying storage abstraction. These containers can be prepared at compile time.
 
 ```c
-#define FLAT_HASH_MAP_USING_NAMESPACE_CCC
-struct Val {
+struct Key_val {
     int key;
     int val;
 };
-static Flat_hash_map static_fh = flat_hash_map_with_storage(
-    key, flat_hash_map_int_to_u64, flat_hash_map_id_cmp,
-    (struct Val[64]){});
+static CCC_Array_adaptive_map adaptive_map
+    = CCC_array_adaptive_map_with_storage(
+    key, compare_int_key, (struct Key_val[1024]){});
+static CCC_Array_tree_map tree_map
+    = CCC_array_tree_map_with_storage(
+    key, compare_int_key, (struct Key_val[1024]){});
+static CCC_Flat_hash_map hash_map
+    = CCC_flat_hash_map_with_storage(
+    key, hash_int, compare_int_key, (struct Key_val[1024]){});
+static CCC_Flat_priority_queue priority_queue
+    = CCC_flat_priority_queue_with_storage(
+    CCC_ORDER_LESSER, compare_int, (int[1024]){});
+static CCC_Flat_double_ended_queue ring_buffer
+    = CCC_flat_double_ended_queue_with_storage(
+    0, (int[1024]){});
+static CCC_Buffer buffer
+    = CCC_buffer_with_storage(
+    0, (int[1024]){});
+static CCC_Bitset bitset
+    = CCC_bitset_with_storage(
+    1024, (CCC_Bit[1024]){});
 ```
 
-A flat hash map can also be initialized in preparation for dynamic allocation at compile time if an allocation function is provided (see [allocation](#allocation) for more on `std_alloc`).
+All of these containers can also be initialized in preparation for dynamic allocation at compile time if an allocation function is provided (see [allocation](#allocation) for more on `std_alloc`). Here is
 
 ```c
 #define FLAT_HASH_MAP_USING_NAMESPACE_CCC
-struct Val {
-    int key;
-    int val;
-};
-static Flat_hash_map static_fh
-    = flat_hash_map_with_allocator(struct Val, key, flat_hash_map_int_to_u64,
-                                   flat_hash_map_id_cmp, std_allocate);
+static Flat_hash_map hash_map
+    = flat_hash_map_with_allocator(
+    struct Key_val, key, hash_int, compare_int_key, std_allocate);
 ```
-
-All other containers provide default initialization macros that can be used at compile time or runtime. For example, initializing a ring Buffer at compile time is simple.
-
-```c
-#define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
-static Flat_doubled_ended_queue ring_buffer
-    = flat_doubled_ended_queue_with_storage(0, (static int[4096]){});
-```
-
-In all the preceding examples initializing at compile time simplifies the code, eliminates the need for initialization functions, and ensures that all containers are ready to operate when execution begins. Using compound literal initialization also helps create better ownership of memory for each container, eliminating named references to a container's memory that could be accessed by mistake.
 
 ### Metadata is Trivially Copyable
 
