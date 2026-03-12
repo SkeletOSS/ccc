@@ -87,11 +87,11 @@ specifiers which is a feature of C23. Not all compilers support this yet. */
             "a (CCC_Bit[N]){} compound literal array as an argument. Do not "  \
             "use CCC_bitset_storage_for as an argument to "                    \
             "CCC_bitset_with_storage.");                                       \
-        typeof(*(struct CCC_Bitset){}.blocks)                                  \
-            _[CCC_private_bitset_block_count(                                  \
+        typeof(*(struct CCC_Bitset){}.blocks) private                          \
+            [CCC_private_bitset_block_count(                                   \
                 sizeof(private_bit_compound_literal))];                        \
     }){}                                                                       \
-        ._
+        .private
 
 /** @internal NOLINTNEXTLINE */
 #define CCC_private_bitset_non_CCC_private_bitset_default_size(private_cap,    \
