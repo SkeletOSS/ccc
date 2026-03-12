@@ -210,9 +210,11 @@ to inline function for bit set construction. */
 
 /** @internal */
 #define CCC_private_bitset_with_storage(private_count,                         \
-                                        private_compound_literal_array)        \
-    CCC_private_bitset_context_with_storage(NULL, private_count,               \
-                                            private_compound_literal_array)
+                                        private_compound_literal_array,        \
+                                        private_optional_storage_specifier...) \
+    CCC_private_bitset_context_with_storage(                                   \
+        NULL, private_count, private_compound_literal_array,                   \
+        private_optional_storage_specifier)
 
 /** @internal */
 #define CCC_private_bitset_context_with_allocator(private_allocate,            \
