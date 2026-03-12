@@ -602,9 +602,9 @@ check_static_begin(flat_hash_map_test_insert_and_find) {
 }
 
 check_static_begin(flat_hash_map_test_reserve_without_permissions) {
-    Flat_hash_map fh
-        = flat_hash_map_for(struct Val, key, flat_hash_map_int_to_u64,
-                            flat_hash_map_id_order, NULL, NULL, 0, NULL);
+    Flat_hash_map fh = flat_hash_map_with_allocator(
+        struct Val, key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
+        NULL);
     /* The map must insert all of the requested elements but has no permission
        to resize. This ensures the reserve function works as expected. */
     int const to_insert = 1000;
@@ -613,8 +613,11 @@ check_static_begin(flat_hash_map_test_reserve_without_permissions) {
     check(res, CCC_RESULT_OK);
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
          ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert) {
-        struct Val elem = {.key = shuffled_index, .val = i};
-        struct Val *v = insert_entry(entry_wrap(&fh, &elem.key), &elem);
+        struct Val *v = insert_entry(entry_wrap(&fh, &shuffled_index),
+                                     &(struct Val){
+                                         .key = shuffled_index,
+                                         .val = i,
+                                     });
         check(v != NULL, true);
         check(v->key, shuffled_index);
         check(v->val, i);
