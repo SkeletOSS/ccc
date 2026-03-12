@@ -80,7 +80,7 @@ specifiers which is a feature of C23. Not all compilers support this yet. */
             "CCC_bitset_storage_for and CCC_bitset_with_storage only accept "  \
             "(CCC_Bit[N]){} compound literal array as an argument.");          \
         static_assert(                                                         \
-            sizeof(*(private_bit_compound_literal)) == sizeof(uint8_t),        \
+            sizeof(*(private_bit_compound_literal)) == sizeof(CCC_Bit),        \
             "CCC_bitset_storage_for and CCC_bitset_with_storage only accept "  \
             "a (CCC_Bit[N]){} compound literal array as an argument. Do not "  \
             "use CCC_bitset_storage_for as an argument to "                    \
