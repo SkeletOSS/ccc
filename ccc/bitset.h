@@ -135,16 +135,13 @@ main(void)
         sizeof(CCC_bitset_storage_for((CCC_Bit[4096]){}))
     );
     defer free(storage);
-    CCC_Flat_hash_map hash_map = CCC_flat_hash_map_for(
-        struct Val,
-        key,
-        hash_key,
-        order_vals,
+    CCC_Bitset bitset = CCC_bitset_for(
         NULL,
         NULL,
         4096,
         storage
     );
+    return 0;
 }
 ```
 

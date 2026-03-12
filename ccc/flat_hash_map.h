@@ -166,6 +166,7 @@ main(void)
         4096,
         storage
     );
+    return 0;
 }
 ```
 
