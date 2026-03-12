@@ -888,21 +888,18 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">        <span class="keyword">sizeof</span>(<a class="code hl_define" href="bitset_8h.html#a107c8cb33f8cfc226bd606d09b37e1b7">CCC_bitset_storage_for</a>((<a class="code hl_typedef" href="bitset_8h.html#abf6fcc3da3c3e472c3a65ac541ad5be2">CCC_Bit</a>[4096]){}))</div>
 <div class="line">    );</div>
 <div class="line">    defer free(storage);</div>
-<div class="line">    <a class="code hl_struct" href="structCCC__Flat__hash__map.html">CCC_Flat_hash_map</a> hash_map = <a class="code hl_define" href="flat__hash__map_8h.html#a7e7fd71f7918b37c8a572cae1f443ab8">CCC_flat_hash_map_for</a>(</div>
-<div class="line">        <span class="keyword">struct</span> Val,</div>
-<div class="line">        key,</div>
-<div class="line">        hash_key,</div>
-<div class="line">        order_vals,</div>
+<div class="line">    <a class="code hl_struct" href="structCCC__Bitset.html">CCC_Bitset</a> bitset = <a class="code hl_define" href="bitset_8h.html#a12aba0975a8e6a277f8c7657321de6b8">CCC_bitset_for</a>(</div>
 <div class="line">        NULL,</div>
 <div class="line">        NULL,</div>
 <div class="line">        4096,</div>
 <div class="line">        storage</div>
 <div class="line">    );</div>
+<div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="abitset_8h_html_a107c8cb33f8cfc226bd606d09b37e1b7"><div class="ttname"><a href="bitset_8h.html#a107c8cb33f8cfc226bd606d09b37e1b7">CCC_bitset_storage_for</a></div><div class="ttdeci">#define CCC_bitset_storage_for(bit_compound_literal_array, optional_storage_specifier...)</div><div class="ttdoc">Create the underlying fixed size storage for a bit set given a compound literal array of bits the use...</div><div class="ttdef"><b>Definition:</b> bitset.h:156</div></div>
+<div class="ttc" id="abitset_8h_html_a107c8cb33f8cfc226bd606d09b37e1b7"><div class="ttname"><a href="bitset_8h.html#a107c8cb33f8cfc226bd606d09b37e1b7">CCC_bitset_storage_for</a></div><div class="ttdeci">#define CCC_bitset_storage_for(bit_compound_literal_array, optional_storage_specifier...)</div><div class="ttdoc">Create the underlying fixed size storage for a bit set given a compound literal array of bits the use...</div><div class="ttdef"><b>Definition:</b> bitset.h:153</div></div>
+<div class="ttc" id="abitset_8h_html_a12aba0975a8e6a277f8c7657321de6b8"><div class="ttname"><a href="bitset_8h.html#a12aba0975a8e6a277f8c7657321de6b8">CCC_bitset_for</a></div><div class="ttdeci">#define CCC_bitset_for(allocate, context, cap, count, bitblock_pointer...)</div><div class="ttdoc">Initialize the bit set with memory and allocation permissions.</div><div class="ttdef"><b>Definition:</b> bitset.h:193</div></div>
 <div class="ttc" id="abitset_8h_html_abf6fcc3da3c3e472c3a65ac541ad5be2"><div class="ttname"><a href="bitset_8h.html#abf6fcc3da3c3e472c3a65ac541ad5be2">CCC_Bit</a></div><div class="ttdeci">uint8_t CCC_Bit</div><div class="ttdoc">A type to represent a single bit in the bit set.</div><div class="ttdef"><b>Definition:</b> bitset.h:79</div></div>
-<div class="ttc" id="aflat__hash__map_8h_html_a7e7fd71f7918b37c8a572cae1f443ab8"><div class="ttname"><a href="flat__hash__map_8h.html#a7e7fd71f7918b37c8a572cae1f443ab8">CCC_flat_hash_map_for</a></div><div class="ttdeci">#define CCC_flat_hash_map_for(type_name, key_field, hash, compare, allocate, context, capacity, map_pointer)</div><div class="ttdoc">Initialize a map of types at compile time or runtime.</div><div class="ttdef"><b>Definition:</b> flat_hash_map.h:245</div></div>
-<div class="ttc" id="astructCCC__Flat__hash__map_html"><div class="ttname"><a href="structCCC__Flat__hash__map.html">CCC_Flat_hash_map</a></div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:139</div></div>
+<div class="ttc" id="astructCCC__Bitset_html"><div class="ttname"><a href="structCCC__Bitset.html">CCC_Bitset</a></div><div class="ttdef"><b>Definition:</b> private_bitset.h:33</div></div>
 </div><!-- fragment --><p>Usually, using a dynamic bit set and the reserve interface would be sufficient. However, the reserve interface only guarantees that at least the needed bytes are allocated. When the user must know the exact size of the backing object due to strict memory requirements, this is helpful. Such a use case may be rare, but must be supported by this container. </p>
 
 </div>
