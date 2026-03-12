@@ -380,8 +380,10 @@ static Bitset bitset = bitset_with_storage(
 ```
 
 This saves some initialization boilerplate. */
-#define CCC_bitset_with_storage(count, compound_literal_array)                 \
-    CCC_private_bitset_with_storage(count, compound_literal_array)
+#define CCC_bitset_with_storage(count, compound_literal_array,                 \
+                                optional_storage_specifier...)                 \
+    CCC_private_bitset_with_storage(count, compound_literal_array,             \
+                                    optional_storage_specifier)
 
 /** @brief Initialize the bit set with a starting capacity and size at runtime
 or compile time with no allocation permissions from a compound literal of bitset
@@ -409,10 +411,10 @@ static Bitset bitset = bitset_context_with_storage(
 ```
 
 This saves some initialization boilerplate. */
-#define CCC_bitset_context_with_storage(context, count,                        \
-                                        compound_literal_array)                \
-    CCC_private_bitset_context_with_storage(context, count,                    \
-                                            compound_literal_array)
+#define CCC_bitset_context_with_storage(                                       \
+    context, count, compound_literal_array, optional_storage_specifier...)     \
+    CCC_private_bitset_context_with_storage(                                   \
+        context, count, compound_literal_array, optional_storage_specifier)
 
 /** @brief Initialize an empty dynamic bit set at compile or runtime with an
 allocator.
