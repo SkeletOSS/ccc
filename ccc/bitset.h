@@ -363,6 +363,8 @@ literal of bitset blocks.
 @param[in] compound_literal_array the compound literal of CCC_Bit specifying
 the desired bit count for the bit set. A platform specific array of fixed width
 integers is constructed to accommodate this bit count.
+@param[in] optional_storage_specifier a storage specifier for the backing block
+storage may be added on newer compilers.
 @return the initialized bit set on the right hand side of an equality operator
 Capacity will be set to the full capacity available for the compound literal.
 
@@ -386,12 +388,14 @@ or compile time with no allocation permissions from a compound literal of bitset
 blocks.
 @param[in] context context for the bitset.
 @param[in] count the count of bits <= capacity of this bit set.
-@param[in] compound_literal_array the compound literal of bitset blocks. Use the
-CCC_bitset_storage_for() macro to help construct this.
-@return the initialized bit set on the right hand side of an equality operator.
+@param[in] compound_literal_array the compound literal of CCC_Bit specifying
+the desired bit count for the bit set. A platform specific array of fixed width
+integers is constructed to accommodate this bit count.
+@param[in] optional_storage_specifier a storage specifier for the backing block
+storage may be added on newer compilers.
+@return the initialized bit set on the right hand side of an equality operator
 Capacity will be set to the full capacity available for the compound literal.
-@warning Use the CCC_bitset_storage_for() macro to help construct the compound
-literal array.
+
 
 A fixed size bit set.
 

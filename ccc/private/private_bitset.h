@@ -194,10 +194,12 @@ to inline function for bit set construction. */
 
 /** @internal */
 #define CCC_private_bitset_context_with_storage(                               \
-    private_context, private_count, private_compound_literal_array)            \
+    private_context, private_count, private_compound_literal_array,            \
+    private_optional_storage_specifier...)                                     \
     {                                                                          \
         .blocks                                                                \
-        = CCC_private_bitset_storage_for(private_compound_literal_array),      \
+        = CCC_private_bitset_storage_for(private_compound_literal_array,       \
+                                         private_optional_storage_specifier),  \
         .count = (private_count),                                              \
         .capacity = sizeof(CCC_private_bitset_storage_for(                     \
                         private_compound_literal_array))                       \
