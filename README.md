@@ -816,8 +816,8 @@ As was mentioned in the previous section, all containers can be forbidden from a
 
 ```c
 CCC_Flat_priority_queue flat_priority_queue
-    = CCC_flat_priority_queue_with_storage(CCC_LES, int_cmp,
-                                                    (int[40]){});
+    = CCC_flat_priority_queue_with_storage(
+    CCC_LES, int_compare, (int[40]){});
 ```
 
 This reduces the need for the user to implement boilerplate allocator interfaces and the guarantees of the container are more clear and direct. If the user does not provide an allocator function there is no way for the container to allocate, re-size, or free memory by default.
@@ -834,7 +834,7 @@ struct Id_val {
 };
 
 CCC_Doubly_linked_list dll
-    = CCC_doubly_linked_list_for(struct Id_val, e, val_cmp, NULL, NULL);
+    = CCC_doubly_linked_list_with_allocator(struct Id_val, e, val_cmp, NULL);
 ```
 
 All interface functions now expect the memory containing the intrusive elements to exist with the appropriate scope and lifetime for the programmer's needs. Consider the following classic problem with scoping in C.
@@ -983,8 +983,9 @@ id_cmp(CCC_Type_comparator_context const cmp) {
 
 int
 main(void) {
-    static CCC_Doubly_linked_list id_list = CCC_doubly_linked_list_for(
-        struct Id, id_node, id_cmp, NULL, NULL);
+    static CCC_Doubly_linked_list id_list
+    = CCC_doubly_linked_list_with_allocator(
+    struct Id, id_node, id_cmp, NULL);
     /* ...fill list... */
     struct Id *front = CCC_doubly_linked_list_front(&id_list);
     struct Id *new_id = generate_id();
