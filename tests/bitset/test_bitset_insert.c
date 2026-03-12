@@ -10,8 +10,8 @@
 #include "utility/allocate.h"
 
 check_static_begin(bitset_test_push_back_no_reallocate) {
-    CCC_Bitset bs
-        = CCC_bitset_for(NULL, NULL, 16, 0, CCC_bitset_storage_for(16));
+    CCC_Bitset bs = CCC_bitset_for(NULL, NULL, 16, 0,
+                                   CCC_bitset_storage_for((CCC_Bit[16]){}));
     check(CCC_bitset_capacity(&bs).count, 16);
     check(CCC_bitset_count(&bs).count, 0);
     CCC_Result push_status = CCC_RESULT_OK;
