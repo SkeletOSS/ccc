@@ -117,22 +117,6 @@ argument. */
         .context = (private_context),                                          \
     }
 
-/** @internal Returns a bit set with the memory reserved for the blocks and
-the size set. */
-static inline struct CCC_Bitset
-CCC_private_bitset_with_capacity_fn(CCC_Allocator *const private_allocate,
-                                    void *const private_context,
-                                    size_t const private_cap,
-                                    size_t const private_count) {
-    struct CCC_Bitset b
-        = CCC_private_bitset_for(private_allocate, private_context, 0, 0, NULL);
-    if (CCC_private_bitset_reserve(&b, private_cap, private_allocate)
-        == CCC_RESULT_OK) {
-        b.count = private_count;
-    }
-    return b;
-}
-
 /** @internal Determine if user wants capacity different than count. Then pass
 to inline function for bit set construction. */
 #define CCC_private_bitset_context_from(private_allocate, private_context,     \
