@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"priority__queue_8h.html#a5a3b8d1ce0b40810d2c0b423418feee4":[3,0,0,10,4],
 "priority__queue_8h.html#a5a592eb95b28d9aaa1c845c0bb935fcc":[3,0,0,10,5],
 "priority__queue_8h.html#a6e6d9ce9f2e6fff1a7b2e517327b6366":[3,0,0,10,24],
 "priority__queue_8h.html#a725a83bf0418994b2bf862d1c37dba98":[3,0,0,10,15],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "structCCC__Priority__queue.html#a8887fcada26b63e56a462869f2b46439":[2,0,33,2],
 "structCCC__Priority__queue.html#a8b30700d12729778574c4ef059e8b4df":[2,0,33,0],
 "structCCC__Priority__queue.html#a92577356d2bce4d5dccbae15c7557584":[2,0,33,6],
-"structCCC__Priority__queue.html#a9fec8e2519b186fa59c2579d5c81ea6e":[2,0,33,1],
-"structCCC__Priority__queue.html#ad99183af769b8f35f5325a3b6e3fb064":[2,0,33,7]
+"structCCC__Priority__queue.html#a9fec8e2519b186fa59c2579d5c81ea6e":[2,0,33,1]
 };

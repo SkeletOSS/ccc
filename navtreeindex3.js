@@ -1,5 +1,6 @@
 var NAVTREEINDEX3 =
 {
+"structCCC__Priority__queue.html#ad99183af769b8f35f5325a3b6e3fb064":[2,0,33,7],
 "structCCC__Priority__queue__node.html":[2,0,34],
 "structCCC__Priority__queue__node.html#a17a92a743da2481da0fed76f0c4ae8c0":[2,0,34,0],
 "structCCC__Priority__queue__node.html#a8827bdb3654a98aadf193c5d3b2bcfd1":[2,0,34,2],

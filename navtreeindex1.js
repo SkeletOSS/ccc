@@ -1,5 +1,6 @@
 var NAVTREEINDEX1 =
 {
+"buffer_8h.html#a2d29d714feeec257bae6e418257b721b":[3,0,0,5,42],
 "buffer_8h.html#a3974ff2704b82ff5c05f3f379ada7b04":[3,0,0,5,32],
 "buffer_8h.html#a3d1cc37e0625a8420ac15f4890e32233":[3,0,0,5,38],
 "buffer_8h.html#a4a986ae56f2d1ac5114433cb2e95b8fb":[3,0,0,5,10],
@@ -223,8 +224,8 @@ var NAVTREEINDEX1 =
 "functions_vars.html":[2,2,1],
 "globals.html":[3,1,0],
 "globals.html":[3,1,0,0],
-"globals_defs.html":[3,1,6,0],
 "globals_defs.html":[3,1,6],
+"globals_defs.html":[3,1,6,0],
 "globals_enum.html":[3,1,4],
 "globals_eval.html":[3,1,5],
 "globals_func.html":[3,1,1,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "priority__queue_8h.html#a1c9b2c19c2648c0e23e12735052a55d0":[3,0,0,10,9],
 "priority__queue_8h.html#a1c9b2c19c2648c0e23e12735052a55d0":[3,0,0,10,8],
 "priority__queue_8h.html#a2107f9c1d0d7900dd8c0c55e55fd65ed":[3,0,0,10,3],
-"priority__queue_8h.html#a379b56644b2bae099d609134d6c7beac":[3,0,0,10,13],
-"priority__queue_8h.html#a5a3b8d1ce0b40810d2c0b423418feee4":[3,0,0,10,4]
+"priority__queue_8h.html#a379b56644b2bae099d609134d6c7beac":[3,0,0,10,13]
 };
