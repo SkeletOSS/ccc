@@ -40,7 +40,6 @@ better capabilities for 128 bit group operations. */
 
 #include "flat_hash_map.h"
 #include "private/private_flat_hash_map.h"
-#include "private/private_types.h"
 #include "types.h"
 
 /*=========================   Platform Selection  ===========================*/
@@ -262,7 +261,7 @@ struct Query {
     /** The slot in the table. */
     size_t index;
     /** Status indicating occupied, vacant, or possible error. */
-    enum CCC_Entry_status status;
+    CCC_Entry_status status;
 };
 
 /*===========================   Prototypes   ================================*/
@@ -393,9 +392,9 @@ CCC_flat_hash_map_get_key_value(CCC_Flat_hash_map const *const map,
 CCC_Flat_hash_map_entry
 CCC_flat_hash_map_entry(CCC_Flat_hash_map *const map, void const *const key) {
     if (unlikely(!map || !key)) {
-        return (CCC_Flat_hash_map_entry){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
+        return (CCC_Flat_hash_map_entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
-    return (CCC_Flat_hash_map_entry){entry(map, key)};
+    return entry(map, key);
 }
 
 void *
@@ -404,14 +403,14 @@ CCC_flat_hash_map_or_insert(CCC_Flat_hash_map_entry const *const e,
     if (unlikely(!e || !type)) {
         return NULL;
     }
-    if (e->private.status & CCC_ENTRY_OCCUPIED) {
-        return data_at(e->private.map, e->private.index);
+    if (e->status & CCC_ENTRY_OCCUPIED) {
+        return data_at(e->map, e->index);
     }
-    if (e->private.status & CCC_ENTRY_INSERT_ERROR) {
+    if (e->status & CCC_ENTRY_INSERT_ERROR) {
         return NULL;
     }
-    insert_and_copy(e->private.map, type, e->private.tag, e->private.index);
-    return data_at(e->private.map, e->private.index);
+    insert_and_copy(e->map, type, e->tag, e->index);
+    return data_at(e->map, e->index);
 }
 
 void *
@@ -420,37 +419,36 @@ CCC_flat_hash_map_insert_entry(CCC_Flat_hash_map_entry const *const e,
     if (unlikely(!e || !type)) {
         return NULL;
     }
-    if (e->private.status & CCC_ENTRY_OCCUPIED) {
-        void *const slot = data_at(e->private.map, e->private.index);
-        (void)memcpy(slot, type, e->private.map->sizeof_type);
+    if (e->status & CCC_ENTRY_OCCUPIED) {
+        void *const slot = data_at(e->map, e->index);
+        (void)memcpy(slot, type, e->map->sizeof_type);
         return slot;
     }
-    if (e->private.status & CCC_ENTRY_INSERT_ERROR) {
+    if (e->status & CCC_ENTRY_INSERT_ERROR) {
         return NULL;
     }
-    insert_and_copy(e->private.map, type, e->private.tag, e->private.index);
-    return data_at(e->private.map, e->private.index);
+    insert_and_copy(e->map, type, e->tag, e->index);
+    return data_at(e->map, e->index);
 }
 
 CCC_Entry
 CCC_flat_hash_map_remove_entry(CCC_Flat_hash_map_entry const *const e) {
     if (unlikely(!e)) {
-        return (CCC_Entry){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
+        return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
-    if (!(e->private.status & CCC_ENTRY_OCCUPIED)) {
-        return (CCC_Entry){{.status = CCC_ENTRY_VACANT}};
+    if (!(e->status & CCC_ENTRY_OCCUPIED)) {
+        return (CCC_Entry){.status = CCC_ENTRY_VACANT};
     }
-    erase(e->private.map, e->private.index);
-    return (CCC_Entry){{.status = CCC_ENTRY_OCCUPIED}};
+    erase(e->map, e->index);
+    return (CCC_Entry){.status = CCC_ENTRY_OCCUPIED};
 }
 
 CCC_Flat_hash_map_entry *
 CCC_flat_hash_map_and_modify(CCC_Flat_hash_map_entry *const entry,
                              CCC_Type_modifier *const modify) {
-    if (entry && modify
-        && ((entry->private.status & CCC_ENTRY_OCCUPIED) != 0)) {
+    if (entry && modify && ((entry->status & CCC_ENTRY_OCCUPIED) != 0)) {
         modify((CCC_Type_context){
-            .type = data_at(entry->private.map, entry->private.index),
+            .type = data_at(entry->map, entry->index),
             .context = NULL,
         });
     }
@@ -461,10 +459,9 @@ CCC_Flat_hash_map_entry *
 CCC_flat_hash_map_and_context_modify(CCC_Flat_hash_map_entry *const entry,
                                      CCC_Type_modifier *const modify,
                                      void *const context) {
-    if (entry && modify
-        && ((entry->private.status & CCC_ENTRY_OCCUPIED) != 0)) {
+    if (entry && modify && ((entry->status & CCC_ENTRY_OCCUPIED) != 0)) {
         modify((CCC_Type_context){
-            .type = data_at(entry->private.map, entry->private.index),
+            .type = data_at(entry->map, entry->index),
             .context = context,
         });
     }
@@ -475,97 +472,97 @@ CCC_Entry
 CCC_flat_hash_map_swap_entry(CCC_Flat_hash_map *const map,
                              void *const type_output) {
     if (unlikely(!map || !type_output)) {
-        return (CCC_Entry){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
+        return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     void *const key = key_in_slot(map, type_output);
     struct CCC_Flat_hash_map_entry ent = entry(map, key);
     if (ent.status & CCC_ENTRY_OCCUPIED) {
         swap(swap_slot(map), data_at(map, ent.index), type_output,
              map->sizeof_type);
-        return (CCC_Entry){{
+        return (CCC_Entry){
             .type = type_output,
             .status = CCC_ENTRY_OCCUPIED,
-        }};
+        };
     }
     if (ent.status & CCC_ENTRY_INSERT_ERROR) {
-        return (CCC_Entry){{.status = CCC_ENTRY_INSERT_ERROR}};
+        return (CCC_Entry){.status = CCC_ENTRY_INSERT_ERROR};
     }
     insert_and_copy(ent.map, type_output, ent.tag, ent.index);
-    return (CCC_Entry){{
+    return (CCC_Entry){
         .type = data_at(map, ent.index),
         .status = CCC_ENTRY_VACANT,
-    }};
+    };
 }
 
 CCC_Entry
 CCC_flat_hash_map_try_insert(CCC_Flat_hash_map *const map,
                              void const *const type) {
     if (unlikely(!map || !type)) {
-        return (CCC_Entry){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
+        return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     void *const key = key_in_slot(map, type);
     struct CCC_Flat_hash_map_entry ent = entry(map, key);
     if (ent.status & CCC_ENTRY_OCCUPIED) {
-        return (CCC_Entry){{
+        return (CCC_Entry){
             .type = data_at(map, ent.index),
             .status = CCC_ENTRY_OCCUPIED,
-        }};
+        };
     }
     if (ent.status & CCC_ENTRY_INSERT_ERROR) {
-        return (CCC_Entry){{.status = CCC_ENTRY_INSERT_ERROR}};
+        return (CCC_Entry){.status = CCC_ENTRY_INSERT_ERROR};
     }
     insert_and_copy(ent.map, type, ent.tag, ent.index);
-    return (CCC_Entry){{
+    return (CCC_Entry){
         .type = data_at(map, ent.index),
         .status = CCC_ENTRY_VACANT,
-    }};
+    };
 }
 
 CCC_Entry
 CCC_flat_hash_map_insert_or_assign(CCC_Flat_hash_map *const map,
                                    void const *const type) {
     if (unlikely(!map || !type)) {
-        return (CCC_Entry){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
+        return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     void *const key = key_in_slot(map, type);
     struct CCC_Flat_hash_map_entry ent = entry(map, key);
     if (ent.status & CCC_ENTRY_OCCUPIED) {
         (void)memcpy(data_at(map, ent.index), type, map->sizeof_type);
-        return (CCC_Entry){{
+        return (CCC_Entry){
             .type = data_at(map, ent.index),
             .status = CCC_ENTRY_OCCUPIED,
-        }};
+        };
     }
     if (ent.status & CCC_ENTRY_INSERT_ERROR) {
-        return (CCC_Entry){{.status = CCC_ENTRY_INSERT_ERROR}};
+        return (CCC_Entry){.status = CCC_ENTRY_INSERT_ERROR};
     }
     insert_and_copy(ent.map, type, ent.tag, ent.index);
-    return (CCC_Entry){{
+    return (CCC_Entry){
         .type = data_at(map, ent.index),
         .status = CCC_ENTRY_VACANT,
-    }};
+    };
 }
 
 CCC_Entry
 CCC_flat_hash_map_remove_key_value(CCC_Flat_hash_map *const map,
                                    void *const type_output) {
     if (unlikely(!map || !type_output)) {
-        return (CCC_Entry){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
+        return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     if (unlikely(is_uninitialized(map) || !map->count)) {
-        return (CCC_Entry){{.status = CCC_ENTRY_VACANT}};
+        return (CCC_Entry){.status = CCC_ENTRY_VACANT};
     }
     void *const key = key_in_slot(map, type_output);
     CCC_Count const index = find_key_or_fail(map, key, hasher(map, key));
     if (index.error) {
-        return (CCC_Entry){{.status = CCC_ENTRY_VACANT}};
+        return (CCC_Entry){.status = CCC_ENTRY_VACANT};
     }
     (void)memcpy(type_output, data_at(map, index.count), map->sizeof_type);
     erase(map, index.count);
-    return (CCC_Entry){{
+    return (CCC_Entry){
         .type = type_output,
         .status = CCC_ENTRY_OCCUPIED,
-    }};
+    };
 }
 
 void *
@@ -606,10 +603,10 @@ CCC_flat_hash_map_end(CCC_Flat_hash_map const *const) {
 
 void *
 CCC_flat_hash_map_unwrap(CCC_Flat_hash_map_entry const *const e) {
-    if (unlikely(!e) || !(e->private.status & CCC_ENTRY_OCCUPIED)) {
+    if (unlikely(!e) || !(e->status & CCC_ENTRY_OCCUPIED)) {
         return NULL;
     }
-    return data_at(e->private.map, e->private.index);
+    return data_at(e->map, e->index);
 }
 
 CCC_Result
@@ -693,7 +690,7 @@ CCC_flat_hash_map_occupied(CCC_Flat_hash_map_entry const *const e) {
     if (unlikely(!e)) {
         return CCC_TRIBOOL_ERROR;
     }
-    return (e->private.status & CCC_ENTRY_OCCUPIED) != 0;
+    return (e->status & CCC_ENTRY_OCCUPIED) != 0;
 }
 
 CCC_Tribool
@@ -701,7 +698,7 @@ CCC_flat_hash_map_insert_error(CCC_Flat_hash_map_entry const *const e) {
     if (unlikely(!e)) {
         return CCC_TRIBOOL_ERROR;
     }
-    return (e->private.status & CCC_ENTRY_INSERT_ERROR) != 0;
+    return (e->status & CCC_ENTRY_INSERT_ERROR) != 0;
 }
 
 CCC_Entry_status
@@ -709,7 +706,7 @@ CCC_flat_hash_map_entry_status(CCC_Flat_hash_map_entry const *const e) {
     if (unlikely(!e)) {
         return CCC_ENTRY_ARGUMENT_ERROR;
     }
-    return e->private.status;
+    return e->status;
 }
 
 CCC_Result

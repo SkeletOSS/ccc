@@ -29,8 +29,6 @@ the allocator function interface. */
 #include <stdint.h>
 /** @endcond */
 
-#include "private/private_types.h"
-
 /** @name Container Types
 Types used across many containers. */
 /**@{*/
@@ -41,7 +39,10 @@ A range provides a view all elements that fit the equals range criteria
 of search-by-key containers. Use the provided range iteration functions in
 this header to iterate from beginning to end in forward order relative to
 the containers default ordering. */
-typedef union CCC_Range_wrap CCC_Range;
+typedef struct {
+    void *begin;
+    void *end;
+} CCC_Range;
 
 /** @brief The result of a range_reverse query on iterable containers.
 
@@ -49,52 +50,10 @@ A range_reverse provides a view all elements that fit the equals range_reverse
 criteria of search-by-key containers. Use the provided range iteration functions
 in this header to iterate from beginning to end in reverse order relative to the
 containers default ordering. */
-typedef union CCC_Range_reverse_wrap CCC_Range_reverse;
-
-/** @brief The result of a range query on iterable containers.
-
-A range provides a view all elements that fit the equals range criteria
-of search-by-key containers. Use the provided range iteration functions in
-this header to iterate from beginning to end in forward order relative to
-the containers default ordering. */
-typedef union CCC_Handle_range_wrap CCC_Handle_range;
-
-/** @brief The result of a range_reverse query on iterable containers.
-
-A range_reverse provides a view all elements that fit the equals range_reverse
-criteria of search-by-key containers. Use the provided range iteration functions
-in this header to iterate from beginning to end in reverse order relative to the
-containers default ordering. */
-typedef union CCC_Handle_range_reverse_wrap CCC_Handle_range_reverse;
-
-/** @brief An Occupied or Vacant position in a searchable container.
-
-A entry is the basis for more complex container specific Entry Interface for
-all search-by-key containers. An entry is returned from various operations
-to provide both a reference to data and any context status that is
-important for the user. An entry can be Occupied or Vacant. See individual
-headers for containers that return this type for its meaning in context. */
-typedef union CCC_Entry_wrap CCC_Entry;
-
-/** @brief The status monitoring and entry state once it is obtained.
-
-To manage safe and efficient views into associative containers entries use
-status flags internally. The provided functions in the Entry Interface for
-each container are sufficient to obtain the needed status. However if more
-information is needed, the status can be passed to the
-CCC_entry_status_message() function for detailed string messages regarding the
-entry status. This may be helpful for debugging or logging. */
-typedef enum CCC_Entry_status CCC_Entry_status;
-
-/** @brief An Occupied or Vacant handle to a flat searchable container entry.
-
-A handle uses the same semantics as an entry. However, the wrapped value is
-a CCC_Handle_index index. When this type is returned the container interface is
-promising that this element will remain at the returned handle index until the
-element is removed by the user. This is similar to pointer stability but offers
-a stronger guarantee that will hold even if the underlying container is
-resized. */
-typedef union CCC_Handle_wrap CCC_Handle;
+typedef struct {
+    void *reverse_begin;
+    void *reverse_end;
+} CCC_Range_reverse;
 
 /** @brief A stable index to user data in a container that uses a flat array as
 the underlying storage method.
@@ -108,6 +67,81 @@ when the underlying array is resized; a handle remains valid because it is an
 index not a pointer. */
 typedef size_t CCC_Handle_index;
 
+/** @brief The result of a range query on iterable containers.
+
+A range provides a view all elements that fit the equals range criteria
+of search-by-key containers. Use the provided range iteration functions in
+this header to iterate from beginning to end in forward order relative to
+the containers default ordering. */
+typedef struct {
+    size_t begin;
+    size_t end;
+} CCC_Handle_range;
+
+/** @brief The result of a range_reverse query on iterable containers.
+
+A range_reverse provides a view all elements that fit the equals range_reverse
+criteria of search-by-key containers. Use the provided range iteration functions
+in this header to iterate from beginning to end in reverse order relative to the
+containers default ordering. */
+typedef struct {
+    size_t reverse_begin;
+    size_t reverse_end;
+} CCC_Handle_range_reverse;
+
+/** @brief The status monitoring and entry state once it is obtained.
+
+To manage safe and efficient views into associative containers entries use
+status flags internally. The provided functions in the Entry Interface for
+each container are sufficient to obtain the needed status. However if more
+information is needed, the status can be passed to the
+CCC_entry_status_message() function for detailed string messages regarding the
+entry status. This may be helpful for debugging or logging. */
+typedef enum : uint8_t {
+    /** The entry has no value and is ready for new insert. */
+    CCC_ENTRY_VACANT = 0,
+    /** The entry has a value. */
+    CCC_ENTRY_OCCUPIED = 0x1,
+    /** Insert errors only occur for vacant entries. This means we
+        cannot insert a new value. No slot is available. */
+    CCC_ENTRY_INSERT_ERROR = 0x2,
+    /** Some input to the function returning an entry is bad. */
+    CCC_ENTRY_ARGUMENT_ERROR = 0x4,
+    /** Lesser used annotation on a vacant entry. Important not to look at the
+       vacant entry for some associative containers to preserve data structure
+       invariants. */
+    CCC_ENTRY_NO_UNWRAP = 0x8,
+} CCC_Entry_status;
+
+/** @brief An Occupied or Vacant position in a searchable container.
+
+A entry is the basis for more complex container specific Entry Interface for
+all search-by-key containers. An entry is returned from various operations
+to provide both a reference to data and any context status that is
+important for the user. An entry can be Occupied or Vacant. See individual
+headers for containers that return this type for its meaning in context. */
+typedef struct {
+    /** The user type that belongs at this container location. */
+    void *type;
+    /** A status to help us decide how to act with the entry. */
+    CCC_Entry_status status;
+} CCC_Entry;
+
+/** @brief An Occupied or Vacant handle to a flat searchable container entry.
+
+A handle uses the same semantics as an entry. However, the wrapped value is
+a CCC_Handle_index index. When this type is returned the container interface is
+promising that this element will remain at the returned handle index until the
+element is removed by the user. This is similar to pointer stability but offers
+a stronger guarantee that will hold even if the underlying container is
+resized. */
+typedef struct {
+    /** The index into the contiguous region of memory. */
+    size_t index;
+    /** A status to help us decide how to act with the entry. */
+    CCC_Entry_status status;
+} CCC_Handle;
+
 /** @brief The status monitoring and handle state once it is obtained.
 
 To manage safe and efficient views into associative containers entries use
@@ -116,7 +150,7 @@ each container are sufficient to obtain the needed status. However if more
 information is needed, the status can be passed to the
 CCC_entry_status_message() function for detailed string messages regarding the
 handle status. This may be helpful for debugging or logging. */
-typedef enum CCC_Entry_status CCC_Handle_status;
+typedef CCC_Entry_status CCC_Handle_status;
 
 /** @brief A three state boolean to allow for an error state. Error is -1, False
 is 0, and True is 1.

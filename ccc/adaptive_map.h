@@ -71,7 +71,7 @@ typedef struct CCC_Adaptive_map_node CCC_Adaptive_map_node;
 
 The Entry Interface offers efficient search and subsequent insertion, deletion,
 or value update based on the needs of the user. */
-typedef union CCC_Adaptive_map_entry_wrap CCC_Adaptive_map_entry;
+typedef struct CCC_Adaptive_map_entry CCC_Adaptive_map_entry;
 
 /**@}*/
 
@@ -286,10 +286,10 @@ Note that this function may write to the struct containing temp_intruder and
 wraps it in an entry to provide information about the old value. */
 #define CCC_adaptive_map_swap_entry_wrap(map_pointer, type_intruder_pointer,   \
                                          temp_intruder_pointer)                \
-    &(CCC_Entry){CCC_adaptive_map_swap_entry((map_pointer),                    \
-                                             (type_intruder_pointer),          \
-                                             (temp_intruder_pointer))          \
-                     .private}
+    &(struct { CCC_Entry private; }){                                          \
+        CCC_adaptive_map_swap_entry((map_pointer), (type_intruder_pointer),    \
+                                    (temp_intruder_pointer))}                  \
+         .private
 
 /** @brief Attempts to insert the key value wrapping type_intruder.
 @param[in] map the pointer to the map.
@@ -312,9 +312,9 @@ If Vacant the entry contains a reference to the newly inserted entry in the map.
 If more space is needed but allocation fails or has been forbidden, an insert
 error is set. */
 #define CCC_adaptive_map_try_insert_wrap(map_pointer, type_intruder_pointer)   \
-    &(CCC_Entry){                                                              \
-        CCC_adaptive_map_try_insert((map_pointer), (type_intruder_pointer))    \
-            .private}
+    &(struct { CCC_Entry private; }){                                          \
+        CCC_adaptive_map_try_insert((map_pointer), (type_intruder_pointer))}   \
+         .private
 
 /** @brief lazily insert compound_literal_type into the map at key if key is
 absent.
@@ -331,11 +331,13 @@ lazy value compound literal as well. This function ensures the key in the
 compound literal matches the searched key. */
 #define CCC_adaptive_map_try_insert_with(map_pointer, key,                     \
                                          compound_literal_type...)             \
-    &(CCC_Entry){CCC_private_adaptive_map_try_insert_with(                     \
-        map_pointer, key, compound_literal_type)}
+    &(struct { CCC_Entry private; }){                                          \
+        CCC_private_adaptive_map_try_insert_with(map_pointer, key,             \
+                                                 compound_literal_type)}       \
+         .private
 
 /** @brief Invariantly inserts or overwrites a user struct into the map.
-@param[in] map a pointer to the flat hash map.
+@param[in] map a pointer to the flat map.
 @param[in] type_intruder the handle to the wrapping user struct key value.
 @return an entry. If Occupied an entry was overwritten by the new key value. If
 Vacant no prior map entry existed.
@@ -346,8 +348,21 @@ the information regarding its presence is helpful. */
 CCC_adaptive_map_insert_or_assign(CCC_Adaptive_map *map,
                                   CCC_Adaptive_map_node *type_intruder);
 
+/** @brief Invariantly inserts or overwrites a user struct into the map.
+@param[in] map_pointer a pointer to the handle map.
+@param[in] type_pointer a pointer to the user struct key value type.
+@return a compound literal reference to a handle. If Occupied a handle was
+overwritten by the new key value. If Vacant no prior map handle existed.
+
+Note that this function can be used when the old user type is not needed but
+the information regarding its presence is helpful. */
+#define CCC_adaptive_map_insert_or_assign_wrap(map_pointer, type_pointer...)   \
+    &(struct { CCC_Handle private; }){                                         \
+        CCC_adaptive_map_insert_or_assign(map_pointer, type_pointer)}          \
+         .private
+
 /** @brief Inserts a new key value pair or overwrites the existing entry.
-@param[in] map_pointer the pointer to the flat hash map.
+@param[in] map_pointer the pointer to the flat map.
 @param[in] key the key to be searched in the map.
 @param[in] compound_literal_type the compound literal to insert or use for
 overwrite.
@@ -361,8 +376,10 @@ lazy value compound literal as well. This function ensures the key in the
 compound literal matches the searched key. */
 #define CCC_adaptive_map_insert_or_assign_with(map_pointer, key,               \
                                                compound_literal_type...)       \
-    &(CCC_Entry){CCC_private_adaptive_map_insert_or_assign_with(               \
-        map_pointer, key, compound_literal_type)}
+    &(struct { CCC_Entry private; }){                                          \
+        CCC_private_adaptive_map_insert_or_assign_with(map_pointer, key,       \
+                                                       compound_literal_type)} \
+         .private
 
 /** @brief Removes the key value in the map storing the old value, if present,
 in the struct containing type_output_intruder provided by the user.
@@ -401,9 +418,10 @@ the type_output_intruder. It is then the user's responsibility to manage their
 previously stored memory as they see fit. */
 #define CCC_adaptive_map_remove_key_value_wrap(map_pointer,                    \
                                                type_output_intruder_pointer)   \
-    &(CCC_Entry){CCC_adaptive_map_remove_key_value(                            \
-                     (map_pointer), (type_output_intruder_pointer))            \
-                     .private}
+    &(struct { CCC_Entry private; }){                                          \
+        CCC_adaptive_map_remove_key_value((map_pointer),                       \
+                                          (type_output_intruder_pointer))}     \
+         .private
 
 /** @brief Obtains an entry for the provided key in the map for future use.
 @param[in] map the map to be searched.
@@ -439,8 +457,9 @@ where in the map such an element should be inserted.
 An entry is rarely useful on its own. It should be passed in a functional style
 to subsequent calls in the Entry Interface. */
 #define CCC_adaptive_map_entry_wrap(map_pointer, key_pointer)                  \
-    &(CCC_Adaptive_map_entry){                                                 \
-        CCC_adaptive_map_entry((map_pointer), (key_pointer)).private}
+    &(struct { CCC_Adaptive_map_entry private; }){                             \
+        CCC_adaptive_map_entry((map_pointer), (key_pointer))}                  \
+         .private
 
 /** @brief Modifies the provided entry if it is Occupied.
 @param[in] entry the entry obtained from an entry function or macro.
@@ -505,8 +524,10 @@ container can deliver the user type T. This means any function calls are lazily
 evaluated in the closure scope. */
 #define CCC_adaptive_map_and_modify_with(adaptive_map_entry_pointer,           \
                                          type_name, closure_over_T...)         \
-    &(CCC_Adaptive_map_entry){CCC_private_adaptive_map_and_modify_with(        \
-        adaptive_map_entry_pointer, type_name, closure_over_T)}
+    &(struct { CCC_Adaptive_map_entry private; }){                             \
+        CCC_private_adaptive_map_and_modify_with(adaptive_map_entry_pointer,   \
+                                                 type_name, closure_over_T)}   \
+         .private
 
 /** @brief Inserts the struct with handle type_intruder if the entry is Vacant.
 @param[in] entry the entry obtained via function or macro call.
@@ -661,9 +682,9 @@ range and a second to the end of the range.
 enclosing scope. This reference is always non-NULL. */
 #define CCC_adaptive_map_equal_range_wrap(map_pointer,                         \
                                           begin_and_end_key_pointers...)       \
-    &(CCC_Range){                                                              \
-        CCC_adaptive_map_equal_range(map_pointer, begin_and_end_key_pointers)  \
-            .private}
+    &(struct { CCC_Range private; }){                                          \
+        CCC_adaptive_map_equal_range(map_pointer, begin_and_end_key_pointers)} \
+         .private
 
 /** @brief Return an iterable range_reverse of values from [begin_key, end_key).
 Amortized O(lg N).
@@ -702,10 +723,10 @@ start of the range_reverse and a second to the end of the range_reverse.
 with the enclosing scope. This reference is always non-NULL. */
 #define CCC_adaptive_map_equal_range_reverse_wrap(                             \
     map_pointer, reverse_begin_and_reverse_end_key_pointers...)                \
-    &(CCC_Range_reverse){                                                      \
+    &(struct { CCC_Range_reverse private; }){                                  \
         CCC_adaptive_map_equal_range_reverse(                                  \
-            map_pointer, reverse_begin_and_reverse_end_key_pointers)           \
-            .private}
+            map_pointer, reverse_begin_and_reverse_end_key_pointers)}          \
+         .private
 
 /** @brief Return the start of an inorder traversal of the map. Amortized
 O(lg N).

@@ -87,7 +87,7 @@ or value update based on the needs of the user. Handles obtained via the Handle
 Interface are stable until the user removes the element at the provided handle.
 Insertions and deletions of other elements do not affect handle stability.
 Resizing of the table does not affect handle stability. */
-typedef union CCC_Array_tree_map_handle_wrap CCC_Array_tree_map_handle;
+typedef struct CCC_Array_tree_map_handle CCC_Array_tree_map_handle;
 
 /**@}*/
 
@@ -755,9 +755,10 @@ forbidden, an insert error is set.
 Note that this function may write to the provided user type struct. */
 #define CCC_array_tree_map_swap_handle_wrap(array_tree_map_pointer,            \
                                             type_output_pointer)               \
-    &(CCC_Handle){CCC_array_tree_map_swap_handle((array_tree_map_pointer),     \
-                                                 (type_output_pointer))        \
-                      .private}
+    &(struct { CCC_Handle private; }){                                         \
+        CCC_array_tree_map_swap_handle((array_tree_map_pointer),               \
+                                       (type_output_pointer))}                 \
+         .private
 
 /** @brief Attempts to insert the key value in type.
 @param[in] map the pointer to the map.
@@ -778,9 +779,10 @@ If Vacant the handle contains a reference to the newly inserted handle in the
 map. If more space is needed but allocation fails an insert error is set. */
 #define CCC_array_tree_map_try_insert_wrap(array_tree_map_pointer,             \
                                            type_pointer)                       \
-    &(CCC_Handle){CCC_array_tree_map_try_insert((array_tree_map_pointer),      \
-                                                (type_pointer))                \
-                      .private}
+    &(struct { CCC_Handle private; }){                                         \
+        CCC_array_tree_map_try_insert((array_tree_map_pointer),                \
+                                      (type_pointer))}                         \
+         .private
 
 /** @brief lazily insert type_compound_literal into the map at key if key is
 absent.
@@ -797,11 +799,13 @@ lazy value compound literal as well. This function ensures the key in the
 compound literal matches the searched key. */
 #define CCC_array_tree_map_try_insert_with(array_tree_map_pointer, key,        \
                                            type_compound_literal...)           \
-    &(CCC_Handle){CCC_private_array_tree_map_try_insert_with(                  \
-        array_tree_map_pointer, key, type_compound_literal)}
+    &(struct { CCC_Handle private; }){                                         \
+        CCC_private_array_tree_map_try_insert_with(                            \
+            array_tree_map_pointer, key, type_compound_literal)}               \
+         .private
 
 /** @brief Invariantly inserts or overwrites a user struct into the map.
-@param[in] map a pointer to the handle hash map.
+@param[in] map a pointer to the handle map.
 @param[in] type the type user struct key value.
 @return a handle. If Occupied a handle was overwritten by the new key value.
 If Vacant no prior map handle existed.
@@ -811,8 +815,21 @@ the information regarding its presence is helpful. */
 [[nodiscard]] CCC_Handle
 CCC_array_tree_map_insert_or_assign(CCC_Array_tree_map *map, void const *type);
 
+/** @brief Invariantly inserts or overwrites a user struct into the map.
+@param[in] map_pointer a pointer to the handle map.
+@param[in] type_pointer a pointer to the user struct key value type.
+@return a compound literal reference to a handle. If Occupied a handle was
+overwritten by the new key value. If Vacant no prior map handle existed.
+
+Note that this function can be used when the old user type is not needed but
+the information regarding its presence is helpful. */
+#define CCC_array_tree_map_insert_or_assign_wrap(map_pointer, type_pointer...) \
+    &(struct { CCC_Handle private; }){                                         \
+        CCC_array_tree_map_insert_or_assign(map_pointer, type_pointer)}        \
+         .private
+
 /** @brief Inserts a new key value pair or overwrites the existing handle.
-@param[in] array_tree_map_pointer the pointer to the handle hash map.
+@param[in] array_tree_map_pointer the pointer to the handle map.
 @param[in] key the key to be searched in the map.
 @param[in] type_compound_literal the compound literal to insert or use for
 overwrite.
@@ -826,8 +843,10 @@ lazy value compound literal as well. This function ensures the key in the
 compound literal matches the searched key. */
 #define CCC_array_tree_map_insert_or_assign_with(array_tree_map_pointer, key,  \
                                                  type_compound_literal...)     \
-    &(CCC_Handle){CCC_private_array_tree_map_insert_or_assign_with(            \
-        array_tree_map_pointer, key, type_compound_literal)}
+    &(struct { CCC_Handle private; }){                                         \
+        CCC_private_array_tree_map_insert_or_assign_with(                      \
+            array_tree_map_pointer, key, type_compound_literal)}               \
+         .private
 
 /** @brief Removes the key value in the map storing the old value, if present,
 in the type_output provided by the user.
@@ -853,9 +872,10 @@ set.
 Note that this function may write to the user type struct. */
 #define CCC_array_tree_map_remove_key_value_wrap(array_tree_map_pointer,       \
                                                  type_output_pointer)          \
-    &(CCC_Handle){CCC_array_tree_map_remove_key_value(                         \
-                      (array_tree_map_pointer), (type_output_pointer))         \
-                      .private}
+    &(struct { CCC_Handle private; }){                                         \
+        CCC_array_tree_map_remove_key_value((array_tree_map_pointer),          \
+                                            (type_output_pointer))}            \
+         .private
 
 /** @brief Obtains a handle for the provided key in the map for future use.
 @param[in] map the map to be searched.
@@ -892,9 +912,9 @@ where in the map such an element should be inserted.
 A handle is rarely useful on its own. It should be passed in a functional style
 to subsequent calls in the Handle Interface. */
 #define CCC_array_tree_map_handle_wrap(array_tree_map_pointer, key_pointer)    \
-    &(CCC_Array_tree_map_handle){                                              \
-        CCC_array_tree_map_handle((array_tree_map_pointer), (key_pointer))     \
-            .private}
+    &(struct { CCC_Array_tree_map_handle private; }){                          \
+        CCC_array_tree_map_handle((array_tree_map_pointer), (key_pointer))}    \
+         .private
 
 /** @brief Modifies the provided handle if it is Occupied.
 @param[in] handle the handle obtained from a handle function or macro.
@@ -960,8 +980,10 @@ container can deliver the user type T. This means any function calls are lazily
 evaluated in the closure scope. */
 #define CCC_array_tree_map_and_modify_with(map_array_pointer, type_name,       \
                                            closure_over_T...)                  \
-    &(CCC_Array_tree_map_handle){CCC_private_array_tree_map_and_modify_with(   \
-        map_array_pointer, type_name, closure_over_T)}
+    &(struct { CCC_Array_tree_map_handle private; }){                          \
+        CCC_private_array_tree_map_and_modify_with(map_array_pointer,          \
+                                                   type_name, closure_over_T)} \
+         .private
 
 /** @brief Inserts the provided user type if the handle is Vacant.
 @param[in] handle the handle obtained via function or macro call.
@@ -1037,7 +1059,9 @@ Vacant, no prior handle existed to be removed.
 Note that the reference to the removed handle is invalidated upon any further
 insertions. */
 #define CCC_array_tree_map_remove_handle_wrap(map_array_pointer)               \
-    &(CCC_Handle){CCC_array_tree_map_remove_handle((map_array_pointer)).private}
+    &(struct { CCC_Handle private; }){                                         \
+        CCC_array_tree_map_remove_handle((map_array_pointer))}                 \
+         .private
 
 /** @brief Unwraps the provided handle to obtain a view into the map element.
 @param[in] handle the handle from a query to the map via function or macro.
@@ -1176,10 +1200,10 @@ the range the second to the end of the range.
 enclosing scope. This reference is always non-NULL. */
 #define CCC_array_tree_map_equal_range_wrap(array_tree_map_pointer,            \
                                             begin_and_end_key_pointers...)     \
-    &(CCC_Handle_range){                                                       \
+    &(struct { CCC_Handle_range private; }){                                   \
         CCC_array_tree_map_equal_range((array_tree_map_pointer),               \
-                                       (begin_and_end_key_pointers))           \
-            .private}
+                                       begin_and_end_key_pointers)}            \
+         .private
 
 /** @brief Return an iterable range_reverse of values from [begin_key, end_key).
 O(lg N).
@@ -1218,11 +1242,11 @@ to the start of the range_reverse the second to the end of the range_reverse.
 with the enclosing scope. This reference is always non-NULL. */
 #define CCC_array_tree_map_equal_range_reverse_wrap(                           \
     array_tree_map_pointer, reverse_begin_and_reverse_end_key_pointers...)     \
-    &(CCC_Handle_range_reverse){                                               \
+    &(struct { CCC_Handle_range_reverse private; }){                           \
         CCC_array_tree_map_equal_range_reverse(                                \
             (array_tree_map_pointer),                                          \
-            (reverse_begin_and_reverse_end_key_pointers))                      \
-            .private}
+            reverse_begin_and_reverse_end_key_pointers)}                       \
+         .private
 
 /** @brief Return the start of an inorder traversal of the map. O(lg N).
 @param[in] map a pointer to the map.

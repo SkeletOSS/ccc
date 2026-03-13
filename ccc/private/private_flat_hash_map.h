@@ -41,7 +41,6 @@ most complexity in the implementation. */
 /** @endcond */
 
 #include "../types.h"
-#include "private_types.h"
 
 /* NOLINTBEGIN(readability-identifier-naming) */
 
@@ -171,18 +170,7 @@ struct CCC_Flat_hash_map_entry {
     /** The saved tag from the current query hash value. */
     struct CCC_Flat_hash_map_tag tag;
     /** The status of this entry. */
-    enum CCC_Entry_status status;
-};
-
-/** @internal A simple wrapper for an entry that allows us to return a compound
-literal reference. All interface functions accept pointers to entries and
-a functional chain of calls is not possible with return by value. The interface
-can then return `&(union
-CCC_Flat_hash_map_entry_wrap){function_call(...).private}` which is a compound
-literal reference in C23. */
-union CCC_Flat_hash_map_entry_wrap {
-    /** @internal Wrapped type to make compound literal reference easy. */
-    struct CCC_Flat_hash_map_entry private;
+    CCC_Entry_status status;
 };
 
 /*======================     Private Interface      =========================*/
@@ -409,15 +397,15 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
 The user facing docs clarify that T is a correctly typed reference to the
 desired data if occupied. */
 #define CCC_private_flat_hash_map_and_modify_with(                             \
-    Flat_hash_map_entry_pointer, type_name, closure_over_T...)                 \
+    flat_hash_map_entry_pointer, type_name, closure_over_T...)                 \
     (__extension__({                                                           \
         __auto_type private_flat_hash_map_mod_ent_pointer                      \
-            = (Flat_hash_map_entry_pointer);                                   \
+            = (flat_hash_map_entry_pointer);                                   \
         struct CCC_Flat_hash_map_entry private_flat_hash_map_mod_with_ent      \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                            \
         if (private_flat_hash_map_mod_ent_pointer) {                           \
             private_flat_hash_map_mod_with_ent                                 \
-                = private_flat_hash_map_mod_ent_pointer->private;              \
+                = *private_flat_hash_map_mod_ent_pointer;                      \
             if (private_flat_hash_map_mod_with_ent.status                      \
                 & CCC_ENTRY_OCCUPIED) {                                        \
                 type_name *const T = CCC_private_flat_hash_map_data_at(        \
@@ -435,26 +423,25 @@ desired data if occupied. */
 reference to the inserted data rather than a entry with a status. This is
 because it should not fail. If NULL is returned the user knows there is a
 problem. */
-#define CCC_private_flat_hash_map_or_insert_with(Flat_hash_map_entry_pointer,  \
+#define CCC_private_flat_hash_map_or_insert_with(flat_hash_map_entry_pointer,  \
                                                  type_compound_literal...)     \
     (__extension__({                                                           \
         __auto_type private_flat_hash_map_or_ins_ent_pointer                   \
-            = (Flat_hash_map_entry_pointer);                                   \
+            = (flat_hash_map_entry_pointer);                                   \
         typeof(type_compound_literal) *private_flat_hash_map_or_ins_res        \
             = NULL;                                                            \
         if (private_flat_hash_map_or_ins_ent_pointer) {                        \
-            if (!(private_flat_hash_map_or_ins_ent_pointer->private.status     \
+            if (!(private_flat_hash_map_or_ins_ent_pointer->status             \
                   & CCC_ENTRY_INSERT_ERROR)) {                                 \
                 private_flat_hash_map_or_ins_res                               \
                     = CCC_private_flat_hash_map_data_at(                       \
-                        private_flat_hash_map_or_ins_ent_pointer->private.map, \
-                        private_flat_hash_map_or_ins_ent_pointer->private      \
-                            .index);                                           \
-                if (private_flat_hash_map_or_ins_ent_pointer->private.status   \
+                        private_flat_hash_map_or_ins_ent_pointer->map,         \
+                        private_flat_hash_map_or_ins_ent_pointer->index);      \
+                if (private_flat_hash_map_or_ins_ent_pointer->status           \
                     == CCC_ENTRY_VACANT) {                                     \
                     *private_flat_hash_map_or_ins_res = type_compound_literal; \
                     CCC_private_flat_hash_map_set_insert(                      \
-                        &private_flat_hash_map_or_ins_ent_pointer->private);   \
+                        private_flat_hash_map_or_ins_ent_pointer);             \
                 }                                                              \
             }                                                                  \
         }                                                                      \
@@ -465,24 +452,24 @@ problem. */
 reference directly. This is similar to insert or assign where overwriting may
 occur. */
 #define CCC_private_flat_hash_map_insert_entry_with(                           \
-    Flat_hash_map_entry_pointer, type_compound_literal...)                     \
+    flat_hash_map_entry_pointer, type_compound_literal...)                     \
     (__extension__({                                                           \
         __auto_type private_flat_hash_map_ins_ent_pointer                      \
-            = (Flat_hash_map_entry_pointer);                                   \
+            = (flat_hash_map_entry_pointer);                                   \
         typeof(type_compound_literal) *private_flat_hash_map_ins_ent_res       \
             = NULL;                                                            \
         if (private_flat_hash_map_ins_ent_pointer) {                           \
-            if (!(private_flat_hash_map_ins_ent_pointer->private.status        \
+            if (!(private_flat_hash_map_ins_ent_pointer->status                \
                   & CCC_ENTRY_INSERT_ERROR)) {                                 \
                 private_flat_hash_map_ins_ent_res                              \
                     = CCC_private_flat_hash_map_data_at(                       \
-                        private_flat_hash_map_ins_ent_pointer->private.map,    \
-                        private_flat_hash_map_ins_ent_pointer->private.index); \
+                        private_flat_hash_map_ins_ent_pointer->map,            \
+                        private_flat_hash_map_ins_ent_pointer->index);         \
                 *private_flat_hash_map_ins_ent_res = type_compound_literal;    \
-                if (private_flat_hash_map_ins_ent_pointer->private.status      \
+                if (private_flat_hash_map_ins_ent_pointer->status              \
                     == CCC_ENTRY_VACANT) {                                     \
                     CCC_private_flat_hash_map_set_insert(                      \
-                        &private_flat_hash_map_ins_ent_pointer->private);      \
+                        private_flat_hash_map_ins_ent_pointer);                \
                 }                                                              \
             }                                                                  \
         }                                                                      \
@@ -497,7 +484,7 @@ Importantly, this function makes sure the key is in sync with key in table. */
     (__extension__({                                                           \
         struct CCC_Flat_hash_map *private_flat_hash_map_pointer                \
             = (flat_hash_map_pointer);                                         \
-        struct CCC_Entry private_flat_hash_map_try_insert_res                  \
+        CCC_Entry private_flat_hash_map_try_insert_res                         \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                            \
         if (private_flat_hash_map_pointer) {                                   \
             __auto_type private_flat_hash_map_key = key;                       \
@@ -509,14 +496,14 @@ Importantly, this function makes sure the key is in sync with key in table. */
                  & CCC_ENTRY_OCCUPIED)                                         \
                 || (private_flat_hash_map_try_ins_ent.status                   \
                     & CCC_ENTRY_INSERT_ERROR)) {                               \
-                private_flat_hash_map_try_insert_res = (struct CCC_Entry){     \
+                private_flat_hash_map_try_insert_res = (CCC_Entry){            \
                     .type = CCC_private_flat_hash_map_data_at(                 \
                         private_flat_hash_map_try_ins_ent.map,                 \
                         private_flat_hash_map_try_ins_ent.index),              \
                     .status = private_flat_hash_map_try_ins_ent.status,        \
                 };                                                             \
             } else {                                                           \
-                private_flat_hash_map_try_insert_res = (struct CCC_Entry){     \
+                private_flat_hash_map_try_insert_res = (CCC_Entry){            \
                     .type = CCC_private_flat_hash_map_data_at(                 \
                         private_flat_hash_map_try_ins_ent.map,                 \
                         private_flat_hash_map_try_ins_ent.index),              \
@@ -546,7 +533,7 @@ Similar to insert entry this will overwrite. */
     (__extension__({                                                           \
         struct CCC_Flat_hash_map *private_flat_hash_map_pointer                \
             = (flat_hash_map_pointer);                                         \
-        struct CCC_Entry private_flat_hash_map_insert_or_assign_res            \
+        CCC_Entry private_flat_hash_map_insert_or_assign_res                   \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                            \
         if (private_flat_hash_map_pointer) {                                   \
             private_flat_hash_map_insert_or_assign_res.status                  \
@@ -559,14 +546,12 @@ Similar to insert entry this will overwrite. */
                     (void *)&private_flat_hash_map_key);                       \
             if (!(private_flat_hash_map_ins_or_assign_ent.status               \
                   & CCC_ENTRY_INSERT_ERROR)) {                                 \
-                private_flat_hash_map_insert_or_assign_res                     \
-                    = (struct CCC_Entry){                                      \
-                        .type = CCC_private_flat_hash_map_data_at(             \
-                            private_flat_hash_map_ins_or_assign_ent.map,       \
-                            private_flat_hash_map_ins_or_assign_ent.index),    \
-                        .status                                                \
-                        = private_flat_hash_map_ins_or_assign_ent.status,      \
-                    };                                                         \
+                private_flat_hash_map_insert_or_assign_res = (CCC_Entry){      \
+                    .type = CCC_private_flat_hash_map_data_at(                 \
+                        private_flat_hash_map_ins_or_assign_ent.map,           \
+                        private_flat_hash_map_ins_or_assign_ent.index),        \
+                    .status = private_flat_hash_map_ins_or_assign_ent.status,  \
+                };                                                             \
                 *((typeof(type_compound_literal) *)                            \
                       private_flat_hash_map_insert_or_assign_res.type)         \
                     = type_compound_literal;                                   \
