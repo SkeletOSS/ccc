@@ -120,7 +120,7 @@ check_static_begin(buffer_test_car_fleet) {
     Buffer car_idx
         = buffer_context_with_storage(&positions, CARCAP, (int[CARCAP]){});
     iota(buffer_begin(&car_idx), CARCAP, 0);
-    sort(&car_idx, order_car_idx, &(int){0});
+    sort(&car_idx, order_car_idx, &(int){});
     int target = 12;
     int fleets = 1;
     double slowest_time_to_target

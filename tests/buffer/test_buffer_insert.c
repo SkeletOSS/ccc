@@ -69,9 +69,9 @@ check_static_begin(buffer_test_push_qsort) {
     iota(buffer_begin(&b), BUF_SORT_CAP, 0);
     check(memcmp(ref, buffer_begin(&b), BUF_SORT_CAP * sizeof(*ref)),
           CCC_ORDER_EQUAL);
-    rand_shuffle(sizeof(*ref), ref, BUF_SORT_CAP, &(int){0});
+    rand_shuffle(sizeof(*ref), ref, BUF_SORT_CAP, &(int){});
     rand_shuffle(buffer_sizeof_type(&b).count, buffer_begin(&b),
-                 buffer_count(&b).count, &(int){0});
+                 buffer_count(&b).count, &(int){});
     qsort(ref, BUF_SORT_CAP, sizeof(*ref), std_order_ints);
     qsort(buffer_begin(&b), buffer_capacity(&b).count,
           buffer_sizeof_type(&b).count, std_order_ints);
@@ -97,8 +97,8 @@ check_static_begin(buffer_test_push_sort) {
     Buffer b = buffer_with_storage(BUF_SORT_CAP, (int[BUF_SORT_CAP]){});
     iota(buffer_begin(&b), BUF_SORT_CAP, 0);
     rand_shuffle(buffer_sizeof_type(&b).count, buffer_begin(&b),
-                 buffer_count(&b).count, &(int){0});
-    (void)sort(&b, ccc_order_ints, &(int){0});
+                 buffer_count(&b).count, &(int){});
+    (void)sort(&b, ccc_order_ints, &(int){});
     int prev = INT_MIN;
     size_t count = 0;
     for (int const *i = buffer_begin(&b); i != buffer_end(&b);
@@ -125,7 +125,7 @@ check_static_begin(buffer_test_insert_no_allocate) {
         = buforder(&b, BUFINSCAP - 2, (int[BUFINSCAP - 2]){1, 2, 3, 4, 5});
     check(order, CCC_ORDER_EQUAL);
     check(buffer_count(&b).count, BUFINSCAP - 2);
-    int const *const zero = buffer_insert(&b, 0, &(int){0});
+    int const *const zero = buffer_insert(&b, 0, &(int){});
     check(zero != NULL, CCC_TRUE);
     check(*zero, 0);
     order = buforder(&b, BUFINSCAP - 1, (int[BUFINSCAP - 1]){0, 1, 2, 3, 4, 5});
@@ -167,7 +167,7 @@ check_static_begin(buffer_test_insert_allocate) {
     CCC_Order order = buforder(&b, 7, (int[7]){1, 2, 3, 4, 5, 6, 7});
     check(order, CCC_ORDER_EQUAL);
     check(buffer_count(&b).count, 7);
-    int const *const zero = buffer_insert(&b, 0, &(int){0});
+    int const *const zero = buffer_insert(&b, 0, &(int){});
     check(zero != NULL, CCC_TRUE);
     check(*zero, 0);
     order = buforder(&b, 8, (int[8]){0, 1, 2, 3, 4, 5, 6, 7});

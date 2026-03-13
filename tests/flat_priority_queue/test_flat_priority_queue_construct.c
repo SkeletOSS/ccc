@@ -86,7 +86,7 @@ check_static_begin(flat_priority_queue_test_raw_type) {
         = flat_priority_queue_for(int, CCC_ORDER_LESSER, int_order, NULL, NULL,
                                   (sizeof(vals) / sizeof(int)), vals);
     int val = 1;
-    int *res = push(&priority_queue, &val, &(int){0});
+    int *res = push(&priority_queue, &val, &(int){});
     check(res != NULL, true);
     check(flat_priority_queue_is_empty(&priority_queue), false);
     res = flat_priority_queue_emplace(&priority_queue, -1);
@@ -110,10 +110,10 @@ check_static_begin(flat_priority_queue_test_heapify) {
         = flat_priority_queue_heapify(int, CCC_ORDER_LESSER, int_order, NULL,
                                       NULL, HEAPIFY_CAP, HEAPIFY_CAP, heap);
     int prev = *((int *)flat_priority_queue_front(&priority_queue));
-    (void)pop(&priority_queue, &(int){0});
+    (void)pop(&priority_queue, &(int){});
     while (!flat_priority_queue_is_empty(&priority_queue)) {
         int cur = *((int *)flat_priority_queue_front(&priority_queue));
-        (void)pop(&priority_queue, &(int){0});
+        (void)pop(&priority_queue, &(int){});
         check(cur >= prev, true);
         prev = cur;
     }
@@ -132,15 +132,15 @@ check_static_begin(flat_priority_queue_test_heapify_copy) {
     for (size_t i = 0; i < HEAPIFY_COPY_CAP; ++i) {
         input[i] = rand_range(-99, 99); /* NOLINT */
     }
-    check(flat_priority_queue_copy_heapify(&priority_queue, &(int){0}, input,
+    check(flat_priority_queue_copy_heapify(&priority_queue, &(int){}, input,
                                            HEAPIFY_COPY_CAP, sizeof(int)),
           CCC_RESULT_OK);
     check(flat_priority_queue_count(&priority_queue).count, HEAPIFY_COPY_CAP);
     int prev = *((int *)flat_priority_queue_front(&priority_queue));
-    (void)pop(&priority_queue, &(int){0});
+    (void)pop(&priority_queue, &(int){});
     while (!flat_priority_queue_is_empty(&priority_queue)) {
         int cur = *((int *)flat_priority_queue_front(&priority_queue));
-        (void)pop(&priority_queue, &(int){0});
+        (void)pop(&priority_queue, &(int){});
         check(cur >= prev, true);
         prev = cur;
     }
@@ -160,7 +160,7 @@ check_static_begin(flat_priority_queue_test_heapsort) {
         = flat_priority_queue_heapify(int, CCC_ORDER_LESSER, int_order, NULL,
                                       NULL, HPSORTCAP, HPSORTCAP, heap);
     CCC_Buffer const b
-        = CCC_flat_priority_queue_heapsort(&priority_queue, &(int){0});
+        = CCC_flat_priority_queue_heapsort(&priority_queue, &(int){});
     int const *prev = begin(&b);
     check(prev != NULL, true);
     check(CCC_buffer_count(&b).count, HPSORTCAP);
@@ -179,9 +179,9 @@ check_static_begin(flat_priority_queue_test_copy_no_allocate) {
         int, CCC_ORDER_LESSER, int_order, NULL, NULL, 4, (int[4]){});
     Flat_priority_queue destination = flat_priority_queue_for(
         int, CCC_ORDER_LESSER, int_order, NULL, NULL, 5, (int[5]){});
-    (void)push(&source, &(int){0}, &(int){0});
-    (void)push(&source, &(int){1}, &(int){0});
-    (void)push(&source, &(int){2}, &(int){0});
+    (void)push(&source, &(int){}, &(int){});
+    (void)push(&source, &(int){1}, &(int){});
+    (void)push(&source, &(int){2}, &(int){});
     check(count(&source).count, 3);
     check(*(int *)front(&source), 0);
     check(is_empty(&destination), true);
@@ -191,8 +191,8 @@ check_static_begin(flat_priority_queue_test_copy_no_allocate) {
     while (!is_empty(&source) && !is_empty(&destination)) {
         int f1 = *(int *)front(&source);
         int f2 = *(int *)front(&destination);
-        (void)pop(&source, &(int){0});
-        (void)pop(&destination, &(int){0});
+        (void)pop(&source, &(int){});
+        (void)pop(&destination, &(int){});
         check(f1, f2);
     }
     check(is_empty(&source), is_empty(&destination));
@@ -204,9 +204,9 @@ check_static_begin(flat_priority_queue_test_copy_no_allocate_fail) {
         int, CCC_ORDER_LESSER, int_order, NULL, NULL, 4, (int[4]){});
     Flat_priority_queue destination = flat_priority_queue_for(
         int, CCC_ORDER_LESSER, int_order, NULL, NULL, 2, (int[2]){});
-    (void)push(&source, &(int){0}, &(int){0});
-    (void)push(&source, &(int){1}, &(int){0});
-    (void)push(&source, &(int){2}, &(int){0});
+    (void)push(&source, &(int){}, &(int){});
+    (void)push(&source, &(int){1}, &(int){});
+    (void)push(&source, &(int){2}, &(int){});
     check(count(&source).count, 3);
     check(*(int *)front(&source), 0);
     check(is_empty(&destination), true);
@@ -223,9 +223,9 @@ check_static_begin(flat_priority_queue_test_copy_allocate) {
     Flat_priority_queue destination = flat_priority_queue_for(
         int, CCC_ORDER_LESSER, int_order, stack_allocator_allocate, &allocator,
         0, NULL);
-    (void)push(&source, &(int){0}, &(int){0});
-    (void)push(&source, &(int){1}, &(int){0});
-    (void)push(&source, &(int){2}, &(int){0});
+    (void)push(&source, &(int){}, &(int){});
+    (void)push(&source, &(int){1}, &(int){});
+    (void)push(&source, &(int){2}, &(int){});
     check(*(int *)front(&source), 0);
     check(is_empty(&destination), true);
     CCC_Result res = flat_priority_queue_copy(&destination, &source,
@@ -235,8 +235,8 @@ check_static_begin(flat_priority_queue_test_copy_allocate) {
     while (!is_empty(&source) && !is_empty(&destination)) {
         int f1 = *(int *)front(&source);
         int f2 = *(int *)front(&destination);
-        (void)pop(&source, &(int){0});
-        (void)pop(&destination, &(int){0});
+        (void)pop(&source, &(int){});
+        (void)pop(&destination, &(int){});
         check(f1, f2);
     }
     check(is_empty(&source), is_empty(&destination));
@@ -254,9 +254,9 @@ check_static_begin(flat_priority_queue_test_copy_allocate_fail) {
     Flat_priority_queue destination = flat_priority_queue_for(
         int, CCC_ORDER_LESSER, int_order, stack_allocator_allocate, &allocator,
         0, NULL);
-    (void)push(&source, &(int){0}, &(int){0});
-    (void)push(&source, &(int){1}, &(int){0});
-    (void)push(&source, &(int){2}, &(int){0});
+    (void)push(&source, &(int){}, &(int){});
+    (void)push(&source, &(int){1}, &(int){});
+    (void)push(&source, &(int){2}, &(int){});
     check(*(int *)front(&source), 0);
     check(is_empty(&destination), true);
     CCC_Result res = flat_priority_queue_copy(&destination, &source, NULL);
@@ -275,7 +275,7 @@ check_static_begin(flat_priority_queue_test_init_from) {
     while (!CCC_flat_priority_queue_is_empty(&queue)) {
         int const front = *(int *)CCC_flat_priority_queue_front(&queue);
         check(front > prev, true);
-        CCC_Result const pop = CCC_flat_priority_queue_pop(&queue, &(int){0});
+        CCC_Result const pop = CCC_flat_priority_queue_pop(&queue, &(int){});
         check(pop, CCC_RESULT_OK);
         ++count;
     }
@@ -295,12 +295,12 @@ check_static_begin(flat_priority_queue_test_init_from_fail) {
         int const front = *(int *)CCC_flat_priority_queue_front(&queue);
         check(front > prev, true);
         ++count;
-        CCC_Result const pop = CCC_flat_priority_queue_pop(&queue, &(int){0});
+        CCC_Result const pop = CCC_flat_priority_queue_pop(&queue, &(int){});
         check(pop, CCC_RESULT_OK);
     }
     check(count, 0);
     check(CCC_flat_priority_queue_capacity(&queue).count, 0);
-    check(CCC_flat_priority_queue_push(&queue, &(int){12}, &(int){0}), NULL);
+    check(CCC_flat_priority_queue_push(&queue, &(int){12}, &(int){}), NULL);
     check_end((void)CCC_flat_priority_queue_clear_and_free(&queue, NULL););
 }
 
@@ -311,7 +311,7 @@ check_static_begin(flat_priority_queue_test_init_with_capacity) {
             int, CCC_ORDER_LESSER, int_order, stack_allocator_allocate,
             &allocator, 8);
     check(CCC_flat_priority_queue_capacity(&queue).count, 8);
-    check(CCC_flat_priority_queue_push(&queue, &(int){9}, &(int){0}) != NULL,
+    check(CCC_flat_priority_queue_push(&queue, &(int){9}, &(int){}) != NULL,
           CCC_TRUE);
     check_end(CCC_flat_priority_queue_clear_and_free(&queue, NULL););
 }
@@ -321,7 +321,7 @@ check_static_begin(flat_priority_queue_test_init_with_capacity_fail) {
     CCC_Flat_priority_queue queue = CCC_flat_priority_queue_with_capacity(
         int, CCC_ORDER_LESSER, int_order, NULL, 8);
     check(CCC_flat_priority_queue_capacity(&queue).count, 0);
-    check(CCC_flat_priority_queue_push(&queue, &(int){9}, &(int){0}), NULL);
+    check(CCC_flat_priority_queue_push(&queue, &(int){9}, &(int){}), NULL);
     check_end(CCC_flat_priority_queue_clear_and_free(&queue, NULL););
 }
 
@@ -341,7 +341,7 @@ check_static_begin(flat_priority_queue_test_context_with_allocator) {
     check(CCC_flat_priority_queue_reserve(&queue, 8, stack_allocator_allocate),
           CCC_RESULT_OK);
     check(CCC_flat_priority_queue_capacity(&queue).count, 8);
-    check(CCC_flat_priority_queue_push(&queue, &(int){9}, &(int){0}) != NULL,
+    check(CCC_flat_priority_queue_push(&queue, &(int){9}, &(int){}) != NULL,
           CCC_TRUE);
     check_end(CCC_flat_priority_queue_clear_and_free(&queue, NULL););
 }

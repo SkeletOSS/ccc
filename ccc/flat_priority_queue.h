@@ -36,7 +36,7 @@ literal references. For example, if we have a `int` flat priority queue we can
 provide a temporary slot inline to a function as follows.
 
 ```
-CCC_flat_priority_queue_pop(&priority_queue, &(int){0});
+CCC_flat_priority_queue_pop(&priority_queue, &(int){});
 ```
 
 Any user defined struct can also use this technique.

@@ -382,7 +382,7 @@ main(void) {
     };
     Flat_priority_queue priority_queue = flat_priority_queue_heapify(
         int, CCC_LES, int_cmp, NULL, NULL, HCAP, HCAP, heap);
-    Buffer const b = flat_priority_queue_heapsort(&priority_queue, &(int){0});
+    Buffer const b = flat_priority_queue_heapsort(&priority_queue, &(int){});
     int const *prev = begin(&b);
     assert(prev != NULL);
     assert(buffer_count(&b).count == HCAP);
