@@ -85,7 +85,7 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
                 private_flat_priority_queue_heapify_data);                     \
         CCC_private_flat_priority_queue_in_place_heapify(                      \
             &private_flat_priority_queue_heapify_res, (private_size),          \
-            &(private_type_name){0});                                          \
+            &(private_type_name){});                                           \
         private_flat_priority_queue_heapify_res;                               \
     }))}.private
 
@@ -93,7 +93,7 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
 #define CCC_private_flat_priority_queue_context_from(                          \
     private_order, private_compare, private_allocate, private_context,         \
     private_optional_capacity, private_compound_literal_array...)              \
-    (__extension__({                                                           \
+    (struct { struct CCC_Flat_priority_queue private; }){(__extension__({      \
         struct CCC_Flat_priority_queue private_flat_priority_queue = {         \
             .buffer = CCC_buffer_context_from(                                 \
                 private_allocate, private_context, private_optional_capacity,  \
@@ -105,10 +105,10 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
             CCC_private_flat_priority_queue_in_place_heapify(                  \
                 &private_flat_priority_queue,                                  \
                 private_flat_priority_queue.buffer.count,                      \
-                &(typeof(*private_compound_literal_array)){0});                \
+                &(typeof(*private_compound_literal_array)){});                 \
         }                                                                      \
         private_flat_priority_queue;                                           \
-    }))
+    }))}.private
 
 /** @internal */
 #define CCC_private_flat_priority_queue_from(                                  \
@@ -151,8 +151,6 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
 #define CCC_private_flat_priority_queue_context_with_storage(                  \
     private_order, private_compare, private_context, private_compound_literal) \
     (struct {                                                                  \
-        static_assert(sizeof(private_compound_literal) > 0,                    \
-                      "provide non-empty compound literal array");             \
         static_assert(                                                         \
             (private_order) == CCC_ORDER_LESSER                                \
                 || (private_order) == CCC_ORDER_GREATER,                       \
@@ -207,7 +205,7 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
                     &private_flat_priority_queue->buffer,                      \
                     CCC_private_flat_priority_queue_bubble_up(                 \
                         private_flat_priority_queue,                           \
-                        &(typeof(type_compound_literal)){0},                   \
+                        &(typeof(type_compound_literal)){},                    \
                         private_flat_priority_queue->buffer.count - 1));       \
             } else {                                                           \
                 private_flat_priority_queue_res                                \
@@ -230,7 +228,7 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
             && T) {                                                            \
             {update_closure_over_T} T                                          \
                 = CCC_private_flat_priority_queue_update_fixup(                \
-                    private_flat_priority_queue, T, &(typeof(*T_pointer)){0}); \
+                    private_flat_priority_queue, T, &(typeof(*T_pointer)){});  \
         }                                                                      \
         T;                                                                     \
     }))

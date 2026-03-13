@@ -18,6 +18,16 @@ check_static_begin(flat_double_ended_queue_test_construct) {
     check_end();
 }
 
+check_static_begin(flat_double_ended_queue_test_construct_with_storage) {
+    Flat_double_ended_queue q1
+        = flat_double_ended_queue_with_storage(0, (int[4]){});
+    Flat_double_ended_queue q2
+        = flat_double_ended_queue_with_storage(4, (int[4]){});
+    check(is_empty(&q1), true);
+    check(is_empty(&q2), false);
+    check_end();
+}
+
 check_static_begin(flat_double_ended_queue_test_copy_no_allocate) {
     Flat_double_ended_queue q1
         = flat_double_ended_queue_for(int, NULL, NULL, 3, 3, (int[3]){0, 1, 2});
@@ -179,6 +189,7 @@ check_static_begin(flat_double_ended_queue_test_init_context_with_allocator) {
 int
 main(void) {
     return check_run(flat_double_ended_queue_test_construct(),
+                     flat_double_ended_queue_test_construct_with_storage(),
                      flat_double_ended_queue_test_copy_no_allocate(),
                      flat_double_ended_queue_test_copy_no_allocate_fail(),
                      flat_double_ended_queue_test_copy_allocate(),

@@ -134,15 +134,6 @@ void *CCC_private_flat_double_ended_queue_allocate_back(
     }))
 
 /** @internal */
-#define CCC_private_flat_double_ended_queue_with_storage(                      \
-    private_count, private_compound_literal...)                                \
-    {                                                                          \
-        .buffer                                                                \
-        = CCC_buffer_with_storage(private_count, private_compound_literal),    \
-        .front = 0,                                                            \
-    }
-
-/** @internal */
 #define CCC_private_flat_double_ended_queue_context_with_storage(              \
     private_context, private_count, private_compound_literal...)               \
     {                                                                          \
@@ -150,6 +141,12 @@ void *CCC_private_flat_double_ended_queue_allocate_back(
             private_context, private_count, private_compound_literal),         \
         .front = 0,                                                            \
     }
+
+/** @internal */
+#define CCC_private_flat_double_ended_queue_with_storage(                      \
+    private_count, private_compound_literal...)                                \
+    CCC_private_flat_double_ended_queue_context_with_storage(                  \
+        NULL, private_count, private_compound_literal)
 
 /** @internal */
 #define CCC_private_flat_double_ended_queue_emplace_back(                      \

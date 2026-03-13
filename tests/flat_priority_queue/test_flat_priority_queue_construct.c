@@ -148,13 +148,13 @@ check_static_begin(flat_priority_queue_test_heapify_copy) {
 }
 
 check_static_begin(flat_priority_queue_test_heapsort) {
-    enum : size_t {
+    enum : int {
         HPSORTCAP = 100,
     };
     srand(time(NULL)); /* NOLINT */
     int heap[HPSORTCAP] = {};
-    for (size_t i = 0; i < HPSORTCAP; ++i) {
-        heap[i] = rand_range(-99, (int)(HPSORTCAP)); /* NOLINT */
+    for (int i = 0; i < HPSORTCAP; ++i) {
+        heap[i] = rand_range(-99, HPSORTCAP); /* NOLINT */
     }
     Flat_priority_queue priority_queue
         = flat_priority_queue_heapify(int, CCC_ORDER_LESSER, int_order, NULL,
