@@ -49,8 +49,9 @@ size_t
 CCC_private_flat_priority_queue_bubble_up(struct CCC_Flat_priority_queue *,
                                           void *, size_t);
 /** @internal */
-void CCC_private_flat_priority_queue_in_place_heapify(
-    struct CCC_Flat_priority_queue *, size_t, void *);
+void
+CCC_private_flat_priority_queue_heap_order(struct CCC_Flat_priority_queue *,
+                                           void *);
 /** @internal */
 void *
 CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
@@ -73,21 +74,37 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
 /** @internal */
 #define CCC_private_flat_priority_queue_heapify(                               \
     private_type_name, private_order, private_compare, private_allocate,       \
-    private_context, private_capacity, private_size, private_data_pointer)     \
+    private_context, private_capacity, private_size, private_data_pointer...)  \
     (struct { struct CCC_Flat_priority_queue private; }){(__extension__({      \
         typeof(*(                                                              \
             private_data_pointer)) *private_flat_priority_queue_heapify_data   \
-            = (private_data_pointer);                                          \
+            = private_data_pointer;                                            \
         struct CCC_Flat_priority_queue private_flat_priority_queue_heapify_res \
             = CCC_private_flat_priority_queue_for(                             \
                 private_type_name, private_order, private_compare,             \
                 private_allocate, private_context, private_capacity,           \
                 private_flat_priority_queue_heapify_data);                     \
-        CCC_private_flat_priority_queue_in_place_heapify(                      \
-            &private_flat_priority_queue_heapify_res, (private_size),          \
-            &(private_type_name){});                                           \
+        private_flat_priority_queue_heapify_res.buffer.count = (private_size); \
+        CCC_private_flat_priority_queue_heap_order(                            \
+            &private_flat_priority_queue_heapify_res, &(private_type_name){}); \
         private_flat_priority_queue_heapify_res;                               \
     }))}.private
+
+/** @internal */
+#define CCC_private_flat_priority_queue_context_heapify_storage(               \
+    private_type_name, private_order, private_compare, private_context,        \
+    private_capacity, private_size, private_data_pointer...)                   \
+    CCC_private_flat_priority_queue_heapify(                                   \
+        private_type_name, private_order, private_compare, NULL,               \
+        private_context, private_capacity, private_size, private_data_pointer)
+
+/** @internal */
+#define CCC_private_flat_priority_queue_heapify_storage(                       \
+    private_type_name, private_order, private_compare, private_capacity,       \
+    private_size, private_data_pointer...)                                     \
+    CCC_private_flat_priority_queue_context_heapify_storage(                   \
+        private_type_name, private_order, private_compare, NULL,               \
+        private_capacity, private_size, private_data_pointer)
 
 /** @internal */
 #define CCC_private_flat_priority_queue_context_from(                          \
@@ -102,9 +119,8 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
             .compare = private_compare,                                        \
         };                                                                     \
         if (private_flat_priority_queue.buffer.count) {                        \
-            CCC_private_flat_priority_queue_in_place_heapify(                  \
+            CCC_private_flat_priority_queue_heap_order(                        \
                 &private_flat_priority_queue,                                  \
-                private_flat_priority_queue.buffer.count,                      \
                 &(typeof(*private_compound_literal_array)){});                 \
         }                                                                      \
         private_flat_priority_queue;                                           \

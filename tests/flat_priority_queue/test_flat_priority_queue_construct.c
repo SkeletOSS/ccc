@@ -6,6 +6,7 @@
 
 #define TRAITS_USING_NAMESPACE_CCC
 #define FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC
+#define BUFFER_USING_NAMESPACE_CCC
 
 #include "buffer.h"
 #include "checkers.h"
@@ -128,12 +129,13 @@ check_static_begin(flat_priority_queue_test_heapify_copy) {
     Flat_priority_queue priority_queue
         = flat_priority_queue_for(int, CCC_ORDER_LESSER, int_order, NULL, NULL,
                                   HEAPIFY_COPY_CAP, (int[HEAPIFY_COPY_CAP]){});
-    int input[HEAPIFY_COPY_CAP] = {};
-    for (size_t i = 0; i < HEAPIFY_COPY_CAP; ++i) {
-        input[i] = rand_range(-99, 99); /* NOLINT */
+    Buffer input
+        = buffer_with_storage(HEAPIFY_COPY_CAP, (int[HEAPIFY_COPY_CAP]){});
+    for (int *i = buffer_begin(&input); i != buffer_end(&input);
+         i = buffer_next(&input, i)) {
+        *i = rand_range(-99, 99); /* NOLINT */
     }
-    check(flat_priority_queue_copy_heapify(&priority_queue, &(int){}, input,
-                                           HEAPIFY_COPY_CAP, sizeof(int)),
+    check(flat_priority_queue_copy_heapify(&priority_queue, &input, &(int){}),
           CCC_RESULT_OK);
     check(flat_priority_queue_count(&priority_queue).count, HEAPIFY_COPY_CAP);
     int prev = *((int *)flat_priority_queue_front(&priority_queue));
@@ -152,20 +154,20 @@ check_static_begin(flat_priority_queue_test_heapsort) {
         HPSORTCAP = 100,
     };
     srand(time(NULL)); /* NOLINT */
-    int heap[HPSORTCAP] = {};
-    for (int i = 0; i < HPSORTCAP; ++i) {
-        heap[i] = rand_range(-99, HPSORTCAP); /* NOLINT */
+    Buffer storage = buffer_with_storage(HPSORTCAP, (int[HPSORTCAP]){});
+    for (int *i = buffer_begin(&storage); i != buffer_end(&storage);
+         i = buffer_next(&storage, i)) {
+        *i = rand_range(-99, HPSORTCAP); /* NOLINT */
     }
-    Flat_priority_queue priority_queue
-        = flat_priority_queue_heapify(int, CCC_ORDER_LESSER, int_order, NULL,
-                                      NULL, HPSORTCAP, HPSORTCAP, heap);
-    CCC_Buffer const b
-        = CCC_flat_priority_queue_heapsort(&priority_queue, &(int){});
-    int const *prev = begin(&b);
+    CCC_Result const result = CCC_flat_priority_queue_heapsort(
+        &storage, CCC_ORDER_LESSER, int_order, &(int){});
+    check(result, CCC_RESULT_OK);
+    int const *prev = begin(&storage);
     check(prev != NULL, true);
-    check(CCC_buffer_count(&b).count, HPSORTCAP);
+    check(CCC_buffer_count(&storage).count, HPSORTCAP);
     size_t count = 1;
-    for (int const *cur = next(&b, prev); cur != end(&b); cur = next(&b, cur)) {
+    for (int const *cur = next(&storage, prev); cur != end(&storage);
+         cur = next(&storage, cur)) {
         check(*prev >= *cur, true);
         prev = cur;
         ++count;

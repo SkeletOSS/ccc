@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #define FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC
+#define BUFFER_USING_NAMESPACE_CCC
 #define TRAITS_USING_NAMESPACE_CCC
 
 #include "buffer.h"
@@ -62,23 +63,24 @@ check_begin(inorder_fill, int vals[const], size_t const size,
     if (CCC_flat_priority_queue_count(flat_priority_queue).count != size) {
         return CHECK_FAIL;
     }
-    CCC_Flat_priority_queue flat_priority_queue_cpy
-        = CCC_flat_priority_queue_for(struct Val, CCC_ORDER_LESSER, val_order,
-                                      std_allocate, NULL, 0, NULL);
-    CCC_Result const r = flat_priority_queue_copy(
-        &flat_priority_queue_cpy, flat_priority_queue, std_allocate);
+    CCC_Buffer copy = CCC_buffer_with_allocator(struct Val, std_allocate);
+    CCC_Result r
+        = buffer_copy(&copy, &flat_priority_queue->buffer, std_allocate);
     check(r, CCC_RESULT_OK);
-    CCC_Buffer b = flat_priority_queue_heapsort(&flat_priority_queue_cpy,
-                                                &(struct Val){});
-    check(CCC_buffer_is_empty(&b), CCC_FALSE);
-    vals[0] = *CCC_buffer_back_as(&b, int);
+    r = flat_priority_queue_heapsort(
+        &copy,
+        flat_priority_queue->order == CCC_ORDER_GREATER ? CCC_ORDER_LESSER
+                                                        : CCC_ORDER_GREATER,
+        flat_priority_queue->compare, &(struct Val){});
+    check(r, CCC_RESULT_OK);
+    check(CCC_buffer_is_empty(&copy), CCC_FALSE);
+    vals[0] = *CCC_buffer_front_as(&copy, int);
     size_t i = 1;
-    for (struct Val const *prev = reverse_begin(&b),
-                          *v = reverse_next(&b, prev);
-         v != reverse_end(&b); prev = v, v = reverse_next(&b, v)) {
+    for (struct Val const *prev = begin(&copy), *v = next(&copy, prev);
+         v != end(&copy); prev = v, v = next(&copy, v)) {
         check(prev->val <= v->val, CCC_TRUE);
         vals[i++] = v->val;
     }
     check(i, flat_priority_queue_count(flat_priority_queue).count);
-    check_end(clear_and_free(&b, NULL););
+    check_end(clear_and_free(&copy, NULL););
 }

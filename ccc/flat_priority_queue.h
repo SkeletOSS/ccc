@@ -118,10 +118,51 @@ operator.
 for swapping purposes. */
 #define CCC_flat_priority_queue_heapify(type_name, order, compare, allocate,   \
                                         context, capacity, count,              \
-                                        data_pointer)                          \
+                                        data_pointer...)                       \
     CCC_private_flat_priority_queue_heapify(type_name, order, compare,         \
                                             allocate, context, capacity,       \
                                             count, data_pointer)
+
+/** @brief Partial order an array of elements as a min or max heap at runtime
+in O(N) time and space equal to the provided data capacity. Intended for
+converting storage into a fixed capacity flat priority queue with no allocation
+permission and no context for comparison.
+@param[in] type_name the name of the user type.
+@param[in] order CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max
+heap, respectively.
+@param[in] compare the user defined comparison function for user types.
+@param[in] capacity the capacity of contiguous elements at data_pointer.
+@param[in] count the count <= capacity of valid elements.
+@param[in] data_pointer a pointer to an array of user types or NULL.
+@return the initialized priority queue on the right hand side of an equality
+operator.
+@warning One additional element of the provided type is allocated on the stack
+for swapping purposes. */
+#define CCC_flat_priority_queue_heapify_storage(                               \
+    type_name, order, compare, capacity, count, data_pointer...)               \
+    CCC_private_flat_priority_queue_heapify_storage(                           \
+        type_name, order, compare, capacity, count, data_pointer)
+
+/** @brief Partial order an array of elements as a min or max heap at runtime
+in O(N) time and space equal to the provided data capacity. Intended for
+converting storage into a fixed capacity flat priority queue with no allocation
+permission but context for comparison.
+@param[in] type_name the name of the user type.
+@param[in] order CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max
+heap, respectively.
+@param[in] compare the user defined comparison function for user types.
+@param[in] context any context data needed for destruction of elements.
+@param[in] capacity the capacity of contiguous elements at data_pointer.
+@param[in] count the count <= capacity of valid elements.
+@param[in] data_pointer a pointer to an array of user types or NULL.
+@return the initialized priority queue on the right hand side of an equality
+operator.
+@warning One additional element of the provided type is allocated on the stack
+for swapping purposes. */
+#define CCC_flat_priority_queue_context_heapify_storage(                       \
+    type_name, order, compare, context, capacity, count, data_pointer...)      \
+    CCC_private_flat_priority_queue_context_heapify_storage(                   \
+        type_name, order, compare, context, capacity, count, data_pointer)
 
 /** @brief Partial order a compound literal array of elements as a min or max
 heap. O(N).
@@ -177,8 +218,8 @@ main(void)
 ```
 
 Only dynamic priority queues may be initialized this way. For static or stack
-based initialization of fixed buffers with contents known at compile time, see
-the CCC_flat_priority_queue_for() macro. */
+based initialization of fixed capacity compound literals with no elements see
+the CCC_flat_priority_queue_with_storage() macro. */
 #define CCC_flat_priority_queue_from(                                          \
     order, compare, allocate, optional_capacity, compound_literal_array...)    \
     CCC_private_flat_priority_queue_from(                                      \
@@ -241,8 +282,8 @@ main(void)
 ```
 
 Only dynamic priority queues may be initialized this way. For static or stack
-based initialization of fixed buffers with contents known at compile time, see
-the CCC_flat_priority_queue_for() macro. */
+based initialization of fixed capacity compound literals with no elements see
+the CCC_flat_priority_queue_with_storage() macro. */
 #define CCC_flat_priority_queue_context_from(order, compare, allocate,         \
                                              context, optional_capacity,       \
                                              compound_literal_array...)        \
@@ -278,9 +319,9 @@ main(void)
 }
 ```
 
-Only dynamic Flat_priority_queues may be initialized this way. For static or
-stack based initialization of fixed flat_priority_queues with contents known at
-compile time, see the CCC_flat_priority_queue_for() macro. */
+Only dynamic priority queues may be initialized this way. For static or stack
+based initialization of fixed capacity compound literals with no elements see
+the CCC_flat_priority_queue_with_storage() macro. */
 #define CCC_flat_priority_queue_with_capacity(type_name, order, compare,       \
                                               allocate, capacity)              \
     CCC_private_flat_priority_queue_with_capacity(type_name, order, compare,   \
@@ -316,9 +357,9 @@ main(void)
 }
 ```
 
-Only dynamic Flat_priority_queues may be initialized this way. For static or
-stack based initialization of fixed flat_priority_queues with contents known at
-compile time, see the CCC_flat_priority_queue_for() macro. */
+Only dynamic priority queues may be initialized this way. For static or stack
+based initialization of fixed capacity compound literals with no elements see
+the CCC_flat_priority_queue_with_storage() macro. */
 #define CCC_flat_priority_queue_context_with_capacity(                         \
     type_name, order, compare, allocate, context, capacity)                    \
     CCC_private_flat_priority_queue_context_with_capacity(                     \
@@ -334,11 +375,7 @@ respectively.
 operator. Capacity of the compound literal is capacity of the priority queue.
 @warning The compound literal is NOT swapped into heap order upon
 initialization. This initializer is meant for compile or runtime initialization
-with a fixed size compound literal. If this same compound literal contains
-unsorted elements that must be swapped into heap order, use the provided
-`CCC_flat_priority_queue_in_place_heapify()` operation at runtime on this
-priority queue. The size count of elements to be sorted must be less than or
-equal to the capacity of the compound literal. */
+with a fixed capacity compound literal with a count of 0. */
 #define CCC_flat_priority_queue_with_storage(order, compare,                   \
                                              compound_literal_array)           \
     CCC_private_flat_priority_queue_with_storage(order, compare,               \
@@ -355,11 +392,7 @@ respectively.
 operator.
 @warning The compound literal is NOT swapped into heap order upon
 initialization. This initializer is meant for compile or runtime initialization
-with a fixed size compound literal. If this same compound literal contains
-unsorted elements that must be swapped into heap order, use the provided
-`CCC_flat_priority_queue_in_place_heapify()` operation at runtime on this
-priority queue. The size count of elements to be sorted must be less than or
-equal to the capacity of the compound literal. */
+with a fixed capacity compound literal with a count of 0. */
 #define CCC_flat_priority_queue_context_with_storage(order, compare, context,  \
                                                      compound_literal_array)   \
     CCC_private_flat_priority_queue_context_with_storage(                      \
@@ -545,50 +578,61 @@ Insert or remove elements from the flat priority queue. */
     CCC_private_flat_priority_queue_emplace(priority_queue_pointer,            \
                                             type_compound_literal)
 
-/** @brief Copy input array into the flat_priority_queue, organizing into heap.
-O(N).
+/** @brief Copy input buffer into the flat priority queue, organizing into data
+into heap order in O(N) time.
 @param[in] priority_queue a pointer to the priority queue.
+@param[in] buffer a pointer to the buffer of types to copy into the flat
+priority queue and heapify.
 @param[in] temp a pointer to an additional element of array type for swapping.
-@param[in] type_array an array of elements of the same size as the type used
-to initialize flat_priority_queue.
-@param[in] count the number of contiguous elements at type_array.
-@param[in] sizeof_type size of each element in type_array matching
-element size of flat_priority_queue.
-@return OK if sorting was successful or an input error if bad input is
+@return OK if ordering was successful or an input error if bad input is
 provided. A permission error will occur if no allocation is allowed and the
-input array is larger than the fixed priority_queue capacity. A memory
+input buffer is larger than the flat priority queue capacity. A memory
 error will occur if reallocation is required to fit all elements but
 reallocation fails.
+@warning Assumes the input buffer has been initialized correctly via its
+interface.
+@warning Any elements in the original flat priority queue are overwritten or
+lost when the buffer contents are copied.
 
 A simple way to provide a temp for swapping is with an inline compound literal
-reference provided directly to the function argument `&(name_of_type){}`.
+reference provided directly to the function argument `&(My_type){}`.
 
-Note that this version of heapify copies elements from the input array. If an
-in place heapify is required use the initializer version of this method. */
+Note that this version of heapify copies elements from the input buffer. If an
+in place heapify is required see any of the following functions.
+
+```
+CCC_flat_priority_queue_in_place_heapify()
+CCC_flat_priority_queue_heapify()
+CCC_flat_priority_queue_context_heapify_storage()
+CCC_flat_priority_queue_heapify_storage()
+```
+
+This function does not modify the input buffer. */
 CCC_Result
 CCC_flat_priority_queue_copy_heapify(CCC_Flat_priority_queue *priority_queue,
-                                     void *temp, void *type_array, size_t count,
-                                     size_t sizeof_type);
+                                     CCC_Buffer const *buffer, void *temp);
 
 /** @brief Order count elements of the underlying priority_queue Buffer as
 an flat_priority_queue.
-@param[in] priority_queue a pointer to the flat priority queue.
+@param[in] buffer a pointer to a buffer with memory that will be sorted into
+heap order, given to the flat priority queue, and its metadata struct will be
+cleared.
+@param[in] order the order of the heap, minimum or maximum priority queue.
 @param[in] temp a pointer to a dummy user type that will be used for swapping.
-@param[in] count the number count of elements where  0 < count <= capacity.
-@return the result of the heapify operation, OK if successful or an error if
-flat_priority_queue is NULL or count is larger than the initialized capacity of
-the flat_priority_queue.
+@return a flat priority queue that now owns the underlying buffer storage and
+is in correct heap order. If an error occurs all fields are set to 0 or NULL
+and the order of the priority queue is set to CCC_ORDER_ERROR. The order can
+be read with CCC_flat_priority_queue_order(). If an error occurs, the buffer
+remains unmodified.
+@warning Assumed the buffer has been correctly initialized.
+@warning All fields in the input buffer are cleared, zeroed, or set to NULL.
 
 A simple way to provide a temp for swapping is with an inline compound literal
-reference provided directly to the function argument `&(name_of_type){}`.
-
-This function is helpful to use in conjunction with a priority queue initialized
-with `CCC_flat_priority_queue_with_storage()`. It is is another method
-to order a heap that already has all the elements one needs sorted. The
-underlying Buffer will be interpreted to have valid elements to order in the
-range `[0, count)`. */
-CCC_Result CCC_flat_priority_queue_in_place_heapify(
-    CCC_Flat_priority_queue *priority_queue, void *temp, size_t count);
+reference provided directly to the function argument `&(name_of_type){}`. */
+CCC_Flat_priority_queue
+CCC_flat_priority_queue_in_place_heapify(CCC_Buffer *buffer, CCC_Order order,
+                                         CCC_Type_comparator *compare,
+                                         void *temp);
 
 /** @brief Pushes element pointed to at e into flat_priority_queue. O(lgN).
 @param[in] priority_queue a pointer to the priority queue.
@@ -776,37 +820,29 @@ Note that if this priority queue is min or max, the runtime is the same. */
 Deallocate the container or destroy the heap invariants. */
 /**@{*/
 
-/** @brief Destroys the priority_queue by sorting its data and returning
-the underlying buffer. The data is sorted in `O(N * log(N))` time and `O(1)`
-space.
-@param[in] priority_queue the priority_queue to be sorted and
-destroyed.
+/** @brief Sorts the input buffer in `O(N * log(N))` time and `O(1)` space.
+@param[in] buffer the buffer to be sorted in place.
+@param[in] order the desired order of the sorted buffer. CCC_ORDER_LESSER places
+elements in non-increasing order from index `[0, N)`, where N is the count of
+the buffer. CCC_ORDER_GREATER placed elements in non-decreasing order from index
+`[0, N)`, where N is the count of the buffer.
+@param[in] compare the comparator function for comparing buffer elements.
 @param[in] temp a pointer to a dummy user type that will be used for swapping.
-@return a Buffer filled from the back to the front by the flat_priority_queue
-order. If the priority_queue is initialized CCC_ORDER_LESSER the returned
-Buffer is sorted in non-increasing order from index [0, N). If the
-flat_priority_queue is initialized CCC_ORDER_GREATER the buffer is sorted in
-non-descending order from index [0, N). If priority_queue is NULL, the
-buffer is default initialized and unusable.
-@warning all fields of the priority_queue are cleared or otherwise default
-initialized so the priority_queue is unusable as a container after sorting.
-This function assumes the priority_queue has been previously initialized.
-Therefore, if the returned Buffer value is not used the flat_priority_queue
-memory is leaked.
+@return the result of the sorting operation. If an argument input error occurs
+an input error result is provided. Allocation is not needed to sort elements in
+the buffer so memory related errors are not possible if the provided buffer is
+initialized correctly.
+@warning Assumes the input buffer has been correctly initialized via its
+interface.
 
-A simple way to provide a temp for swapping is with an inline compound literal
-reference provided directly to the function argument `&(name_of_type){}`.
-
-The underlying memory storage source for the flat_priority_queue, a buffer, is
-not moved or copied during the sort. If a copy of the sorted data is preferred
-copy the data the data to another initialized priority_queue with the
-`CCC_flat_priority_queue_copy` function first then sort that copy.
+An easy way to provide a temp slot is with an anonymous compound literal such
+as `&(My_type){}`, passed directly as an argument.
 
 The sort is not inherently stable and uses the provided comparison function to
 the priority_queue to order the elements. */
-[[nodiscard]] CCC_Buffer
-CCC_flat_priority_queue_heapsort(CCC_Flat_priority_queue *priority_queue,
-                                 void *temp);
+CCC_Result CCC_flat_priority_queue_heapsort(CCC_Buffer *buffer, CCC_Order order,
+                                            CCC_Type_comparator *compare,
+                                            void *temp);
 
 /** @brief Clears the priority_queue calling destroy on every element if
 provided. O(1)-O(N).
@@ -964,6 +1000,10 @@ typedef CCC_Flat_priority_queue Flat_priority_queue;
         CCC_flat_priority_queue_context_with_allocator(arguments)
 #    define flat_priority_queue_heapify(arguments...)                          \
         CCC_flat_priority_queue_heapify(arguments)
+#    define flat_priority_queue_heapify_storage(arguments...)                  \
+        CCC_flat_priority_queue_heapify_storage(arguments)
+#    define flat_priority_queue_context_heapify_storage(arguments...)          \
+        CCC_flat_priority_queue_context_heapify_storage(arguments)
 #    define flat_priority_queue_copy(arguments...)                             \
         CCC_flat_priority_queue_copy(arguments)
 #    define flat_priority_queue_reserve(arguments...)                          \
