@@ -1562,13 +1562,13 @@ bit_count_index(size_t const bitset_index) {
 /** Returns the number of blocks required to store the given bits. Assumes bits
 is non-zero. For any bits > 1 the block count is always less than bits.*/
 static inline Block_count
-block_count(size_t const set_bits) {
-    static_assert((typeof(set_bits))~((typeof(set_bits))0)
-                      >= (typeof(set_bits))0,
+block_count(size_t const bit_count) {
+    static_assert((typeof(bit_count))~((typeof(bit_count))0)
+                      >= (typeof(bit_count))0,
                   "shifting to avoid division with power of 2 divisor is only "
                   "defined for unsigned types");
-    assert(set_bits);
-    return (set_bits + (BIT_BLOCK_BITS - 1)) >> BIT_BLOCK_BITS_LOG2;
+    assert(bit_count);
+    return (bit_count + (BIT_BLOCK_BITS - 1)) >> BIT_BLOCK_BITS_LOG2;
 }
 
 /** Returns min of size_t arguments. Beware of conversions. */
