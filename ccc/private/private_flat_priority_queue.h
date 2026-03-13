@@ -74,7 +74,7 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
 #define CCC_private_flat_priority_queue_heapify(                               \
     private_type_name, private_order, private_compare, private_allocate,       \
     private_context, private_capacity, private_size, private_data_pointer)     \
-    (__extension__({                                                           \
+    (struct { struct CCC_Flat_priority_queue private; }){(__extension__({      \
         typeof(*(                                                              \
             private_data_pointer)) *private_flat_priority_queue_heapify_data   \
             = (private_data_pointer);                                          \
@@ -87,7 +87,7 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
             &private_flat_priority_queue_heapify_res, (private_size),          \
             &(private_type_name){0});                                          \
         private_flat_priority_queue_heapify_res;                               \
-    }))
+    }))}.private
 
 /** @internal */
 #define CCC_private_flat_priority_queue_context_from(                          \
@@ -148,33 +148,29 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
     }))
 
 /** @internal */
-#define CCC_private_flat_priority_queue_with_storage(                          \
-    private_order, private_compare, private_compound_literal)                  \
-    {                                                                          \
-        .buffer = CCC_buffer_with_storage(0, private_compound_literal),        \
-        .order = (private_order),                                              \
-        .compare = (private_compare),                                          \
-    }
-
-/** @internal */
 #define CCC_private_flat_priority_queue_context_with_storage(                  \
     private_order, private_compare, private_context, private_compound_literal) \
-    {                                                                          \
-        .buffer = CCC_buffer_context_with_storage(private_context, 0,          \
-                                                  private_compound_literal),   \
-        .order = (private_order),                                              \
-        .compare = (private_compare),                                          \
-    }
+    (struct {                                                                  \
+        static_assert(sizeof(private_compound_literal) > 0,                    \
+                      "provide non-empty compound literal array");             \
+        static_assert(                                                         \
+            (private_order) == CCC_ORDER_LESSER                                \
+                || (private_order) == CCC_ORDER_GREATER,                       \
+            "flat priority queue must be a min or max priority queue");        \
+        struct CCC_Flat_priority_queue private;                                \
+    }){{                                                                       \
+           .buffer = CCC_buffer_context_with_storage(                          \
+               private_context, 0, private_compound_literal),                  \
+           .order = (private_order),                                           \
+           .compare = (private_compare),                                       \
+       }}                                                                      \
+        .private
 
 /** @internal */
-#define CCC_private_flat_priority_queue_with_allocator(                        \
-    private_type_name, private_order, private_compare, private_allocate)       \
-    {                                                                          \
-        .buffer                                                                \
-        = CCC_buffer_with_allocator(private_type_name, private_allocate),      \
-        .order = (private_order),                                              \
-        .compare = (private_compare),                                          \
-    }
+#define CCC_private_flat_priority_queue_with_storage(                          \
+    private_order, private_compare, private_compound_literal)                  \
+    CCC_private_flat_priority_queue_context_with_storage(                      \
+        private_order, private_compare, NULL, private_compound_literal)
 
 /** @internal */
 #define CCC_private_flat_priority_queue_context_with_allocator(                \
@@ -186,6 +182,13 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
         .order = (private_order),                                              \
         .compare = (private_compare),                                          \
     }
+
+/** @internal */
+#define CCC_private_flat_priority_queue_with_allocator(                        \
+    private_type_name, private_order, private_compare, private_allocate)       \
+    CCC_private_flat_priority_queue_context_with_allocator(                    \
+        private_type_name, private_order, private_compare, private_allocate,   \
+        NULL)
 
 /** @internal This macro "returns" a value thanks to clang and gcc statement
    expressions. See documentation in the flat priority_queueueue header for

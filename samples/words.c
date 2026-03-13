@@ -331,24 +331,23 @@ copy_frequencies(Array_adaptive_map const *const map) {
 }
 
 static void
-print_n(CCC_Array_adaptive_map *const map, CCC_Order const ord,
+print_n(CCC_Array_adaptive_map *const map, CCC_Order const order,
         struct String_arena *const arena, int n) {
     Buffer freqs = copy_frequencies(map);
     defer {
         (void)clear_and_free(&freqs, NULL);
     }
     check(!buffer_is_empty(&freqs));
-    Flat_priority_queue flat_priority_queue = flat_priority_queue_heapify(
-        Word, ord, order_words, NULL, arena, capacity(&freqs).count,
-        count(&freqs).count, begin(&freqs));
-    check(count(&flat_priority_queue).count == count(&freqs).count);
     if (!n) {
-        n = count(&flat_priority_queue).count;
+        n = count(&freqs).count;
     }
     /* Because all CCC containers are complete they can be treated as copyable
        types like this. There is no opaque container in CCC. */
-    Buffer const sorted_freqs
-        = flat_priority_queue_heapsort(&flat_priority_queue, &(Word){});
+    Buffer const sorted_freqs = flat_priority_queue_heapsort(
+        &flat_priority_queue_heapify(Word, order, order_words, NULL, arena,
+                                     capacity(&freqs).count,
+                                     count(&freqs).count, begin(&freqs)),
+        &(Word){});
     int w = 0;
     /* Heap sort puts the root most nodes at the back of the buffer. */
     for (Word const *i = reverse_begin(&sorted_freqs);

@@ -221,10 +221,6 @@ be exposed to the user if they wish to know the size in bytes of this object. */
 #define CCC_private_flat_hash_map_storage_for(                                 \
     private_type_compound_literal_array, optional_storage_specifier...)        \
     (optional_storage_specifier struct {                                       \
-        static_assert(!__builtin_types_compatible_p(                           \
-                          typeof(private_type_compound_literal_array),         \
-                          typeof(&(private_type_compound_literal_array)[0])),  \
-                      "initialize with a compound literal array only");        \
         static_assert(                                                         \
             CCC_private_flat_hash_map_compound_literal_array_capacity(         \
                 private_type_compound_literal_array)                           \

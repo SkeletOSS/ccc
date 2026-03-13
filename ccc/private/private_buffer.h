@@ -115,20 +115,6 @@ of memory in one step. */
         private_type_name, private_allocate, NULL, private_capacity)
 
 /** @internal Initializes a fixed size buffer with no allocation or context. */
-#define CCC_private_buffer_with_storage(private_count,                         \
-                                        private_compound_literal_array...)     \
-                                                                               \
-    {                                                                          \
-        .data = (private_compound_literal_array),                              \
-        .sizeof_type = sizeof(*private_compound_literal_array),                \
-        .count = private_count,                                                \
-        .capacity = sizeof(private_compound_literal_array)                     \
-                  / sizeof(*private_compound_literal_array),                   \
-        .allocate = NULL,                                                      \
-        .context = NULL,                                                       \
-    }
-
-/** @internal Initializes a fixed size buffer with no allocation or context. */
 #define CCC_private_buffer_context_with_storage(                               \
     private_context, private_count, private_compound_literal_array...)         \
                                                                                \
@@ -142,16 +128,11 @@ of memory in one step. */
         .context = (private_context),                                          \
     }
 
-/** @internal */
-#define CCC_private_buffer_with_allocator(private_type_name, private_allocate) \
-    {                                                                          \
-        .data = NULL,                                                          \
-        .sizeof_type = sizeof(private_type_name),                              \
-        .count = 0,                                                            \
-        .capacity = 0,                                                         \
-        .allocate = (private_allocate),                                        \
-        .context = NULL,                                                       \
-    }
+/** @internal Initializes a fixed size buffer with no allocation or context. */
+#define CCC_private_buffer_with_storage(private_count,                         \
+                                        private_compound_literal_array...)     \
+    CCC_private_buffer_context_with_storage(NULL, private_count,               \
+                                            private_compound_literal_array)
 
 /** @internal */
 #define CCC_private_buffer_context_with_allocator(                             \
@@ -164,6 +145,11 @@ of memory in one step. */
         .allocate = (private_allocate),                                        \
         .context = (private_context),                                          \
     }
+
+/** @internal */
+#define CCC_private_buffer_with_allocator(private_type_name, private_allocate) \
+    CCC_private_buffer_context_with_allocator(private_type_name,               \
+                                              private_allocate, NULL)
 
 /** @internal */
 #define CCC_private_buffer_emplace(private_buffer_pointer, index,              \
