@@ -74,8 +74,8 @@ of search-by-key containers. Use the provided range iteration functions in
 this header to iterate from beginning to end in forward order relative to
 the containers default ordering. */
 typedef struct {
-    size_t begin;
-    size_t end;
+    CCC_Handle_index begin;
+    CCC_Handle_index end;
 } CCC_Handle_range;
 
 /** @brief The result of a range_reverse query on iterable containers.
@@ -85,8 +85,8 @@ criteria of search-by-key containers. Use the provided range iteration functions
 in this header to iterate from beginning to end in reverse order relative to the
 containers default ordering. */
 typedef struct {
-    size_t reverse_begin;
-    size_t reverse_end;
+    CCC_Handle_index reverse_begin;
+    CCC_Handle_index reverse_end;
 } CCC_Handle_range_reverse;
 
 /** @brief The status monitoring and entry state once it is obtained.
@@ -137,7 +137,7 @@ a stronger guarantee that will hold even if the underlying container is
 resized. */
 typedef struct {
     /** The index into the contiguous region of memory. */
-    size_t index;
+    CCC_Handle_index index;
     /** A status to help us decide how to act with the entry. */
     CCC_Entry_status status;
 } CCC_Handle;
