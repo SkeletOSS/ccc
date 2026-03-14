@@ -75,8 +75,8 @@ struct CCC_Doubly_linked_list {
     size_t sizeof_type;
     /** @internal The offset in bytes of the intrusive element in user type. */
     size_t type_intruder_offset;
-    /** @internal The user provided comparison callback for sorting. */
-    CCC_Type_comparator *compare;
+    /** @internal The internal state of ordering. Remembers last sort. */
+    CCC_Order order;
     /** @internal The user provided allocation function, if any. */
     CCC_Allocator *allocate;
     /** @internal User provided context data, if any. */
@@ -102,9 +102,9 @@ CCC_private_doubly_linked_list_node_in(struct CCC_Doubly_linked_list const *,
 
 /** @internal Initialization at compile time is allowed in C due to the provided
 name of the list being on the left hand side of the assignment operator. */
-#define CCC_private_doubly_linked_list_for(                                    \
-    private_struct_name, private_type_intruder_field, private_compare,         \
-    private_allocate, private_context)                                         \
+#define CCC_private_doubly_linked_list_for(private_struct_name,                \
+                                           private_type_intruder_field,        \
+                                           private_allocate, private_context)  \
     {                                                                          \
         .head = NULL,                                                          \
         .tail = NULL,                                                          \
@@ -113,30 +113,29 @@ name of the list being on the left hand side of the assignment operator. */
         = offsetof(private_struct_name, private_type_intruder_field),          \
         .count = 0,                                                            \
         .allocate = (private_allocate),                                        \
-        .compare = (private_compare),                                          \
+        .order = CCC_ORDER_ERROR,                                              \
         .context = (private_context),                                          \
     }
 
 /** @internal */
 #define CCC_private_doubly_linked_list_context_with_allocator(                 \
-    private_struct_name, private_type_intruder_field, private_compare,         \
-    private_allocate, private_context)                                         \
-    CCC_private_doubly_linked_list_for(                                        \
-        private_struct_name, private_type_intruder_field, private_compare,     \
-        private_allocate, private_context)
+    private_struct_name, private_type_intruder_field, private_allocate,        \
+    private_context)                                                           \
+    CCC_private_doubly_linked_list_for(private_struct_name,                    \
+                                       private_type_intruder_field,            \
+                                       private_allocate, private_context)
 
 /** @internal */
 #define CCC_private_doubly_linked_list_with_allocator(                         \
-    private_struct_name, private_type_intruder_field, private_compare,         \
-    private_allocate)                                                          \
-    CCC_private_doubly_linked_list_for(                                        \
-        private_struct_name, private_type_intruder_field, private_compare,     \
-        private_allocate, NULL)
+    private_struct_name, private_type_intruder_field, private_allocate)        \
+    CCC_private_doubly_linked_list_for(private_struct_name,                    \
+                                       private_type_intruder_field,            \
+                                       private_allocate, NULL)
 
 /** @internal */
 #define CCC_private_doubly_linked_list_context_from(                           \
-    private_type_intruder_field, private_compare, private_allocate,            \
-    private_destroy, private_context, private_compound_literal_array...)       \
+    private_type_intruder_field, private_allocate, private_destroy,            \
+    private_context, private_compound_literal_array...)                        \
     (__extension__({                                                           \
         typeof(*private_compound_literal_array)                                \
             *private_doubly_linked_list_type_array                             \
@@ -144,8 +143,8 @@ name of the list being on the left hand side of the assignment operator. */
         struct CCC_Doubly_linked_list private_doubly_linked_list               \
             = CCC_private_doubly_linked_list_for(                              \
                 typeof(*private_doubly_linked_list_type_array),                \
-                private_type_intruder_field, private_compare,                  \
-                private_allocate, private_context);                            \
+                private_type_intruder_field, private_allocate,                 \
+                private_context);                                              \
         if (private_doubly_linked_list.allocate) {                             \
             size_t const private_count                                         \
                 = sizeof(private_compound_literal_array)                       \
@@ -176,12 +175,12 @@ name of the list being on the left hand side of the assignment operator. */
     }))
 
 /** @internal */
-#define CCC_private_doubly_linked_list_from(                                   \
-    private_type_intruder_field, private_compare, private_allocate,            \
-    private_destroy, private_compound_literal_array...)                        \
+#define CCC_private_doubly_linked_list_from(private_type_intruder_field,       \
+                                            private_allocate, private_destroy, \
+                                            private_compound_literal_array...) \
     CCC_private_doubly_linked_list_context_from(                               \
-        private_type_intruder_field, private_compare, private_allocate,        \
-        private_destroy, NULL, private_compound_literal_array)
+        private_type_intruder_field, private_allocate, private_destroy, NULL,  \
+        private_compound_literal_array)
 
 /** @internal */
 #define CCC_private_doubly_linked_list_emplace_back(                           \

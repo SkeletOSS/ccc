@@ -49,6 +49,7 @@ target_sources(${PROJECT_NAME}
               singly_linked_list.h
               doubly_linked_list.h
               traits.h
+              sort.h
 )
 
 option(CCC_FLAT_HASH_MAP_PORTABLE "Fallback to portable implementation of flat hash map to improve cross platform compatibility while decreasing optimizations" OFF)

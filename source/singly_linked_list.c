@@ -22,6 +22,7 @@ if they refactor. */
 
 #include "private/private_singly_linked_list.h"
 #include "singly_linked_list.h"
+#include "sort.h"
 #include "types.h"
 
 /** @brief When sorting, a singly linked list is at a disadvantage for iterative
@@ -56,13 +57,18 @@ static size_t erase_range(struct CCC_Singly_linked_list *,
                           struct CCC_Singly_linked_list_node *);
 static struct CCC_Singly_linked_list_node *
 elem_in(struct CCC_Singly_linked_list const *, void const *);
-static struct Link merge(struct CCC_Singly_linked_list *, struct Link,
-                         struct Link, struct Link);
-static struct Link first_less(struct CCC_Singly_linked_list const *,
-                              struct Link);
-static CCC_Order order(struct CCC_Singly_linked_list const *,
-                       struct CCC_Singly_linked_list_node const *,
-                       struct CCC_Singly_linked_list_node const *);
+static struct Link merge(CCC_Singly_linked_list *list, CCC_Order order,
+                         CCC_Type_comparator *compare, void *context,
+                         struct Link a_first, struct Link a_count_b_first,
+                         struct Link b_count);
+static struct Link first_out_of_order(CCC_Singly_linked_list const *list,
+                                      CCC_Order order,
+                                      CCC_Type_comparator *compare,
+                                      void *context, struct Link link);
+static CCC_Order get_order(struct CCC_Singly_linked_list const *list,
+                           CCC_Type_comparator *compare, void *context,
+                           struct CCC_Singly_linked_list_node const *left,
+                           struct CCC_Singly_linked_list_node const *right);
 
 /*===========================     Interface     =============================*/
 
@@ -72,6 +78,7 @@ CCC_singly_linked_list_push_front(CCC_Singly_linked_list *const list,
     if (!list || !type_intruder) {
         return NULL;
     }
+    list->order = CCC_ORDER_ERROR;
     if (list->allocate) {
         void *const node = list->allocate((CCC_Allocator_context){
             .input = NULL,
@@ -128,6 +135,7 @@ CCC_singly_linked_list_splice(
         || type_intruder_position->next == type_intruder_splice) {
         return CCC_RESULT_OK;
     }
+    position_list->order = CCC_ORDER_ERROR;
     remove_node(splice_list, before(splice_list, type_intruder_splice),
                 type_intruder_splice);
     insert_node(position_list, type_intruder_position, type_intruder_splice);
@@ -151,6 +159,7 @@ CCC_singly_linked_list_splice_range(
     if (type_intruder_position == type_intruder_to_cut_begin) {
         return CCC_RESULT_OK;
     }
+    position_list->order = CCC_ORDER_ERROR;
     CCC_Singly_linked_list_node *const to_cut_inclusive_end
         = before(to_cut_list, type_intruder_to_cut_exclusive_end);
     if (type_intruder_to_cut_begin == to_cut_inclusive_end) {
@@ -309,6 +318,7 @@ CCC_singly_linked_list_clear(CCC_Singly_linked_list *const list,
         }
     }
     list->count = 0;
+    list->order = CCC_ORDER_ERROR;
     return CCC_RESULT_OK;
 }
 
@@ -349,34 +359,60 @@ CCC_singly_linked_list_is_empty(CCC_Singly_linked_list const *const list) {
 
 /*==========================     Sorting     ================================*/
 
+CCC_Tribool
+CCC_singly_linked_list_is_sorted(CCC_Singly_linked_list const *const list,
+                                 CCC_Order const order,
+                                 CCC_Type_comparator *const compare) {
+    return CCC_singly_linked_list_context_is_sorted(list, order, compare, NULL);
+}
+
 /** Returns true if the list is sorted in non-decreasing order. The user should
 flip the return values of their comparison function if they want a different
 order for elements.*/
 CCC_Tribool
-CCC_singly_linked_list_is_sorted(CCC_Singly_linked_list const *const list) {
+CCC_singly_linked_list_context_is_sorted(
+    CCC_Singly_linked_list const *const list, CCC_Order const order,
+    CCC_Type_comparator *const compare, void *const context) {
     if (!list) {
         return CCC_TRIBOOL_ERROR;
+    }
+    if ((list->order != CCC_ORDER_LESSER && list->order != CCC_ORDER_GREATER)
+        || list->order != order) {
+        return CCC_FALSE;
     }
     if (list->count <= 1) {
         return CCC_TRUE;
     }
+    CCC_Order const wrong_order
+        = order == CCC_ORDER_LESSER ? CCC_ORDER_GREATER : CCC_ORDER_LESSER;
     for (struct CCC_Singly_linked_list_node const *previous = list->head,
                                                   *current = list->head->next;
          current != NULL; previous = current, current = current->next) {
-        if (order(list, previous, current) == CCC_ORDER_GREATER) {
+        if (get_order(list, compare, context, previous, current)
+            == wrong_order) {
             return CCC_FALSE;
         }
     }
     return CCC_TRUE;
 }
 
+void *
+CCC_singly_linked_list_insert_sorted(CCC_Singly_linked_list *const list,
+                                     CCC_Singly_linked_list_node *type_intruder,
+                                     CCC_Type_comparator *const compare) {
+    return CCC_singly_linked_list_context_insert_sorted(list, type_intruder,
+                                                        compare, NULL);
+}
+
 /** Inserts an element in non-decreasing order. This means an element will go
 to the end of a section of duplicate values which is good for round-robin style
 list use. */
 void *
-CCC_singly_linked_list_insert_sorted(
-    CCC_Singly_linked_list *list, CCC_Singly_linked_list_node *type_intruder) {
-    if (!list || !type_intruder) {
+CCC_singly_linked_list_context_insert_sorted(
+    CCC_Singly_linked_list *list, CCC_Singly_linked_list_node *type_intruder,
+    CCC_Type_comparator *const compare, void *const context) {
+    if (!list || !type_intruder || list->order == CCC_ORDER_ERROR
+        || list->order == CCC_ORDER_EQUAL) {
         return NULL;
     }
     if (list->allocate) {
@@ -393,11 +429,21 @@ CCC_singly_linked_list_insert_sorted(
     }
     struct CCC_Singly_linked_list_node *prev = NULL;
     struct CCC_Singly_linked_list_node *i = list->head;
-    for (; i != NULL && order(list, type_intruder, i) != CCC_ORDER_LESSER;
+    for (;
+         i != NULL
+         && get_order(list, compare, context, type_intruder, i) != list->order;
          prev = i, i = i->next) {}
     insert_node(list, prev, type_intruder);
     ++list->count;
     return struct_base(list, type_intruder);
+}
+
+CCC_Result
+CCC_sort_singly_linked_list_mergesort(CCC_Singly_linked_list *const list,
+                                      CCC_Order const order,
+                                      CCC_Type_comparator *const compare) {
+    return CCC_sort_context_singly_linked_list_mergesort(list, order, compare,
+                                                         NULL);
 }
 
 /** Sorts the list in `O(N * log(N))` time with `O(1)` context space (no
@@ -426,10 +472,13 @@ each merge step. Therefore the number of times we must perform the merge step is
 `O(log(N))`. The most elements we would have to merge in the merge step is all
 `N` elements so together that gives us the runtime of `O(N * log(N))`. */
 CCC_Result
-CCC_singly_linked_list_sort(CCC_Singly_linked_list *const list) {
-    if (!list) {
+CCC_sort_context_singly_linked_list_mergesort(
+    CCC_Singly_linked_list *const list, CCC_Order const order,
+    CCC_Type_comparator *const compare, void *const context) {
+    if (!list || (order != CCC_ORDER_LESSER && order != CCC_ORDER_GREATER)) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
+    list->order = order;
     /* Algorithm is one pass if list is sorted. Merging is never true. */
     CCC_Tribool merging = CCC_FALSE;
     do {
@@ -438,7 +487,8 @@ CCC_singly_linked_list_sort(CCC_Singly_linked_list *const list) {
         struct Link a_first = {.previous = NULL, .current = list->head};
         while (a_first.current != NULL) {
             /* The Nth index of list A (its size) aka 0th index of B list. */
-            struct Link a_count_b_first = first_less(list, a_first);
+            struct Link a_count_b_first
+                = first_out_of_order(list, order, compare, context, a_first);
             if (a_count_b_first.current == NULL) {
                 break;
             }
@@ -446,8 +496,10 @@ CCC_singly_linked_list_sort(CCC_Singly_linked_list *const list) {
                to progress the sorting algorithm with the next run that needs
                fixing. Merge returns the final B element to indicate it is the
                final sentinel that has not yet been examined. */
-            a_first = merge(list, a_first, a_count_b_first,
-                            first_less(list, a_count_b_first));
+            a_first
+                = merge(list, order, compare, context, a_first, a_count_b_first,
+                        first_out_of_order(list, order, compare, context,
+                                           a_count_b_first));
             merging = CCC_TRUE;
         }
     } while (merging);
@@ -463,13 +515,15 @@ consistency. This function assumes the provided lists are already sorted
 separately. A list link must be returned because the `b_count` previous field
 may be updated due to arbitrary splices during comparison sorting. */
 static inline struct Link
-merge(CCC_Singly_linked_list *const list, struct Link a_first,
-      struct Link a_count_b_first, struct Link b_count) {
+merge(CCC_Singly_linked_list *const list, CCC_Order const order,
+      CCC_Type_comparator *const compare, void *const context,
+      struct Link a_first, struct Link a_count_b_first, struct Link b_count) {
     while (a_first.current && a_first.current != a_count_b_first.current
            && a_count_b_first.current
            && a_count_b_first.current != b_count.current) {
-        if (order(list, a_count_b_first.current, a_first.current)
-            == CCC_ORDER_LESSER) {
+        if (get_order(list, compare, context, a_count_b_first.current,
+                      a_first.current)
+            == order) {
             /* The current element is the lesser element that must be spliced
                out. However, a_count_b_first.previous is not updated because
                only current is spliced out. Algorithm will continue with new
@@ -508,12 +562,15 @@ list_link returned will have the out of order element as cur and the last
 remaining in order element as prev. The cur element may be the sentinel if the
 run is sorted. */
 static inline struct Link
-first_less(CCC_Singly_linked_list const *const list, struct Link link) {
+first_out_of_order(CCC_Singly_linked_list const *const list,
+                   CCC_Order const order, CCC_Type_comparator *const compare,
+                   void *const context, struct Link link) {
     do {
         link.previous = link.current;
         link.current = link.current->next;
     } while (link.current != NULL
-             && order(list, link.current, link.previous) != CCC_ORDER_LESSER);
+             && get_order(list, compare, context, link.current, link.previous)
+                    != order);
     return link;
 }
 
@@ -639,12 +696,13 @@ elem_in(struct CCC_Singly_linked_list const *const list,
 type wrapping the provided intrusive handles. Returns the three way comparison
 result value. */
 static inline CCC_Order
-order(struct CCC_Singly_linked_list const *const list,
-      struct CCC_Singly_linked_list_node const *const left,
-      struct CCC_Singly_linked_list_node const *const right) {
-    return list->compare((CCC_Type_comparator_context){
+get_order(struct CCC_Singly_linked_list const *const list,
+          CCC_Type_comparator *const compare, void *const context,
+          struct CCC_Singly_linked_list_node const *const left,
+          struct CCC_Singly_linked_list_node const *const right) {
+    return compare((CCC_Type_comparator_context){
         .type_left = struct_base(list, left),
         .type_right = struct_base(list, right),
-        .context = list->context,
+        .context = context,
     });
 }

@@ -20,6 +20,7 @@ limitations under the License. */
 #include "buffer.h"
 #include "flat_priority_queue.h"
 #include "private/private_flat_priority_queue.h"
+#include "sort.h"
 #include "types.h"
 
 enum : size_t {
@@ -106,46 +107,6 @@ CCC_flat_priority_queue_context_in_place_heapify(
             priority_queue.compare, context, temp);
     *buffer = (CCC_Buffer){};
     return priority_queue;
-}
-
-CCC_Result
-CCC_flat_priority_queue_heapsort(CCC_Buffer *const buffer, CCC_Order order,
-                                 CCC_Type_comparator *const compare,
-                                 void *const temp) {
-    if (!buffer || !temp || !compare
-        || (order != CCC_ORDER_GREATER && order != CCC_ORDER_LESSER)) {
-        return CCC_RESULT_ARGUMENT_ERROR;
-    }
-    /* For sorting the user expects the buffer to be in the order they specify.
-       Just like they would expect their input order to the priority queue to
-       place the least or greatest element closest to the root. However,
-       heap sort fills a buffer from back to front, so flip it. */
-    order == CCC_ORDER_GREATER ? (order = CCC_ORDER_LESSER)
-                               : (order = CCC_ORDER_GREATER);
-    heapify(buffer, order, compare, NULL, temp);
-    heapsort(buffer, order, compare, NULL, temp);
-    return CCC_RESULT_OK;
-}
-
-CCC_Result
-CCC_flat_priority_queue_context_heapsort(CCC_Buffer *const buffer,
-                                         CCC_Order order,
-                                         CCC_Type_comparator *const compare,
-                                         void *const context,
-                                         void *const temp) {
-    if (!buffer || !temp || !compare
-        || (order != CCC_ORDER_GREATER && order != CCC_ORDER_LESSER)) {
-        return CCC_RESULT_ARGUMENT_ERROR;
-    }
-    /* For sorting the user expects the buffer to be in the order they specify.
-       Just like they would expect their input order to the priority queue to
-       place the least or greatest element closest to the root. However,
-       heap sort fills a buffer from back to front, so flip it. */
-    order == CCC_ORDER_GREATER ? (order = CCC_ORDER_LESSER)
-                               : (order = CCC_ORDER_GREATER);
-    heapify(buffer, order, compare, context, temp);
-    heapsort(buffer, order, compare, context, temp);
-    return CCC_RESULT_OK;
 }
 
 void *
@@ -420,6 +381,45 @@ CCC_flat_priority_queue_validate(
         }
     }
     return CCC_TRUE;
+}
+
+/*===================     Interface in sort.h   =============================*/
+
+CCC_Result
+CCC_sort_heapsort(CCC_Buffer *const buffer, CCC_Order order,
+                  CCC_Type_comparator *const compare, void *const temp) {
+    if (!buffer || !temp || !compare
+        || (order != CCC_ORDER_GREATER && order != CCC_ORDER_LESSER)) {
+        return CCC_RESULT_ARGUMENT_ERROR;
+    }
+    /* For sorting the user expects the buffer to be in the order they specify.
+       Just like they would expect their input order to the priority queue to
+       place the least or greatest element closest to the root. However,
+       heap sort fills a buffer from back to front, so flip it. */
+    order == CCC_ORDER_GREATER ? (order = CCC_ORDER_LESSER)
+                               : (order = CCC_ORDER_GREATER);
+    heapify(buffer, order, compare, NULL, temp);
+    heapsort(buffer, order, compare, NULL, temp);
+    return CCC_RESULT_OK;
+}
+
+CCC_Result
+CCC_sort_context_heapsort(CCC_Buffer *const buffer, CCC_Order order,
+                          CCC_Type_comparator *const compare,
+                          void *const context, void *const temp) {
+    if (!buffer || !temp || !compare
+        || (order != CCC_ORDER_GREATER && order != CCC_ORDER_LESSER)) {
+        return CCC_RESULT_ARGUMENT_ERROR;
+    }
+    /* For sorting the user expects the buffer to be in the order they specify.
+       Just like they would expect their input order to the priority queue to
+       place the least or greatest element closest to the root. However,
+       heap sort fills a buffer from back to front, so flip it. */
+    order == CCC_ORDER_GREATER ? (order = CCC_ORDER_LESSER)
+                               : (order = CCC_ORDER_GREATER);
+    heapify(buffer, order, compare, context, temp);
+    heapsort(buffer, order, compare, context, temp);
+    return CCC_RESULT_OK;
 }
 
 /*===================     Private Interface     =============================*/

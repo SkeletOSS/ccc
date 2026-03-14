@@ -83,22 +83,20 @@ for comparison, printing, or destructors.
 element.
 @param[in] type_intruder_field name of the Doubly_linked_list element in the
 containing type.
-@param[in] compare the CCC_Type_comparator used to compare list elements.
-@param[in] context any context data that will be needed for comparison,
-printing, or destruction of elements.
+@param[in] context any context data that will be needed for allocation or
+destruction of elements.
 @param[in] allocate the optional allocation function or NULL.
 @return the initialized list. Assign to the list directly on the right hand
 side of an equality operator. Initialization can occur at runtime or compile
 time (e.g. CCC_doubly_linked list = CCC_doubly_linked_list_for(...);). */
-#define CCC_doubly_linked_list_for(type_name, type_intruder_field, compare,    \
-                                   allocate, context)                          \
+#define CCC_doubly_linked_list_for(type_name, type_intruder_field, allocate,   \
+                                   context)                                    \
     CCC_private_doubly_linked_list_for(type_name, type_intruder_field,         \
-                                       compare, allocate, context)
+                                       allocate, context)
 
 /** @brief Initialize a doubly linked list at runtime from a compound literal
 array.
 @param[in] type_intruder_field the name of the field intruding on user's type.
-@param[in] compare the comparison function for the user type.
 @param[in] allocate the allocation function required for construction.
 @param[in] destroy the optional destructor to run if insertion fails.
 @param[in] compound_literal_array the array of user types to insert into the
@@ -108,19 +106,17 @@ operator (e.g. CCC_Doubly_linked_list list = CCC_doubly_linked_list_from(...);)
 @note The list is constructed to mirror the compound literal array provided.
 The list will be constructed with the element at index 0 of the array as the
 front of the list and the final index element at the back of the list. */
-#define CCC_doubly_linked_list_from(type_intruder_field, compare, allocate,    \
-                                    destroy, compound_literal_array...)        \
-    CCC_private_doubly_linked_list_from(type_intruder_field, compare,          \
-                                        allocate, destroy,                     \
-                                        compound_literal_array)
+#define CCC_doubly_linked_list_from(type_intruder_field, allocate, destroy,    \
+                                    compound_literal_array...)                 \
+    CCC_private_doubly_linked_list_from(type_intruder_field, allocate,         \
+                                        destroy, compound_literal_array)
 
 /** @brief Initialize a doubly linked list at runtime from a compound literal
 array.
 @param[in] type_intruder_field the name of the field intruding on user's type.
-@param[in] compare the comparison function for the user type.
 @param[in] allocate the allocation function required for construction.
 @param[in] destroy the optional destructor to run if insertion fails.
-@param[in] context context data needed for comparison or destruction.
+@param[in] context context data needed for allocation or destruction.
 @param[in] compound_literal_array the array of user types to insert into the
 map (e.g. (struct My_type[]){ {.val = 1}, {.val = 2}}).
 @return the initialized doubly linked list on the right side of an equality
@@ -129,17 +125,16 @@ operator (e.g. CCC_Doubly_linked_list list
 @note The list is constructed to mirror the compound literal array provided.
 The list will be constructed with the element at index 0 of the array as the
 front of the list and the final index element at the back of the list. */
-#define CCC_doubly_linked_list_context_from(type_intruder_field, compare,      \
-                                            allocate, destroy, context,        \
+#define CCC_doubly_linked_list_context_from(type_intruder_field, allocate,     \
+                                            destroy, context,                  \
                                             compound_literal_array...)         \
-    CCC_private_doubly_linked_list_context_from(type_intruder_field, compare,  \
-                                                allocate, destroy, context,    \
+    CCC_private_doubly_linked_list_context_from(type_intruder_field, allocate, \
+                                                destroy, context,              \
                                                 compound_literal_array)
 
 /** @brief Initialize an empty list at compile or runtime with an allocator.
 @param[in] type_name the user defined type stored in the list.
 @param[in] type_intruder_field the name of the intrusive element.
-@param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] allocate the CCC_Allocator function used to manage list memory.
 @return the list directly initialized on the right hand side of the equality
 operator.
@@ -156,23 +151,21 @@ struct Val
 static Doubly_linked_list list = doubly_linked_list_with_allocator(
     struct Val,
     node,
-    val_order,
     stdlib_allocate
 );
 ```
 
 This can help eliminate boilerplate in initializers. */
 #define CCC_doubly_linked_list_with_allocator(type_name, type_intruder_field,  \
-                                              compare, allocate)               \
+                                              allocate)                        \
     CCC_private_doubly_linked_list_with_allocator(                             \
-        type_name, type_intruder_field, compare, allocate)
+        type_name, type_intruder_field, allocate)
 
 /** @brief Initialize an empty list at compile or runtime with an allocator.
 @param[in] type_name the user defined type stored in the list.
 @param[in] type_intruder_field the name of the intrusive element.
-@param[in] compare the CCC_Key_comparator the user intends to use.
 @param[in] allocate the CCC_Allocator function used to manage list memory.
-@param[in] context context data needed for comparison or destruction.
+@param[in] context context data needed for allocation or destruction.
 @return the list directly initialized on the right hand side of the equality
 operator.
 
@@ -188,7 +181,6 @@ struct Val
 static Doubly_linked_list list = doubly_linked_list_with_allocator(
     struct Val,
     node,
-    val_order,
     arena_allocate,
     &arena
 );
@@ -196,9 +188,9 @@ static Doubly_linked_list list = doubly_linked_list_with_allocator(
 
 This can help eliminate boilerplate in initializers. */
 #define CCC_doubly_linked_list_context_with_allocator(                         \
-    type_name, type_intruder_field, compare, allocate, context)                \
+    type_name, type_intruder_field, allocate, context)                         \
     CCC_private_doubly_linked_list_context_with_allocator(                     \
-        type_name, type_intruder_field, compare, allocate, context)
+        type_name, type_intruder_field, allocate, context)
 
 /**@}*/
 
@@ -381,42 +373,82 @@ CCC_Result CCC_doubly_linked_list_splice_range(
 Sort the container. */
 /**@{*/
 
-/** @brief Sorts the doubly linked list in non-decreasing order as defined by
-the provided comparison function. `O(N * log(N))` time, `O(1)` space.
-@param[in] doubly_linked_list a pointer to the doubly linked list to sort.
-@return the result of the sort, usually OK. An arg error if doubly_linked_list
-is null. */
-CCC_Result
-CCC_doubly_linked_list_sort(CCC_Doubly_linked_list *doubly_linked_list);
-
 /** @brief Inserts type_intruder in sorted position according to the
 non-decreasing order of the list determined by the user provided comparison
 function. `O(1)`.
 @param[in] doubly_linked_list a pointer to the doubly linked list.
 @param[in] type_intruder a pointer to the element to be inserted in order.
+@param[in] compare the type comparison function.
 @return a pointer to the element that has been inserted or NULL if allocation
-is required and has failed.
-@warning this function assumes the list is sorted.
+is required and has failed. NULL is also returned if the list has never been
+formally sorted from sort.h.
+@warning This function assumes the list is sorted and inserts according to the
+last sorted ordering. If the list has never been sorted NULL is returned.
 
 If a non-increasing order is desired, return opposite results from the user
 comparison function. If an element is CCC_ORDER_LESSERERS return
 CCC_ORDER_GREATER and vice versa. If elements are equal, return CCC_ORDER_EQUAL.
 */
-void *CCC_doubly_linked_list_insert_sorted(
-    CCC_Doubly_linked_list *doubly_linked_list,
-    CCC_Doubly_linked_list_node *type_intruder);
+void *
+CCC_doubly_linked_list_insert_sorted(CCC_Doubly_linked_list *doubly_linked_list,
+                                     CCC_Doubly_linked_list_node *type_intruder,
+                                     CCC_Type_comparator *compare);
+
+/** @brief Inserts type_intruder in sorted position according to the
+non-decreasing order of the list determined by the user provided comparison
+function. `O(1)`.
+@param[in] list a pointer to the doubly linked list.
+@param[in] type_intruder a pointer to the element to be inserted in order.
+@param[in] compare the type comparison function.
+@param[in] context context needed for the type comparator.
+@return a pointer to the element that has been inserted or NULL if allocation
+is required and has failed. NULL is also returned if the list has never been
+formally sorted from sort.h.
+@warning This function assumes the list is sorted and inserts according to the
+last sorted ordering. If the list has never been sorted NULL is returned.
+
+If a non-increasing order is desired, return opposite results from the user
+comparison function. If an element is CCC_ORDER_LESSERERS return
+CCC_ORDER_GREATER and vice versa. If elements are equal, return CCC_ORDER_EQUAL.
+*/
+void *CCC_doubly_linked_list_context_insert_sorted(
+    CCC_Doubly_linked_list *list, CCC_Doubly_linked_list_node *type_intruder,
+    CCC_Type_comparator *compare, void *context);
 
 /** @brief Returns true if the list is sorted in non-decreasing order according
 to the user provided comparison function.
 @param[in] doubly_linked_list a pointer to the singly linked list.
-@return CCC_TRUE if the list is sorted CCC_FALSE if not. Error if
-doubly_linked_list is NULL.
+@param[in] order the assumed order checked against last sorted order of list.
+@param[in] compare the comparator function for comparing list elements.
+@return CCC_TRUE if the list has been previously sorted and all elements remain
+in the assumed input sorted order. CCC_FALSE is returned if the list is not
+completely sorted in the assumed input order. CCC_TRIBOOL_ERROR is returned if
+the input list pointer is NULL.
 
 If a non-increasing order is desired, return opposite results from the user
 comparison function. If an element is CCC_ORDER_LESSER return CCC_ORDER_GREATER
 and vice versa. If elements are equal, return CCC_ORDER_EQUAL. */
 CCC_Tribool CCC_doubly_linked_list_is_sorted(
-    CCC_Doubly_linked_list const *doubly_linked_list);
+    CCC_Doubly_linked_list const *doubly_linked_list, CCC_Order order,
+    CCC_Type_comparator *compare);
+
+/** @brief Returns true if the list is sorted in non-decreasing order according
+to the user provided comparison function.
+@param[in] doubly_linked_list a pointer to the singly linked list.
+@param[in] order the assumed order checked against last sorted order of list.
+@param[in] compare the comparator function for comparing list elements.
+@param[in] context a pointer to context needed for the comparator.
+@return CCC_TRUE if the list has been previously sorted and all elements remain
+in the assumed input sorted order. CCC_FALSE is returned if the list is not
+completely sorted in the assumed input order. CCC_TRIBOOL_ERROR is returned if
+the input list pointer is NULL.
+
+If a non-increasing order is desired, return opposite results from the user
+comparison function. If an element is CCC_ORDER_LESSER return CCC_ORDER_GREATER
+and vice versa. If elements are equal, return CCC_ORDER_EQUAL. */
+CCC_Tribool CCC_doubly_linked_list_context_is_sorted(
+    CCC_Doubly_linked_list const *doubly_linked_list, CCC_Order order,
+    CCC_Type_comparator *compare, void *context);
 
 /**@}*/
 

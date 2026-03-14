@@ -12,6 +12,7 @@
 #include "checkers.h"
 #include "flat_priority_queue.h"
 #include "flat_priority_queue_utility.h"
+#include "sort.h"
 #include "traits.h"
 #include "types.h"
 #include "utility/allocate.h"
@@ -159,8 +160,8 @@ check_static_begin(flat_priority_queue_test_heapsort) {
          i = buffer_next(&storage, i)) {
         *i = rand_range(-99, HPSORTCAP); /* NOLINT */
     }
-    CCC_Result const result = CCC_flat_priority_queue_heapsort(
-        &storage, CCC_ORDER_GREATER, int_order, &(int){});
+    CCC_Result const result
+        = CCC_sort_heapsort(&storage, CCC_ORDER_GREATER, int_order, &(int){});
     check(result, CCC_RESULT_OK);
     int const *prev = begin(&storage);
     check(prev != NULL, true);

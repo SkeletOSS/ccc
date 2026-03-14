@@ -13,21 +13,20 @@
 static CCC_Singly_linked_list
 construct_empty(void) {
     CCC_Singly_linked_list return_this
-        = CCC_singly_linked_list_for(struct Val, e, val_order, NULL, NULL);
+        = CCC_singly_linked_list_for(struct Val, e, NULL, NULL);
     return return_this;
 }
 
 check_static_begin(singly_linked_list_test_construct) {
     CCC_Singly_linked_list singly_linked_list
-        = singly_linked_list_for(struct Val, e, val_order, NULL, NULL);
+        = singly_linked_list_for(struct Val, e, NULL, NULL);
     check(is_empty(&singly_linked_list), true);
     check_end();
 }
 
 check_static_begin(singly_linked_list_test_with_allocator) {
     CCC_Singly_linked_list singly_linked_list
-        = singly_linked_list_with_allocator(struct Val, e, val_order,
-                                            std_allocate);
+        = singly_linked_list_with_allocator(struct Val, e, std_allocate);
     check(is_empty(&singly_linked_list), true);
     check_end();
 }
@@ -35,7 +34,7 @@ check_static_begin(singly_linked_list_test_with_allocator) {
 check_static_begin(singly_linked_list_test_context_with_allocator) {
     struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
     CCC_Singly_linked_list list = singly_linked_list_context_with_allocator(
-        struct Val, e, val_order, stack_allocator_allocate, &allocator);
+        struct Val, e, stack_allocator_allocate, &allocator);
     check(CCC_singly_linked_list_validate(&list), true);
     struct Val const *const v
         = CCC_singly_linked_list_push_front(&list, &(struct Val){.val = 1}.e);
@@ -66,7 +65,7 @@ check_static_begin(singly_linked_list_test_constructor_copy) {
 check_static_begin(singly_linked_list_test_construct_from) {
     struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
     CCC_Singly_linked_list list = CCC_singly_linked_list_context_from(
-        e, val_order, stack_allocator_allocate, NULL, &allocator,
+        e, stack_allocator_allocate, NULL, &allocator,
         (struct Val[]){
             {.val = 0},
             {.val = 1},
@@ -81,13 +80,12 @@ check_static_begin(singly_linked_list_test_construct_from) {
 }
 
 check_static_begin(singly_linked_list_test_construct_from_fail) {
-    CCC_Singly_linked_list list
-        = CCC_singly_linked_list_from(e, val_order, NULL, NULL,
-                                      (struct Val[]){
-                                          {.val = 0},
-                                          {.val = 1},
-                                          {.val = 2},
-                                      });
+    CCC_Singly_linked_list list = CCC_singly_linked_list_from(e, NULL, NULL,
+                                                              (struct Val[]){
+                                                                  {.val = 0},
+                                                                  {.val = 1},
+                                                                  {.val = 2},
+                                                              });
     check(CCC_singly_linked_list_validate(&list), true);
     check(CCC_singly_linked_list_is_empty(&list), true);
     check_end((void)CCC_singly_linked_list_clear(&list, NULL););

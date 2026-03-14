@@ -13,14 +13,14 @@
 static CCC_Doubly_linked_list
 construct_empty(void) {
     CCC_Doubly_linked_list return_this
-        = CCC_doubly_linked_list_for(struct Val, e, val_order, NULL, NULL);
+        = CCC_doubly_linked_list_for(struct Val, e, NULL, NULL);
     return return_this;
 }
 
 check_static_begin(doubly_linked_list_test_construct) {
     struct Val val = {};
     Doubly_linked_list doubly_linked_list
-        = doubly_linked_list_for(struct Val, e, val_order, NULL, NULL);
+        = doubly_linked_list_for(struct Val, e, NULL, NULL);
     check(is_empty(&doubly_linked_list), true);
     check(doubly_linked_list_push_front(&doubly_linked_list, &val.e) != NULL,
           true);
@@ -30,8 +30,8 @@ check_static_begin(doubly_linked_list_test_construct) {
 }
 
 check_static_begin(doubly_linked_list_test_with_allocator) {
-    Doubly_linked_list doubly_linked_list = doubly_linked_list_with_allocator(
-        struct Val, e, val_order, std_allocate);
+    Doubly_linked_list doubly_linked_list
+        = doubly_linked_list_with_allocator(struct Val, e, std_allocate);
     check(is_empty(&doubly_linked_list), true);
     check_end();
 }
@@ -39,7 +39,7 @@ check_static_begin(doubly_linked_list_test_with_allocator) {
 check_static_begin(doubly_linked_list_test_context_with_allocator) {
     struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
     CCC_Doubly_linked_list list = doubly_linked_list_context_with_allocator(
-        struct Val, e, val_order, stack_allocator_allocate, &allocator);
+        struct Val, e, stack_allocator_allocate, &allocator);
     check(CCC_doubly_linked_list_validate(&list), true);
     struct Val const *const v
         = CCC_doubly_linked_list_push_back(&list, &(struct Val){.val = 1}.e);
@@ -74,7 +74,7 @@ check_static_begin(doubly_linked_list_test_constructor_copy) {
 check_static_begin(doubly_linked_list_test_construct_from) {
     struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
     CCC_Doubly_linked_list list = CCC_doubly_linked_list_context_from(
-        e, val_order, stack_allocator_allocate, NULL, &allocator,
+        e, stack_allocator_allocate, NULL, &allocator,
         (struct Val[]){
             {.val = 0},
             {.val = 1},
@@ -89,13 +89,12 @@ check_static_begin(doubly_linked_list_test_construct_from) {
 }
 
 check_static_begin(doubly_linked_list_test_construct_from_fail) {
-    CCC_Doubly_linked_list list
-        = CCC_doubly_linked_list_from(e, val_order, NULL, NULL,
-                                      (struct Val[]){
-                                          {.val = 0},
-                                          {.val = 1},
-                                          {.val = 2},
-                                      });
+    CCC_Doubly_linked_list list = CCC_doubly_linked_list_from(e, NULL, NULL,
+                                                              (struct Val[]){
+                                                                  {.val = 0},
+                                                                  {.val = 1},
+                                                                  {.val = 2},
+                                                              });
     check(CCC_doubly_linked_list_validate(&list), true);
     check(CCC_doubly_linked_list_is_empty(&list), true);
     check_end((void)CCC_doubly_linked_list_clear(&list, NULL););

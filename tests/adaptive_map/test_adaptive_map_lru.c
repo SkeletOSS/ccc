@@ -65,13 +65,6 @@ order_by_key(CCC_Key_comparator_context const order) {
     return (key_left > kv->key) - (key_left < kv->key);
 }
 
-static CCC_Order
-order_list_nodes(CCC_Type_comparator_context const order) {
-    struct Lru_node const *const kv_a = order.type_left;
-    struct Lru_node const *const kv_b = order.type_right;
-    return (kv_a->key > kv_b->key) - (kv_a->key < kv_b->key);
-}
-
 static struct Lru_node *
 lru_head(struct Lru_cache *const lru) {
     return doubly_linked_list_front(&lru->l);
@@ -81,8 +74,7 @@ lru_head(struct Lru_cache *const lru) {
    of the hash table and list. */
 static struct Lru_cache lru_cache = {
     .cap = 3,
-    .l = doubly_linked_list_for(struct Lru_node, list_node, order_list_nodes,
-                                NULL, NULL),
+    .l = doubly_linked_list_for(struct Lru_node, list_node, NULL, NULL),
     .map = adaptive_map_for(struct Lru_node, map_node, key, order_by_key,
                             std_allocate, NULL),
 };

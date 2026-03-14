@@ -1404,6 +1404,6 @@ typedef CCC_Flat_hash_map_entry Flat_hash_map_entry;
 #    define flat_hash_map_validate(arguments...)                               \
         CCC_flat_hash_map_validate(arguments)
 /* NOLINTEND(readability-identifier-naming) */
-#endif
+#endif /* FLAT_HASH_MAP_USING_NAMESPACE_CCC */
 
 #endif /* CCC_FLAT_HASH_MAP_H */

@@ -29,7 +29,7 @@ Please specify a command as follows:
 
 #include "ccc/array_adaptive_map.h"
 #include "ccc/buffer.h"
-#include "ccc/flat_priority_queue.h"
+#include "ccc/sort.h"
 #include "ccc/traits.h"
 #include "ccc/types.h"
 #include "str_view/str_view.h"
@@ -341,7 +341,7 @@ print_n(CCC_Array_adaptive_map *const map, CCC_Order const order,
     if (!n) {
         n = count(&freqs).count;
     }
-    CCC_Result const result = CCC_flat_priority_queue_context_heapsort(
+    CCC_Result const result = CCC_sort_context_heapsort(
         &freqs, order, order_words, arena, &(Word){});
     check(result == CCC_RESULT_OK);
     int w = 0;
