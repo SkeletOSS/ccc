@@ -67,11 +67,9 @@ check_begin(inorder_fill, int vals[const], size_t const size,
     CCC_Result r
         = buffer_copy(&copy, &flat_priority_queue->buffer, std_allocate);
     check(r, CCC_RESULT_OK);
-    r = flat_priority_queue_heapsort(
-        &copy,
-        flat_priority_queue->order == CCC_ORDER_GREATER ? CCC_ORDER_LESSER
-                                                        : CCC_ORDER_GREATER,
-        flat_priority_queue->compare, &(struct Val){});
+    r = flat_priority_queue_heapsort(&copy, flat_priority_queue->order,
+                                     flat_priority_queue->compare,
+                                     &(struct Val){});
     check(r, CCC_RESULT_OK);
     check(CCC_buffer_is_empty(&copy), CCC_FALSE);
     vals[0] = *CCC_buffer_front_as(&copy, int);

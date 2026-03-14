@@ -341,8 +341,6 @@ print_n(CCC_Array_adaptive_map *const map, CCC_Order const order,
     if (!n) {
         n = count(&freqs).count;
     }
-    /* Because all CCC containers are complete they can be treated as copyable
-       types like this. There is no opaque container in CCC. */
     CCC_Result const result
         = flat_priority_queue_heapsort(&freqs, order, order_words, &(Word){});
     check(result == CCC_RESULT_OK);

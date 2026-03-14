@@ -160,7 +160,7 @@ check_static_begin(flat_priority_queue_test_heapsort) {
         *i = rand_range(-99, HPSORTCAP); /* NOLINT */
     }
     CCC_Result const result = CCC_flat_priority_queue_heapsort(
-        &storage, CCC_ORDER_LESSER, int_order, &(int){});
+        &storage, CCC_ORDER_GREATER, int_order, &(int){});
     check(result, CCC_RESULT_OK);
     int const *prev = begin(&storage);
     check(prev != NULL, true);
