@@ -820,14 +820,16 @@ Note that if this priority queue is min or max, the runtime is the same. */
 Deallocate the container or destroy the heap invariants. */
 /**@{*/
 
-/** @brief Sorts the input buffer in `O(N * log(N))` time and `O(1)` space.
-@param[in] buffer the buffer to be sorted in place.
+/** @brief Sorts the input buffer in `O(N * log(N))` time and `O(1)` space
+according to the desired input order.
+@param[in] buffer the buffer to be modified and sorted in place.
 @param[in] order the desired order of the sorted buffer. CCC_ORDER_LESSER places
-elements in non-decreasing order from index `[0, N)`, where N is the count of
-the buffer. CCC_ORDER_GREATER placed elements in non-increasing order from index
-`[0, N)`, where N is the count of the buffer. This is done for consistency with
-heap order, where CCC_ORDER_LESSER places the minimum element at index 0, the
-root of the tree, and CCC_ORDER_GREATER placed the maximum element at index 0.
+elements in non-decreasing order starting from index `[0, N)`, where N is the
+count of the buffer. CCC_ORDER_GREATER places elements in non-increasing order
+starting from index `[0, N)`, where N is the count of the buffer. This is done
+to remain consistent with heap order, where CCC_ORDER_LESSER places the minimum
+element at index 0 and CCC_ORDER_GREATER places the maximum element at index 0
+because 0 is the root of the tree in either heap ordering.
 @param[in] compare the comparator function for comparing buffer elements.
 @param[in] temp a pointer to a dummy user type that will be used for swapping.
 @return the result of the sorting operation. If an argument input error occurs
