@@ -612,8 +612,9 @@ CCC_Result
 CCC_flat_priority_queue_copy_heapify(CCC_Flat_priority_queue *priority_queue,
                                      CCC_Buffer const *buffer, void *temp);
 
-/** @brief Order count elements of the underlying priority_queue Buffer as
-an flat_priority_queue.
+/** @brief Order count elements of the input Buffer as a flat priority queue,
+destroying the input metadata Buffer struct taking ownership of its underlying
+memory.
 @param[in] buffer a pointer to a buffer with memory that will be sorted into
 heap order, given to the flat priority queue, and its metadata struct will be
 cleared.
@@ -633,6 +634,29 @@ CCC_Flat_priority_queue
 CCC_flat_priority_queue_in_place_heapify(CCC_Buffer *buffer, CCC_Order order,
                                          CCC_Type_comparator *compare,
                                          void *temp);
+
+/** @brief Order count elements of the input Buffer as a flat priority queue,
+destroying the input metadata Buffer struct taking ownership of its underlying
+memory. Provide context for the comparison function.
+@param[in] buffer a pointer to a buffer with memory that will be sorted into
+heap order, given to the flat priority queue, and its metadata struct will be
+cleared.
+@param[in] order the order of the heap, minimum or maximum priority queue.
+@param[in] context a pointer to context needed for the comparator.
+@param[in] temp a pointer to a dummy user type that will be used for swapping.
+@return a flat priority queue that now owns the underlying buffer storage and
+is in correct heap order. If an error occurs all fields are set to 0 or NULL
+and the order of the priority queue is set to CCC_ORDER_ERROR. The order can
+be read with CCC_flat_priority_queue_order(). If an error occurs, the buffer
+remains unmodified.
+@warning Assumed the buffer has been correctly initialized.
+@warning All fields in the input buffer are cleared, zeroed, or set to NULL.
+
+A simple way to provide a temp for swapping is with an inline compound literal
+reference provided directly to the function argument `&(name_of_type){}`. */
+CCC_Flat_priority_queue CCC_flat_priority_queue_context_in_place_heapify(
+    CCC_Buffer *buffer, CCC_Order order, CCC_Type_comparator *compare,
+    void *context, void *temp);
 
 /** @brief Pushes element pointed to at e into flat_priority_queue. O(lgN).
 @param[in] priority_queue a pointer to the priority queue.
@@ -848,6 +872,36 @@ CCC_Result CCC_flat_priority_queue_heapsort(CCC_Buffer *buffer, CCC_Order order,
                                             CCC_Type_comparator *compare,
                                             void *temp);
 
+/** @brief Sorts the input buffer in `O(N * log(N))` time and `O(1)` space
+according to the desired input order with context for the comparison.
+@param[in] buffer the buffer to be modified and sorted in place.
+@param[in] order the desired order of the sorted buffer. CCC_ORDER_LESSER places
+elements in non-decreasing order starting from index `[0, N)`, where N is the
+count of the buffer. CCC_ORDER_GREATER places elements in non-increasing order
+starting from index `[0, N)`, where N is the count of the buffer. This is done
+to remain consistent with heap order, where CCC_ORDER_LESSER places the minimum
+element at index 0 and CCC_ORDER_GREATER places the maximum element at index 0
+because 0 is the root of the tree in either heap ordering.
+@param[in] compare the comparator function for comparing buffer elements.
+@param[in] context a pointer to context needed for the comparator.
+@param[in] temp a pointer to a dummy user type that will be used for swapping.
+@return the result of the sorting operation. If an argument input error occurs
+an input error result is provided. Allocation is not needed to sort elements in
+the buffer so memory related errors are not possible if the provided buffer is
+initialized correctly.
+@warning Assumes the input buffer has been correctly initialized via its
+interface.
+
+An easy way to provide a temp slot is with an anonymous compound literal such
+as `&(My_type){}`, passed directly as an argument.
+
+The sort is not inherently stable and uses the provided comparison function to
+the priority_queue to order the elements. */
+CCC_Result
+CCC_flat_priority_queue_context_heapsort(CCC_Buffer *buffer, CCC_Order order,
+                                         CCC_Type_comparator *compare,
+                                         void *context, void *temp);
+
 /** @brief Clears the priority_queue calling destroy on every element if
 provided. O(1)-O(N).
 @param[in] priority_queue a pointer to the flat priority queue.
@@ -1016,8 +1070,12 @@ typedef CCC_Flat_priority_queue Flat_priority_queue;
         CCC_flat_priority_queue_copy_heapify(arguments)
 #    define flat_priority_queue_in_place_heapify(arguments...)                 \
         CCC_flat_priority_queue_in_place_heapify(arguments)
+#    define flat_priority_queue_context_in_place_heapify(arguments...)         \
+        CCC_flat_priority_queue_context_in_place_heapify(arguments)
 #    define flat_priority_queue_heapsort(arguments...)                         \
         CCC_flat_priority_queue_heapsort(arguments)
+#    define flat_priority_queue_context_heapsort(arguments...)                 \
+        CCC_flat_priority_queue_context_heapsort(arguments)
 #    define flat_priority_queue_emplace(arguments...)                          \
         CCC_flat_priority_queue_emplace(arguments)
 #    define flat_priority_queue_push(arguments...)                             \
