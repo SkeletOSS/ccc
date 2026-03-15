@@ -34,7 +34,8 @@ rand_range(size_t const min, size_t const max) {
 }
 
 check_begin(insert_shuffled, CCC_Flat_priority_queue *const priority_queue,
-            size_t const size, int const larger_prime) {
+            size_t const size, int const larger_prime,
+            CCC_Allocator_context const *const allocator) {
     /* Math magic ahead so that we iterate over every index
        eventually but in a shuffled order. Not necessarily
        random but a repeatable sequence that makes it
@@ -47,7 +48,7 @@ check_begin(insert_shuffled, CCC_Flat_priority_queue *const priority_queue,
                        .id = (int)shuffled_index,
                        .val = (int)shuffled_index,
                    },
-                   &(struct Val){})
+                   &(struct Val){}, allocator)
                   != NULL,
               CCC_TRUE);
         check(CCC_flat_priority_queue_count(priority_queue).count, i + 1);
@@ -64,12 +65,12 @@ check_begin(inorder_fill, int vals[const], size_t const size,
     if (CCC_flat_priority_queue_count(flat_priority_queue).count != size) {
         return CHECK_FAIL;
     }
-    CCC_Buffer copy = CCC_buffer_with_allocator(struct Val, std_allocate);
+    CCC_Buffer copy = CCC_buffer_default(struct Val);
     CCC_Result r
-        = buffer_copy(&copy, &flat_priority_queue->buffer, std_allocate);
+        = buffer_copy(&copy, &flat_priority_queue->buffer, &std_allocator);
     check(r, CCC_RESULT_OK);
-    r = CCC_sort_heapsort(&copy, flat_priority_queue->order,
-                          flat_priority_queue->compare, &(struct Val){});
+    r = CCC_sort_heapsort(&copy, &(struct Val){}, flat_priority_queue->order,
+                          &flat_priority_queue->comparator);
     check(r, CCC_RESULT_OK);
     check(CCC_buffer_is_empty(&copy), CCC_FALSE);
     vals[0] = *CCC_buffer_front_as(&copy, int);
@@ -80,5 +81,6 @@ check_begin(inorder_fill, int vals[const], size_t const size,
         vals[i++] = v->val;
     }
     check(i, flat_priority_queue_count(flat_priority_queue).count);
-    check_end(clear_and_free(&copy, NULL););
+    check_end(
+        clear_and_free(&copy, &(CCC_Destructor_context){}, &std_allocator););
 }

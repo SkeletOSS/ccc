@@ -33,6 +33,26 @@ the allocator function interface. */
 Types used across many containers. */
 /**@{*/
 
+/** @brief The default argument when no user data is available for an
+initializer that accepts a pointer to user data. NULL is never an acceptable
+argument to any function or macro in the C Container Collection. If NULL is
+used at any call site, a programmer error has occurred. To help enforce this
+habit, use this macro in the rare case of the `_for(` initializer macros
+requiring a pointer to empty user data.
+
+```
+CCC_Buffer buffer = CCC_buffer_for(int, 0, 0, CCC_DEFAULT);
+```
+
+Instead, a more specific initializer is appropriate.
+
+```
+CCC_Buffer buffer = CCC_buffer_default(int);
+```
+
+In most cases, a more expressive initializer exists for use instead. */
+#define CCC_DEFAULT NULL
+
 /** @brief The result of a range query on iterable containers.
 
 A range provides a view all elements that fit the equals range criteria
@@ -236,49 +256,6 @@ typedef struct {
     size_t count;
 } CCC_Count;
 
-/** @brief An element comparison helper.
-
-This type helps the user define the comparison callback function, if the
-container takes a standard element comparison function, and helps avoid
-swappable argument errors. Any type LHS is considered the left hand side and
-any type RHS is the right hand side when considering three-way comparison
-return values. Context data is a reference to any context data provided upon
-container initialization. */
-typedef struct {
-    /** The left hand side for a three-way comparison operation. */
-    void const *const type_left;
-    /** The right hand side for a three-way comparison operation. */
-    void const *const type_right;
-    /** A reference to context data provided to container on initialization. */
-    void *context;
-} CCC_Comparator_arguments;
-
-/** @brief A key comparison helper to avoid argument swapping.
-
-The key is considered the left hand side of the operation if three-way
-comparison is needed. Note a comparison is taking place between the key on the
-left hand side and the complete user type on the right hand side. This means the
-right hand side will need to manually access its key field.
-
-```
-int const *const key_left = order.key_left;
-struct Key_val const *const type_right  = order.type_right;
-return (*key_left > type_right->key) - (*key_left < type_right->key);
-```
-
-Notice that the user type must access its key field of its struct. Comparison
-must happen this way to support searching by key in associative containers
-rather than by entire user struct. Only needing to provide a key can save
-significant memory for a search depending on the size of the user type. */
-typedef struct {
-    /** Key matching the key field of the provided type to the container. */
-    void const *const key_left;
-    /** The complete user type stored in the container. */
-    void const *const type_right;
-    /** A reference to context provided to the container on initialization. */
-    void *context;
-} CCC_Key_comparator_arguments;
-
 /** @brief A reference to a user type within the container.
 
 This is to help users define callback functions that act on each node in a
@@ -289,18 +266,6 @@ typedef struct {
     /** A reference to context provided to the container on initialization. */
     void *context;
 } CCC_Arguments;
-
-/** @brief A read only reference to a key type matching the key field type used
-for hash containers.
-
-A reference to any context data is also provided. This the struct one can use
-to hash their values with their hash function. */
-typedef struct {
-    /** A reference to the same type used for keys in the container. */
-    void const *const key;
-    /** A reference to context provided to the container on initialization. */
-    void *context;
-} CCC_Key_arguments;
 
 /** @brief A bundle of arguments to pass to the user-implemented Allocator
 function interface. This ensures clarity in inputs and expected outputs to
@@ -413,6 +378,23 @@ typedef struct {
     void *context;
 } CCC_Allocator_context;
 
+/** @brief An element comparison helper.
+
+This type helps the user define the comparison callback function, if the
+container takes a standard element comparison function, and helps avoid
+swappable argument errors. Any type LHS is considered the left hand side and
+any type RHS is the right hand side when considering three-way comparison
+return values. Context data is a reference to any context data provided upon
+container initialization. */
+typedef struct {
+    /** The left hand side for a three-way comparison operation. */
+    void const *const type_left;
+    /** The right hand side for a three-way comparison operation. */
+    void const *const type_right;
+    /** A reference to context data provided to container on initialization. */
+    void *context;
+} CCC_Comparator_arguments;
+
 /** @brief A callback function for comparing two elements in a container.
 
 A three-way comparison return value is expected and the two containers being
@@ -479,12 +461,50 @@ typedef struct {
     void *context;
 } CCC_Destructor_context;
 
+/** @brief A key comparison helper to avoid argument swapping.
+
+The key is considered the left hand side of the operation if three-way
+comparison is needed. Note a comparison is taking place between the key on the
+left hand side and the complete user type on the right hand side. This means the
+right hand side will need to manually access its key field.
+
+```
+int const *const key_left = order.key_left;
+struct Key_val const *const type_right  = order.type_right;
+return (*key_left > type_right->key) - (*key_left < type_right->key);
+```
+
+Notice that the user type must access its key field of its struct. Comparison
+must happen this way to support searching by key in associative containers
+rather than by entire user struct. Only needing to provide a key can save
+significant memory for a search depending on the size of the user type. */
+typedef struct {
+    /** Key matching the key field of the provided type to the container. */
+    void const *const key_left;
+    /** The complete user type stored in the container. */
+    void const *const type_right;
+    /** A reference to context provided to the container on initialization. */
+    void *context;
+} CCC_Key_comparator_arguments;
+
 /** @brief A callback function for three-way comparing two stored keys.
 
 The key is considered the left hand side of the comparison. The function should
 return CCC_ORDER_LESSER if the key is less than the key in key field of user
 type, CCC_ORDER_EQUAL if equal, and CCC_ORDER_GREATER if greater. */
 typedef CCC_Order CCC_Key_comparator(CCC_Key_comparator_arguments);
+
+/** @brief A read only reference to a key type matching the key field type used
+for hash containers.
+
+A reference to any context data is also provided. This the struct one can use
+to hash their values with their hash function. */
+typedef struct {
+    /** A reference to the same type used for keys in the container. */
+    void const *const key;
+    /** A reference to context provided to the container on initialization. */
+    void *context;
+} CCC_Key_arguments;
 
 /** @brief A callback function to hash the key type used in a container.
 
