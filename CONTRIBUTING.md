@@ -254,7 +254,7 @@ CCC_Buffer_allocate(CCC_Buffer *const buf, size_t const capacity,
     if (!allocate) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
-    void *const new_mem = allocate((CCC_Allocator_context){
+    void *const new_mem = allocate((CCC_Allocator_arguments){
         .input = buf->data,
         .bytes = buf->sizeof_type * capacity,
         .context = buf->context,

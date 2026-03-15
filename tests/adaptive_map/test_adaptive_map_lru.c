@@ -59,7 +59,7 @@ static bool const quiet = true;
     } while (0)
 
 static CCC_Order
-order_by_key(CCC_Key_comparator_context const order) {
+order_by_key(CCC_Key_comparator_arguments const order) {
     int const key_left = *(int *)order.key_left;
     struct Lru_node const *const kv = order.type_right;
     return (key_left > kv->key) - (key_left < kv->key);

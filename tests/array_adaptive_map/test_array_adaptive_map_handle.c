@@ -24,12 +24,12 @@ idval(int const id, int const val) {
 }
 
 static inline void
-plus(CCC_Type_context const t) {
+plus(CCC_Type_arguments const t) {
     ((struct Val *)t.type)->val++;
 }
 
 static inline void
-pluscontext(CCC_Type_context const t) {
+pluscontext(CCC_Type_arguments const t) {
     ((struct Val *)t.type)->val += *(int *)t.context;
 }
 

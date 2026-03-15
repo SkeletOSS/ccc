@@ -12,19 +12,19 @@
 #include "utility/allocate.h"
 
 static void
-mod(CCC_Type_context const u) {
+mod(CCC_Type_arguments const u) {
     struct Val *v = u.type;
     v->val += 5;
 }
 
 static void
-modw(CCC_Type_context const u) {
+modw(CCC_Type_arguments const u) {
     struct Val *v = u.type;
     v->val = *((int *)u.context);
 }
 
 static CCC_Order
-flat_hash_map_int_order(CCC_Key_comparator_context const order) {
+flat_hash_map_int_order(CCC_Key_comparator_arguments const order) {
     int const *const right = order.type_right;
     int const left = *((int *)order.key_left);
     return (left > *right) - (left < *right);

@@ -19,7 +19,7 @@ tree_map_create(int const id, int const val) {
 }
 
 static inline void
-tree_map_modplus(CCC_Type_context const t) {
+tree_map_modplus(CCC_Type_arguments const t) {
     ((struct Val *)t.type)->val++;
 }
 

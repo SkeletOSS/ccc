@@ -63,7 +63,7 @@ static bool const quiet = true;
     } while (0)
 
 static CCC_Order
-lru_lookup_order(CCC_Key_comparator_context const order) {
+lru_lookup_order(CCC_Key_comparator_arguments const order) {
     struct Lru_lookup const *const right = order.type_right;
     int const left = *((int *)order.key_left);
     return (left > right->key) - (left < right->key);

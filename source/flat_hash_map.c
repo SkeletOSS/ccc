@@ -447,7 +447,7 @@ CCC_Flat_hash_map_entry *
 CCC_flat_hash_map_and_modify(CCC_Flat_hash_map_entry *const entry,
                              CCC_Type_modifier *const modify) {
     if (entry && modify && ((entry->status & CCC_ENTRY_OCCUPIED) != 0)) {
-        modify((CCC_Type_context){
+        modify((CCC_Type_arguments){
             .type = data_at(entry->map, entry->index),
             .context = NULL,
         });
@@ -460,7 +460,7 @@ CCC_flat_hash_map_and_context_modify(CCC_Flat_hash_map_entry *const entry,
                                      CCC_Type_modifier *const modify,
                                      void *const context) {
     if (entry && modify && ((entry->status & CCC_ENTRY_OCCUPIED) != 0)) {
-        modify((CCC_Type_context){
+        modify((CCC_Type_arguments){
             .type = data_at(entry->map, entry->index),
             .context = context,
         });
@@ -648,7 +648,7 @@ CCC_flat_hash_map_clear_and_free(CCC_Flat_hash_map *const map,
     map->mask = 0;
     map->count = 0;
     map->tag = NULL;
-    (void)map->allocate((CCC_Allocator_context){
+    (void)map->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
         .context = map->context,
@@ -676,7 +676,7 @@ CCC_flat_hash_map_clear_and_free_reserve(CCC_Flat_hash_map *const map,
     map->mask = 0;
     map->count = 0;
     map->tag = NULL;
-    (void)allocate((CCC_Allocator_context){
+    (void)allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
         .context = map->context,
@@ -730,7 +730,7 @@ CCC_flat_hash_map_copy(CCC_Flat_hash_map *const destination,
     size_t const source_bytes
         = mask_to_total_bytes(source->sizeof_type, source->mask);
     if (destination->mask < source->mask) {
-        void *const new_data = destination->allocate((CCC_Allocator_context){
+        void *const new_data = destination->allocate((CCC_Allocator_arguments){
             .input = destination->data,
             .bytes = source_bytes,
             .context = destination->context,
@@ -1316,7 +1316,7 @@ rehash_resize(struct CCC_Flat_hash_map *const map, size_t const to_add,
     if (total_bytes < prev_bytes) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
-    void *const new_buf = allocate((CCC_Allocator_context){
+    void *const new_buf = allocate((CCC_Allocator_arguments){
         .input = NULL,
         .bytes = total_bytes,
         .context = map->context,
@@ -1352,7 +1352,7 @@ rehash_resize(struct CCC_Flat_hash_map *const map, size_t const to_add,
     }
     new_map.remain -= map->count;
     new_map.count = map->count;
-    (void)allocate((CCC_Allocator_context){
+    (void)allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
         .context = map->context,
@@ -1384,7 +1384,7 @@ lazy_initialize(struct CCC_Flat_hash_map *const map, size_t required_total_cap,
         required_total_cap = max(required_total_cap, GROUP_COUNT);
         size_t const total_bytes
             = mask_to_total_bytes(map->sizeof_type, required_total_cap - 1);
-        map->data = allocate((CCC_Allocator_context){
+        map->data = allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = total_bytes,
             .context = map->context,
@@ -1405,7 +1405,7 @@ destory_each(struct CCC_Flat_hash_map *const map,
              CCC_Type_destructor *const destroy) {
     for (void *i = CCC_flat_hash_map_begin(map);
          i != CCC_flat_hash_map_end(map); i = CCC_flat_hash_map_next(map, i)) {
-        destroy((CCC_Type_context){
+        destroy((CCC_Type_arguments){
             .type = i,
             .context = map->context,
         });
@@ -1414,7 +1414,7 @@ destory_each(struct CCC_Flat_hash_map *const map,
 
 static inline uint64_t
 hasher(struct CCC_Flat_hash_map const *const map, void const *const any_key) {
-    return map->hash((CCC_Key_context){
+    return map->hash((CCC_Key_arguments){
         .key = any_key,
         .context = map->context,
     });
@@ -1423,7 +1423,7 @@ hasher(struct CCC_Flat_hash_map const *const map, void const *const any_key) {
 static inline CCC_Tribool
 is_equal(struct CCC_Flat_hash_map const *const map, void const *const key,
          size_t const i) {
-    return map->compare((CCC_Key_comparator_context){
+    return map->compare((CCC_Key_comparator_arguments){
                .key_left = key,
                .type_right = data_at(map, i),
                .context = map->context,

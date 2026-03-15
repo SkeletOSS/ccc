@@ -141,10 +141,10 @@ static void flush_cursor_maze_coordinate(struct Maze const *, int, int);
 static bool can_build_new_square(struct Maze const *, int, int);
 static void help(void);
 static struct Point rand_point(struct Maze const *);
-static Order order_prim_cells(Type_comparator_context);
+static Order order_prim_cells(Type_comparator_arguments);
 static struct Int_conversion parse_digits(SV_Str_view);
-static CCC_Order prim_cell_order(Key_comparator_context);
-static uint64_t prim_cell_hash_fn(Key_context);
+static CCC_Order prim_cell_order(Key_comparator_arguments);
+static uint64_t prim_cell_hash_fn(Key_arguments);
 static uint64_t hash_64_bits(uint64_t);
 
 /*======================  Main Arg Handling  ===============================*/
@@ -284,7 +284,7 @@ animate_maze(struct Maze *maze) {
 /*===================     Container Support Code     ========================*/
 
 static CCC_Order
-prim_cell_order(Key_comparator_context const c) {
+prim_cell_order(Key_comparator_arguments const c) {
     struct Point const *const left = c.key_left;
     struct Prim_cell const *const right = c.type_right;
     CCC_Order const order
@@ -296,7 +296,7 @@ prim_cell_order(Key_comparator_context const c) {
 }
 
 static uint64_t
-prim_cell_hash_fn(Key_context const k) {
+prim_cell_hash_fn(Key_arguments const k) {
     struct Prim_cell const *const p = k.key;
     uint64_t const wr = p->cell.r;
     static_assert(sizeof((struct Point){}.r) * CHAR_BIT == 32,
@@ -314,7 +314,7 @@ hash_64_bits(uint64_t x) {
 }
 
 static Order
-order_prim_cells(Type_comparator_context const order_cells) {
+order_prim_cells(Type_comparator_arguments const order_cells) {
     struct Prim_cell const *const left = order_cells.type_left;
     struct Prim_cell const *const right = order_cells.type_right;
     return (left->cost > right->cost) - (left->cost < right->cost);

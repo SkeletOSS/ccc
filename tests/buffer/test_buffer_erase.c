@@ -96,7 +96,7 @@ check_static_begin(buffer_test_daily_temperatures) {
 }
 
 static CCC_Order
-order_car_idx(CCC_Type_comparator_context const order) {
+order_car_idx(CCC_Type_comparator_arguments const order) {
     Buffer const *const int_positions = order.context;
     int const *const left_pos
         = buffer_at(int_positions, *(int *)order.type_left);

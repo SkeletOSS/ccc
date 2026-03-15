@@ -284,9 +284,9 @@ static enum Label_orientation get_direction(struct Point const *,
 static struct Int_conversion parse_digits(SV_Str_view, int, int, char const *);
 static struct Path_request parse_path_request(struct Graph *, SV_Str_view);
 static void help(void);
-static Order order_priority_queue_costs(Type_comparator_context);
-static CCC_Order order_parent_cells(Key_comparator_context);
-static uint64_t hash_parent_cells(Key_context);
+static Order order_priority_queue_costs(Type_comparator_arguments);
+static CCC_Order order_parent_cells(Key_comparator_arguments);
+static uint64_t hash_parent_cells(Key_arguments);
 static uint64_t hash_64_bits(uint64_t);
 static unsigned count_digits(uintmax_t);
 static void print_str_view(FILE *, SV_Str_view);
@@ -988,7 +988,7 @@ build_path_outline(struct Graph *const graph) {
 /*====================    Data Structure Helpers    =========================*/
 
 static CCC_Order
-order_parent_cells(Key_comparator_context const c) {
+order_parent_cells(Key_comparator_arguments const c) {
     struct Point const *const left = c.key_left;
     struct Path_backtrack_cell const *const right = c.type_right;
     CCC_Order const order
@@ -1000,14 +1000,14 @@ order_parent_cells(Key_comparator_context const c) {
 }
 
 static uint64_t
-hash_parent_cells(Key_context const point_struct) {
+hash_parent_cells(Key_arguments const point_struct) {
     struct Point const *const p = point_struct.key;
     uint64_t const wr = p->r;
     return hash_64_bits((wr << 31) | p->c);
 }
 
 static Order
-order_priority_queue_costs(Type_comparator_context const cost_order) {
+order_priority_queue_costs(Type_comparator_arguments const cost_order) {
     struct Cost const *const a = cost_order.type_left;
     struct Cost const *const b = cost_order.type_right;
     return (a->cost > b->cost) - (a->cost < b->cost);

@@ -62,7 +62,7 @@ type size stored in the buffer. A stack allocator is not general purpose and
 expects the user to only request the type specified in the initialization
 argument. Otherwise, a strict aliasing violation has occurred. If a request that
 is not a multiple of type size is given NULL is returned. */
-void *stack_allocator_allocate(CCC_Allocator_context context);
+void *stack_allocator_allocate(CCC_Allocator_arguments context);
 
 /** Resets a stack allocator into thinking it is empty. This is safe because
 conceptually it just a buffer of user types. This allows us to recycle the

@@ -13,7 +13,7 @@ struct Val {
     CCC_Adaptive_map_node elem;
 };
 
-CCC_Order id_order(CCC_Key_comparator_context);
+CCC_Order id_order(CCC_Key_comparator_arguments);
 
 enum Check_result insert_shuffled(CCC_Adaptive_map *m, size_t size,
                                   int larger_prime);

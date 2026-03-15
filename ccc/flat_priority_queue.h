@@ -85,21 +85,26 @@ typedef struct CCC_Flat_priority_queue CCC_Flat_priority_queue;
 Initialize the container with memory, callbacks, and permissions. */
 /**@{*/
 
+/** @brief Initialize an empty priority queue
+@param[in] type_name the name of the user type.
+@return the initialized priority queue on the right hand side of an equality
+operator. */
+#define CCC_flat_priority_queue_default(type_name)                             \
+    CCC_private_flat_priority_queue_default(type_name)
+
 /** @brief Initialize a priority_queue as a min or max heap.
 @param[in] type_name the name of the user type.
 @param[in] order CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max
 heap, respectively.
 @param[in] compare the user defined comarison function for user types.
-@param[in] allocate the allocation function or NULL if no allocation.
-@param[in] context any context data needed for destruction of elements.
 @param[in] capacity the capacity of contiguous elements at data_pointer.
 @param[in] data_pointer a pointer to an array of user types or NULL.
 @return the initialized priority queue on the right hand side of an equality
 operator. */
-#define CCC_flat_priority_queue_for(type_name, order, compare, allocate,       \
-                                    context, capacity, data_pointer)           \
-    CCC_private_flat_priority_queue_for(type_name, order, compare, allocate,   \
-                                        context, capacity, data_pointer)
+#define CCC_flat_priority_queue_for(type_name, order, compare, capacity,       \
+                                    data_pointer)                              \
+    CCC_private_flat_priority_queue_for(type_name, order, compare, capacity,   \
+                                        data_pointer)
 
 /** @brief Partial order an array of elements as a min or max heap at runtime
 in O(N) time and space equal to the provided data capacity.
@@ -107,8 +112,6 @@ in O(N) time and space equal to the provided data capacity.
 @param[in] order CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max
 heap, respectively.
 @param[in] compare the user defined comparison function for user types.
-@param[in] allocate the allocation function or NULL if no allocation.
-@param[in] context any context data needed for destruction of elements.
 @param[in] capacity the capacity of contiguous elements at data_pointer.
 @param[in] count the count <= capacity of valid elements.
 @param[in] data_pointer a pointer to an array of user types or NULL.
@@ -116,12 +119,10 @@ heap, respectively.
 operator.
 @warning One additional element of the provided type is allocated on the stack
 for swapping purposes. */
-#define CCC_flat_priority_queue_heapify(type_name, order, compare, allocate,   \
-                                        context, capacity, count,              \
-                                        data_pointer...)                       \
+#define CCC_flat_priority_queue_heapify(type_name, order, compare, capacity,   \
+                                        count, data_pointer...)                \
     CCC_private_flat_priority_queue_heapify(type_name, order, compare,         \
-                                            allocate, context, capacity,       \
-                                            count, data_pointer)
+                                            capacity, count, data_pointer)
 
 /** @brief Partial order an array of elements as a min or max heap at runtime
 in O(N) time and space equal to the provided data capacity. Intended for

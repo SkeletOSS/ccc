@@ -153,7 +153,7 @@ name of the list being on the left hand side of the assignment operator. */
                  ++private_i) {                                                \
                 typeof(*private_doubly_linked_list_type_array) *const          \
                     private_new_node = private_doubly_linked_list.allocate(    \
-                        (CCC_Allocator_context){                               \
+                        (CCC_Allocator_arguments){                             \
                             .input = NULL,                                     \
                             .bytes = private_doubly_linked_list.sizeof_type,   \
                             .context = private_doubly_linked_list.context,     \
@@ -193,7 +193,7 @@ name of the list being on the left hand side of the assignment operator. */
             if (private_doubly_linked_list->allocate) {                        \
                 private_doubly_linked_list_res                                 \
                     = private_doubly_linked_list->allocate(                    \
-                        (CCC_Allocator_context){                               \
+                        (CCC_Allocator_arguments){                             \
                             .input = NULL,                                     \
                             .bytes = private_doubly_linked_list->sizeof_type,  \
                             .context = private_doubly_linked_list->context,    \
@@ -223,7 +223,7 @@ name of the list being on the left hand side of the assignment operator. */
         } else {                                                               \
             private_doubly_linked_list_res                                     \
                 = private_doubly_linked_list->allocate(                        \
-                    (CCC_Allocator_context){                                   \
+                    (CCC_Allocator_arguments){                                 \
                         .input = NULL,                                         \
                         .bytes = private_doubly_linked_list->sizeof_type,      \
                         .context = private_doubly_linked_list->context,        \

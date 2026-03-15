@@ -120,8 +120,8 @@ static void print_n(Array_adaptive_map *, CCC_Order, struct String_arena *,
 static struct Int_conversion parse_n_ranks(SV_Str_view);
 static struct String_offset clean_word(struct String_arena *, SV_Str_view);
 static Array_adaptive_map create_frequency_map(struct String_arena *, FILE *);
-static Order order_string_keys(Key_comparator_context);
-static Order order_words(Type_comparator_context);
+static Order order_string_keys(Key_comparator_arguments);
+static Order order_words(Type_comparator_arguments);
 static FILE *open_file(SV_Str_view);
 static void print_str_view(FILE *, SV_Str_view);
 
@@ -418,7 +418,7 @@ clean_word(struct String_arena *const a, SV_Str_view wv) {
 /*=======================   Container Helpers    ============================*/
 
 static Order
-order_string_keys(Key_comparator_context const c) {
+order_string_keys(Key_comparator_arguments const c) {
     Word const *const w = c.type_right;
     struct String_arena const *const a = c.context;
     struct String_offset const *const id = c.key_left;
@@ -431,7 +431,7 @@ order_string_keys(Key_comparator_context const c) {
 
 /* Sorts by frequency then alphabetic order if frequencies are tied. */
 static Order
-order_words(Type_comparator_context const c) {
+order_words(Type_comparator_arguments const c) {
     Word const *const left = c.type_left;
     Word const *const right = c.type_right;
     Order freq_order = (left->freq > right->freq) - (left->freq < right->freq);

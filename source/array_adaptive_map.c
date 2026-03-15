@@ -229,7 +229,7 @@ CCC_array_adaptive_map_and_modify(CCC_Array_adaptive_map_handle *const handle,
         return NULL;
     }
     if (modify && handle->status & CCC_ENTRY_OCCUPIED) {
-        modify((CCC_Type_context){
+        modify((CCC_Type_arguments){
             .type = data_at(handle->map, handle->index),
             .context = NULL,
         });
@@ -245,7 +245,7 @@ CCC_array_adaptive_map_and_context_modify(
         return NULL;
     }
     if (modify && handle->status & CCC_ENTRY_OCCUPIED) {
-        modify((CCC_Type_context){
+        modify((CCC_Type_arguments){
             .type = data_at(handle->map, handle->index),
             .context = context,
         });
@@ -631,7 +631,7 @@ CCC_array_adaptive_map_clear_and_free(CCC_Array_adaptive_map *const map,
     map->root = 0;
     map->count = 0;
     map->capacity = 0;
-    (void)map->allocate((CCC_Allocator_context){
+    (void)map->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
         .context = map->context,
@@ -654,7 +654,7 @@ CCC_array_adaptive_map_clear_and_free_reserve(
     map->root = 0;
     map->count = 0;
     map->capacity = 0;
-    (void)allocate((CCC_Allocator_context){
+    (void)allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
         .context = map->context,
@@ -806,7 +806,7 @@ resize(struct CCC_Array_adaptive_map *const map, size_t const new_capacity,
     if (!allocate) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
-    void *const new_data = allocate((CCC_Allocator_context){
+    void *const new_data = allocate((CCC_Allocator_arguments){
         .input = NULL,
         .bytes = total_bytes(map->sizeof_type, new_capacity),
         .context = map->context,
@@ -816,7 +816,7 @@ resize(struct CCC_Array_adaptive_map *const map, size_t const new_capacity,
     }
     copy_soa(map, new_data, new_capacity);
     map->nodes = nodes_base_address(map->sizeof_type, new_data, new_capacity);
-    allocate((CCC_Allocator_context){
+    allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
         .context = map->context,
@@ -1012,7 +1012,7 @@ delete_nodes(struct CCC_Array_adaptive_map *const map,
         size_t const next = e->branch[R];
         e->branch[L] = e->branch[R] = 0;
         e->parent = 0;
-        destroy((CCC_Type_context){
+        destroy((CCC_Type_arguments){
             .type = data_at(map, node),
             .context = map->context,
         });
@@ -1024,7 +1024,7 @@ static inline CCC_Order
 order_nodes(struct CCC_Array_adaptive_map const *const map,
             void const *const key, size_t const node,
             CCC_Key_comparator *const compare) {
-    return compare((CCC_Key_comparator_context){
+    return compare((CCC_Key_comparator_arguments){
         .key_left = key,
         .type_right = data_at(map, node),
         .context = map->context,

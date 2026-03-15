@@ -164,7 +164,7 @@ CCC_adaptive_map_and_modify(CCC_Adaptive_map_entry *const entry,
     }
     if (modify && (entry->entry.status & CCC_ENTRY_OCCUPIED)
         && entry->entry.type) {
-        modify((CCC_Type_context){
+        modify((CCC_Type_arguments){
             .type = entry->entry.type,
             .context = NULL,
         });
@@ -178,7 +178,7 @@ CCC_adaptive_map_and_context_modify(CCC_Adaptive_map_entry *const entry,
                                     void *const context) {
     if (entry && modify && entry->entry.status & CCC_ENTRY_OCCUPIED
         && entry->entry.type) {
-        modify((CCC_Type_context){
+        modify((CCC_Type_arguments){
             .type = entry->entry.type,
             .context = context,
         });
@@ -296,7 +296,7 @@ CCC_adaptive_map_remove_key_value(
     if (map->allocate) {
         void *const any_struct = struct_base(map, type_output_intruder);
         memcpy(any_struct, n, map->sizeof_type);
-        map->allocate((CCC_Allocator_context){
+        map->allocate((CCC_Allocator_arguments){
             .input = n,
             .bytes = 0,
             .context = map->context,
@@ -321,7 +321,7 @@ CCC_adaptive_map_remove_entry(CCC_Adaptive_map_entry *const e) {
         void *const erased = erase(e->map, key_in_slot(e->map, e->entry.type));
         assert(erased);
         if (e->map->allocate) {
-            e->map->allocate((CCC_Allocator_context){
+            e->map->allocate((CCC_Allocator_arguments){
                 .input = erased,
                 .bytes = 0,
                 .context = e->map->context,
@@ -472,13 +472,13 @@ CCC_adaptive_map_clear(CCC_Adaptive_map *const map,
         node->parent = NULL;
         void *const del = struct_base(map, node);
         if (destroy) {
-            destroy((CCC_Type_context){
+            destroy((CCC_Type_arguments){
                 .type = del,
                 .context = map->context,
             });
         }
         if (map->allocate) {
-            (void)map->allocate((CCC_Allocator_context){
+            (void)map->allocate((CCC_Allocator_arguments){
                 .input = del,
                 .bytes = 0,
                 .context = map->context,
@@ -675,7 +675,7 @@ allocate_insert(struct CCC_Adaptive_map *const t,
         }
     }
     if (t->allocate) {
-        void *const node = t->allocate((CCC_Allocator_context){
+        void *const node = t->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = t->sizeof_type,
             .context = t->context,
@@ -841,7 +841,7 @@ static inline CCC_Order
 order(struct CCC_Adaptive_map const *const t, void const *const key,
       struct CCC_Adaptive_map_node const *const node,
       CCC_Key_comparator *const compare) {
-    return compare((CCC_Key_comparator_context){
+    return compare((CCC_Key_comparator_arguments){
         .key_left = key,
         .type_right = struct_base(t, node),
         .context = t->context,

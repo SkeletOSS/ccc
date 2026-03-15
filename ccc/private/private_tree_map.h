@@ -160,7 +160,7 @@ void *CCC_private_tree_map_insert(
                       & CCC_ENTRY_OCCUPIED)) {                                 \
                     typeof(*private_tree_map_type_array) *const                \
                         private_new_slot                                       \
-                        = private_map.allocate((CCC_Allocator_context){        \
+                        = private_map.allocate((CCC_Allocator_arguments){      \
                             .input = NULL,                                     \
                             .bytes = private_map.sizeof_type,                  \
                             .context = private_map.context,                    \
@@ -213,7 +213,7 @@ void *CCC_private_tree_map_insert(
         if ((Tree_map_entry)->map->allocate) {                                 \
             private_tree_map_ins_allocate_ret                                  \
                 = (Tree_map_entry)                                             \
-                      ->map->allocate((CCC_Allocator_context){                 \
+                      ->map->allocate((CCC_Allocator_arguments){               \
                           .input = NULL,                                       \
                           .bytes = (Tree_map_entry)->map->sizeof_type,         \
                           .context = (Tree_map_entry)->map->context,           \

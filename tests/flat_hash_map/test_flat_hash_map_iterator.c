@@ -17,14 +17,14 @@ struct Owner {
 };
 
 static CCC_Order
-owners_eq(CCC_Key_comparator_context const order) {
+owners_eq(CCC_Key_comparator_arguments const order) {
     int const *const left = order.key_left;
     struct Owner const *const right = order.type_right;
     return (*left > right->key) - (*left < right->key);
 }
 
 static void
-destroy_owner_allocation(CCC_Type_context const t) {
+destroy_owner_allocation(CCC_Type_arguments const t) {
     struct Owner const *const o = t.type;
     free(o->allocation);
 }

@@ -5,7 +5,7 @@
 #include "types.h"
 
 void *
-std_allocate(CCC_Allocator_context const context) {
+std_allocate(CCC_Allocator_arguments const context) {
 
     if (!context.input && !context.bytes) {
         return NULL;

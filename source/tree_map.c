@@ -307,7 +307,7 @@ CCC_tree_map_remove_entry(CCC_Tree_map_entry const *const entry) {
             entry->map, elem_in_slot(entry->map, entry->entry.type));
         assert(erased);
         if (entry->map->allocate) {
-            entry->map->allocate((CCC_Allocator_context){
+            entry->map->allocate((CCC_Allocator_arguments){
                 .input = erased,
                 .bytes = 0,
                 .context = entry->map->context,
@@ -345,7 +345,7 @@ CCC_tree_map_remove_key_value(CCC_Tree_map *const map,
     if (map->allocate) {
         void *const any_struct = struct_base(map, type_output_intruder);
         memcpy(any_struct, removed, map->sizeof_type);
-        map->allocate((CCC_Allocator_context){
+        map->allocate((CCC_Allocator_arguments){
             .input = removed,
             .bytes = 0,
             .context = map->context,
@@ -367,7 +367,7 @@ CCC_tree_map_and_modify(CCC_Tree_map_entry *e, CCC_Type_modifier *modify) {
         return NULL;
     }
     if (modify && e->entry.status & CCC_ENTRY_OCCUPIED && e->entry.type) {
-        modify((CCC_Type_context){
+        modify((CCC_Type_arguments){
             .type = e->entry.type,
             NULL,
         });
@@ -382,7 +382,7 @@ CCC_tree_map_and_context_modify(CCC_Tree_map_entry *e,
         return NULL;
     }
     if (modify && e->entry.status & CCC_ENTRY_OCCUPIED && e->entry.type) {
-        modify((CCC_Type_context){
+        modify((CCC_Type_arguments){
             .type = e->entry.type,
             context,
         });
@@ -543,13 +543,13 @@ CCC_tree_map_clear(CCC_Tree_map *const map,
         node->parent = NULL;
         void *const type = struct_base(map, node);
         if (destroy) {
-            destroy((CCC_Type_context){
+            destroy((CCC_Type_arguments){
                 .type = type,
                 .context = map->context,
             });
         }
         if (map->allocate) {
-            (void)map->allocate((CCC_Allocator_context){
+            (void)map->allocate((CCC_Allocator_arguments){
                 .input = type,
                 .bytes = 0,
                 .context = map->context,
@@ -628,7 +628,7 @@ maybe_allocate_insert(struct CCC_Tree_map *const map,
                       CCC_Order const last_order,
                       struct CCC_Tree_map_node *type_output_intruder) {
     if (map->allocate) {
-        void *const new = map->allocate((CCC_Allocator_context){
+        void *const new = map->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = map->sizeof_type,
             .context = map->context,
@@ -748,7 +748,7 @@ static inline CCC_Order
 order(struct CCC_Tree_map const *const map, void const *const key,
       struct CCC_Tree_map_node const *const node,
       CCC_Key_comparator *const compare) {
-    return compare((CCC_Key_comparator_context){
+    return compare((CCC_Key_comparator_arguments){
         .key_left = key,
         .type_right = struct_base(map, node),
         .context = map->context,

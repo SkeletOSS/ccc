@@ -154,7 +154,7 @@ void *CCC_private_adaptive_map_insert(struct CCC_Adaptive_map *,
                       & CCC_ENTRY_OCCUPIED)) {                                 \
                     typeof(*private_adaptive_map_type_array) *const            \
                         private_new_slot                                       \
-                        = private_map.allocate((CCC_Allocator_context){        \
+                        = private_map.allocate((CCC_Allocator_arguments){      \
                             .input = NULL,                                     \
                             .bytes = private_map.sizeof_type,                  \
                             .context = private_map.context,                    \
@@ -218,7 +218,7 @@ void *CCC_private_adaptive_map_insert(struct CCC_Adaptive_map *,
         if ((adaptive_map_entry)->map->allocate) {                             \
             private_adaptive_map_ins_allocate_ret                              \
                 = (adaptive_map_entry)                                         \
-                      ->map->allocate((CCC_Allocator_context){                 \
+                      ->map->allocate((CCC_Allocator_arguments){               \
                           .input = NULL,                                       \
                           .bytes = (adaptive_map_entry)->map->sizeof_type,     \
                           .context = (adaptive_map_entry)->map->context,       \

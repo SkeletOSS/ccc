@@ -12,8 +12,8 @@ struct Val {
     int val;
 };
 
-CCC_Order val_order(CCC_Type_comparator_context);
-void val_update(CCC_Type_context);
+CCC_Order val_order(CCC_Type_comparator_arguments);
+void val_update(CCC_Type_arguments);
 size_t rand_range(size_t min, size_t max);
 enum Check_result inorder_fill(int[], size_t, CCC_Flat_priority_queue const *);
 enum Check_result insert_shuffled(CCC_Flat_priority_queue *priority_queue,

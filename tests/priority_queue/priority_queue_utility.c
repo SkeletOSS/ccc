@@ -11,14 +11,14 @@
 #include "utility/stack_allocator.h"
 
 CCC_Order
-val_order(CCC_Type_comparator_context const order) {
+val_order(CCC_Type_comparator_arguments const order) {
     struct Val const *const left = order.type_left;
     struct Val const *const right = order.type_right;
     return (left->val > right->val) - (left->val < right->val);
 }
 
 void
-val_update(CCC_Type_context const u) {
+val_update(CCC_Type_arguments const u) {
     struct Val *const old = u.type;
     old->val = *(int *)u.context;
 }

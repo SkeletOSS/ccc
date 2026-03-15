@@ -328,7 +328,7 @@ CCC_flat_double_ended_queue_clear(CCC_Flat_double_ended_queue *const queue,
     }
     size_t const back = back_free_slot(queue);
     for (size_t i = queue->front; i != back; i = increment(queue, i)) {
-        destructor((CCC_Type_context){
+        destructor((CCC_Type_arguments){
             .type = CCC_buffer_at(&queue->buffer, i),
             .context = queue->buffer.context,
         });
@@ -349,7 +349,7 @@ CCC_flat_double_ended_queue_clear_and_free(
     }
     size_t const back = back_free_slot(queue);
     for (size_t i = queue->front; i != back; i = increment(queue, i)) {
-        destructor((CCC_Type_context){
+        destructor((CCC_Type_arguments){
             .type = CCC_buffer_at(&queue->buffer, i),
             .context = queue->buffer.context,
         });
@@ -375,7 +375,7 @@ CCC_flat_double_ended_queue_clear_and_free_reserve(
     }
     size_t const back = back_free_slot(queue);
     for (size_t i = queue->front; i != back; i = increment(queue, i)) {
-        destructor((CCC_Type_context){
+        destructor((CCC_Type_arguments){
             .type = CCC_buffer_at(&queue->buffer, i),
             .context = queue->buffer.context,
         });
@@ -630,7 +630,7 @@ maybe_resize(struct CCC_Flat_double_ended_queue *const queue,
     } else if (to_add == 1) {
         required = queue->buffer.capacity * 2;
     }
-    void *const new_data = allocate((CCC_Allocator_context){
+    void *const new_data = allocate((CCC_Allocator_arguments){
         .input = NULL,
         .bytes = sizeof_type * required,
         .context = queue->buffer.context,

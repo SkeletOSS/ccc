@@ -21,7 +21,7 @@ std_order_ints(void const *const left, void const *const right) {
 }
 
 static CCC_Order
-ccc_order_ints(CCC_Type_comparator_context const order) {
+ccc_order_ints(CCC_Type_comparator_arguments const order) {
     int const left_int = *(int *)order.type_left;
     int const right_int = *(int *)order.type_right;
     return (left_int > right_int) - (left_int < right_int);

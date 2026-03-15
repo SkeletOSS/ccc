@@ -25,7 +25,7 @@ partition(Buffer *const b, CCC_Type_comparator *const compare, void *const temp,
     void *const pivot_val = hi;
     void *i = lo;
     for (void *j = lo; j < hi; j = buffer_next(b, j)) {
-        CCC_Order const order = compare((CCC_Type_comparator_context){
+        CCC_Order const order = compare((CCC_Type_comparator_arguments){
             .type_left = j,
             .type_right = pivot_val,
             .context = b->context,

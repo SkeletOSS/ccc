@@ -4,7 +4,7 @@
 #include "stack_allocator.h"
 
 void *
-stack_allocator_allocate(CCC_Allocator_context context) {
+stack_allocator_allocate(CCC_Allocator_arguments context) {
     if (!context.bytes || context.input || !context.context) {
         return NULL;
     }

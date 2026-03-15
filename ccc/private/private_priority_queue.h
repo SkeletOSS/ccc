@@ -192,12 +192,12 @@ CCC_private_priority_queue_struct_base(struct CCC_Priority_queue const *,
             for (size_t private_i = 0; private_i < private_count;              \
                  ++private_i) {                                                \
                 typeof(*private_priority_queue_type_array) *const              \
-                    private_new_node                                           \
-                    = private_priority_queue.allocate((CCC_Allocator_context){ \
-                        .input = NULL,                                         \
-                        .bytes = private_priority_queue.sizeof_type,           \
-                        .context = private_priority_queue.context,             \
-                    });                                                        \
+                    private_new_node = private_priority_queue.allocate(        \
+                        (CCC_Allocator_arguments){                             \
+                            .input = NULL,                                     \
+                            .bytes = private_priority_queue.sizeof_type,       \
+                            .context = private_priority_queue.context,         \
+                        });                                                    \
                 if (!private_new_node) {                                       \
                     CCC_priority_queue_clear(&private_priority_queue,          \
                                              private_destroy);                 \
@@ -236,7 +236,7 @@ CCC_private_priority_queue_struct_base(struct CCC_Priority_queue const *,
                 private_priority_queue_res = NULL;                             \
             } else {                                                           \
                 private_priority_queue_res = private_priority_queue->allocate( \
-                    (CCC_Allocator_context){                                   \
+                    (CCC_Allocator_arguments){                                 \
                         .input = NULL,                                         \
                         .bytes = private_priority_queue->sizeof_type,          \
                         .context = private_priority_queue->context,            \

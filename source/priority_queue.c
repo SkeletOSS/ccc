@@ -73,7 +73,7 @@ CCC_priority_queue_push(CCC_Priority_queue *const priority_queue,
     }
     void *ret = struct_base(priority_queue, type_intruder);
     if (priority_queue->allocate) {
-        void *const node = priority_queue->allocate((CCC_Allocator_context){
+        void *const node = priority_queue->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = priority_queue->sizeof_type,
             .context = priority_queue->context,
@@ -102,7 +102,7 @@ CCC_priority_queue_pop(CCC_Priority_queue *const priority_queue) {
     priority_queue->count--;
     clear_node(popped);
     if (priority_queue->allocate) {
-        (void)priority_queue->allocate((CCC_Allocator_context){
+        (void)priority_queue->allocate((CCC_Allocator_arguments){
             .input = struct_base(priority_queue, popped),
             .bytes = 0,
             .context = priority_queue->context,
@@ -134,7 +134,7 @@ CCC_priority_queue_erase(CCC_Priority_queue *const priority_queue,
     priority_queue->root = delete_node(priority_queue, type_intruder);
     priority_queue->count--;
     if (priority_queue->allocate) {
-        (void)priority_queue->allocate((CCC_Allocator_context){
+        (void)priority_queue->allocate((CCC_Allocator_arguments){
             .input = struct_base(priority_queue, type_intruder),
             .bytes = 0,
             .context = priority_queue->context,
@@ -181,13 +181,13 @@ CCC_priority_queue_clear(CCC_Priority_queue *const priority_queue,
         node->parent = node->next = node->prev = node->child = NULL;
         void *const destroy_this = struct_base(priority_queue, node);
         if (destroy) {
-            destroy((CCC_Type_context){
+            destroy((CCC_Type_arguments){
                 .type = destroy_this,
                 .context = priority_queue->context,
             });
         }
         if (priority_queue->allocate) {
-            (void)priority_queue->allocate((CCC_Allocator_context){
+            (void)priority_queue->allocate((CCC_Allocator_arguments){
                 .input = destroy_this,
                 .bytes = 0,
                 .context = priority_queue->context,
@@ -353,7 +353,7 @@ update_fixup(struct CCC_Priority_queue *const priority_queue,
     if (node->parent
         && order(priority_queue, node, node->parent) == priority_queue->order) {
         cut_child(node);
-        modify((CCC_Type_context){
+        modify((CCC_Type_arguments){
             .type = struct_base(priority_queue, node),
             .context = context,
         });
@@ -363,7 +363,7 @@ update_fixup(struct CCC_Priority_queue *const priority_queue,
     }
     priority_queue->root = delete_node(priority_queue, node);
     init_node(node);
-    modify((CCC_Type_context){
+    modify((CCC_Type_arguments){
         .type = struct_base(priority_queue, node),
         .context = context,
     });
@@ -380,7 +380,7 @@ increase_fixup(struct CCC_Priority_queue *const priority_queue,
         priority_queue->root = delete_node(priority_queue, node);
         init_node(node);
     }
-    modify((CCC_Type_context){
+    modify((CCC_Type_arguments){
         .type = struct_base(priority_queue, node),
         .context = context,
     });
@@ -397,7 +397,7 @@ decrease_fixup(struct CCC_Priority_queue *const priority_queue,
         priority_queue->root = delete_node(priority_queue, e);
         init_node(e);
     }
-    modify((CCC_Type_context){
+    modify((CCC_Type_arguments){
         .type = struct_base(priority_queue, e),
         .context = context,
     });
@@ -561,7 +561,7 @@ static inline CCC_Order
 order(struct CCC_Priority_queue const *const priority_queue,
       struct CCC_Priority_queue_node const *const left,
       struct CCC_Priority_queue_node const *const right) {
-    return priority_queue->compare((CCC_Type_comparator_context){
+    return priority_queue->compare((CCC_Type_comparator_arguments){
         .type_left = struct_base(priority_queue, left),
         .type_right = struct_base(priority_queue, right),
         .context = priority_queue->context,
