@@ -11,7 +11,7 @@
 #include "types.h"
 
 CCC_Order
-val_order(CCC_Type_comparator_arguments const c) {
+val_order(CCC_Comparator_arguments const c) {
     struct Val const *const a = c.type_left;
     struct Val const *const b = c.type_right;
     return (a->val > b->val) - (a->val < b->val);

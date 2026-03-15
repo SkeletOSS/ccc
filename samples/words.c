@@ -121,7 +121,7 @@ static struct Int_conversion parse_n_ranks(SV_Str_view);
 static struct String_offset clean_word(struct String_arena *, SV_Str_view);
 static Array_adaptive_map create_frequency_map(struct String_arena *, FILE *);
 static Order order_string_keys(Key_comparator_arguments);
-static Order order_words(Type_comparator_arguments);
+static Order order_words(Comparator_arguments);
 static FILE *open_file(SV_Str_view);
 static void print_str_view(FILE *, SV_Str_view);
 
@@ -431,7 +431,7 @@ order_string_keys(Key_comparator_arguments const c) {
 
 /* Sorts by frequency then alphabetic order if frequencies are tied. */
 static Order
-order_words(Type_comparator_arguments const c) {
+order_words(Comparator_arguments const c) {
     Word const *const left = c.type_left;
     Word const *const right = c.type_right;
     Order freq_order = (left->freq > right->freq) - (left->freq < right->freq);

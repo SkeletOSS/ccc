@@ -317,7 +317,7 @@ CCC_flat_double_ended_queue_reserve(CCC_Flat_double_ended_queue *const queue,
 
 CCC_Result
 CCC_flat_double_ended_queue_clear(CCC_Flat_double_ended_queue *const queue,
-                                  CCC_Type_destructor *const destructor) {
+                                  CCC_Destructor *const destructor) {
     if (!queue) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -328,7 +328,7 @@ CCC_flat_double_ended_queue_clear(CCC_Flat_double_ended_queue *const queue,
     }
     size_t const back = back_free_slot(queue);
     for (size_t i = queue->front; i != back; i = increment(queue, i)) {
-        destructor((CCC_Type_arguments){
+        destructor((CCC_Arguments){
             .type = CCC_buffer_at(&queue->buffer, i),
             .context = queue->buffer.context,
         });
@@ -339,7 +339,7 @@ CCC_flat_double_ended_queue_clear(CCC_Flat_double_ended_queue *const queue,
 CCC_Result
 CCC_flat_double_ended_queue_clear_and_free(
     CCC_Flat_double_ended_queue *const queue,
-    CCC_Type_destructor *const destructor) {
+    CCC_Destructor *const destructor) {
     if (!queue) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -349,7 +349,7 @@ CCC_flat_double_ended_queue_clear_and_free(
     }
     size_t const back = back_free_slot(queue);
     for (size_t i = queue->front; i != back; i = increment(queue, i)) {
-        destructor((CCC_Type_arguments){
+        destructor((CCC_Arguments){
             .type = CCC_buffer_at(&queue->buffer, i),
             .context = queue->buffer.context,
         });
@@ -364,8 +364,8 @@ CCC_flat_double_ended_queue_clear_and_free(
 
 CCC_Result
 CCC_flat_double_ended_queue_clear_and_free_reserve(
-    CCC_Flat_double_ended_queue *const queue,
-    CCC_Type_destructor *const destructor, CCC_Allocator *const allocate) {
+    CCC_Flat_double_ended_queue *const queue, CCC_Destructor *const destructor,
+    CCC_Allocator *const allocate) {
     if (!queue) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -375,7 +375,7 @@ CCC_flat_double_ended_queue_clear_and_free_reserve(
     }
     size_t const back = back_free_slot(queue);
     for (size_t i = queue->front; i != back; i = increment(queue, i)) {
-        destructor((CCC_Type_arguments){
+        destructor((CCC_Arguments){
             .type = CCC_buffer_at(&queue->buffer, i),
             .context = queue->buffer.context,
         });

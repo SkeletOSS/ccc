@@ -182,7 +182,7 @@ static void bitq_clear_and_free(struct Bit_queue *);
 static CCC_Result bitq_reserve(struct Bit_queue *, size_t);
 static uint64_t hash_char(CCC_Key_arguments);
 static CCC_Order char_order(CCC_Key_comparator_arguments);
-static CCC_Order order_freqs(CCC_Type_comparator_arguments);
+static CCC_Order order_freqs(CCC_Comparator_arguments);
 static CCC_Order path_memo_order(CCC_Key_comparator_arguments);
 static void memoize_path(struct Huffman_tree *, Flat_hash_map *,
                          struct Bit_queue *, char);
@@ -1096,7 +1096,7 @@ char_order(CCC_Key_comparator_arguments const order) {
 }
 
 static CCC_Order
-order_freqs(CCC_Type_comparator_arguments const order) {
+order_freqs(CCC_Comparator_arguments const order) {
     struct Flat_priority_queue_node const *const left
         = (struct Flat_priority_queue_node *)order.type_left;
     struct Flat_priority_queue_node const *const right

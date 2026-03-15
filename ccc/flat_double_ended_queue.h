@@ -598,7 +598,7 @@ flat_double_ended_queue. However, the underlying Buffer for the
 flat_double_ended_queue is not freed. If the destructor is NULL, setting the
 size to 0 is O(1). */
 CCC_Result CCC_flat_double_ended_queue_clear(CCC_Flat_double_ended_queue *queue,
-                                             CCC_Type_destructor *destructor);
+                                             CCC_Destructor *destructor);
 
 /** @brief Set size of queue to 0 and call destructor on each
 element if needed. Free the underlying Buffer setting the capacity to 0. O(1) if
@@ -612,7 +612,7 @@ and capacity is 0. If destructor is NULL the Buffer is freed directly and
 capacity is 0. */
 CCC_Result
 CCC_flat_double_ended_queue_clear_and_free(CCC_Flat_double_ended_queue *queue,
-                                           CCC_Type_destructor *destructor);
+                                           CCC_Destructor *destructor);
 
 /** @brief Frees all slots in the queue and frees the
 underlying Buffer that was previously dynamically reserved with the reserve
@@ -646,7 +646,7 @@ This function will work normally if called on a queue with
 allocation permission however the normal
 CCC_flat_double_ended_queue_clear_and_free is sufficient for that use case. */
 CCC_Result CCC_flat_double_ended_queue_clear_and_free_reserve(
-    CCC_Flat_double_ended_queue *queue, CCC_Type_destructor *destructor,
+    CCC_Flat_double_ended_queue *queue, CCC_Destructor *destructor,
     CCC_Allocator *allocate);
 
 /**@}*/

@@ -203,7 +203,7 @@ static size_t maybe_allocate_insert(struct CCC_Array_tree_map *, size_t,
                                     CCC_Order, void const *);
 static size_t remove_fixup(struct CCC_Array_tree_map *, size_t);
 static size_t allocate_slot(struct CCC_Array_tree_map *);
-static void delete_nodes(struct CCC_Array_tree_map *, CCC_Type_destructor *);
+static void delete_nodes(struct CCC_Array_tree_map *, CCC_Destructor *);
 /* Returning the user key with stored offsets. */
 static void *key_at(struct CCC_Array_tree_map const *, size_t);
 static void *key_in_slot(struct CCC_Array_tree_map const *, void const *);
@@ -391,10 +391,10 @@ CCC_array_tree_map_insert_or_assign(CCC_Array_tree_map *const map,
 
 CCC_Array_tree_map_handle *
 CCC_array_tree_map_and_modify(CCC_Array_tree_map_handle *const handle,
-                              CCC_Type_modifier *const modify) {
+                              CCC_Modifier *const modify) {
     if (handle && modify && handle->status & CCC_ENTRY_OCCUPIED
         && handle->index > 0) {
-        modify((CCC_Type_arguments){
+        modify((CCC_Arguments){
             .type = data_at(handle->map, handle->index),
             NULL,
         });
@@ -404,11 +404,11 @@ CCC_array_tree_map_and_modify(CCC_Array_tree_map_handle *const handle,
 
 CCC_Array_tree_map_handle *
 CCC_array_tree_map_and_context_modify(CCC_Array_tree_map_handle *const handle,
-                                      CCC_Type_modifier *const modify,
+                                      CCC_Modifier *const modify,
                                       void *const context) {
     if (handle && modify && handle->status & CCC_ENTRY_OCCUPIED
         && handle->status > 0) {
-        modify((CCC_Type_arguments){
+        modify((CCC_Arguments){
             .type = data_at(handle->map, handle->index),
             context,
         });
@@ -710,7 +710,7 @@ CCC_array_tree_map_copy(CCC_Array_tree_map *const destination,
 
 CCC_Result
 CCC_array_tree_map_clear(CCC_Array_tree_map *const map,
-                         CCC_Type_destructor *const destroy) {
+                         CCC_Destructor *const destroy) {
     if (!map) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -724,7 +724,7 @@ CCC_array_tree_map_clear(CCC_Array_tree_map *const map,
 
 CCC_Result
 CCC_array_tree_map_clear_and_free(CCC_Array_tree_map *const map,
-                                  CCC_Type_destructor *const destroy) {
+                                  CCC_Destructor *const destroy) {
     if (!map || !map->allocate) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -746,7 +746,7 @@ CCC_array_tree_map_clear_and_free(CCC_Array_tree_map *const map,
 
 CCC_Result
 CCC_array_tree_map_clear_and_free_reserve(CCC_Array_tree_map *const map,
-                                          CCC_Type_destructor *const destroy,
+                                          CCC_Destructor *const destroy,
                                           CCC_Allocator *const allocate) {
     if (!map || !allocate) {
         return CCC_RESULT_ARGUMENT_ERROR;
@@ -1024,7 +1024,7 @@ simply calls the destructor on each node and removes the nodes references to
 other tree elements. */
 static void
 delete_nodes(struct CCC_Array_tree_map *const map,
-             CCC_Type_destructor *const destroy) {
+             CCC_Destructor *const destroy) {
     assert(map);
     assert(destroy);
     size_t node = map->root;
@@ -1040,7 +1040,7 @@ delete_nodes(struct CCC_Array_tree_map *const map,
         size_t const next = e->branch[R];
         e->branch[L] = e->branch[R] = 0;
         e->parent = 0;
-        destroy((CCC_Type_arguments){
+        destroy((CCC_Arguments){
             .type = data_at(map, node),
             .context = map->context,
         });

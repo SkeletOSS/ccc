@@ -32,7 +32,7 @@ flat_hash_map_int_to_u64(CCC_Key_arguments const k) {
 }
 
 void
-flat_hash_map_modplus(CCC_Type_arguments const mod) {
+flat_hash_map_modplus(CCC_Arguments const mod) {
     ((struct Val *)mod.type)->val++;
 }
 
@@ -42,7 +42,7 @@ flat_hash_map_create(int const id, int const val) {
 }
 
 void
-flat_hash_map_swap_val(CCC_Type_arguments const u) {
+flat_hash_map_swap_val(CCC_Arguments const u) {
     struct Val *v = u.type;
     v->val = *((int *)u.context);
 }

@@ -334,7 +334,7 @@ static size_t next_power_of_two(size_t);
 static CCC_Tribool is_power_of_two(size_t);
 static size_t to_power_of_two(size_t);
 static CCC_Tribool is_uninitialized(struct CCC_Flat_hash_map const *);
-static void destory_each(struct CCC_Flat_hash_map *, CCC_Type_destructor *);
+static void destory_each(struct CCC_Flat_hash_map *, CCC_Destructor *);
 static size_t roundup(size_t);
 static CCC_Tribool check_replica_group(struct CCC_Flat_hash_map const *);
 
@@ -445,9 +445,9 @@ CCC_flat_hash_map_remove_entry(CCC_Flat_hash_map_entry const *const e) {
 
 CCC_Flat_hash_map_entry *
 CCC_flat_hash_map_and_modify(CCC_Flat_hash_map_entry *const entry,
-                             CCC_Type_modifier *const modify) {
+                             CCC_Modifier *const modify) {
     if (entry && modify && ((entry->status & CCC_ENTRY_OCCUPIED) != 0)) {
-        modify((CCC_Type_arguments){
+        modify((CCC_Arguments){
             .type = data_at(entry->map, entry->index),
             .context = NULL,
         });
@@ -457,10 +457,10 @@ CCC_flat_hash_map_and_modify(CCC_Flat_hash_map_entry *const entry,
 
 CCC_Flat_hash_map_entry *
 CCC_flat_hash_map_and_context_modify(CCC_Flat_hash_map_entry *const entry,
-                                     CCC_Type_modifier *const modify,
+                                     CCC_Modifier *const modify,
                                      void *const context) {
     if (entry && modify && ((entry->status & CCC_ENTRY_OCCUPIED) != 0)) {
-        modify((CCC_Type_arguments){
+        modify((CCC_Arguments){
             .type = data_at(entry->map, entry->index),
             .context = context,
         });
@@ -611,7 +611,7 @@ CCC_flat_hash_map_unwrap(CCC_Flat_hash_map_entry const *const e) {
 
 CCC_Result
 CCC_flat_hash_map_clear(CCC_Flat_hash_map *const map,
-                        CCC_Type_destructor *const destroy) {
+                        CCC_Destructor *const destroy) {
     if (unlikely(!map)) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -633,7 +633,7 @@ CCC_flat_hash_map_clear(CCC_Flat_hash_map *const map,
 
 CCC_Result
 CCC_flat_hash_map_clear_and_free(CCC_Flat_hash_map *const map,
-                                 CCC_Type_destructor *const destroy) {
+                                 CCC_Destructor *const destroy) {
     if (unlikely(!map || !map->data || !map->mask || is_uninitialized(map))) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -659,7 +659,7 @@ CCC_flat_hash_map_clear_and_free(CCC_Flat_hash_map *const map,
 
 CCC_Result
 CCC_flat_hash_map_clear_and_free_reserve(CCC_Flat_hash_map *const map,
-                                         CCC_Type_destructor *const destroy,
+                                         CCC_Destructor *const destroy,
                                          CCC_Allocator *const allocate) {
     if (unlikely(!map || !map->data || is_uninitialized(map) || !map->mask
                  || (map->allocate && map->allocate != allocate))) {
@@ -1402,10 +1402,10 @@ lazy_initialize(struct CCC_Flat_hash_map *const map, size_t required_total_cap,
 
 static inline void
 destory_each(struct CCC_Flat_hash_map *const map,
-             CCC_Type_destructor *const destroy) {
+             CCC_Destructor *const destroy) {
     for (void *i = CCC_flat_hash_map_begin(map);
          i != CCC_flat_hash_map_end(map); i = CCC_flat_hash_map_next(map, i)) {
-        destroy((CCC_Type_arguments){
+        destroy((CCC_Arguments){
             .type = i,
             .context = map->context,
         });

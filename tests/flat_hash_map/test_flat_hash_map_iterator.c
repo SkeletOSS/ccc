@@ -24,7 +24,7 @@ owners_eq(CCC_Key_comparator_arguments const order) {
 }
 
 static void
-destroy_owner_allocation(CCC_Type_arguments const t) {
+destroy_owner_allocation(CCC_Arguments const t) {
     struct Owner const *const o = t.type;
     free(o->allocation);
 }

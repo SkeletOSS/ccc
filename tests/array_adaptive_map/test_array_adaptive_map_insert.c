@@ -20,7 +20,7 @@ array_adaptive_map_create(int const id, int const val) {
 }
 
 static inline void
-array_adaptive_map_modplus(CCC_Type_arguments const t) {
+array_adaptive_map_modplus(CCC_Arguments const t) {
     ((struct Val *)t.type)->val++;
 }
 

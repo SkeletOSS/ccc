@@ -362,12 +362,12 @@ CCC_tree_map_remove_key_value(CCC_Tree_map *const map,
 }
 
 CCC_Tree_map_entry *
-CCC_tree_map_and_modify(CCC_Tree_map_entry *e, CCC_Type_modifier *modify) {
+CCC_tree_map_and_modify(CCC_Tree_map_entry *e, CCC_Modifier *modify) {
     if (!e) {
         return NULL;
     }
     if (modify && e->entry.status & CCC_ENTRY_OCCUPIED && e->entry.type) {
-        modify((CCC_Type_arguments){
+        modify((CCC_Arguments){
             .type = e->entry.type,
             NULL,
         });
@@ -376,13 +376,13 @@ CCC_tree_map_and_modify(CCC_Tree_map_entry *e, CCC_Type_modifier *modify) {
 }
 
 CCC_Tree_map_entry *
-CCC_tree_map_and_context_modify(CCC_Tree_map_entry *e,
-                                CCC_Type_modifier *modify, void *context) {
+CCC_tree_map_and_context_modify(CCC_Tree_map_entry *e, CCC_Modifier *modify,
+                                void *context) {
     if (!e) {
         return NULL;
     }
     if (modify && e->entry.status & CCC_ENTRY_OCCUPIED && e->entry.type) {
-        modify((CCC_Type_arguments){
+        modify((CCC_Arguments){
             .type = e->entry.type,
             context,
         });
@@ -524,8 +524,7 @@ CCC_tree_map_validate(CCC_Tree_map const *map) {
 /** This is a linear time constant space deletion of tree nodes via left
 rotations so element fields are modified during progression of deletes. */
 CCC_Result
-CCC_tree_map_clear(CCC_Tree_map *const map,
-                   CCC_Type_destructor *const destroy) {
+CCC_tree_map_clear(CCC_Tree_map *const map, CCC_Destructor *const destroy) {
     if (!map) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -543,7 +542,7 @@ CCC_tree_map_clear(CCC_Tree_map *const map,
         node->parent = NULL;
         void *const type = struct_base(map, node);
         if (destroy) {
-            destroy((CCC_Type_arguments){
+            destroy((CCC_Arguments){
                 .type = type,
                 .context = map->context,
             });

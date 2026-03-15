@@ -389,10 +389,10 @@ If a non-increasing order is desired, return opposite results from the user
 comparison function. If an element is CCC_ORDER_LESSERERS return
 CCC_ORDER_GREATER and vice versa. If elements are equal, return CCC_ORDER_EQUAL.
 */
-void *CCC_doubly_linked_list_insert_sorted(
-    CCC_Doubly_linked_list *doubly_linked_list,
-    CCC_Doubly_linked_list_node *type_intruder,
-    CCC_Type_comparator_context const *comparator);
+void *
+CCC_doubly_linked_list_insert_sorted(CCC_Doubly_linked_list *doubly_linked_list,
+                                     CCC_Doubly_linked_list_node *type_intruder,
+                                     CCC_Comparator_context const *comparator);
 
 /** @brief Returns true if the list is sorted in non-decreasing order according
 to the user provided comparison function.
@@ -409,7 +409,7 @@ comparison function. If an element is CCC_ORDER_LESSER return CCC_ORDER_GREATER
 and vice versa. If elements are equal, return CCC_ORDER_EQUAL. */
 CCC_Tribool CCC_doubly_linked_list_is_sorted(
     CCC_Doubly_linked_list const *doubly_linked_list, CCC_Order order,
-    CCC_Type_comparator_context const *comparator);
+    CCC_Comparator_context const *comparator);
 
 /**@}*/
 
@@ -434,7 +434,7 @@ ensures the function is called after the element is removed. Otherwise, the user
 must manage their elements at their discretion after the list is emptied in
 this function. */
 CCC_Result CCC_doubly_linked_list_clear(CCC_Doubly_linked_list *list,
-                                        CCC_Type_destructor *destroy);
+                                        CCC_Destructor *destroy);
 
 /**@}*/
 

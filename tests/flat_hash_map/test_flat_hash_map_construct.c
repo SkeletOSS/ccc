@@ -12,13 +12,13 @@
 #include "utility/allocate.h"
 
 static void
-mod(CCC_Type_arguments const u) {
+mod(CCC_Arguments const u) {
     struct Val *v = u.type;
     v->val += 5;
 }
 
 static void
-modw(CCC_Type_arguments const u) {
+modw(CCC_Arguments const u) {
     struct Val *v = u.type;
     v->val = *((int *)u.context);
 }

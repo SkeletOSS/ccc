@@ -161,8 +161,7 @@ static void init_node(struct CCC_Array_adaptive_map const *, size_t);
 static void swap(void *, void *, void *, size_t);
 static void link(struct CCC_Array_adaptive_map *, size_t, enum Branch, size_t);
 static size_t max(size_t, size_t);
-static void delete_nodes(struct CCC_Array_adaptive_map *,
-                         CCC_Type_destructor *);
+static void delete_nodes(struct CCC_Array_adaptive_map *, CCC_Destructor *);
 
 /*==============================  Interface    ==============================*/
 
@@ -224,12 +223,12 @@ CCC_array_adaptive_map_insert_handle(
 
 CCC_Array_adaptive_map_handle *
 CCC_array_adaptive_map_and_modify(CCC_Array_adaptive_map_handle *const handle,
-                                  CCC_Type_modifier *const modify) {
+                                  CCC_Modifier *const modify) {
     if (!handle) {
         return NULL;
     }
     if (modify && handle->status & CCC_ENTRY_OCCUPIED) {
-        modify((CCC_Type_arguments){
+        modify((CCC_Arguments){
             .type = data_at(handle->map, handle->index),
             .context = NULL,
         });
@@ -239,13 +238,13 @@ CCC_array_adaptive_map_and_modify(CCC_Array_adaptive_map_handle *const handle,
 
 CCC_Array_adaptive_map_handle *
 CCC_array_adaptive_map_and_context_modify(
-    CCC_Array_adaptive_map_handle *const handle,
-    CCC_Type_modifier *const modify, void *const context) {
+    CCC_Array_adaptive_map_handle *const handle, CCC_Modifier *const modify,
+    void *const context) {
     if (!handle) {
         return NULL;
     }
     if (modify && handle->status & CCC_ENTRY_OCCUPIED) {
-        modify((CCC_Type_arguments){
+        modify((CCC_Arguments){
             .type = data_at(handle->map, handle->index),
             .context = context,
         });
@@ -607,7 +606,7 @@ CCC_array_adaptive_map_copy(CCC_Array_adaptive_map *const destination,
 
 CCC_Result
 CCC_array_adaptive_map_clear(CCC_Array_adaptive_map *const map,
-                             CCC_Type_destructor *const destroy) {
+                             CCC_Destructor *const destroy) {
     if (!map) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -621,7 +620,7 @@ CCC_array_adaptive_map_clear(CCC_Array_adaptive_map *const map,
 
 CCC_Result
 CCC_array_adaptive_map_clear_and_free(CCC_Array_adaptive_map *const map,
-                                      CCC_Type_destructor *const destroy) {
+                                      CCC_Destructor *const destroy) {
     if (!map || !map->allocate) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -642,9 +641,9 @@ CCC_array_adaptive_map_clear_and_free(CCC_Array_adaptive_map *const map,
 }
 
 CCC_Result
-CCC_array_adaptive_map_clear_and_free_reserve(
-    CCC_Array_adaptive_map *const map, CCC_Type_destructor *const destroy,
-    CCC_Allocator *const allocate) {
+CCC_array_adaptive_map_clear_and_free_reserve(CCC_Array_adaptive_map *const map,
+                                              CCC_Destructor *const destroy,
+                                              CCC_Allocator *const allocate) {
     if (!map || !allocate) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -996,7 +995,7 @@ simply calls the destructor on each node and removes the nodes references to
 other tree elements. */
 static void
 delete_nodes(struct CCC_Array_adaptive_map *const map,
-             CCC_Type_destructor *const destroy) {
+             CCC_Destructor *const destroy) {
     assert(map);
     assert(destroy);
     size_t node = map->root;
@@ -1012,7 +1011,7 @@ delete_nodes(struct CCC_Array_adaptive_map *const map,
         size_t const next = e->branch[R];
         e->branch[L] = e->branch[R] = 0;
         e->parent = 0;
-        destroy((CCC_Type_arguments){
+        destroy((CCC_Arguments){
             .type = data_at(map, node),
             .context = map->context,
         });

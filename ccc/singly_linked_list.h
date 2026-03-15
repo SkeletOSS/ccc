@@ -352,10 +352,10 @@ If a non-increasing order is desired, return opposite results from the user
 comparison function. If an element is CCC_ORDER_LESSERERS return
 CCC_ORDER_GREATER and vice versa. If elements are equal, return CCC_ORDER_EQUAL.
 */
-void *CCC_singly_linked_list_insert_sorted(
-    CCC_Singly_linked_list *singly_linked_list,
-    CCC_Singly_linked_list_node *type_intruder,
-    CCC_Type_comparator_context const *comparator);
+void *
+CCC_singly_linked_list_insert_sorted(CCC_Singly_linked_list *singly_linked_list,
+                                     CCC_Singly_linked_list_node *type_intruder,
+                                     CCC_Comparator_context const *comparator);
 
 /** @brief Returns true if the list is sorted in non-decreasing order according
 to the user provided comparison function.
@@ -372,7 +372,7 @@ comparison function. If an element is CCC_ORDER_LESSER return CCC_ORDER_GREATER
 and vice versa. If elements are equal, return CCC_ORDER_EQUAL. */
 CCC_Tribool CCC_singly_linked_list_is_sorted(
     CCC_Singly_linked_list const *singly_linked_list, CCC_Order order,
-    CCC_Type_comparator_context const *comparator);
+    CCC_Comparator_context const *comparator);
 
 /**@}*/
 
@@ -394,7 +394,7 @@ If allocation is not allowed destroy may free memory or not as the user sees
 fit. The user is responsible for managing the memory that wraps each intrusive
 handle as the elements are simply removed from the list. */
 CCC_Result CCC_singly_linked_list_clear(CCC_Singly_linked_list *list,
-                                        CCC_Type_destructor *destroy);
+                                        CCC_Destructor *destroy);
 
 /**@}*/
 

@@ -853,11 +853,11 @@ Entry Interface.*/
 
 This function is intended to make the function chaining in the Entry Interface
 more succinct if the entry will be modified in place based on its own value
-without the need of the context argument a CCC_Type_modifier can provide.
+without the need of the context argument a CCC_Modifier can provide.
 */
 [[nodiscard]] CCC_Flat_hash_map_entry *
 CCC_flat_hash_map_and_modify(CCC_Flat_hash_map_entry *entry,
-                             CCC_Type_modifier *modify);
+                             CCC_Modifier *modify);
 
 /** @brief Modifies the provided entry if it is Occupied.
 @param[in] entry the entry obtained from an entry function or macro.
@@ -865,11 +865,11 @@ CCC_flat_hash_map_and_modify(CCC_Flat_hash_map_entry *entry,
 @param[in] context context data required for the update.
 @return the updated entry if it was Occupied or the unmodified vacant entry.
 
-This function makes full use of a CCC_Type_modifier capability, meaning a
+This function makes full use of a CCC_Modifier capability, meaning a
 complete CCC_update object will be passed to the update function callback. */
 [[nodiscard]] CCC_Flat_hash_map_entry *
 CCC_flat_hash_map_and_context_modify(CCC_Flat_hash_map_entry *entry,
-                                     CCC_Type_modifier *modify, void *context);
+                                     CCC_Modifier *modify, void *context);
 
 /** @brief Modify an Occupied entry with a closure over user type T.
 @param[in] map_entry_pointer a pointer to the obtained entry.
@@ -1202,7 +1202,7 @@ forfeit.
 
 If NULL is passed as the destructor function time is O(1), else O(capacity). */
 CCC_Result CCC_flat_hash_map_clear(CCC_Flat_hash_map *map,
-                                   CCC_Type_destructor *destroy);
+                                   CCC_Destructor *destroy);
 
 /** @brief Frees all slots in the table and frees the underlying buffer.
 @param[in] map the table to be cleared.
@@ -1213,7 +1213,7 @@ forfeit.
 an error to attempt to free the Buffer and a memory error is returned.
 Otherwise, an OK result is returned. */
 CCC_Result CCC_flat_hash_map_clear_and_free(CCC_Flat_hash_map *map,
-                                            CCC_Type_destructor *destroy);
+                                            CCC_Destructor *destroy);
 
 /** @brief Frees all slots in the table and frees the underlying Buffer that was
 previously dynamically reserved with the reserve function.
@@ -1242,10 +1242,9 @@ to reserve memory so to is it required to free memory.
 This function will work normally if called on a map with allocation permission
 however the normal CCC_flat_hash_map_clear_and_free is sufficient for that use
 case. */
-CCC_Result
-CCC_flat_hash_map_clear_and_free_reserve(CCC_Flat_hash_map *map,
-                                         CCC_Type_destructor *destroy,
-                                         CCC_Allocator *allocate);
+CCC_Result CCC_flat_hash_map_clear_and_free_reserve(CCC_Flat_hash_map *map,
+                                                    CCC_Destructor *destroy,
+                                                    CCC_Allocator *allocate);
 
 /**@}*/
 

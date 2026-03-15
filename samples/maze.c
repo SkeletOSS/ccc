@@ -141,7 +141,7 @@ static void flush_cursor_maze_coordinate(struct Maze const *, int, int);
 static bool can_build_new_square(struct Maze const *, int, int);
 static void help(void);
 static struct Point rand_point(struct Maze const *);
-static Order order_prim_cells(Type_comparator_arguments);
+static Order order_prim_cells(Comparator_arguments);
 static struct Int_conversion parse_digits(SV_Str_view);
 static CCC_Order prim_cell_order(Key_comparator_arguments);
 static uint64_t prim_cell_hash_fn(Key_arguments);
@@ -314,7 +314,7 @@ hash_64_bits(uint64_t x) {
 }
 
 static Order
-order_prim_cells(Type_comparator_arguments const order_cells) {
+order_prim_cells(Comparator_arguments const order_cells) {
     struct Prim_cell const *const left = order_cells.type_left;
     struct Prim_cell const *const right = order_cells.type_right;
     return (left->cost > right->cost) - (left->cost < right->cost);

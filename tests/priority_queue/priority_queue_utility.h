@@ -14,8 +14,8 @@ struct Val {
     CCC_Priority_queue_node elem;
 };
 
-void val_update(CCC_Type_arguments);
-CCC_Order val_order(CCC_Type_comparator_arguments);
+void val_update(CCC_Arguments);
+CCC_Order val_order(CCC_Comparator_arguments);
 
 /** Expects queue to have allocator permissions. */
 enum Check_result insert_shuffled(CCC_Priority_queue *, size_t, int);

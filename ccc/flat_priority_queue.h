@@ -633,8 +633,7 @@ A simple way to provide a temp for swapping is with an inline compound literal
 reference provided directly to the function argument `&(name_of_type){}`. */
 CCC_Flat_priority_queue
 CCC_flat_priority_queue_in_place_heapify(CCC_Buffer *buffer, CCC_Order order,
-                                         CCC_Type_comparator *compare,
-                                         void *temp);
+                                         CCC_Comparator *compare, void *temp);
 
 /** @brief Order count elements of the input Buffer as a flat priority queue,
 destroying the input metadata Buffer struct taking ownership of its underlying
@@ -656,8 +655,8 @@ remains unmodified.
 A simple way to provide a temp for swapping is with an inline compound literal
 reference provided directly to the function argument `&(name_of_type){}`. */
 CCC_Flat_priority_queue CCC_flat_priority_queue_context_in_place_heapify(
-    CCC_Buffer *buffer, CCC_Order order, CCC_Type_comparator *compare,
-    void *context, void *temp);
+    CCC_Buffer *buffer, CCC_Order order, CCC_Comparator *compare, void *context,
+    void *temp);
 
 /** @brief Pushes element pointed to at e into flat_priority_queue. O(lgN).
 @param[in] priority_queue a pointer to the priority queue.
@@ -722,7 +721,7 @@ A simple way to provide a temp for swapping is with an inline compound literal
 reference provided directly to the function argument `&(name_of_type){}`. */
 void *CCC_flat_priority_queue_update(CCC_Flat_priority_queue *priority_queue,
                                      void *type, void *temp,
-                                     CCC_Type_modifier *modify, void *context);
+                                     CCC_Modifier *modify, void *context);
 
 /** @brief Update the user type stored in the priority queue directly. O(lgN).
 @param[in] priority_queue_pointer a pointer to the flat priority queue.
@@ -766,8 +765,7 @@ A simple way to provide a temp for swapping is with an inline compound literal
 reference provided directly to the function argument `&(name_of_type){}`. */
 void *CCC_flat_priority_queue_increase(CCC_Flat_priority_queue *priority_queue,
                                        void *type, void *temp,
-                                       CCC_Type_modifier *modify,
-                                       void *context);
+                                       CCC_Modifier *modify, void *context);
 
 /** @brief Increase the user type stored in the priority queue directly. O(lgN).
 @param[in] flat_priority_queue_pointer a pointer to the flat priority queue.
@@ -811,8 +809,7 @@ A simple way to provide a temp for swapping is with an inline compound literal
 reference provided directly to the function argument `&(name_of_type){}`. */
 void *CCC_flat_priority_queue_decrease(CCC_Flat_priority_queue *priority_queue,
                                        void *type, void *temp,
-                                       CCC_Type_modifier *modify,
-                                       void *context);
+                                       CCC_Modifier *modify, void *context);
 
 /** @brief Increase the user type stored in the priority queue directly. O(lgN).
 @param[in] flat_priority_queue_pointer a pointer to the flat priority queue.
@@ -860,7 +857,7 @@ If the destructor is NULL, the function is O(1) and no attempt is made to
 free capacity of the flat_priority_queue. */
 CCC_Result
 CCC_flat_priority_queue_clear(CCC_Flat_priority_queue *priority_queue,
-                              CCC_Type_destructor *destroy);
+                              CCC_Destructor *destroy);
 
 /** @brief Clears the priority_queue calling destroy on every element if
 provided and frees the underlying buffer. O(1)-O(N).
@@ -877,7 +874,7 @@ If the destructor is NULL, the function is O(1) and only relies on the runtime
 of the provided allocation function free operation. */
 CCC_Result
 CCC_flat_priority_queue_clear_and_free(CCC_Flat_priority_queue *priority_queue,
-                                       CCC_Type_destructor *destroy);
+                                       CCC_Destructor *destroy);
 
 /** @brief Frees all slots in the priority_queue and frees the underlying
 Buffer that was previously dynamically reserved with the reserve function.
@@ -910,7 +907,7 @@ This function will work normally if called on a priority_queue with
 allocation permission however the normal CCC_flat_priority_queue_clear_and_free
 is sufficient for that use case. */
 CCC_Result CCC_flat_priority_queue_clear_and_free_reserve(
-    CCC_Flat_priority_queue *priority_queue, CCC_Type_destructor *destructor,
+    CCC_Flat_priority_queue *priority_queue, CCC_Destructor *destructor,
     CCC_Allocator *allocate);
 
 /**@}*/

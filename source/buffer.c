@@ -79,7 +79,7 @@ CCC_buffer_reserve(CCC_Buffer *const buffer, size_t const to_add,
 
 CCC_Result
 CCC_buffer_clear(CCC_Buffer *const buffer,
-                 CCC_Type_destructor_context *const destructor) {
+                 CCC_Destructor_context *const destructor) {
     if (!buffer || !destructor) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -89,7 +89,7 @@ CCC_buffer_clear(CCC_Buffer *const buffer,
     }
     for (void *i = CCC_buffer_begin(buffer); i != CCC_buffer_end(buffer);
          i = CCC_buffer_next(buffer, i)) {
-        destructor->destroy((CCC_Type_arguments){
+        destructor->destroy((CCC_Arguments){
             .type = i,
             .context = destructor->context,
         });
@@ -100,7 +100,7 @@ CCC_buffer_clear(CCC_Buffer *const buffer,
 
 CCC_Result
 CCC_buffer_clear_and_free(CCC_Buffer *const buffer,
-                          CCC_Type_destructor_context *const destructor,
+                          CCC_Destructor_context *const destructor,
                           CCC_Allocator_context const *const allocator) {
     if (!buffer || !allocator || !destructor || !allocator->allocate) {
         return CCC_RESULT_ARGUMENT_ERROR;
@@ -108,7 +108,7 @@ CCC_buffer_clear_and_free(CCC_Buffer *const buffer,
     if (destructor) {
         for (void *i = CCC_buffer_begin(buffer); i != CCC_buffer_end(buffer);
              i = CCC_buffer_next(buffer, i)) {
-            destructor->destroy((CCC_Type_arguments){
+            destructor->destroy((CCC_Arguments){
                 .type = i,
                 .context = destructor->context,
             });

@@ -62,24 +62,21 @@ are contiguous. */
 
 /** @internal For dynamic containers to perform the allocation and
 initialization in one convenient step for user. */
-#define CCC_private_buffer_context_from(private_allocate, private_context,     \
-                                        private_optional_capacity,             \
-                                        private_compound_literal_array...)     \
+#define CCC_private_buffer_from(private_allocator_context_pointer,             \
+                                private_optional_capacity,                     \
+                                private_compound_literal_array...)             \
     (__extension__({                                                           \
         typeof(*private_compound_literal_array)                                \
             *private_buffer_initializer_list = private_compound_literal_array; \
-        struct CCC_Buffer private_buf = CCC_private_buffer_for(                \
-            typeof(*private_buffer_initializer_list), 0, 0, NULL);             \
+        struct CCC_Buffer private_buf = CCC_private_buffer_default(            \
+            typeof(*private_buffer_initializer_list));                         \
         size_t const private_n = sizeof(private_compound_literal_array)        \
                                / sizeof(*private_buffer_initializer_list);     \
         size_t const private_cap = private_optional_capacity;                  \
         if (CCC_buffer_reserve(                                                \
                 &private_buf,                                                  \
                 (private_n > private_cap ? private_n : private_cap),           \
-                &(CCC_Allocator_context){                                      \
-                    .allocate = (private_allocate),                            \
-                    .context = (private_context),                              \
-                })                                                             \
+                (private_allocator_context_pointer))                           \
             == CCC_RESULT_OK) {                                                \
             (void)memcpy(private_buf.data, private_buffer_initializer_list,    \
                          private_n                                             \
@@ -89,38 +86,21 @@ initialization in one convenient step for user. */
         private_buf;                                                           \
     }))
 
-/** @internal For dynamic containers to perform the allocation and
-initialization in one convenient step for user. */
-#define CCC_private_buffer_from(private_allocate, private_optional_capacity,   \
-                                private_compound_literal_array...)             \
-    CCC_private_buffer_context_from(private_allocate, NULL,                    \
-                                    private_optional_capacity,                 \
-                                    private_compound_literal_array)
-
 /** @internal For dynamic containers to perform initialization and reservation
 of memory in one step. */
-#define CCC_private_buffer_context_with_capacity(                              \
-    private_type_name, private_allocate, private_context, private_capacity)    \
+#define CCC_private_buffer_with_capacity(                                      \
+    private_type_name, private_allocator_context_pointer, private_capacity)    \
     (__extension__({                                                           \
-        struct CCC_Buffer private_buf = CCC_private_buffer_for(                \
-            private_type_name, private_allocate, private_context, 0, 0, NULL); \
+        struct CCC_Buffer private_buf                                          \
+            = CCC_private_buffer_default(private_type_name);                   \
         (void)CCC_buffer_reserve(&private_buf, (private_capacity),             \
-                                 &(CCC_Allocator_context){                     \
-                                     .allocate = (private_allocate),           \
-                                     .context = (private_context),             \
-                                 });                                           \
+                                 (private_allocator_context_pointer));         \
         private_buf;                                                           \
     }))
 
-/** @internal */
-#define CCC_private_buffer_with_capacity(private_type_name, private_allocate,  \
-                                         private_capacity)                     \
-    CCC_private_buffer_context_with_capacity(                                  \
-        private_type_name, private_allocate, NULL, private_capacity)
-
 /** @internal Initializes a fixed size buffer with no allocation or context. */
-#define CCC_private_buffer_context_with_storage(                               \
-    private_context, private_count, private_compound_literal_array...)         \
+#define CCC_private_buffer_with_storage(private_count,                         \
+                                        private_compound_literal_array...)     \
     (struct {                                                                  \
         static_assert(sizeof(private_compound_literal_array) > 0,              \
                       "provide non-zero capacity compound literal array");     \
@@ -136,16 +116,8 @@ of memory in one step. */
            .count = private_count,                                             \
            .capacity = sizeof(private_compound_literal_array)                  \
                      / sizeof(*private_compound_literal_array),                \
-           .allocate = NULL,                                                   \
-           .context = (private_context),                                       \
        }}                                                                      \
         .private
-
-/** @internal Initializes a fixed size buffer with no allocation or context. */
-#define CCC_private_buffer_with_storage(private_count,                         \
-                                        private_compound_literal_array...)     \
-    CCC_private_buffer_context_with_storage(NULL, private_count,               \
-                                            private_compound_literal_array)
 
 /** @internal */
 #define CCC_private_buffer_emplace(private_buffer_pointer, index,              \

@@ -923,11 +923,11 @@ to subsequent calls in the Handle Interface. */
 
 This function is intended to make the function chaining in the Handle Interface
 more succinct if the handle will be modified in place based on its own value
-without the need of the context argument a CCC_Type_modifier can provide.
+without the need of the context argument a CCC_Modifier can provide.
 */
 [[nodiscard]] CCC_Array_adaptive_map_handle *
 CCC_array_adaptive_map_and_modify(CCC_Array_adaptive_map_handle *handle,
-                                  CCC_Type_modifier *modify);
+                                  CCC_Modifier *modify);
 
 /** @brief Modifies the provided handle if it is Occupied.
 @param[in] handle the handle obtained from a handle function or macro.
@@ -935,12 +935,11 @@ CCC_array_adaptive_map_and_modify(CCC_Array_adaptive_map_handle *handle,
 @param[in] context context data required for the update.
 @return the updated handle if it was Occupied or the unmodified vacant handle.
 
-This function makes full use of a CCC_Type_modifier capability, meaning a
+This function makes full use of a CCC_Modifier capability, meaning a
 complete CCC_update object will be passed to the update function callback. */
 [[nodiscard]] CCC_Array_adaptive_map_handle *
 CCC_array_adaptive_map_and_context_modify(CCC_Array_adaptive_map_handle *handle,
-                                          CCC_Type_modifier *modify,
-                                          void *context);
+                                          CCC_Modifier *modify, void *context);
 
 /** @brief Modify an Occupied handle with a closure over user type T.
 @param[in] array_pointer a pointer to the obtained handle.
@@ -1234,7 +1233,7 @@ forfeit.
 
 If NULL is passed as the destructor function time is O(1), else O(size). */
 CCC_Result CCC_array_adaptive_map_clear(CCC_Array_adaptive_map *map,
-                                        CCC_Type_destructor *destroy);
+                                        CCC_Destructor *destroy);
 
 /** @brief Frees all slots in the map and frees the underlying buffer.
 @param[in] map the map to be cleared.
@@ -1247,7 +1246,7 @@ Otherwise, an OK result is returned.
 
 If NULL is passed as the destructor function time is O(1), else O(size). */
 CCC_Result CCC_array_adaptive_map_clear_and_free(CCC_Array_adaptive_map *map,
-                                                 CCC_Type_destructor *destroy);
+                                                 CCC_Destructor *destroy);
 
 /** @brief Frees all slots in the array_adaptive_map and frees the underlying
 Buffer that was previously dynamically reserved with the reserve function.
@@ -1281,7 +1280,7 @@ allocation permission however the normal CCC_array_adaptive_map_clear_and_free
 is sufficient for that use case. */
 CCC_Result
 CCC_array_adaptive_map_clear_and_free_reserve(CCC_Array_adaptive_map *map,
-                                              CCC_Type_destructor *destroy,
+                                              CCC_Destructor *destroy,
                                               CCC_Allocator *allocate);
 
 /**@}*/

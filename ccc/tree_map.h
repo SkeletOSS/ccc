@@ -465,10 +465,10 @@ to subsequent calls in the Entry Interface. */
 
 This function is intended to make the function chaining in the Entry Interface
 more succinct if the entry will be modified in place based on its own value
-without the need of the context argument a CCC_Type_modifier can provide.
+without the need of the context argument a CCC_Modifier can provide.
 */
 [[nodiscard]] CCC_Tree_map_entry *
-CCC_tree_map_and_modify(CCC_Tree_map_entry *entry, CCC_Type_modifier *modify);
+CCC_tree_map_and_modify(CCC_Tree_map_entry *entry, CCC_Modifier *modify);
 
 /** @brief Modifies the provided entry if it is Occupied.
 @param[in] entry the entry obtained from an entry function or macro.
@@ -476,11 +476,11 @@ CCC_tree_map_and_modify(CCC_Tree_map_entry *entry, CCC_Type_modifier *modify);
 @param[in] context context data required for the update.
 @return the updated entry if it was Occupied or the unmodified vacant entry.
 
-This function makes full use of a CCC_Type_modifier capability, meaning a
+This function makes full use of a CCC_Modifier capability, meaning a
 complete CCC_update object will be passed to the update function callback. */
 [[nodiscard]] CCC_Tree_map_entry *
-CCC_tree_map_and_context_modify(CCC_Tree_map_entry *entry,
-                                CCC_Type_modifier *modify, void *context);
+CCC_tree_map_and_context_modify(CCC_Tree_map_entry *entry, CCC_Modifier *modify,
+                                void *context);
 
 /** @brief Modify an Occupied entry with a closure over user type T.
 @param[in] map_pointer a pointer to the obtained entry.
@@ -651,7 +651,7 @@ will occur.
 If the container has not been given allocation permission, then the destructor
 may free elements or not depending on how and when the user wishes to free
 elements of the map according to their own memory management schemes. */
-CCC_Result CCC_tree_map_clear(CCC_Tree_map *map, CCC_Type_destructor *destroy);
+CCC_Result CCC_tree_map_clear(CCC_Tree_map *map, CCC_Destructor *destroy);
 
 /**@}*/
 

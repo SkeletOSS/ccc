@@ -48,16 +48,16 @@ type_intruder_in(CCC_Doubly_linked_list const *, void const *);
 static struct CCC_Doubly_linked_list_node *
 first_out_of_order(struct CCC_Doubly_linked_list const *,
                    struct CCC_Doubly_linked_list_node *, CCC_Order,
-                   CCC_Type_comparator_context const *);
+                   CCC_Comparator_context const *);
 static struct CCC_Doubly_linked_list_node *
 merge(struct CCC_Doubly_linked_list *, struct CCC_Doubly_linked_list_node *,
       struct CCC_Doubly_linked_list_node *,
       struct CCC_Doubly_linked_list_node *, CCC_Order,
-      CCC_Type_comparator_context const *);
+      CCC_Comparator_context const *);
 static CCC_Order get_order(struct CCC_Doubly_linked_list const *,
                            struct CCC_Doubly_linked_list_node const *,
                            struct CCC_Doubly_linked_list_node const *,
-                           CCC_Type_comparator_context const *);
+                           CCC_Comparator_context const *);
 
 /*===========================     Interface   ===============================*/
 
@@ -473,7 +473,7 @@ CCC_doubly_linked_list_is_empty(CCC_Doubly_linked_list const *const list) {
 
 CCC_Result
 CCC_doubly_linked_list_clear(CCC_Doubly_linked_list *const list,
-                             CCC_Type_destructor *const destroy) {
+                             CCC_Destructor *const destroy) {
     if (!list) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -482,7 +482,7 @@ CCC_doubly_linked_list_clear(CCC_Doubly_linked_list *const list,
         remove_node(list, removed);
         void *const node = struct_base(list, removed);
         if (destroy) {
-            destroy((CCC_Type_arguments){
+            destroy((CCC_Arguments){
                 .type = node,
                 .context = list->context,
             });
@@ -547,7 +547,7 @@ order for elements.*/
 CCC_Tribool
 CCC_doubly_linked_list_is_sorted(
     CCC_Doubly_linked_list const *const list, CCC_Order const order,
-    CCC_Type_comparator_context const *const comparator) {
+    CCC_Comparator_context const *const comparator) {
     if (!list || !comparator || !comparator->compare
         || (order != CCC_ORDER_LESSER && order != CCC_ORDER_GREATER)) {
         return CCC_TRIBOOL_ERROR;
@@ -577,7 +577,7 @@ void *
 CCC_doubly_linked_list_insert_sorted(
     CCC_Doubly_linked_list *const list,
     CCC_Doubly_linked_list_node *type_intruder,
-    CCC_Type_comparator_context const *const comparator) {
+    CCC_Comparator_context const *const comparator) {
     if (!list || !comparator || !comparator->compare || !type_intruder
         || list->order == CCC_ORDER_ERROR || list->order == CCC_ORDER_EQUAL) {
         return NULL;
@@ -630,7 +630,7 @@ each merge step. Therefore the number of times we must perform the merge step is
 CCC_Result
 CCC_sort_doubly_linked_list_mergesort(
     CCC_Doubly_linked_list *const list, CCC_Order const order,
-    CCC_Type_comparator_context const *const comparator) {
+    CCC_Comparator_context const *const comparator) {
     if (!list || !comparator || !comparator->compare
         || (order != CCC_ORDER_LESSER && order != CCC_ORDER_GREATER)) {
         return CCC_RESULT_ARGUMENT_ERROR;
@@ -675,7 +675,7 @@ merge(struct CCC_Doubly_linked_list *const list,
       struct CCC_Doubly_linked_list_node *a_first,
       struct CCC_Doubly_linked_list_node *a_count_b_first,
       struct CCC_Doubly_linked_list_node *const b_count, CCC_Order const order,
-      CCC_Type_comparator_context const *const comparator) {
+      CCC_Comparator_context const *const comparator) {
     while (a_first && a_first != a_count_b_first && a_count_b_first
            && a_count_b_first != b_count) {
         if (get_order(list, a_count_b_first, a_first, comparator) == order) {
@@ -713,7 +713,7 @@ static inline struct CCC_Doubly_linked_list_node *
 first_out_of_order(struct CCC_Doubly_linked_list const *const list,
                    struct CCC_Doubly_linked_list_node *start,
                    CCC_Order const order,
-                   CCC_Type_comparator_context const *const comparator) {
+                   CCC_Comparator_context const *const comparator) {
     assert(list && start);
     do {
         start = start->next;
@@ -869,8 +869,8 @@ static inline CCC_Order
 get_order(struct CCC_Doubly_linked_list const *const list,
           struct CCC_Doubly_linked_list_node const *const left,
           struct CCC_Doubly_linked_list_node const *const right,
-          CCC_Type_comparator_context const *const comparator) {
-    return comparator->compare((CCC_Type_comparator_arguments){
+          CCC_Comparator_context const *const comparator) {
+    return comparator->compare((CCC_Comparator_arguments){
         .type_left = struct_base(list, left),
         .type_right = struct_base(list, right),
         .context = comparator->context,

@@ -284,7 +284,7 @@ static enum Label_orientation get_direction(struct Point const *,
 static struct Int_conversion parse_digits(SV_Str_view, int, int, char const *);
 static struct Path_request parse_path_request(struct Graph *, SV_Str_view);
 static void help(void);
-static Order order_priority_queue_costs(Type_comparator_arguments);
+static Order order_priority_queue_costs(Comparator_arguments);
 static CCC_Order order_parent_cells(Key_comparator_arguments);
 static uint64_t hash_parent_cells(Key_arguments);
 static uint64_t hash_64_bits(uint64_t);
@@ -1007,7 +1007,7 @@ hash_parent_cells(Key_arguments const point_struct) {
 }
 
 static Order
-order_priority_queue_costs(Type_comparator_arguments const cost_order) {
+order_priority_queue_costs(Comparator_arguments const cost_order) {
     struct Cost const *const a = cost_order.type_left;
     struct Cost const *const b = cost_order.type_right;
     return (a->cost > b->cost) - (a->cost < b->cost);

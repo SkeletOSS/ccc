@@ -158,13 +158,13 @@ CCC_adaptive_map_or_insert(CCC_Adaptive_map_entry const *const entry,
 
 CCC_Adaptive_map_entry *
 CCC_adaptive_map_and_modify(CCC_Adaptive_map_entry *const entry,
-                            CCC_Type_modifier *const modify) {
+                            CCC_Modifier *const modify) {
     if (!entry) {
         return NULL;
     }
     if (modify && (entry->entry.status & CCC_ENTRY_OCCUPIED)
         && entry->entry.type) {
-        modify((CCC_Type_arguments){
+        modify((CCC_Arguments){
             .type = entry->entry.type,
             .context = NULL,
         });
@@ -174,11 +174,11 @@ CCC_adaptive_map_and_modify(CCC_Adaptive_map_entry *const entry,
 
 CCC_Adaptive_map_entry *
 CCC_adaptive_map_and_context_modify(CCC_Adaptive_map_entry *const entry,
-                                    CCC_Type_modifier *const modify,
+                                    CCC_Modifier *const modify,
                                     void *const context) {
     if (entry && modify && entry->entry.status & CCC_ENTRY_OCCUPIED
         && entry->entry.type) {
-        modify((CCC_Type_arguments){
+        modify((CCC_Arguments){
             .type = entry->entry.type,
             .context = context,
         });
@@ -454,7 +454,7 @@ CCC_adaptive_map_equal_range_reverse(CCC_Adaptive_map *const map,
 rotations so element fields are modified during progression of deletes. */
 CCC_Result
 CCC_adaptive_map_clear(CCC_Adaptive_map *const map,
-                       CCC_Type_destructor *const destroy) {
+                       CCC_Destructor *const destroy) {
     if (!map) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -472,7 +472,7 @@ CCC_adaptive_map_clear(CCC_Adaptive_map *const map,
         node->parent = NULL;
         void *const del = struct_base(map, node);
         if (destroy) {
-            destroy((CCC_Type_arguments){
+            destroy((CCC_Arguments){
                 .type = del,
                 .context = map->context,
             });

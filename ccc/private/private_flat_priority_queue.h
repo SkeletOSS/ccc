@@ -39,7 +39,7 @@ struct CCC_Flat_priority_queue {
      * (max) of the flat_priority_queue. */
     CCC_Order order;
     /** @internal The user defined three way comparison function. */
-    CCC_Type_comparator *compare;
+    CCC_Comparator *compare;
 };
 
 /*========================    Private Interface     =========================*/

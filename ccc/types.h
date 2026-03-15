@@ -251,7 +251,7 @@ typedef struct {
     void const *const type_right;
     /** A reference to context data provided to container on initialization. */
     void *context;
-} CCC_Type_comparator_arguments;
+} CCC_Comparator_arguments;
 
 /** @brief A key comparison helper to avoid argument swapping.
 
@@ -288,7 +288,7 @@ typedef struct {
     void *type;
     /** A reference to context provided to the container on initialization. */
     void *context;
-} CCC_Type_arguments;
+} CCC_Arguments;
 
 /** @brief A read only reference to a key type matching the key field type used
 for hash containers.
@@ -419,17 +419,17 @@ A three-way comparison return value is expected and the two containers being
 compared are guaranteed to be non-NULL and pointing to the base of the user type
 stored in the container. Context may be NULL if no context is provided on
 initialization. */
-typedef CCC_Order CCC_Type_comparator(CCC_Type_comparator_arguments);
+typedef CCC_Order CCC_Comparator(CCC_Comparator_arguments);
 
 /** @brief The type passed by reference to any container function that may need
 to compare elements.  The context pointer is passed as the context argument of
-the `CCC_Type_arguments` type, when provided. */
+the `CCC_Arguments` type, when provided. */
 typedef struct {
     /** The comparison function to be passed to comparing operation. */
-    CCC_Type_comparator *compare;
+    CCC_Comparator *compare;
     /** Additional state to pass to the comparison. */
     void *context;
-} CCC_Type_comparator_context;
+} CCC_Comparator_context;
 
 /** @brief A callback function for modifying an element in the container.
 
@@ -439,17 +439,17 @@ user type and is not NULL. Context may be NULL if no context is provided on
 initialization. An update function is used when a container Interface exposes
 functions to modify the key or value used to determine sorted order of elements
 in the container. */
-typedef void CCC_Type_modifier(CCC_Type_arguments);
+typedef void CCC_Modifier(CCC_Arguments);
 
 /** @brief The type passed by reference to any container function that may need
 to modify elements.  The context pointer is passed as the context argument of
-the `CCC_Type_arguments` type, when provided. */
+the `CCC_Arguments` type, when provided. */
 typedef struct {
     /** The comparison function to be passed to comparing operation. */
-    CCC_Type_modifier *modify;
+    CCC_Modifier *modify;
     /** Additional state to pass to the comparison. */
     void *context;
-} CCC_Type_modifier_context;
+} CCC_Modifier_context;
 
 /** @brief A callback function for destroying an element in the container.
 
@@ -467,17 +467,17 @@ before the container frees. If the user has not given permission to the
 container to allocate memory, this a good function in which to free each
 element, if desired; any program state can be maintained then the element can be
 freed by the user in this function as the final step. */
-typedef void CCC_Type_destructor(CCC_Type_arguments);
+typedef void CCC_Destructor(CCC_Arguments);
 
 /** @brief The type passed by reference to any container function that may need
 to destroy elements.  The context pointer is passed as the context argument of
-the `CCC_Type_arguments` type, when provided. */
+the `CCC_Arguments` type, when provided. */
 typedef struct {
     /** The comparison function to be passed to comparing operation. */
-    CCC_Type_destructor *destroy;
+    CCC_Destructor *destroy;
     /** Additional state to pass to the comparison. */
     void *context;
-} CCC_Type_destructor_context;
+} CCC_Destructor_context;
 
 /** @brief A callback function for three-way comparing two stored keys.
 
@@ -723,14 +723,14 @@ typedef CCC_Handle Handle;
 typedef CCC_Handle_index Handle_index;
 typedef CCC_Result Result;
 typedef CCC_Order Order;
-typedef CCC_Type_arguments Type_arguments;
-typedef CCC_Type_comparator_arguments Type_comparator_arguments;
+typedef CCC_Arguments Arguments;
+typedef CCC_Comparator_arguments Comparator_arguments;
 typedef CCC_Key_arguments Key_arguments;
 typedef CCC_Key_comparator_arguments Key_comparator_arguments;
 typedef CCC_Allocator Allocator;
-typedef CCC_Type_comparator Type_comparator;
-typedef CCC_Type_modifier Type_modifier;
-typedef CCC_Type_destructor Type_destructor;
+typedef CCC_Comparator Comparator;
+typedef CCC_Modifier Modifier;
+typedef CCC_Destructor Destructor;
 typedef CCC_Key_comparator Key_comparator;
 typedef CCC_Key_hasher Key_hasher;
 #    define entry_occupied(entry_pointer) CCC_entry_occupied(entry_pointer)

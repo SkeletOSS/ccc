@@ -200,7 +200,7 @@ struct Int_node {
 };
 
 static CCC_Order
-int_cmp(CCC_Type_comparator_arguments const cmp) {
+int_cmp(CCC_Comparator_arguments const cmp) {
     struct Int_node const *const left = cmp.type_left;
     struct Int_node const *const right = cmp.type_right;
     return (left->i > right->i) - (left->i < right->i);
@@ -366,7 +366,7 @@ main(void) {
 #include "ccc/traits.h"
 
 CCC_Order
-int_cmp(CCC_Type_comparator_arguments const ints) {
+int_cmp(CCC_Comparator_arguments const ints) {
     int const left = *(int *)ints.type_left;
     int const right = *(int *)ints.type_right;
     return (left > right) - (left < right);
@@ -615,7 +615,7 @@ struct Val {
 };
 
 static CCC_Order
-val_cmp(CCC_Type_comparator_arguments const cmp) {
+val_cmp(CCC_Comparator_arguments const cmp) {
     struct Val const *const left = cmp.type_left;
     struct Val const *const right = cmp.type_right;
     return (left->val > right->val) - (left->val < right->val);
@@ -727,7 +727,7 @@ struct Int_node {
 };
 
 static CCC_Order
-int_cmp(CCC_Type_comparator_arguments const cmp) {
+int_cmp(CCC_Comparator_arguments const cmp) {
     struct Int_node const *const left = cmp.type_left;
     struct Int_node const *const right = cmp.type_right;
     return (left->i > right->i) - (left->i < right->i);
@@ -975,7 +975,7 @@ struct Id {
 };
 /* Or when writing a comparison callback. */
 CCC_Order
-id_cmp(CCC_Type_comparator_arguments const cmp) {
+id_cmp(CCC_Comparator_arguments const cmp) {
     struct Id const *const left = cmp.type_left;
     struct Id const *const right = cmp.type_right;
     return (left->id > right->id) - (left->id < right->id);
