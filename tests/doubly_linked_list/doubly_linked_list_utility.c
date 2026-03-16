@@ -67,12 +67,15 @@ check_begin(check_order, Doubly_linked_list const *const doubly_linked_list,
 }
 
 check_begin(push_list, CCC_Doubly_linked_list *const doubly_linked_list,
-            enum Push_direction const dir, size_t const n, struct Val vals[]) {
+            enum Push_direction const dir, size_t const n, struct Val vals[],
+            CCC_Allocator const *const allocator) {
     for (size_t i = 0; i < n; ++i) {
         if (dir == UTIL_PUSH_FRONT) {
-            check(push_front(doubly_linked_list, &vals[i].e) == NULL, false);
+            check(push_front(doubly_linked_list, &vals[i].e, allocator) == NULL,
+                  false);
         } else {
-            check(push_back(doubly_linked_list, &vals[i].e) == NULL, false);
+            check(push_back(doubly_linked_list, &vals[i].e, allocator) == NULL,
+                  false);
         }
     }
     check(validate(doubly_linked_list), true);

@@ -40,7 +40,8 @@ static void *struct_base(struct CCC_Doubly_linked_list const *,
                          struct CCC_Doubly_linked_list_node const *);
 static size_t erase_range(struct CCC_Doubly_linked_list const *,
                           struct CCC_Doubly_linked_list_node *,
-                          struct CCC_Doubly_linked_list_node *);
+                          struct CCC_Doubly_linked_list_node *,
+                          CCC_Allocator const *);
 static size_t len(struct CCC_Doubly_linked_list_node const *,
                   struct CCC_Doubly_linked_list_node const *);
 static struct CCC_Doubly_linked_list_node *
@@ -62,16 +63,17 @@ static CCC_Order get_order(struct CCC_Doubly_linked_list const *,
 
 void *
 CCC_doubly_linked_list_push_front(CCC_Doubly_linked_list *const list,
-                                  CCC_Doubly_linked_list_node *type_intruder) {
-    if (!list || !type_intruder) {
+                                  CCC_Doubly_linked_list_node *type_intruder,
+                                  CCC_Allocator const *const allocator) {
+    if (!list || !type_intruder || !allocator) {
         return NULL;
     }
     list->order = CCC_ORDER_ERROR;
-    if (list->allocate) {
-        void *const copy = list->allocate((CCC_Allocator_arguments){
+    if (allocator->allocate) {
+        void *const copy = allocator->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = list->sizeof_type,
-            .context = list->context,
+            .context = allocator->context,
         });
         if (!copy) {
             return NULL;
@@ -87,16 +89,17 @@ CCC_doubly_linked_list_push_front(CCC_Doubly_linked_list *const list,
 
 void *
 CCC_doubly_linked_list_push_back(CCC_Doubly_linked_list *const list,
-                                 CCC_Doubly_linked_list_node *type_intruder) {
-    if (!list || !type_intruder) {
+                                 CCC_Doubly_linked_list_node *type_intruder,
+                                 CCC_Allocator const *const allocator) {
+    if (!list || !type_intruder || allocator) {
         return NULL;
     }
     list->order = CCC_ORDER_ERROR;
-    if (list->allocate) {
-        void *const node = list->allocate((CCC_Allocator_arguments){
+    if (allocator->allocate) {
+        void *const node = allocator->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = list->sizeof_type,
-            .context = list->context,
+            .context = allocator->context,
         });
         if (!node) {
             return NULL;
@@ -126,18 +129,19 @@ CCC_doubly_linked_list_back(CCC_Doubly_linked_list const *list) {
 }
 
 CCC_Result
-CCC_doubly_linked_list_pop_front(CCC_Doubly_linked_list *const list) {
-    if (!list || !list->count) {
+CCC_doubly_linked_list_pop_front(CCC_Doubly_linked_list *const list,
+                                 CCC_Allocator const *const allocator) {
+    if (!list || !list->count || !allocator) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     struct CCC_Doubly_linked_list_node *const r = list->head;
     remove_node(list, r);
-    if (list->allocate) {
+    if (allocator->allocate) {
         assert(r);
-        (void)list->allocate((CCC_Allocator_arguments){
+        (void)allocator->allocate((CCC_Allocator_arguments){
             .input = struct_base(list, r),
             .bytes = 0,
-            .context = list->context,
+            .context = allocator->context,
         });
     }
     --list->count;
@@ -145,17 +149,18 @@ CCC_doubly_linked_list_pop_front(CCC_Doubly_linked_list *const list) {
 }
 
 CCC_Result
-CCC_doubly_linked_list_pop_back(CCC_Doubly_linked_list *const list) {
-    if (!list || !list->count) {
+CCC_doubly_linked_list_pop_back(CCC_Doubly_linked_list *const list,
+                                CCC_Allocator const *const allocator) {
+    if (!list || !list->count || !allocator) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     struct CCC_Doubly_linked_list_node *const r = list->tail;
     remove_node(list, r);
-    if (list->allocate) {
-        (void)list->allocate((CCC_Allocator_arguments){
+    if (allocator->allocate) {
+        (void)allocator->allocate((CCC_Allocator_arguments){
             .input = struct_base(list, r),
             .bytes = 0,
-            .context = list->context,
+            .context = allocator->context,
         });
     }
     --list->count;
@@ -165,16 +170,17 @@ CCC_doubly_linked_list_pop_back(CCC_Doubly_linked_list *const list) {
 void *
 CCC_doubly_linked_list_insert(CCC_Doubly_linked_list *const list,
                               CCC_Doubly_linked_list_node *const position,
-                              CCC_Doubly_linked_list_node *type_intruder) {
-    if (!list) {
+                              CCC_Doubly_linked_list_node *type_intruder,
+                              CCC_Allocator const *const allocator) {
+    if (!list || !allocator) {
         return NULL;
     }
     list->order = CCC_ORDER_ERROR;
-    if (list->allocate) {
-        void *const node = list->allocate((CCC_Allocator_arguments){
+    if (allocator->allocate) {
+        void *const node = allocator->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = list->sizeof_type,
-            .context = list->context,
+            .context = allocator->context,
         });
         if (!node) {
             return NULL;
@@ -189,17 +195,18 @@ CCC_doubly_linked_list_insert(CCC_Doubly_linked_list *const list,
 
 void *
 CCC_doubly_linked_list_erase(CCC_Doubly_linked_list *const list,
-                             CCC_Doubly_linked_list_node *type_intruder) {
-    if (!list || !type_intruder || !list->count) {
+                             CCC_Doubly_linked_list_node *type_intruder,
+                             CCC_Allocator const *const allocator) {
+    if (!list || !type_intruder || !allocator || !list->count) {
         return NULL;
     }
     void *const ret = struct_base(list, type_intruder->next);
     remove_node(list, type_intruder);
-    if (list->allocate) {
-        (void)list->allocate((CCC_Allocator_arguments){
+    if (allocator->allocate) {
+        (void)allocator->allocate((CCC_Allocator_arguments){
             .input = struct_base(list, type_intruder),
             .bytes = 0,
-            .context = list->context,
+            .context = allocator->context,
         });
     }
     --list->count;
@@ -210,14 +217,16 @@ void *
 CCC_doubly_linked_list_erase_range(
     CCC_Doubly_linked_list *const list,
     CCC_Doubly_linked_list_node *const type_intruder_begin,
-    CCC_Doubly_linked_list_node *type_intruder_end) {
-    if (!list || list->count == 0 || !type_intruder_begin
+    CCC_Doubly_linked_list_node *type_intruder_end,
+    CCC_Allocator const *const allocator) {
+    if (!list || !allocator || list->count == 0 || !type_intruder_begin
         || !type_intruder_end) {
         return NULL;
     }
 
     if (type_intruder_begin == type_intruder_end) {
-        return CCC_doubly_linked_list_erase(list, type_intruder_begin);
+        return CCC_doubly_linked_list_erase(list, type_intruder_begin,
+                                            allocator);
     }
 
     CCC_Doubly_linked_list_node *const previous = type_intruder_begin->previous;
@@ -235,7 +244,8 @@ CCC_doubly_linked_list_erase_range(
         list->tail = previous;
     }
 
-    size_t deleted = erase_range(list, type_intruder_begin, type_intruder_end);
+    size_t deleted
+        = erase_range(list, type_intruder_begin, type_intruder_end, allocator);
 
     assert(deleted <= list->count);
     list->count -= deleted;
@@ -472,25 +482,26 @@ CCC_doubly_linked_list_is_empty(CCC_Doubly_linked_list const *const list) {
 
 CCC_Result
 CCC_doubly_linked_list_clear(CCC_Doubly_linked_list *const list,
-                             CCC_Destructor_interface *const destroy) {
-    if (!list) {
+                             CCC_Destructor const *const destructor,
+                             CCC_Allocator const *const allocator) {
+    if (!list || !destructor || !allocator) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     while (list->head) {
         struct CCC_Doubly_linked_list_node *const removed = list->head;
         remove_node(list, removed);
         void *const node = struct_base(list, removed);
-        if (destroy) {
-            destroy((CCC_Arguments){
+        if (destructor->destroy) {
+            destructor->destroy((CCC_Arguments){
                 .type = node,
-                .context = list->context,
+                .context = destructor->context,
             });
         }
-        if (list->allocate) {
-            (void)list->allocate((CCC_Allocator_arguments){
+        if (allocator->allocate) {
+            (void)allocator->allocate((CCC_Allocator_arguments){
                 .input = node,
                 .bytes = 0,
-                .context = list->context,
+                .context = allocator->context,
             });
         }
     }
@@ -575,16 +586,18 @@ list use. */
 void *
 CCC_doubly_linked_list_insert_sorted(CCC_Doubly_linked_list *const list,
                                      CCC_Doubly_linked_list_node *type_intruder,
-                                     CCC_Comparator const *const comparator) {
-    if (!list || !comparator || !comparator->compare || !type_intruder
-        || list->order == CCC_ORDER_ERROR || list->order == CCC_ORDER_EQUAL) {
+                                     CCC_Comparator const *const comparator,
+                                     CCC_Allocator const *const allocator) {
+    if (!list || !allocator || !comparator || !comparator->compare
+        || !type_intruder || list->order == CCC_ORDER_ERROR
+        || list->order == CCC_ORDER_EQUAL) {
         return NULL;
     }
-    if (list->allocate) {
-        void *const node = list->allocate((CCC_Allocator_arguments){
+    if (allocator->allocate) {
+        void *const node = allocator->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = list->sizeof_type,
-            .context = list->context,
+            .context = allocator->context,
         });
         if (!node) {
             return NULL;
@@ -810,8 +823,9 @@ remove_node(struct CCC_Doubly_linked_list *const list,
 static size_t
 erase_range(struct CCC_Doubly_linked_list const *const list,
             struct CCC_Doubly_linked_list_node *begin,
-            struct CCC_Doubly_linked_list_node *const end) {
-    if (!list->allocate) {
+            struct CCC_Doubly_linked_list_node *const end,
+            CCC_Allocator const *const allocator) {
+    if (!allocator->allocate) {
         return len(begin, end);
     }
     size_t count = 0;
@@ -819,10 +833,10 @@ erase_range(struct CCC_Doubly_linked_list const *const list,
     for (;;) {
         assert(count < list->count);
         CCC_Doubly_linked_list_node *const next = node->next;
-        list->allocate((CCC_Allocator_arguments){
+        allocator->allocate((CCC_Allocator_arguments){
             .input = struct_base(list, node),
             .bytes = 0,
-            .context = list->context,
+            .context = allocator->context,
         });
         ++count;
         if (node == end) {

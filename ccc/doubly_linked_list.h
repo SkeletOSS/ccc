@@ -75,124 +75,49 @@ typedef struct CCC_Doubly_linked_list_node CCC_Doubly_linked_list_node;
 Initialize the container with memory, callbacks, and permissions. */
 /**@{*/
 
-/** @brief Initialize a doubly linked list with its l-value name, type
-containing the Doubly_linked_list elems, the field of the doubly_linked_list
-elem, allocation function, compare function and any context data needed
-for comparison, printing, or destructors.
+/** @brief Initialize an intrusive doubly linked list for a type with a user
+specified intruder field.
 @param[in] type_name the type containing the intrusive doubly_linked_list
 element.
 @param[in] type_intruder_field name of the Doubly_linked_list element in the
 containing type.
-@param[in] context any context data that will be needed for allocation or
-destruction of elements.
-@param[in] allocate the optional allocation function or NULL.
 @return the initialized list. Assign to the list directly on the right hand
 side of an equality operator. Initialization can occur at runtime or compile
-time (e.g. CCC_doubly_linked list = CCC_doubly_linked_list_for(...);). */
-#define CCC_doubly_linked_list_for(type_name, type_intruder_field, allocate,   \
-                                   context)                                    \
-    CCC_private_doubly_linked_list_for(type_name, type_intruder_field,         \
-                                       allocate, context)
+time. */
+#define CCC_doubly_linked_list_default(type_name, type_intruder_field)         \
+    CCC_private_doubly_linked_list_for(type_name, type_intruder_field)
+
+/** @brief Initialize an intrusive doubly linked list for a type with a user
+specified intruder field.
+@param[in] type_name the type containing the intrusive doubly_linked_list
+element.
+@param[in] type_intruder_field name of the Doubly_linked_list element in the
+containing type.
+@return the initialized list. Assign to the list directly on the right hand
+side of an equality operator. Initialization can occur at runtime or compile
+time. */
+#define CCC_doubly_linked_list_for(type_name, type_intruder_field)             \
+    CCC_private_doubly_linked_list_for(type_name, type_intruder_field)
 
 /** @brief Initialize a doubly linked list at runtime from a compound literal
 array.
 @param[in] type_intruder_field the name of the field intruding on user's type.
-@param[in] allocate the allocation function required for construction.
-@param[in] destroy the optional destructor to run if insertion fails.
+@param[in] allocator_pointer the required CCC_Allocator for allocation.
+@param[in] destructor_pointer the optional destructor to run over all allocated
+elements if memory exhaustion occurs at any point during construction.
 @param[in] compound_literal_array the array of user types to insert into the
 map (e.g. (struct My_type[]){ {.val = 1}, {.val = 2}}).
 @return the initialized doubly linked list on the right side of an equality
-operator (e.g. CCC_Doubly_linked_list list = CCC_doubly_linked_list_from(...);)
-@note The list is constructed to mirror the compound literal array provided.
-The list will be constructed with the element at index 0 of the array as the
-front of the list and the final index element at the back of the list. */
-#define CCC_doubly_linked_list_from(type_intruder_field, allocate, destroy,    \
+operator.
+@note The list is constructed to the specification of compound literal array
+provided. The list will be constructed with the element at index 0 of the array
+as the front of the list and the final index element at the back of the list. */
+#define CCC_doubly_linked_list_from(type_intruder_field, allocator_pointer,    \
+                                    destructor_pointer,                        \
                                     compound_literal_array...)                 \
-    CCC_private_doubly_linked_list_from(type_intruder_field, allocate,         \
-                                        destroy, compound_literal_array)
-
-/** @brief Initialize a doubly linked list at runtime from a compound literal
-array.
-@param[in] type_intruder_field the name of the field intruding on user's type.
-@param[in] allocate the allocation function required for construction.
-@param[in] destroy the optional destructor to run if insertion fails.
-@param[in] context context data needed for allocation or destruction.
-@param[in] compound_literal_array the array of user types to insert into the
-map (e.g. (struct My_type[]){ {.val = 1}, {.val = 2}}).
-@return the initialized doubly linked list on the right side of an equality
-operator (e.g. CCC_Doubly_linked_list list
-= CCC_doubly_linked_list_context_from(...);)
-@note The list is constructed to mirror the compound literal array provided.
-The list will be constructed with the element at index 0 of the array as the
-front of the list and the final index element at the back of the list. */
-#define CCC_doubly_linked_list_context_from(type_intruder_field, allocate,     \
-                                            destroy, context,                  \
-                                            compound_literal_array...)         \
-    CCC_private_doubly_linked_list_context_from(type_intruder_field, allocate, \
-                                                destroy, context,              \
-                                                compound_literal_array)
-
-/** @brief Initialize an empty list at compile or runtime with an allocator.
-@param[in] type_name the user defined type stored in the list.
-@param[in] type_intruder_field the name of the intrusive element.
-@param[in] allocate the CCC_Allocator_interface function used to manage list
-memory.
-@return the list directly initialized on the right hand side of the equality
-operator.
-
-Initialize a dynamic list at compile time.
-
-```
-#define DOUBLY_LINKED_LIST_USING_NAMESPACE_CCC
-struct Val
-{
-    Doubly_linked_list_node node;
-    int val;
-};
-static Doubly_linked_list list = doubly_linked_list_with_allocator(
-    struct Val,
-    node,
-    stdlib_allocate
-);
-```
-
-This can help eliminate boilerplate in initializers. */
-#define CCC_doubly_linked_list_with_allocator(type_name, type_intruder_field,  \
-                                              allocate)                        \
-    CCC_private_doubly_linked_list_with_allocator(                             \
-        type_name, type_intruder_field, allocate)
-
-/** @brief Initialize an empty list at compile or runtime with an allocator.
-@param[in] type_name the user defined type stored in the list.
-@param[in] type_intruder_field the name of the intrusive element.
-@param[in] allocate the CCC_Allocator_interface function used to manage list
-memory.
-@param[in] context context data needed for allocation or destruction.
-@return the list directly initialized on the right hand side of the equality
-operator.
-
-Initialize a dynamic list at compile time.
-
-```
-#define DOUBLY_LINKED_LIST_USING_NAMESPACE_CCC
-struct Val
-{
-    Doubly_linked_list_node node;
-    int val;
-};
-static Doubly_linked_list list = doubly_linked_list_with_allocator(
-    struct Val,
-    node,
-    arena_allocate,
-    &arena
-);
-```
-
-This can help eliminate boilerplate in initializers. */
-#define CCC_doubly_linked_list_context_with_allocator(                         \
-    type_name, type_intruder_field, allocate, context)                         \
-    CCC_private_doubly_linked_list_context_with_allocator(                     \
-        type_name, type_intruder_field, allocate, context)
+    CCC_private_doubly_linked_list_from(type_intruder_field,                   \
+                                        allocator_pointer, destructor_pointer, \
+                                        compound_literal_array)
 
 /**@}*/
 
@@ -203,6 +128,7 @@ Add or remove elements from the doubly linked list. */
 /** @brief  writes contents of type initializer directly to allocated memory at
 the back of the list. O(1).
 @param[in] list_pointer the address of the doubly linked list.
+@param[in] allocator_pointer the required CCC_Allocator for allocation.
 @param[in] type_compound_literal the r-value initializer of the type to be
 inserted in the list. This should match the type containing Doubly_linked_list
 elements as a struct member for this list.
@@ -213,14 +139,15 @@ Note that it does not make sense to use this method if the list has been
 initialized without an allocation function. If the user does not allow
 allocation, the contents of new elements to be inserted has been determined by
 the user prior to any inserts into the list. */
-#define CCC_doubly_linked_list_emplace_back(list_pointer,                      \
+#define CCC_doubly_linked_list_emplace_back(list_pointer, allocator_pointer,   \
                                             type_compound_literal...)          \
-    CCC_private_doubly_linked_list_emplace_back(list_pointer,                  \
-                                                type_compound_literal)
+    CCC_private_doubly_linked_list_emplace_back(                               \
+        list_pointer, allocator_pointer, type_compound_literal)
 
 /** @brief  writes contents of type initializer directly to allocated memory at
 the front of the list. O(1).
 @param[in] list_pointer the address of the doubly linked list.
+@param[in] allocator_pointer the required CCC_Allocator for allocation.
 @param[in] type_compound_literal the r-value initializer of the type to be
 inserted in the list. This should match the type containing Doubly_linked_list
 elements as a struct member for this list.
@@ -231,52 +158,60 @@ Note that it does not make sense to use this method if the list has been
 initialized without an allocation function. If the user does not allow
 allocation, the contents of new elements to be inserted has been determined by
 the user prior to any inserts into the list. */
-#define CCC_doubly_linked_list_emplace_front(list_pointer,                     \
+#define CCC_doubly_linked_list_emplace_front(list_pointer, allocator_pointer,  \
                                              type_compound_literal...)         \
-    CCC_private_doubly_linked_list_emplace_front(list_pointer,                 \
-                                                 type_compound_literal)
+    CCC_private_doubly_linked_list_emplace_front(                              \
+        list_pointer, allocator_pointer, type_compound_literal)
 
 /** @brief Push user type wrapping type_intruder to the front of the list. O(1).
 @param[in] list a pointer to the doubly linked list.
 @param[in] type_intruder a pointer to the list element.
+@param[in] allocator the CCC_Allocator for allocating a user type.
 @return a pointer to the element inserted or NULL if bad input is provided
 or allocation fails. */
 [[nodiscard]] void *
 CCC_doubly_linked_list_push_front(CCC_Doubly_linked_list *list,
-                                  CCC_Doubly_linked_list_node *type_intruder);
+                                  CCC_Doubly_linked_list_node *type_intruder,
+                                  CCC_Allocator const *allocator);
 
 /** @brief Push user type wrapping type_intruder to the back of the list. O(1).
 @param[in] list a pointer to the doubly linked list.
 @param[in] type_intruder a pointer to the list element.
+@param[in] allocator the CCC_Allocator for allocating a user type.
 @return a pointer to the element inserted or NULL if bad input is provided
 or allocation fails. */
 [[nodiscard]] void *
 CCC_doubly_linked_list_push_back(CCC_Doubly_linked_list *list,
-                                 CCC_Doubly_linked_list_node *type_intruder);
+                                 CCC_Doubly_linked_list_node *type_intruder,
+                                 CCC_Allocator const *allocator);
 
 /** @brief Insert user type wrapping type_intruder before position_node. O(1).
 @param[in] list a pointer to the doubly linked list.
 @param[in] position_node a pointer to the list element before which
 type_intruder inserts.
 @param[in] type_intruder a pointer to the list element.
+@param[in] allocator the CCC_Allocator for allocating a user type.
 @return a pointer to the element inserted or NULL if bad input is provided
 or allocation fails. */
-[[nodiscard]] void *
-CCC_doubly_linked_list_insert(CCC_Doubly_linked_list *list,
-                              CCC_Doubly_linked_list_node *position_node,
-                              CCC_Doubly_linked_list_node *type_intruder);
+[[nodiscard]] void *CCC_doubly_linked_list_insert(
+    CCC_Doubly_linked_list *list, CCC_Doubly_linked_list_node *position_node,
+    CCC_Doubly_linked_list_node *type_intruder, CCC_Allocator const *allocator);
 
 /** @brief Pop the user type at the front of the list. O(1).
 @param[in] list a pointer to the doubly linked list.
+@param[in] allocator the CCC_Allocator for freeing a user type.
 @return an ok result if the pop was successful or an error if bad input is
 provided or the list is empty.*/
-CCC_Result CCC_doubly_linked_list_pop_front(CCC_Doubly_linked_list *list);
+CCC_Result CCC_doubly_linked_list_pop_front(CCC_Doubly_linked_list *list,
+                                            CCC_Allocator const *allocator);
 
 /** @brief Pop the user type at the back of the list. O(1).
 @param[in] list a pointer to the doubly linked list.
+@param[in] allocator the CCC_Allocator for freeing a user type.
 @return an ok result if the pop was successful or an error if bad input is
 provided or the list is empty.*/
-CCC_Result CCC_doubly_linked_list_pop_back(CCC_Doubly_linked_list *list);
+CCC_Result CCC_doubly_linked_list_pop_back(CCC_Doubly_linked_list *list,
+                                           CCC_Allocator const *allocator);
 
 /** @brief Returns the element following an extracted element from the list
 without deallocating regardless of allocation permission provided to the
@@ -293,11 +228,13 @@ CCC_doubly_linked_list_extract(CCC_Doubly_linked_list *list,
 /** @brief Returns the element following an erased element from the list. O(1).
 @param[in] list a pointer to the doubly linked list.
 @param[in] type_intruder the handle of an element known to be in the list.
+@param[in] allocator the CCC_Allocator for freeing a user type.
 @return a reference to the element in the list following type_intruder or NULL
 if the element is the last. NULL is returned if bad input is provided or the
 type_intruder is not in the list. */
 void *CCC_doubly_linked_list_erase(CCC_Doubly_linked_list *list,
-                                   CCC_Doubly_linked_list_node *type_intruder);
+                                   CCC_Doubly_linked_list_node *type_intruder,
+                                   CCC_Allocator const *allocator);
 
 /** @brief Returns the element following an extracted range of elements from the
 list. O(N).
@@ -306,6 +243,7 @@ list. O(N).
 at the start of the range.
 @param[in] type_intruder_end the handle of an element known to be in the list at
 the end of the range following type_intruder_begin.
+@param[in] allocator the CCC_Allocator for freeing a user type.
 @return a reference to the element in the list following type_intruder_end or
 NULL if the element is the last. NULL is returned if bad input is provided or
 the type_intruder is not in the list.
@@ -318,7 +256,8 @@ invalidated. */
 void *CCC_doubly_linked_list_erase_range(
     CCC_Doubly_linked_list *list,
     CCC_Doubly_linked_list_node *type_intruder_begin,
-    CCC_Doubly_linked_list_node *type_intruder_end);
+    CCC_Doubly_linked_list_node *type_intruder_end,
+    CCC_Allocator const *allocator);
 
 /** @brief Returns the element following an extracted range of elements from the
 list without deallocating regardless of allocation permission provided to the
@@ -381,6 +320,7 @@ function. `O(1)`.
 @param[in] doubly_linked_list a pointer to the doubly linked list.
 @param[in] type_intruder a pointer to the element to be inserted in order.
 @param[in] comparator the comparator context for comparing list elements.
+@param[in] allocator the CCC_Allocator for allocating a user type.
 @return a pointer to the element that has been inserted or NULL if allocation
 is required and has failed. NULL is also returned if the list has never been
 formally sorted from sort.h.
@@ -394,7 +334,8 @@ CCC_ORDER_GREATER and vice versa. If elements are equal, return CCC_ORDER_EQUAL.
 void *
 CCC_doubly_linked_list_insert_sorted(CCC_Doubly_linked_list *doubly_linked_list,
                                      CCC_Doubly_linked_list_node *type_intruder,
-                                     CCC_Comparator const *comparator);
+                                     CCC_Comparator const *comparator,
+                                     CCC_Allocator const *allocator);
 
 /** @brief Returns true if the list is sorted in non-decreasing order according
 to the user provided comparison function.
@@ -423,20 +364,23 @@ Deallocate the container. */
 permission. O(N).
 @param[in] list a pointer to the doubly linked list.
 @param[in] destroy a destructor function to run on each element.
+@param[in] allocator the CCC_Allocator for freeing a user type.
 @return ok if the clearing was a success or an input error if list or destroy is
 NULL.
 
-Note that if the list is initialized with allocation permission it will free
-elements for the user and the destructor function should only perform context
-cleanup, otherwise a double free will occur.
+Note that if an allocator is provided it will be called to free each element in
+the list. Be mindful that the destructor does not free as well, instead taking
+care of any destructor-like book keeping. If no destructor is needed provide
+the default destructor `&(CCC_Destructor){}`.
 
-If the list has not been given allocation permission the user should free
-the list elements with the destructor if they wish to do so. The implementation
-ensures the function is called after the element is removed. Otherwise, the user
-must manage their elements at their discretion after the list is emptied in
-this function. */
+If the list is not provided with an allocator, `&(CCC_Allocator){}`, the user
+should free the list elements with the destructor if they wish to do so. The
+implementation ensures the function is called after the element is removed.
+Otherwise, the user must manage their elements at their discretion after the
+list is emptied in this function. */
 CCC_Result CCC_doubly_linked_list_clear(CCC_Doubly_linked_list *list,
-                                        CCC_Destructor_interface *destroy);
+                                        CCC_Destructor const *destructor,
+                                        CCC_Allocator const *allocator);
 
 /**@}*/
 
@@ -541,16 +485,12 @@ clashes exist prior to name shortening. */
 /* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Doubly_linked_list_node Doubly_linked_list_node;
 typedef CCC_Doubly_linked_list Doubly_linked_list;
+#    define doubly_linked_list_default(arguments...)                           \
+        CCC_doubly_linked_list_default(arguments)
 #    define doubly_linked_list_for(arguments...)                               \
         CCC_doubly_linked_list_for(arguments)
 #    define doubly_linked_list_from(arguments...)                              \
         CCC_doubly_linked_list_from(arguments)
-#    define doubly_linked_list_context_from(arguments...)                      \
-        CCC_doubly_linked_list_context_from(arguments)
-#    define doubly_linked_list_with_allocator(arguments...)                    \
-        CCC_doubly_linked_list_with_allocator(arguments)
-#    define doubly_linked_list_context_with_allocator(arguments...)            \
-        CCC_doubly_linked_list_context_with_allocator(arguments)
 #    define doubly_linked_list_emplace_back(arguments...)                      \
         CCC_doubly_linked_list_emplace_back(arguments)
 #    define doubly_linked_list_emplace_front(arguments...)                     \

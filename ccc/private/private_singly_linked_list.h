@@ -159,28 +159,24 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
         typeof(struct_initializer) *private_singly_linked_list_res = NULL;     \
         struct CCC_Singly_linked_list *private_singly_linked_list              \
             = (list_pointer);                                                  \
-        if (private_singly_linked_list) {                                      \
-            CCC_Allocator const *const private_singly_linked_list_allocator    \
-                = (private_allocator_pointer);                                 \
-            if (!private_singly_linked_list_allocator                          \
-                || !private_singly_linked_list_allocator->allocate) {          \
-                private_singly_linked_list_res = NULL;                         \
-            } else {                                                           \
-                private_singly_linked_list_res                                 \
-                    = private_singly_linked_list->allocate(                    \
-                        (CCC_Allocator_arguments){                             \
-                            .input = NULL,                                     \
-                            .bytes = private_singly_linked_list->sizeof_type,  \
-                            .context = private_singly_linked_list->context,    \
-                        });                                                    \
-                if (private_singly_linked_list_res) {                          \
-                    *private_singly_linked_list_res = struct_initializer;      \
-                    CCC_private_singly_linked_list_push_front(                 \
+        CCC_Allocator const *const private_singly_linked_list_allocator        \
+            = (private_allocator_pointer);                                     \
+        if (private_singly_linked_list && private_singly_linked_list_allocator \
+            && private_singly_linked_list_allocator->allocate) {               \
+            private_singly_linked_list_res                                     \
+                = private_singly_linked_list->allocate(                        \
+                    (CCC_Allocator_arguments){                                 \
+                        .input = NULL,                                         \
+                        .bytes = private_singly_linked_list->sizeof_type,      \
+                        .context = private_singly_linked_list->context,        \
+                    });                                                        \
+            if (private_singly_linked_list_res) {                              \
+                *private_singly_linked_list_res = struct_initializer;          \
+                CCC_private_singly_linked_list_push_front(                     \
+                    private_singly_linked_list,                                \
+                    CCC_private_singly_linked_list_node_in(                    \
                         private_singly_linked_list,                            \
-                        CCC_private_singly_linked_list_node_in(                \
-                            private_singly_linked_list,                        \
-                            private_singly_linked_list_res));                  \
-                }                                                              \
+                        private_singly_linked_list_res));                      \
             }                                                                  \
         }                                                                      \
         private_singly_linked_list_res;                                        \
