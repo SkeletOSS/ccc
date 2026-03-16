@@ -593,6 +593,8 @@ typedef CCC_Flat_double_ended_queue Flat_double_ended_queue;
         CCC_flat_double_ended_queue_from(arguments)
 #    define flat_double_ended_queue_with_storage(arguments...)                 \
         CCC_flat_double_ended_queue_with_storage(arguments)
+#    define flat_double_ended_queue_with_capacity(arguments...)                \
+        CCC_flat_double_ended_queue_with_capacity(arguments)
 #    define flat_double_ended_queue_copy(arguments...)                         \
         CCC_flat_double_ended_queue_copy(arguments)
 #    define flat_double_ended_queue_reserve(arguments...)                      \
@@ -621,6 +623,8 @@ typedef CCC_Flat_double_ended_queue Flat_double_ended_queue;
         CCC_flat_double_ended_queue_is_empty(arguments)
 #    define flat_double_ended_queue_count(arguments...)                        \
         CCC_flat_double_ended_queue_count(arguments)
+#    define flat_double_ended_queue_capacity(arguments...)                     \
+        CCC_flat_double_ended_queue_capacity(arguments)
 #    define flat_double_ended_queue_clear(arguments...)                        \
         CCC_flat_double_ended_queue_clear(arguments)
 #    define flat_double_ended_queue_clear_and_free(arguments...)               \
