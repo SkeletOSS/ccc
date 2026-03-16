@@ -22,6 +22,7 @@ if they refactor. */
 
 #include "doubly_linked_list.h"
 #include "private/private_doubly_linked_list.h"
+#include "sort.h"
 #include "types.h"
 
 /*===========================   Prototypes    ===============================*/
@@ -45,15 +46,18 @@ static size_t len(struct CCC_Doubly_linked_list_node const *,
 static struct CCC_Doubly_linked_list_node *
 type_intruder_in(CCC_Doubly_linked_list const *, void const *);
 static struct CCC_Doubly_linked_list_node *
-first_less(struct CCC_Doubly_linked_list const *,
-           struct CCC_Doubly_linked_list_node *);
+first_out_of_order(struct CCC_Doubly_linked_list const *,
+                   struct CCC_Doubly_linked_list_node *, CCC_Order,
+                   CCC_Comparator_context const *);
 static struct CCC_Doubly_linked_list_node *
 merge(struct CCC_Doubly_linked_list *, struct CCC_Doubly_linked_list_node *,
       struct CCC_Doubly_linked_list_node *,
-      struct CCC_Doubly_linked_list_node *);
-static CCC_Order order(struct CCC_Doubly_linked_list const *,
-                       struct CCC_Doubly_linked_list_node const *,
-                       struct CCC_Doubly_linked_list_node const *);
+      struct CCC_Doubly_linked_list_node *, CCC_Order,
+      CCC_Comparator_context const *);
+static CCC_Order get_order(struct CCC_Doubly_linked_list const *,
+                           struct CCC_Doubly_linked_list_node const *,
+                           struct CCC_Doubly_linked_list_node const *,
+                           CCC_Comparator_context const *);
 
 /*===========================     Interface   ===============================*/
 
@@ -63,9 +67,9 @@ CCC_doubly_linked_list_push_front(CCC_Doubly_linked_list *const list,
     if (!list || !type_intruder) {
         return NULL;
     }
-
+    list->order = CCC_ORDER_ERROR;
     if (list->allocate) {
-        void *const copy = list->allocate((CCC_Allocator_context){
+        void *const copy = list->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = list->sizeof_type,
             .context = list->context,
@@ -88,8 +92,9 @@ CCC_doubly_linked_list_push_back(CCC_Doubly_linked_list *const list,
     if (!list || !type_intruder) {
         return NULL;
     }
+    list->order = CCC_ORDER_ERROR;
     if (list->allocate) {
-        void *const node = list->allocate((CCC_Allocator_context){
+        void *const node = list->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = list->sizeof_type,
             .context = list->context,
@@ -130,7 +135,7 @@ CCC_doubly_linked_list_pop_front(CCC_Doubly_linked_list *const list) {
     remove_node(list, r);
     if (list->allocate) {
         assert(r);
-        (void)list->allocate((CCC_Allocator_context){
+        (void)list->allocate((CCC_Allocator_arguments){
             .input = struct_base(list, r),
             .bytes = 0,
             .context = list->context,
@@ -148,7 +153,7 @@ CCC_doubly_linked_list_pop_back(CCC_Doubly_linked_list *const list) {
     struct CCC_Doubly_linked_list_node *const r = list->tail;
     remove_node(list, r);
     if (list->allocate) {
-        (void)list->allocate((CCC_Allocator_context){
+        (void)list->allocate((CCC_Allocator_arguments){
             .input = struct_base(list, r),
             .bytes = 0,
             .context = list->context,
@@ -165,8 +170,9 @@ CCC_doubly_linked_list_insert(CCC_Doubly_linked_list *const list,
     if (!list) {
         return NULL;
     }
+    list->order = CCC_ORDER_ERROR;
     if (list->allocate) {
-        void *const node = list->allocate((CCC_Allocator_context){
+        void *const node = list->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = list->sizeof_type,
             .context = list->context,
@@ -191,7 +197,7 @@ CCC_doubly_linked_list_erase(CCC_Doubly_linked_list *const list,
     void *const ret = struct_base(list, type_intruder->next);
     remove_node(list, type_intruder);
     if (list->allocate) {
-        (void)list->allocate((CCC_Allocator_context){
+        (void)list->allocate((CCC_Allocator_arguments){
             .input = struct_base(list, type_intruder),
             .bytes = 0,
             .context = list->context,
@@ -319,6 +325,7 @@ CCC_doubly_linked_list_splice(
         && (to_cut == position || to_cut->next == position)) {
         return CCC_RESULT_OK;
     }
+    position_doubly_linked_list->order = CCC_ORDER_ERROR;
     remove_node(to_cut_doubly_linked_list, to_cut);
     insert_node(position_doubly_linked_list, position, to_cut);
     if (to_cut_doubly_linked_list != position_doubly_linked_list) {
@@ -340,7 +347,7 @@ CCC_doubly_linked_list_splice_range(
         || type_intruder_to_cut_begin == type_intruder_to_cut_exclusive_end) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-
+    position_doubly_linked_list->order = CCC_ORDER_ERROR;
     CCC_Doubly_linked_list_node *const to_cut_inclusive_end
         = type_intruder_to_cut_exclusive_end
             ? type_intruder_to_cut_exclusive_end->previous
@@ -466,7 +473,7 @@ CCC_doubly_linked_list_is_empty(CCC_Doubly_linked_list const *const list) {
 
 CCC_Result
 CCC_doubly_linked_list_clear(CCC_Doubly_linked_list *const list,
-                             CCC_Type_destructor *const destroy) {
+                             CCC_Destructor *const destroy) {
     if (!list) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -475,13 +482,13 @@ CCC_doubly_linked_list_clear(CCC_Doubly_linked_list *const list,
         remove_node(list, removed);
         void *const node = struct_base(list, removed);
         if (destroy) {
-            destroy((CCC_Type_context){
+            destroy((CCC_Arguments){
                 .type = node,
                 .context = list->context,
             });
         }
         if (list->allocate) {
-            (void)list->allocate((CCC_Allocator_context){
+            (void)list->allocate((CCC_Allocator_arguments){
                 .input = node,
                 .bytes = 0,
                 .context = list->context,
@@ -490,6 +497,7 @@ CCC_doubly_linked_list_clear(CCC_Doubly_linked_list *const list,
     }
     list->tail = NULL;
     list->count = 0;
+    list->order = CCC_ORDER_ERROR;
     return CCC_RESULT_OK;
 }
 
@@ -537,16 +545,25 @@ CCC_doubly_linked_list_validate(CCC_Doubly_linked_list const *const list) {
 flip the return values of their comparison function if they want a different
 order for elements.*/
 CCC_Tribool
-CCC_doubly_linked_list_is_sorted(CCC_Doubly_linked_list const *const list) {
-    if (!list) {
+CCC_doubly_linked_list_is_sorted(
+    CCC_Doubly_linked_list const *const list, CCC_Order const order,
+    CCC_Comparator_context const *const comparator) {
+    if (!list || !comparator || !comparator->compare
+        || (order != CCC_ORDER_LESSER && order != CCC_ORDER_GREATER)) {
         return CCC_TRIBOOL_ERROR;
+    }
+    if ((list->order != CCC_ORDER_LESSER && list->order != CCC_ORDER_GREATER)
+        || list->order != order) {
+        return CCC_FALSE;
     }
     if (list->count <= 1) {
         return CCC_TRUE;
     }
+    CCC_Order const wrong_order
+        = order == CCC_ORDER_LESSER ? CCC_ORDER_GREATER : CCC_ORDER_LESSER;
     for (struct CCC_Doubly_linked_list_node const *cur = list->head->next;
          cur != NULL; cur = cur->next) {
-        if (order(list, cur->previous, cur) == CCC_ORDER_GREATER) {
+        if (get_order(list, cur->previous, cur, comparator) == wrong_order) {
             return CCC_FALSE;
         }
     }
@@ -559,12 +576,14 @@ list use. */
 void *
 CCC_doubly_linked_list_insert_sorted(
     CCC_Doubly_linked_list *const list,
-    CCC_Doubly_linked_list_node *type_intruder) {
-    if (!list || !type_intruder) {
+    CCC_Doubly_linked_list_node *type_intruder,
+    CCC_Comparator_context const *const comparator) {
+    if (!list || !comparator || !comparator->compare || !type_intruder
+        || list->order == CCC_ORDER_ERROR || list->order == CCC_ORDER_EQUAL) {
         return NULL;
     }
     if (list->allocate) {
-        void *const node = list->allocate((CCC_Allocator_context){
+        void *const node = list->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = list->sizeof_type,
             .context = list->context,
@@ -576,7 +595,8 @@ CCC_doubly_linked_list_insert_sorted(
         type_intruder = type_intruder_in(list, node);
     }
     struct CCC_Doubly_linked_list_node *pos = list->head;
-    for (; pos != NULL && order(list, type_intruder, pos) != CCC_ORDER_LESSER;
+    for (; pos != NULL
+           && get_order(list, type_intruder, pos, comparator) != list->order;
          pos = pos->next) {}
     insert_node(list, pos, type_intruder);
     ++list->count;
@@ -608,10 +628,14 @@ each merge step. Therefore the number of times we must perform the merge step is
 `O(log(N))`. The most elements we would have to merge in the merge step is all
 `N` elements so together that gives us the runtime of `O(N * log(N))`. */
 CCC_Result
-CCC_doubly_linked_list_sort(CCC_Doubly_linked_list *const list) {
-    if (!list) {
+CCC_sort_doubly_linked_list_mergesort(
+    CCC_Doubly_linked_list *const list, CCC_Order const order,
+    CCC_Comparator_context const *const comparator) {
+    if (!list || !comparator || !comparator->compare
+        || (order != CCC_ORDER_LESSER && order != CCC_ORDER_GREATER)) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
+    list->order = order;
     /* Algorithm is one pass if list is sorted. Merging is never true. */
     CCC_Tribool merging = CCC_FALSE;
     do {
@@ -621,7 +645,7 @@ CCC_doubly_linked_list_sort(CCC_Doubly_linked_list *const list) {
         while (a_first != NULL) {
             /* The Nth index of list A (its size) aka 0th index of B list. */
             struct CCC_Doubly_linked_list_node *const a_count_b_first
-                = first_less(list, a_first);
+                = first_out_of_order(list, a_first, order, comparator);
             if (a_count_b_first == NULL) {
                 break;
             }
@@ -629,8 +653,10 @@ CCC_doubly_linked_list_sort(CCC_Doubly_linked_list *const list) {
                to progress the sorting algorithm with the next run that needs
                fixing. Merge returns the end of B to indicate it is the final
                sentinel node yet to be examined. */
-            a_first = merge(list, a_first, a_count_b_first,
-                            first_less(list, a_count_b_first));
+            a_first = merge(
+                list, a_first, a_count_b_first,
+                first_out_of_order(list, a_count_b_first, order, comparator),
+                order, comparator);
             merging = CCC_TRUE;
         }
     } while (merging);
@@ -648,10 +674,11 @@ static inline struct CCC_Doubly_linked_list_node *
 merge(struct CCC_Doubly_linked_list *const list,
       struct CCC_Doubly_linked_list_node *a_first,
       struct CCC_Doubly_linked_list_node *a_count_b_first,
-      struct CCC_Doubly_linked_list_node *const b_count) {
+      struct CCC_Doubly_linked_list_node *const b_count, CCC_Order const order,
+      CCC_Comparator_context const *const comparator) {
     while (a_first && a_first != a_count_b_first && a_count_b_first
            && a_count_b_first != b_count) {
-        if (order(list, a_count_b_first, a_first) == CCC_ORDER_LESSER) {
+        if (get_order(list, a_count_b_first, a_first, comparator) == order) {
             struct CCC_Doubly_linked_list_node *const lesser = a_count_b_first;
             a_count_b_first = lesser->next;
             if (lesser->next) {
@@ -683,13 +710,15 @@ merge(struct CCC_Doubly_linked_list *const list,
 the user comparison callback function. If no out of order element can be
 found the list sentinel is returned. */
 static inline struct CCC_Doubly_linked_list_node *
-first_less(struct CCC_Doubly_linked_list const *const list,
-           struct CCC_Doubly_linked_list_node *start) {
+first_out_of_order(struct CCC_Doubly_linked_list const *const list,
+                   struct CCC_Doubly_linked_list_node *start,
+                   CCC_Order const order,
+                   CCC_Comparator_context const *const comparator) {
     assert(list && start);
     do {
         start = start->next;
     } while (start != NULL
-             && order(list, start, start->previous) != CCC_ORDER_LESSER);
+             && get_order(list, start, start->previous, comparator) != order);
     return start;
 }
 
@@ -792,7 +821,7 @@ erase_range(struct CCC_Doubly_linked_list const *const list,
     for (;;) {
         assert(count < list->count);
         CCC_Doubly_linked_list_node *const next = node->next;
-        list->allocate((CCC_Allocator_context){
+        list->allocate((CCC_Allocator_arguments){
             .input = struct_base(list, node),
             .bytes = 0,
             .context = list->context,
@@ -837,12 +866,13 @@ type_intruder_in(struct CCC_Doubly_linked_list const *const list,
 type wrapping the provided intrusive handles. Returns the three way comparison
 result value. */
 static inline CCC_Order
-order(struct CCC_Doubly_linked_list const *const list,
-      struct CCC_Doubly_linked_list_node const *const left,
-      struct CCC_Doubly_linked_list_node const *const right) {
-    return list->compare((CCC_Type_comparator_context){
+get_order(struct CCC_Doubly_linked_list const *const list,
+          struct CCC_Doubly_linked_list_node const *const left,
+          struct CCC_Doubly_linked_list_node const *const right,
+          CCC_Comparator_context const *const comparator) {
+    return comparator->compare((CCC_Comparator_arguments){
         .type_left = struct_base(list, left),
         .type_right = struct_base(list, right),
-        .context = list->context,
+        .context = comparator->context,
     });
 }

@@ -246,7 +246,7 @@ deduce if an increase or decrease is occurring. See the increase and decrease
 operations. O(1) best case, O(lgN) worst case. */
 void *CCC_priority_queue_update(CCC_Priority_queue *priority_queue,
                                 CCC_Priority_queue_node *type_intruder,
-                                CCC_Type_modifier *modify, void *context);
+                                CCC_Modifier *modify, void *context);
 
 /** @brief Update the priority in the user type_intruder stored in the
 container.
@@ -303,7 +303,7 @@ from the priority_queue creates an amortized o(lgN) runtime for this function.
 */
 void *CCC_priority_queue_increase(CCC_Priority_queue *priority_queue,
                                   CCC_Priority_queue_node *type_intruder,
-                                  CCC_Type_modifier *modify, void *context);
+                                  CCC_Modifier *modify, void *context);
 
 /** @brief Increases the priority of the user type_intruder stored in the
 container.
@@ -364,7 +364,7 @@ from the priority_queue creates an amortized o(lgN) runtime for this function.
 */
 void *CCC_priority_queue_decrease(CCC_Priority_queue *priority_queue,
                                   CCC_Priority_queue_node *type_intruder,
-                                  CCC_Type_modifier *modify, void *context);
+                                  CCC_Modifier *modify, void *context);
 
 /** @brief Decreases the priority of the user type_intruder stored in the
 container.
@@ -427,7 +427,7 @@ destructor function if they wish to do so. The container simply removes all
 the elements from the priority_queue, calling destroy on each user type_intruder
 if provided, and sets the size to zero. */
 CCC_Result CCC_priority_queue_clear(CCC_Priority_queue *priority_queue,
-                                    CCC_Type_destructor *destroy);
+                                    CCC_Destructor *destroy);
 
 /**@}*/
 

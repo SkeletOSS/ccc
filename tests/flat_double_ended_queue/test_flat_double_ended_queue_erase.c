@@ -58,7 +58,7 @@ check_static_begin(
             check(CCC_flat_double_ended_queue_push_front(&q, &(int){1}) != NULL,
                   true);
         } else {
-            check(CCC_flat_double_ended_queue_push_back(&q, &(int){0}) != NULL,
+            check(CCC_flat_double_ended_queue_push_back(&q, &(int){}) != NULL,
                   true);
         }
     }
@@ -97,7 +97,7 @@ check_static_begin(
             check(CCC_flat_double_ended_queue_push_front(&q, &(int){1}) != NULL,
                   true);
         } else {
-            check(CCC_flat_double_ended_queue_push_back(&q, &(int){0}) != NULL,
+            check(CCC_flat_double_ended_queue_push_back(&q, &(int){}) != NULL,
                   true);
         }
     }

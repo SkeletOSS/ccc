@@ -16,13 +16,13 @@ enum : size_t {
     STANDARD_FIXED_CAP = 1024,
 };
 
-uint64_t flat_hash_map_int_zero(CCC_Key_context);
-uint64_t flat_hash_map_int_last_digit(CCC_Key_context);
-uint64_t flat_hash_map_int_to_u64(CCC_Key_context);
-CCC_Order flat_hash_map_id_order(CCC_Key_comparator_context);
+uint64_t flat_hash_map_int_zero(CCC_Key_arguments);
+uint64_t flat_hash_map_int_last_digit(CCC_Key_arguments);
+uint64_t flat_hash_map_int_to_u64(CCC_Key_arguments);
+CCC_Order flat_hash_map_id_order(CCC_Key_comparator_arguments);
 
-void flat_hash_map_modplus(CCC_Type_context);
+void flat_hash_map_modplus(CCC_Arguments);
 struct Val flat_hash_map_create(int id, int val);
-void flat_hash_map_swap_val(CCC_Type_context u);
+void flat_hash_map_swap_val(CCC_Arguments u);
 
 #endif /* CCC_FLAT_HASH_MAP_UTIL_H */

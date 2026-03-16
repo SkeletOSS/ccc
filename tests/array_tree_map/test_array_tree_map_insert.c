@@ -20,7 +20,7 @@ array_tree_map_create(int const id, int const val) {
 }
 
 static inline void
-array_tree_map_modplus(CCC_Type_context const t) {
+array_tree_map_modplus(CCC_Arguments const t) {
     ((struct Val *)t.type)->val++;
 }
 
@@ -156,7 +156,7 @@ check_static_begin(array_tree_map_test_array_api_functional) {
     /* Test handle or insert with for all even values. Default should be
        inserted. All entries are hashed to last digit so many spread out
        collisions. */
-    struct Val def = {0};
+    struct Val def = {};
     for (size_t i = 0; i < size / 2; i += 2) {
         def.id = (int)i;
         def.val = (int)i;
@@ -211,7 +211,7 @@ check_static_begin(array_tree_map_test_insert_via_handle) {
     /* Test handle or insert with for all even values. Default should be
        inserted. All entries are hashed to last digit so many spread out
        collisions. */
-    struct Val def = {0};
+    struct Val def = {};
     for (size_t i = 0; i < size / 2; i += 2) {
         def.id = (int)i;
         def.val = (int)i;

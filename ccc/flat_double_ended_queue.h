@@ -45,6 +45,7 @@ All types and functions can then be written without the `CCC_` prefix. */
 #include <stddef.h>
 /** @endcond */
 
+#include "buffer.h"
 #include "private/private_flat_double_ended_queue.h"
 #include "types.h"
 
@@ -66,24 +67,40 @@ typedef struct CCC_Flat_double_ended_queue CCC_Flat_double_ended_queue;
 Initialize and create containers with memory, callbacks, and permissions. */
 /**@{*/
 
+/** @brief Initialize a contiguous empty flat_double_ended_queue of a type.
+@param[in] type_name the name of the user type in the flat_double_ended_queue.
+@return the initialized flat_double_ended_queue. Directly assign to
+flat_double_ended_queue on the right hand side of the equality operator.
+
+Initialization of a flat_double_ended_queue can occur at compile time or run
+time.
+
+```
+static CCC_flat_double_ended_queue queue
+    = CCC_flat_double_ended_queue_default(int);
+```
+
+The flat_double_ended_queue will be empty with a count and capacity of 0. */
+#define CCC_flat_double_ended_queue_default(type_name)                         \
+    CCC_private_flat_double_ended_queue_default(type_name)
+
 /** @brief Initialize the queue with memory and allocation permission.
 @param[in] type_name the name of the user type.
-@param[in] allocate the allocator function, if allocation is allowed.
-@param[in] context any context data needed for element destruction.
 @param[in] capacity the number of contiguous elements at data_pointer
 @param[in] count the starting size of the flat doubled ended queue.
 @param[in] data_pointer a pointer to existing memory or NULL.
 @return the queue on the right hand side of an equality
 operator at runtime or compiletime (e.g. CCC_Flat_double_ended_queue q =
 CCC_flat_double_ended_queue_for(...);) */
-#define CCC_flat_double_ended_queue_for(type_name, allocate, context,          \
-                                        capacity, count, data_pointer...)      \
-    CCC_private_flat_double_ended_queue_for(type_name, allocate, context,      \
-                                            capacity, count, data_pointer)
+#define CCC_flat_double_ended_queue_for(type_name, capacity, count,            \
+                                        data_pointer...)                       \
+    CCC_private_flat_double_ended_queue_for(type_name, capacity, count,        \
+                                            data_pointer)
 
 /** @brief Initialize a Flat_double_ended_queue from a compound literal array
 initializer.
-@param[in] allocate CCC_Allocator or NULL if no allocation is permitted.
+@param[in] allocator_context_pointer the CCC_Allocator_context needed to copy in
+the compound literal array elements.
 @param[in] optional_capacity optionally specify the capacity of the queue if
 different from the size of the compound literal array initializer. If the
 capacity is greater than the size of the compound literal array initializer, it
@@ -104,53 +121,14 @@ int
 main(void)
 {
     Flat_double_ended_queue f
-        = flat_double_ended_queue_from(std_allocate, NULL, 0,
-            (int[]){ 0, 1, 2, 3 });
+        = flat_double_ended_queue_from(&std_allocator, 0,
+                                       (int[]){ 0, 1, 2, 3 });
     return 0;
 }
 ```
 
 Initialize a dynamic Flat_double_ended_queue with a compound literal array with
 capacity.
-
-```
-#define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
-int
-main(void)
-{
-    Flat_double_ended_queue f = flat_double_ended_queue_from(
-        std_allocate, NULL, 4096, (int[]){ 0, 1, 2, 3 }
-    );
-    return 0;
-}
-```
-
-Only dynamic flat_double_ended_queues may be initialized this way. For static
-or stack based initialization of fixed flat_double_ended_queues with contents
-known at compile time, see the CCC_flat_double_ended_queue_for() macro.
-*/
-#define CCC_flat_double_ended_queue_from(allocate, optional_capacity,          \
-                                         compound_literal_array...)            \
-    CCC_private_flat_double_ended_queue_from(allocate, optional_capacity,      \
-                                             compound_literal_array)
-
-/** @brief Initialize a Flat_double_ended_queue from a compound literal array
-initializer.
-@param[in] allocate CCC_Allocator or NULL if no allocation is permitted.
-@param[in] context any context data needed for managing queue memory.
-@param[in] optional_capacity optionally specify the capacity of the queue if
-different from the size of the compound literal array initializer. If the
-capacity is greater than the size of the compound literal array initializer, it
-is respected and the capacity is reserved. If the capacity is less than the size
-of the compound array initializer, the compound literal array initializer size
-is set as the capacity. Therefore, 0 is valid if one is not concerned with the
-underlying reservation.
-@param[in] compound_literal_array the initializer of the type stored in queue.
-@return the initialized flat_double_ended_queue. Directly assign to queue on the
-right hand side of the equality operator
-(e.g. Flat_double_ended_queue b = flat_double_ended_queue_context_from(...);).
-
-Initialize a dynamic Flat_double_ended_queue with a compound literal array.
 
 ```
 #define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
@@ -158,22 +136,8 @@ int
 main(void)
 {
     Flat_double_ended_queue f
-        = flat_double_ended_queue_context_from(arena_allocate, &arena, 0,
-            (int[]){ 0, 1, 2, 3 });
-    return 0;
-}
-```
-
-Initialize a dynamic Flat_double_ended_queue with a compound literal array with
-capacity.
-
-```
-#define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
-int
-main(void)
-{
-    Flat_double_ended_queue f = flat_double_ended_queue_context_from(
-        arena_allocate, &arena, 4096, (int[]){ 0, 1, 2, 3 }
+        = flat_double_ended_queue_from(&std_allocator, 4096,
+                                       (int[]){ 0, 1, 2, 3 }
     );
     return 0;
 }
@@ -181,16 +145,16 @@ main(void)
 
 Only dynamic flat_double_ended_queues may be initialized this way. For static
 or stack based initialization of fixed flat_double_ended_queues with contents
-known at compile time, see the CCC_flat_double_ended_queue_for() macro.
+known at compile time, see the CCC_flat_double_ended_queue_with_storage() macro.
 */
-#define CCC_flat_double_ended_queue_context_from(                              \
-    allocate, context, optional_capacity, compound_literal_array...)           \
-    CCC_private_flat_double_ended_queue_context_from(                          \
-        allocate, context, optional_capacity, compound_literal_array)
+#define CCC_flat_double_ended_queue_from(                                      \
+    allocator_context_pointer, optional_capacity, compound_literal_array...)   \
+    CCC_private_flat_double_ended_queue_from(                                  \
+        allocator_context_pointer, optional_capacity, compound_literal_array)
 
 /** @brief Initialize a Flat_double_ended_queue with a capacity.
 @param[in] type_name any user or language standard type name.
-@param[in] allocate CCC_Allocator or NULL if no allocation is permitted.
+@param[in] allocator_context_pointer the CCC_Allocator_context for resizing.
 @param[in] capacity the capacity of the Flat_double_ended_queue to reserve.
 @return the initialized flat_double_ended_queue. Directly assign to
 Flat_double_ended_queue on the right hand side of the equality operator (e.g.
@@ -204,103 +168,35 @@ int
 main(void)
 {
     Flat_double_ended_queue f
-        = flat_double_ended_queue_with_capacity(std_allocate, 4096);
+        = flat_double_ended_queue_with_capacity(int, &std_allocator, 4096);
     return 0;
 }
 ```
 
 Only dynamic flat_double_ended_queues may be initialized this way. For static or
 stack based initialization of fixed flat_double_ended_queues with contents known
-at compile time, see the CCC_flat_double_ended_queue_for() macro. */
-#define CCC_flat_double_ended_queue_with_capacity(type_name, allocate,         \
-                                                  capacity)                    \
-    CCC_private_flat_double_ended_queue_with_capacity(type_name, allocate,     \
-                                                      capacity)
-
-/** @brief Initialize a Flat_double_ended_queue with a capacity.
-@param[in] type_name any user or language standard type name.
-@param[in] allocate CCC_Allocator or NULL if no allocation is permitted.
-@param[in] context any context data needed for managing queue memory.
-@param[in] capacity the capacity of the Flat_double_ended_queue to reserve.
-@return the initialized flat_double_ended_queue. Directly assign to
-Flat_double_ended_queue on the right hand side of the equality operator (e.g.
-Flat_double_ended_queue b = flat_double_ended_queue_context_with_capacity(...)).
-
-Initialize a dynamic Flat_double_ended_queue.
-
-```
-#define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
-int
-main(void)
-{
-    Flat_double_ended_queue f = flat_double_ended_queue_context_with_capacity(
-        arena_allocate, &arena, 4096
-    );
-    return 0;
-}
-```
-
-Only dynamic flat_double_ended_queues may be initialized this way. For static or
-stack based initialization of fixed flat_double_ended_queues with contents known
-at compile time, see the CCC_flat_double_ended_queue_for() macro. */
-#define CCC_flat_double_ended_queue_context_with_capacity(type_name, allocate, \
-                                                          context, capacity)   \
-    CCC_private_flat_double_ended_queue_context_with_capacity(                 \
-        type_name, allocate, context, capacity)
+at compile time, see the CCC_flat_double_ended_queue_with_storage() macro. */
+#define CCC_flat_double_ended_queue_with_capacity(                             \
+    type_name, allocator_context_pointer, capacity)                            \
+    CCC_private_flat_double_ended_queue_with_capacity(                         \
+        type_name, allocator_context_pointer, capacity)
 
 /** @brief Initialize the queue from a compound literal array with no allocation
 permissions or context data.
 @param[in] count the count of elements to start.
 @param[in] compound_literal_array the array of user types.
-@return the queue on the right hand side of an equality
-operator at runtime or compiletime (e.g. CCC_Flat_double_ended_queue q =
-CCC_flat_double_ended_queue_with_storage(...);) */
+@return the queue on the right hand side of an equality operator at runtime or
+compiletime. */
 #define CCC_flat_double_ended_queue_with_storage(count,                        \
                                                  compound_literal_array...)    \
     CCC_private_flat_double_ended_queue_with_storage(count,                    \
                                                      compound_literal_array)
 
-/** @brief Initialize the queue from a compound literal array with no allocation
-permissions.
-@param[in] context any context needed for the flat double ended queue.
-@param[in] count the count of elements to start.
-@param[in] compound_literal_array the array of user types.
-@return the queue on the right hand side of an equality
-operator at runtime or compiletime (e.g. CCC_Flat_double_ended_queue q =
-CCC_flat_double_ended_queue_context_with_storage(...);) */
-#define CCC_flat_double_ended_queue_context_with_storage(                      \
-    context, count, compound_literal_array...)                                 \
-    CCC_private_flat_double_ended_queue_context_with_storage(                  \
-        context, count, compound_literal_array)
-
-/** @brief Initialize an empty dynamic queue at compile or runtime with an
-allocator.
-@param[in] type_name the type stored in the queue.
-@param[in] allocate the CCC_Allocator function.
-@return the queue on the right hand side of an equality operator at runtime or
-compiletime (e.g. CCC_Flat_double_ended_queue q =
-CCC_flat_double_ended_queue_with_allocator(...);) */
-#define CCC_flat_double_ended_queue_with_allocator(type_name, allocate)        \
-    CCC_private_flat_double_ended_queue_with_allocator(type_name, allocate)
-
-/** @brief Initialize an empty dynamic queue at compile or runtime with an
-allocator and context.
-@param[in] type_name the type stored in the queue.
-@param[in] allocate the CCC_Allocator function.
-@param[in] context the context needed for allocation.
-@return the queue on the right hand side of an equality operator at runtime or
-compiletime (e.g. CCC_Flat_double_ended_queue q =
-CCC_flat_double_ended_queue_with_allocator(...);) */
-#define CCC_flat_double_ended_queue_context_with_allocator(type_name,          \
-                                                           allocate, context)  \
-    CCC_private_flat_double_ended_queue_context_with_allocator(                \
-        type_name, allocate, context)
-
 /** @brief Copy the queue from source to newly initialized
 destination.
 @param[in] destination the destination that will copy the source queue.
 @param[in] source the source of the flat_double_ended_queue.
-@param[in] allocate the allocation function in case resizing of destination is
+@param[in] allocator the allocation context in case resizing of destination is
 needed.
 @return the result of the copy operation. If the destination capacity is less
 than the source capacity and no allocation function is provided an input error
@@ -318,11 +214,7 @@ Manual memory management with no allocation function provided.
 
 ```
 #define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
-Flat_double_ended_queue source = flat_double_ended_queue_for(
-    int,
-    NULL,
-    NULL,
-    10,
+Flat_double_ended_queue source = flat_double_ended_queue_with_storage(
     0,
     (int[10]){}
 );
@@ -330,13 +222,12 @@ int *new_data
     = malloc(sizeof(int) * flat_double_ended_queue_capacity(&source).count);
 Flat_double_ended_queue destination = flat_double_ended_queue_for(
     int,
-    NULL,
-    NULL,
     flat_double_ended_queue_capacity(&source).count,
     0,
     new_data
 );
-CCC_Result res = flat_double_ended_queue_copy(&destination, &source, NULL);
+CCC_Result res = flat_double_ended_queue_copy(&destination, &source,
+                                              &(CCC_Allocator_context){});
 ```
 
 The above requires destination capacity be greater than or equal to source
@@ -344,105 +235,42 @@ capacity. Here is memory management handed over to the copy function.
 
 ```
 #define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
-Flat_double_ended_queue source = flat_double_ended_queue_for(
-    int,
-    std_allocate,
-    NULL,
-    0,
-    0,
-    NULL
-);
+Flat_double_ended_queue source = flat_double_ended_queue_default(int);
 (void)CCC_flat_double_ended_queue_push_back_range(
     &source,
     5,
-    (int[5]){0,1,2,3,4}
+    (int[5]){0,1,2,3,4},
+    &std_allocator
 );
-Flat_double_ended_queue destination = flat_double_ended_queue_for(
-    int,
-    std_allocate,
-    NULL,
-    0,
-    0,
-    NULL
-);
+Flat_double_ended_queue destination = flat_double_ended_queue_default(int);
 CCC_Result res = flat_double_ended_queue_copy(
     &destination,
     &source,
-    std_allocate
+    &std_allocator
 );
 ```
 
 The above allows destination to have a capacity less than that of the source as
 long as copy has been provided an allocation function to resize destination.
-Note that this would still work if copying to a destination that the user wants
-as a fixed size queue (ring buffer).
-
-```
-#define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
-Flat_double_ended_queue source = flat_double_ended_queue_for(
-    int,
-    std_allocate,
-    NULL,
-    0,
-    0,
-    NULL
-);
-(void)CCC_flat_double_ended_queue_push_back_range(
-    &source,
-    5,
-    (int[5]){0,1,2,3,4}
-);
-Flat_double_ended_queue destination = flat_double_ended_queue_for(
-    int,
-    NULL,
-    NULL,
-    0,
-    0,
-    NULL
-);
-CCC_Result res = flat_double_ended_queue_copy(
-    &destination,
-    &source,
-    std_allocate
-);
-```
-
-The above sets up destination as a ring Buffer while source is a dynamic
-flat_double_ended_queue. Because an allocation function is provided, the
-destination is resized once for the copy and retains its fixed size after the
-copy is complete. This would require the user to manually free the underlying
-Buffer at destination eventually if this method is used. Usually it is better to
-allocate the memory explicitly before the copy if copying between ring buffers.
-
-These options allow users to stay consistent across containers with their
-memory management strategies. */
+These options allow users to stay consistent across containers with their memory
+management strategies. */
 CCC_Result
 CCC_flat_double_ended_queue_copy(CCC_Flat_double_ended_queue *destination,
                                  CCC_Flat_double_ended_queue const *source,
-                                 CCC_Allocator *allocate);
+                                 CCC_Allocator_context const *allocator);
 
 /** @brief Reserves space for at least to_add more elements.
 @param[in] queue a pointer to the flat double ended queue.
 @param[in] to_add the number of elements to add to the current size.
-@param[in] allocate the allocation function to use to reserve memory.
+@param[in] allocator the CCC_Allocator_context to use to reserve memory.
 @return the result of the reservation. OK if successful, otherwise an error
 status is returned.
 @note see the CCC_flat_double_ended_queue_clear_and_free_reserve function if
-this function is being used for a one-time dynamic reservation.
-
-This function can be used for a dynamic queue with or without
-allocation permission. If the queue has allocation permission,
-it will reserve the required space and later resize if more space is needed.
-
-If the queue has been initialized with no allocation
-permission and no memory this function can serve as a one-time reservation. The
-flat_double_ended_queue will then act as as ring Buffer when space runs out.
-This is helpful when a fixed size is needed but that size is only known
-dynamically at runtime. To free the queue in such a case see
-the CCC_flat_double_ended_queue_clear_and_free_reserve function. */
+this function is being used for a one-time dynamic reservation. */
 CCC_Result
 CCC_flat_double_ended_queue_reserve(CCC_Flat_double_ended_queue *queue,
-                                    size_t to_add, CCC_Allocator *allocate);
+                                    size_t to_add,
+                                    CCC_Allocator_context const *allocator);
 
 /**@}*/
 
@@ -455,44 +283,48 @@ flat_double_ended_queue. O(1) if no allocation permission amortized O(1) if
 allocation permission is given and a resize is required.
 @param[in] flat_double_ended_queue_pointer a pointer to the
 flat_double_ended_queue.
+@param[in] allocator_context_pointer a pointer to the CCC_Allocator_context.
 @param[in] value for integral types, the direct value. For structs and
 unions use compound literal syntax.
 @return a reference to the inserted element. If allocation is permitted and a
 resizing is required to insert the element but fails, NULL is returned. */
 #define CCC_flat_double_ended_queue_emplace_back(                              \
-    flat_double_ended_queue_pointer, value...)                                 \
+    flat_double_ended_queue_pointer, allocator_context_pointer, value...)      \
     CCC_private_flat_double_ended_queue_emplace_back(                          \
-        flat_double_ended_queue_pointer, value)
+        flat_double_ended_queue_pointer, allocator_context_pointer, value)
 
 /** @brief Write an element directly to the front slot of the
 flat_double_ended_queue. O(1) if no allocation permission amortized O(1) if
 allocation permission is given and a resize is required.
 @param[in] flat_double_ended_queue_pointer a pointer to the queue.
+@param[in] allocator_context_pointer a pointer to the CCC_Allocator_context.
 @param[in] value for integral types, the direct value. For structs and unions
 use compound literal syntax.
 @return a reference to the inserted element. If allocation is permitted and a
 resizing is required to insert the element but fails, NULL is returned. */
 #define CCC_flat_double_ended_queue_emplace_front(                             \
-    flat_double_ended_queue_pointer, value...)                                 \
+    flat_double_ended_queue_pointer, allocator_context_pointer, value...)      \
     CCC_private_flat_double_ended_queue_emplace_front(                         \
-        flat_double_ended_queue_pointer, value)
+        flat_double_ended_queue_pointer, allocator_context_pointer, value)
 
 /** @brief Push the user type to the back of the flat_double_ended_queue. O(1)
 if no allocation permission amortized O(1) if allocation permission is given and
 a resize is required.
 @param[in] queue a pointer to the flat_double_ended_queue.
-@param[in] type a pointer to the user type to insert into the
-flat_double_ended_queue.
-@return a reference to the inserted element. */
+@param[in] type a pointer to the user type to insert into the queue.
+@param[in] allocator the CCC_Allocator_context to use in case of resizing.
+@return a reference to the inserted element or NULL upon failure to resize due
+to exhaustion or an empty allocation context passed in the resizing case. */
 [[nodiscard]] void *
 CCC_flat_double_ended_queue_push_back(CCC_Flat_double_ended_queue *queue,
-                                      void const *type);
+                                      void const *type,
+                                      CCC_Allocator_context const *allocator);
 
 /** @brief Push the range of user types to the back of the
 flat_double_ended_queue. O(N).
 @param[in] queue pointer to the flat_double_ended_queue.
-@param[in] count the number of user types in the type_array range.
-@param[in] type_array a pointer to the array of user types.
+@param[in] range the buffer from which count elements are pushed.
+@param[in] allocator the CCC_Allocator_context to use in case of resizing.
 @return ok if insertion was successful. If allocation is permitted and a resize
 is needed but fails an error is returned. If bad input is provided an input
 error is returned.
@@ -501,23 +333,26 @@ Note that if no allocation is permitted the queue behaves as a
 ring buffer. Therefore, pushing a range that will exceed capacity will overwrite
 elements at the beginning of the flat_double_ended_queue. */
 CCC_Result CCC_flat_double_ended_queue_push_back_range(
-    CCC_Flat_double_ended_queue *queue, size_t count, void const *type_array);
+    CCC_Flat_double_ended_queue *queue, CCC_Buffer const *range,
+    CCC_Allocator_context const *allocator);
 
 /** @brief Push the user type to the front of the flat_double_ended_queue. O(1)
 if no allocation permission amortized O(1) if allocation permission is given and
 a resize is required.
 @param[in] queue a pointer to the flat_double_ended_queue.
 @param[in] type a pointer to the user type to insert into the queue.
+@param[in] allocator the CCC_Allocator_context to use in case of resizing.
 @return a reference to the inserted element. */
 [[nodiscard]] void *
 CCC_flat_double_ended_queue_push_front(CCC_Flat_double_ended_queue *queue,
-                                       void const *type);
+                                       void const *type,
+                                       CCC_Allocator_context const *allocator);
 
 /** @brief Push the range of user types to the front of the
 flat_double_ended_queue. O(N).
 @param[in] queue a pointer to the flat_double_ended_queue.
-@param[in] count the number of user types in the type_array range.
-@param[in] type_array a pointer to the array of user types.
+@param[in] range the buffer from which count elements are pushed.
+@param[in] allocator the CCC_Allocator_context to use in case of resizing.
 @return ok if insertion was successful. If allocation is permitted and a resize
 is needed but fails an error is returned. If bad input is provided an input
 error is returned.
@@ -526,14 +361,15 @@ Note that if no allocation is permitted the queue behaves as a
 ring buffer. Therefore, pushing a range that will exceed capacity will overwrite
 elements at the back of the flat_double_ended_queue. */
 CCC_Result CCC_flat_double_ended_queue_push_front_range(
-    CCC_Flat_double_ended_queue *queue, size_t count, void const *type_array);
+    CCC_Flat_double_ended_queue *queue, CCC_Buffer const *range,
+    CCC_Allocator_context const *allocator);
 
 /** @brief Push the range of user types before position of the
 flat_double_ended_queue. O(N).
 @param[in] queue a pointer to the flat_double_ended_queue.
 @param[in] position the position in the queue before which to push the range.
-@param[in] count the number of user types in the type_array range.
-@param[in] type_array a pointer to the array of user types.
+@param[in] range the buffer from which count elements are pushed.
+@param[in] allocator the CCC_Allocator_context to use in case of resizing.
 @return a pointer to the start of the inserted range or NULL if a resize was
 required and could not complete.
 
@@ -563,10 +399,9 @@ front  position front
 └─┴─┴─┴─┴─┘    └─┴─┴─┴─┴─┘
 
 Notice that the start of the range, `{0,0,3,...}`, is overwritten. */
-[[nodiscard]] void *
-CCC_flat_double_ended_queue_insert_range(CCC_Flat_double_ended_queue *queue,
-                                         void *position, size_t count,
-                                         void const *type_array);
+[[nodiscard]] void *CCC_flat_double_ended_queue_insert_range(
+    CCC_Flat_double_ended_queue *queue, void *position, CCC_Buffer const *range,
+    CCC_Allocator_context const *allocator);
 
 /** @brief Pop an element from the front of the flat_double_ended_queue. O(1).
 @param[in] queue a pointer to the flat_double_ended_queue.
@@ -591,63 +426,31 @@ Destroy the container. */
 /** @brief Set size of queue to 0 and call destructor on each
 element if needed. O(1) if no destructor is provided, else O(N).
 @param[in] queue a pointer to the flat_double_ended_queue.
-@param[in] destructor the destructor if needed or NULL.
+@param[in] destructor the destructor context or &(CCC_Destructor_context){}.
 
-Note that if destructor is non-NULL it will be called on each element in the
+Note that if destructor is non-empty it will be called on each element in the
 flat_double_ended_queue. However, the underlying Buffer for the
 flat_double_ended_queue is not freed. If the destructor is NULL, setting the
 size to 0 is O(1). */
-CCC_Result CCC_flat_double_ended_queue_clear(CCC_Flat_double_ended_queue *queue,
-                                             CCC_Type_destructor *destructor);
+CCC_Result
+CCC_flat_double_ended_queue_clear(CCC_Flat_double_ended_queue *queue,
+                                  CCC_Destructor_context const *destructor);
 
 /** @brief Set size of queue to 0 and call destructor on each
 element if needed. Free the underlying Buffer setting the capacity to 0. O(1) if
 no destructor is provided, else O(N).
 @param[in] queue a pointer to the flat_double_ended_queue.
-@param[in] destructor the destructor if needed or NULL.
+@param[in] destructor the destructor context or &(CCC_Destructor_context){}.
+@param[in] allocator the CCC_Allocator_context to free memory.
 
-Note that if destructor is non-NULL it will be called on each element in the
+Note that if destructor is non-empty it will be called on each element in the
 flat_double_ended_queue. After all elements are processed the Buffer is freed
 and capacity is 0. If destructor is NULL the Buffer is freed directly and
 capacity is 0. */
-CCC_Result
-CCC_flat_double_ended_queue_clear_and_free(CCC_Flat_double_ended_queue *queue,
-                                           CCC_Type_destructor *destructor);
-
-/** @brief Frees all slots in the queue and frees the
-underlying Buffer that was previously dynamically reserved with the reserve
-function.
-@param[in] queue the queue to be cleared.
-@param[in] destructor the destructor for each element. NULL can be passed if no
-maintenance is required on the elements in the queue before
-their slots are dropped.
-@param[in] allocate the required allocation function to provide to a
-dynamically reserved flat_double_ended_queue. Any context data provided upon
-initialization will be passed to the allocation function when called.
-@return the result of free operation. OK if success, or an error status to
-indicate the error.
-@warning It is an error to call this function on a queue that
-was not reserved with the provided CCC_Allocator. The flat_double_ended_queue
-must have existing memory to free.
-
-This function covers the edge case of reserving a dynamic capacity for a
-flat_double_ended_queue at runtime but denying the flat_double_ended_queue
-allocation permission to resize. This can help prevent a flat_double_ended_queue
-from growing untree. The user in this case knows the flat_double_ended_queue
-does not have allocation permission and therefore no further memory will be
-dedicated to the flat_double_ended_queue.
-
-However, to free the queue in such a case this function must
-be used because the queue has no ability to free itself. Just
-as the allocation function is required to reserve memory so to is it required to
-free memory.
-
-This function will work normally if called on a queue with
-allocation permission however the normal
-CCC_flat_double_ended_queue_clear_and_free is sufficient for that use case. */
-CCC_Result CCC_flat_double_ended_queue_clear_and_free_reserve(
-    CCC_Flat_double_ended_queue *queue, CCC_Type_destructor *destructor,
-    CCC_Allocator *allocate);
+CCC_Result CCC_flat_double_ended_queue_clear_and_free(
+    CCC_Flat_double_ended_queue *queue,
+    CCC_Destructor_context const *destructor,
+    CCC_Allocator_context const *allocator);
 
 /**@}*/
 
@@ -782,22 +585,14 @@ name shortening. */
 #ifdef FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
 /* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Flat_double_ended_queue Flat_double_ended_queue;
+#    define flat_double_ended_queue_default(argument)                          \
+        CCC_flat_double_ended_queue_default(argument)
 #    define flat_double_ended_queue_for(arguments...)                          \
         CCC_flat_double_ended_queue_for(arguments)
 #    define flat_double_ended_queue_from(arguments...)                         \
         CCC_flat_double_ended_queue_from(arguments)
-#    define flat_double_ended_queue_context_from(arguments...)                 \
-        CCC_flat_double_ended_queue_context_from(arguments)
-#    define flat_double_ended_queue_context_with_capacity(arguments...)        \
-        CCC_flat_double_ended_queue_context_with_capacity(arguments)
 #    define flat_double_ended_queue_with_storage(arguments...)                 \
         CCC_flat_double_ended_queue_with_storage(arguments)
-#    define flat_double_ended_queue_context_with_storage(arguments...)         \
-        CCC_flat_double_ended_queue_context_with_storage(arguments)
-#    define flat_double_ended_queue_with_allocator(arguments...)               \
-        CCC_flat_double_ended_queue_with_allocator(arguments)
-#    define flat_double_ended_queue_context_with_allocator(arguments...)       \
-        CCC_flat_double_ended_queue_context_with_allocator(arguments)
 #    define flat_double_ended_queue_copy(arguments...)                         \
         CCC_flat_double_ended_queue_copy(arguments)
 #    define flat_double_ended_queue_reserve(arguments...)                      \

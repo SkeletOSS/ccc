@@ -866,7 +866,7 @@ CCC_bitset_clear_and_free(CCC_Bitset *const bitset) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
     if (bitset->blocks) {
-        (void)bitset->allocate((CCC_Allocator_context){
+        (void)bitset->allocate((CCC_Allocator_arguments){
             .input = bitset->blocks,
             .bytes = 0,
             .context = bitset->context,
@@ -885,7 +885,7 @@ CCC_bitset_clear_and_free_reserve(CCC_Bitset *const bitset,
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     if (bitset->blocks) {
-        (void)allocate((CCC_Allocator_context){
+        (void)allocate((CCC_Allocator_arguments){
             .input = bitset->blocks,
             .bytes = 0,
             .context = bitset->context,
@@ -917,7 +917,7 @@ CCC_bitset_copy(CCC_Bitset *const destination, CCC_Bitset const *const source,
         return CCC_RESULT_OK;
     }
     if (destination->capacity < source->capacity) {
-        Bit_block *const new_data = allocate((CCC_Allocator_context){
+        Bit_block *const new_data = allocate((CCC_Allocator_arguments){
             .input = destination->blocks,
             .bytes = block_count(source->capacity) * SIZEOF_BLOCK,
             .context = destination->context,
@@ -1013,7 +1013,7 @@ maybe_resize(struct CCC_Bitset *const bitset, size_t const to_add,
         = block_count(bits_needed - bitset->count) * SIZEOF_BLOCK;
     size_t const old_bytes
         = bitset->count ? block_count(bitset->count) * SIZEOF_BLOCK : 0;
-    Bit_block *const new_data = allocate((CCC_Allocator_context){
+    Bit_block *const new_data = allocate((CCC_Allocator_arguments){
         .input = bitset->blocks,
         .bytes = block_count(bits_needed) * SIZEOF_BLOCK,
         .context = bitset->context,

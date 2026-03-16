@@ -52,8 +52,7 @@ struct Lru_request {
 
 /*===========================   Prototypes   ================================*/
 
-static CCC_Order order_by_key(CCC_Key_comparator_context order);
-static CCC_Order order_list_nodes(CCC_Type_comparator_context corder);
+static CCC_Order order_by_key(CCC_Key_comparator_arguments order);
 static struct Lru_node *lru_head(struct Lru_cache *lru);
 static enum Check_result lru_put(struct Lru_cache *lru, int key, int val);
 static enum Check_result lru_get(struct Lru_cache *lru, int key, int *val);
@@ -66,8 +65,7 @@ static enum Check_result run_lru_cache(void);
 static struct Lru_cache lru_cache = {
     .map = array_tree_map_with_storage(key, order_by_key,
                                        (struct Lru_node[LRU_CAP]){}),
-    .l = doubly_linked_list_for(struct Lru_node, list_node, order_list_nodes,
-                                NULL, NULL),
+    .l = doubly_linked_list_for(struct Lru_node, list_node, NULL, NULL),
     .cap = 3,
 };
 
@@ -192,15 +190,8 @@ lru_head(struct Lru_cache *const lru) {
 }
 
 static CCC_Order
-order_by_key(CCC_Key_comparator_context const order) {
+order_by_key(CCC_Key_comparator_arguments const order) {
     int const key_left = *(int *)order.key_left;
     struct Lru_node const *const kv = order.type_right;
     return (key_left > kv->key) - (key_left < kv->key);
-}
-
-static CCC_Order
-order_list_nodes(CCC_Type_comparator_context const order) {
-    struct Lru_node const *const kv_a = order.type_left;
-    struct Lru_node const *const kv_b = order.type_right;
-    return (kv_a->key > kv_b->key) - (kv_a->key < kv_b->key);
 }

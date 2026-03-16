@@ -17,7 +17,7 @@ enum : size_t {
     STANDARD_FIXED_CAP = 1024,
 };
 
-CCC_Order id_order(CCC_Key_comparator_context);
+CCC_Order id_order(CCC_Key_comparator_arguments);
 
 enum Check_result insert_shuffled(CCC_Array_adaptive_map *m, size_t size,
                                   int larger_prime);

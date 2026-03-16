@@ -70,8 +70,8 @@ struct CCC_Singly_linked_list {
     size_t sizeof_type;
     /** @internal The offset in bytes of the intrusive element in user type. */
     size_t type_intruder_offset;
-    /** @internal The user provided comparison callback for sorting. */
-    CCC_Type_comparator *compare;
+    /** @internal The sorted state of the list. Remembers last sort. */
+    CCC_Order order;
     /** @internal The user provided allocation function, if any. */
     CCC_Allocator *allocate;
     /** @internal User provided context data, if any. */
@@ -94,7 +94,7 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
 /** @internal */
 #define CCC_private_singly_linked_list_for(                                    \
     private_struct_name, private_singly_linked_list_node_field,                \
-    private_compare, private_allocate, private_context)                        \
+    private_allocate, private_context)                                         \
     {                                                                          \
         .head = NULL,                                                          \
         .sizeof_type = sizeof(private_struct_name),                            \
@@ -102,30 +102,29 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
             private_struct_name, private_singly_linked_list_node_field),       \
         .count = 0,                                                            \
         .allocate = (private_allocate),                                        \
-        .compare = (private_compare),                                          \
+        .order = CCC_ORDER_ERROR,                                              \
         .context = (private_context),                                          \
     }
 
 /** @internal */
 #define CCC_private_singly_linked_list_context_with_allocator(                 \
-    private_struct_name, private_type_intruder_field, private_compare,         \
-    private_allocate, private_context)                                         \
-    CCC_private_singly_linked_list_for(                                        \
-        private_struct_name, private_type_intruder_field, private_compare,     \
-        private_allocate, private_context)
+    private_struct_name, private_type_intruder_field, private_allocate,        \
+    private_context)                                                           \
+    CCC_private_singly_linked_list_for(private_struct_name,                    \
+                                       private_type_intruder_field,            \
+                                       private_allocate, private_context)
 
 /** @internal */
 #define CCC_private_singly_linked_list_with_allocator(                         \
-    private_struct_name, private_type_intruder_field, private_compare,         \
-    private_allocate)                                                          \
-    CCC_private_singly_linked_list_for(                                        \
-        private_struct_name, private_type_intruder_field, private_compare,     \
-        private_allocate, NULL)
+    private_struct_name, private_type_intruder_field, private_allocate)        \
+    CCC_private_singly_linked_list_for(private_struct_name,                    \
+                                       private_type_intruder_field,            \
+                                       private_allocate, NULL)
 
 /** @internal */
 #define CCC_private_singly_linked_list_context_from(                           \
-    private_type_intruder_field, private_compare, private_allocate,            \
-    private_destroy, private_context, private_compound_literal_array...)       \
+    private_type_intruder_field, private_allocate, private_destroy,            \
+    private_context, private_compound_literal_array...)                        \
     (__extension__({                                                           \
         typeof(*private_compound_literal_array)                                \
             *private_singly_linked_list_type_array                             \
@@ -133,8 +132,8 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
         struct CCC_Singly_linked_list private_singly_linked_list               \
             = CCC_private_singly_linked_list_for(                              \
                 typeof(*private_singly_linked_list_type_array),                \
-                private_type_intruder_field, private_compare,                  \
-                private_allocate, private_context);                            \
+                private_type_intruder_field, private_allocate,                 \
+                private_context);                                              \
         if (private_singly_linked_list.allocate) {                             \
             size_t private_count                                               \
                 = sizeof(private_compound_literal_array)                       \
@@ -142,7 +141,7 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
             while (private_count--) {                                          \
                 typeof(*private_singly_linked_list_type_array) *const          \
                     private_new_node = private_singly_linked_list.allocate(    \
-                        (CCC_Allocator_context){                               \
+                        (CCC_Allocator_arguments){                             \
                             .input = NULL,                                     \
                             .bytes = private_singly_linked_list.sizeof_type,   \
                             .context = private_singly_linked_list.context,     \
@@ -164,12 +163,12 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
     }))
 
 /** @internal */
-#define CCC_private_singly_linked_list_from(                                   \
-    private_type_intruder_field, private_compare, private_allocate,            \
-    private_destroy, private_compound_literal_array...)                        \
+#define CCC_private_singly_linked_list_from(private_type_intruder_field,       \
+                                            private_allocate, private_destroy, \
+                                            private_compound_literal_array...) \
     CCC_private_singly_linked_list_context_from(                               \
-        private_type_intruder_field, private_compare, private_allocate,        \
-        private_destroy, NULL, private_compound_literal_array)
+        private_type_intruder_field, private_allocate, private_destroy, NULL,  \
+        private_compound_literal_array)
 
 /** @internal */
 #define CCC_private_singly_linked_list_emplace_front(list_pointer,             \
@@ -184,7 +183,7 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
             } else {                                                           \
                 private_singly_linked_list_res                                 \
                     = private_singly_linked_list->allocate(                    \
-                        (CCC_Allocator_context){                               \
+                        (CCC_Allocator_arguments){                             \
                             .input = NULL,                                     \
                             .bytes = private_singly_linked_list->sizeof_type,  \
                             .context = private_singly_linked_list->context,    \

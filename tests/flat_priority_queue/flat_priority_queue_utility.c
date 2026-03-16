@@ -2,25 +2,27 @@
 #include <stdlib.h>
 
 #define FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC
+#define BUFFER_USING_NAMESPACE_CCC
 #define TRAITS_USING_NAMESPACE_CCC
 
 #include "buffer.h"
 #include "checkers.h"
 #include "flat_priority_queue.h"
 #include "flat_priority_queue_utility.h"
+#include "sort.h"
 #include "traits.h"
 #include "types.h"
 #include "utility/allocate.h"
 
 CCC_Order
-val_order(CCC_Type_comparator_context const order) {
+val_order(CCC_Comparator_arguments const order) {
     struct Val const *const left = order.type_left;
     struct Val const *const right = order.type_right;
     return (left->val > right->val) - (left->val < right->val);
 }
 
 void
-val_update(CCC_Type_context const u) {
+val_update(CCC_Arguments const u) {
     struct Val *const old = u.type;
     old->val = *(int *)u.context;
 }
@@ -32,7 +34,8 @@ rand_range(size_t const min, size_t const max) {
 }
 
 check_begin(insert_shuffled, CCC_Flat_priority_queue *const priority_queue,
-            size_t const size, int const larger_prime) {
+            size_t const size, int const larger_prime,
+            CCC_Allocator_context const *const allocator) {
     /* Math magic ahead so that we iterate over every index
        eventually but in a shuffled order. Not necessarily
        random but a repeatable sequence that makes it
@@ -45,7 +48,7 @@ check_begin(insert_shuffled, CCC_Flat_priority_queue *const priority_queue,
                        .id = (int)shuffled_index,
                        .val = (int)shuffled_index,
                    },
-                   &(struct Val){})
+                   &(struct Val){}, allocator)
                   != NULL,
               CCC_TRUE);
         check(CCC_flat_priority_queue_count(priority_queue).count, i + 1);
@@ -62,23 +65,22 @@ check_begin(inorder_fill, int vals[const], size_t const size,
     if (CCC_flat_priority_queue_count(flat_priority_queue).count != size) {
         return CHECK_FAIL;
     }
-    CCC_Flat_priority_queue flat_priority_queue_cpy
-        = CCC_flat_priority_queue_for(struct Val, CCC_ORDER_LESSER, val_order,
-                                      std_allocate, NULL, 0, NULL);
-    CCC_Result const r = flat_priority_queue_copy(
-        &flat_priority_queue_cpy, flat_priority_queue, std_allocate);
+    CCC_Buffer copy = CCC_buffer_default(struct Val);
+    CCC_Result r
+        = buffer_copy(&copy, &flat_priority_queue->buffer, &std_allocator);
     check(r, CCC_RESULT_OK);
-    CCC_Buffer b = flat_priority_queue_heapsort(&flat_priority_queue_cpy,
-                                                &(struct Val){});
-    check(CCC_buffer_is_empty(&b), CCC_FALSE);
-    vals[0] = *CCC_buffer_back_as(&b, int);
+    r = CCC_sort_heapsort(&copy, &(struct Val){}, flat_priority_queue->order,
+                          &flat_priority_queue->comparator);
+    check(r, CCC_RESULT_OK);
+    check(CCC_buffer_is_empty(&copy), CCC_FALSE);
+    vals[0] = *CCC_buffer_front_as(&copy, int);
     size_t i = 1;
-    for (struct Val const *prev = reverse_begin(&b),
-                          *v = reverse_next(&b, prev);
-         v != reverse_end(&b); prev = v, v = reverse_next(&b, v)) {
+    for (struct Val const *prev = begin(&copy), *v = next(&copy, prev);
+         v != end(&copy); prev = v, v = next(&copy, v)) {
         check(prev->val <= v->val, CCC_TRUE);
         vals[i++] = v->val;
     }
     check(i, flat_priority_queue_count(flat_priority_queue).count);
-    check_end(clear_and_free(&b, NULL););
+    check_end(
+        clear_and_free(&copy, &(CCC_Destructor_context){}, &std_allocator););
 }

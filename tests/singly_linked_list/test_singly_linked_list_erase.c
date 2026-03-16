@@ -12,7 +12,7 @@
 
 check_static_begin(singly_linked_list_test_pop_empty) {
     Singly_linked_list singly_linked_list
-        = singly_linked_list_for(struct Val, e, val_order, NULL, NULL);
+        = singly_linked_list_for(struct Val, e, NULL, NULL);
     check(is_empty(&singly_linked_list), true);
     check(singly_linked_list_pop_front(&singly_linked_list),
           CCC_RESULT_ARGUMENT_ERROR);
@@ -25,7 +25,7 @@ check_static_begin(singly_linked_list_test_pop_empty) {
 check_static_begin(singly_linked_list_test_push_pop_three) {
     struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
     Singly_linked_list singly_linked_list = singly_linked_list_context_from(
-        e, val_order, stack_allocator_allocate, NULL, &allocator,
+        e, stack_allocator_allocate, NULL, &allocator,
         (struct Val[3]){
             {.val = 0},
             {.val = 1},
@@ -42,7 +42,7 @@ check_static_begin(singly_linked_list_test_push_pop_three) {
 
 check_static_begin(singly_linked_list_test_push_extract_middle) {
     Singly_linked_list singly_linked_list
-        = singly_linked_list_for(struct Val, e, val_order, NULL, NULL);
+        = singly_linked_list_for(struct Val, e, NULL, NULL);
     struct Val vals[3] = {{.val = 0}, {.val = 1}, {.val = 2}};
     enum Check_result const t = push_list(&singly_linked_list, 3, vals);
     check(t, CHECK_PASS);
@@ -61,7 +61,7 @@ check_static_begin(singly_linked_list_test_push_extract_middle) {
 
 check_static_begin(singly_linked_list_test_push_extract_range) {
     Singly_linked_list singly_linked_list
-        = singly_linked_list_for(struct Val, e, val_order, NULL, NULL);
+        = singly_linked_list_for(struct Val, e, NULL, NULL);
     struct Val vals[5]
         = {{.val = 0}, {.val = 1}, {.val = 2}, {.val = 3}, {.val = 4}};
     enum Check_result const t = push_list(&singly_linked_list, 5, vals);
@@ -85,13 +85,13 @@ check_static_begin(singly_linked_list_test_push_extract_range) {
 
 check_static_begin(singly_linked_list_test_splice_two_lists) {
     Singly_linked_list to_lose
-        = singly_linked_list_for(struct Val, e, val_order, NULL, NULL);
+        = singly_linked_list_for(struct Val, e, NULL, NULL);
     struct Val to_lose_vals[5]
         = {{.val = 0}, {.val = 1}, {.val = 2}, {.val = 3}, {.val = 4}};
     enum Check_result t = push_list(&to_lose, 5, to_lose_vals);
     check(t, CHECK_PASS);
     Singly_linked_list to_gain
-        = singly_linked_list_for(struct Val, e, val_order, NULL, NULL);
+        = singly_linked_list_for(struct Val, e, NULL, NULL);
     struct Val to_gain_vals[2] = {{.val = 0}, {.val = 1}};
     t = push_list(&to_gain, 2, to_gain_vals);
     check(t, CHECK_PASS);

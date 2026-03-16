@@ -19,7 +19,7 @@ adaptive_map_create(int const id, int const val) {
 }
 
 static inline void
-adaptive_map_modplus(CCC_Type_context const t) {
+adaptive_map_modplus(CCC_Arguments const t) {
     ((struct Val *)t.type)->val++;
 }
 
@@ -153,7 +153,7 @@ check_static_begin(adaptive_map_test_entry_api_functional) {
     /* Test entry or insert with for all even values. Default should be
        inserted. All entries are hashed to last digit so many spread out
        collisions. */
-    struct Val def = {0};
+    struct Val def = {};
     for (size_t i = 0; i < size / 2; i += 2) {
         def.key = (int)i;
         def.val = (int)i;

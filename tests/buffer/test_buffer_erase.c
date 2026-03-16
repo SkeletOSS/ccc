@@ -16,14 +16,16 @@ check_static_begin(buffer_test_push_pop_fixed) {
     int const push[8] = {7, 6, 5, 4, 3, 2, 1, 0};
     size_t count = 0;
     for (size_t i = 0; i < sizeof(push) / sizeof(*push); ++i) {
-        int const *const p = buffer_push_back(&b, &push[i]);
+        int const *const p
+            = buffer_push_back(&b, &push[i], &(CCC_Allocator_context){});
         check(p != NULL, CCC_TRUE);
         check(*p, push[i]);
         ++count;
     }
     check(buffer_count(&b).count, sizeof(push) / sizeof(*push));
     check(buffer_count(&b).count, count);
-    check(buffer_push_back(&b, &(int){99}) == NULL, CCC_TRUE);
+    check(buffer_push_back(&b, &(int){99}, &(CCC_Allocator_context){}) == NULL,
+          CCC_TRUE);
     while (!buffer_is_empty(&b)) {
         int const v = *(int *)buffer_back(&b);
         check(buffer_pop_back(&b), CCC_RESULT_OK);
@@ -36,14 +38,14 @@ check_static_begin(buffer_test_push_pop_fixed) {
 }
 
 check_static_begin(buffer_test_push_resize_pop) {
-    Buffer b = buffer_with_allocator(int, std_allocate);
+    Buffer b = buffer_default(int);
     size_t const cap = 32;
     int *const many = malloc(sizeof(int) * cap);
     iota(many, cap, 0);
     check(many != NULL, CCC_TRUE);
     size_t count = 0;
     for (size_t i = 0; i < cap; ++i) {
-        int *p = buffer_push_back(&b, &many[i]);
+        int *p = buffer_push_back(&b, &many[i], &std_allocator);
         check(p != NULL, CCC_TRUE);
         check(*p, many[i]);
         ++count;
@@ -60,7 +62,8 @@ check_static_begin(buffer_test_push_resize_pop) {
     check(buffer_count(&b).count, count);
     check(count, 0);
     check_end({
-        (void)buffer_clear_and_free(&b, NULL);
+        (void)buffer_clear_and_free(&b, &(CCC_Destructor_context){},
+                                    &std_allocator);
         free(many);
     });
 }
@@ -86,7 +89,8 @@ check_static_begin(buffer_test_daily_temperatures) {
             CCC_Result const r = buffer_pop_back(&idx_stack);
             check(r, CCC_RESULT_OK);
         }
-        int const *const pointer = buffer_push_back(&idx_stack, &i);
+        int const *const pointer
+            = buffer_push_back(&idx_stack, &i, &(CCC_Allocator_context){});
         check(pointer != NULL, CCC_TRUE);
     }
     check(memcmp(buffer_begin(&res), buffer_begin(&correct),
@@ -96,7 +100,7 @@ check_static_begin(buffer_test_daily_temperatures) {
 }
 
 static CCC_Order
-order_car_idx(CCC_Type_comparator_context const order) {
+order_car_idx(CCC_Comparator_arguments const order) {
     Buffer const *const int_positions = order.context;
     int const *const left_pos
         = buffer_at(int_positions, *(int *)order.type_left);
@@ -117,10 +121,13 @@ check_static_begin(buffer_test_car_fleet) {
     Buffer const speeds
         = buffer_with_storage(CARCAP, (int[CARCAP]){2, 4, 1, 1, 3});
     int const correct_fleet_count = 3;
-    Buffer car_idx
-        = buffer_context_with_storage(&positions, CARCAP, (int[CARCAP]){});
+    Buffer car_idx = buffer_with_storage(CARCAP, (int[CARCAP]){});
     iota(buffer_begin(&car_idx), CARCAP, 0);
-    sort(&car_idx, order_car_idx, &(int){0});
+    quicksort(&car_idx, &(int){}, CCC_ORDER_LESSER,
+              &(CCC_Comparator_context){
+                  .compare = order_car_idx,
+                  .context = &positions,
+              });
     int target = 12;
     int fleets = 1;
     double slowest_time_to_target
@@ -164,7 +171,8 @@ check_static_begin(buffer_test_largest_rectangle_in_histogram) {
                             : i - *buffer_back_as(&bar_indices, int) - 1;
             max_rectangle = maxint(max_rectangle, stack_top_height * w);
         }
-        int const *const pointer = buffer_push_back(&bar_indices, &i);
+        int const *const pointer
+            = buffer_push_back(&bar_indices, &i, &(CCC_Allocator_context){});
         check(pointer != NULL, CCC_TRUE);
     }
     check(max_rectangle, correct_max_rectangle);

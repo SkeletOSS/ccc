@@ -73,12 +73,6 @@ specifiers which is a feature of C23. Not all compilers support this yet. */
 #define CCC_private_bitset_storage_for(private_bit_compound_literal,           \
                                        private_optional_storage_specifier...)  \
     (private_optional_storage_specifier struct {                               \
-        static_assert(                                                         \
-            !__builtin_types_compatible_p(                                     \
-                typeof(private_bit_compound_literal),                          \
-                typeof(&(private_bit_compound_literal)[0])),                   \
-            "CCC_bitset_storage_for and CCC_bitset_with_storage only accept "  \
-            "(CCC_Bit[N]){} compound literal array as an argument.");          \
         static_assert(sizeof(private_bit_compound_literal) > 0,                \
                       "Specify non-zero capacity of bits.");                   \
         static_assert(                                                         \

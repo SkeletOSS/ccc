@@ -13,7 +13,7 @@ struct Val {
     CCC_Tree_map_node elem;
 };
 
-CCC_Order id_order(CCC_Key_comparator_context);
+CCC_Order id_order(CCC_Key_comparator_arguments);
 
 /** Runs a prime shuffle over the map using size as N and larger_prime as the
 larger prime to run the shuffle. Expects the map to have allocation permission.

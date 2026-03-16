@@ -86,7 +86,7 @@ check_static_begin(flat_hash_map_test_shuffle_erase_fixed) {
         (struct Val[STANDARD_FIXED_CAP]){});
     int to_insert[STANDARD_FIXED_CAP];
     iota(to_insert, STANDARD_FIXED_CAP, 0);
-    rand_shuffle(sizeof(int), to_insert, STANDARD_FIXED_CAP, &(int){0});
+    rand_shuffle(sizeof(int), to_insert, STANDARD_FIXED_CAP, &(int){});
     int i = 0;
     do {
         int const cur = to_insert[i];
@@ -158,7 +158,7 @@ check_static_begin(flat_hash_map_test_shuffle_erase_reserved) {
     /* Give ourselves plenty more to insert so we don't run out before cap. */
     int to_insert[1024];
     iota(to_insert, 1024, 0);
-    rand_shuffle(sizeof(int), to_insert, 1024, &(int){0});
+    rand_shuffle(sizeof(int), to_insert, 1024, &(int){});
     int i = 0;
     do {
         int const cur = to_insert[i];
@@ -222,7 +222,7 @@ check_static_begin(flat_hash_map_test_shuffle_erase_dynamic) {
         std_allocate, NULL, 0, NULL);
     int to_insert[1024];
     iota(to_insert, 1024, 0);
-    rand_shuffle(sizeof(int), to_insert, 1024, &(int){0});
+    rand_shuffle(sizeof(int), to_insert, 1024, &(int){});
     int inserted = 0;
     for (; inserted < 1024; ++inserted) {
         int const cur = to_insert[inserted];

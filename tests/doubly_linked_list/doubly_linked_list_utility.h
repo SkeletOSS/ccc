@@ -18,7 +18,7 @@ enum Push_direction {
     UTIL_PUSH_BACK,
 };
 
-CCC_Order val_order(CCC_Type_comparator_context);
+CCC_Order val_order(CCC_Comparator_arguments);
 
 enum Check_result check_order(CCC_Doubly_linked_list const *, size_t n,
                               int const order[]);

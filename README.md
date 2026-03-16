@@ -200,7 +200,7 @@ struct Int_node {
 };
 
 static CCC_Order
-int_cmp(CCC_Type_comparator_context const cmp) {
+int_cmp(CCC_Comparator_arguments const cmp) {
     struct Int_node const *const left = cmp.type_left;
     struct Int_node const *const right = cmp.type_right;
     return (left->i > right->i) - (left->i < right->i);
@@ -278,7 +278,7 @@ struct Key_val {
 };
 
 static uint64_t
-flat_hash_map_int_to_u64(CCC_Key_context const k) {
+flat_hash_map_int_to_u64(CCC_Key_arguments const k) {
     int const key_int = *((int *)k.key);
     uint64_t x = key_int;
     x = (x ^ (x >> 30)) * UINT64_C(0xbf58476d1ce4e5b9);
@@ -288,7 +288,7 @@ flat_hash_map_int_to_u64(CCC_Key_context const k) {
 }
 
 CCC_Order
-flat_hash_map_id_cmp(CCC_Key_comparator_context const cmp) {
+flat_hash_map_id_cmp(CCC_Key_comparator_arguments const cmp) {
     struct Key_val const *const right = cmp.type_right;
     int const left = *((int *)cmp.key_left;
     return (left > right->key) - (left < right->key);
@@ -366,7 +366,7 @@ main(void) {
 #include "ccc/traits.h"
 
 CCC_Order
-int_cmp(CCC_Type_comparator_context const ints) {
+int_cmp(CCC_Comparator_arguments const ints) {
     int const left = *(int *)ints.type_left;
     int const right = *(int *)ints.type_right;
     return (left > right) - (left < right);
@@ -382,7 +382,7 @@ main(void) {
     };
     Flat_priority_queue priority_queue = flat_priority_queue_heapify(
         int, CCC_LES, int_cmp, NULL, NULL, HCAP, HCAP, heap);
-    Buffer const b = flat_priority_queue_heapsort(&priority_queue, &(int){0});
+    Buffer const b = flat_priority_queue_heapsort(&priority_queue, &(int){});
     int const *prev = begin(&b);
     assert(prev != NULL);
     assert(buffer_count(&b).count == HCAP);
@@ -418,7 +418,7 @@ struct Key_val {
 };
 
 static CCC_Order
-Key_val_cmp(CCC_Key_comparator_context const cmp) {
+Key_val_cmp(CCC_Key_comparator_arguments const cmp) {
     struct Key_val const *const right = cmp.type_right;
     int const key_left = *((int *)cmp.key_left);
     return (key_left > right->key) - (key_left < right->key);
@@ -485,7 +485,7 @@ struct Key_val {
 };
 
 static CCC_Order
-Key_val_cmp(CCC_Key_comparator_context const cmp) {
+Key_val_cmp(CCC_Key_comparator_arguments const cmp) {
     struct Key_val const *const right = cmp.type_right;
     int const key_left = *((int *)cmp.key_left);
     return (key_left > right->key) - (key_left < right->key);
@@ -550,7 +550,7 @@ struct Name {
 };
 
 CCC_Order
-Key_val_cmp(CCC_Key_comparator_context cmp) {
+Key_val_cmp(CCC_Key_comparator_arguments cmp) {
     char const *const key = *(char **)cmp.key_left;
     struct Name const *const right = cmp.type_right;
     int const res = strcmp(key, right->name);
@@ -615,7 +615,7 @@ struct Val {
 };
 
 static CCC_Order
-val_cmp(CCC_Type_comparator_context const cmp) {
+val_cmp(CCC_Comparator_arguments const cmp) {
     struct Val const *const left = cmp.type_left;
     struct Val const *const right = cmp.type_right;
     return (left->val > right->val) - (left->val < right->val);
@@ -661,7 +661,7 @@ struct Key_val {
 };
 
 static CCC_Order
-Key_val_cmp(CCC_Key_comparator_context const cmp) {
+Key_val_cmp(CCC_Key_comparator_arguments const cmp) {
     struct Key_val const *const right = cmp.type_right;
     int const key_left = *((int *)cmp.key_left);
     return (key_left > right->key) - (key_left < right->key);
@@ -727,7 +727,7 @@ struct Int_node {
 };
 
 static CCC_Order
-int_cmp(CCC_Type_comparator_context const cmp) {
+int_cmp(CCC_Comparator_arguments const cmp) {
     struct Int_node const *const left = cmp.type_left;
     struct Int_node const *const right = cmp.type_right;
     return (left->i > right->i) - (left->i < right->i);
@@ -975,7 +975,7 @@ struct Id {
 };
 /* Or when writing a comparison callback. */
 CCC_Order
-id_cmp(CCC_Type_comparator_context const cmp) {
+id_cmp(CCC_Comparator_arguments const cmp) {
     struct Id const *const left = cmp.type_left;
     struct Id const *const right = cmp.type_right;
     return (left->id > right->id) - (left->id < right->id);
@@ -1141,8 +1141,8 @@ typedef struct {
     void *input;
     size_t bytes;
     void *context;
-} CCC_Allocator_context;
-typedef void *CCC_Allocator(CCC_Allocator_context);
+} CCC_Allocator_arguments;
+typedef void *CCC_Allocator(CCC_Allocator_arguments);
 ```
 
 An allocation function implements the following behavior, where `input` is pointer to memory, `bytes` is number of bytes to allocate, and `context` is a reference to any supplementary information required for allocation, deallocation, or reallocation. The `context` parameter is passed to a container upon its initialization and the programmer may choose how to best utilize this reference (read on for more on `context`).
@@ -1159,7 +1159,7 @@ One may be tempted to use realloc to check all of these boxes but realloc is imp
 
 ```c
 void *
-std_allocator(CCC_Allocator_context const context) {
+std_allocator(CCC_Allocator_arguments const context) {
     if (!context.input && !context.bytes) {
         return NULL;
     }

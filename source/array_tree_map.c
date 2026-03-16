@@ -59,7 +59,6 @@ to that section, in my opinion. */
 
 #include "array_tree_map.h"
 #include "private/private_array_tree_map.h"
-#include "private/private_types.h"
 #include "types.h"
 
 /*========================   Data Alignment Test   ==========================*/
@@ -204,7 +203,7 @@ static size_t maybe_allocate_insert(struct CCC_Array_tree_map *, size_t,
                                     CCC_Order, void const *);
 static size_t remove_fixup(struct CCC_Array_tree_map *, size_t);
 static size_t allocate_slot(struct CCC_Array_tree_map *);
-static void delete_nodes(struct CCC_Array_tree_map *, CCC_Type_destructor *);
+static void delete_nodes(struct CCC_Array_tree_map *, CCC_Destructor *);
 /* Returning the user key with stored offsets. */
 static void *key_at(struct CCC_Array_tree_map const *, size_t);
 static void *key_in_slot(struct CCC_Array_tree_map const *, void const *);
@@ -218,9 +217,8 @@ static struct Query find(struct CCC_Array_tree_map const *, void const *);
 static inline struct CCC_Array_tree_map_handle
 handle(struct CCC_Array_tree_map const *, void const *);
 /* Returning a generic range that can be use for range or range_reverse. */
-static struct CCC_Handle_range equal_range(struct CCC_Array_tree_map const *,
-                                           void const *, void const *,
-                                           enum Link);
+static CCC_Handle_range equal_range(struct CCC_Array_tree_map const *,
+                                    void const *, void const *, enum Link);
 /* Returning threeway comparison with user callback. */
 static CCC_Order order_nodes(struct CCC_Array_tree_map const *, void const *,
                              size_t, CCC_Key_comparator *);
@@ -311,93 +309,93 @@ CCC_Handle
 CCC_array_tree_map_swap_handle(CCC_Array_tree_map *const map,
                                void *const type_output) {
     if (!map || !type_output) {
-        return (CCC_Handle){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
+        return (CCC_Handle){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     struct Query const q = find(map, key_in_slot(map, type_output));
     if (CCC_ORDER_EQUAL == q.last_order) {
         void *const slot = data_at(map, q.found);
         void *const temp = data_at(map, 0);
         swap(temp, type_output, slot, map->sizeof_type);
-        return (CCC_Handle){{
+        return (CCC_Handle){
             .index = q.found,
             .status = CCC_ENTRY_OCCUPIED,
-        }};
+        };
     }
     size_t const i
         = maybe_allocate_insert(map, q.parent, q.last_order, type_output);
     if (!i) {
-        return (CCC_Handle){{
+        return (CCC_Handle){
             .index = 0,
             .status = CCC_ENTRY_INSERT_ERROR,
-        }};
+        };
     }
-    return (CCC_Handle){{
+    return (CCC_Handle){
         .index = i,
         .status = CCC_ENTRY_VACANT,
-    }};
+    };
 }
 
 CCC_Handle
 CCC_array_tree_map_try_insert(CCC_Array_tree_map *const map,
                               void const *const type) {
     if (!map || !type) {
-        return (CCC_Handle){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
+        return (CCC_Handle){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     struct Query const q = find(map, key_in_slot(map, type));
     if (CCC_ORDER_EQUAL == q.last_order) {
-        return (CCC_Handle){{
+        return (CCC_Handle){
             .index = q.found,
             .status = CCC_ENTRY_OCCUPIED,
-        }};
+        };
     }
     size_t const i = maybe_allocate_insert(map, q.parent, q.last_order, type);
     if (!i) {
-        return (CCC_Handle){{
+        return (CCC_Handle){
             .index = 0,
             .status = CCC_ENTRY_INSERT_ERROR,
-        }};
+        };
     }
-    return (CCC_Handle){{
+    return (CCC_Handle){
         .index = i,
         .status = CCC_ENTRY_VACANT,
-    }};
+    };
 }
 
 CCC_Handle
 CCC_array_tree_map_insert_or_assign(CCC_Array_tree_map *const map,
                                     void const *const type) {
     if (!map || !type) {
-        return (CCC_Handle){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
+        return (CCC_Handle){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     struct Query const q = find(map, key_in_slot(map, type));
     if (CCC_ORDER_EQUAL == q.last_order) {
         void *const found = data_at(map, q.found);
         (void)memcpy(found, type, map->sizeof_type);
-        return (CCC_Handle){{
+        return (CCC_Handle){
             .index = q.found,
             .status = CCC_ENTRY_OCCUPIED,
-        }};
+        };
     }
     size_t const i = maybe_allocate_insert(map, q.parent, q.last_order, type);
     if (!i) {
-        return (CCC_Handle){{
+        return (CCC_Handle){
             .index = 0,
             .status = CCC_ENTRY_INSERT_ERROR,
-        }};
+        };
     }
-    return (CCC_Handle){{
+    return (CCC_Handle){
         .index = i,
         .status = CCC_ENTRY_VACANT,
-    }};
+    };
 }
 
 CCC_Array_tree_map_handle *
 CCC_array_tree_map_and_modify(CCC_Array_tree_map_handle *const handle,
-                              CCC_Type_modifier *const modify) {
-    if (handle && modify && handle->private.status & CCC_ENTRY_OCCUPIED
-        && handle->private.index > 0) {
-        modify((CCC_Type_context){
-            .type = data_at(handle->private.map, handle->private.index),
+                              CCC_Modifier *const modify) {
+    if (handle && modify && handle->status & CCC_ENTRY_OCCUPIED
+        && handle->index > 0) {
+        modify((CCC_Arguments){
+            .type = data_at(handle->map, handle->index),
             NULL,
         });
     }
@@ -406,12 +404,12 @@ CCC_array_tree_map_and_modify(CCC_Array_tree_map_handle *const handle,
 
 CCC_Array_tree_map_handle *
 CCC_array_tree_map_and_context_modify(CCC_Array_tree_map_handle *const handle,
-                                      CCC_Type_modifier *const modify,
+                                      CCC_Modifier *const modify,
                                       void *const context) {
-    if (handle && modify && handle->private.status & CCC_ENTRY_OCCUPIED
-        && handle->private.status > 0) {
-        modify((CCC_Type_context){
-            .type = data_at(handle->private.map, handle->private.index),
+    if (handle && modify && handle->status & CCC_ENTRY_OCCUPIED
+        && handle->status > 0) {
+        modify((CCC_Arguments){
+            .type = data_at(handle->map, handle->index),
             context,
         });
     }
@@ -424,11 +422,10 @@ CCC_array_tree_map_or_insert(CCC_Array_tree_map_handle const *const h,
     if (!h || !type) {
         return 0;
     }
-    if (h->private.status == CCC_ENTRY_OCCUPIED) {
-        return h->private.index;
+    if (h->status == CCC_ENTRY_OCCUPIED) {
+        return h->index;
     }
-    return maybe_allocate_insert(h->private.map, h->private.index,
-                                 h->private.last_order, type);
+    return maybe_allocate_insert(h->map, h->index, h->last_order, type);
 }
 
 CCC_Handle_index
@@ -437,15 +434,14 @@ CCC_array_tree_map_insert_handle(CCC_Array_tree_map_handle const *const h,
     if (!h || !type) {
         return 0;
     }
-    if (h->private.status == CCC_ENTRY_OCCUPIED) {
-        void *const slot = data_at(h->private.map, h->private.index);
+    if (h->status == CCC_ENTRY_OCCUPIED) {
+        void *const slot = data_at(h->map, h->index);
         if (slot != type) {
-            (void)memcpy(slot, type, h->private.map->sizeof_type);
+            (void)memcpy(slot, type, h->map->sizeof_type);
         }
-        return h->private.index;
+        return h->index;
     }
-    return maybe_allocate_insert(h->private.map, h->private.index,
-                                 h->private.last_order, type);
+    return maybe_allocate_insert(h->map, h->index, h->last_order, type);
 }
 
 CCC_Array_tree_map_handle
@@ -453,41 +449,42 @@ CCC_array_tree_map_handle(CCC_Array_tree_map const *const map,
                           void const *const key) {
     if (!map || !key) {
         return (CCC_Array_tree_map_handle){
-            {.status = CCC_ENTRY_ARGUMENT_ERROR}};
+            .status = CCC_ENTRY_ARGUMENT_ERROR,
+        };
     }
-    return (CCC_Array_tree_map_handle){handle(map, key)};
+    return handle(map, key);
 }
 
 CCC_Handle
 CCC_array_tree_map_remove_handle(CCC_Array_tree_map_handle const *const h) {
     if (!h) {
-        return (CCC_Handle){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
+        return (CCC_Handle){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
-    if (h->private.status == CCC_ENTRY_OCCUPIED) {
-        size_t const ret = remove_fixup(h->private.map, h->private.index);
-        return (CCC_Handle){{
+    if (h->status == CCC_ENTRY_OCCUPIED) {
+        size_t const ret = remove_fixup(h->map, h->index);
+        return (CCC_Handle){
             .index = ret,
             .status = CCC_ENTRY_OCCUPIED,
-        }};
+        };
     }
-    return (CCC_Handle){{
+    return (CCC_Handle){
         .index = 0,
         .status = CCC_ENTRY_VACANT,
-    }};
+    };
 }
 
 CCC_Handle
 CCC_array_tree_map_remove_key_value(CCC_Array_tree_map *const map,
                                     void *const type_output) {
     if (!map || !type_output) {
-        return (CCC_Handle){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
+        return (CCC_Handle){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     struct Query const q = find(map, key_in_slot(map, type_output));
     if (q.last_order != CCC_ORDER_EQUAL) {
-        return (CCC_Handle){{
+        return (CCC_Handle){
             .index = 0,
             .status = CCC_ENTRY_VACANT,
-        }};
+        };
     }
     size_t const removed = remove_fixup(map, q.found);
     assert(removed);
@@ -495,10 +492,10 @@ CCC_array_tree_map_remove_key_value(CCC_Array_tree_map *const map,
     if (type_output != r) {
         (void)memcpy(type_output, r, map->sizeof_type);
     }
-    return (CCC_Handle){{
+    return (CCC_Handle){
         .index = 0,
         .status = CCC_ENTRY_OCCUPIED,
-    }};
+    };
 }
 
 CCC_Handle_range
@@ -508,9 +505,7 @@ CCC_array_tree_map_equal_range(CCC_Array_tree_map const *const map,
     if (!map || !begin_key || !end_key) {
         return (CCC_Handle_range){};
     }
-    return (CCC_Handle_range){
-        equal_range(map, begin_key, end_key, INORDER),
-    };
+    return equal_range(map, begin_key, end_key, INORDER);
 }
 
 CCC_Handle_range_reverse
@@ -520,15 +515,18 @@ CCC_array_tree_map_equal_range_reverse(CCC_Array_tree_map const *const map,
     if (!map || !reverse_begin_key || !reverse_end_key) {
         return (CCC_Handle_range_reverse){};
     }
+    CCC_Handle_range const range
+        = equal_range(map, reverse_begin_key, reverse_end_key, INORDER_REVERSE);
     return (CCC_Handle_range_reverse){
-        equal_range(map, reverse_begin_key, reverse_end_key, INORDER_REVERSE),
+        .reverse_begin = range.begin,
+        .reverse_end = range.end,
     };
 }
 
 CCC_Handle_index
 CCC_array_tree_map_unwrap(CCC_Array_tree_map_handle const *const h) {
-    if (h && h->private.status & CCC_ENTRY_OCCUPIED && h->private.index > 0) {
-        return h->private.index;
+    if (h && h->status & CCC_ENTRY_OCCUPIED && h->index > 0) {
+        return h->index;
     }
     return 0;
 }
@@ -538,7 +536,7 @@ CCC_array_tree_map_insert_error(CCC_Array_tree_map_handle const *const h) {
     if (!h) {
         return CCC_TRIBOOL_ERROR;
     }
-    return (h->private.status & CCC_ENTRY_INSERT_ERROR) != 0;
+    return (h->status & CCC_ENTRY_INSERT_ERROR) != 0;
 }
 
 CCC_Tribool
@@ -546,12 +544,12 @@ CCC_array_tree_map_occupied(CCC_Array_tree_map_handle const *const h) {
     if (!h) {
         return CCC_TRIBOOL_ERROR;
     }
-    return (h->private.status & CCC_ENTRY_OCCUPIED) != 0;
+    return (h->status & CCC_ENTRY_OCCUPIED) != 0;
 }
 
 CCC_Handle_status
 CCC_array_tree_map_handle_status(CCC_Array_tree_map_handle const *const h) {
-    return h ? h->private.status : CCC_ENTRY_ARGUMENT_ERROR;
+    return h ? h->status : CCC_ENTRY_ARGUMENT_ERROR;
 }
 
 CCC_Tribool
@@ -712,7 +710,7 @@ CCC_array_tree_map_copy(CCC_Array_tree_map *const destination,
 
 CCC_Result
 CCC_array_tree_map_clear(CCC_Array_tree_map *const map,
-                         CCC_Type_destructor *const destroy) {
+                         CCC_Destructor *const destroy) {
     if (!map) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -726,7 +724,7 @@ CCC_array_tree_map_clear(CCC_Array_tree_map *const map,
 
 CCC_Result
 CCC_array_tree_map_clear_and_free(CCC_Array_tree_map *const map,
-                                  CCC_Type_destructor *const destroy) {
+                                  CCC_Destructor *const destroy) {
     if (!map || !map->allocate) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -735,7 +733,7 @@ CCC_array_tree_map_clear_and_free(CCC_Array_tree_map *const map,
     }
     map->root = 0;
     map->capacity = 0;
-    (void)map->allocate((CCC_Allocator_context){
+    (void)map->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
         .context = map->context,
@@ -748,7 +746,7 @@ CCC_array_tree_map_clear_and_free(CCC_Array_tree_map *const map,
 
 CCC_Result
 CCC_array_tree_map_clear_and_free_reserve(CCC_Array_tree_map *const map,
-                                          CCC_Type_destructor *const destroy,
+                                          CCC_Destructor *const destroy,
                                           CCC_Allocator *const allocate) {
     if (!map || !allocate) {
         return CCC_RESULT_ARGUMENT_ERROR;
@@ -758,7 +756,7 @@ CCC_array_tree_map_clear_and_free_reserve(CCC_Array_tree_map *const map,
     }
     map->root = 0;
     map->capacity = 0;
-    (void)allocate((CCC_Allocator_context){
+    (void)allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
         .context = map->context,
@@ -879,7 +877,7 @@ resize(struct CCC_Array_tree_map *const map, size_t const new_capacity,
     if (!allocate) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
-    void *const new_data = allocate((CCC_Allocator_context){
+    void *const new_data = allocate((CCC_Allocator_arguments){
         .input = NULL,
         .bytes = total_bytes(map->sizeof_type, new_capacity),
         .context = map->context,
@@ -891,7 +889,7 @@ resize(struct CCC_Array_tree_map *const map, size_t const new_capacity,
     map->nodes = nodes_base_address(map->sizeof_type, new_data, new_capacity);
     map->parity
         = parities_base_address(map->sizeof_type, new_data, new_capacity);
-    allocate((CCC_Allocator_context){
+    allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
         .context = map->context,
@@ -984,12 +982,12 @@ next(struct CCC_Array_tree_map const *const map, size_t n,
     return p;
 }
 
-static struct CCC_Handle_range
+static CCC_Handle_range
 equal_range(struct CCC_Array_tree_map const *const map,
             void const *const begin_key, void const *const end_key,
             enum Link const traversal) {
     if (CCC_array_tree_map_is_empty(map)) {
-        return (struct CCC_Handle_range){};
+        return (CCC_Handle_range){};
     }
     CCC_Order const les_or_grt[2] = {CCC_ORDER_LESSER, CCC_ORDER_GREATER};
     struct Query b = find(map, begin_key);
@@ -1000,7 +998,7 @@ equal_range(struct CCC_Array_tree_map const *const map,
     if (e.last_order != les_or_grt[!traversal]) {
         e.found = next(map, e.found, traversal);
     }
-    return (struct CCC_Handle_range){
+    return (CCC_Handle_range){
         .begin = b.found,
         .end = e.found,
     };
@@ -1026,7 +1024,7 @@ simply calls the destructor on each node and removes the nodes references to
 other tree elements. */
 static void
 delete_nodes(struct CCC_Array_tree_map *const map,
-             CCC_Type_destructor *const destroy) {
+             CCC_Destructor *const destroy) {
     assert(map);
     assert(destroy);
     size_t node = map->root;
@@ -1042,7 +1040,7 @@ delete_nodes(struct CCC_Array_tree_map *const map,
         size_t const next = e->branch[R];
         e->branch[L] = e->branch[R] = 0;
         e->parent = 0;
-        destroy((CCC_Type_context){
+        destroy((CCC_Arguments){
             .type = data_at(map, node),
             .context = map->context,
         });
@@ -1053,7 +1051,7 @@ delete_nodes(struct CCC_Array_tree_map *const map,
 static inline CCC_Order
 order_nodes(struct CCC_Array_tree_map const *const map, void const *const key,
             size_t const node, CCC_Key_comparator *const compare) {
-    return compare((CCC_Key_comparator_context){
+    return compare((CCC_Key_comparator_arguments){
         .key_left = key,
         .type_right = data_at(map, node),
         .context = map->context,

@@ -4,18 +4,22 @@
 #include "allocate.h"
 #include "types.h"
 
-void *
-std_allocate(CCC_Allocator_context const context) {
+/** Defined extern in allocate.h */
+CCC_Allocator_context const std_allocator = {
+    .allocate = std_allocate,
+};
 
-    if (!context.input && !context.bytes) {
+void *
+std_allocate(CCC_Allocator_arguments const arguments) {
+    if (!arguments.input && !arguments.bytes) {
         return NULL;
     }
-    if (!context.input) {
-        return malloc(context.bytes);
+    if (!arguments.input) {
+        return malloc(arguments.bytes);
     }
-    if (!context.bytes) {
-        free(context.input);
+    if (!arguments.bytes) {
+        free(arguments.input);
         return NULL;
     }
-    return realloc(context.input, context.bytes);
+    return realloc(arguments.input, arguments.bytes);
 }

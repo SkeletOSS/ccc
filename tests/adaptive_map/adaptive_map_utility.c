@@ -11,7 +11,7 @@
 #include "types.h"
 
 CCC_Order
-id_order(CCC_Key_comparator_context const order) {
+id_order(CCC_Key_comparator_arguments const order) {
     struct Val const *const c = order.type_right;
     int const key = *((int *)order.key_left);
     return (key > c->key) - (key < c->key);

@@ -63,17 +63,10 @@ static bool const quiet = true;
     } while (0)
 
 static CCC_Order
-lru_lookup_order(CCC_Key_comparator_context const order) {
+lru_lookup_order(CCC_Key_comparator_arguments const order) {
     struct Lru_lookup const *const right = order.type_right;
     int const left = *((int *)order.key_left);
     return (left > right->key) - (left < right->key);
-}
-
-static CCC_Order
-order_by_key(CCC_Type_comparator_context const order) {
-    struct Key_val const *const kv_a = order.type_left;
-    struct Key_val const *const kv_b = order.type_right;
-    return (kv_a->key > kv_b->key) - (kv_a->key < kv_b->key);
 }
 
 static struct Key_val *
@@ -91,8 +84,7 @@ static_assert(CAP * 1UL < SMALL_FIXED_CAP * 1UL);
    of the hash table and list. */
 static struct Lru_cache lru_cache = {
     .cap = CAP,
-    .l = doubly_linked_list_for(struct Key_val, list_node, order_by_key,
-                                std_allocate, NULL),
+    .l = doubly_linked_list_for(struct Key_val, list_node, std_allocate, NULL),
     .fh = flat_hash_map_with_storage(key, flat_hash_map_int_to_u64,
                                      lru_lookup_order,
                                      (struct Val[SMALL_FIXED_CAP]){}),

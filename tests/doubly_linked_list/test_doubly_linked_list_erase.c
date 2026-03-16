@@ -12,7 +12,7 @@
 
 check_static_begin(doubly_linked_list_test_pop_empty) {
     Doubly_linked_list doubly_linked_list
-        = doubly_linked_list_for(struct Val, e, val_order, NULL, NULL);
+        = doubly_linked_list_for(struct Val, e, NULL, NULL);
     check(is_empty(&doubly_linked_list), true);
     check(doubly_linked_list_pop_front(&doubly_linked_list),
           CCC_RESULT_ARGUMENT_ERROR);
@@ -29,7 +29,7 @@ check_static_begin(doubly_linked_list_test_pop_empty) {
 check_static_begin(doubly_linked_list_test_push_pop_front) {
     struct Stack_allocator allocator = stack_allocator_for(struct Val, 12);
     Doubly_linked_list doubly_linked_list = doubly_linked_list_context_from(
-        e, val_order, stack_allocator_allocate, NULL, &allocator,
+        e, stack_allocator_allocate, NULL, &allocator,
         (struct Val[3]){
             {.val = 0},
             {.val = 1},
@@ -57,7 +57,7 @@ check_static_begin(doubly_linked_list_test_push_pop_front) {
 check_static_begin(doubly_linked_list_test_push_pop_back) {
     struct Stack_allocator allocator = stack_allocator_for(struct Val, 12);
     Doubly_linked_list doubly_linked_list = doubly_linked_list_context_from(
-        e, val_order, stack_allocator_allocate, NULL, &allocator,
+        e, stack_allocator_allocate, NULL, &allocator,
         (struct Val[3]){
             {.val = 0},
             {.val = 1},
@@ -84,7 +84,7 @@ check_static_begin(doubly_linked_list_test_push_pop_back) {
 
 check_static_begin(doubly_linked_list_test_push_pop_middle) {
     Doubly_linked_list doubly_linked_list
-        = doubly_linked_list_for(struct Val, e, val_order, NULL, NULL);
+        = doubly_linked_list_for(struct Val, e, NULL, NULL);
     struct Val vals[4] = {{.val = 0}, {.val = 1}, {.val = 2}, {.val = 3}};
     enum Check_result const t
         = push_list(&doubly_linked_list, UTIL_PUSH_BACK, 4, vals);
@@ -97,7 +97,7 @@ check_static_begin(doubly_linked_list_test_push_pop_middle) {
     check(check_order(&doubly_linked_list, 2, (int[2]){0, 3}), CHECK_PASS);
     (void)extract(&doubly_linked_list, &vals[3].e);
     check(validate(&doubly_linked_list), true);
-    check(check_order(&doubly_linked_list, 1, (int[1]){0}), CHECK_PASS);
+    check(check_order(&doubly_linked_list, 1, (int[1]){}), CHECK_PASS);
     (void)extract(&doubly_linked_list, &vals[0].e);
     check(validate(&doubly_linked_list), true);
     check(is_empty(&doubly_linked_list), true);
@@ -106,7 +106,7 @@ check_static_begin(doubly_linked_list_test_push_pop_middle) {
 
 check_static_begin(doubly_linked_list_test_push_pop_middle_range) {
     Doubly_linked_list doubly_linked_list
-        = doubly_linked_list_for(struct Val, e, val_order, NULL, NULL);
+        = doubly_linked_list_for(struct Val, e, NULL, NULL);
     struct Val vals[5]
         = {{.val = 0}, {.val = 1}, {.val = 2}, {.val = 3}, {.val = 4}};
     enum Check_result const t
@@ -127,13 +127,13 @@ check_static_begin(doubly_linked_list_test_push_pop_middle_range) {
 
 check_static_begin(doubly_linked_list_test_splice_two_lists) {
     Doubly_linked_list to_lose
-        = doubly_linked_list_for(struct Val, e, val_order, NULL, NULL);
+        = doubly_linked_list_for(struct Val, e, NULL, NULL);
     struct Val to_lose_vals[5]
         = {{.val = 0}, {.val = 1}, {.val = 2}, {.val = 3}, {.val = 4}};
     enum Check_result t = push_list(&to_lose, UTIL_PUSH_BACK, 5, to_lose_vals);
     check(t, CHECK_PASS);
     Doubly_linked_list to_gain
-        = doubly_linked_list_for(struct Val, e, val_order, NULL, NULL);
+        = doubly_linked_list_for(struct Val, e, NULL, NULL);
     struct Val to_gain_vals[2] = {{.val = 0}, {.val = 1}};
     t = push_list(&to_gain, UTIL_PUSH_BACK, 2, to_gain_vals);
     check(t, CHECK_PASS);

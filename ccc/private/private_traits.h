@@ -17,19 +17,19 @@ limitations under the License.
 #define CCC_PRIVATE_TRAITS_H
 
 /* NOLINTBEGIN */
-#include "../adaptive_map.h"
-#include "../array_adaptive_map.h"
-#include "../array_tree_map.h"
-#include "../bitset.h"
-#include "../buffer.h"
-#include "../doubly_linked_list.h"
-#include "../flat_double_ended_queue.h"
-#include "../flat_hash_map.h"
-#include "../flat_priority_queue.h"
-#include "../priority_queue.h"
-#include "../singly_linked_list.h"
-#include "../tree_map.h"
-#include "../types.h"
+#include "../adaptive_map.h"            /* IWYU pragma: keep */
+#include "../array_adaptive_map.h"      /* IWYU pragma: keep */
+#include "../array_tree_map.h"          /* IWYU pragma: keep */
+#include "../bitset.h"                  /* IWYU pragma: keep */
+#include "../buffer.h"                  /* IWYU pragma: keep */
+#include "../doubly_linked_list.h"      /* IWYU pragma: keep */
+#include "../flat_double_ended_queue.h" /* IWYU pragma: keep */
+#include "../flat_hash_map.h"           /* IWYU pragma: keep */
+#include "../flat_priority_queue.h"     /* IWYU pragma: keep */
+#include "../priority_queue.h"          /* IWYU pragma: keep */
+#include "../singly_linked_list.h"      /* IWYU pragma: keep */
+#include "../tree_map.h"                /* IWYU pragma: keep */
+#include "../types.h"                   /* IWYU pragma: keep */
 /* NOLINTEND */
 
 /*====================     Entry/Handle Interface   =========================*/
@@ -43,9 +43,10 @@ limitations under the License.
 
 #define CCC_private_swap_entry_wrap(container_pointer,                         \
                                     key_val_container_array_pointer...)        \
-    &(CCC_Entry){CCC_private_swap_entry(container_pointer,                     \
-                                        key_val_container_array_pointer)       \
-                     .private}
+    &(struct { CCC_Entry private; }){                                          \
+        CCC_private_swap_entry(container_pointer,                              \
+                               key_val_container_array_pointer)}               \
+         .private
 
 #define CCC_private_swap_handle(container_pointer, swap_arguments...)          \
     _Generic((container_pointer),                                              \
@@ -55,9 +56,10 @@ limitations under the License.
 
 #define CCC_private_swap_handle_wrap(container_pointer,                        \
                                      key_val_container_array_pointer...)       \
-    &(CCC_Handle){CCC_private_swap_handle(container_pointer,                   \
-                                          key_val_container_array_pointer)     \
-                      .private}
+    &(struct { CCC_Handle private; }){                                         \
+        CCC_private_swap_handle(container_pointer,                             \
+                                key_val_container_array_pointer)}              \
+         .private
 
 #define CCC_private_try_insert(container_pointer, try_insert_arguments...)     \
     _Generic((container_pointer),                                              \
@@ -71,30 +73,35 @@ limitations under the License.
 #define CCC_private_try_insert_wrap(container_pointer,                         \
                                     try_insert_arguments...)                   \
     _Generic((container_pointer),                                              \
-        CCC_Array_adaptive_map *: &(                                           \
-                 CCC_Handle){CCC_array_adaptive_map_try_insert(                \
-                                 (CCC_Array_adaptive_map *)container_pointer,  \
-                                 try_insert_arguments)                         \
-                                 .private},                                    \
-        CCC_Array_tree_map *: &(                                               \
-                 CCC_Handle){CCC_array_tree_map_try_insert(                    \
-                                 (CCC_Array_tree_map *)container_pointer,      \
-                                 try_insert_arguments)                         \
-                                 .private},                                    \
-        CCC_Flat_hash_map *: &(                                                \
-                 CCC_Entry){CCC_flat_hash_map_try_insert(                      \
-                                (CCC_Flat_hash_map *)container_pointer,        \
-                                try_insert_arguments)                          \
-                                .private},                                     \
-        CCC_Adaptive_map *: &(                                                 \
-                 CCC_Entry){CCC_adaptive_map_try_insert(                       \
-                                (CCC_Adaptive_map *)container_pointer,         \
-                                (CCC_Adaptive_map_node *)try_insert_arguments) \
-                                .private},                                     \
-        CCC_Tree_map *: &(CCC_Entry){                                          \
-            CCC_tree_map_try_insert((CCC_Tree_map *)container_pointer,         \
-                                    (CCC_Tree_map_node *)try_insert_arguments) \
-                .private})
+        CCC_Array_adaptive_map *: &(struct {                                   \
+            CCC_Handle private;                                                \
+        }){CCC_array_adaptive_map_try_insert((CCC_Array_adaptive_map *)        \
+                                                 container_pointer,            \
+                                             try_insert_arguments)}            \
+            .private,                                                          \
+        CCC_Array_tree_map *: &(struct {                                       \
+            CCC_Handle private;                                                \
+        }){CCC_array_tree_map_try_insert((CCC_Array_tree_map *)                \
+                                             container_pointer,                \
+                                         try_insert_arguments)}                \
+            .private,                                                          \
+        CCC_Flat_hash_map *: &(struct {                                        \
+            CCC_Entry private;                                                 \
+        }){CCC_flat_hash_map_try_insert((CCC_Flat_hash_map *)                  \
+                                            container_pointer,                 \
+                                        try_insert_arguments)}                 \
+            .private,                                                          \
+        CCC_Adaptive_map *: &(struct {                                         \
+            CCC_Entry private;                                                 \
+        }){CCC_adaptive_map_try_insert((CCC_Adaptive_map *)container_pointer,  \
+                                       (CCC_Adaptive_map_node *)               \
+                                           try_insert_arguments)}              \
+            .private,                                                          \
+        CCC_Tree_map *: &(struct {                                             \
+            CCC_Entry private;                                                 \
+        }){CCC_tree_map_try_insert((CCC_Tree_map *)container_pointer,          \
+                                   (CCC_Tree_map_node *)try_insert_arguments)} \
+            .private)
 
 #define CCC_private_insert_or_assign(container_pointer,                        \
                                      insert_or_assign_arguments...)            \
@@ -110,31 +117,37 @@ limitations under the License.
                                           insert_or_assign_arguments...)       \
     _Generic((container_pointer),                                              \
         CCC_Array_adaptive_map *: &(                                           \
-                 CCC_Handle){CCC_array_adaptive_map_insert_or_assign(          \
-                                 (CCC_Array_adaptive_map *)container_pointer,  \
-                                 insert_or_assign_arguments)                   \
-                                 .private},                                    \
-        CCC_Array_tree_map *: &(                                               \
-                 CCC_Handle){CCC_array_tree_map_insert_or_assign(              \
-                                 (CCC_Array_tree_map *)container_pointer,      \
-                                 insert_or_assign_arguments)                   \
-                                 .private},                                    \
-        CCC_Flat_hash_map *: &(                                                \
-                 CCC_Entry){CCC_flat_hash_map_insert_or_assign(                \
-                                (CCC_Flat_hash_map *)container_pointer,        \
-                                insert_or_assign_arguments)                    \
-                                .private},                                     \
-        CCC_Adaptive_map *: &(                                                 \
-                 CCC_Entry){CCC_adaptive_map_insert_or_assign(                 \
-                                (CCC_Adaptive_map *)container_pointer,         \
-                                (CCC_Adaptive_map_node *)                      \
-                                    insert_or_assign_arguments)                \
-                                .private},                                     \
-        CCC_Tree_map *: &(CCC_Entry){                                          \
-            CCC_tree_map_insert_or_assign(                                     \
-                (CCC_Tree_map *)container_pointer,                             \
-                (CCC_Tree_map_node *)insert_or_assign_arguments)               \
-                .private})
+            struct                                                             \
+            { CCC_Handle private; }){CCC_array_adaptive_map_insert_or_assign(  \
+                                         (CCC_Array_adaptive_map *)            \
+                                             container_pointer,                \
+                                         insert_or_assign_arguments)}          \
+            .private,                                                          \
+        CCC_Array_tree_map *: &(struct {                                       \
+            CCC_Handle private;                                                \
+        }){CCC_array_tree_map_insert_or_assign((CCC_Array_tree_map *)          \
+                                                   container_pointer,          \
+                                               insert_or_assign_arguments)}    \
+            .private,                                                          \
+        CCC_Flat_hash_map *: &(struct {                                        \
+            CCC_Entry private;                                                 \
+        }){CCC_flat_hash_map_insert_or_assign((CCC_Flat_hash_map *)            \
+                                                  container_pointer,           \
+                                              insert_or_assign_arguments)}     \
+            .private,                                                          \
+        CCC_Adaptive_map *: &(struct {                                         \
+            CCC_Entry private;                                                 \
+        }){CCC_adaptive_map_insert_or_assign((CCC_Adaptive_map *)              \
+                                                 container_pointer,            \
+                                             (CCC_Adaptive_map_node *)         \
+                                                 insert_or_assign_arguments)}  \
+            .private,                                                          \
+        CCC_Tree_map *: &(struct {                                             \
+            CCC_Entry private;                                                 \
+        }){CCC_tree_map_insert_or_assign((CCC_Tree_map *)container_pointer,    \
+                                         (CCC_Tree_map_node *)                 \
+                                             insert_or_assign_arguments)}      \
+            .private)
 
 #define CCC_private_remove_key_value(container_pointer,                        \
                                      key_val_container_array_pointer...)       \
@@ -150,31 +163,39 @@ limitations under the License.
                                           key_val_container_array_pointer...)  \
     _Generic((container_pointer),                                              \
         CCC_Array_adaptive_map *: &(                                           \
-                 CCC_Handle){CCC_array_adaptive_map_remove_key_value(          \
-                                 (CCC_Array_adaptive_map *)container_pointer,  \
-                                 key_val_container_array_pointer)              \
-                                 .private},                                    \
+            struct                                                             \
+            { CCC_Handle private; }){CCC_array_adaptive_map_remove_key_value(  \
+                                         (CCC_Array_adaptive_map *)            \
+                                             container_pointer,                \
+                                         key_val_container_array_pointer)}     \
+            .private,                                                          \
         CCC_Array_tree_map *: &(                                               \
-                 CCC_Handle){CCC_array_tree_map_remove_key_value(              \
-                                 (CCC_Array_tree_map *)container_pointer,      \
-                                 key_val_container_array_pointer)              \
-                                 .private},                                    \
+            struct                                                             \
+            { CCC_Handle private; }){CCC_array_tree_map_remove_key_value(      \
+                                         (CCC_Array_tree_map *)                \
+                                             container_pointer,                \
+                                         key_val_container_array_pointer)}     \
+            .private,                                                          \
         CCC_Flat_hash_map *: &(                                                \
-                 CCC_Entry){CCC_flat_hash_map_remove_key_value(                \
-                                (CCC_Flat_hash_map *)container_pointer,        \
-                                key_val_container_array_pointer)               \
-                                .private},                                     \
+            struct                                                             \
+            { CCC_Entry private; }){CCC_flat_hash_map_remove_key_value(        \
+                                        (CCC_Flat_hash_map *)                  \
+                                            container_pointer,                 \
+                                        key_val_container_array_pointer)}      \
+            .private,                                                          \
         CCC_Adaptive_map *: &(                                                 \
-                 CCC_Entry){CCC_adaptive_map_remove_key_value(                 \
-                                (CCC_Adaptive_map *)container_pointer,         \
-                                (CCC_Adaptive_map_node *)                      \
-                                    key_val_container_array_pointer)           \
-                                .private},                                     \
-        CCC_Tree_map *: &(CCC_Entry){                                          \
-            CCC_tree_map_remove_key_value(                                     \
-                (CCC_Tree_map *)container_pointer,                             \
-                (CCC_Tree_map_node *)key_val_container_array_pointer)          \
-                .private})
+            struct                                                             \
+            { CCC_Entry private; }){CCC_adaptive_map_remove_key_value(         \
+                                        (CCC_Adaptive_map *)container_pointer, \
+                                        (CCC_Adaptive_map_node *)              \
+                                            key_val_container_array_pointer)}  \
+            .private,                                                          \
+        CCC_Tree_map *: &(struct {                                             \
+            CCC_Entry private;                                                 \
+        }){CCC_tree_map_remove_key_value((CCC_Tree_map *)container_pointer,    \
+                                         (CCC_Tree_map_node *)                 \
+                                             key_val_container_array_pointer)} \
+            .private)
 
 #define CCC_private_remove_entry(container_entry_pointer)                      \
     _Generic((container_entry_pointer),                                        \
@@ -187,7 +208,9 @@ limitations under the License.
         (container_entry_pointer))
 
 #define CCC_private_remove_entry_wrap(container_entry_pointer)                 \
-    &(CCC_Entry){CCC_private_remove_entry(container_entry_pointer).private}
+    &(struct { CCC_Entry private; }){                                          \
+        CCC_private_remove_entry(container_entry_pointer)}                     \
+         .private
 
 #define CCC_private_remove_handle(container_array_pointer)                     \
     _Generic((container_array_pointer),                                        \
@@ -199,7 +222,9 @@ limitations under the License.
         (container_array_pointer))
 
 #define CCC_private_remove_handle_wrap(container_array_pointer)                \
-    &(CCC_Handle){CCC_private_remove_handle(container_array_pointer).private}
+    &(struct { CCC_Handle private; }){                                         \
+        CCC_private_remove_handle(container_array_pointer)}                    \
+         .private
 
 #define CCC_private_entry(container_pointer, key_pointer...)                   \
     _Generic((container_pointer),                                              \
@@ -212,33 +237,16 @@ limitations under the License.
 
 #define CCC_private_entry_wrap(container_pointer, key_pointer...)              \
     _Generic((container_pointer),                                              \
-        CCC_Flat_hash_map *: &(                                                \
-                 CCC_Flat_hash_map_entry){CCC_flat_hash_map_entry(             \
-                                              (CCC_Flat_hash_map               \
-                                                   *)(container_pointer),      \
-                                              key_pointer)                     \
-                                              .private},                       \
-        CCC_Flat_hash_map const *: &(                                          \
-                 CCC_Flat_hash_map_entry){CCC_flat_hash_map_entry(             \
-                                              (CCC_Flat_hash_map               \
-                                                   *)(container_pointer),      \
-                                              key_pointer)                     \
-                                              .private},                       \
-        CCC_Adaptive_map *: &(                                                 \
-                 CCC_Adaptive_map_entry){CCC_adaptive_map_entry(               \
-                                             (CCC_Adaptive_map                 \
-                                                  *)(container_pointer),       \
-                                             key_pointer)                      \
-                                             .private},                        \
-        CCC_Tree_map *: &(                                                     \
-                 CCC_Tree_map_entry){CCC_tree_map_entry(                       \
-                                         (CCC_Tree_map *)(container_pointer),  \
-                                         key_pointer)                          \
-                                         .private},                            \
-        CCC_Tree_map const *: &(CCC_Tree_map_entry){                           \
-            CCC_tree_map_entry((CCC_Tree_map *)(container_pointer),            \
-                               key_pointer)                                    \
-                .private})
+        CCC_Flat_hash_map *: CCC_flat_hash_map_entry_wrap(                     \
+                 (CCC_Flat_hash_map *)(container_pointer), key_pointer),       \
+        CCC_Flat_hash_map const *: CCC_flat_hash_map_entry_wrap(               \
+                 (CCC_Flat_hash_map *)(container_pointer), key_pointer),       \
+        CCC_Adaptive_map *: CCC_adaptive_map_entry_wrap(                       \
+                 (CCC_Adaptive_map *)(container_pointer), key_pointer),        \
+        CCC_Tree_map *: CCC_tree_map_entry_wrap(                               \
+                 (CCC_Tree_map *)(container_pointer), key_pointer),            \
+        CCC_Tree_map const *: CCC_tree_map_entry_wrap(                         \
+                 (CCC_Tree_map *)(container_pointer), key_pointer))
 
 #define CCC_private_handle(container_pointer, key_pointer...)                  \
     _Generic((container_pointer),                                              \
@@ -248,24 +256,13 @@ limitations under the License.
         (container_pointer), key_pointer)
 
 #define CCC_private_handle_wrap(container_pointer, key_pointer...)             \
-    _Generic(                                                                  \
-        (container_pointer),                                                   \
-        CCC_Array_adaptive_map *: &(                                           \
-            CCC_Array_adaptive_map_handle){CCC_array_adaptive_map_handle(      \
-                                               (CCC_Array_adaptive_map         \
-                                                    *)(container_pointer),     \
-                                               key_pointer)                    \
-                                               .private},                      \
-        CCC_Array_tree_map *: &(                                               \
-            CCC_Array_tree_map_handle){CCC_array_tree_map_handle(              \
-                                           (CCC_Array_tree_map                 \
-                                                *)(container_pointer),         \
-                                           key_pointer)                        \
-                                           .private},                          \
-        CCC_Array_tree_map const *: &(CCC_Array_tree_map_handle){              \
-            CCC_array_tree_map_handle(                                         \
-                (CCC_Array_tree_map *)(container_pointer), key_pointer)        \
-                .private})
+    _Generic((container_pointer),                                              \
+        CCC_Array_adaptive_map *: CCC_array_adaptive_map_handle_wrap(          \
+                 (CCC_Array_adaptive_map *)(container_pointer), key_pointer),  \
+        CCC_Array_tree_map *: CCC_array_tree_map_handle_wrap(                  \
+                 (CCC_Array_tree_map *)(container_pointer), key_pointer),      \
+        CCC_Array_tree_map const *: CCC_array_tree_map_handle_wrap(            \
+                 (CCC_Array_tree_map *)(container_pointer), key_pointer))
 
 #define CCC_private_and_modify(container_entry_pointer, mod_fn)                \
     _Generic((container_entry_pointer),                                        \
@@ -664,37 +661,24 @@ limitations under the License.
 #define CCC_private_equal_range_wrap(container_pointer,                        \
                                      begin_and_end_key_pointer...)             \
     _Generic((container_pointer),                                              \
-        CCC_Adaptive_map *: &(                                                 \
-                 CCC_Range){CCC_adaptive_map_equal_range(                      \
-                                (CCC_Adaptive_map *)(container_pointer),       \
-                                begin_and_end_key_pointer)                     \
-                                .private},                                     \
-        CCC_Tree_map *: &(CCC_Range){CCC_tree_map_equal_range(                 \
-                                         (CCC_Tree_map *)(container_pointer),  \
-                                         begin_and_end_key_pointer)            \
-                                         .private},                            \
-        CCC_Tree_map const *: &(                                               \
-                 CCC_Range){CCC_tree_map_equal_range(                          \
-                                (CCC_Tree_map const *)(container_pointer),     \
-                                begin_and_end_key_pointer)                     \
-                                .private},                                     \
-        CCC_Array_tree_map *: &(                                               \
-                 CCC_Handle_range){CCC_array_tree_map_equal_range(             \
-                                       (CCC_Array_tree_map                     \
-                                            *)(container_pointer),             \
-                                       begin_and_end_key_pointer)              \
-                                       .private},                              \
-        CCC_Array_tree_map const *: &(                                         \
-                 CCC_Handle_range){CCC_array_tree_map_equal_range(             \
-                                       (CCC_Array_tree_map const               \
-                                            *)(container_pointer),             \
-                                       begin_and_end_key_pointer)              \
-                                       .private},                              \
-        CCC_Array_adaptive_map *: &(CCC_Handle_range){                         \
-            CCC_array_adaptive_map_equal_range(                                \
-                (CCC_Array_adaptive_map *)(container_pointer),                 \
-                begin_and_end_key_pointer)                                     \
-                .private})
+        CCC_Adaptive_map *: CCC_adaptive_map_equal_range_wrap(                 \
+                 (CCC_Adaptive_map *)(container_pointer),                      \
+                 begin_and_end_key_pointer),                                   \
+        CCC_Tree_map *: CCC_tree_map_equal_range_wrap(                         \
+                 (CCC_Tree_map *)(container_pointer),                          \
+                 begin_and_end_key_pointer),                                   \
+        CCC_Tree_map const *: CCC_tree_map_equal_range_wrap(                   \
+                 (CCC_Tree_map const *)(container_pointer),                    \
+                 begin_and_end_key_pointer),                                   \
+        CCC_Array_tree_map *: CCC_array_tree_map_equal_range_wrap(             \
+                 (CCC_Array_tree_map *)(container_pointer),                    \
+                 begin_and_end_key_pointer),                                   \
+        CCC_Array_tree_map const *: CCC_array_tree_map_equal_range_wrap(       \
+                 (CCC_Array_tree_map const *)(container_pointer),              \
+                 begin_and_end_key_pointer),                                   \
+        CCC_Array_adaptive_map *: CCC_array_adaptive_map_equal_range_wrap(     \
+                 (CCC_Array_adaptive_map *)(container_pointer),                \
+                 begin_and_end_key_pointer))
 
 #define CCC_private_equal_range_reverse(                                       \
     container_pointer, reverse_begin_and_reverse_end_key_pointer...)           \
@@ -709,40 +693,27 @@ limitations under the License.
 
 #define CCC_private_equal_range_reverse_wrap(container_pointer,                \
                                              begin_and_end_key_pointer...)     \
-    _Generic(                                                                  \
-        (container_pointer),                                                   \
-        CCC_Adaptive_map *: &(                                                 \
-            CCC_Range_reverse){CCC_adaptive_map_equal_range_reverse(           \
-                                   (CCC_Adaptive_map *)(container_pointer),    \
-                                   begin_and_end_key_pointer)                  \
-                                   .private},                                  \
-        CCC_Tree_map *: &(                                                     \
-            CCC_Range_reverse){CCC_tree_map_equal_range_reverse(               \
-                                   (CCC_Tree_map *)(container_pointer),        \
-                                   begin_and_end_key_pointer)                  \
-                                   .private},                                  \
-        CCC_Tree_map const *: &(                                               \
-            CCC_Range_reverse){CCC_tree_map_equal_range_reverse(               \
-                                   (CCC_Tree_map const *)(container_pointer),  \
-                                   begin_and_end_key_pointer)                  \
-                                   .private},                                  \
-        CCC_Array_tree_map *: &(                                               \
-            CCC_Handle_range_reverse){CCC_array_tree_map_equal_range_reverse(  \
-                                          (CCC_Array_tree_map                  \
-                                               *)(container_pointer),          \
-                                          begin_and_end_key_pointer)           \
-                                          .private},                           \
-        CCC_Array_tree_map const *: &(                                         \
-            CCC_Handle_range_reverse){CCC_array_tree_map_equal_range_reverse(  \
-                                          (CCC_Array_tree_map const            \
-                                               *)(container_pointer),          \
-                                          begin_and_end_key_pointer)           \
-                                          .private},                           \
-        CCC_Array_adaptive_map *: &(CCC_Handle_range_reverse){                 \
-            CCC_array_adaptive_map_equal_range_reverse(                        \
-                (CCC_Array_adaptive_map *)(container_pointer),                 \
-                begin_and_end_key_pointer)                                     \
-                .private})
+    _Generic((container_pointer),                                              \
+        CCC_Adaptive_map *: CCC_adaptive_map_equal_range_reverse_wrap(         \
+                 (CCC_Adaptive_map *)(container_pointer),                      \
+                 begin_and_end_key_pointer),                                   \
+        CCC_Tree_map *: CCC_tree_map_equal_range_reverse_wrap(                 \
+                 (CCC_Tree_map *)(container_pointer),                          \
+                 begin_and_end_key_pointer),                                   \
+        CCC_Tree_map const *: CCC_tree_map_equal_range_reverse_wrap(           \
+                 (CCC_Tree_map const *)(container_pointer),                    \
+                 begin_and_end_key_pointer),                                   \
+        CCC_Array_tree_map *: CCC_array_tree_map_equal_range_reverse_wrap(     \
+                 (CCC_Array_tree_map *)(container_pointer),                    \
+                 begin_and_end_key_pointer),                                   \
+        CCC_Array_tree_map const                                               \
+            *: CCC_array_tree_map_equal_range_reverse_wrap(                    \
+                 (CCC_Array_tree_map const *)(container_pointer),              \
+                 begin_and_end_key_pointer),                                   \
+        CCC_Array_adaptive_map                                                 \
+            *: CCC_array_adaptive_map_equal_range_reverse_wrap(                \
+                 (CCC_Array_adaptive_map *)(container_pointer),                \
+                 begin_and_end_key_pointer))
 
 /** These generic macros will take precedence over any name shortening the user
 may have requested from the types.h file. The standard range name conflicts
