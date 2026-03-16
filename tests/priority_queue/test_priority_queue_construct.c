@@ -5,19 +5,20 @@
 #include "priority_queue.h"
 #include "priority_queue_utility.h"
 #include "types.h"
-#include "utility/allocate.h"
 #include "utility/stack_allocator.h"
 
 static CCC_Priority_queue
 construct_empty(void) {
-    CCC_Priority_queue result = CCC_priority_queue_for(
-        struct Val, elem, CCC_ORDER_LESSER, val_order, NULL, NULL);
+    CCC_Priority_queue result
+        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER,
+                                 &(CCC_Comparator){.compare = val_order});
     return result;
 }
 
 check_static_begin(priority_queue_test_empty) {
-    CCC_Priority_queue priority_queue = CCC_priority_queue_for(
-        struct Val, elem, CCC_ORDER_LESSER, val_order, NULL, NULL);
+    CCC_Priority_queue priority_queue
+        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER,
+                                 &(CCC_Comparator){.compare = val_order});
     check(CCC_priority_queue_is_empty(&priority_queue), true);
     check_end();
 }
@@ -32,16 +33,20 @@ address on the priority queue struct itself. */
 check_static_begin(priority_queue_test_construct) {
     CCC_Priority_queue pq = construct_empty();
     struct Val v = {};
-    check(CCC_priority_queue_push(&pq, &v.elem) != NULL, true);
+    check(CCC_priority_queue_push(&pq, &v.elem, &(CCC_Allocator){}) != NULL,
+          true);
     check(CCC_priority_queue_validate(&pq), true);
     check_end();
 }
 
 check_static_begin(priority_queue_test_construct_from) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
-    CCC_Priority_queue pq = CCC_priority_queue_context_from(
-        elem, CCC_ORDER_LESSER, val_order, stack_allocator_allocate, NULL,
-        &allocator,
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[3]){}),
+    };
+    CCC_Priority_queue pq = CCC_priority_queue_from(
+        elem, CCC_ORDER_LESSER, &(CCC_Comparator){.compare = val_order},
+        &allocator, &(CCC_Destructor){},
         (struct Val[]){
             {.val = 0},
             {.val = 1},
@@ -52,43 +57,23 @@ check_static_begin(priority_queue_test_construct_from) {
     struct Val const *const v = CCC_priority_queue_front(&pq);
     check(v != NULL, true);
     check(v->val, 0);
-    check_end((void)CCC_priority_queue_clear(&pq, NULL););
+    check_end(
+        (void)CCC_priority_queue_clear(&pq, &(CCC_Destructor){}, &allocator););
 }
 
 check_static_begin(priority_queue_test_construct_from_fail) {
-    CCC_Priority_queue pq
-        = CCC_priority_queue_from(elem, CCC_ORDER_LESSER, val_order, NULL, NULL,
-                                  (struct Val[]){
-                                      {.val = 0},
-                                      {.val = 1},
-                                      {.val = 2},
-                                  });
+    CCC_Priority_queue pq = CCC_priority_queue_from(
+        elem, CCC_ORDER_LESSER, &(CCC_Comparator){.compare = val_order},
+        &(CCC_Allocator){}, &(CCC_Destructor){},
+        (struct Val[]){
+            {.val = 0},
+            {.val = 1},
+            {.val = 2},
+        });
     check(CCC_priority_queue_validate(&pq), true);
     check(CCC_priority_queue_is_empty(&pq), true);
-    check_end((void)CCC_priority_queue_clear(&pq, NULL););
-}
-
-check_static_begin(priority_queue_test_with_allocator) {
-    CCC_Priority_queue pq = CCC_priority_queue_with_allocator(
-        struct Val, elem, CCC_ORDER_LESSER, val_order, std_allocate);
-    check(CCC_priority_queue_validate(&pq), true);
-    check(CCC_priority_queue_is_empty(&pq), CCC_TRUE);
-    check_end();
-}
-
-check_static_begin(priority_queue_test_context_with_allocator) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
-    CCC_Priority_queue pq = CCC_priority_queue_context_with_allocator(
-        struct Val, elem, CCC_ORDER_LESSER, val_order, stack_allocator_allocate,
-        &allocator);
-    check(CCC_priority_queue_validate(&pq), true);
-    check(CCC_priority_queue_is_empty(&pq), true);
-    check(CCC_priority_queue_push(&pq, &(struct Val){.val = 1}.elem) != NULL,
-          CCC_TRUE);
-    struct Val const *const v = CCC_priority_queue_front(&pq);
-    check(v != NULL, true);
-    check(v->val, 1);
-    check_end((void)CCC_priority_queue_clear(&pq, NULL););
+    check_end((void)CCC_priority_queue_clear(&pq, &(CCC_Destructor){},
+                                             &(CCC_Allocator){}););
 }
 
 int
@@ -96,7 +81,5 @@ main(void) {
     return check_run(priority_queue_test_empty(),
                      priority_queue_test_construct(),
                      priority_queue_test_construct_from(),
-                     priority_queue_test_with_allocator(),
-                     priority_queue_test_context_with_allocator(),
                      priority_queue_test_construct_from_fail());
 }

@@ -69,6 +69,22 @@ typedef struct CCC_Priority_queue_node CCC_Priority_queue_node;
 Initialize the container with memory, callbacks, and permissions. */
 /**@{*/
 
+/** @brief Initialize a default priority queue at runtime or compile time.
+@param[in] type_name the name of the user type_intruder wrapping
+priority_queue elems.
+@param[in] type_intruder_field the name of the field for the
+priority_queue elem.
+@param[in] order CCC_ORDER_LESSER for a min priority_queue or
+CCC_ORDER_GREATER for a max priority_queue.
+@param[in] comparator_pointer the pointer to CCC_Comparator for type comparison.
+@return the initialized priority_queue on the right side of an equality operator
+(e.g. CCC_Priority_queue priority_queue = CCC_priority_queue_for(...);)
+*/
+#define CCC_priority_queue_default(type_name, type_intruder_field, order,      \
+                                   comparator_pointer)                         \
+    CCC_private_priority_queue_for(type_name, type_intruder_field, order,      \
+                                   comparator_pointer)
+
 /** @brief Initialize a priority queue at runtime or compile time.
 @param[in] type_name the name of the user type_intruder wrapping
 priority_queue elems.
@@ -76,98 +92,30 @@ priority_queue elems.
 priority_queue elem.
 @param[in] order CCC_ORDER_LESSER for a min priority_queue or
 CCC_ORDER_GREATER for a max priority_queue.
-@param[in] compare the function used to compare two user types.
-@param[in] allocate the allocation function or NULL if allocation is banned.
-@param[in] context context data needed for comparison or destruction.
+@param[in] comparator_pointer the pointer to CCC_Comparator for type comparison.
 @return the initialized priority_queue on the right side of an equality operator
 (e.g. CCC_Priority_queue priority_queue = CCC_priority_queue_for(...);)
 */
-#define CCC_priority_queue_for(type_name, type_intruder_field, order, compare, \
-                               allocate, context)                              \
+#define CCC_priority_queue_for(type_name, type_intruder_field, order,          \
+                               comparator_pointer...)                          \
     CCC_private_priority_queue_for(type_name, type_intruder_field, order,      \
-                                   compare, allocate, context)
-
-/** @brief Initialize a priority queue at runtime or compile time with an
-allocator.
-@param[in] type_name the name of the user type_intruder wrapping queue elements.
-@param[in] type_intruder_field the name of the field for the queue elements.
-@param[in] order `CCC_ORDER_LESSER` for a min priority_queue or
-`CCC_ORDER_GREATER` for a max priority_queue.
-@param[in] compare the function used to compare two user types.
-@param[in] allocate the allocation function or NULL if allocation is banned.
-@return the initialized queue on the right side of an equality operator */
-#define CCC_priority_queue_with_allocator(type_name, type_intruder_field,      \
-                                          order, compare, allocate)            \
-    CCC_private_priority_queue_with_allocator(type_name, type_intruder_field,  \
-                                              order, compare, allocate)
-
-/** @brief Initialize a priority queue at runtime or compile time with an
-allocator and context.
-@param[in] type_name the name of the user type_intruder wrapping
-priority_queue elems.
-@param[in] type_intruder_field the name of the field for the
-priority_queue elem.
-@param[in] order CCC_ORDER_LESSER for a min priority_queue or
-CCC_ORDER_GREATER for a max priority_queue.
-@param[in] compare the function used to compare two user types.
-@param[in] allocate the allocation function or NULL if allocation is banned.
-@param[in] context context data needed for comparison or destruction.
-@return the initialized queue on the right side of an equality operator. */
-#define CCC_priority_queue_context_with_allocator(                             \
-    type_name, type_intruder_field, order, compare, allocate, context)         \
-    CCC_private_priority_queue_context_with_allocator(                         \
-        type_name, type_intruder_field, order, compare, allocate, context)
-
-/** @brief Initialize a priority queue at runtime or compile time with an
-allocator.
-@param[in] type_name the name of the user type_intruder wrapping queue elements.
-@param[in] type_intruder_field the name of the field for the queue elements.
-@param[in] order `CCC_ORDER_LESSER` for a min priority_queue or
-`CCC_ORDER_GREATER` for a max priority_queue.
-@param[in] compare the function used to compare two user types.
-@param[in] allocate the allocation function or NULL if allocation is banned.
-@return the initialized queue on the right side of an equality operator */
-#define CCC_priority_queue_with_allocator(type_name, type_intruder_field,      \
-                                          order, compare, allocate)            \
-    CCC_private_priority_queue_with_allocator(type_name, type_intruder_field,  \
-                                              order, compare, allocate)
+                                   comparator_pointer)
 
 /** @brief Initialize a priority queue at runtime from a compound literal array.
 @param[in] type_intruder_field the name of the field intruding on user's type.
 @param[in] order CCC_ORDER_LESSER for a min priority queue or CCC_ORDER_GREATER
 for a max priority queue.
-@param[in] compare the function used to compare two user types.
-@param[in] allocate the allocation function required for construction.
-@param[in] destroy the optional destructor to run if insertion fails.
-@param[in] compound_literal_array the array of user types to insert into the
-map (e.g. (struct My_type[]){ {.key = 1, .val = 1}, {.key = 2, .val = 2}}).
-@return the initialized priority_queue on the right side of an equality operator
-(e.g. CCC_Priority_queue priority_queue = CCC_priority_queue_from(...);)
-*/
-#define CCC_priority_queue_from(type_intruder_field, order, compare, allocate, \
-                                destroy, compound_literal_array...)            \
-    CCC_private_priority_queue_from(type_intruder_field, order, compare,       \
-                                    allocate, destroy, compound_literal_array)
-
-/** @brief Initialize a priority queue at runtime from a compound literal array.
-@param[in] type_intruder_field the name of the field intruding on user's type.
-@param[in] order CCC_ORDER_LESSER for a min priority queue or CCC_ORDER_GREATER
-for a max priority queue.
-@param[in] compare the function used to compare two user types.
-@param[in] allocate the allocation function required for construction.
-@param[in] destroy the optional destructor to run if insertion fails.
-@param[in] context context data needed for comparison or destruction.
-@param[in] compound_literal_array the array of user types to insert into the
-map (e.g. (struct My_type[]){ {.key = 1, .val = 1}, {.key = 2, .val = 2}}).
-@return the initialized priority_queue on the right side of an equality operator
-(e.g. CCC_Priority_queue priority_queue = CCC_priority_queue_context_from(...);)
-*/
-#define CCC_priority_queue_context_from(type_intruder_field, order, compare,   \
-                                        allocate, destroy, context,            \
-                                        compound_literal_array...)             \
-    CCC_private_priority_queue_context_from(type_intruder_field, order,        \
-                                            compare, allocate, destroy,        \
-                                            context, compound_literal_array)
+@param[in] comparator_pointer the CCC_Comparator to compare two user types.
+@param[in] allocator_pointer the CCC_Allocator for construction.
+@param[in] destructor_pointer optional CCC_Destructor if insertion fails.
+@param[in] compound_literal_array the array of user types to insert.
+@return the priority_queue on the right side of an equality operator */
+#define CCC_priority_queue_from(type_intruder_field, order,                    \
+                                comparator_pointer, allocator_pointer,         \
+                                destructor_pointer, compound_literal_array...) \
+    CCC_private_priority_queue_from(                                           \
+        type_intruder_field, order, comparator_pointer, allocator_pointer,     \
+        destructor_pointer, compound_literal_array)
 
 /**@}*/
 
@@ -178,6 +126,7 @@ Insert and remove elements from the priority queue. */
 /** @brief Adds an element to the priority queue in correct total order. O(1).
 @param[in] priority_queue a pointer to the priority queue.
 @param[in] type_intruder a pointer to the intrusive element in the user type.
+@param[in] allocator the CCC_Allocator for insertion allocation, if needed.
 @return a reference to the newly inserted user type_intruder or NULL if NULL
 arguments are provided or allocation fails when permitted.
 
@@ -188,28 +137,31 @@ If allocation is not permitted this function assumes the memory wrapping elem
 has been allocated with the appropriate lifetime for the user's needs. */
 [[nodiscard]] void *
 CCC_priority_queue_push(CCC_Priority_queue *priority_queue,
-                        CCC_Priority_queue_node *type_intruder);
+                        CCC_Priority_queue_node *type_intruder,
+                        CCC_Allocator const *allocator);
 
 /** @brief Write user type_intruder directly to a newly allocated priority queue
 elem.
 @param[in] Priority_queue_pointer a pointer to the priority queue.
+@param[in] allocator_pointer the pointer for allocation. It is required.
 @param[in] type_compound_literal the compound literal to write to the
 allocation.
 @return a reference to the successfully inserted element or NULL if allocation
 fails or is not allowed.
-
-Note that the priority queue must be initialized with allocation permission to
-use this macro. */
-#define CCC_priority_queue_emplace(Priority_queue_pointer,                     \
+@warning a non-empty `&(CCC_Allocator){.allocate = my_allocate}` must be
+provided so that memory can be allocated for the compound literal data. */
+#define CCC_priority_queue_emplace(priority_queue_pointer, allocator_pointer,  \
                                    type_compound_literal...)                   \
-    CCC_private_priority_queue_emplace(Priority_queue_pointer,                 \
-                                       type_compound_literal)
+    CCC_private_priority_queue_emplace(                                        \
+        priority_queue_pointer, allocator_pointer, type_compound_literal)
 
 /** @brief Pops the front element from the priority queue. Amortized O(lgN).
 @param[in] priority_queue a pointer to the priority queue.
+@param[in] allocator the CCC_Allocator to free the element, if needed.
 @return ok if pop was successful or an input error if priority_queue is NULL or
 empty. */
-CCC_Result CCC_priority_queue_pop(CCC_Priority_queue *priority_queue);
+CCC_Result CCC_priority_queue_pop(CCC_Priority_queue *priority_queue,
+                                  CCC_Allocator const *allocator);
 
 /** Extract the element known to be in the priority_queue without freeing
 memory. Amortized O(lgN).
@@ -225,18 +177,19 @@ CCC_priority_queue_extract(CCC_Priority_queue *priority_queue,
 /** @brief Erase type_intruder from the priority_queue. Amortized O(lgN).
 @param[in] priority_queue a pointer to the priority queue.
 @param[in] type_intruder a pointer to the intrusive element in the user type.
+@param[in] allocator the CCC_Allocator to free the element, if needed.
 @return ok if erase was successful or an input error if priority_queue or elem
 is NULL or priority_queue is empty.
 
 Note that the user must ensure that type_intruder is in the priority queue. */
 CCC_Result CCC_priority_queue_erase(CCC_Priority_queue *priority_queue,
-                                    CCC_Priority_queue_node *type_intruder);
+                                    CCC_Priority_queue_node *type_intruder,
+                                    CCC_Allocator const *allocator);
 
 /** @brief Update the priority in the user type_intruder wrapping elem.
 @param[in] priority_queue a pointer to the priority queue.
 @param[in] type_intruder a pointer to the intrusive element in the user type.
-@param[in] modify the update function to act on the type_intruder wrapping elem.
-@param[in] context any context data needed for the update function.
+@param[in] modifier the CCC_Modifier to act on the type_intruder wrapping elem.
 @return a reference to the updated user type_intruder or NULL if update failed
 due to bad arguments provided.
 @warning the user must ensure type_intruder is in the priority_queue.
@@ -246,7 +199,7 @@ deduce if an increase or decrease is occurring. See the increase and decrease
 operations. O(1) best case, O(lgN) worst case. */
 void *CCC_priority_queue_update(CCC_Priority_queue *priority_queue,
                                 CCC_Priority_queue_node *type_intruder,
-                                CCC_Modifier_interface *modify, void *context);
+                                CCC_Modifier const *modifier);
 
 /** @brief Update the priority in the user type_intruder stored in the
 container.
@@ -287,8 +240,7 @@ operations. O(1) best case, O(lgN) worst case. */
 O(lgN)
 @param[in] priority_queue a pointer to the priority queue.
 @param[in] type_intruder a pointer to the intrusive element in the user type.
-@param[in] modify the update function to act on the type_intruder wrapping elem.
-@param[in] context any context data needed for the update function.
+@param[in] modifier the CCC_Modifier to act on the type_intruder wrapping elem.
 @return a reference to the updated user type_intruder or NULL if update failed
 due to bad arguments provided.
 @warning the data structure will be in an invalid state if the user decreases
@@ -299,12 +251,10 @@ initialized as a max queue and the new value is known to be greater than the old
 value. If this is a max heap O(1), otherwise O(lgN).
 
 While the best case operation is O(1) the impact of restructuring on future pops
-from the priority_queue creates an amortized o(lgN) runtime for this function.
-*/
+from the priority_queue creates amortized o(lgN) runtime for this function.*/
 void *CCC_priority_queue_increase(CCC_Priority_queue *priority_queue,
                                   CCC_Priority_queue_node *type_intruder,
-                                  CCC_Modifier_interface *modify,
-                                  void *context);
+                                  CCC_Modifier const *modifier);
 
 /** @brief Increases the priority of the user type_intruder stored in the
 container.
@@ -351,8 +301,7 @@ from the priority_queue creates an amortized o(lgN) runtime for this function.
 O(lgN)
 @param[in] priority_queue a pointer to the priority queue.
 @param[in] type_intruder a pointer to the intrusive element in the user type.
-@param[in] modify the update function to act on the type_intruder wrapping elem.
-@param[in] context any context data needed for the update function.
+@param[in] modifier the CCC_Modifier to act on the type_intruder wrapping elem.
 @return a reference to the updated user type_intruder or NULL if update failed
 due to bad arguments provided.
 
@@ -361,12 +310,10 @@ initialized as a min queue and the new value is known to be less than the old
 value. If this is a min heap O(1), otherwise O(lgN).
 
 While the best case operation is O(1) the impact of restructuring on future pops
-from the priority_queue creates an amortized o(lgN) runtime for this function.
-*/
+from the priority_queue creates amortized o(lgN) runtime for this function. */
 void *CCC_priority_queue_decrease(CCC_Priority_queue *priority_queue,
                                   CCC_Priority_queue_node *type_intruder,
-                                  CCC_Modifier_interface *modify,
-                                  void *context);
+                                  CCC_Modifier const *modifier);
 
 /** @brief Decreases the priority of the user type_intruder stored in the
 container.
@@ -417,19 +364,12 @@ Deallocate the container. */
 
 /** @brief Removes all elements from the priority_queue, freeing if needed.
 @param[in] priority_queue a pointer to the priority queue.
-@param[in] destroy the destructor function or NULL if not needed.
-@return ok if the clear was successful or an input error for NULL arguments.
-
-Note that if allocation is allowed the container will free the user type
-wrapping each element in the priority_queue. Therefore, the user should not free
-in the destructor function. Only perform context cleanup operations if needed.
-
-If allocation is not allowed, the user may free their stored types in the
-destructor function if they wish to do so. The container simply removes all
-the elements from the priority_queue, calling destroy on each user type_intruder
-if provided, and sets the size to zero. */
+@param[in] destructor the CCC_Destructor if needed.
+@param[in] allocator the CCC_Allocator to free elements, if needed.
+@return ok if the clear was successful or an input error for NULL arguments. */
 CCC_Result CCC_priority_queue_clear(CCC_Priority_queue *priority_queue,
-                                    CCC_Destructor_interface *destroy);
+                                    CCC_Destructor const *destructor,
+                                    CCC_Allocator const *allocator);
 
 /**@}*/
 
@@ -478,14 +418,10 @@ priority queue container. Check for collisions before name shortening. */
 /* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Priority_queue_node priority_queue_node;
 typedef CCC_Priority_queue Priority_queue;
+#    define priority_queue_default(arguments...)                               \
+        CCC_priority_queue_default(arguments)
 #    define priority_queue_for(arguments...) CCC_priority_queue_for(arguments)
-#    define priority_queue_with_allocator(arguments...)                        \
-        CCC_priority_queue_with_allocator(arguments)
-#    define priority_queue_context_with_allocator(arguments...)                \
-        CCC_priority_queue_context_with_allocator(arguments)
 #    define priority_queue_from(arguments...) CCC_priority_queue_from(arguments)
-#    define priority_queue_context_from(arguments...)                          \
-        CCC_priority_queue_context_from(arguments)
 #    define priority_queue_front(arguments...)                                 \
         CCC_priority_queue_front(arguments)
 #    define priority_queue_push(arguments...) CCC_priority_queue_push(arguments)

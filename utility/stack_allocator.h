@@ -17,7 +17,8 @@ functions that require an allocator. We test those code paths while not dealing
 with the system heap allocator. As the test harness grows, this speed up is
 valuable. This should only be used for testing. */
 struct Stack_allocator {
-    /** The stack array of a compile time known capacity of user types. */
+    /** The stack array of a compile time known capacity of user types. Always
+        the first field of the struct. Do not move. */
     void *blocks;
     /** The size in bytes of the user type stored in this stack array. */
     size_t sizeof_type;

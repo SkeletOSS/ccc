@@ -17,11 +17,13 @@ enum : int {
 };
 
 check_static_begin(priority_queue_test_insert_iterate_pop) {
-    struct Stack_allocator allocator
-        = stack_allocator_for(struct Val, HEAP_CAP);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[HEAP_CAP]){}),
+    };
     CCC_Priority_queue priority_queue
-        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER, val_order,
-                                 stack_allocator_allocate, &allocator);
+        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER,
+                                 &(CCC_Comparator){.compare = val_order});
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -33,13 +35,14 @@ check_static_begin(priority_queue_test_insert_iterate_pop) {
                        .val = rand() % (HEAP_CAP + 1), /* NOLINT */
                        .id = (int)i,
                    }
-                        .elem);
+                        .elem,
+                   &allocator);
         check(pushed != NULL, true);
         check(validate(&priority_queue), true);
     }
     size_t pop_count = 0;
     while (!CCC_priority_queue_is_empty(&priority_queue)) {
-        check(pop(&priority_queue), CCC_RESULT_OK);
+        check(pop(&priority_queue, &allocator), CCC_RESULT_OK);
         ++pop_count;
         check(validate(&priority_queue), true);
     }
@@ -48,11 +51,13 @@ check_static_begin(priority_queue_test_insert_iterate_pop) {
 }
 
 check_static_begin(priority_queue_test_priority_removal) {
-    struct Stack_allocator allocator
-        = stack_allocator_for(struct Val, HEAP_CAP);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[HEAP_CAP]){}),
+    };
     CCC_Priority_queue priority_queue
-        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER, val_order,
-                                 stack_allocator_allocate, &allocator);
+        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER,
+                                 &(CCC_Comparator){.compare = val_order});
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -64,12 +69,13 @@ check_static_begin(priority_queue_test_priority_removal) {
                        .val = rand() % (HEAP_CAP + 1), /* NOLINT */
                        .id = (int)i,
                    }
-                        .elem);
+                        .elem,
+                   &allocator);
         check(pushed != NULL, true);
         check(validate(&priority_queue), true);
     }
     int const limit = 400;
-    struct Val *const val_array = allocator.blocks;
+    struct Val *const val_array = allocator.context;
     for (size_t val = 0; val < HEAP_CAP; ++val) {
         struct Val *const i = &val_array[val];
         if (i->val > limit) {
@@ -81,11 +87,13 @@ check_static_begin(priority_queue_test_priority_removal) {
 }
 
 check_static_begin(priority_queue_test_priority_update) {
-    struct Stack_allocator allocator
-        = stack_allocator_for(struct Val, HEAP_CAP);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[HEAP_CAP]){}),
+    };
     CCC_Priority_queue priority_queue
-        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER, val_order,
-                                 stack_allocator_allocate, &allocator);
+        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER,
+                                 &(CCC_Comparator){.compare = val_order});
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -97,18 +105,22 @@ check_static_begin(priority_queue_test_priority_update) {
                        .val = rand() % (HEAP_CAP + 1), /* NOLINT */
                        .id = (int)i,
                    }
-                        .elem);
+                        .elem,
+                   &allocator);
         check(pushed != NULL, true);
         check(validate(&priority_queue), true);
     }
     int const limit = 400;
-    struct Val *const val_array = allocator.blocks;
+    struct Val *const val_array = allocator.context;
     for (size_t val = 0; val < HEAP_CAP; ++val) {
         struct Val *const i = &val_array[val];
         int backoff = i->val / 2;
         if (i->val > limit) {
             check(CCC_priority_queue_update(&priority_queue, &i->elem,
-                                            val_update, &backoff)
+                                            &(CCC_Modifier){
+                                                .modify = val_update,
+                                                .context = &backoff,
+                                            })
                       != NULL,
                   true);
             check(validate(&priority_queue), true);
@@ -119,11 +131,13 @@ check_static_begin(priority_queue_test_priority_update) {
 }
 
 check_static_begin(priority_queue_test_priority_update_with) {
-    struct Stack_allocator allocator
-        = stack_allocator_for(struct Val, HEAP_CAP);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[HEAP_CAP]){}),
+    };
     CCC_Priority_queue priority_queue
-        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER, val_order,
-                                 stack_allocator_allocate, &allocator);
+        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER,
+                                 &(CCC_Comparator){.compare = val_order});
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -135,12 +149,13 @@ check_static_begin(priority_queue_test_priority_update_with) {
                        .val = rand() % (HEAP_CAP + 1), /* NOLINT */
                        .id = (int)i,
                    }
-                        .elem);
+                        .elem,
+                   &allocator);
         check(pushed != NULL, true);
         check(validate(&priority_queue), true);
     }
     int const limit = 400;
-    struct Val *const val_array = allocator.blocks;
+    struct Val *const val_array = allocator.context;
     for (size_t val = 0; val < HEAP_CAP; ++val) {
         int backoff = val_array[val].val / 2;
         if (val_array[val].val > limit) {
@@ -156,11 +171,13 @@ check_static_begin(priority_queue_test_priority_update_with) {
 }
 
 check_static_begin(priority_queue_test_priority_increase) {
-    struct Stack_allocator allocator
-        = stack_allocator_for(struct Val, HEAP_CAP);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[HEAP_CAP]){}),
+    };
     CCC_Priority_queue priority_queue
-        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER, val_order,
-                                 stack_allocator_allocate, &allocator);
+        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER,
+                                 &(CCC_Comparator){.compare = val_order});
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -172,25 +189,32 @@ check_static_begin(priority_queue_test_priority_increase) {
                        .val = rand() % (HEAP_CAP + 1), /* NOLINT */
                        .id = (int)i,
                    }
-                        .elem);
+                        .elem,
+                   &allocator);
         check(pushed != NULL, true);
         check(validate(&priority_queue), true);
     }
     int const limit = 400;
-    struct Val *const val_array = allocator.blocks;
+    struct Val *const val_array = allocator.context;
     for (size_t val = 0; val < HEAP_CAP; ++val) {
         struct Val *const i = &val_array[val];
         int inc = (limit * 2) + 1;
         int dec = (i->val / 2) - 1;
         if (i->val > limit && dec < i->val) {
             check(CCC_priority_queue_decrease(&priority_queue, &i->elem,
-                                              val_update, &dec)
+                                              &(CCC_Modifier){
+                                                  .modify = val_update,
+                                                  .context = &dec,
+                                              })
                       != NULL,
                   true);
             check(validate(&priority_queue), true);
         } else if (i->val < limit && inc > i->val) {
             check(CCC_priority_queue_increase(&priority_queue, &i->elem,
-                                              val_update, &inc)
+                                              &(CCC_Modifier){
+                                                  .modify = val_update,
+                                                  .context = &inc,
+                                              })
                       != NULL,
                   true);
             check(validate(&priority_queue), true);
@@ -201,11 +225,13 @@ check_static_begin(priority_queue_test_priority_increase) {
 }
 
 check_static_begin(priority_queue_test_priority_increase_with) {
-    struct Stack_allocator allocator
-        = stack_allocator_for(struct Val, HEAP_CAP);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[HEAP_CAP]){}),
+    };
     CCC_Priority_queue priority_queue
-        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER, val_order,
-                                 stack_allocator_allocate, &allocator);
+        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER,
+                                 &(CCC_Comparator){.compare = val_order});
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -217,12 +243,13 @@ check_static_begin(priority_queue_test_priority_increase_with) {
                        .val = rand() % (HEAP_CAP + 1), /* NOLINT */
                        .id = (int)i,
                    }
-                        .elem);
+                        .elem,
+                   &allocator);
         check(pushed != NULL, true);
         check(validate(&priority_queue), true);
     }
     int const limit = 400;
-    struct Val *const val_array = allocator.blocks;
+    struct Val *const val_array = allocator.context;
     for (size_t val = 0; val < HEAP_CAP; ++val) {
         int inc = (limit * 2) + 1;
         int dec = (val_array[val].val / 2) - 1;
@@ -245,11 +272,13 @@ check_static_begin(priority_queue_test_priority_increase_with) {
 }
 
 check_static_begin(priority_queue_test_priority_decrease) {
-    struct Stack_allocator allocator
-        = stack_allocator_for(struct Val, HEAP_CAP);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[HEAP_CAP]){}),
+    };
     CCC_Priority_queue priority_queue
-        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_GREATER, val_order,
-                                 stack_allocator_allocate, &allocator);
+        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER,
+                                 &(CCC_Comparator){.compare = val_order});
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -261,25 +290,32 @@ check_static_begin(priority_queue_test_priority_decrease) {
                        .val = rand() % (HEAP_CAP + 1), /* NOLINT */
                        .id = (int)i,
                    }
-                        .elem);
+                        .elem,
+                   &allocator);
         check(pushed != NULL, true);
         check(validate(&priority_queue), true);
     }
     int const limit = 400;
-    struct Val *const val_array = allocator.blocks;
+    struct Val *const val_array = allocator.context;
     for (size_t val = 0; val < HEAP_CAP; ++val) {
         struct Val *const i = &val_array[val];
         int inc = (limit * 2) + 1;
         int dec = (i->val / 2) - 1;
         if (i->val < limit && inc > i->val) {
             check(CCC_priority_queue_increase(&priority_queue, &i->elem,
-                                              val_update, &inc)
+                                              &(CCC_Modifier){
+                                                  .modify = val_update,
+                                                  .context = &inc,
+                                              })
                       != NULL,
                   true);
             check(validate(&priority_queue), true);
         } else if (i->val > limit && dec < i->val) {
             check(CCC_priority_queue_decrease(&priority_queue, &i->elem,
-                                              val_update, &dec)
+                                              &(CCC_Modifier){
+                                                  .modify = val_update,
+                                                  .context = &dec,
+                                              })
                       != NULL,
                   true);
             check(validate(&priority_queue), true);
@@ -290,11 +326,13 @@ check_static_begin(priority_queue_test_priority_decrease) {
 }
 
 check_static_begin(priority_queue_test_priority_decrease_with) {
-    struct Stack_allocator allocator
-        = stack_allocator_for(struct Val, HEAP_CAP);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[HEAP_CAP]){}),
+    };
     CCC_Priority_queue priority_queue
-        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_GREATER, val_order,
-                                 stack_allocator_allocate, &allocator);
+        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER,
+                                 &(CCC_Comparator){.compare = val_order});
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -306,12 +344,13 @@ check_static_begin(priority_queue_test_priority_decrease_with) {
                        .val = rand() % (HEAP_CAP + 1), /* NOLINT */
                        .id = (int)i,
                    }
-                        .elem);
+                        .elem,
+                   &allocator);
         check(pushed != NULL, true);
         check(validate(&priority_queue), true);
     }
     int const limit = 400;
-    struct Val *const val_array = allocator.blocks;
+    struct Val *const val_array = allocator.context;
     for (size_t val = 0; val < HEAP_CAP; ++val) {
         struct Val *const i = &val_array[val];
         int inc = (limit * 2) + 1;

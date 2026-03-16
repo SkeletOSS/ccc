@@ -88,36 +88,36 @@ Initialize the container with memory, callbacks, and permissions. */
 /** @brief Initialize an empty priority queue
 @param[in] type_name the name of the user type.
 @param[in] order desired order of this priority queue.
-@param[in] comparator_context_pointer a pointer to the
+@param[in] comparator_pointer a pointer to the
 CCC_Comparator.
 @return the initialized priority queue on the right hand side of an equality
 operator. */
 #define CCC_flat_priority_queue_default(type_name, order,                      \
-                                        comparator_context_pointer...)         \
+                                        comparator_pointer...)                 \
     CCC_private_flat_priority_queue_default(type_name, order,                  \
-                                            comparator_context_pointer)
+                                            comparator_pointer)
 
 /** @brief Initialize a priority_queue as a min or max heap.
 @param[in] type_name the name of the user type.
 @param[in] order CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max
 heap, respectively.
-@param[in] comparator_context_pointer a pointer to
+@param[in] comparator_pointer a pointer to
 CCC_Comparator.
 @param[in] capacity the capacity of contiguous elements at data_pointer.
 @param[in] data_pointer a pointer to an array of user types or NULL.
 @return the initialized priority queue on the right hand side of an equality
 operator. */
-#define CCC_flat_priority_queue_for(                                           \
-    type_name, order, comparator_context_pointer, capacity, data_pointer)      \
-    CCC_private_flat_priority_queue_for(                                       \
-        type_name, order, comparator_context_pointer, capacity, data_pointer)
+#define CCC_flat_priority_queue_for(type_name, order, comparator_pointer,      \
+                                    capacity, data_pointer)                    \
+    CCC_private_flat_priority_queue_for(type_name, order, comparator_pointer,  \
+                                        capacity, data_pointer)
 
 /** @brief Partial order an array of elements as a min or max heap at runtime
 in O(N) time and space equal to the provided data capacity.
 @param[in] type_name the name of the user type.
 @param[in] order CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max
 heap, respectively.
-@param[in] comparator_context_pointer a pointer to
+@param[in] comparator_pointer a pointer to
 CCC_Comparator.
 @param[in] capacity the capacity of contiguous elements at data_pointer.
 @param[in] count the count <= capacity of valid elements.
@@ -126,18 +126,16 @@ CCC_Comparator.
 operator.
 @warning One additional element of the provided type is allocated on the stack
 for swapping purposes. */
-#define CCC_flat_priority_queue_heapify(type_name, order,                      \
-                                        comparator_context_pointer, capacity,  \
-                                        count, data_pointer...)                \
-    CCC_private_flat_priority_queue_heapify(type_name, order,                  \
-                                            comparator_context_pointer,        \
-                                            capacity, count, data_pointer)
+#define CCC_flat_priority_queue_heapify(type_name, order, comparator_pointer,  \
+                                        capacity, count, data_pointer...)      \
+    CCC_private_flat_priority_queue_heapify(                                   \
+        type_name, order, comparator_pointer, capacity, count, data_pointer)
 
 /** @brief Partial order a compound literal array of elements as a min or max
 heap. O(N).
 @param[in] order CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max heap,
 respectively.
-@param[in] comparator_context_pointer a pointer to
+@param[in] comparator_pointer a pointer to
 CCC_Comparator.
 @param[in] allocator_pointer a pointer to
 CCC_Allocator for allocating the needed memory to copy in the
@@ -192,10 +190,10 @@ main(void)
 Only dynamic priority queues may be initialized this way. For static or stack
 based initialization of fixed capacity compound literals with no elements see
 the CCC_flat_priority_queue_with_storage() macro. */
-#define CCC_flat_priority_queue_from(order, comparator_context_pointer,        \
+#define CCC_flat_priority_queue_from(order, comparator_pointer,                \
                                      allocator_pointer, optional_capacity,     \
                                      compound_literal_array...)                \
-    CCC_private_flat_priority_queue_from(order, comparator_context_pointer,    \
+    CCC_private_flat_priority_queue_from(order, comparator_pointer,            \
                                          allocator_pointer, optional_capacity, \
                                          compound_literal_array)
 
@@ -203,7 +201,7 @@ the CCC_flat_priority_queue_with_storage() macro. */
 @param[in] type_name the name of the user type.
 @param[in] order CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max
 heap, respectively.
-@param[in] comparator_context_pointer a pointer to
+@param[in] comparator_pointer a pointer to
 CCC_Comparator.
 @param[in] allocator_pointer a pointer to
 CCC_Allocator for allocating the needed memory to reserve
@@ -234,16 +232,15 @@ Only dynamic priority queues may be initialized this way. For static or stack
 based initialization of fixed capacity compound literals with no elements see
 the CCC_flat_priority_queue_with_storage() macro. */
 #define CCC_flat_priority_queue_with_capacity(                                 \
-    type_name, order, comparator_context_pointer, allocator_pointer, capacity) \
-    CCC_private_flat_priority_queue_with_capacity(type_name, order,            \
-                                                  comparator_context_pointer,  \
-                                                  allocator_pointer, capacity)
+    type_name, order, comparator_pointer, allocator_pointer, capacity)         \
+    CCC_private_flat_priority_queue_with_capacity(                             \
+        type_name, order, comparator_pointer, allocator_pointer, capacity)
 
 /** @brief Initialize a priority_queue as a min or max heap with no allocation
 permission, no context data, and a compound literal as backing storage.
 @param[in] order CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max heap,
 respectively.
-@param[in] comparator_context_pointer a pointer to
+@param[in] comparator_pointer a pointer to
 CCC_Comparator.
 @param[in] compound_literal_array the compound literal array of fixed capacity.
 @return the initialized priority queue on the right hand side of an equality
@@ -251,10 +248,10 @@ operator. Capacity of the compound literal is capacity of the priority queue.
 @warning The compound literal is NOT swapped into heap order upon
 initialization. This initializer is meant for compile or runtime initialization
 with a fixed capacity compound literal with a count of 0. */
-#define CCC_flat_priority_queue_with_storage(                                  \
-    order, comparator_context_pointer, compound_literal_array)                 \
-    CCC_private_flat_priority_queue_with_storage(                              \
-        order, comparator_context_pointer, compound_literal_array)
+#define CCC_flat_priority_queue_with_storage(order, comparator_pointer,        \
+                                             compound_literal_array)           \
+    CCC_private_flat_priority_queue_with_storage(order, comparator_pointer,    \
+                                                 compound_literal_array)
 
 /** @brief Copy the priority_queue from source to newly initialized
 destination.
