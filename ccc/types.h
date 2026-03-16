@@ -527,7 +527,7 @@ typedef struct {
     /** The function for hashing the key field of the user type. */
     CCC_Key_hasher_interface *hash;
     /** The function for comparing a key to user elements in the container. */
-    CCC_Key_comparator_interface *comare;
+    CCC_Key_comparator_interface *compare;
     /** A reference to context needed for hashing and comparison. */
     void *context;
 } CCC_Hasher;

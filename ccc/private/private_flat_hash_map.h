@@ -150,8 +150,12 @@ struct CCC_Flat_hash_map {
     size_t sizeof_type;
     /** @internal The location of the key field in user type. */
     size_t key_offset;
-    /** @internal The user provided hasher, comparator, and context. */
-    CCC_Hasher hasher;
+    /** @internal The user provided hash function. */
+    CCC_Key_hasher_interface *hash;
+    /** @internal The user provided comparison function. */
+    CCC_Key_comparator_interface *compare;
+    /** @internal The user provided context for hashing and comparison. */
+    void *context;
 };
 
 /** @internal A struct for containing all relevant information for a query
@@ -228,6 +232,17 @@ be exposed to the user if they wish to know the size in bytes of this object. */
                     private_type_compound_literal_array)                       \
                 + CCC_FLAT_HASH_MAP_GROUP_COUNT];                              \
     }) {                                                                       \
+    }
+
+/** @internal All other fields default to 0 or NULL. */
+#define CCC_private_flat_hash_map_default(                                     \
+    private_type_name, private_key_field, private_hasher_pointer)              \
+    {                                                                          \
+        .sizeof_type = sizeof(private_type_name),                              \
+        .key_offset = offsetof(private_type_name, private_key_field),          \
+        .hash = (private_hasher_pointer)->hash,                                \
+        .compare = (private_hasher_pointer)->compare,                          \
+        .context = (private_hasher_pointer)->context,                          \
     }
 
 /** @internal Initialization is tricky but we simplify by only accepting a
