@@ -99,7 +99,7 @@ CCC_flat_double_ended_queue_for(...);) */
 
 /** @brief Initialize a Flat_double_ended_queue from a compound literal array
 initializer.
-@param[in] allocator_context_pointer the CCC_Allocator needed
+@param[in] allocator_pointer the CCC_Allocator needed
 to copy in the compound literal array elements.
 @param[in] optional_capacity optionally specify the capacity of the queue if
 different from the size of the compound literal array initializer. If the
@@ -147,14 +147,14 @@ Only dynamic flat_double_ended_queues may be initialized this way. For static
 or stack based initialization of fixed flat_double_ended_queues with contents
 known at compile time, see the CCC_flat_double_ended_queue_with_storage() macro.
 */
-#define CCC_flat_double_ended_queue_from(                                      \
-    allocator_context_pointer, optional_capacity, compound_literal_array...)   \
+#define CCC_flat_double_ended_queue_from(allocator_pointer, optional_capacity, \
+                                         compound_literal_array...)            \
     CCC_private_flat_double_ended_queue_from(                                  \
-        allocator_context_pointer, optional_capacity, compound_literal_array)
+        allocator_pointer, optional_capacity, compound_literal_array)
 
 /** @brief Initialize a Flat_double_ended_queue with a capacity.
 @param[in] type_name any user or language standard type name.
-@param[in] allocator_context_pointer the CCC_Allocator for
+@param[in] allocator_pointer the CCC_Allocator for
 resizing.
 @param[in] capacity the capacity of the Flat_double_ended_queue to reserve.
 @return the initialized flat_double_ended_queue. Directly assign to
@@ -177,10 +177,10 @@ main(void)
 Only dynamic flat_double_ended_queues may be initialized this way. For static or
 stack based initialization of fixed flat_double_ended_queues with contents known
 at compile time, see the CCC_flat_double_ended_queue_with_storage() macro. */
-#define CCC_flat_double_ended_queue_with_capacity(                             \
-    type_name, allocator_context_pointer, capacity)                            \
+#define CCC_flat_double_ended_queue_with_capacity(type_name,                   \
+                                                  allocator_pointer, capacity) \
     CCC_private_flat_double_ended_queue_with_capacity(                         \
-        type_name, allocator_context_pointer, capacity)
+        type_name, allocator_pointer, capacity)
 
 /** @brief Initialize the queue from a compound literal array with no allocation
 permissions or context data.
@@ -285,31 +285,31 @@ flat_double_ended_queue. O(1) if no allocation permission amortized O(1) if
 allocation permission is given and a resize is required.
 @param[in] flat_double_ended_queue_pointer a pointer to the
 flat_double_ended_queue.
-@param[in] allocator_context_pointer a pointer to the
+@param[in] allocator_pointer a pointer to the
 CCC_Allocator.
 @param[in] value for integral types, the direct value. For structs and
 unions use compound literal syntax.
 @return a reference to the inserted element. If allocation is permitted and a
 resizing is required to insert the element but fails, NULL is returned. */
 #define CCC_flat_double_ended_queue_emplace_back(                              \
-    flat_double_ended_queue_pointer, allocator_context_pointer, value...)      \
+    flat_double_ended_queue_pointer, allocator_pointer, value...)              \
     CCC_private_flat_double_ended_queue_emplace_back(                          \
-        flat_double_ended_queue_pointer, allocator_context_pointer, value)
+        flat_double_ended_queue_pointer, allocator_pointer, value)
 
 /** @brief Write an element directly to the front slot of the
 flat_double_ended_queue. O(1) if no allocation permission amortized O(1) if
 allocation permission is given and a resize is required.
 @param[in] flat_double_ended_queue_pointer a pointer to the queue.
-@param[in] allocator_context_pointer a pointer to the
+@param[in] allocator_pointer a pointer to the
 CCC_Allocator.
 @param[in] value for integral types, the direct value. For structs and unions
 use compound literal syntax.
 @return a reference to the inserted element. If allocation is permitted and a
 resizing is required to insert the element but fails, NULL is returned. */
 #define CCC_flat_double_ended_queue_emplace_front(                             \
-    flat_double_ended_queue_pointer, allocator_context_pointer, value...)      \
+    flat_double_ended_queue_pointer, allocator_pointer, value...)              \
     CCC_private_flat_double_ended_queue_emplace_front(                         \
-        flat_double_ended_queue_pointer, allocator_context_pointer, value)
+        flat_double_ended_queue_pointer, allocator_pointer, value)
 
 /** @brief Push the user type to the back of the flat_double_ended_queue. O(1)
 if no allocation permission amortized O(1) if allocation permission is given and

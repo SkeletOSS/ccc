@@ -176,7 +176,7 @@ static struct Group_count max_trailing_ones(Bit_block, Bit_count, size_t);
 static struct Group_signed_count max_leading_ones(Bit_block, Bit_signed_count,
                                                   size_t);
 static CCC_Result maybe_resize(struct CCC_Bitset *, size_t,
-                               CCC_Allocator_interface *);
+                               CCC_Allocator const *);
 static size_t size_t_min(size_t, size_t);
 static void set_all(struct CCC_Bitset *, CCC_Tribool);
 static Bit_count bit_count_index(size_t);
@@ -664,11 +664,12 @@ CCC_bitset_popcount_range(CCC_Bitset const *const bitset,
 }
 
 CCC_Result
-CCC_bitset_push_back(CCC_Bitset *const bitset, CCC_Tribool const b) {
-    if (!bitset || b > CCC_TRUE || b < CCC_FALSE) {
+CCC_bitset_push_back(CCC_Bitset *const bitset, CCC_Tribool const b,
+                     CCC_Allocator const *const allocator) {
+    if (!bitset || !allocator || b > CCC_TRUE || b < CCC_FALSE) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    CCC_Result const check_resize = maybe_resize(bitset, 1, bitset->allocate);
+    CCC_Result const check_resize = maybe_resize(bitset, 1, allocator);
     if (check_resize != CCC_RESULT_OK) {
         return check_resize;
     }
@@ -859,37 +860,19 @@ CCC_bitset_clear(CCC_Bitset *const bitset) {
 }
 
 CCC_Result
-CCC_bitset_clear_and_free(CCC_Bitset *const bitset) {
-    if (!bitset) {
+CCC_bitset_clear_and_free(CCC_Bitset *const bitset,
+                          CCC_Allocator const *const allocator) {
+    if (!bitset || !allocator) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    if (!bitset->allocate) {
+    if (!allocator->allocate) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
     if (bitset->blocks) {
-        (void)bitset->allocate((CCC_Allocator_arguments){
+        (void)allocator->allocate((CCC_Allocator_arguments){
             .input = bitset->blocks,
             .bytes = 0,
-            .context = bitset->context,
-        });
-    }
-    bitset->count = 0;
-    bitset->capacity = 0;
-    bitset->blocks = NULL;
-    return CCC_RESULT_OK;
-}
-
-CCC_Result
-CCC_bitset_clear_and_free_reserve(CCC_Bitset *const bitset,
-                                  CCC_Allocator_interface *const allocate) {
-    if (!bitset || !allocate) {
-        return CCC_RESULT_ARGUMENT_ERROR;
-    }
-    if (bitset->blocks) {
-        (void)allocate((CCC_Allocator_arguments){
-            .input = bitset->blocks,
-            .bytes = 0,
-            .context = bitset->context,
+            .context = allocator->context,
         });
     }
     bitset->count = 0;
@@ -900,29 +883,30 @@ CCC_bitset_clear_and_free_reserve(CCC_Bitset *const bitset,
 
 CCC_Result
 CCC_bitset_reserve(CCC_Bitset *const bitset, size_t const to_add,
-                   CCC_Allocator_interface *const allocate) {
-    if (!bitset || !allocate || !to_add) {
+                   CCC_Allocator const *const allocator) {
+    if (!bitset || !allocator || !allocator->allocate || !to_add) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    return maybe_resize(bitset, to_add, allocate);
+    return maybe_resize(bitset, to_add, allocator);
 }
 
 CCC_Result
 CCC_bitset_copy(CCC_Bitset *const destination, CCC_Bitset const *const source,
-                CCC_Allocator_interface *const allocate) {
-    if (!destination || !source
-        || (destination->capacity < source->capacity && !allocate)) {
+                CCC_Allocator const *const allocator) {
+    if (!destination || !source || !allocator
+        || (destination->capacity < source->capacity && !allocator->allocate)) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     if (!source->capacity) {
         return CCC_RESULT_OK;
     }
     if (destination->capacity < source->capacity) {
-        Bit_block *const new_data = allocate((CCC_Allocator_arguments){
-            .input = destination->blocks,
-            .bytes = block_count(source->capacity) * SIZEOF_BLOCK,
-            .context = destination->context,
-        });
+        Bit_block *const new_data
+            = allocator->allocate((CCC_Allocator_arguments){
+                .input = destination->blocks,
+                .bytes = block_count(source->capacity) * SIZEOF_BLOCK,
+                .context = allocator->context,
+            });
         if (!new_data) {
             return CCC_RESULT_ALLOCATOR_ERROR;
         }
@@ -965,8 +949,8 @@ CCC_bitset_is_equal(CCC_Bitset const *const left,
 
 CCC_Result
 CCC_private_bitset_reserve(struct CCC_Bitset *const bitset, size_t const to_add,
-                           CCC_Allocator_interface *const allocate) {
-    return CCC_bitset_reserve(bitset, to_add, allocate);
+                           CCC_Allocator const *const allocator) {
+    return CCC_bitset_reserve(bitset, to_add, allocator);
 }
 
 CCC_Tribool
@@ -994,7 +978,7 @@ is_subset_of(struct CCC_Bitset const *const subset,
 
 static CCC_Result
 maybe_resize(struct CCC_Bitset *const bitset, size_t const to_add,
-             CCC_Allocator_interface *const allocate) {
+             CCC_Allocator const *const allocator) {
     size_t bits_needed = bitset->count + to_add;
     if (bits_needed < bitset->count) {
         return CCC_RESULT_ARGUMENT_ERROR;
@@ -1002,7 +986,7 @@ maybe_resize(struct CCC_Bitset *const bitset, size_t const to_add,
     if (bits_needed <= bitset->capacity) {
         return CCC_RESULT_OK;
     }
-    if (!allocate) {
+    if (!allocator->allocate) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
     if (!bitset->count && to_add == 1) {
@@ -1014,10 +998,10 @@ maybe_resize(struct CCC_Bitset *const bitset, size_t const to_add,
         = block_count(bits_needed - bitset->count) * SIZEOF_BLOCK;
     size_t const old_bytes
         = bitset->count ? block_count(bitset->count) * SIZEOF_BLOCK : 0;
-    Bit_block *const new_data = allocate((CCC_Allocator_arguments){
+    Bit_block *const new_data = allocator->allocate((CCC_Allocator_arguments){
         .input = bitset->blocks,
         .bytes = block_count(bits_needed) * SIZEOF_BLOCK,
-        .context = bitset->context,
+        .context = allocator->context,
     });
     if (!new_data) {
         return CCC_RESULT_ALLOCATOR_ERROR;

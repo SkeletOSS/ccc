@@ -126,7 +126,7 @@ Ensure the count is less than equal to capacity. */
     CCC_private_buffer_for(type_name, capacity, count, data_pointer)
 
 /** @brief Initialize a Buffer from a compound literal array initializer.
-@param[in] allocator_context_pointer a pointer to
+@param[in] allocator_pointer a pointer to
 CCC_Allocator.
 @param[in] optional_capacity optionally specify the capacity of the Buffer if
 different from the size of the compound literal array initializer. If the
@@ -178,14 +178,14 @@ main(void)
 Only dynamic buffers may be initialized this way. For static or stack based
 initialization of fixed buffers with contents known at compile time, see the
 CCC_buffer_for() macro. */
-#define CCC_buffer_from(allocator_context_pointer, optional_capacity,          \
+#define CCC_buffer_from(allocator_pointer, optional_capacity,                  \
                         compound_literal_array...)                             \
-    CCC_private_buffer_from(allocator_context_pointer, optional_capacity,      \
+    CCC_private_buffer_from(allocator_pointer, optional_capacity,              \
                             compound_literal_array)
 
 /** @brief Initialize a Buffer with a capacity.
 @param[in] type_name any user or language standard type name.
-@param[in] allocator_context_pointer a pointer to
+@param[in] allocator_pointer a pointer to
 CCC_Allocator.
 @param[in] capacity the capacity of the Buffer to reserve.
 @return the initialized buffer. Directly assign to Buffer on the right hand
@@ -211,10 +211,8 @@ main(void)
 Only dynamic buffers may be initialized this way. For static or stack based
 initialization of fixed buffers with contents known at compile time, see the
 CCC_buffer_for() macro. */
-#define CCC_buffer_with_capacity(type_name, allocator_context_pointer,         \
-                                 capacity)                                     \
-    CCC_private_buffer_with_capacity(type_name, allocator_context_pointer,     \
-                                     capacity)
+#define CCC_buffer_with_capacity(type_name, allocator_pointer, capacity)       \
+    CCC_private_buffer_with_capacity(type_name, allocator_pointer, capacity)
 
 /** @brief Initialize a contiguous Buffer of user a specified type of fixed
 capacity with no allocation permission or context.

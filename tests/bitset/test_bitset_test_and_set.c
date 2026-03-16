@@ -105,7 +105,7 @@ check_static_begin(bitset_test_reset_all) {
     check(bitset_popcount(&bs).count, 10);
     check(bitset_reset_all(&bs), CCC_RESULT_OK);
     check(bitset_popcount(&bs).count, 0);
-    check(bitset_push_back(&bs, CCC_FALSE), CCC_RESULT_OK);
+    check(bitset_push_back(&bs, CCC_FALSE, &(CCC_Allocator){}), CCC_RESULT_OK);
     check(bitset_popcount(&bs).count, 0);
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(bitset_popcount(&bs).count, 11);

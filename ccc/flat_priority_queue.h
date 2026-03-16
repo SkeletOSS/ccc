@@ -139,7 +139,7 @@ heap. O(N).
 respectively.
 @param[in] comparator_context_pointer a pointer to
 CCC_Comparator.
-@param[in] allocator_context_pointer a pointer to
+@param[in] allocator_pointer a pointer to
 CCC_Allocator for allocating the needed memory to copy in the
 provided compound literal data.
 @param[in] optional_capacity the optional capacity larger than the input
@@ -192,12 +192,12 @@ main(void)
 Only dynamic priority queues may be initialized this way. For static or stack
 based initialization of fixed capacity compound literals with no elements see
 the CCC_flat_priority_queue_with_storage() macro. */
-#define CCC_flat_priority_queue_from(                                          \
-    order, comparator_context_pointer, allocator_context_pointer,              \
-    optional_capacity, compound_literal_array...)                              \
-    CCC_private_flat_priority_queue_from(                                      \
-        order, comparator_context_pointer, allocator_context_pointer,          \
-        optional_capacity, compound_literal_array)
+#define CCC_flat_priority_queue_from(order, comparator_context_pointer,        \
+                                     allocator_pointer, optional_capacity,     \
+                                     compound_literal_array...)                \
+    CCC_private_flat_priority_queue_from(order, comparator_context_pointer,    \
+                                         allocator_pointer, optional_capacity, \
+                                         compound_literal_array)
 
 /** @brief Initialize a Flat_priority_queue with a capacity.
 @param[in] type_name the name of the user type.
@@ -205,7 +205,7 @@ the CCC_flat_priority_queue_with_storage() macro. */
 heap, respectively.
 @param[in] comparator_context_pointer a pointer to
 CCC_Comparator.
-@param[in] allocator_context_pointer a pointer to
+@param[in] allocator_pointer a pointer to
 CCC_Allocator for allocating the needed memory to reserve
 capacity.
 @param[in] capacity the capacity of contiguous elements at data_pointer.
@@ -234,11 +234,10 @@ Only dynamic priority queues may be initialized this way. For static or stack
 based initialization of fixed capacity compound literals with no elements see
 the CCC_flat_priority_queue_with_storage() macro. */
 #define CCC_flat_priority_queue_with_capacity(                                 \
-    type_name, order, comparator_context_pointer, allocator_context_pointer,   \
-    capacity)                                                                  \
-    CCC_private_flat_priority_queue_with_capacity(                             \
-        type_name, order, comparator_context_pointer,                          \
-        allocator_context_pointer, capacity)
+    type_name, order, comparator_context_pointer, allocator_pointer, capacity) \
+    CCC_private_flat_priority_queue_with_capacity(type_name, order,            \
+                                                  comparator_context_pointer,  \
+                                                  allocator_pointer, capacity)
 
 /** @brief Initialize a priority_queue as a min or max heap with no allocation
 permission, no context data, and a compound literal as backing storage.
@@ -358,16 +357,14 @@ Insert or remove elements from the flat priority queue. */
 
 /** @brief Write a type directly to a priority queue slot. O(lgN).
 @param[in] priority_queue_pointer a pointer to the priority queue.
-@param[in] allocator_context_pointer a pointer to
+@param[in] allocator_pointer a pointer to
 CCC_Allocator.
 @param[in] type_compound_literal the compound literal or direct scalar type.
 @return a reference to the inserted element or NULL if allocation failed. */
-#define CCC_flat_priority_queue_emplace(priority_queue_pointer,                \
-                                        allocator_context_pointer,             \
-                                        type_compound_literal...)              \
-    CCC_private_flat_priority_queue_emplace(priority_queue_pointer,            \
-                                            allocator_context_pointer,         \
-                                            type_compound_literal)
+#define CCC_flat_priority_queue_emplace(                                       \
+    priority_queue_pointer, allocator_pointer, type_compound_literal...)       \
+    CCC_private_flat_priority_queue_emplace(                                   \
+        priority_queue_pointer, allocator_pointer, type_compound_literal)
 
 /** @brief Copy input buffer into the flat priority queue, organizing into data
 into heap order in O(N) time.

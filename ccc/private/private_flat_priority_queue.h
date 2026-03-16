@@ -101,11 +101,11 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
 /** @internal */
 #define CCC_private_flat_priority_queue_from(                                  \
     private_order, private_comparator_context_pointer,                         \
-    private_allocator_context_pointer, private_optional_capacity,              \
+    private_allocator_pointer, private_optional_capacity,                      \
     private_compound_literal_array...)                                         \
     (struct { struct CCC_Flat_priority_queue private; }){(__extension__({      \
         struct CCC_Flat_priority_queue private_flat_priority_queue = {         \
-            .buffer = CCC_buffer_from(private_allocator_context_pointer,       \
+            .buffer = CCC_buffer_from(private_allocator_pointer,               \
                                       private_optional_capacity,               \
                                       private_compound_literal_array),         \
             .order = (private_order),                                          \
@@ -122,12 +122,12 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
 /** @internal */
 #define CCC_private_flat_priority_queue_with_capacity(                         \
     private_type_name, private_order, private_comparator_context_pointer,      \
-    private_allocator_context_pointer, private_capacity)                       \
+    private_allocator_pointer, private_capacity)                               \
     (__extension__({                                                           \
         struct CCC_Flat_priority_queue private_flat_priority_queue = {         \
-            .buffer = CCC_buffer_with_capacity(                                \
-                private_type_name, private_allocator_context_pointer,          \
-                private_capacity),                                             \
+            .buffer = CCC_buffer_with_capacity(private_type_name,              \
+                                               private_allocator_pointer,      \
+                                               private_capacity),              \
             .order = (private_order),                                          \
             .comparator = *(private_comparator_context_pointer),               \
         };                                                                     \
@@ -155,14 +155,13 @@ CCC_private_flat_priority_queue_update_fixup(struct CCC_Flat_priority_queue *,
    expressions. See documentation in the flat priority_queueueue header for
    usage. The ugly details of the macro are hidden here in the impl header. */
 #define CCC_private_flat_priority_queue_emplace(                               \
-    flat_priority_queue, private_allocator_context_pointer,                    \
-    type_compound_literal...)                                                  \
+    flat_priority_queue, private_allocator_pointer, type_compound_literal...)  \
     (__extension__({                                                           \
         struct CCC_Flat_priority_queue *private_flat_priority_queue            \
             = (flat_priority_queue);                                           \
         typeof(type_compound_literal) *private_flat_priority_queue_res         \
             = CCC_buffer_allocate_back(&private_flat_priority_queue->buffer,   \
-                                       private_allocator_context_pointer);     \
+                                       private_allocator_pointer);             \
         if (private_flat_priority_queue_res) {                                 \
             *private_flat_priority_queue_res = type_compound_literal;          \
             if (private_flat_priority_queue->buffer.count > 1) {               \
