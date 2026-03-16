@@ -445,19 +445,20 @@ limitations under the License.
         CCC_Priority_queue *: CCC_priority_queue_pop)(                         \
         (container_pointer)__VA_OPT__(, __VA_ARGS__))
 
-#define CCC_private_pop_front(container_pointer)                               \
+#define CCC_private_pop_front(container_pointer, ...)                          \
     _Generic((container_pointer),                                              \
         CCC_Flat_double_ended_queue *: CCC_flat_double_ended_queue_pop_front,  \
         CCC_Doubly_linked_list *: CCC_doubly_linked_list_pop_front,            \
         CCC_Singly_linked_list *: CCC_singly_linked_list_pop_front)(           \
-        (container_pointer))
+        (container_pointer)__VA_OPT__(, __VA_ARGS__))
 
-#define CCC_private_pop_back(container_pointer)                                \
+#define CCC_private_pop_back(container_pointer, ...)                           \
     _Generic((container_pointer),                                              \
         CCC_Bitset *: CCC_bitset_pop_back,                                     \
         CCC_Flat_double_ended_queue *: CCC_flat_double_ended_queue_pop_back,   \
         CCC_Doubly_linked_list *: CCC_doubly_linked_list_pop_back,             \
-        CCC_Buffer *: CCC_buffer_pop_back)((container_pointer))
+        CCC_Buffer *: CCC_buffer_pop_back)(                                    \
+        (container_pointer)__VA_OPT__(, __VA_ARGS__))
 
 #define CCC_private_front(container_pointer)                                   \
     _Generic((container_pointer),                                              \

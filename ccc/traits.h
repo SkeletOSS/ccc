@@ -341,18 +341,23 @@ See container documentation for specific behavior. */
 
 /** @brief Pop an element from the front of a container.
 @param[in] container_pointer a pointer to the container.
+@param[in] pop_arguments any supplementary arguments a container may have for
+the pop.
 @return a result of the pop operation.
 
 See container documentation for specific behavior. */
-#define CCC_pop_front(container_pointer)                                       \
-    CCC_private_pop_front(container_pointer)
+#define CCC_pop_front(container_pointer, pop_arguments...)                     \
+    CCC_private_pop_front(container_pointer, pop_arguments)
 
 /** @brief Pop an element from the back of a container.
 @param[in] container_pointer a pointer to the container.
+@param[in] pop_arguments any supplementary arguments a container may have for
+the pop.
 @return a result of the pop operation.
 
 See container documentation for specific behavior. */
-#define CCC_pop_back(container_pointer) CCC_private_pop_back(container_pointer)
+#define CCC_pop_back(container_pointer, pop_arguments...)                      \
+    CCC_private_pop_back(container_pointer, pop_arguments)
 
 /** @brief Obtain a reference the front element of a container.
 @param[in] container_pointer a pointer to the container.

@@ -72,10 +72,6 @@ struct CCC_Singly_linked_list {
     size_t type_intruder_offset;
     /** @internal The sorted state of the list. Remembers last sort. */
     CCC_Order order;
-    /** @internal The user provided allocation function, if any. */
-    CCC_Allocator_interface *allocate;
-    /** @internal User provided context data, if any. */
-    void *context;
 };
 
 /*=========================   Private Interface  ============================*/
@@ -93,38 +89,26 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
 
 /** @internal */
 #define CCC_private_singly_linked_list_for(                                    \
-    private_struct_name, private_singly_linked_list_node_field,                \
-    private_allocate, private_context)                                         \
+    private_struct_name, private_singly_linked_list_node_field)                \
     {                                                                          \
         .head = NULL,                                                          \
         .sizeof_type = sizeof(private_struct_name),                            \
         .type_intruder_offset = offsetof(                                      \
             private_struct_name, private_singly_linked_list_node_field),       \
         .count = 0,                                                            \
-        .allocate = (private_allocate),                                        \
         .order = CCC_ORDER_ERROR,                                              \
-        .context = (private_context),                                          \
     }
 
 /** @internal */
-#define CCC_private_singly_linked_list_context_with_allocator(                 \
-    private_struct_name, private_type_intruder_field, private_allocate,        \
-    private_context)                                                           \
+#define CCC_private_singly_linked_list_default(                                \
+    private_struct_name, private_singly_linked_list_node_field)                \
     CCC_private_singly_linked_list_for(private_struct_name,                    \
-                                       private_type_intruder_field,            \
-                                       private_allocate, private_context)
+                                       private_singly_linked_list_node_field)
 
 /** @internal */
-#define CCC_private_singly_linked_list_with_allocator(                         \
-    private_struct_name, private_type_intruder_field, private_allocate)        \
-    CCC_private_singly_linked_list_for(private_struct_name,                    \
-                                       private_type_intruder_field,            \
-                                       private_allocate, NULL)
-
-/** @internal */
-#define CCC_private_singly_linked_list_context_from(                           \
-    private_type_intruder_field, private_allocate, private_destroy,            \
-    private_context, private_compound_literal_array...)                        \
+#define CCC_private_singly_linked_list_from(                                   \
+    private_type_intruder_field, private_allocator_pointer,                    \
+    private_destructor_pointer, private_compound_literal_array...)             \
     (__extension__({                                                           \
         typeof(*private_compound_literal_array)                                \
             *private_singly_linked_list_type_array                             \
@@ -132,23 +116,29 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
         struct CCC_Singly_linked_list private_singly_linked_list               \
             = CCC_private_singly_linked_list_for(                              \
                 typeof(*private_singly_linked_list_type_array),                \
-                private_type_intruder_field, private_allocate,                 \
-                private_context);                                              \
-        if (private_singly_linked_list.allocate) {                             \
+                private_type_intruder_field);                                  \
+        CCC_Allocator const *const private_singly_linked_list_allocator        \
+            = (private_allocator_pointer);                                     \
+        if (private_singly_linked_list_allocator                               \
+            && private_singly_linked_list_allocator->allocate) {               \
             size_t private_count                                               \
                 = sizeof(private_compound_literal_array)                       \
                 / sizeof(*private_singly_linked_list_type_array);              \
             while (private_count--) {                                          \
                 typeof(*private_singly_linked_list_type_array) *const          \
-                    private_new_node = private_singly_linked_list.allocate(    \
+                    private_new_node                                           \
+                    = private_singly_linked_list_allocator->allocate(          \
                         (CCC_Allocator_arguments){                             \
                             .input = NULL,                                     \
                             .bytes = private_singly_linked_list.sizeof_type,   \
-                            .context = private_singly_linked_list.context,     \
+                            .context                                           \
+                            = private_singly_linked_list_allocator->context,   \
                         });                                                    \
                 if (!private_new_node) {                                       \
-                    CCC_singly_linked_list_clear(&private_singly_linked_list,  \
-                                                 private_destroy);             \
+                    CCC_singly_linked_list_clear(                              \
+                        &private_singly_linked_list,                           \
+                        private_destructor_pointer,                            \
+                        private_singly_linked_list_allocator);                 \
                     break;                                                     \
                 }                                                              \
                 *private_new_node                                              \
@@ -163,22 +153,17 @@ CCC_private_singly_linked_list_node_in(struct CCC_Singly_linked_list const *,
     }))
 
 /** @internal */
-#define CCC_private_singly_linked_list_from(private_type_intruder_field,       \
-                                            private_allocate, private_destroy, \
-                                            private_compound_literal_array...) \
-    CCC_private_singly_linked_list_context_from(                               \
-        private_type_intruder_field, private_allocate, private_destroy, NULL,  \
-        private_compound_literal_array)
-
-/** @internal */
-#define CCC_private_singly_linked_list_emplace_front(list_pointer,             \
-                                                     struct_initializer...)    \
+#define CCC_private_singly_linked_list_emplace_front(                          \
+    list_pointer, private_allocator_pointer, struct_initializer...)            \
     (__extension__({                                                           \
         typeof(struct_initializer) *private_singly_linked_list_res = NULL;     \
         struct CCC_Singly_linked_list *private_singly_linked_list              \
             = (list_pointer);                                                  \
         if (private_singly_linked_list) {                                      \
-            if (!private_singly_linked_list->allocate) {                       \
+            CCC_Allocator const *const private_singly_linked_list_allocator    \
+                = (private_allocator_pointer);                                 \
+            if (!private_singly_linked_list_allocator                          \
+                || !private_singly_linked_list_allocator->allocate) {          \
                 private_singly_linked_list_res = NULL;                         \
             } else {                                                           \
                 private_singly_linked_list_res                                 \

@@ -12,21 +12,28 @@
 #include "utility/stack_allocator.h"
 
 check_static_begin(singly_linked_list_test_insert_three) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
-    Singly_linked_list singly_linked_list = singly_linked_list_for(
-        struct Val, e, stack_allocator_allocate, &allocator);
-    check(push_front(&singly_linked_list, &(struct Val){}.e) != NULL, true);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[3]){}),
+    };
+    Singly_linked_list singly_linked_list
+        = singly_linked_list_for(struct Val, e);
+    check(push_front(&singly_linked_list, &(struct Val){}.e, &allocator)
+              != NULL,
+          true);
     struct Val *v = front(&singly_linked_list);
     check(validate(&singly_linked_list), true);
     check(v == NULL, false);
     check(v->val, 0);
-    check(push_front(&singly_linked_list, &(struct Val){.val = 1}.e) != NULL,
+    check(push_front(&singly_linked_list, &(struct Val){.val = 1}.e, &allocator)
+              != NULL,
           true);
     check(validate(&singly_linked_list), true);
     v = front(&singly_linked_list);
     check(v == NULL, false);
     check(v->val, 1);
-    check(push_front(&singly_linked_list, &(struct Val){.val = 2}.e) != NULL,
+    check(push_front(&singly_linked_list, &(struct Val){.val = 2}.e, &allocator)
+              != NULL,
           true);
     check(validate(&singly_linked_list), true);
     v = front(&singly_linked_list);
@@ -39,9 +46,10 @@ check_static_begin(singly_linked_list_test_insert_three) {
 
 check_static_begin(singly_linked_list_test_push_and_splice) {
     Singly_linked_list singly_linked_list
-        = singly_linked_list_for(struct Val, e, NULL, NULL);
+        = singly_linked_list_for(struct Val, e);
     struct Val vals[4] = {{.val = 0}, {.val = 1}, {.val = 2}, {.val = 3}};
-    enum Check_result const t = push_list(&singly_linked_list, 4, vals);
+    enum Check_result const t
+        = push_list(&singly_linked_list, 4, vals, &(CCC_Allocator){});
     check(t, CHECK_PASS);
     check(check_order(&singly_linked_list, 4, (int[4]){3, 2, 1, 0}),
           CHECK_PASS);
@@ -69,10 +77,11 @@ check_static_begin(singly_linked_list_test_push_and_splice) {
 
 check_static_begin(singly_linked_list_test_push_and_splice_range) {
     Singly_linked_list singly_linked_list
-        = singly_linked_list_for(struct Val, e, NULL, NULL);
+        = singly_linked_list_for(struct Val, e);
     struct Val vals[5]
         = {{.val = 0}, {.val = 1}, {.val = 2}, {.val = 3}, {.val = 4}};
-    enum Check_result const t = push_list(&singly_linked_list, 5, vals);
+    enum Check_result const t
+        = push_list(&singly_linked_list, 5, vals, &(CCC_Allocator){});
     check(t, CHECK_PASS);
     check(check_order(&singly_linked_list, 5, (int[5]){4, 3, 2, 1, 0}),
           CHECK_PASS);
@@ -115,10 +124,11 @@ check_static_begin(singly_linked_list_test_push_and_splice_range) {
 
 check_static_begin(singly_linked_list_test_push_and_splice_range_no_ops) {
     Singly_linked_list singly_linked_list
-        = singly_linked_list_for(struct Val, e, NULL, NULL);
+        = singly_linked_list_for(struct Val, e);
     struct Val vals[5]
         = {{.val = 0}, {.val = 1}, {.val = 2}, {.val = 3}, {.val = 4}};
-    enum Check_result const t = push_list(&singly_linked_list, 5, vals);
+    enum Check_result const t
+        = push_list(&singly_linked_list, 5, vals, &(CCC_Allocator){});
     check(t, CHECK_PASS);
     check(check_order(&singly_linked_list, 5, (int[5]){4, 3, 2, 1, 0}),
           CHECK_PASS);
@@ -146,27 +156,31 @@ check_static_begin(singly_linked_list_test_push_and_splice_range_no_ops) {
 }
 
 check_static_begin(singly_linked_list_test_sort_reverse) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 6);
-    Singly_linked_list singly_linked_list = singly_linked_list_context_from(
-        e, stack_allocator_allocate, NULL, &allocator,
-        (struct Val[6]){
-            {.val = 5},
-            {.val = 4},
-            {.val = 3},
-            {.val = 2},
-            {.val = 1},
-            {.val = 0},
-        });
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[6]){}),
+    };
+    Singly_linked_list singly_linked_list
+        = singly_linked_list_from(e, &allocator, &(CCC_Destructor){},
+                                  (struct Val[6]){
+                                      {.val = 5},
+                                      {.val = 4},
+                                      {.val = 3},
+                                      {.val = 2},
+                                      {.val = 1},
+                                      {.val = 0},
+                                  });
     check(check_order(&singly_linked_list, 6, (int[6]){5, 4, 3, 2, 1, 0}),
           CHECK_PASS);
     check(validate(&singly_linked_list), true);
     check(singly_linked_list_is_sorted(&singly_linked_list, CCC_ORDER_LESSER,
-                                       val_order),
+                                       &(CCC_Comparator){.compare = val_order}),
           false);
     CCC_Result const r
-        = CCC_sort_mergesort(&singly_linked_list, CCC_ORDER_LESSER, val_order);
+        = CCC_sort_mergesort(&singly_linked_list, CCC_ORDER_LESSER,
+                             &(CCC_Comparator){.compare = val_order});
     check(singly_linked_list_is_sorted(&singly_linked_list, CCC_ORDER_LESSER,
-                                       val_order),
+                                       &(CCC_Comparator){.compare = val_order}),
           true);
     check(r, CCC_RESULT_OK);
     check(check_order(&singly_linked_list, 6, (int[6]){0, 1, 2, 3, 4, 5}),
@@ -175,30 +189,34 @@ check_static_begin(singly_linked_list_test_sort_reverse) {
 }
 
 check_static_begin(singly_linked_list_test_sort_even) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 8);
-    Singly_linked_list singly_linked_list = singly_linked_list_context_from(
-        e, stack_allocator_allocate, NULL, &allocator,
-        (struct Val[8]){
-            {.val = 9},
-            {.val = 4},
-            {.val = 1},
-            {.val = 3},
-            {.val = 99},
-            {.val = -55},
-            {.val = 5},
-            {.val = 2},
-        });
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[8]){}),
+    };
+    Singly_linked_list singly_linked_list
+        = singly_linked_list_from(e, &allocator, &(CCC_Destructor){},
+                                  (struct Val[8]){
+                                      {.val = 9},
+                                      {.val = 4},
+                                      {.val = 1},
+                                      {.val = 3},
+                                      {.val = 99},
+                                      {.val = -55},
+                                      {.val = 5},
+                                      {.val = 2},
+                                  });
     check(validate(&singly_linked_list), true);
     check(check_order(&singly_linked_list, 8,
                       (int[8]){9, 4, 1, 3, 99, -55, 5, 2}),
           CHECK_PASS);
     check(singly_linked_list_is_sorted(&singly_linked_list, CCC_ORDER_LESSER,
-                                       val_order),
+                                       &(CCC_Comparator){.compare = val_order}),
           false);
     CCC_Result const r
-        = CCC_sort_mergesort(&singly_linked_list, CCC_ORDER_LESSER, val_order);
+        = CCC_sort_mergesort(&singly_linked_list, CCC_ORDER_LESSER,
+                             &(CCC_Comparator){.compare = val_order});
     check(singly_linked_list_is_sorted(&singly_linked_list, CCC_ORDER_LESSER,
-                                       val_order),
+                                       &(CCC_Comparator){.compare = val_order}),
           true);
     check(r, CCC_RESULT_OK);
     check(check_order(&singly_linked_list, 8,
@@ -209,31 +227,35 @@ check_static_begin(singly_linked_list_test_sort_even) {
 }
 
 check_static_begin(singly_linked_list_test_sort_odd) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 9);
-    Singly_linked_list singly_linked_list = singly_linked_list_context_from(
-        e, stack_allocator_allocate, NULL, &allocator,
-        (struct Val[9]){
-            {.val = 10},
-            {.val = 9},
-            {.val = 4},
-            {.val = 1},
-            {.val = 1},
-            {.val = 99},
-            {.val = -55},
-            {.val = 5},
-            {.val = 2},
-        });
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[9]){}),
+    };
+    Singly_linked_list singly_linked_list
+        = singly_linked_list_from(e, &allocator, &(CCC_Destructor){},
+                                  (struct Val[9]){
+                                      {.val = 10},
+                                      {.val = 9},
+                                      {.val = 4},
+                                      {.val = 1},
+                                      {.val = 1},
+                                      {.val = 99},
+                                      {.val = -55},
+                                      {.val = 5},
+                                      {.val = 2},
+                                  });
     check(validate(&singly_linked_list), true);
     check(check_order(&singly_linked_list, 9,
                       (int[9]){10, 9, 4, 1, 1, 99, -55, 5, 2}),
           CHECK_PASS);
     check(singly_linked_list_is_sorted(&singly_linked_list, CCC_ORDER_LESSER,
-                                       val_order),
+                                       &(CCC_Comparator){.compare = val_order}),
           false);
     CCC_Result const r
-        = CCC_sort_mergesort(&singly_linked_list, CCC_ORDER_LESSER, val_order);
+        = CCC_sort_mergesort(&singly_linked_list, CCC_ORDER_LESSER,
+                             &(CCC_Comparator){.compare = val_order});
     check(singly_linked_list_is_sorted(&singly_linked_list, CCC_ORDER_LESSER,
-                                       val_order),
+                                       &(CCC_Comparator){.compare = val_order}),
           true);
     check(r, CCC_RESULT_OK);
     check(check_order(&singly_linked_list, 9,
@@ -244,35 +266,39 @@ check_static_begin(singly_linked_list_test_sort_odd) {
 }
 
 check_static_begin(singly_linked_list_test_sort_runs) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 12);
-    Singly_linked_list singly_linked_list = singly_linked_list_context_from(
-        e, stack_allocator_allocate, NULL, &allocator,
-        (struct Val[12]){
-            {.val = 10},
-            {.val = 7},
-            {.val = 3},
-            {.val = -55},
-            {.val = -55},
-            {.val = -99},
-            {.val = 9},
-            {.val = 8},
-            {.val = 4},
-            {.val = 103},
-            {.val = 101},
-            {.val = 99},
-        });
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[12]){}),
+    };
+    Singly_linked_list singly_linked_list
+        = singly_linked_list_from(e, &allocator, &(CCC_Destructor){},
+                                  (struct Val[12]){
+                                      {.val = 10},
+                                      {.val = 7},
+                                      {.val = 3},
+                                      {.val = -55},
+                                      {.val = -55},
+                                      {.val = -99},
+                                      {.val = 9},
+                                      {.val = 8},
+                                      {.val = 4},
+                                      {.val = 103},
+                                      {.val = 101},
+                                      {.val = 99},
+                                  });
     check(validate(&singly_linked_list), true);
     enum Check_result t = check_order(
         &singly_linked_list, 12,
         (int[12]){10, 7, 3, -55, -55, -99, 9, 8, 4, 103, 101, 99});
     check(t, CHECK_PASS);
     check(singly_linked_list_is_sorted(&singly_linked_list, CCC_ORDER_LESSER,
-                                       val_order),
+                                       &(CCC_Comparator){.compare = val_order}),
           false);
     CCC_Result const r
-        = CCC_sort_mergesort(&singly_linked_list, CCC_ORDER_LESSER, val_order);
+        = CCC_sort_mergesort(&singly_linked_list, CCC_ORDER_LESSER,
+                             &(CCC_Comparator){.compare = val_order});
     check(singly_linked_list_is_sorted(&singly_linked_list, CCC_ORDER_LESSER,
-                                       val_order),
+                                       &(CCC_Comparator){.compare = val_order}),
           true);
     check(r, CCC_RESULT_OK);
     t = check_order(&singly_linked_list, 12,
@@ -283,35 +309,39 @@ check_static_begin(singly_linked_list_test_sort_runs) {
 }
 
 check_static_begin(singly_linked_list_test_sort_halves) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 12);
-    Singly_linked_list singly_linked_list = singly_linked_list_context_from(
-        e, stack_allocator_allocate, NULL, &allocator,
-        (struct Val[12]){
-            {.val = 25},
-            {.val = 20},
-            {.val = 18},
-            {.val = 15},
-            {.val = 12},
-            {.val = 8},
-            {.val = 21},
-            {.val = 19},
-            {.val = 17},
-            {.val = 13},
-            {.val = 10},
-            {.val = 7},
-        });
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[12]){}),
+    };
+    Singly_linked_list singly_linked_list
+        = singly_linked_list_from(e, &allocator, &(CCC_Destructor){},
+                                  (struct Val[12]){
+                                      {.val = 25},
+                                      {.val = 20},
+                                      {.val = 18},
+                                      {.val = 15},
+                                      {.val = 12},
+                                      {.val = 8},
+                                      {.val = 21},
+                                      {.val = 19},
+                                      {.val = 17},
+                                      {.val = 13},
+                                      {.val = 10},
+                                      {.val = 7},
+                                  });
     check(validate(&singly_linked_list), true);
     enum Check_result t
         = check_order(&singly_linked_list, 12,
                       (int[12]){25, 20, 18, 15, 12, 8, 21, 19, 17, 13, 10, 7});
     check(t, CHECK_PASS);
     check(singly_linked_list_is_sorted(&singly_linked_list, CCC_ORDER_LESSER,
-                                       val_order),
+                                       &(CCC_Comparator){.compare = val_order}),
           false);
     CCC_Result const r
-        = CCC_sort_mergesort(&singly_linked_list, CCC_ORDER_LESSER, val_order);
+        = CCC_sort_mergesort(&singly_linked_list, CCC_ORDER_LESSER,
+                             &(CCC_Comparator){.compare = val_order});
     check(singly_linked_list_is_sorted(&singly_linked_list, CCC_ORDER_LESSER,
-                                       val_order),
+                                       &(CCC_Comparator){.compare = val_order}),
           true);
     check(r, CCC_RESULT_OK);
     t = check_order(&singly_linked_list, 12,
@@ -323,25 +353,27 @@ check_static_begin(singly_linked_list_test_sort_halves) {
 
 check_static_begin(singly_linked_list_test_sort_insert) {
     Singly_linked_list singly_linked_list
-        = singly_linked_list_for(struct Val, e, NULL, NULL);
+        = singly_linked_list_for(struct Val, e);
     struct Val vals[9] = {
         [8] = {.val = 9}, [7] = {.val = 4},  [6] = {.val = 1},
         [5] = {.val = 1}, [4] = {.val = 99}, [3] = {.val = -55},
         [2] = {.val = 5}, [1] = {.val = 2},  [0] = {.val = -99},
     };
-    enum Check_result const t = push_list(&singly_linked_list, 9, vals);
+    enum Check_result const t
+        = push_list(&singly_linked_list, 9, vals, &(CCC_Allocator){});
     check(t, CHECK_PASS);
     check(validate(&singly_linked_list), true);
     check(check_order(&singly_linked_list, 9,
                       (int[9]){9, 4, 1, 1, 99, -55, 5, 2, -99}),
           CHECK_PASS);
     check(singly_linked_list_is_sorted(&singly_linked_list, CCC_ORDER_LESSER,
-                                       val_order),
+                                       &(CCC_Comparator){.compare = val_order}),
           false);
     CCC_Result const r
-        = CCC_sort_mergesort(&singly_linked_list, CCC_ORDER_LESSER, val_order);
+        = CCC_sort_mergesort(&singly_linked_list, CCC_ORDER_LESSER,
+                             &(CCC_Comparator){.compare = val_order});
     check(singly_linked_list_is_sorted(&singly_linked_list, CCC_ORDER_LESSER,
-                                       val_order),
+                                       &(CCC_Comparator){.compare = val_order}),
           true);
     check(r, CCC_RESULT_OK);
     check(validate(&singly_linked_list), true);
@@ -354,35 +386,40 @@ check_static_begin(singly_linked_list_test_sort_insert) {
     };
     /* Before -99. */
     struct Val *inserted = singly_linked_list_insert_sorted(
-        &singly_linked_list, &to_insert[0].e, val_order);
+        &singly_linked_list, &to_insert[0].e,
+        &(CCC_Comparator){.compare = val_order}, &(CCC_Allocator){});
     check(inserted != NULL, true);
     check(validate(&singly_linked_list), true);
     check(singly_linked_list_next(&singly_linked_list, &inserted->e), &vals[0]);
 
     /* After -99. */
-    inserted = singly_linked_list_insert_sorted(&singly_linked_list,
-                                                &to_insert[1].e, val_order);
+    inserted = singly_linked_list_insert_sorted(
+        &singly_linked_list, &to_insert[1].e,
+        &(CCC_Comparator){.compare = val_order}, &(CCC_Allocator){});
     check(inserted != NULL, true);
     check(validate(&singly_linked_list), true);
     check(singly_linked_list_next(&singly_linked_list, &inserted->e), &vals[3]);
 
     /* Before 4. */
-    inserted = singly_linked_list_insert_sorted(&singly_linked_list,
-                                                &to_insert[2].e, val_order);
+    inserted = singly_linked_list_insert_sorted(
+        &singly_linked_list, &to_insert[2].e,
+        &(CCC_Comparator){.compare = val_order}, &(CCC_Allocator){});
     check(inserted != NULL, true);
     check(validate(&singly_linked_list), true);
     check(singly_linked_list_next(&singly_linked_list, &inserted->e), &vals[7]);
 
     /* Before 99. */
-    inserted = singly_linked_list_insert_sorted(&singly_linked_list,
-                                                &to_insert[3].e, val_order);
+    inserted = singly_linked_list_insert_sorted(
+        &singly_linked_list, &to_insert[3].e,
+        &(CCC_Comparator){.compare = val_order}, &(CCC_Allocator){});
     check(inserted != NULL, true);
     check(validate(&singly_linked_list), true);
     check(singly_linked_list_next(&singly_linked_list, &inserted->e), &vals[4]);
 
     /* After 99. */
-    inserted = singly_linked_list_insert_sorted(&singly_linked_list,
-                                                &to_insert[4].e, val_order);
+    inserted = singly_linked_list_insert_sorted(
+        &singly_linked_list, &to_insert[4].e,
+        &(CCC_Comparator){.compare = val_order}, &(CCC_Allocator){});
     check(inserted != NULL, true);
     check(validate(&singly_linked_list), true);
     check(singly_linked_list_next(&singly_linked_list, &inserted->e),

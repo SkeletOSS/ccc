@@ -58,9 +58,11 @@ check_begin(check_order, Singly_linked_list const *const singly_linked_list,
 }
 
 check_begin(push_list, CCC_Singly_linked_list *const singly_linked_list,
-            size_t const n, struct Val vals[]) {
+            size_t const n, struct Val vals[const],
+            CCC_Allocator const *const allocator) {
     for (size_t i = 0; i < n; ++i) {
-        check(push_front(singly_linked_list, &vals[i].e) == NULL, false);
+        check(push_front(singly_linked_list, &vals[i].e, allocator) == NULL,
+              false);
     }
     check(validate(singly_linked_list), true);
     check_end();
