@@ -263,7 +263,7 @@ container. For example, a destruct function will use this type. */
 typedef struct {
     /** The user type being stored in the container. */
     void *type;
-    /** A reference to context provided to the container on initialization. */
+    /** A reference to context for this action on a type.. */
     void *context;
 } CCC_Arguments;
 
@@ -487,7 +487,7 @@ typedef struct {
     void const *const key_left;
     /** The complete user type stored in the container. */
     void const *const type_right;
-    /** A reference to context provided to the container on initialization. */
+    /** A reference to context for this key comparison. */
     void *context;
 } CCC_Key_comparator_arguments;
 
@@ -506,7 +506,7 @@ to hash their values with their hash function. */
 typedef struct {
     /** A reference to the same type used for keys in the container. */
     void const *const key;
-    /** A reference to context provided to the container on initialization. */
+    /** A reference to context for this action on a key. */
     void *context;
 } CCC_Key_arguments;
 
@@ -515,6 +515,22 @@ typedef struct {
 A reference to any context data provided on initialization is also available.
 Return the complete hash value as determined by the user hashing algorithm. */
 typedef uint64_t CCC_Key_hasher_interface(CCC_Key_arguments);
+
+/** @brief The type passed by reference to a hash map that needs a hash function
+and key comparison function. These fields are owned and stored within the hash
+map metadata struct because they provide the invariants of the container
+hashing and comparison algorithm. The fields are provided as arguments to the
+`CCC_Key_arguments` type for hashing and the `CCC_Key_comparator_arguments`
+type for key comparison when needed for the user defined functions that accept
+those types. */
+typedef struct {
+    /** The function for hashing the key field of the user type. */
+    CCC_Key_hasher_interface *hash;
+    /** The function for comparing a key to user elements in the container. */
+    CCC_Key_comparator_interface *comare;
+    /** A reference to context needed for hashing and comparison. */
+    void *context;
+} CCC_Hasher;
 
 /**@}*/
 

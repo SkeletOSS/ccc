@@ -136,28 +136,22 @@ still needs to use byte offset multiplication because the data is stored as
 template generic system. Simple 0 based indexing makes the addition and
 multiplication we perform as simple as possible. */
 struct CCC_Flat_hash_map {
-    /** User data type array. */
+    /** @internal User data type array. */
     void *data;
-    /** Tag array on byte following data. */
+    /** @internal Tag array on byte following data. */
     struct CCC_Flat_hash_map_tag *tag;
-    /** The number of user active slots. */
+    /** @internal The number of user active slots. */
     size_t count;
-    /** Track available slots given load factor constraints. When 0, rehash. */
+    /** @internal Track available slots given load factor constraints. */
     size_t remain;
-    /** The mask for power of two table sizing. */
+    /** @internal The mask for power of two table sizing. */
     size_t mask;
-    /** Size of each user data element being stored. */
+    /** @internal Size of each user data element being stored. */
     size_t sizeof_type;
-    /** The location of the key field in user type. */
+    /** @internal The location of the key field in user type. */
     size_t key_offset;
-    /** The user callback for equality comparison. */
-    CCC_Key_comparator_interface *compare;
-    /** The hash function provided by user. */
-    CCC_Key_hasher_interface *hash;
-    /** The allocation function, if any. */
-    CCC_Allocator_interface *allocate;
-    /** Auxiliary data, if any. */
-    void *context;
+    /** @internal The user provided hasher, comparator, and context. */
+    CCC_Hasher hasher;
 };
 
 /** @internal A struct for containing all relevant information for a query
