@@ -65,9 +65,9 @@ struct CCC_Adaptive_map {
     /** @internal The byte offset of the user key in the user type. */
     size_t key_offset;
     /** @internal The user defined comparison callback function. */
-    CCC_Key_comparator *compare;
+    CCC_Key_comparator_interface *compare;
     /** @internal The user defined allocation function, if any. */
-    CCC_Allocator *allocate;
+    CCC_Allocator_interface *allocate;
     /** @internal Auxiliary data, if any. */
     void *context;
 };

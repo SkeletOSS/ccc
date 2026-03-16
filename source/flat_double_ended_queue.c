@@ -29,7 +29,7 @@ enum : size_t {
 /*==========================    Prototypes    ===============================*/
 
 static CCC_Result maybe_resize(struct CCC_Flat_double_ended_queue *, size_t,
-                               CCC_Allocator_context const *);
+                               CCC_Allocator const *);
 static size_t index_of(struct CCC_Flat_double_ended_queue const *,
                        void const *);
 static void *at(struct CCC_Flat_double_ended_queue const *, size_t);
@@ -40,28 +40,26 @@ static size_t distance(struct CCC_Flat_double_ended_queue const *, size_t,
 static size_t rdistance(struct CCC_Flat_double_ended_queue const *, size_t,
                         size_t);
 static CCC_Result push_front_range(struct CCC_Flat_double_ended_queue *,
-                                   CCC_Buffer const *,
-                                   CCC_Allocator_context const *);
+                                   CCC_Buffer const *, CCC_Allocator const *);
 static CCC_Result push_back_range(struct CCC_Flat_double_ended_queue *,
-                                  CCC_Buffer const *,
-                                  CCC_Allocator_context const *);
+                                  CCC_Buffer const *, CCC_Allocator const *);
 static size_t back_free_slot(struct CCC_Flat_double_ended_queue const *);
 static size_t front_free_slot(size_t, size_t);
 static size_t last_index(struct CCC_Flat_double_ended_queue const *);
 static void *push_range(struct CCC_Flat_double_ended_queue *, void const *,
-                        CCC_Buffer const *, CCC_Allocator_context const *);
+                        CCC_Buffer const *, CCC_Allocator const *);
 static void *allocate_front(struct CCC_Flat_double_ended_queue *,
-                            CCC_Allocator_context const *);
+                            CCC_Allocator const *);
 static void *allocate_back(struct CCC_Flat_double_ended_queue *,
-                           CCC_Allocator_context const *);
+                           CCC_Allocator const *);
 static size_t min(size_t, size_t);
 
 /*==========================     Interface    ===============================*/
 
 void *
-CCC_flat_double_ended_queue_push_back(
-    CCC_Flat_double_ended_queue *const queue, void const *const type,
-    CCC_Allocator_context const *const allocator) {
+CCC_flat_double_ended_queue_push_back(CCC_Flat_double_ended_queue *const queue,
+                                      void const *const type,
+                                      CCC_Allocator const *const allocator) {
     if (!queue || !type || !allocator) {
         return NULL;
     }
@@ -73,9 +71,9 @@ CCC_flat_double_ended_queue_push_back(
 }
 
 void *
-CCC_flat_double_ended_queue_push_front(
-    CCC_Flat_double_ended_queue *const queue, void const *const type,
-    CCC_Allocator_context const *const allocator) {
+CCC_flat_double_ended_queue_push_front(CCC_Flat_double_ended_queue *const queue,
+                                       void const *const type,
+                                       CCC_Allocator const *const allocator) {
     if (!queue || !type || !allocator) {
         return NULL;
     }
@@ -89,7 +87,7 @@ CCC_flat_double_ended_queue_push_front(
 CCC_Result
 CCC_flat_double_ended_queue_push_front_range(
     CCC_Flat_double_ended_queue *const queue, CCC_Buffer const *const range,
-    CCC_Allocator_context const *const allocator) {
+    CCC_Allocator const *const allocator) {
     if (!queue || !range || range->sizeof_type != queue->buffer.sizeof_type
         || !allocator) {
         return CCC_RESULT_ARGUMENT_ERROR;
@@ -100,7 +98,7 @@ CCC_flat_double_ended_queue_push_front_range(
 CCC_Result
 CCC_flat_double_ended_queue_push_back_range(
     CCC_Flat_double_ended_queue *const queue, CCC_Buffer const *const range,
-    CCC_Allocator_context const *const allocator) {
+    CCC_Allocator const *const allocator) {
     if (!queue || !range || range->sizeof_type != queue->buffer.sizeof_type
         || !allocator) {
         return CCC_RESULT_ARGUMENT_ERROR;
@@ -111,8 +109,7 @@ CCC_flat_double_ended_queue_push_back_range(
 void *
 CCC_flat_double_ended_queue_insert_range(
     CCC_Flat_double_ended_queue *const queue, void *position,
-    CCC_Buffer const *const range,
-    CCC_Allocator_context const *const allocator) {
+    CCC_Buffer const *const range, CCC_Allocator const *const allocator) {
     if (!queue || !range || range->sizeof_type != queue->buffer.sizeof_type
         || !allocator) {
         return NULL;
@@ -272,7 +269,7 @@ CCC_Result
 CCC_flat_double_ended_queue_copy(
     CCC_Flat_double_ended_queue *const destination,
     CCC_Flat_double_ended_queue const *const source,
-    CCC_Allocator_context const *const allocator) {
+    CCC_Allocator const *const allocator) {
     if (!destination || !source || !allocator || source == destination
         || (destination->buffer.capacity < source->buffer.capacity
             && !allocator->allocate)) {
@@ -316,9 +313,9 @@ CCC_flat_double_ended_queue_copy(
 }
 
 CCC_Result
-CCC_flat_double_ended_queue_reserve(
-    CCC_Flat_double_ended_queue *const queue, size_t const to_add,
-    CCC_Allocator_context const *const allocator) {
+CCC_flat_double_ended_queue_reserve(CCC_Flat_double_ended_queue *const queue,
+                                    size_t const to_add,
+                                    CCC_Allocator const *const allocator) {
     if (!queue || !allocator || !allocator->allocate || !to_add) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -326,9 +323,8 @@ CCC_flat_double_ended_queue_reserve(
 }
 
 CCC_Result
-CCC_flat_double_ended_queue_clear(
-    CCC_Flat_double_ended_queue *const queue,
-    CCC_Destructor_context const *const destructor) {
+CCC_flat_double_ended_queue_clear(CCC_Flat_double_ended_queue *const queue,
+                                  CCC_Destructor const *const destructor) {
     if (!queue || !destructor) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -350,8 +346,8 @@ CCC_flat_double_ended_queue_clear(
 CCC_Result
 CCC_flat_double_ended_queue_clear_and_free(
     CCC_Flat_double_ended_queue *const queue,
-    CCC_Destructor_context const *const destructor,
-    CCC_Allocator_context const *const allocator) {
+    CCC_Destructor const *const destructor,
+    CCC_Allocator const *const allocator) {
     if (!queue || !destructor || !allocator || !allocator->allocate) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -416,14 +412,14 @@ CCC_flat_double_ended_queue_validate(
 void *
 CCC_private_flat_double_ended_queue_allocate_back(
     struct CCC_Flat_double_ended_queue *const queue,
-    CCC_Allocator_context const *const allocator) {
+    CCC_Allocator const *const allocator) {
     return allocate_back(queue, allocator);
 }
 
 void *
 CCC_private_flat_double_ended_queue_allocate_front(
     struct CCC_Flat_double_ended_queue *const queue,
-    CCC_Allocator_context const *const allocator) {
+    CCC_Allocator const *const allocator) {
     return allocate_front(queue, allocator);
 }
 
@@ -431,7 +427,7 @@ CCC_private_flat_double_ended_queue_allocate_front(
 
 static void *
 allocate_front(struct CCC_Flat_double_ended_queue *const queue,
-               CCC_Allocator_context const *const allocator) {
+               CCC_Allocator const *const allocator) {
     CCC_Tribool const full = maybe_resize(queue, 1, allocator) != CCC_RESULT_OK;
     /* Should have been able to resize. Bad error. */
     if ((full && !queue->buffer.capacity) || (allocator->allocate && full)) {
@@ -447,7 +443,7 @@ allocate_front(struct CCC_Flat_double_ended_queue *const queue,
 
 static void *
 allocate_back(struct CCC_Flat_double_ended_queue *const queue,
-              CCC_Allocator_context const *const allocator) {
+              CCC_Allocator const *const allocator) {
     CCC_Tribool const full = maybe_resize(queue, 1, allocator) != CCC_RESULT_OK;
     /* Should have been able to resize. Bad error. */
     if ((full && !queue->buffer.capacity) || (allocator->allocate && full)) {
@@ -466,7 +462,7 @@ allocate_back(struct CCC_Flat_double_ended_queue *const queue,
 static CCC_Result
 push_back_range(struct CCC_Flat_double_ended_queue *const queue,
                 CCC_Buffer const *const range,
-                CCC_Allocator_context const *const allocator) {
+                CCC_Allocator const *const allocator) {
     size_t const sizeof_type = queue->buffer.sizeof_type;
     CCC_Tribool const full
         = maybe_resize(queue, range->count, allocator) != CCC_RESULT_OK;
@@ -505,7 +501,7 @@ push_back_range(struct CCC_Flat_double_ended_queue *const queue,
 static CCC_Result
 push_front_range(struct CCC_Flat_double_ended_queue *const queue,
                  CCC_Buffer const *const range,
-                 CCC_Allocator_context const *const allocator) {
+                 CCC_Allocator const *const allocator) {
     size_t const sizeof_type = queue->buffer.sizeof_type;
     CCC_Tribool const full
         = maybe_resize(queue, range->count, allocator) != CCC_RESULT_OK;
@@ -543,7 +539,7 @@ push_front_range(struct CCC_Flat_double_ended_queue *const queue,
 static void *
 push_range(struct CCC_Flat_double_ended_queue *const queue,
            void const *const position, CCC_Buffer const *const range,
-           CCC_Allocator_context const *const allocator) {
+           CCC_Allocator const *const allocator) {
     size_t const sizeof_type = queue->buffer.sizeof_type;
     CCC_Tribool const full
         = maybe_resize(queue, range->count, allocator) != CCC_RESULT_OK;
@@ -603,8 +599,7 @@ push_range(struct CCC_Flat_double_ended_queue *const queue,
 
 static CCC_Result
 maybe_resize(struct CCC_Flat_double_ended_queue *const queue,
-             size_t const to_add,
-             CCC_Allocator_context const *const allocator) {
+             size_t const to_add, CCC_Allocator const *const allocator) {
     size_t required = queue->buffer.count + to_add;
     if (required < queue->buffer.count) {
         return CCC_RESULT_ARGUMENT_ERROR;

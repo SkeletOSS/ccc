@@ -15,7 +15,7 @@ equivalent to the size of an element stored in the buffer. Elements are sorted
 in a non-decreasing order. Therefore if a non-increasing list is needed simply
 reverse the return of the comparison function for non-equivalent values. */
 CCC_Result quicksort(CCC_Buffer *b, void *swap, CCC_Order order,
-                     CCC_Comparator_context const *comparator);
+                     CCC_Comparator const *comparator);
 
 /** Compares the Buffer contents as left hand side to the provided sequence of
 elements as the right hand side. The sequence type must match the type stored in
@@ -28,7 +28,7 @@ capacity of a fixed size buffer, only those elements which fit will be pushed
 and a failure will be returned. If resizing is allowed the full range should
 be appended unless reallocation fails in which case an error is returned. */
 CCC_Result append_range(CCC_Buffer *b, size_t range_count, void const *range,
-                        CCC_Allocator_context const *allocator);
+                        CCC_Allocator const *allocator);
 
 /** Returns max int between a and b. Ties go to a. */
 static inline int

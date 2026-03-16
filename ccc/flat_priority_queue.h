@@ -88,7 +88,8 @@ Initialize the container with memory, callbacks, and permissions. */
 /** @brief Initialize an empty priority queue
 @param[in] type_name the name of the user type.
 @param[in] order desired order of this priority queue.
-@param[in] comparator_context_pointer a pointer to the CCC_Comparator_context.
+@param[in] comparator_context_pointer a pointer to the
+CCC_Comparator.
 @return the initialized priority queue on the right hand side of an equality
 operator. */
 #define CCC_flat_priority_queue_default(type_name, order,                      \
@@ -100,7 +101,8 @@ operator. */
 @param[in] type_name the name of the user type.
 @param[in] order CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max
 heap, respectively.
-@param[in] comparator_context_pointer a pointer to CCC_Comparator_context.
+@param[in] comparator_context_pointer a pointer to
+CCC_Comparator.
 @param[in] capacity the capacity of contiguous elements at data_pointer.
 @param[in] data_pointer a pointer to an array of user types or NULL.
 @return the initialized priority queue on the right hand side of an equality
@@ -115,7 +117,8 @@ in O(N) time and space equal to the provided data capacity.
 @param[in] type_name the name of the user type.
 @param[in] order CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max
 heap, respectively.
-@param[in] comparator_context_pointer a pointer to CCC_Comparator_context.
+@param[in] comparator_context_pointer a pointer to
+CCC_Comparator.
 @param[in] capacity the capacity of contiguous elements at data_pointer.
 @param[in] count the count <= capacity of valid elements.
 @param[in] data_pointer a pointer to an array of user types or NULL.
@@ -134,9 +137,11 @@ for swapping purposes. */
 heap. O(N).
 @param[in] order CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max heap,
 respectively.
-@param[in] comparator_context_pointer a pointer to CCC_Comparator_context.
-@param[in] allocator_context_pointer a pointer to CCC_Allocator_context for
-allocating the needed memory to copy in the provided compound literal data.
+@param[in] comparator_context_pointer a pointer to
+CCC_Comparator.
+@param[in] allocator_context_pointer a pointer to
+CCC_Allocator for allocating the needed memory to copy in the
+provided compound literal data.
 @param[in] optional_capacity the optional capacity larger than the input
 compound literal array array to reserve. If capacity provided is less than the
 size of the input compound literal array, the capacity is set to the size of the
@@ -198,9 +203,11 @@ the CCC_flat_priority_queue_with_storage() macro. */
 @param[in] type_name the name of the user type.
 @param[in] order CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max
 heap, respectively.
-@param[in] comparator_context_pointer a pointer to CCC_Comparator_context.
-@param[in] allocator_context_pointer a pointer to CCC_Allocator_context for
-allocating the needed memory to reserve capacity.
+@param[in] comparator_context_pointer a pointer to
+CCC_Comparator.
+@param[in] allocator_context_pointer a pointer to
+CCC_Allocator for allocating the needed memory to reserve
+capacity.
 @param[in] capacity the capacity of contiguous elements at data_pointer.
 @return the initialized flat_priority_queue. Directly assign to
 Flat_priority_queue on the right hand side of the equality operator.
@@ -237,7 +244,8 @@ the CCC_flat_priority_queue_with_storage() macro. */
 permission, no context data, and a compound literal as backing storage.
 @param[in] order CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max heap,
 respectively.
-@param[in] comparator_context_pointer a pointer to CCC_Comparator_context.
+@param[in] comparator_context_pointer a pointer to
+CCC_Comparator.
 @param[in] compound_literal_array the compound literal array of fixed capacity.
 @return the initialized priority queue on the right hand side of an equality
 operator. Capacity of the compound literal is capacity of the priority queue.
@@ -254,7 +262,7 @@ destination.
 @param[in] destination the destination that will copy the source
 flat_priority_queue.
 @param[in] source the source of the flat_priority_queue.
-@param[in] allocator a pointer to CCC_Allocator_context for resizing.
+@param[in] allocator a pointer to CCC_Allocator for resizing.
 @return the result of the copy operation. If the destination capacity is less
 than the source capacity and no allocation function is provided an input error
 is returned. If resizing is required and resizing of destination fails a memory
@@ -287,7 +295,7 @@ Flat_priority_queue destination = flat_priority_queue_for(
     (int[11]){}
 );
 CCC_Result res = flat_priority_queue_copy(&destination, &source,
-                                          &(CCC_Allocator_context){});
+                                          &(CCC_Allocator){});
 ```
 
 The above requires destination capacity be greater than or equal to source
@@ -318,12 +326,12 @@ These options allow users to stay consistent across containers with their
 memory management strategies. */
 CCC_Result CCC_flat_priority_queue_copy(CCC_Flat_priority_queue *destination,
                                         CCC_Flat_priority_queue const *source,
-                                        CCC_Allocator_context const *allocator);
+                                        CCC_Allocator const *allocator);
 
 /** @brief Reserves space for at least to_add more elements.
 @param[in] priority_queue a pointer to the flat priority queue.
 @param[in] to_add the number of elements to add to the current size.
-@param[in] allocator a pointer to CCC_Allocator_context for resizing.
+@param[in] allocator a pointer to CCC_Allocator for resizing.
 @return the result of the reservation. OK if successful, otherwise an error
 status is returned.
 @note see the CCC_flat_priority_queue_clear_and_free_reserve function if this
@@ -340,8 +348,7 @@ To free the priority_queue in such a case see the
 CCC_flat_priority_queue_clear_and_free_reserve function. */
 CCC_Result
 CCC_flat_priority_queue_reserve(CCC_Flat_priority_queue *priority_queue,
-                                size_t to_add,
-                                CCC_Allocator_context const *allocator);
+                                size_t to_add, CCC_Allocator const *allocator);
 
 /**@}*/
 
@@ -351,7 +358,8 @@ Insert or remove elements from the flat priority queue. */
 
 /** @brief Write a type directly to a priority queue slot. O(lgN).
 @param[in] priority_queue_pointer a pointer to the priority queue.
-@param[in] allocator_context_pointer a pointer to CCC_Allocator_context.
+@param[in] allocator_context_pointer a pointer to
+CCC_Allocator.
 @param[in] type_compound_literal the compound literal or direct scalar type.
 @return a reference to the inserted element or NULL if allocation failed. */
 #define CCC_flat_priority_queue_emplace(priority_queue_pointer,                \
@@ -367,7 +375,7 @@ into heap order in O(N) time.
 @param[in] buffer a pointer to the buffer of types to copy into the flat
 priority queue and heapify.
 @param[in] temp a pointer to an additional element of array type for swapping.
-@param[in] allocator a pointer to CCC_Allocator_context for resizing.
+@param[in] allocator a pointer to CCC_Allocator for resizing.
 @return OK if ordering was successful or an input error if bad input is
 provided. A permission error will occur if no allocation is allowed and the
 input buffer is larger than the flat priority queue capacity. A memory
@@ -395,7 +403,7 @@ This function does not modify the input buffer. */
 CCC_Result
 CCC_flat_priority_queue_copy_heapify(CCC_Flat_priority_queue *priority_queue,
                                      CCC_Buffer const *buffer, void *temp,
-                                     CCC_Allocator_context const *allocator);
+                                     CCC_Allocator const *allocator);
 
 /** @brief Order count elements of the input Buffer as a flat priority queue,
 destroying the input metadata Buffer struct taking ownership of its underlying
@@ -416,16 +424,17 @@ remains unmodified.
 
 A simple way to provide a temp for swapping is with an inline compound literal
 reference provided directly to the function argument `&(name_of_type){}`. */
-CCC_Flat_priority_queue CCC_flat_priority_queue_in_place_heapify(
-    CCC_Buffer *buffer, void *temp, CCC_Order order,
-    CCC_Comparator_context const *comparator);
+CCC_Flat_priority_queue
+CCC_flat_priority_queue_in_place_heapify(CCC_Buffer *buffer, void *temp,
+                                         CCC_Order order,
+                                         CCC_Comparator const *comparator);
 
 /** @brief Pushes element pointed to at e into flat_priority_queue. O(lgN).
 @param[in] priority_queue a pointer to the priority queue.
 @param[in] type a pointer to the user element of same type as in
 flat_priority_queue.
 @param[in] temp a pointer to a dummy user type that will be used for swapping.
-@param[in] allocator a pointer to CCC_Allocator_context for resizing.
+@param[in] allocator a pointer to CCC_Allocator for resizing.
 @return a pointer to the inserted element or NULl if NULL arguments are provided
 or push required more memory and failed. Failure can occur if the
 flat_priority_queue is full and allocation is not allowed or a resize failed
@@ -436,7 +445,7 @@ reference provided directly to the function argument `&(name_of_type){}`. */
 [[nodiscard]] void *
 CCC_flat_priority_queue_push(CCC_Flat_priority_queue *priority_queue,
                              void const *type, void *temp,
-                             CCC_Allocator_context const *allocator);
+                             CCC_Allocator const *allocator);
 
 /** @brief Pop the front element (min or max) element in the
 flat_priority_queue. O(lgN).
@@ -484,7 +493,7 @@ A simple way to provide a temp for swapping is with an inline compound literal
 reference provided directly to the function argument `&(name_of_type){}`. */
 void *CCC_flat_priority_queue_update(CCC_Flat_priority_queue *priority_queue,
                                      void *type, void *temp,
-                                     CCC_Modifier_context const *modifier);
+                                     CCC_Modifier const *modifier);
 
 /** @brief Update the user type stored in the priority queue directly. O(lgN).
 @param[in] priority_queue_pointer a pointer to the flat priority queue.
@@ -528,7 +537,7 @@ A simple way to provide a temp for swapping is with an inline compound literal
 reference provided directly to the function argument `&(name_of_type){}`. */
 void *CCC_flat_priority_queue_increase(CCC_Flat_priority_queue *priority_queue,
                                        void *type, void *temp,
-                                       CCC_Modifier_context const *modifier);
+                                       CCC_Modifier const *modifier);
 
 /** @brief Increase the user type stored in the priority queue directly. O(lgN).
 @param[in] flat_priority_queue_pointer a pointer to the flat priority queue.
@@ -572,7 +581,7 @@ A simple way to provide a temp for swapping is with an inline compound literal
 reference provided directly to the function argument `&(name_of_type){}`. */
 void *CCC_flat_priority_queue_decrease(CCC_Flat_priority_queue *priority_queue,
                                        void *type, void *temp,
-                                       CCC_Modifier_context const *modifier);
+                                       CCC_Modifier const *modifier);
 
 /** @brief Increase the user type stored in the priority queue directly. O(lgN).
 @param[in] flat_priority_queue_pointer a pointer to the flat priority queue.
@@ -616,11 +625,12 @@ elements stored in the flat_priority_queue. However, the destructor is free to
 manage cleanup in other parts of user code as needed upon destruction of each
 element.
 
-If the destructor is empty, `&(CCC_Destructor_context){}`, the function is O(1)
-and no attempt is made to free capacity of the flat_priority_queue. */
+If the destructor is empty, `&(CCC_Destructor){}`, the
+function is O(1) and no attempt is made to free capacity of the
+flat_priority_queue. */
 CCC_Result
 CCC_flat_priority_queue_clear(CCC_Flat_priority_queue *priority_queue,
-                              CCC_Destructor_context const *destructor);
+                              CCC_Destructor const *destructor);
 
 /** @brief Clears the priority_queue calling destroy on every element if
 provided. O(1)-O(N).
@@ -634,12 +644,13 @@ elements stored in the flat_priority_queue. However, the destructor is free to
 manage cleanup in other parts of user code as needed upon destruction of each
 element.
 
-If the destructor is empty, `&(CCC_Destructor_context){}`, the function is O(1)
-and no attempt is made to free capacity of the flat_priority_queue. */
+If the destructor is empty, `&(CCC_Destructor){}`, the
+function is O(1) and no attempt is made to free capacity of the
+flat_priority_queue. */
 CCC_Result
 CCC_flat_priority_queue_clear_and_free(CCC_Flat_priority_queue *priority_queue,
-                                       CCC_Destructor_context const *destructor,
-                                       CCC_Allocator_context const *allocator);
+                                       CCC_Destructor const *destructor,
+                                       CCC_Allocator const *allocator);
 
 /**@}*/
 

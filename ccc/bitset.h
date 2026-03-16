@@ -415,7 +415,7 @@ This saves some initialization boilerplate. */
 
 /** @brief Initialize an empty dynamic bit set at compile or runtime with an
 allocator.
-@param[in] allocator the CCC_Allocator function.
+@param[in] allocator the CCC_Allocator_interface function.
 @return the initialized bit set on the right hand side of an equality operator.
 
 An empty dynamic bit set.
@@ -431,7 +431,7 @@ This saves some initialization boilerplate. */
 
 /** @brief Initialize an empty dynamic bit set at compile or runtime with an
 allocator.
-@param[in] allocator the CCC_Allocator function.
+@param[in] allocator the CCC_Allocator_interface function.
 @param[in] context the pointer to any context needed for the allocator.
 @return the initialized bit set on the right hand side of an equality operator.
 
@@ -538,7 +538,7 @@ permission.
 These options allow users to stay consistent across containers with their
 memory management strategies. */
 CCC_Result CCC_bitset_copy(CCC_Bitset *destination, CCC_Bitset const *source,
-                           CCC_Allocator *allocate);
+                           CCC_Allocator_interface *allocate);
 
 /** @brief Reserves space for at least to_add more bits.
 @param[in] bitset a pointer to the bit set.
@@ -558,7 +558,7 @@ this function can serve as a one-time reservation. This is helpful when a fixed
 size is needed but that size is only known dynamically at runtime. To free the
 bit set in such a case see the CCC_bitset_clear_and_free_reserve() function. */
 CCC_Result CCC_bitset_reserve(CCC_Bitset *bitset, size_t to_add,
-                              CCC_Allocator *allocate);
+                              CCC_Allocator_interface *allocate);
 
 /**@}*/
 
@@ -1091,7 +1091,7 @@ CCC_Count CCC_bitset_popcount_range(CCC_Bitset const *bitset,
 
 /**@}*/
 
-/** @name Destructor Interface
+/** @name Destructor_interface Interface
 Clear the set and manage its memory. */
 /**@{*/
 
@@ -1118,7 +1118,8 @@ allocation function when called.
 @return the result of free operation. OK if success, or an error status to
 indicate the error.
 @warning It is an error to call this function on a bitset that was not reserved
-with the provided CCC_Allocator. The bitset must have existing memory to free.
+with the provided CCC_Allocator_interface. The bitset must have existing memory
+to free.
 
 This function covers the edge case of reserving a dynamic capacity for a bitset
 at runtime but denying the bitset allocation permission to resize. This can help
@@ -1134,7 +1135,7 @@ This function will work normally if called on a bitset with allocation
 permission however the normal CCC_bitset_clear_and_free is sufficient for that
 use case. */
 CCC_Result CCC_bitset_clear_and_free_reserve(CCC_Bitset *bitset,
-                                             CCC_Allocator *allocate);
+                                             CCC_Allocator_interface *allocate);
 
 /**@}*/
 

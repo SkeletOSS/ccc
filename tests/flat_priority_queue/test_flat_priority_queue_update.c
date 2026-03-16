@@ -18,7 +18,7 @@ check_static_begin(flat_priority_queue_test_insert_iterate_pop) {
     size_t const num_nodes = 1000;
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_storage(
-            CCC_ORDER_LESSER, &(CCC_Comparator_context){.compare = val_order},
+            CCC_ORDER_LESSER, &(CCC_Comparator){.compare = val_order},
             (struct Val[1000 + 1]){});
     for (size_t i = 0; i < num_nodes; ++i) {
         /* Force duplicates. */
@@ -27,7 +27,7 @@ check_static_begin(flat_priority_queue_test_insert_iterate_pop) {
             .id = (int)i,
         };
         check(push(&flat_priority_queue, &val, &(struct Val){},
-                   &(CCC_Allocator_context){})
+                   &(CCC_Allocator){})
                   != NULL,
               true);
         check(validate(&flat_priority_queue), true);
@@ -49,13 +49,12 @@ check_static_begin(flat_priority_queue_test_priority_removal) {
     size_t const num_nodes = 1000;
     struct Val vals[1000 + 1];
     CCC_Flat_priority_queue flat_priority_queue = CCC_flat_priority_queue_for(
-        struct Val, CCC_ORDER_LESSER,
-        &(CCC_Comparator_context){.compare = val_order},
+        struct Val, CCC_ORDER_LESSER, &(CCC_Comparator){.compare = val_order},
         (sizeof(vals) / sizeof(*vals)), vals);
     for (size_t i = 0; i < num_nodes; ++i) {
         /* Force duplicates. */
         struct Val const *res = CCC_flat_priority_queue_emplace(
-            &flat_priority_queue, &(CCC_Allocator_context){},
+            &flat_priority_queue, &(CCC_Allocator){},
             (struct Val){
                 .val = rand() % (num_nodes + 1), /*NOLINT*/
                 .id = (int)i,
@@ -82,13 +81,12 @@ check_static_begin(flat_priority_queue_test_priority_update) {
     size_t const num_nodes = 1000;
     struct Val vals[1000 + 1];
     CCC_Flat_priority_queue flat_priority_queue = CCC_flat_priority_queue_for(
-        struct Val, CCC_ORDER_LESSER,
-        &(CCC_Comparator_context){.compare = val_order},
+        struct Val, CCC_ORDER_LESSER, &(CCC_Comparator){.compare = val_order},
         (sizeof(vals) / sizeof(vals[0])), vals);
     for (size_t i = 0; i < num_nodes; ++i) {
         /* Force duplicates. */
         struct Val const *res = CCC_flat_priority_queue_emplace(
-            &flat_priority_queue, &(CCC_Allocator_context){},
+            &flat_priority_queue, &(CCC_Allocator){},
             (struct Val){
                 .val = rand() % (num_nodes + 1), /*NOLINT*/
                 .id = (int)i,
@@ -103,7 +101,7 @@ check_static_begin(flat_priority_queue_test_priority_update) {
         if (cur->val > limit) {
             struct Val const *const updated
                 = update(&flat_priority_queue, cur, &(struct Val){},
-                         &(CCC_Modifier_context){
+                         &(CCC_Modifier){
                              .modify = val_update,
                              .context = &backoff,
                          });
@@ -123,13 +121,12 @@ check_static_begin(flat_priority_queue_test_priority_update_with) {
     size_t const num_nodes = 1000;
     struct Val vals[1000 + 1];
     CCC_Flat_priority_queue flat_priority_queue = CCC_flat_priority_queue_for(
-        struct Val, CCC_ORDER_LESSER,
-        &(CCC_Comparator_context){.compare = val_order},
+        struct Val, CCC_ORDER_LESSER, &(CCC_Comparator){.compare = val_order},
         (sizeof(vals) / sizeof(vals[0])), vals);
     for (size_t i = 0; i < num_nodes; ++i) {
         /* Force duplicates. */
         struct Val const *res = CCC_flat_priority_queue_emplace(
-            &flat_priority_queue, &(CCC_Allocator_context){},
+            &flat_priority_queue, &(CCC_Allocator){},
             (struct Val){
                 .val = rand() % (num_nodes + 1), /*NOLINT*/
                 .id = (int)i,

@@ -31,12 +31,12 @@ check_static_begin(buffer_test_push_fixed) {
     Buffer b = buffer_with_storage(0, (int[8]){});
     int const push[8] = {7, 6, 5, 4, 3, 2, 1, 0};
     for (size_t i = 0; i < sizeof(push) / sizeof(*push); ++i) {
-        int *p = buffer_push_back(&b, &push[i], &(CCC_Allocator_context){});
+        int *p = buffer_push_back(&b, &push[i], &(CCC_Allocator){});
         check(p != NULL, CCC_TRUE);
         check(*p, push[i]);
     }
     check(buffer_count(&b).count, sizeof(push) / sizeof(*push));
-    check(buffer_push_back(&b, &(int){99}, &(CCC_Allocator_context){}) == NULL,
+    check(buffer_push_back(&b, &(int){99}, &(CCC_Allocator){}) == NULL,
           CCC_TRUE);
     check_end();
 }
@@ -55,8 +55,7 @@ check_static_begin(buffer_test_push_resize) {
     check(buffer_count(&b).count, cap);
     check(buffer_capacity(&b).count >= cap, CCC_TRUE);
     check_end({
-        (void)buffer_clear_and_free(&b, &(CCC_Destructor_context){},
-                                    &std_allocator);
+        (void)buffer_clear_and_free(&b, &(CCC_Destructor){}, &std_allocator);
         free(many);
     });
 }
@@ -101,7 +100,7 @@ check_static_begin(buffer_test_push_sort) {
     rand_shuffle(buffer_sizeof_type(&b).count, buffer_begin(&b),
                  buffer_count(&b).count, &(int){});
     (void)quicksort(&b, &(int){}, CCC_ORDER_LESSER,
-                    &(CCC_Comparator_context){.compare = ccc_order_ints});
+                    &(CCC_Comparator){.compare = ccc_order_ints});
     int prev = INT_MIN;
     size_t count = 0;
     for (int const *i = buffer_begin(&b); i != buffer_end(&b);
@@ -122,22 +121,20 @@ check_static_begin(buffer_test_insert_no_allocate) {
     Buffer b = buffer_with_storage(BUFINSCAP - 3, (int[BUFINSCAP]){1, 2, 4, 5});
     check(buffer_count(&b).count, BUFINSCAP - 3);
     int const *const three
-        = buffer_insert(&b, 2, &(int){3}, &(CCC_Allocator_context){});
+        = buffer_insert(&b, 2, &(int){3}, &(CCC_Allocator){});
     check(three != NULL, CCC_TRUE);
     check(*three, 3);
     CCC_Order order
         = buforder(&b, BUFINSCAP - 2, (int[BUFINSCAP - 2]){1, 2, 3, 4, 5});
     check(order, CCC_ORDER_EQUAL);
     check(buffer_count(&b).count, BUFINSCAP - 2);
-    int const *const zero
-        = buffer_insert(&b, 0, &(int){}, &(CCC_Allocator_context){});
+    int const *const zero = buffer_insert(&b, 0, &(int){}, &(CCC_Allocator){});
     check(zero != NULL, CCC_TRUE);
     check(*zero, 0);
     order = buforder(&b, BUFINSCAP - 1, (int[BUFINSCAP - 1]){0, 1, 2, 3, 4, 5});
     check(order, CCC_ORDER_EQUAL);
     check(buffer_count(&b).count, BUFINSCAP - 1);
-    int const *const six
-        = buffer_insert(&b, 6, &(int){6}, &(CCC_Allocator_context){});
+    int const *const six = buffer_insert(&b, 6, &(int){6}, &(CCC_Allocator){});
     check(six != NULL, CCC_TRUE);
     check(*six, 6);
     order = buforder(&b, BUFINSCAP, (int[BUFINSCAP]){0, 1, 2, 3, 4, 5, 6});
@@ -154,7 +151,7 @@ check_static_begin(buffer_test_insert_no_allocate_fail) {
         = buffer_with_storage(BUFINSCAP, (int[BUFINSCAP]){0, 1, 2, 3, 4, 5, 6});
     check(buffer_count(&b).count, BUFINSCAP);
     int const *const three
-        = buffer_insert(&b, 3, &(int){3}, &(CCC_Allocator_context){});
+        = buffer_insert(&b, 3, &(int){3}, &(CCC_Allocator){});
     check(three == NULL, CCC_TRUE);
     check(buffer_count(&b).count, BUFINSCAP);
     check_end();
@@ -186,8 +183,7 @@ check_static_begin(buffer_test_insert_allocate) {
     order = buforder(&b, 9, (int[9]){0, 1, 2, 3, 4, 5, 6, 7, 8});
     check(order, CCC_ORDER_EQUAL);
     check(buffer_count(&b).count, 9);
-    check_end(buffer_clear_and_free(&b, &(CCC_Destructor_context){},
-                                    &std_allocator););
+    check_end(buffer_clear_and_free(&b, &(CCC_Destructor){}, &std_allocator););
 }
 
 int

@@ -35,7 +35,7 @@ rand_range(size_t const min, size_t const max) {
 
 check_begin(insert_shuffled, CCC_Flat_priority_queue *const priority_queue,
             size_t const size, int const larger_prime,
-            CCC_Allocator_context const *const allocator) {
+            CCC_Allocator const *const allocator) {
     /* Math magic ahead so that we iterate over every index
        eventually but in a shuffled order. Not necessarily
        random but a repeatable sequence that makes it
@@ -81,6 +81,5 @@ check_begin(inorder_fill, int vals[const], size_t const size,
         vals[i++] = v->val;
     }
     check(i, flat_priority_queue_count(flat_priority_queue).count);
-    check_end(
-        clear_and_free(&copy, &(CCC_Destructor_context){}, &std_allocator););
+    check_end(clear_and_free(&copy, &(CCC_Destructor){}, &std_allocator););
 }

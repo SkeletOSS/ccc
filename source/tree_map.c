@@ -78,7 +78,8 @@ struct Query {
 
 static void init_node(struct CCC_Tree_map *, struct CCC_Tree_map_node *);
 static CCC_Order order(struct CCC_Tree_map const *, void const *,
-                       struct CCC_Tree_map_node const *, CCC_Key_comparator *);
+                       struct CCC_Tree_map_node const *,
+                       CCC_Key_comparator_interface *);
 static void *struct_base(struct CCC_Tree_map const *,
                          struct CCC_Tree_map_node const *);
 static struct Query find(struct CCC_Tree_map const *, void const *);
@@ -362,7 +363,7 @@ CCC_tree_map_remove_key_value(CCC_Tree_map *const map,
 }
 
 CCC_Tree_map_entry *
-CCC_tree_map_and_modify(CCC_Tree_map_entry *e, CCC_Modifier *modify) {
+CCC_tree_map_and_modify(CCC_Tree_map_entry *e, CCC_Modifier_interface *modify) {
     if (!e) {
         return NULL;
     }
@@ -376,8 +377,8 @@ CCC_tree_map_and_modify(CCC_Tree_map_entry *e, CCC_Modifier *modify) {
 }
 
 CCC_Tree_map_entry *
-CCC_tree_map_and_context_modify(CCC_Tree_map_entry *e, CCC_Modifier *modify,
-                                void *context) {
+CCC_tree_map_and_context_modify(CCC_Tree_map_entry *e,
+                                CCC_Modifier_interface *modify, void *context) {
     if (!e) {
         return NULL;
     }
@@ -524,7 +525,8 @@ CCC_tree_map_validate(CCC_Tree_map const *map) {
 /** This is a linear time constant space deletion of tree nodes via left
 rotations so element fields are modified during progression of deletes. */
 CCC_Result
-CCC_tree_map_clear(CCC_Tree_map *const map, CCC_Destructor *const destroy) {
+CCC_tree_map_clear(CCC_Tree_map *const map,
+                   CCC_Destructor_interface *const destroy) {
     if (!map) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -746,7 +748,7 @@ swap(void *const temp, void *const a, void *const b, size_t const sizeof_type) {
 static inline CCC_Order
 order(struct CCC_Tree_map const *const map, void const *const key,
       struct CCC_Tree_map_node const *const node,
-      CCC_Key_comparator *const compare) {
+      CCC_Key_comparator_interface *const compare) {
     return compare((CCC_Key_comparator_arguments){
         .key_left = key,
         .type_right = struct_base(map, node),

@@ -83,12 +83,13 @@ next(struct CCC_Adaptive_map const *, struct CCC_Adaptive_map_node const *,
      enum Link);
 static struct CCC_Adaptive_map_node *splay(struct CCC_Adaptive_map *,
                                            struct CCC_Adaptive_map_node *,
-                                           void const *, CCC_Key_comparator *);
+                                           void const *,
+                                           CCC_Key_comparator_interface *);
 static struct CCC_Adaptive_map_node *
 elem_in_slot(struct CCC_Adaptive_map const *, void const *);
 static CCC_Order order(struct CCC_Adaptive_map const *, void const *,
                        struct CCC_Adaptive_map_node const *,
-                       CCC_Key_comparator *);
+                       CCC_Key_comparator_interface *);
 
 /*=======================        Map Interface      =========================*/
 
@@ -158,7 +159,7 @@ CCC_adaptive_map_or_insert(CCC_Adaptive_map_entry const *const entry,
 
 CCC_Adaptive_map_entry *
 CCC_adaptive_map_and_modify(CCC_Adaptive_map_entry *const entry,
-                            CCC_Modifier *const modify) {
+                            CCC_Modifier_interface *const modify) {
     if (!entry) {
         return NULL;
     }
@@ -174,7 +175,7 @@ CCC_adaptive_map_and_modify(CCC_Adaptive_map_entry *const entry,
 
 CCC_Adaptive_map_entry *
 CCC_adaptive_map_and_context_modify(CCC_Adaptive_map_entry *const entry,
-                                    CCC_Modifier *const modify,
+                                    CCC_Modifier_interface *const modify,
                                     void *const context) {
     if (entry && modify && entry->entry.status & CCC_ENTRY_OCCUPIED
         && entry->entry.type) {
@@ -454,7 +455,7 @@ CCC_adaptive_map_equal_range_reverse(CCC_Adaptive_map *const map,
 rotations so element fields are modified during progression of deletes. */
 CCC_Result
 CCC_adaptive_map_clear(CCC_Adaptive_map *const map,
-                       CCC_Destructor *const destroy) {
+                       CCC_Destructor_interface *const destroy) {
     if (!map) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -771,7 +772,7 @@ and manage the parent pointers. Parent pointers are not usual for splay trees
 but are necessary for a clean iteration API. */
 static struct CCC_Adaptive_map_node *
 splay(struct CCC_Adaptive_map *const t, struct CCC_Adaptive_map_node *root,
-      void const *const key, CCC_Key_comparator *const compare) {
+      void const *const key, CCC_Key_comparator_interface *const compare) {
     assert(root);
     /* Splaying brings the key element up to the root. The zigzag fixes of
        splaying repair the tree and we remember the roots of these changes in
@@ -840,7 +841,7 @@ struct_base(struct CCC_Adaptive_map const *const t,
 static inline CCC_Order
 order(struct CCC_Adaptive_map const *const t, void const *const key,
       struct CCC_Adaptive_map_node const *const node,
-      CCC_Key_comparator *const compare) {
+      CCC_Key_comparator_interface *const compare) {
     return compare((CCC_Key_comparator_arguments){
         .key_left = key,
         .type_right = struct_base(t, node),

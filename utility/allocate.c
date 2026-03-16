@@ -5,7 +5,7 @@
 #include "types.h"
 
 /** Defined extern in allocate.h */
-CCC_Allocator_context const std_allocator = {
+CCC_Allocator const std_allocator = {
     .allocate = std_allocate,
 };
 

@@ -154,8 +154,9 @@ allocator.
 @param[in] type_name the user defined type stored in the map.
 @param[in] type_intruder_field the name of the intrusive map node element.
 @param[in] type_key_field the field of the struct used for key storage.
-@param[in] compare the CCC_Key_comparator the user intends to use.
-@param[in] allocate the CCC_Allocator function used to manage map memory.
+@param[in] compare the CCC_Key_comparator_interface the user intends to use.
+@param[in] allocate the CCC_Allocator_interface function used to manage map
+memory.
 @return the map directly initialized on the right hand side of the equality
 operator (e.g. CCC_Adaptive_map map =
 CCC_adaptive_map_with_allocator(...);)
@@ -190,8 +191,9 @@ allocator and supplementary context.
 @param[in] type_name the user defined type stored in the map.
 @param[in] type_intruder_field the name of the intrusive map node element.
 @param[in] type_key_field the field of the struct used for key storage.
-@param[in] compare the CCC_Key_comparator the user intends to use.
-@param[in] allocate the CCC_Allocator function used to manage map memory.
+@param[in] compare the CCC_Key_comparator_interface the user intends to use.
+@param[in] allocate the CCC_Allocator_interface function used to manage map
+memory.
 @param[in] context any additional context needed for comparison or allocation.
 @return the map directly initialized on the right hand side of the equality
 operator (e.g. CCC_Adaptive_map map =
@@ -468,11 +470,11 @@ to subsequent calls in the Entry Interface. */
 
 This function is intended to make the function chaining in the Entry Interface
 more succinct if the entry will be modified in place based on its own value
-without the need of the context argument a CCC_Modifier can provide.
+without the need of the context argument a CCC_Modifier_interface can provide.
 */
 [[nodiscard]] CCC_Adaptive_map_entry *
 CCC_adaptive_map_and_modify(CCC_Adaptive_map_entry *entry,
-                            CCC_Modifier *modify);
+                            CCC_Modifier_interface *modify);
 
 /** @brief Modifies the provided entry if it is Occupied.
 @param[in] entry the entry obtained from an entry function or macro.
@@ -480,11 +482,12 @@ CCC_adaptive_map_and_modify(CCC_Adaptive_map_entry *entry,
 @param[in] context context data required for the update.
 @return the updated entry if it was Occupied or the unmodified vacant entry.
 
-This function makes full use of a CCC_Modifier capability, meaning a
+This function makes full use of a CCC_Modifier_interface capability, meaning a
 complete CCC_update object will be passed to the update function callback. */
 [[nodiscard]] CCC_Adaptive_map_entry *
 CCC_adaptive_map_and_context_modify(CCC_Adaptive_map_entry *entry,
-                                    CCC_Modifier *modify, void *context);
+                                    CCC_Modifier_interface *modify,
+                                    void *context);
 
 /** @brief Modify an Occupied entry with a closure over user type T.
 @param[in] adaptive_map_entry_pointer a pointer to the obtained entry.
@@ -792,7 +795,7 @@ If the container has not been given allocation permission, then the destructor
 may free elements or not depending on how and when the user wishes to free
 elements of the map according to their own memory management schemes. */
 CCC_Result CCC_adaptive_map_clear(CCC_Adaptive_map *map,
-                                  CCC_Destructor *destroy);
+                                  CCC_Destructor_interface *destroy);
 
 /**@}*/
 

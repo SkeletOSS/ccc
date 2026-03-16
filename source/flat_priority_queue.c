@@ -31,18 +31,16 @@ enum : size_t {
 
 static size_t index_of(struct CCC_Flat_priority_queue const *, void const *);
 static CCC_Tribool wins(void const *, void const *, CCC_Order,
-                        CCC_Comparator_context const *);
+                        CCC_Comparator const *);
 static size_t bubble_up(CCC_Buffer *, size_t, void *, CCC_Order,
-                        CCC_Comparator_context const *);
+                        CCC_Comparator const *);
 static size_t bubble_down(CCC_Buffer *, size_t, void *, CCC_Order,
-                          CCC_Comparator_context const *);
+                          CCC_Comparator const *);
 static size_t update_fixup(struct CCC_Flat_priority_queue *, void *, void *);
-static void heapify(CCC_Buffer *, void *, CCC_Order,
-                    CCC_Comparator_context const *);
-static void heapsort(CCC_Buffer *, void *, CCC_Order,
-                     CCC_Comparator_context const *);
+static void heapify(CCC_Buffer *, void *, CCC_Order, CCC_Comparator const *);
+static void heapsort(CCC_Buffer *, void *, CCC_Order, CCC_Comparator const *);
 static void destroy_each(struct CCC_Flat_priority_queue *,
-                         CCC_Destructor_context const *);
+                         CCC_Destructor const *);
 
 /*=====================       Interface      ================================*/
 
@@ -50,7 +48,7 @@ CCC_Result
 CCC_flat_priority_queue_copy_heapify(
     CCC_Flat_priority_queue *const priority_queue,
     CCC_Buffer const *const buffer, void *const temp,
-    CCC_Allocator_context const *const allocator) {
+    CCC_Allocator const *const allocator) {
     if (!priority_queue || !temp || !allocator) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -67,7 +65,7 @@ CCC_flat_priority_queue_copy_heapify(
 CCC_Flat_priority_queue
 CCC_flat_priority_queue_in_place_heapify(
     CCC_Buffer *const buffer, void *const temp, CCC_Order const order,
-    CCC_Comparator_context const *const comparator) {
+    CCC_Comparator const *const comparator) {
     if (!buffer || !temp || !comparator || !comparator->compare
         || (order != CCC_ORDER_GREATER && order != CCC_ORDER_LESSER)) {
         return (CCC_Flat_priority_queue){
@@ -88,7 +86,7 @@ CCC_flat_priority_queue_in_place_heapify(
 void *
 CCC_flat_priority_queue_push(CCC_Flat_priority_queue *const priority_queue,
                              void const *const type, void *const temp,
-                             CCC_Allocator_context const *const allocator) {
+                             CCC_Allocator const *const allocator) {
     if (!priority_queue || !type || !temp || !allocator) {
         return NULL;
     }
@@ -159,7 +157,7 @@ CCC_flat_priority_queue_erase(CCC_Flat_priority_queue *const priority_queue,
 void *
 CCC_flat_priority_queue_update(CCC_Flat_priority_queue *const priority_queue,
                                void *const type, void *const temp,
-                               CCC_Modifier_context const *const modifier) {
+                               CCC_Modifier const *const modifier) {
     if (!priority_queue || !type || !temp || !modifier || !modifier->modify
         || !priority_queue->buffer.count) {
         return NULL;
@@ -176,7 +174,7 @@ CCC_flat_priority_queue_update(CCC_Flat_priority_queue *const priority_queue,
 void *
 CCC_flat_priority_queue_increase(CCC_Flat_priority_queue *const priority_queue,
                                  void *const type, void *const temp,
-                                 CCC_Modifier_context const *const modifier) {
+                                 CCC_Modifier const *const modifier) {
     return CCC_flat_priority_queue_update(priority_queue, type, temp, modifier);
 }
 
@@ -184,7 +182,7 @@ CCC_flat_priority_queue_increase(CCC_Flat_priority_queue *const priority_queue,
 void *
 CCC_flat_priority_queue_decrease(CCC_Flat_priority_queue *const priority_queue,
                                  void *const type, void *const temp,
-                                 CCC_Modifier_context const *const modifier) {
+                                 CCC_Modifier const *const modifier) {
     return CCC_flat_priority_queue_update(priority_queue, type, temp, modifier);
 }
 
@@ -239,7 +237,7 @@ CCC_flat_priority_queue_order(
 CCC_Result
 CCC_flat_priority_queue_reserve(CCC_Flat_priority_queue *const priority_queue,
                                 size_t const to_add,
-                                CCC_Allocator_context const *const allocator) {
+                                CCC_Allocator const *const allocator) {
     if (!priority_queue || !allocator) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -249,7 +247,7 @@ CCC_flat_priority_queue_reserve(CCC_Flat_priority_queue *const priority_queue,
 CCC_Result
 CCC_flat_priority_queue_copy(CCC_Flat_priority_queue *const destination,
                              CCC_Flat_priority_queue const *const source,
-                             CCC_Allocator_context const *const allocator) {
+                             CCC_Allocator const *const allocator) {
     if (!destination || !source || source == destination || !allocator
         || (destination->buffer.capacity < source->buffer.capacity
             && !allocator->allocate)) {
@@ -279,7 +277,7 @@ CCC_flat_priority_queue_copy(CCC_Flat_priority_queue *const destination,
 
 CCC_Result
 CCC_flat_priority_queue_clear(CCC_Flat_priority_queue *const priority_queue,
-                              CCC_Destructor_context const *const destructor) {
+                              CCC_Destructor const *const destructor) {
     if (!priority_queue || !destructor) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -292,8 +290,8 @@ CCC_flat_priority_queue_clear(CCC_Flat_priority_queue *const priority_queue,
 CCC_Result
 CCC_flat_priority_queue_clear_and_free(
     CCC_Flat_priority_queue *const priority_queue,
-    CCC_Destructor_context const *const destructor,
-    CCC_Allocator_context const *const allocator) {
+    CCC_Destructor const *const destructor,
+    CCC_Allocator const *const allocator) {
     if (!priority_queue || !destructor || !allocator) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -340,7 +338,7 @@ CCC_flat_priority_queue_validate(
 
 CCC_Result
 CCC_sort_heapsort(CCC_Buffer *const buffer, void *const temp, CCC_Order order,
-                  CCC_Comparator_context const *const comparator) {
+                  CCC_Comparator const *const comparator) {
     if (!buffer || !temp || !comparator || !comparator->compare
         || (order != CCC_ORDER_GREATER && order != CCC_ORDER_LESSER)) {
         return CCC_RESULT_ARGUMENT_ERROR;
@@ -389,7 +387,7 @@ CCC_private_flat_priority_queue_heap_order(
 /* Orders the heap in O(N) time. Assumes n > 0 and n <= capacity. */
 static inline void
 heapify(CCC_Buffer *const buffer, void *temp, CCC_Order const order,
-        CCC_Comparator_context const *const comparator) {
+        CCC_Comparator const *const comparator) {
     size_t i = ((buffer->count - 1) / 2) + 1;
     while (i--) {
         (void)bubble_down(buffer, i, temp, order, comparator);
@@ -398,7 +396,7 @@ heapify(CCC_Buffer *const buffer, void *temp, CCC_Order const order,
 
 static inline void
 heapsort(CCC_Buffer *const buffer, void *const temp, CCC_Order const order,
-         CCC_Comparator_context const *const comparator) {
+         CCC_Comparator const *const comparator) {
     if (buffer->count > 1) {
         size_t const start = buffer->count;
         while (--buffer->count) {
@@ -439,8 +437,7 @@ update_fixup(struct CCC_Flat_priority_queue *const priority_queue,
 /* Returns the sorted position of the element starting at position i. */
 static inline size_t
 bubble_up(CCC_Buffer *const buffer, size_t index, void *const temp,
-          CCC_Order const order,
-          CCC_Comparator_context const *const comparator) {
+          CCC_Order const order, CCC_Comparator const *const comparator) {
     for (size_t parent = (index - 1) / 2; index;
          index = parent, parent = (parent - 1) / 2) {
         void const *const parent_pointer = CCC_buffer_at(buffer, parent);
@@ -457,8 +454,7 @@ bubble_up(CCC_Buffer *const buffer, size_t index, void *const temp,
 /* Returns the sorted position of the element starting at position i. */
 static inline size_t
 bubble_down(CCC_Buffer *const buffer, size_t index, void *const temp,
-            CCC_Order const order,
-            CCC_Comparator_context const *const comparator) {
+            CCC_Order const order, CCC_Comparator const *const comparator) {
     for (size_t next = 0, left = (index * 2) + 1, right = left + 1;
          left < buffer->count;
          index = next, left = (index * 2) + 1, right = left + 1) {
@@ -488,7 +484,7 @@ bubble_down(CCC_Buffer *const buffer, size_t index, void *const temp,
    losing the total order comparison, the function also returns false. */
 static inline CCC_Tribool
 wins(void const *const winner, void const *const loser, CCC_Order const order,
-     CCC_Comparator_context const *const comparator) {
+     CCC_Comparator const *const comparator) {
     return comparator->compare((CCC_Comparator_arguments){
                .type_left = winner,
                .type_right = loser,
@@ -512,7 +508,7 @@ index_of(struct CCC_Flat_priority_queue const *const priority_queue,
 
 static inline void
 destroy_each(struct CCC_Flat_priority_queue *const priority_queue,
-             CCC_Destructor_context const *const destructor) {
+             CCC_Destructor const *const destructor) {
     size_t const count = priority_queue->buffer.count;
     for (size_t i = 0; i < count; ++i) {
         destructor->destroy((CCC_Arguments){

@@ -35,7 +35,7 @@ as `&(My_type){}`, passed directly as an argument.
 The sort is not inherently stable and uses the provided comparison function to
 order the elements. */
 CCC_Result CCC_sort_heapsort(CCC_Buffer *buffer, void *temp, CCC_Order order,
-                             CCC_Comparator_context const *comparator);
+                             CCC_Comparator const *comparator);
 
 /** @brief Sorts the doubly linked list in non-decreasing order as defined by
 the provided comparison function. `O(N * log(N))` time, `O(1)` space.
@@ -53,7 +53,7 @@ is null. */
 CCC_Result
 CCC_sort_doubly_linked_list_mergesort(CCC_Doubly_linked_list *list,
                                       CCC_Order order,
-                                      CCC_Comparator_context const *comparator);
+                                      CCC_Comparator const *comparator);
 
 /** @brief Sorts the singly linked list in non-decreasing order as defined by
 the provided comparison function. `O(N * log(N))` time, `O(1)` space.
@@ -71,7 +71,7 @@ is null. */
 CCC_Result
 CCC_sort_singly_linked_list_mergesort(CCC_Singly_linked_list *list,
                                       CCC_Order order,
-                                      CCC_Comparator_context const *comparator);
+                                      CCC_Comparator const *comparator);
 
 /** @brief Sorts the list in non-decreasing order as defined by
 the provided comparison function. `O(N * log(N))` time, `O(1)` space.

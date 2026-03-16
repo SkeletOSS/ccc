@@ -118,7 +118,7 @@ enum {
 /*==============================  Prototypes   ==============================*/
 
 static size_t splay(struct CCC_Array_adaptive_map *, size_t, void const *,
-                    CCC_Key_comparator *);
+                    CCC_Key_comparator_interface *);
 static struct CCC_Array_adaptive_map_node *
 node_at(struct CCC_Array_adaptive_map const *, size_t);
 static void *data_at(struct CCC_Array_adaptive_map const *, size_t);
@@ -128,7 +128,7 @@ static size_t erase(struct CCC_Array_adaptive_map *, void const *);
 static size_t maybe_allocate_insert(struct CCC_Array_adaptive_map *,
                                     void const *);
 static CCC_Result resize(struct CCC_Array_adaptive_map *, size_t,
-                         CCC_Allocator *);
+                         CCC_Allocator_interface *);
 static void copy_soa(struct CCC_Array_adaptive_map const *, void *, size_t);
 static size_t data_bytes(size_t, size_t);
 static size_t nodes_bytes(size_t);
@@ -145,7 +145,8 @@ static CCC_Handle_range equal_range(struct CCC_Array_adaptive_map *,
                                     void const *, void const *, enum Branch);
 static void *key_at(struct CCC_Array_adaptive_map const *, size_t);
 static CCC_Order order_nodes(struct CCC_Array_adaptive_map const *,
-                             void const *, size_t, CCC_Key_comparator *);
+                             void const *, size_t,
+                             CCC_Key_comparator_interface *);
 static size_t remove_from_tree(struct CCC_Array_adaptive_map *, size_t);
 static size_t min_max_from(struct CCC_Array_adaptive_map const *, size_t,
                            enum Branch);
@@ -161,7 +162,8 @@ static void init_node(struct CCC_Array_adaptive_map const *, size_t);
 static void swap(void *, void *, void *, size_t);
 static void link(struct CCC_Array_adaptive_map *, size_t, enum Branch, size_t);
 static size_t max(size_t, size_t);
-static void delete_nodes(struct CCC_Array_adaptive_map *, CCC_Destructor *);
+static void delete_nodes(struct CCC_Array_adaptive_map *,
+                         CCC_Destructor_interface *);
 
 /*==============================  Interface    ==============================*/
 
@@ -223,7 +225,7 @@ CCC_array_adaptive_map_insert_handle(
 
 CCC_Array_adaptive_map_handle *
 CCC_array_adaptive_map_and_modify(CCC_Array_adaptive_map_handle *const handle,
-                                  CCC_Modifier *const modify) {
+                                  CCC_Modifier_interface *const modify) {
     if (!handle) {
         return NULL;
     }
@@ -238,8 +240,8 @@ CCC_array_adaptive_map_and_modify(CCC_Array_adaptive_map_handle *const handle,
 
 CCC_Array_adaptive_map_handle *
 CCC_array_adaptive_map_and_context_modify(
-    CCC_Array_adaptive_map_handle *const handle, CCC_Modifier *const modify,
-    void *const context) {
+    CCC_Array_adaptive_map_handle *const handle,
+    CCC_Modifier_interface *const modify, void *const context) {
     if (!handle) {
         return NULL;
     }
@@ -535,7 +537,7 @@ CCC_array_adaptive_map_equal_range_reverse(CCC_Array_adaptive_map *const map,
 CCC_Result
 CCC_array_adaptive_map_reserve(CCC_Array_adaptive_map *const map,
                                size_t const to_add,
-                               CCC_Allocator *const allocate) {
+                               CCC_Allocator_interface *const allocate) {
     if (!map || !to_add || !allocate) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -569,7 +571,7 @@ CCC_array_adaptive_map_reserve(CCC_Array_adaptive_map *const map,
 CCC_Result
 CCC_array_adaptive_map_copy(CCC_Array_adaptive_map *const destination,
                             CCC_Array_adaptive_map const *const source,
-                            CCC_Allocator *const allocate) {
+                            CCC_Allocator_interface *const allocate) {
     if (!destination || !source || source == destination
         || (destination->capacity < source->capacity && !allocate)) {
         return CCC_RESULT_ARGUMENT_ERROR;
@@ -578,7 +580,7 @@ CCC_array_adaptive_map_copy(CCC_Array_adaptive_map *const destination,
     struct CCC_Array_adaptive_map_node *const destination_nodes
         = destination->nodes;
     size_t const destination_cap = destination->capacity;
-    CCC_Allocator *const destination_allocate = destination->allocate;
+    CCC_Allocator_interface *const destination_allocate = destination->allocate;
     *destination = *source;
     destination->data = destination_data;
     destination->nodes = destination_nodes;
@@ -606,7 +608,7 @@ CCC_array_adaptive_map_copy(CCC_Array_adaptive_map *const destination,
 
 CCC_Result
 CCC_array_adaptive_map_clear(CCC_Array_adaptive_map *const map,
-                             CCC_Destructor *const destroy) {
+                             CCC_Destructor_interface *const destroy) {
     if (!map) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -620,7 +622,7 @@ CCC_array_adaptive_map_clear(CCC_Array_adaptive_map *const map,
 
 CCC_Result
 CCC_array_adaptive_map_clear_and_free(CCC_Array_adaptive_map *const map,
-                                      CCC_Destructor *const destroy) {
+                                      CCC_Destructor_interface *const destroy) {
     if (!map || !map->allocate) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -641,9 +643,9 @@ CCC_array_adaptive_map_clear_and_free(CCC_Array_adaptive_map *const map,
 }
 
 CCC_Result
-CCC_array_adaptive_map_clear_and_free_reserve(CCC_Array_adaptive_map *const map,
-                                              CCC_Destructor *const destroy,
-                                              CCC_Allocator *const allocate) {
+CCC_array_adaptive_map_clear_and_free_reserve(
+    CCC_Array_adaptive_map *const map, CCC_Destructor_interface *const destroy,
+    CCC_Allocator_interface *const allocate) {
     if (!map || !allocate) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -798,7 +800,7 @@ allocate_slot(struct CCC_Array_adaptive_map *const map) {
 
 static CCC_Result
 resize(struct CCC_Array_adaptive_map *const map, size_t const new_capacity,
-       CCC_Allocator *const allocate) {
+       CCC_Allocator_interface *const allocate) {
     if (map->capacity && new_capacity <= map->capacity - 1) {
         return CCC_RESULT_OK;
     }
@@ -902,7 +904,7 @@ and manage the parent pointers. Parent pointers are not usual for splay trees
 but are necessary for a clean iteration API. */
 static size_t
 splay(struct CCC_Array_adaptive_map *const map, size_t root,
-      void const *const key, CCC_Key_comparator *const compare) {
+      void const *const key, CCC_Key_comparator_interface *const compare) {
     assert(root);
     /* Splaying brings the key element up to the root. The zigzag fixes of
        splaying repair the tree and we remember the roots of these changes in
@@ -995,7 +997,7 @@ simply calls the destructor on each node and removes the nodes references to
 other tree elements. */
 static void
 delete_nodes(struct CCC_Array_adaptive_map *const map,
-             CCC_Destructor *const destroy) {
+             CCC_Destructor_interface *const destroy) {
     assert(map);
     assert(destroy);
     size_t node = map->root;
@@ -1022,7 +1024,7 @@ delete_nodes(struct CCC_Array_adaptive_map *const map,
 static inline CCC_Order
 order_nodes(struct CCC_Array_adaptive_map const *const map,
             void const *const key, size_t const node,
-            CCC_Key_comparator *const compare) {
+            CCC_Key_comparator_interface *const compare) {
     return compare((CCC_Key_comparator_arguments){
         .key_left = key,
         .type_right = data_at(map, node),

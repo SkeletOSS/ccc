@@ -126,7 +126,8 @@ Ensure the count is less than equal to capacity. */
     CCC_private_buffer_for(type_name, capacity, count, data_pointer)
 
 /** @brief Initialize a Buffer from a compound literal array initializer.
-@param[in] allocator_context_pointer a pointer to CCC_Allocator_context.
+@param[in] allocator_context_pointer a pointer to
+CCC_Allocator.
 @param[in] optional_capacity optionally specify the capacity of the Buffer if
 different from the size of the compound literal array initializer. If the
 capacity is greater than the size of the compound literal array initializer, it
@@ -146,7 +147,7 @@ int
 main(void)
 {
     Buffer b = buffer_from(
-        &(CCC_Allocator_context){.allocator = std_allocate},
+        &(CCC_Allocator){.allocator = std_allocate},
         0,
         (int[]){ 0, 1, 2, 3 }
     );
@@ -163,7 +164,7 @@ int
 main(void)
 {
     Buffer b = buffer_from(
-        (&(CCC_Allocator_context){
+        (&(CCC_Allocator){
             .allocator = arena_allocate,
             .context = &arena,
         }),
@@ -184,7 +185,8 @@ CCC_buffer_for() macro. */
 
 /** @brief Initialize a Buffer with a capacity.
 @param[in] type_name any user or language standard type name.
-@param[in] allocator_context_pointer a pointer to CCC_Allocator_context.
+@param[in] allocator_context_pointer a pointer to
+CCC_Allocator.
 @param[in] capacity the capacity of the Buffer to reserve.
 @return the initialized buffer. Directly assign to Buffer on the right hand
 side of the equality operator (e.g. CCC_Buffer b =
@@ -199,7 +201,7 @@ main(void)
 {
     Buffer b = buffer_with_capacity(
         int,
-        &(CCC_Allocator_context){.allocator = std_allocate},
+        &(CCC_Allocator){.allocator = std_allocate},
         4096
     );
     return 0;
@@ -242,9 +244,8 @@ wrapping static or stack based arrays. */
 @param[in] allocator the allocation function to use to reserve memory.
 @return the result of the reservation. OK if successful, otherwise an error
 status is returned. */
-[[nodiscard]] CCC_Result
-CCC_buffer_reserve(CCC_Buffer *buffer, size_t to_add,
-                   CCC_Allocator_context const *allocator);
+[[nodiscard]] CCC_Result CCC_buffer_reserve(CCC_Buffer *buffer, size_t to_add,
+                                            CCC_Allocator const *allocator);
 
 /** @brief Copy the buffer from source to newly initialized destination.
 @param[in] destination the destination that will copy the source buf.
@@ -271,7 +272,8 @@ Buffer source = buffer_with_storage(0, (int[10]){});
 int *new_data = malloc(sizeof(int) * buffer_capacity(&source).count);
 Buffer destination
     = buffer_for(int, buffer_capacity(&source).count, 0, new_data);
-CCC_Result res = buffer_copy(&destination, &source, &(CCC_Allocator_context){});
+CCC_Result res = buffer_copy(&destination, &source,
+&(CCC_Allocator){});
 ```
 
 The above requires destination capacity be greater than or equal to source
@@ -283,7 +285,7 @@ Buffer source = buffer_for(int, 0, 0, NULL);
 (void)CCC_buffer_push_back_range(&source, 5, (int[5]){0,1,2,3,4});
 Buffer destination = buffer_for(NULL, int, std_allocate, NULL, 0);
 CCC_Result res = buffer_copy(&destination, &source,
-                             &(CCC_Allocator_context){std_allocate});
+                             &(CCC_Allocator){std_allocate});
 ```
 
 The above allows destination to have a capacity less than that of the source as
@@ -295,7 +297,7 @@ Buffer source = buffer_default(int);
 (void)CCC_buffer_push_back_range(&source, 5, (int[5]){0,1,2,3,4});
 Buffer destination = buffer_for(NULL, int, NULL, NULL, 0);
 CCC_Result res = buffer_copy(&destination, &source,
-                             &(CCC_Allocator_context){std_allocate});
+                             &(CCC_Allocator){std_allocate});
 ```
 
 Because an allocation function is provided, the destination is resized once for
@@ -306,9 +308,9 @@ explicitly before the copy if copying between ring buffers.
 
 These options allow users to stay consistent across containers with their
 memory management strategies. */
-[[nodiscard]] CCC_Result
-CCC_buffer_copy(CCC_Buffer *destination, CCC_Buffer const *source,
-                CCC_Allocator_context const *allocator);
+[[nodiscard]] CCC_Result CCC_buffer_copy(CCC_Buffer *destination,
+                                         CCC_Buffer const *source,
+                                         CCC_Allocator const *allocator);
 
 /**@}*/
 
@@ -329,9 +331,9 @@ allocation function has been provided upon initialization and the user is
 managing allocations and resizing directly. If an allocation function has
 been provided than the use of this function should be rare as the buffer
 will reallocate more memory when necessary. */
-[[nodiscard]] CCC_Result
-CCC_buffer_allocate(CCC_Buffer *buffer, size_t capacity,
-                    CCC_Allocator_context const *allocator);
+[[nodiscard]] CCC_Result CCC_buffer_allocate(CCC_Buffer *buffer,
+                                             size_t capacity,
+                                             CCC_Allocator const *allocator);
 
 /** @brief allocates a new slot from the Buffer at the end of the contiguous
 array. A slot is equivalent to one of the element type specified when the
@@ -345,9 +347,8 @@ provided or the Buffer is unable to allocate more memory.
 A Buffer can be used as the backing for more complex data structures.
 Requesting new space from a Buffer as an allocator can be helpful for these
 higher level organizations. */
-[[nodiscard]] void *
-CCC_buffer_allocate_back(CCC_Buffer *buffer,
-                         CCC_Allocator_context const *allocator);
+[[nodiscard]] void *CCC_buffer_allocate_back(CCC_Buffer *buffer,
+                                             CCC_Allocator const *allocator);
 
 /** @brief return the newly pushed data into the last slot of the buffer
 according to size.
@@ -362,14 +363,13 @@ The data is copied into the Buffer at the final slot if there is remaining
 capacity. If size is equal to capacity resizing will be attempted but may
 fail if no allocation function is provided or the allocator provided is
 exhausted. */
-[[nodiscard]] void *
-CCC_buffer_push_back(CCC_Buffer *buffer, void const *data,
-                     CCC_Allocator_context const *allocator);
+[[nodiscard]] void *CCC_buffer_push_back(CCC_Buffer *buffer, void const *data,
+                                         CCC_Allocator const *allocator);
 
 /** @brief Pushes the user provided compound literal directly to back of buffer
 and increments the size to reflect the newly added element.
 @param[in] buffer_pointer a pointer to the buffer.
-@param[in] allocator_pointer a pointer to the CCC_Allocator_context
+@param[in] allocator_pointer a pointer to the CCC_Allocator
 @param[in] type_compound_literal the direct compound literal as provided.
 @return a pointer to the inserted element or NULL if insertion failed.
 
@@ -398,7 +398,7 @@ according to size of the Buffer meaning a bulk move of elements sliding down
 to accommodate index will occur. */
 [[nodiscard]] void *CCC_buffer_insert(CCC_Buffer *buffer, size_t index,
                                       void const *data,
-                                      CCC_Allocator_context const *allocator);
+                                      CCC_Allocator const *allocator);
 
 /** @brief pop the back element from the Buffer according to size.
 @param[in] buffer the pointer to the buffer.
@@ -720,7 +720,7 @@ needed. Free the underlying Buffer setting the capacity to 0. O(1) if no
 destructor is provided, else O(N).
 @param[in] buffer a pointer to the buf.
 @param[in] destructor the destroy function and context if needed, or the empty
-`&(CCC_Destructor_context){}` anonymous compound literal if not..
+`&(CCC_Destructor){}` anonymous compound literal if not..
 @param[in] allocator the allocator context needed to free memory.
 
 Note that if destroy is non-NULL it will be called on each element in the
@@ -728,21 +728,21 @@ buf. After all elements are processed the Buffer is freed and capacity is 0.
 If destroy is NULL the Buffer is freed directly and capacity is 0. Elements
 are assumed to be contiguous from the 0th index to index at size - 1.*/
 CCC_Result CCC_buffer_clear_and_free(CCC_Buffer *buffer,
-                                     CCC_Destructor_context const *destructor,
-                                     CCC_Allocator_context const *allocator);
+                                     CCC_Destructor const *destructor,
+                                     CCC_Allocator const *allocator);
 
 /** @brief Set size of buffer to 0 and call destroy on each element if
 needed. O(1) if no destroy is provided, else O(N).
 @param[in] buffer a pointer to the buf.
 @param[in] destructor the destroy function and context if needed, or the empty
-`&(CCC_Destructor_context){}` anonymous compound literal if not..
+`&(CCC_Destructor){}` anonymous compound literal if not..
 
 Note that if destroy is non-NULL it will be called on each element in the
 buf. However, the underlying Buffer for the buffer is not freed. If the
 destructor is NULL, setting the size to 0 is O(1). Elements are assumed to be
 contiguous from the 0th index to index at size - 1.*/
 CCC_Result CCC_buffer_clear(CCC_Buffer *buffer,
-                            CCC_Destructor_context const *destructor);
+                            CCC_Destructor const *destructor);
 
 /**@}*/
 

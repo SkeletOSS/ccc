@@ -13,14 +13,14 @@
 #include "utility/stack_allocator.h"
 
 check_static_begin(flat_priority_queue_test_insert_one) {
-    CCC_Allocator_context const allocator = {
+    CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for((struct Val[8]){}),
     };
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_capacity(
             struct Val, CCC_ORDER_LESSER,
-            &(CCC_Comparator_context){.compare = val_order}, &allocator, 8);
+            &(CCC_Comparator){.compare = val_order}, &allocator, 8);
     (void)push(&flat_priority_queue, &(struct Val){.val = 1}, &(struct Val){},
                &allocator);
     check(CCC_flat_priority_queue_is_empty(&flat_priority_queue), false);
@@ -29,14 +29,14 @@ check_static_begin(flat_priority_queue_test_insert_one) {
 
 check_static_begin(flat_priority_queue_test_insert_three) {
     size_t size = 3;
-    CCC_Allocator_context const allocator = {
+    CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for((struct Val[8]){}),
     };
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_capacity(
             struct Val, CCC_ORDER_LESSER,
-            &(CCC_Comparator_context){.compare = val_order}, &allocator, 8);
+            &(CCC_Comparator){.compare = val_order}, &allocator, 8);
     for (size_t i = 0; i < size; ++i) {
         (void)push(&flat_priority_queue,
                    &(struct Val){
@@ -51,14 +51,14 @@ check_static_begin(flat_priority_queue_test_insert_three) {
 }
 
 check_static_begin(flat_priority_queue_test_insert_three_dups) {
-    CCC_Allocator_context const allocator = {
+    CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for((struct Val[8]){}),
     };
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_capacity(
             struct Val, CCC_ORDER_LESSER,
-            &(CCC_Comparator_context){.compare = val_order}, &allocator, 8);
+            &(CCC_Comparator){.compare = val_order}, &allocator, 8);
     for (int i = 0; i < 3; ++i) {
         (void)push(&flat_priority_queue,
                    &(struct Val){
@@ -76,14 +76,14 @@ check_static_begin(flat_priority_queue_test_insert_three_dups) {
 check_static_begin(flat_priority_queue_test_insert_shuffle) {
     size_t const size = 50;
     int const prime = 53;
-    CCC_Allocator_context const allocator = {
+    CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for((struct Val[50]){}),
     };
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_capacity(
             struct Val, CCC_ORDER_LESSER,
-            &(CCC_Comparator_context){.compare = val_order}, &allocator, 50);
+            &(CCC_Comparator){.compare = val_order}, &allocator, 50);
     check(insert_shuffled(&flat_priority_queue, size, prime, &allocator),
           CHECK_PASS);
 
@@ -106,7 +106,7 @@ check_static_begin(flat_priority_queue_test_insert_shuffle_grow) {
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_default(
             struct Val, CCC_ORDER_LESSER,
-            &(CCC_Comparator_context){.compare = val_order});
+            &(CCC_Comparator){.compare = val_order});
     check(insert_shuffled(&flat_priority_queue, size, prime, &std_allocator),
           CHECK_PASS);
 
@@ -120,25 +120,24 @@ check_static_begin(flat_priority_queue_test_insert_shuffle_grow) {
         prev = sorted_check[i];
     }
     check_end((void)CCC_flat_priority_queue_clear_and_free(
-                  &flat_priority_queue, &(CCC_Destructor_context){},
-                  &std_allocator););
+                  &flat_priority_queue, &(CCC_Destructor){}, &std_allocator););
 }
 
 check_static_begin(flat_priority_queue_test_insert_shuffle_reserve) {
     size_t const size = 50;
     int const prime = 53;
-    CCC_Allocator_context const allocator = {
+    CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for((struct Val[50]){}),
     };
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_capacity(
             struct Val, CCC_ORDER_LESSER,
-            &(CCC_Comparator_context){.compare = val_order}, &allocator, 50);
+            &(CCC_Comparator){.compare = val_order}, &allocator, 50);
     check(capacity(&flat_priority_queue).count, 50);
-    check(insert_shuffled(&flat_priority_queue, size, prime,
-                          &(CCC_Allocator_context){}),
-          CHECK_PASS);
+    check(
+        insert_shuffled(&flat_priority_queue, size, prime, &(CCC_Allocator){}),
+        CHECK_PASS);
     struct Val const *min = front(&flat_priority_queue);
     check(min->val, 0);
     int sorted_check[50];
@@ -148,20 +147,20 @@ check_static_begin(flat_priority_queue_test_insert_shuffle_reserve) {
         check(prev <= sorted_check[i], true);
         prev = sorted_check[i];
     }
-    check_end(clear_and_free(&flat_priority_queue, &(CCC_Destructor_context){},
-                             &allocator););
+    check_end(
+        clear_and_free(&flat_priority_queue, &(CCC_Destructor){}, &allocator););
 }
 
 check_static_begin(flat_priority_queue_test_read_max_min) {
     size_t const size = 10;
-    CCC_Allocator_context const allocator = {
+    CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for((struct Val[10]){}),
     };
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_capacity(
             struct Val, CCC_ORDER_LESSER,
-            &(CCC_Comparator_context){.compare = val_order}, &allocator, 10);
+            &(CCC_Comparator){.compare = val_order}, &allocator, 10);
     for (size_t i = 0; i < size; ++i) {
         (void)push(&flat_priority_queue,
                    &(struct Val){

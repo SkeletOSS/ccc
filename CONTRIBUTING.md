@@ -247,7 +247,7 @@ Here is an examples from `buffer.h` (may not be in sync with current code).
 ```c
 CCC_Result
 CCC_Buffer_allocate(CCC_Buffer *const buf, size_t const capacity,
-                    CCC_Allocator *const allocate) {
+                    CCC_Allocator_interface *const allocate) {
     if (!buf) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }

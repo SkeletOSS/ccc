@@ -151,11 +151,11 @@ struct CCC_Flat_hash_map {
     /** The location of the key field in user type. */
     size_t key_offset;
     /** The user callback for equality comparison. */
-    CCC_Key_comparator *compare;
+    CCC_Key_comparator_interface *compare;
     /** The hash function provided by user. */
-    CCC_Key_hasher *hash;
+    CCC_Key_hasher_interface *hash;
     /** The allocation function, if any. */
-    CCC_Allocator *allocate;
+    CCC_Allocator_interface *allocate;
     /** Auxiliary data, if any. */
     void *context;
 };

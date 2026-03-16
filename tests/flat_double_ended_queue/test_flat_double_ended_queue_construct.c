@@ -37,7 +37,7 @@ check_static_begin(flat_double_ended_queue_test_copy_no_allocate) {
     check(*(int *)front(&q1), 0);
     check(is_empty(&q2), true);
     CCC_Result const res
-        = flat_double_ended_queue_copy(&q2, &q1, &(CCC_Allocator_context){});
+        = flat_double_ended_queue_copy(&q2, &q1, &(CCC_Allocator){});
     check(res, CCC_RESULT_OK);
     check(count(&q2).count, 3);
     while (!is_empty(&q1) && !is_empty(&q2)) {
@@ -60,13 +60,13 @@ check_static_begin(flat_double_ended_queue_test_copy_no_allocate_fail) {
     check(*(int *)front(&q1), 0);
     check(is_empty(&q2), true);
     CCC_Result const res
-        = flat_double_ended_queue_copy(&q2, &q1, &(CCC_Allocator_context){});
+        = flat_double_ended_queue_copy(&q2, &q1, &(CCC_Allocator){});
     check(res != CCC_RESULT_OK, true);
     check_end();
 }
 
 check_static_begin(flat_double_ended_queue_test_copy_allocate) {
-    CCC_Allocator_context const allocator = {
+    CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for((int[16]){}),
     };
@@ -90,15 +90,15 @@ check_static_begin(flat_double_ended_queue_test_copy_allocate) {
     }
     check(is_empty(&q1), is_empty(&q2));
     check_end({
-        (void)flat_double_ended_queue_clear_and_free(
-            &q1, &(CCC_Destructor_context){}, &allocator);
-        (void)flat_double_ended_queue_clear_and_free(
-            &q2, &(CCC_Destructor_context){}, &allocator);
+        (void)flat_double_ended_queue_clear_and_free(&q1, &(CCC_Destructor){},
+                                                     &allocator);
+        (void)flat_double_ended_queue_clear_and_free(&q2, &(CCC_Destructor){},
+                                                     &allocator);
     });
 }
 
 check_static_begin(flat_double_ended_queue_test_copy_allocate_fail) {
-    CCC_Allocator_context const allocator = {
+    CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for((int[16]){}),
     };
@@ -113,13 +113,13 @@ check_static_begin(flat_double_ended_queue_test_copy_allocate_fail) {
     res = flat_double_ended_queue_copy(&q2, &q1, NULL);
     check(res != CCC_RESULT_OK, true);
     check_end({
-        (void)flat_double_ended_queue_clear_and_free(
-            &q1, &(CCC_Destructor_context){}, &allocator);
+        (void)flat_double_ended_queue_clear_and_free(&q1, &(CCC_Destructor){},
+                                                     &allocator);
     });
 }
 
 check_static_begin(flat_double_ended_queue_test_init_from) {
-    CCC_Allocator_context const allocator = {
+    CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for((int[8]){}),
     };
@@ -137,14 +137,14 @@ check_static_begin(flat_double_ended_queue_test_init_from) {
     check(CCC_flat_double_ended_queue_capacity(&queue).count, elem);
     check_end({
         (void)flat_double_ended_queue_clear_and_free(
-            &queue, &(CCC_Destructor_context){}, &allocator);
+            &queue, &(CCC_Destructor){}, &allocator);
     });
 }
 
 check_static_begin(flat_double_ended_queue_test_init_from_fail) {
     /* Whoops forgot allocation function. */
     CCC_Flat_double_ended_queue queue = CCC_flat_double_ended_queue_from(
-        &(CCC_Allocator_context){}, 0, (int[]){1, 2, 3, 4, 5, 6, 7});
+        &(CCC_Allocator){}, 0, (int[]){1, 2, 3, 4, 5, 6, 7});
     int elem = 1;
     for (int const *i = CCC_flat_double_ended_queue_begin(&queue);
          i != CCC_flat_double_ended_queue_end(&queue);
@@ -156,16 +156,16 @@ check_static_begin(flat_double_ended_queue_test_init_from_fail) {
     check(CCC_flat_double_ended_queue_count(&queue).count, 0);
     check(CCC_flat_double_ended_queue_capacity(&queue).count, 0);
     check(CCC_flat_double_ended_queue_push_back(&queue, &(int){},
-                                                &(CCC_Allocator_context){}),
+                                                &(CCC_Allocator){}),
           NULL);
     check_end({
         (void)flat_double_ended_queue_clear_and_free(
-            &queue, &(CCC_Destructor_context){}, &(CCC_Allocator_context){});
+            &queue, &(CCC_Destructor){}, &(CCC_Allocator){});
     });
 }
 
 check_static_begin(flat_double_ended_queue_test_init_with_capacity) {
-    CCC_Allocator_context const allocator = {
+    CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for((int[8]){}),
     };
@@ -176,21 +176,20 @@ check_static_begin(flat_double_ended_queue_test_init_with_capacity) {
               != NULL,
           CCC_TRUE);
     check_end(CCC_flat_double_ended_queue_clear_and_free(
-                  &queue, &(CCC_Destructor_context){}, &allocator););
+                  &queue, &(CCC_Destructor){}, &allocator););
 }
 
 check_static_begin(flat_double_ended_queue_test_init_with_capacity_fail) {
     /* Forgot allocation function. */
     CCC_Flat_double_ended_queue queue
-        = CCC_flat_double_ended_queue_with_capacity(
-            int, &(CCC_Allocator_context){}, 8);
+        = CCC_flat_double_ended_queue_with_capacity(int, &(CCC_Allocator){}, 8);
     check(CCC_flat_double_ended_queue_capacity(&queue).count, 0);
     check(CCC_flat_double_ended_queue_push_back(&queue, &(int){9},
-                                                &(CCC_Allocator_context){}),
+                                                &(CCC_Allocator){}),
           NULL);
     check_end({
-        CCC_flat_double_ended_queue_clear_and_free(
-            &queue, &(CCC_Destructor_context){}, &(CCC_Allocator_context){});
+        CCC_flat_double_ended_queue_clear_and_free(&queue, &(CCC_Destructor){},
+                                                   &(CCC_Allocator){});
     });
 }
 

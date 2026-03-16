@@ -78,7 +78,7 @@ struct CCC_Doubly_linked_list {
     /** @internal The internal state of ordering. Remembers last sort. */
     CCC_Order order;
     /** @internal The user provided allocation function, if any. */
-    CCC_Allocator *allocate;
+    CCC_Allocator_interface *allocate;
     /** @internal User provided context data, if any. */
     void *context;
 };

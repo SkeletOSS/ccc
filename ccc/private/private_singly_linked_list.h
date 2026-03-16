@@ -73,7 +73,7 @@ struct CCC_Singly_linked_list {
     /** @internal The sorted state of the list. Remembers last sort. */
     CCC_Order order;
     /** @internal The user provided allocation function, if any. */
-    CCC_Allocator *allocate;
+    CCC_Allocator_interface *allocate;
     /** @internal User provided context data, if any. */
     void *context;
 };

@@ -83,9 +83,9 @@ struct CCC_Array_adaptive_map {
     /** @internal Where user key can be found in type. */
     size_t key_offset;
     /** @internal The provided key comparison function. */
-    CCC_Key_comparator *compare;
+    CCC_Key_comparator_interface *compare;
     /** @internal The provided allocation function, if any. */
-    CCC_Allocator *allocate;
+    CCC_Allocator_interface *allocate;
     /** @internal The provided context data, if any. */
     void *context;
 };

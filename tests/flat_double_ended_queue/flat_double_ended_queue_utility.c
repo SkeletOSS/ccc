@@ -20,7 +20,7 @@ compare_ints(CCC_Comparator_arguments arguments) {
 
 check_begin(create_queue, Flat_double_ended_queue *const q,
             CCC_Buffer const *const range,
-            CCC_Allocator_context const *const allocator) {
+            CCC_Allocator const *const allocator) {
     check(q != NULL && range != NULL && allocator != NULL, true);
     if (CCC_buffer_count(range).count) {
         CCC_Result const res

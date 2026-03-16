@@ -18,6 +18,6 @@ size_t rand_range(size_t min, size_t max);
 enum Check_result inorder_fill(int[], size_t, CCC_Flat_priority_queue const *);
 enum Check_result insert_shuffled(CCC_Flat_priority_queue *priority_queue,
                                   size_t size, int larger_prime,
-                                  CCC_Allocator_context const *allocator);
+                                  CCC_Allocator const *allocator);
 
 #endif /* CCC_FLAT_PRIORITY_QUEUE_UTIL_H */

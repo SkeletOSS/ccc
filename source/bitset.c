@@ -175,7 +175,8 @@ static CCC_Count first_leading_bits_range(struct CCC_Bitset const *, size_t,
 static struct Group_count max_trailing_ones(Bit_block, Bit_count, size_t);
 static struct Group_signed_count max_leading_ones(Bit_block, Bit_signed_count,
                                                   size_t);
-static CCC_Result maybe_resize(struct CCC_Bitset *, size_t, CCC_Allocator *);
+static CCC_Result maybe_resize(struct CCC_Bitset *, size_t,
+                               CCC_Allocator_interface *);
 static size_t size_t_min(size_t, size_t);
 static void set_all(struct CCC_Bitset *, CCC_Tribool);
 static Bit_count bit_count_index(size_t);
@@ -880,7 +881,7 @@ CCC_bitset_clear_and_free(CCC_Bitset *const bitset) {
 
 CCC_Result
 CCC_bitset_clear_and_free_reserve(CCC_Bitset *const bitset,
-                                  CCC_Allocator *const allocate) {
+                                  CCC_Allocator_interface *const allocate) {
     if (!bitset || !allocate) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -899,7 +900,7 @@ CCC_bitset_clear_and_free_reserve(CCC_Bitset *const bitset,
 
 CCC_Result
 CCC_bitset_reserve(CCC_Bitset *const bitset, size_t const to_add,
-                   CCC_Allocator *const allocate) {
+                   CCC_Allocator_interface *const allocate) {
     if (!bitset || !allocate || !to_add) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -908,7 +909,7 @@ CCC_bitset_reserve(CCC_Bitset *const bitset, size_t const to_add,
 
 CCC_Result
 CCC_bitset_copy(CCC_Bitset *const destination, CCC_Bitset const *const source,
-                CCC_Allocator *const allocate) {
+                CCC_Allocator_interface *const allocate) {
     if (!destination || !source
         || (destination->capacity < source->capacity && !allocate)) {
         return CCC_RESULT_ARGUMENT_ERROR;
@@ -964,7 +965,7 @@ CCC_bitset_is_equal(CCC_Bitset const *const left,
 
 CCC_Result
 CCC_private_bitset_reserve(struct CCC_Bitset *const bitset, size_t const to_add,
-                           CCC_Allocator *const allocate) {
+                           CCC_Allocator_interface *const allocate) {
     return CCC_bitset_reserve(bitset, to_add, allocate);
 }
 
@@ -993,7 +994,7 @@ is_subset_of(struct CCC_Bitset const *const subset,
 
 static CCC_Result
 maybe_resize(struct CCC_Bitset *const bitset, size_t const to_add,
-             CCC_Allocator *const allocate) {
+             CCC_Allocator_interface *const allocate) {
     size_t bits_needed = bitset->count + to_add;
     if (bits_needed < bitset->count) {
         return CCC_RESULT_ARGUMENT_ERROR;

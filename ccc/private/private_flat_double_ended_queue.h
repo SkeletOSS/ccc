@@ -41,10 +41,10 @@ struct CCC_Flat_double_ended_queue {
 
 /** @internal */
 void *CCC_private_flat_double_ended_queue_allocate_front(
-    struct CCC_Flat_double_ended_queue *, CCC_Allocator_context const *);
+    struct CCC_Flat_double_ended_queue *, CCC_Allocator const *);
 /** @internal */
 void *CCC_private_flat_double_ended_queue_allocate_back(
-    struct CCC_Flat_double_ended_queue *, CCC_Allocator_context const *);
+    struct CCC_Flat_double_ended_queue *, CCC_Allocator const *);
 
 /*=======================  Macro Implementations   ==========================*/
 

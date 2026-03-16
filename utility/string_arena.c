@@ -9,7 +9,8 @@ string_arena_maybe_resize(struct String_arena *a, size_t byte_request);
 static enum String_arena_result
 string_arena_maybe_resize_pos(struct String_arena *a, size_t furthest_pos);
 
-/*=======================   Str Arena Allocator   ===========================*/
+/*=======================   Str Arena Allocator_interface
+ * ===========================*/
 
 struct String_arena
 string_arena_create(size_t const cap) {

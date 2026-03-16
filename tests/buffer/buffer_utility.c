@@ -22,7 +22,7 @@ it is complicated to select a randomized slot but it would still be possible.*/
 static void *
 partition(Buffer *const b, void *const temp, void *lo, void *hi,
           CCC_Order const out_of_order,
-          CCC_Comparator_context const *const comparator) {
+          CCC_Comparator const *const comparator) {
     void *const pivot_val = hi;
     void *i = lo;
     for (void *j = lo; j < hi; j = buffer_next(b, j)) {
@@ -55,8 +55,7 @@ sort data. This is a fun way to test that part of the Buffer interface for
 correctness and turns out to be pretty nice and clean. */
 static void
 sort_rec(Buffer *const b, void *const temp, void *lo, void *hi,
-         CCC_Order const out_of_order,
-         CCC_Comparator_context const *const comparator) {
+         CCC_Order const out_of_order, CCC_Comparator const *const comparator) {
     while (lo < hi) {
         void const *const pivot_i
             = partition(b, temp, lo, hi, out_of_order, comparator);
@@ -80,7 +79,7 @@ stack space. This implementation does not try to be hyper efficient. In fact, we
 test out using iterators here rather than indices. */
 CCC_Result
 quicksort(CCC_Buffer *const b, void *const swap, CCC_Order const order,
-          CCC_Comparator_context const *const comparator) {
+          CCC_Comparator const *const comparator) {
     if (!b || !comparator || !comparator->compare || !swap
         || (order != CCC_ORDER_LESSER && order != CCC_ORDER_GREATER)) {
         return CCC_RESULT_ARGUMENT_ERROR;
@@ -118,7 +117,7 @@ buforder(CCC_Buffer const *const left, size_t const right_count,
 
 CCC_Result
 append_range(CCC_Buffer *const b, size_t range_count, void const *const range,
-             CCC_Allocator_context const *const allocator) {
+             CCC_Allocator const *const allocator) {
     unsigned char const *p = range;
     size_t const sizeof_type = buffer_sizeof_type(b).count;
     while (range_count--) {

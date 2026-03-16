@@ -17,7 +17,7 @@ Currently, this library supports a `FetchContent` or manual installation via CMa
 ## Quick Start
 
 - Read the [DOCS](https://skeletoss.github.io/ccc).
-- Read [types.h](https://skeletoss.github.io/ccc/types_8h.html) to understand the `CCC_Allocator` interface.
+- Read [types.h](https://skeletoss.github.io/ccc/types_8h.html) to understand the `CCC_Allocator_interface` interface.
 - Read the [header](https://skeletoss.github.io/ccc/files.html) for the desired container to understand its functionality.
 - Read about generic [traits.h](https://skeletoss.github.io/ccc/traits_8h.html) shared across containers to make code more succinct.
 - Read [CONTRIBUTING.md](CONTRIBUTING.md) if interested in project structure, tools, and todos.
@@ -1142,7 +1142,7 @@ typedef struct {
     size_t bytes;
     void *context;
 } CCC_Allocator_arguments;
-typedef void *CCC_Allocator(CCC_Allocator_arguments);
+typedef void *CCC_Allocator_interface(CCC_Allocator_arguments);
 ```
 
 An allocation function implements the following behavior, where `input` is pointer to memory, `bytes` is number of bytes to allocate, and `context` is a reference to any supplementary information required for allocation, deallocation, or reallocation. The `context` parameter is passed to a container upon its initialization and the programmer may choose how to best utilize this reference (read on for more on `context`).
@@ -1188,20 +1188,20 @@ void *insert_or_assign(Container *c, Container_node *e);
 
 Because the user has wrapped the intrusive container element in their type, the entire user type will be written to the new allocation. All interfaces can also confirm when insertion succeeds if global state needs to be set in this case. So, if some action beyond setting values needs to be performed, there are multiple opportunities to do so.
 
-### Destructors
+### Destructor_interfaces
 
 For destructors, the argument is similar but the container does offer more help. If an action other than freeing the memory of a user type is needed upon removal, there are options in an interface to obtain the element to be removed. Associative containers offer functions that can obtain entries (similar to Rust's Entry API). This reference can then be examined and complex destructor actions can occur before removal. Other containers like lists or priority queues offer references to an element of interest such as front, back, max, min, etc. These can all allow destructor-like actions before removal. One exception is the following interfaces.
 
 The clear function works for pointer stable containers and flat containers.
 
 ```c
-Result clear(Container *c, Destructor *fn);
+Result clear(Container *c, Destructor_interface *fn);
 ```
 
 The clear and free function works for flat containers.
 
 ```c
-Result clear_and_free(Container *c, Destructor *fn);
+Result clear_and_free(Container *c, Destructor_interface *fn);
 ```
 
 The above functions free the resources of the container. Because there is no way to access each element before it is freed when this function is called, a destructor callback can be passed to operate on each element before deallocation.

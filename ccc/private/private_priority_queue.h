@@ -95,9 +95,9 @@ struct CCC_Priority_queue {
      * `CCC_ORDER_GREATER` (max).*/
     CCC_Order order;
     /** @internal The comparison function to enforce ordering. */
-    CCC_Comparator *compare;
+    CCC_Comparator_interface *compare;
     /** @internal The allocation function, if any. */
-    CCC_Allocator *allocate;
+    CCC_Allocator_interface *allocate;
     /** @internal Auxiliary data, if any. */
     void *context;
 };

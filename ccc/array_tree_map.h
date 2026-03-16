@@ -166,7 +166,7 @@ destruction.
 
 /** @brief Initialize a dynamic map at runtime from an initializer list.
 @param[in] type_key_field the field of the struct used for key storage.
-@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] compare the CCC_Key_comparator_interface the user intends to use.
 @param[in] allocate the required allocation function.
 @param[in] optional_capacity optionally specify the capacity of the map if
 different from the size of the compound literal array initializer. If the
@@ -227,7 +227,7 @@ map to protect its invariants from user error at compile time. */
 
 /** @brief Initialize a dynamic map at runtime from an initializer list.
 @param[in] type_key_field the field of the struct used for key storage.
-@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] compare the CCC_Key_comparator_interface the user intends to use.
 @param[in] allocate the required allocation function.
 @param[in] context context data that is needed for hashing or comparison.
 @param[in] optional_capacity optionally specify the capacity of the map if
@@ -292,7 +292,7 @@ map to protect its invariants from user error at compile time. */
 capacity.
 @param[in] type_name the name of the type being stored in the map.
 @param[in] type_key_field the field of the struct used for key storage.
-@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] compare the CCC_Key_comparator_interface the user intends to use.
 @param[in] allocate the required allocation function.
 @param[in] capacity the desired capacity for the map. A capacity of 0 results
 in an argument error and is a no-op after the map is initialized empty.
@@ -340,7 +340,7 @@ of initialization and reservation. */
 capacity.
 @param[in] type_name the name of the type being stored in the map.
 @param[in] type_key_field the field of the struct used for key storage.
-@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] compare the CCC_Key_comparator_interface the user intends to use.
 @param[in] allocate the required allocation function.
 @param[in] context context data that is needed for comparison.
 @param[in] capacity the desired capacity for the map. A capacity of 0 results
@@ -389,7 +389,7 @@ of initialization and reservation. */
 /** @brief Initialize a fixed map at compile or runtime from any user chosen
 type with no allocation permission or context.
 @param[in] type_key_field the field of the struct used for key storage.
-@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] compare the CCC_Key_comparator_interface the user intends to use.
 @param[in] compound_literal the compound literal array of a type provided by the
 user around which the struct of array backing storage for the map will be built.
 @param[in] optional_storage_specifier lifetime specifier of the backing struct
@@ -423,7 +423,7 @@ This can help eliminate boilerplate in initializers. */
 /** @brief Initialize a fixed map at compile or runtime from any user chosen
 type with no allocation permission.
 @param[in] type_key_field the field of the struct used for key storage.
-@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] compare the CCC_Key_comparator_interface the user intends to use.
 @param[in] context context for the map.
 @param[in] compound_literal the compound literal array of a type provided by the
 user around which the struct of array backing storage for the map will be built.
@@ -462,8 +462,9 @@ This can help eliminate boilerplate in initializers. */
 allocator.
 @param[in] type_name the user defined type stored in the map.
 @param[in] type_key_field the field of the struct used for key storage.
-@param[in] compare the CCC_Key_comparator the user intends to use.
-@param[in] allocate the CCC_Allocator function used to manage map memory.
+@param[in] compare the CCC_Key_comparator_interface the user intends to use.
+@param[in] allocate the CCC_Allocator_interface function used to manage map
+memory.
 @return the map directly initialized on the right hand side of the equality
 operator (e.g. CCC_Array_tree_map map =
 CCC_array_tree_map_with_allocator(...);)
@@ -495,8 +496,9 @@ This can help eliminate boilerplate in initializers. */
 allocator and supplementary context.
 @param[in] type_name the user defined type stored in the map.
 @param[in] type_key_field the field of the struct used for key storage.
-@param[in] compare the CCC_Key_comparator the user intends to use.
-@param[in] allocate the CCC_Allocator function used to manage map memory.
+@param[in] compare the CCC_Key_comparator_interface the user intends to use.
+@param[in] allocate the CCC_Allocator_interface function used to manage map
+memory.
 @param[in] context any additional context needed for comparison or allocation.
 @return the map directly initialized on the right hand side of the equality
 operator (e.g. CCC_Array_tree_map map =
@@ -654,7 +656,7 @@ These options allow users to stay consistent across containers with their
 memory management strategies. */
 CCC_Result CCC_array_tree_map_copy(CCC_Array_tree_map *destination,
                                    CCC_Array_tree_map const *source,
-                                   CCC_Allocator *allocate);
+                                   CCC_Allocator_interface *allocate);
 
 /** @brief Reserves space for at least to_add more elements.
 @param[in] map a pointer to the array tree map.
@@ -676,7 +678,7 @@ is helpful when a fixed size is needed but that size is only known dynamically
 at runtime. To free the map in such a case see the
 CCC_array_tree_map_clear_and_free_reserve function. */
 CCC_Result CCC_array_tree_map_reserve(CCC_Array_tree_map *map, size_t to_add,
-                                      CCC_Allocator *allocate);
+                                      CCC_Allocator_interface *allocate);
 
 /**@}*/
 
@@ -923,11 +925,11 @@ to subsequent calls in the Handle Interface. */
 
 This function is intended to make the function chaining in the Handle Interface
 more succinct if the handle will be modified in place based on its own value
-without the need of the context argument a CCC_Modifier can provide.
+without the need of the context argument a CCC_Modifier_interface can provide.
 */
 [[nodiscard]] CCC_Array_tree_map_handle *
 CCC_array_tree_map_and_modify(CCC_Array_tree_map_handle *handle,
-                              CCC_Modifier *modify);
+                              CCC_Modifier_interface *modify);
 
 /** @brief Modifies the provided handle if it is Occupied.
 @param[in] handle the handle obtained from a handle function or macro.
@@ -935,11 +937,12 @@ CCC_array_tree_map_and_modify(CCC_Array_tree_map_handle *handle,
 @param[in] context context data required for the update.
 @return the updated handle if it was Occupied or the unmodified vacant handle.
 
-This function makes full use of a CCC_Modifier capability, meaning a
+This function makes full use of a CCC_Modifier_interface capability, meaning a
 complete CCC_update object will be passed to the update function callback. */
 [[nodiscard]] CCC_Array_tree_map_handle *
 CCC_array_tree_map_and_context_modify(CCC_Array_tree_map_handle *handle,
-                                      CCC_Modifier *modify, void *context);
+                                      CCC_Modifier_interface *modify,
+                                      void *context);
 
 /** @brief Modify an Occupied handle with a closure over user type T.
 @param[in] map_array_pointer a pointer to the obtained
@@ -1110,7 +1113,7 @@ forfeit.
 
 If NULL is passed as the destructor function time is O(1), else O(size). */
 CCC_Result CCC_array_tree_map_clear(CCC_Array_tree_map *map,
-                                    CCC_Destructor *destroy);
+                                    CCC_Destructor_interface *destroy);
 
 /** @brief Frees all slots in the map and frees the underlying buffer.
 @param[in] map the map to be cleared.
@@ -1123,7 +1126,7 @@ Otherwise, an OK result is returned.
 
 If NULL is passed as the destructor function time is O(1), else O(size). */
 CCC_Result CCC_array_tree_map_clear_and_free(CCC_Array_tree_map *map,
-                                             CCC_Destructor *destroy);
+                                             CCC_Destructor_interface *destroy);
 
 /** @brief Frees all slots in the map and frees the
 underlying Buffer that was previously dynamically reserved with the reserve
@@ -1138,7 +1141,7 @@ initialization will be passed to the allocation function when called.
 @return the result of free operation. OK if success, or an error status to
 indicate the error.
 @warning It is an error to call this function on a array_tree_map
-that was not reserved with the provided CCC_Allocator. The
+that was not reserved with the provided CCC_Allocator_interface. The
 array_tree_map must have existing memory to free.
 
 This function covers the edge case of reserving a dynamic capacity for a
@@ -1158,9 +1161,10 @@ This function will work normally if called on a map with
 allocation permission however the normal
 CCC_array_tree_map_clear_and_free is sufficient for that use case.
 */
-CCC_Result CCC_array_tree_map_clear_and_free_reserve(CCC_Array_tree_map *map,
-                                                     CCC_Destructor *destroy,
-                                                     CCC_Allocator *allocate);
+CCC_Result
+CCC_array_tree_map_clear_and_free_reserve(CCC_Array_tree_map *map,
+                                          CCC_Destructor_interface *destroy,
+                                          CCC_Allocator_interface *allocate);
 
 /**@}*/
 

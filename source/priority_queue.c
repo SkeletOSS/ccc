@@ -44,14 +44,14 @@ static CCC_Order order(struct CCC_Priority_queue const *,
                        struct CCC_Priority_queue_node const *,
                        struct CCC_Priority_queue_node const *);
 static void update_fixup(struct CCC_Priority_queue *,
-                         struct CCC_Priority_queue_node *, CCC_Modifier *,
-                         void *);
+                         struct CCC_Priority_queue_node *,
+                         CCC_Modifier_interface *, void *);
 static void increase_fixup(struct CCC_Priority_queue *,
-                           struct CCC_Priority_queue_node *, CCC_Modifier *,
-                           void *);
+                           struct CCC_Priority_queue_node *,
+                           CCC_Modifier_interface *, void *);
 static void decrease_fixup(struct CCC_Priority_queue *,
-                           struct CCC_Priority_queue_node *, CCC_Modifier *,
-                           void *);
+                           struct CCC_Priority_queue_node *,
+                           CCC_Modifier_interface *, void *);
 
 /*=========================  Interface Functions   ==========================*/
 
@@ -149,7 +149,7 @@ current child list being considered. We are avoiding recursion or amortized
 O(log(N)) pops with this method. */
 CCC_Result
 CCC_priority_queue_clear(CCC_Priority_queue *const priority_queue,
-                         CCC_Destructor *const destroy) {
+                         CCC_Destructor_interface *const destroy) {
     if (!priority_queue) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -225,7 +225,8 @@ CCC_priority_queue_count(CCC_Priority_queue const *const priority_queue) {
 void *
 CCC_priority_queue_update(CCC_Priority_queue *const priority_queue,
                           CCC_Priority_queue_node *const type_intruder,
-                          CCC_Modifier *const modify, void *const context) {
+                          CCC_Modifier_interface *const modify,
+                          void *const context) {
     if (!priority_queue || !type_intruder || !modify || !type_intruder->next
         || !type_intruder->prev) {
         return NULL;
@@ -239,7 +240,8 @@ CCC_priority_queue_update(CCC_Priority_queue *const priority_queue,
 void *
 CCC_priority_queue_increase(CCC_Priority_queue *const priority_queue,
                             CCC_Priority_queue_node *const type_intruder,
-                            CCC_Modifier *const modify, void *const context) {
+                            CCC_Modifier_interface *const modify,
+                            void *const context) {
     if (!priority_queue || !type_intruder || !modify || !type_intruder->next
         || !type_intruder->prev) {
         return NULL;
@@ -253,7 +255,8 @@ CCC_priority_queue_increase(CCC_Priority_queue *const priority_queue,
 void *
 CCC_priority_queue_decrease(CCC_Priority_queue *const priority_queue,
                             CCC_Priority_queue_node *const type_intruder,
-                            CCC_Modifier *const modify, void *const context) {
+                            CCC_Modifier_interface *const modify,
+                            void *const context) {
     if (!priority_queue || !type_intruder || !modify || !type_intruder->next
         || !type_intruder->prev) {
         return NULL;
@@ -346,7 +349,7 @@ CCC_private_priority_queue_struct_base(
 static void
 update_fixup(struct CCC_Priority_queue *const priority_queue,
              struct CCC_Priority_queue_node *const node,
-             CCC_Modifier *const modify, void *context) {
+             CCC_Modifier_interface *const modify, void *context) {
     if (node->parent
         && order(priority_queue, node, node->parent) == priority_queue->order) {
         cut_child(node);
@@ -370,7 +373,7 @@ update_fixup(struct CCC_Priority_queue *const priority_queue,
 static void
 increase_fixup(struct CCC_Priority_queue *const priority_queue,
                struct CCC_Priority_queue_node *const node,
-               CCC_Modifier *const modify, void *context) {
+               CCC_Modifier_interface *const modify, void *context) {
     if (priority_queue->order == CCC_ORDER_GREATER) {
         cut_child(node);
     } else {
@@ -387,7 +390,7 @@ increase_fixup(struct CCC_Priority_queue *const priority_queue,
 static void
 decrease_fixup(struct CCC_Priority_queue *const priority_queue,
                struct CCC_Priority_queue_node *const e,
-               CCC_Modifier *const modify, void *const context) {
+               CCC_Modifier_interface *const modify, void *const context) {
     if (priority_queue->order == CCC_ORDER_LESSER) {
         cut_child(e);
     } else {

@@ -33,8 +33,7 @@ check_static_begin(buffer_test_reserve) {
     check(buffer_reserve(&b, 8, &std_allocator), CCC_RESULT_OK);
     check(buffer_count(&b).count, 0);
     check(buffer_capacity(&b).count, 8);
-    check_end(buffer_clear_and_free(&b, &(CCC_Destructor_context){},
-                                    &std_allocator););
+    check_end(buffer_clear_and_free(&b, &(CCC_Destructor){}, &std_allocator););
 }
 
 check_static_begin(buffer_test_copy_no_allocate) {
@@ -84,9 +83,9 @@ check_static_begin(buffer_test_copy_allocate) {
     }
     check(buffer_is_empty(&source), buffer_is_empty(&destination));
     check_end({
-        (void)buffer_clear_and_free(&source, &(CCC_Destructor_context){},
+        (void)buffer_clear_and_free(&source, &(CCC_Destructor){},
                                     &std_allocator);
-        (void)buffer_clear_and_free(&destination, &(CCC_Destructor_context){},
+        (void)buffer_clear_and_free(&destination, &(CCC_Destructor){},
                                     &std_allocator);
     });
 }
@@ -97,10 +96,10 @@ check_static_begin(buffer_test_copy_allocate_fail) {
     check(buffer_push_back(&source, &(int){88}, &std_allocator) != NULL,
           CCC_TRUE);
     CCC_Result const res
-        = buffer_copy(&destination, &source, &(CCC_Allocator_context){});
+        = buffer_copy(&destination, &source, &(CCC_Allocator){});
     check(res != CCC_RESULT_OK, CCC_TRUE);
     check_end({
-        (void)buffer_clear_and_free(&source, &(CCC_Destructor_context){},
+        (void)buffer_clear_and_free(&source, &(CCC_Destructor){},
                                     &std_allocator);
     });
 }
@@ -117,14 +116,14 @@ check_static_begin(buffer_test_init_from) {
     check(elem, 8);
     check(CCC_buffer_count(&b).count, elem - 1);
     check(CCC_buffer_capacity(&b).count, elem);
-    check_end((void)buffer_clear_and_free(&b, &(CCC_Destructor_context){},
-                                          &std_allocator););
+    check_end(
+        (void)buffer_clear_and_free(&b, &(CCC_Destructor){}, &std_allocator););
 }
 
 check_static_begin(buffer_test_init_from_fail) {
     /* Whoops forgot allocation function. */
-    CCC_Buffer b = CCC_buffer_from(&(CCC_Allocator_context){}, 0,
-                                   (int[]){1, 2, 3, 4, 5, 6, 7});
+    CCC_Buffer b
+        = CCC_buffer_from(&(CCC_Allocator){}, 0, (int[]){1, 2, 3, 4, 5, 6, 7});
     int elem = 1;
     for (int const *i = CCC_buffer_begin(&b); i != CCC_buffer_end(&b);
          i = CCC_buffer_next(&b, i)) {
@@ -135,8 +134,8 @@ check_static_begin(buffer_test_init_from_fail) {
     check(CCC_buffer_count(&b).count, 0);
     check(CCC_buffer_capacity(&b).count, 0);
     check(CCC_buffer_push_back(&b, &(int){}, &std_allocator), NULL);
-    check_end((void)buffer_clear_and_free(&b, &(CCC_Destructor_context){},
-                                          &std_allocator););
+    check_end(
+        (void)buffer_clear_and_free(&b, &(CCC_Destructor){}, &std_allocator););
 }
 
 check_static_begin(buffer_test_init_with_capacity) {
@@ -150,8 +149,8 @@ check_static_begin(buffer_test_init_with_capacity) {
         ++count;
     }
     check(count, 8);
-    check_end((void)buffer_clear_and_free(&b, &(CCC_Destructor_context){},
-                                          &std_allocator););
+    check_end(
+        (void)buffer_clear_and_free(&b, &(CCC_Destructor){}, &std_allocator););
 }
 
 check_static_begin(buffer_test_default) {
@@ -161,7 +160,7 @@ check_static_begin(buffer_test_default) {
 }
 
 check_static_begin(buffer_test_context_with_allocator) {
-    CCC_Allocator_context const stack_allocator = {
+    CCC_Allocator const stack_allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for((int[8]){}),
     };
@@ -172,24 +171,23 @@ check_static_begin(buffer_test_context_with_allocator) {
     check(i != NULL, CCC_TRUE);
     check(*i, 2);
     check(CCC_buffer_count(&b).count, 1);
-    check_end(CCC_buffer_clear_and_free(&b, &(CCC_Destructor_context){},
-                                        &stack_allocator););
+    check_end(
+        CCC_buffer_clear_and_free(&b, &(CCC_Destructor){}, &stack_allocator););
 }
 
 check_static_begin(buffer_test_init_with_capacity_fail) {
     /* Forgot allocation function. */
-    CCC_Buffer b = CCC_buffer_with_capacity(int, &(CCC_Allocator_context){}, 8);
+    CCC_Buffer b = CCC_buffer_with_capacity(int, &(CCC_Allocator){}, 8);
     check(CCC_buffer_capacity(&b).count, 0);
-    check(CCC_buffer_push_back(&b, &(int){9}, &(CCC_Allocator_context){}),
-          NULL);
+    check(CCC_buffer_push_back(&b, &(int){9}, &(CCC_Allocator){}), NULL);
     size_t count = 0;
     for (int const *i = CCC_buffer_begin(&b); i != CCC_buffer_capacity_end(&b);
          i = CCC_buffer_next(&b, i)) {
         ++count;
     }
     check(count, 0);
-    check_end((void)buffer_clear_and_free(&b, &(CCC_Destructor_context){},
-                                          &std_allocator););
+    check_end(
+        (void)buffer_clear_and_free(&b, &(CCC_Destructor){}, &std_allocator););
 }
 
 int

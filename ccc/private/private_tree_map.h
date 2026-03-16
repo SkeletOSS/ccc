@@ -61,9 +61,9 @@ struct CCC_Tree_map {
     /** @internal The size of the user struct holding the intruder. */
     size_t sizeof_type;
     /** @internal The comparison function for three way comparison. */
-    CCC_Key_comparator *compare;
+    CCC_Key_comparator_interface *compare;
     /** @internal An allocation function, if any. */
-    CCC_Allocator *allocate;
+    CCC_Allocator_interface *allocate;
     /** @internal Auxiliary data, if any. */
     void *context;
 };

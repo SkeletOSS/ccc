@@ -38,7 +38,7 @@ struct CCC_Bitset {
     /** The number of bits capable of being tracked in the bit block array. */
     size_t capacity;
     /** The user provided allocation function for resizing, if any. */
-    CCC_Allocator *allocate;
+    CCC_Allocator_interface *allocate;
     /** Auxiliary data for resizing, if any. */
     void *context;
 };
@@ -52,7 +52,7 @@ enum : size_t {
 /*=========================     Private Interface   =========================*/
 
 CCC_Result CCC_private_bitset_reserve(struct CCC_Bitset *, size_t,
-                                      CCC_Allocator *);
+                                      CCC_Allocator_interface *);
 CCC_Tribool CCC_private_bitset_set(struct CCC_Bitset *, size_t, CCC_Tribool);
 
 /*================================     Macros     ===========================*/

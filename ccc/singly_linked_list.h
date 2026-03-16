@@ -94,7 +94,8 @@ destruction.
 /** @brief Initialize an empty list at compile or runtime with an allocator.
 @param[in] type_name the user defined type stored in the list.
 @param[in] type_intruder_field the name of the intrusive element.
-@param[in] allocate the CCC_Allocator function used to manage list memory.
+@param[in] allocate the CCC_Allocator_interface function used to manage list
+memory.
 @return the list directly initialized on the right hand side of the equality
 operator.
 
@@ -123,7 +124,8 @@ This can help eliminate boilerplate in initializers. */
 /** @brief Initialize an empty list at compile or runtime with an allocator.
 @param[in] type_name the user defined type stored in the list.
 @param[in] type_intruder_field the name of the intrusive element.
-@param[in] allocate the CCC_Allocator function used to manage list memory.
+@param[in] allocate the CCC_Allocator_interface function used to manage list
+memory.
 @param[in] context a pointer to any context data needed for allocation or
 destruction.
 @return the list directly initialized on the right hand side of the equality
@@ -355,7 +357,7 @@ CCC_ORDER_GREATER and vice versa. If elements are equal, return CCC_ORDER_EQUAL.
 void *
 CCC_singly_linked_list_insert_sorted(CCC_Singly_linked_list *singly_linked_list,
                                      CCC_Singly_linked_list_node *type_intruder,
-                                     CCC_Comparator_context const *comparator);
+                                     CCC_Comparator const *comparator);
 
 /** @brief Returns true if the list is sorted in non-decreasing order according
 to the user provided comparison function.
@@ -372,7 +374,7 @@ comparison function. If an element is CCC_ORDER_LESSER return CCC_ORDER_GREATER
 and vice versa. If elements are equal, return CCC_ORDER_EQUAL. */
 CCC_Tribool CCC_singly_linked_list_is_sorted(
     CCC_Singly_linked_list const *singly_linked_list, CCC_Order order,
-    CCC_Comparator_context const *comparator);
+    CCC_Comparator const *comparator);
 
 /**@}*/
 
@@ -394,7 +396,7 @@ If allocation is not allowed destroy may free memory or not as the user sees
 fit. The user is responsible for managing the memory that wraps each intrusive
 handle as the elements are simply removed from the list. */
 CCC_Result CCC_singly_linked_list_clear(CCC_Singly_linked_list *list,
-                                        CCC_Destructor *destroy);
+                                        CCC_Destructor_interface *destroy);
 
 /**@}*/
 

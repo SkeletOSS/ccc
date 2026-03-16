@@ -183,8 +183,8 @@ must be supported by this container. */
 /** @brief Initialize a map of types at compile time or runtime.
 @param[in] type_name the name of the user defined type stored in the map.
 @param[in] key_field the field of the struct used for key storage.
-@param[in] hash the CCC_Key_hasher function provided by the user.
-@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] hash the CCC_Key_hasher_interface function provided by the user.
+@param[in] compare the CCC_Key_comparator_interface the user intends to use.
 @param[in] allocate the allocation function for resizing or NULL if no
 resizing is allowed.
 @param[in] context context data that is needed for hashing or comparison.
@@ -250,8 +250,8 @@ boilerplate for construction. */
 
 /** @brief Initialize a dynamic map at runtime from an initializer list.
 @param[in] key_field the field of the struct used for key storage.
-@param[in] hash the CCC_Key_hasher function provided by the user.
-@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] hash the CCC_Key_hasher_interface function provided by the user.
+@param[in] compare the CCC_Key_comparator_interface the user intends to use.
 @param[in] allocate the required allocation function.
 @param[in] optional_capacity optionally specify the capacity of the map if
 different from the size of the compound literal array initializer. If the
@@ -311,8 +311,8 @@ map to protect its invariants from user error at compile time. */
 
 /** @brief Initialize a dynamic map at runtime from an initializer list.
 @param[in] key_field the field of the struct used for key storage.
-@param[in] hash the CCC_Key_hasher function provided by the user.
-@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] hash the CCC_Key_hasher_interface function provided by the user.
+@param[in] compare the CCC_Key_comparator_interface the user intends to use.
 @param[in] allocate the required allocation function.
 @param[in] context context data that is needed for hashing or comparison.
 @param[in] optional_capacity optionally specify the capacity of the map if
@@ -378,8 +378,8 @@ map to protect its invariants from user error at compile time. */
 capacity.
 @param[in] type_name the name of the type being stored in the map.
 @param[in] key_field the field of the struct used for key storage.
-@param[in] hash the CCC_Key_hasher function provided by the user.
-@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] hash the CCC_Key_hasher_interface function provided by the user.
+@param[in] compare the CCC_Key_comparator_interface the user intends to use.
 @param[in] allocate the required allocation function.
 @param[in] capacity the desired capacity for the map. A capacity of 0 results
 in an argument error and is a no-op after the map is initialized empty.
@@ -428,8 +428,8 @@ of initialization and reservation. */
 capacity.
 @param[in] type_name the name of the type being stored in the map.
 @param[in] key_field the field of the struct used for key storage.
-@param[in] hash the CCC_Key_hasher function provided by the user.
-@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] hash the CCC_Key_hasher_interface function provided by the user.
+@param[in] compare the CCC_Key_comparator_interface the user intends to use.
 @param[in] allocate the required allocation function.
 @param[in] context context data that is needed for hashing or comparison.
 @param[in] capacity the desired capacity for the map. A capacity of 0 results
@@ -480,8 +480,8 @@ of initialization and reservation. */
 declared type using a compound literal with no allocation permissions or
 context.
 @param[in] key_field the field of the struct used for key storage.
-@param[in] hash the CCC_Key_hasher function provided by the user.
-@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] hash the CCC_Key_hasher_interface function provided by the user.
+@param[in] compare the CCC_Key_comparator_interface the user intends to use.
 @param[in] compound_literal the compound literal array of a type provided by the
 user around which the struct of arrays backing storage for the map is built.
 @param[in] optional_storage_specifier lifetime specifier of the backing struct
@@ -521,8 +521,8 @@ This saves on boilerplate compared to the raw initializer. */
 /** @brief Initialize a fixed map at compile time or runtime from any user
 chosen type using a compound literal with no allocation permissions.
 @param[in] key_field the field of the struct used for key storage.
-@param[in] hash the CCC_Key_hasher function provided by the user.
-@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] hash the CCC_Key_hasher_interface function provided by the user.
+@param[in] compare the CCC_Key_comparator_interface the user intends to use.
 @param[in] context a pointer to any context needed for the map.
 @param[in] compound_literal the compound literal array of a type provided by the
 user around which the struct of arrays backing storage for the map is built.
@@ -566,9 +566,9 @@ This saves on boilerplate compared to the raw initializer. */
 allocator.
 @param[in] type_name the name of the type stored in the map.
 @param[in] key_field the field of the struct used for key storage.
-@param[in] hash the CCC_Key_hasher function provided by the user.
-@param[in] compare the CCC_Key_comparator the user intends to use.
-@param[in] allocate the CCC_Allocator function.
+@param[in] hash the CCC_Key_hasher_interface function provided by the user.
+@param[in] compare the CCC_Key_comparator_interface the user intends to use.
+@param[in] allocate the CCC_Allocator_interface function.
 @return the flat hash map directly initialized on the right hand side of the
 equality operator
 (e.g. CCC_Flat_hash_map map = flat_hash_map_with_allocator(...);)
@@ -602,9 +602,9 @@ initializer. */
 allocator.
 @param[in] type_name the name of the type stored in the map.
 @param[in] key_field the field of the struct used for key storage.
-@param[in] hash the CCC_Key_hasher function provided by the user.
-@param[in] compare the CCC_Key_comparator the user intends to use.
-@param[in] allocate the CCC_Allocator function.
+@param[in] hash the CCC_Key_hasher_interface function provided by the user.
+@param[in] compare the CCC_Key_comparator_interface the user intends to use.
+@param[in] allocate the CCC_Allocator_interface function.
 @param[in] context a pointer to any context needed for the map.
 @return the flat hash map directly initialized on the right hand side of the
 equality operator
@@ -759,7 +759,7 @@ These options allow users to stay consistent across containers with their
 memory management strategies. */
 CCC_Result CCC_flat_hash_map_copy(CCC_Flat_hash_map *destination,
                                   CCC_Flat_hash_map const *source,
-                                  CCC_Allocator *allocate);
+                                  CCC_Allocator_interface *allocate);
 
 /** @brief Reserve space required to add a specified number of elements to the
 map. If the current capacity is sufficient, do nothing.
@@ -777,7 +777,7 @@ code to indicate the specific failure.
 If the map has already been initialized with allocation permission simply
 provide the same function that was passed upon initialization. */
 CCC_Result CCC_flat_hash_map_reserve(CCC_Flat_hash_map *map, size_t to_add,
-                                     CCC_Allocator *allocate);
+                                     CCC_Allocator_interface *allocate);
 
 /**@}*/
 
@@ -853,11 +853,11 @@ Entry Interface.*/
 
 This function is intended to make the function chaining in the Entry Interface
 more succinct if the entry will be modified in place based on its own value
-without the need of the context argument a CCC_Modifier can provide.
+without the need of the context argument a CCC_Modifier_interface can provide.
 */
 [[nodiscard]] CCC_Flat_hash_map_entry *
 CCC_flat_hash_map_and_modify(CCC_Flat_hash_map_entry *entry,
-                             CCC_Modifier *modify);
+                             CCC_Modifier_interface *modify);
 
 /** @brief Modifies the provided entry if it is Occupied.
 @param[in] entry the entry obtained from an entry function or macro.
@@ -865,11 +865,12 @@ CCC_flat_hash_map_and_modify(CCC_Flat_hash_map_entry *entry,
 @param[in] context context data required for the update.
 @return the updated entry if it was Occupied or the unmodified vacant entry.
 
-This function makes full use of a CCC_Modifier capability, meaning a
+This function makes full use of a CCC_Modifier_interface capability, meaning a
 complete CCC_update object will be passed to the update function callback. */
 [[nodiscard]] CCC_Flat_hash_map_entry *
 CCC_flat_hash_map_and_context_modify(CCC_Flat_hash_map_entry *entry,
-                                     CCC_Modifier *modify, void *context);
+                                     CCC_Modifier_interface *modify,
+                                     void *context);
 
 /** @brief Modify an Occupied entry with a closure over user type T.
 @param[in] map_entry_pointer a pointer to the obtained entry.
@@ -1202,7 +1203,7 @@ forfeit.
 
 If NULL is passed as the destructor function time is O(1), else O(capacity). */
 CCC_Result CCC_flat_hash_map_clear(CCC_Flat_hash_map *map,
-                                   CCC_Destructor *destroy);
+                                   CCC_Destructor_interface *destroy);
 
 /** @brief Frees all slots in the table and frees the underlying buffer.
 @param[in] map the table to be cleared.
@@ -1213,7 +1214,7 @@ forfeit.
 an error to attempt to free the Buffer and a memory error is returned.
 Otherwise, an OK result is returned. */
 CCC_Result CCC_flat_hash_map_clear_and_free(CCC_Flat_hash_map *map,
-                                            CCC_Destructor *destroy);
+                                            CCC_Destructor_interface *destroy);
 
 /** @brief Frees all slots in the table and frees the underlying Buffer that was
 previously dynamically reserved with the reserve function.
@@ -1227,7 +1228,8 @@ passed to the allocation function when called.
 @return the result of free operation. CCC_RESULT_OK if success, or an error
 status to indicate the error.
 @warning It is an error to call this function on a map that was not reserved
-with the provided CCC_Allocator. The map must have existing memory to free.
+with the provided CCC_Allocator_interface. The map must have existing memory to
+free.
 
 This function covers the edge case of reserving a dynamic capacity for a map
 at runtime but denying the map allocation permission to resize. This can help
@@ -1242,9 +1244,10 @@ to reserve memory so to is it required to free memory.
 This function will work normally if called on a map with allocation permission
 however the normal CCC_flat_hash_map_clear_and_free is sufficient for that use
 case. */
-CCC_Result CCC_flat_hash_map_clear_and_free_reserve(CCC_Flat_hash_map *map,
-                                                    CCC_Destructor *destroy,
-                                                    CCC_Allocator *allocate);
+CCC_Result
+CCC_flat_hash_map_clear_and_free_reserve(CCC_Flat_hash_map *map,
+                                         CCC_Destructor_interface *destroy,
+                                         CCC_Allocator_interface *allocate);
 
 /**@}*/
 

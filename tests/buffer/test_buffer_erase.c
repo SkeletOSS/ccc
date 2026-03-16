@@ -16,15 +16,14 @@ check_static_begin(buffer_test_push_pop_fixed) {
     int const push[8] = {7, 6, 5, 4, 3, 2, 1, 0};
     size_t count = 0;
     for (size_t i = 0; i < sizeof(push) / sizeof(*push); ++i) {
-        int const *const p
-            = buffer_push_back(&b, &push[i], &(CCC_Allocator_context){});
+        int const *const p = buffer_push_back(&b, &push[i], &(CCC_Allocator){});
         check(p != NULL, CCC_TRUE);
         check(*p, push[i]);
         ++count;
     }
     check(buffer_count(&b).count, sizeof(push) / sizeof(*push));
     check(buffer_count(&b).count, count);
-    check(buffer_push_back(&b, &(int){99}, &(CCC_Allocator_context){}) == NULL,
+    check(buffer_push_back(&b, &(int){99}, &(CCC_Allocator){}) == NULL,
           CCC_TRUE);
     while (!buffer_is_empty(&b)) {
         int const v = *(int *)buffer_back(&b);
@@ -62,8 +61,7 @@ check_static_begin(buffer_test_push_resize_pop) {
     check(buffer_count(&b).count, count);
     check(count, 0);
     check_end({
-        (void)buffer_clear_and_free(&b, &(CCC_Destructor_context){},
-                                    &std_allocator);
+        (void)buffer_clear_and_free(&b, &(CCC_Destructor){}, &std_allocator);
         free(many);
     });
 }
@@ -90,7 +88,7 @@ check_static_begin(buffer_test_daily_temperatures) {
             check(r, CCC_RESULT_OK);
         }
         int const *const pointer
-            = buffer_push_back(&idx_stack, &i, &(CCC_Allocator_context){});
+            = buffer_push_back(&idx_stack, &i, &(CCC_Allocator){});
         check(pointer != NULL, CCC_TRUE);
     }
     check(memcmp(buffer_begin(&res), buffer_begin(&correct),
@@ -124,7 +122,7 @@ check_static_begin(buffer_test_car_fleet) {
     Buffer car_idx = buffer_with_storage(CARCAP, (int[CARCAP]){});
     iota(buffer_begin(&car_idx), CARCAP, 0);
     quicksort(&car_idx, &(int){}, CCC_ORDER_LESSER,
-              &(CCC_Comparator_context){
+              &(CCC_Comparator){
                   .compare = order_car_idx,
                   .context = &positions,
               });
@@ -172,7 +170,7 @@ check_static_begin(buffer_test_largest_rectangle_in_histogram) {
             max_rectangle = maxint(max_rectangle, stack_top_height * w);
         }
         int const *const pointer
-            = buffer_push_back(&bar_indices, &i, &(CCC_Allocator_context){});
+            = buffer_push_back(&bar_indices, &i, &(CCC_Allocator){});
         check(pointer != NULL, CCC_TRUE);
     }
     check(max_rectangle, correct_max_rectangle);
