@@ -84,10 +84,8 @@ struct CCC_Array_adaptive_map {
     size_t key_offset;
     /** @internal The provided key comparison function. */
     CCC_Key_comparator_interface *compare;
-    /** @internal The provided allocation function, if any. */
-    CCC_Allocator_interface *allocate;
-    /** @internal The provided context data, if any. */
-    void *context;
+    /** @internal The provided context for key comparison. */
+    void *comparator_context;
 };
 
 /** @internal A handle is like an entry but if the handle is Occupied, we can
@@ -122,7 +120,8 @@ CCC_private_array_adaptive_map_key_at(struct CCC_Array_adaptive_map const *,
                                       size_t slot);
 /** @internal */
 size_t
-CCC_private_array_adaptive_map_allocate_slot(struct CCC_Array_adaptive_map *);
+CCC_private_array_adaptive_map_allocate_slot(struct CCC_Array_adaptive_map *,
+                                             CCC_Allocator const *);
 
 /*========================     Initialization       =========================*/
 
@@ -152,6 +151,16 @@ metadata. */
     }) {                                                                       \
     }
 
+/** @internal  All other fields default to NULL or 0. */
+#define CCC_private_array_adaptive_map_default(                                \
+    private_type_name, private_key_node_field, private_comparator_pointer...)  \
+    {                                                                          \
+        .sizeof_type = sizeof(private_type_name),                              \
+        .key_offset = offsetof(private_type_name, private_key_node_field),     \
+        .compare = (private_comparator_pointer)->compare,                      \
+        .comparator_context = (private_comparator_pointer)->context,           \
+    }
+
 /** @internal */
 #define CCC_private_array_adaptive_map_for(                                    \
     private_type_name, private_key_node_field, private_key_order_fn,           \
@@ -166,34 +175,34 @@ metadata. */
         .free_list = 0,                                                        \
         .sizeof_type = sizeof(private_type_name),                              \
         .key_offset = offsetof(private_type_name, private_key_node_field),     \
-        .compare = (private_key_order_fn),                                     \
-        .allocate = (private_allocate),                                        \
-        .context = (private_context),                                          \
+        .compare = (private_comparator_pointer)->compare,                      \
+        .comparator_context = (private_comparator_pointer)->context,           \
     }
 
 /** @internal Initialize an array adaptive map from user input list. */
-#define CCC_private_array_adaptive_map_context_from(                           \
-    private_key_field, private_key_compare, private_allocate, private_context, \
+#define CCC_private_array_adaptive_map_from(                                   \
+    private_key_field, private_comparator_pointer, private_allocator_pointer,  \
     private_optional_cap, private_array_compound_literal...)                   \
     (__extension__({                                                           \
         typeof(*private_array_compound_literal)                                \
             *private_array_adaptive_map_initializer_list                       \
             = private_array_compound_literal;                                  \
         struct CCC_Array_adaptive_map private_array_adaptive_map               \
-            = CCC_private_array_adaptive_map_for(                              \
+            = CCC_private_array_adaptive_map_default(                          \
                 typeof(*private_array_adaptive_map_initializer_list),          \
-                private_key_field, private_key_compare, private_allocate,      \
-                private_context, 0, NULL);                                     \
+                private_key_field, private_comparator_pointer);                \
         size_t const private_array_adaptive_n                                  \
             = sizeof(private_array_compound_literal)                           \
             / sizeof(*private_array_adaptive_map_initializer_list);            \
         size_t const private_cap = private_optional_cap;                       \
+        CCC_Allocator const *const private_array_adaptive_map_allocator        \
+            = (private_allocator_pointer);                                     \
         if (CCC_array_adaptive_map_reserve(                                    \
                 &private_array_adaptive_map,                                   \
                 (private_array_adaptive_n > private_cap                        \
                      ? private_array_adaptive_n                                \
                      : private_cap),                                           \
-                private_allocate)                                              \
+                private_array_adaptive_map_allocator)                          \
             == CCC_RESULT_OK) {                                                \
             for (size_t i = 0; i < private_array_adaptive_n; ++i) {            \
                 struct CCC_Array_adaptive_map_handle                           \
@@ -209,7 +218,8 @@ metadata. */
                       & CCC_ENTRY_OCCUPIED)) {                                 \
                     private_index                                              \
                         = CCC_private_array_adaptive_map_allocate_slot(        \
-                            &private_array_adaptive_map);                      \
+                            &private_array_adaptive_map,                       \
+                            private_array_adaptive_map_allocator);             \
                 }                                                              \
                 *((typeof(*private_array_adaptive_map_initializer_list) *)     \
                       CCC_private_array_adaptive_map_data_at(                  \
@@ -225,39 +235,24 @@ metadata. */
         private_array_adaptive_map;                                            \
     }))
 
-/** @internal Initialize an array adaptive map from user input list. */
-#define CCC_private_array_adaptive_map_from(                                   \
-    private_key_field, private_key_compare, private_allocate,                  \
-    private_optional_cap, private_array_compound_literal...)                   \
-    CCC_private_array_adaptive_map_context_from(                               \
-        private_key_field, private_key_compare, private_allocate, NULL,        \
-        private_optional_cap, private_array_compound_literal)
-
 /** @internal */
-#define CCC_private_array_adaptive_map_context_with_capacity(                  \
-    private_type_name, private_key_field, private_key_compare,                 \
-    private_allocate, private_context, private_cap)                            \
+#define CCC_private_array_adaptive_map_with_capacity(                          \
+    private_type_name, private_key_field, private_comparator_pointer,          \
+    private_allocator_pointer, private_context, private_cap)                   \
     (__extension__({                                                           \
         struct CCC_Array_adaptive_map private_array_adaptive_map               \
-            = CCC_private_array_adaptive_map_for(                              \
-                private_type_name, private_key_field, private_key_compare,     \
-                private_allocate, private_context, 0, NULL);                   \
+            = CCC_private_array_adaptive_map_default(                          \
+                private_type_name, private_key_field,                          \
+                private_comparator_pointer);                                   \
         (void)CCC_array_adaptive_map_reserve(&private_array_adaptive_map,      \
-                                             private_cap, private_allocate);   \
+                                             private_cap,                      \
+                                             private_allocator_pointer);       \
         private_array_adaptive_map;                                            \
     }))
 
 /** @internal */
-#define CCC_private_array_adaptive_map_with_capacity(                          \
-    private_type_name, private_key_field, private_key_compare,                 \
-    private_allocate, private_cap)                                             \
-    CCC_private_array_adaptive_map_context_with_capacity(                      \
-        private_type_name, private_key_field, private_key_compare,             \
-        private_allocate, NULL, private_cap)
-
-/** @internal */
-#define CCC_private_array_adaptive_map_context_with_storage(                   \
-    private_key_node_field, private_key_order_fn, private_context,             \
+#define CCC_private_array_adaptive_map_with_storage(                           \
+    private_key_node_field, private_comparator_pointer,                        \
     private_compound_literal, private_optional_storage_specifier...)           \
     {                                                                          \
         .data = &CCC_private_array_adaptive_map_storage_for(                   \
@@ -272,33 +267,9 @@ metadata. */
         .sizeof_type = sizeof(*(private_compound_literal)),                    \
         .key_offset = offsetof(typeof(*(private_compound_literal)),            \
                                private_key_node_field),                        \
-        .compare = (private_key_order_fn),                                     \
-        .allocate = NULL,                                                      \
-        .context = (private_context),                                          \
+        .compare = (private_comparator_pointer)->compare,                      \
+        .comparator_context = (private_comparator_pointer)->context,           \
     }
-
-/** @internal */
-#define CCC_private_array_adaptive_map_with_storage(                           \
-    private_key_node_field, private_key_order_fn, private_compound_literal,    \
-    private_optional_storage_specifier...)                                     \
-    CCC_private_array_adaptive_map_context_with_storage(                       \
-        private_key_node_field, private_key_order_fn, NULL,                    \
-        private_compound_literal, private_optional_storage_specifier)
-
-/** @internal */
-#define CCC_private_array_adaptive_map_context_with_allocator(                 \
-    private_type_name, private_key_field, private_compare, private_allocate,   \
-    private_context)                                                           \
-    CCC_private_array_adaptive_map_for(private_type_name, private_key_field,   \
-                                       private_compare, private_allocate,      \
-                                       private_context, 0, NULL)
-
-/** @internal */
-#define CCC_private_array_adaptive_map_with_allocator(                         \
-    private_type_name, private_key_field, private_compare, private_allocate)   \
-    CCC_private_array_adaptive_map_context_with_allocator(                     \
-        private_type_name, private_key_field, private_compare,                 \
-        private_allocate, NULL)
 
 /** @internal */
 #define CCC_private_array_adaptive_map_as(array_adaptive_map_pointer,          \
@@ -335,12 +306,16 @@ metadata. */
 
 /** @internal */
 #define CCC_private_array_adaptive_map_or_insert_with(                         \
-    array_adaptive_map_array_pointer, type_compound_literal...)                \
+    array_adaptive_map_array_pointer, private_allocator_pointer,               \
+    type_compound_literal...)                                                  \
     (__extension__({                                                           \
         __auto_type private_array_adaptive_map_or_ins_hndl_pointer             \
             = (array_adaptive_map_array_pointer);                              \
         CCC_Handle_index private_array_adaptive_map_or_ins_ret = 0;            \
-        if (private_array_adaptive_map_or_ins_hndl_pointer) {                  \
+        CCC_Allocator const *const private_array_adaptive_map_allocator        \
+            = (private_allocator_pointer);                                     \
+        if (private_array_adaptive_map_allocator                               \
+            && private_array_adaptive_map_or_ins_hndl_pointer) {               \
             if (private_array_adaptive_map_or_ins_hndl_pointer->status         \
                 == CCC_ENTRY_OCCUPIED) {                                       \
                 private_array_adaptive_map_or_ins_ret                          \
@@ -348,7 +323,8 @@ metadata. */
             } else {                                                           \
                 private_array_adaptive_map_or_ins_ret                          \
                     = CCC_private_array_adaptive_map_allocate_slot(            \
-                        private_array_adaptive_map_or_ins_hndl_pointer->map);  \
+                        private_array_adaptive_map_or_ins_hndl_pointer->map,   \
+                        private_array_adaptive_map_allocator);                 \
                 if (private_array_adaptive_map_or_ins_ret) {                   \
                     *((typeof(type_compound_literal) *)                        \
                           CCC_private_array_adaptive_map_data_at(              \
@@ -366,18 +342,22 @@ metadata. */
     }))
 
 /** @internal */
-#define CCC_private_array_adaptive_map_insert_array_with(                      \
+#define CCC_private_array_adaptive_map_insert_handle_with(                     \
     array_adaptive_map_array_pointer, type_compound_literal...)                \
     (__extension__({                                                           \
         __auto_type private_array_adaptive_map_ins_hndl_pointer                \
             = (array_adaptive_map_array_pointer);                              \
         CCC_Handle_index private_array_adaptive_map_ins_hndl_ret = 0;          \
-        if (private_array_adaptive_map_ins_hndl_pointer) {                     \
+        CCC_Allocator const *const private_array_adaptive_map_allocator        \
+            = (private_allocator_pointer);                                     \
+        if (private_array_adaptive_map_allocator                               \
+            && private_array_adaptive_map_ins_hndl_pointer) {                  \
             if (!(private_array_adaptive_map_ins_hndl_pointer->status          \
                   & CCC_ENTRY_OCCUPIED)) {                                     \
                 private_array_adaptive_map_ins_hndl_ret                        \
                     = CCC_private_array_adaptive_map_allocate_slot(            \
-                        private_array_adaptive_map_ins_hndl_pointer->map);     \
+                        private_array_adaptive_map_ins_hndl_pointer->map,      \
+                        private_array_adaptive_map_allocator);                 \
                 if (private_array_adaptive_map_ins_hndl_ret) {                 \
                     *((typeof(type_compound_literal) *)                        \
                           CCC_private_array_adaptive_map_data_at(              \
@@ -411,7 +391,10 @@ metadata. */
             = (array_adaptive_map_pointer);                                    \
         CCC_Handle private_array_adaptive_map_try_ins_hndl_ret                 \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                            \
-        if (private_array_adaptive_map_try_ins_map_pointer) {                  \
+        CCC_Allocator const *const private_array_adaptive_map_allocator        \
+            = (private_allocator_pointer);                                     \
+        if (private_array_adaptive_map_allocator                               \
+            && private_array_adaptive_map_try_ins_map_pointer) {               \
             __auto_type private_array_adaptive_map_key = (key);                \
             struct CCC_Array_adaptive_map_handle                               \
                 private_array_adaptive_map_try_ins_hndl                        \
@@ -422,7 +405,8 @@ metadata. */
                   & CCC_ENTRY_OCCUPIED)) {                                     \
                 private_array_adaptive_map_try_ins_hndl_ret = (CCC_Handle){    \
                     .index = CCC_private_array_adaptive_map_allocate_slot(     \
-                        private_array_adaptive_map_try_ins_hndl.map),          \
+                        private_array_adaptive_map_try_ins_hndl.map,           \
+                        private_array_adaptive_map_allocator),                 \
                     .status = CCC_ENTRY_INSERT_ERROR,                          \
                 };                                                             \
                 if (private_array_adaptive_map_try_ins_hndl_ret.index) {       \
@@ -460,7 +444,10 @@ metadata. */
             = (array_adaptive_map_pointer);                                         \
         CCC_Handle private_array_adaptive_map_ins_or_assign_hndl_ret                \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                                 \
-        if (private_array_adaptive_map_ins_or_assign_map_pointer) {                 \
+        CCC_Allocator const *const private_array_adaptive_map_allocator             \
+            = (private_allocator_pointer);                                          \
+        if (private_array_adaptive_map_allocator                                    \
+            && private_array_adaptive_map_ins_or_assign_map_pointer) {              \
             __auto_type private_array_adaptive_map_key = (key);                     \
             struct CCC_Array_adaptive_map_handle                                    \
                 private_array_adaptive_map_ins_or_assign_hndl                       \
@@ -472,8 +459,8 @@ metadata. */
                 private_array_adaptive_map_ins_or_assign_hndl_ret                   \
                     = (CCC_Handle){                                                 \
                         .index = CCC_private_array_adaptive_map_allocate_slot(      \
-                            private_array_adaptive_map_ins_or_assign_hndl           \
-                                .map),                                              \
+                            private_array_adaptive_map_ins_or_assign_hndl.map,      \
+                            private_array_adaptive_map_allocator),                  \
                         .status = CCC_ENTRY_INSERT_ERROR,                           \
                     };                                                              \
                 if (private_array_adaptive_map_ins_or_assign_hndl_ret.index) {      \
