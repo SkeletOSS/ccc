@@ -220,10 +220,10 @@ static Flat_hash_map static_map = flat_hash_map_for(
 ```
 
 See other, more specific, initializers for less boilerplate. */
-#define CCC_flat_hash_map_for(type_name, key_field, hash, compare, allocate,   \
-                              context, capacity, map_pointer)                  \
-    CCC_private_flat_hash_map_for(type_name, key_field, hash, compare,         \
-                                  allocate, context, capacity, map_pointer)
+#define CCC_flat_hash_map_for(type_name, key_field, hasher_pointer, capacity,  \
+                              map_pointer)                                     \
+    CCC_private_flat_hash_map_for(type_name, key_field, hasher_pointer,        \
+                                  capacity, map_pointer)
 
 /** @brief Initialize a dynamic map at runtime from an initializer list.
 @param[in] key_field the field of the struct used for key storage.
@@ -368,7 +368,7 @@ This saves on boilerplate compared to the raw initializer. */
 #define CCC_flat_hash_map_with_storage(key_field, hasher_pointer,              \
                                        compound_literal,                       \
                                        optional_storage_specifier...)          \
-    CCC_private_flat_hash_map_with_storage(key_field, hash, compare,           \
+    CCC_private_flat_hash_map_with_storage(key_field, hasher_pointer,          \
                                            compound_literal,                   \
                                            optional_storage_specifier)
 

@@ -138,41 +138,41 @@ See container documentation for specific behavior. */
 
 /** @brief Obtain a container specific entry for the Entry Interface.
 @param[in] container_pointer a pointer to the container.
-@param[in] key_pointer a pointer to the search key.
+@param[in] key_allocator_arguments arguments for obtaining an entry.
 @return a container specific entry depending on container specific context.
 
 See container documentation for specific behavior. */
-#define CCC_entry(container_pointer, key_pointer...)                           \
-    CCC_private_entry(container_pointer, key_pointer)
+#define CCC_entry(container_pointer, key_allocator_arguments...)               \
+    CCC_private_entry(container_pointer, key_allocator_arguments)
 
 /** @brief Obtain a container specific handle for the handle Interface.
 @param[in] container_pointer a pointer to the container.
-@param[in] key_pointer a pointer to the search key.
+@param[in] key_allocator_arguments pointer to the key and allocator.
 @return a container specific handle depending on container specific context.
 
 See container documentation for specific behavior. */
-#define CCC_handle(container_pointer, key_pointer...)                          \
-    CCC_private_handle(container_pointer, key_pointer)
+#define CCC_handle(container_pointer, key_allocator_arguments...)              \
+    CCC_private_handle(container_pointer, key_allocator_arguments)
 
 /** @brief Obtain a container specific entry for the Entry Interface.
 @param[in] container_pointer a pointer to the container.
-@param[in] key_pointer a pointer to the search key.
+@param[in] key_allocator_arguments pointer to the key and allocator.
 @return a container specific entry reference depending on container specific
 context.
 
 See container documentation for specific behavior. */
-#define CCC_entry_wrap(container_pointer, key_pointer...)                      \
-    CCC_private_entry_wrap(container_pointer, key_pointer)
+#define CCC_entry_wrap(container_pointer, key_allocator_arguments...)          \
+    CCC_private_entry_wrap(container_pointer, key_allocator_arguments)
 
 /** @brief Obtain a container specific handle for the handle Interface.
 @param[in] container_pointer a pointer to the container.
-@param[in] key_pointer a pointer to the search key.
+@param[in] key_allocator_arguments pointer to the key and allocator.
 @return a container specific handle reference depending on container specific
 context.
 
 See container documentation for specific behavior. */
-#define CCC_handle_wrap(container_pointer, key_pointer...)                     \
-    CCC_private_handle_wrap(container_pointer, key_pointer)
+#define CCC_handle_wrap(container_pointer, key_allocator_arguments...)         \
+    CCC_private_handle_wrap(container_pointer, key_allocator_arguments)
 
 /** @brief Modify an entry if Occupied.
 @param[in] entry_pointer a pointer to the container.

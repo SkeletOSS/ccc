@@ -30,9 +30,13 @@ flat_hash_map_int_order(CCC_Key_comparator_arguments const order) {
     return (left > *right) - (left < *right);
 }
 
-static CCC_Flat_hash_map static_fh = flat_hash_map_with_storage(
-    key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
-    (struct Val[SMALL_FIXED_CAP]){});
+static CCC_Flat_hash_map static_fh
+    = flat_hash_map_with_storage(key,
+                                 &((CCC_Hasher){
+                                     .hash = flat_hash_map_int_to_u64,
+                                     .compare = flat_hash_map_id_order,
+                                 }),
+                                 (struct Val[SMALL_FIXED_CAP]){});
 
 check_static_begin(flat_hash_map_test_static_initialize) {
     check(flat_hash_map_capacity(&static_fh).count, SMALL_FIXED_CAP);
@@ -43,7 +47,7 @@ check_static_begin(flat_hash_map_test_static_initialize) {
 
     /* Returning a vacant entry is possible when modification is attempted. */
     Flat_hash_map_entry *ent
-        = and_modify(entry_wrap(&static_fh, &def.key), mod);
+        = and_modify(entry_wrap(&static_fh, &def.key, &(CCC_Allocator){}), mod);
     check(occupied(ent), CCC_FALSE);
     check((unwrap(ent) == NULL), CCC_TRUE);
 
