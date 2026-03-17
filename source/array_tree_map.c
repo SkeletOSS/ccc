@@ -192,7 +192,7 @@ static_assert(PARITY_BLOCK_BITS >> PARITY_BLOCK_BITS_LOG2 == 1,
 /* Returning the user struct type with stored offsets. */
 static void insert(struct CCC_Array_tree_map *, size_t, CCC_Order, size_t);
 static CCC_Result resize(struct CCC_Array_tree_map *, size_t,
-                         CCC_Allocator_interface *);
+                         CCC_Allocator const *);
 static void copy_soa(struct CCC_Array_tree_map const *, void *, size_t);
 static size_t data_bytes(size_t, size_t);
 static size_t nodes_bytes(size_t);
@@ -201,11 +201,11 @@ static struct CCC_Array_tree_map_node *nodes_base_address(size_t, void const *,
                                                           size_t);
 static Parity_block *parities_base_address(size_t, void const *, size_t);
 static size_t maybe_allocate_insert(struct CCC_Array_tree_map *, size_t,
-                                    CCC_Order, void const *);
+                                    CCC_Order, void const *,
+                                    CCC_Allocator const *);
 static size_t remove_fixup(struct CCC_Array_tree_map *, size_t);
-static size_t allocate_slot(struct CCC_Array_tree_map *);
-static void delete_nodes(struct CCC_Array_tree_map *,
-                         CCC_Destructor_interface *);
+static size_t allocate_slot(struct CCC_Array_tree_map *, CCC_Allocator const *);
+static void delete_nodes(struct CCC_Array_tree_map *, CCC_Destructor const *);
 /* Returning the user key with stored offsets. */
 static void *key_at(struct CCC_Array_tree_map const *, size_t);
 static void *key_in_slot(struct CCC_Array_tree_map const *, void const *);
@@ -223,7 +223,7 @@ static CCC_Handle_range equal_range(struct CCC_Array_tree_map const *,
                                     void const *, void const *, enum Link);
 /* Returning threeway comparison with user callback. */
 static CCC_Order order_nodes(struct CCC_Array_tree_map const *, void const *,
-                             size_t, CCC_Key_comparator_interface *);
+                             size_t);
 /* Returning read only indices for tree nodes. */
 static size_t sibling_of(struct CCC_Array_tree_map const *, size_t);
 static size_t next(struct CCC_Array_tree_map const *, size_t, enum Link);
@@ -309,8 +309,9 @@ CCC_array_tree_map_get_key_value(CCC_Array_tree_map const *const map,
 
 CCC_Handle
 CCC_array_tree_map_swap_handle(CCC_Array_tree_map *const map,
-                               void *const type_output) {
-    if (!map || !type_output) {
+                               void *const type_output,
+                               CCC_Allocator const *const allocator) {
+    if (!map || !type_output || !allocator) {
         return (CCC_Handle){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     struct Query const q = find(map, key_in_slot(map, type_output));
@@ -323,8 +324,8 @@ CCC_array_tree_map_swap_handle(CCC_Array_tree_map *const map,
             .status = CCC_ENTRY_OCCUPIED,
         };
     }
-    size_t const i
-        = maybe_allocate_insert(map, q.parent, q.last_order, type_output);
+    size_t const i = maybe_allocate_insert(map, q.parent, q.last_order,
+                                           type_output, allocator);
     if (!i) {
         return (CCC_Handle){
             .index = 0,
@@ -339,8 +340,9 @@ CCC_array_tree_map_swap_handle(CCC_Array_tree_map *const map,
 
 CCC_Handle
 CCC_array_tree_map_try_insert(CCC_Array_tree_map *const map,
-                              void const *const type) {
-    if (!map || !type) {
+                              void const *const type,
+                              CCC_Allocator const *const allocator) {
+    if (!map || !type || !allocator) {
         return (CCC_Handle){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     struct Query const q = find(map, key_in_slot(map, type));
@@ -350,7 +352,8 @@ CCC_array_tree_map_try_insert(CCC_Array_tree_map *const map,
             .status = CCC_ENTRY_OCCUPIED,
         };
     }
-    size_t const i = maybe_allocate_insert(map, q.parent, q.last_order, type);
+    size_t const i
+        = maybe_allocate_insert(map, q.parent, q.last_order, type, allocator);
     if (!i) {
         return (CCC_Handle){
             .index = 0,
@@ -365,8 +368,9 @@ CCC_array_tree_map_try_insert(CCC_Array_tree_map *const map,
 
 CCC_Handle
 CCC_array_tree_map_insert_or_assign(CCC_Array_tree_map *const map,
-                                    void const *const type) {
-    if (!map || !type) {
+                                    void const *const type,
+                                    CCC_Allocator const *const allocator) {
+    if (!map || !type || !allocator) {
         return (CCC_Handle){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     struct Query const q = find(map, key_in_slot(map, type));
@@ -378,7 +382,8 @@ CCC_array_tree_map_insert_or_assign(CCC_Array_tree_map *const map,
             .status = CCC_ENTRY_OCCUPIED,
         };
     }
-    size_t const i = maybe_allocate_insert(map, q.parent, q.last_order, type);
+    size_t const i
+        = maybe_allocate_insert(map, q.parent, q.last_order, type, allocator);
     if (!i) {
         return (CCC_Handle){
             .index = 0,
@@ -393,26 +398,12 @@ CCC_array_tree_map_insert_or_assign(CCC_Array_tree_map *const map,
 
 CCC_Array_tree_map_handle *
 CCC_array_tree_map_and_modify(CCC_Array_tree_map_handle *const handle,
-                              CCC_Modifier_interface *const modify) {
-    if (handle && modify && handle->status & CCC_ENTRY_OCCUPIED
-        && handle->index > 0) {
-        modify((CCC_Arguments){
+                              CCC_Modifier const *const modifier) {
+    if (handle && modifier && modifier->modify
+        && handle->status & CCC_ENTRY_OCCUPIED && handle->index > 0) {
+        modifier->modify((CCC_Arguments){
             .type = data_at(handle->map, handle->index),
-            NULL,
-        });
-    }
-    return handle;
-}
-
-CCC_Array_tree_map_handle *
-CCC_array_tree_map_and_context_modify(CCC_Array_tree_map_handle *const handle,
-                                      CCC_Modifier_interface *const modify,
-                                      void *const context) {
-    if (handle && modify && handle->status & CCC_ENTRY_OCCUPIED
-        && handle->status > 0) {
-        modify((CCC_Arguments){
-            .type = data_at(handle->map, handle->index),
-            context,
+            modifier->context,
         });
     }
     return handle;
@@ -420,20 +411,23 @@ CCC_array_tree_map_and_context_modify(CCC_Array_tree_map_handle *const handle,
 
 CCC_Handle_index
 CCC_array_tree_map_or_insert(CCC_Array_tree_map_handle const *const h,
-                             void const *const type) {
-    if (!h || !type) {
+                             void const *const type,
+                             CCC_Allocator const *const allocator) {
+    if (!h || !type || !allocator) {
         return 0;
     }
     if (h->status == CCC_ENTRY_OCCUPIED) {
         return h->index;
     }
-    return maybe_allocate_insert(h->map, h->index, h->last_order, type);
+    return maybe_allocate_insert(h->map, h->index, h->last_order, type,
+                                 allocator);
 }
 
 CCC_Handle_index
 CCC_array_tree_map_insert_handle(CCC_Array_tree_map_handle const *const h,
-                                 void const *const type) {
-    if (!h || !type) {
+                                 void const *const type,
+                                 CCC_Allocator const *const allocator) {
+    if (!h || !type || !allocator) {
         return 0;
     }
     if (h->status == CCC_ENTRY_OCCUPIED) {
@@ -443,7 +437,8 @@ CCC_array_tree_map_insert_handle(CCC_Array_tree_map_handle const *const h,
         }
         return h->index;
     }
-    return maybe_allocate_insert(h->map, h->index, h->last_order, type);
+    return maybe_allocate_insert(h->map, h->index, h->last_order, type,
+                                 allocator);
 }
 
 CCC_Array_tree_map_handle
@@ -636,8 +631,8 @@ CCC_array_tree_map_reverse_end(CCC_Array_tree_map const *const) {
 
 CCC_Result
 CCC_array_tree_map_reserve(CCC_Array_tree_map *const map, size_t const to_add,
-                           CCC_Allocator_interface *const allocate) {
-    if (!map || !to_add || !allocate) {
+                           CCC_Allocator const *const allocator) {
+    if (!map || !to_add || !allocator || !allocator->allocate) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     /* Once initialized the Buffer always has a size of one for root node. */
@@ -647,7 +642,7 @@ CCC_array_tree_map_reserve(CCC_Array_tree_map *const map, size_t const to_add,
     }
     size_t const old_count = map->count;
     size_t old_cap = map->capacity;
-    CCC_Result const r = resize(map, needed, allocate);
+    CCC_Result const r = resize(map, needed, allocator);
     if (r != CCC_RESULT_OK) {
         return r;
     }
@@ -671,9 +666,9 @@ CCC_array_tree_map_reserve(CCC_Array_tree_map *const map, size_t const to_add,
 CCC_Result
 CCC_array_tree_map_copy(CCC_Array_tree_map *const destination,
                         CCC_Array_tree_map const *const source,
-                        CCC_Allocator_interface *const allocate) {
-    if (!destination || !source || source == destination
-        || (destination->capacity < source->capacity && !allocate)) {
+                        CCC_Allocator const *const allocator) {
+    if (!destination || !source || !allocator || source == destination
+        || (destination->capacity < source->capacity && !allocator->allocate)) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     void *const destination_data = destination->data;
@@ -681,18 +676,16 @@ CCC_array_tree_map_copy(CCC_Array_tree_map *const destination,
         = destination->nodes;
     Parity_block *const destination_parity = destination->parity;
     size_t const destination_cap = destination->capacity;
-    CCC_Allocator_interface *const destination_allocate = destination->allocate;
     *destination = *source;
     destination->data = destination_data;
     destination->nodes = destination_nodes;
     destination->parity = destination_parity;
     destination->capacity = destination_cap;
-    destination->allocate = destination_allocate;
     if (!source->capacity) {
         return CCC_RESULT_OK;
     }
     if (destination->capacity < source->capacity) {
-        CCC_Result const r = resize(destination, source->capacity, allocate);
+        CCC_Result const r = resize(destination, source->capacity, allocator);
         if (r != CCC_RESULT_OK) {
             return r;
         }
@@ -712,12 +705,12 @@ CCC_array_tree_map_copy(CCC_Array_tree_map *const destination,
 
 CCC_Result
 CCC_array_tree_map_clear(CCC_Array_tree_map *const map,
-                         CCC_Destructor_interface *const destroy) {
-    if (!map) {
+                         CCC_Destructor const *const destructor) {
+    if (!map || !destructor) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    if (destroy) {
-        delete_nodes(map, destroy);
+    if (destructor->destroy) {
+        delete_nodes(map, destructor);
     }
     map->count = 1;
     map->root = 0;
@@ -726,42 +719,20 @@ CCC_array_tree_map_clear(CCC_Array_tree_map *const map,
 
 CCC_Result
 CCC_array_tree_map_clear_and_free(CCC_Array_tree_map *const map,
-                                  CCC_Destructor_interface *const destroy) {
-    if (!map || !map->allocate) {
+                                  CCC_Destructor const *const destructor,
+                                  CCC_Allocator const *const allocator) {
+    if (!map || !destructor || !allocator || !allocator->allocate) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    if (destroy) {
-        delete_nodes(map, destroy);
+    if (destructor->destroy) {
+        delete_nodes(map, destructor);
     }
     map->root = 0;
     map->capacity = 0;
-    (void)map->allocate((CCC_Allocator_arguments){
+    (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .context = map->context,
-    });
-    map->data = NULL;
-    map->nodes = NULL;
-    map->parity = NULL;
-    return CCC_RESULT_OK;
-}
-
-CCC_Result
-CCC_array_tree_map_clear_and_free_reserve(
-    CCC_Array_tree_map *const map, CCC_Destructor_interface *const destroy,
-    CCC_Allocator_interface *const allocate) {
-    if (!map || !allocate) {
-        return CCC_RESULT_ARGUMENT_ERROR;
-    }
-    if (destroy) {
-        delete_nodes(map, destroy);
-    }
-    map->root = 0;
-    map->capacity = 0;
-    (void)allocate((CCC_Allocator_arguments){
-        .input = map->data,
-        .bytes = 0,
-        .context = map->context,
+        .context = allocator->context,
     });
     map->data = NULL;
     map->nodes = NULL;
@@ -812,18 +783,20 @@ CCC_private_array_tree_map_node_at(struct CCC_Array_tree_map const *map,
 }
 
 size_t
-CCC_private_array_tree_map_allocate_slot(struct CCC_Array_tree_map *const map) {
-    return allocate_slot(map);
+CCC_private_array_tree_map_allocate_slot(struct CCC_Array_tree_map *const map,
+                                         CCC_Allocator const *const allocator) {
+    return allocate_slot(map, allocator);
 }
 
 /*==========================  Static Helpers   ==============================*/
 
 static size_t
 maybe_allocate_insert(struct CCC_Array_tree_map *const map, size_t const parent,
-                      CCC_Order const last_order, void const *const user_type) {
+                      CCC_Order const last_order, void const *const user_type,
+                      CCC_Allocator const *const allocator) {
     /* The end sentinel node will always be at 0. This also means once
        initialized the internal size for implementer is always at least 1. */
-    size_t const node = allocate_slot(map);
+    size_t const node = allocate_slot(map, allocator);
     if (!node) {
         return 0;
     }
@@ -833,7 +806,8 @@ maybe_allocate_insert(struct CCC_Array_tree_map *const map, size_t const parent,
 }
 
 static size_t
-allocate_slot(struct CCC_Array_tree_map *const map) {
+allocate_slot(struct CCC_Array_tree_map *const map,
+              CCC_Allocator const *const allocator) {
     /* The end sentinel node will always be at 0. This also means once
        initialized the internal size for implementer is always at least 1. */
     size_t const old_count = map->count;
@@ -841,7 +815,7 @@ allocate_slot(struct CCC_Array_tree_map *const map) {
     if (!old_count || old_count == old_cap) {
         assert(!map->free_list);
         if (old_count == old_cap) {
-            if (resize(map, max(old_cap * 2, PARITY_BLOCK_BITS), map->allocate)
+            if (resize(map, max(old_cap * 2, PARITY_BLOCK_BITS), allocator)
                 != CCC_RESULT_OK) {
                 return 0;
             }
@@ -872,17 +846,17 @@ allocate_slot(struct CCC_Array_tree_map *const map) {
 
 static CCC_Result
 resize(struct CCC_Array_tree_map *const map, size_t const new_capacity,
-       CCC_Allocator_interface *const allocate) {
+       CCC_Allocator const *const allocator) {
     if (map->capacity && new_capacity <= map->capacity - 1) {
         return CCC_RESULT_OK;
     }
-    if (!allocate) {
+    if (!allocator->allocate) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
-    void *const new_data = allocate((CCC_Allocator_arguments){
+    void *const new_data = allocator->allocate((CCC_Allocator_arguments){
         .input = NULL,
         .bytes = total_bytes(map->sizeof_type, new_capacity),
-        .context = map->context,
+        .context = allocator->context,
     });
     if (!new_data) {
         return CCC_RESULT_ALLOCATOR_ERROR;
@@ -891,10 +865,10 @@ resize(struct CCC_Array_tree_map *const map, size_t const new_capacity,
     map->nodes = nodes_base_address(map->sizeof_type, new_data, new_capacity);
     map->parity
         = parities_base_address(map->sizeof_type, new_data, new_capacity);
-    allocate((CCC_Allocator_arguments){
+    allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .context = map->context,
+        .context = allocator->context,
     });
     map->data = new_data;
     map->capacity = new_capacity;
@@ -950,7 +924,7 @@ find(struct CCC_Array_tree_map const *const map, void const *const key) {
         .found = map->root,
     };
     while (q.found) {
-        q.last_order = order_nodes(map, key, q.found, map->compare);
+        q.last_order = order_nodes(map, key, q.found);
         if (CCC_ORDER_EQUAL == q.last_order) {
             return q;
         }
@@ -1026,9 +1000,7 @@ simply calls the destructor on each node and removes the nodes references to
 other tree elements. */
 static void
 delete_nodes(struct CCC_Array_tree_map *const map,
-             CCC_Destructor_interface *const destroy) {
-    assert(map);
-    assert(destroy);
+             CCC_Destructor const *const destructor) {
     size_t node = map->root;
     while (node) {
         struct CCC_Array_tree_map_node *const e = node_at(map, node);
@@ -1042,9 +1014,9 @@ delete_nodes(struct CCC_Array_tree_map *const map,
         size_t const next = e->branch[R];
         e->branch[L] = e->branch[R] = 0;
         e->parent = 0;
-        destroy((CCC_Arguments){
+        destructor->destroy((CCC_Arguments){
             .type = data_at(map, node),
-            .context = map->context,
+            .context = destructor->context,
         });
         node = next;
     }
@@ -1052,11 +1024,11 @@ delete_nodes(struct CCC_Array_tree_map *const map,
 
 static inline CCC_Order
 order_nodes(struct CCC_Array_tree_map const *const map, void const *const key,
-            size_t const node, CCC_Key_comparator_interface *const compare) {
-    return compare((CCC_Key_comparator_arguments){
+            size_t const node) {
+    return map->compare((CCC_Key_comparator_arguments){
         .key_left = key,
         .type_right = data_at(map, node),
-        .context = map->context,
+        .context = map->comparator_context,
     });
 }
 
@@ -1671,14 +1643,11 @@ are_subtrees_valid(struct CCC_Array_tree_map const *t,
     if (!r.root) {
         return CCC_TRUE;
     }
-    if (r.low
-        && order_nodes(t, key_at(t, r.low), r.root, t->compare)
-               != CCC_ORDER_LESSER) {
+    if (r.low && order_nodes(t, key_at(t, r.low), r.root) != CCC_ORDER_LESSER) {
         return CCC_FALSE;
     }
     if (r.high
-        && order_nodes(t, key_at(t, r.high), r.root, t->compare)
-               != CCC_ORDER_GREATER) {
+        && order_nodes(t, key_at(t, r.high), r.root) != CCC_ORDER_GREATER) {
         return CCC_FALSE;
     }
     return are_subtrees_valid(t,
