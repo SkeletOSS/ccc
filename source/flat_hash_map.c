@@ -267,9 +267,10 @@ struct Query {
 /*===========================   Prototypes   ================================*/
 
 static void swap(void *, void *, void *, size_t);
-static struct CCC_Flat_hash_map_entry entry(struct CCC_Flat_hash_map *,
-                                            void const *);
-static struct Query find(struct CCC_Flat_hash_map *, void const *, uint64_t);
+static struct CCC_Flat_hash_map_entry
+entry(struct CCC_Flat_hash_map *, void const *, CCC_Allocator const *);
+static struct Query find(struct CCC_Flat_hash_map *, void const *, uint64_t,
+                         CCC_Allocator const *);
 static struct Query find_key_or_slot(struct CCC_Flat_hash_map const *,
                                      void const *, uint64_t);
 static CCC_Count find_key_or_fail(struct CCC_Flat_hash_map const *,
@@ -279,16 +280,16 @@ static void *find_first_full_slot(struct CCC_Flat_hash_map const *, size_t);
 static struct Match_mask find_first_full_group(struct CCC_Flat_hash_map const *,
                                                size_t *);
 static CCC_Result maybe_rehash(struct CCC_Flat_hash_map *, size_t,
-                               CCC_Allocator_interface);
+                               CCC_Allocator const *);
 static void insert_and_copy(struct CCC_Flat_hash_map *, void const *,
                             struct CCC_Flat_hash_map_tag, size_t);
 static void erase(struct CCC_Flat_hash_map *, size_t);
 static CCC_Result lazy_initialize(struct CCC_Flat_hash_map *, size_t,
-                                  CCC_Allocator_interface *);
+                                  CCC_Allocator const *);
 static void rehash_in_place(struct CCC_Flat_hash_map *);
 static CCC_Tribool is_same_group(size_t, size_t, uint64_t, size_t);
 static CCC_Result rehash_resize(struct CCC_Flat_hash_map *, size_t,
-                                CCC_Allocator_interface);
+                                CCC_Allocator const *);
 static CCC_Tribool is_equal(struct CCC_Flat_hash_map const *, void const *,
                             size_t);
 static uint64_t hasher(struct CCC_Flat_hash_map const *, void const *);
@@ -334,8 +335,7 @@ static size_t next_power_of_two(size_t);
 static CCC_Tribool is_power_of_two(size_t);
 static size_t to_power_of_two(size_t);
 static CCC_Tribool is_uninitialized(struct CCC_Flat_hash_map const *);
-static void destory_each(struct CCC_Flat_hash_map *,
-                         CCC_Destructor_interface *);
+static void destory_each(struct CCC_Flat_hash_map *, CCC_Destructor const *);
 static size_t roundup(size_t);
 static CCC_Tribool check_replica_group(struct CCC_Flat_hash_map const *);
 
@@ -391,11 +391,12 @@ CCC_flat_hash_map_get_key_value(CCC_Flat_hash_map const *const map,
 }
 
 CCC_Flat_hash_map_entry
-CCC_flat_hash_map_entry(CCC_Flat_hash_map *const map, void const *const key) {
-    if (unlikely(!map || !key)) {
+CCC_flat_hash_map_entry(CCC_Flat_hash_map *const map, void const *const key,
+                        CCC_Allocator const *const allocator) {
+    if (unlikely(!map || !key || !allocator)) {
         return (CCC_Flat_hash_map_entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
-    return entry(map, key);
+    return entry(map, key, allocator);
 }
 
 void *
@@ -446,9 +447,10 @@ CCC_flat_hash_map_remove_entry(CCC_Flat_hash_map_entry const *const e) {
 
 CCC_Flat_hash_map_entry *
 CCC_flat_hash_map_and_modify(CCC_Flat_hash_map_entry *const entry,
-                             CCC_Modifier_interface *const modify) {
-    if (entry && modify && ((entry->status & CCC_ENTRY_OCCUPIED) != 0)) {
-        modify((CCC_Arguments){
+                             CCC_Modifier const *const modifier) {
+    if (entry && modifier && modifier->modify
+        && ((entry->status & CCC_ENTRY_OCCUPIED) != 0)) {
+        modifier->modify((CCC_Arguments){
             .type = data_at(entry->map, entry->index),
             .context = NULL,
         });
@@ -456,27 +458,15 @@ CCC_flat_hash_map_and_modify(CCC_Flat_hash_map_entry *const entry,
     return entry;
 }
 
-CCC_Flat_hash_map_entry *
-CCC_flat_hash_map_and_context_modify(CCC_Flat_hash_map_entry *const entry,
-                                     CCC_Modifier_interface *const modify,
-                                     void *const context) {
-    if (entry && modify && ((entry->status & CCC_ENTRY_OCCUPIED) != 0)) {
-        modify((CCC_Arguments){
-            .type = data_at(entry->map, entry->index),
-            .context = context,
-        });
-    }
-    return entry;
-}
-
 CCC_Entry
 CCC_flat_hash_map_swap_entry(CCC_Flat_hash_map *const map,
-                             void *const type_output) {
-    if (unlikely(!map || !type_output)) {
+                             void *const type_output,
+                             CCC_Allocator const *const allocator) {
+    if (unlikely(!map || !type_output || !allocator)) {
         return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     void *const key = key_in_slot(map, type_output);
-    struct CCC_Flat_hash_map_entry ent = entry(map, key);
+    struct CCC_Flat_hash_map_entry ent = entry(map, key, allocator);
     if (ent.status & CCC_ENTRY_OCCUPIED) {
         swap(swap_slot(map), data_at(map, ent.index), type_output,
              map->sizeof_type);
@@ -497,12 +487,13 @@ CCC_flat_hash_map_swap_entry(CCC_Flat_hash_map *const map,
 
 CCC_Entry
 CCC_flat_hash_map_try_insert(CCC_Flat_hash_map *const map,
-                             void const *const type) {
-    if (unlikely(!map || !type)) {
+                             void const *const type,
+                             CCC_Allocator const *const allocator) {
+    if (unlikely(!map || !type || !allocator)) {
         return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     void *const key = key_in_slot(map, type);
-    struct CCC_Flat_hash_map_entry ent = entry(map, key);
+    struct CCC_Flat_hash_map_entry ent = entry(map, key, allocator);
     if (ent.status & CCC_ENTRY_OCCUPIED) {
         return (CCC_Entry){
             .type = data_at(map, ent.index),
@@ -521,12 +512,13 @@ CCC_flat_hash_map_try_insert(CCC_Flat_hash_map *const map,
 
 CCC_Entry
 CCC_flat_hash_map_insert_or_assign(CCC_Flat_hash_map *const map,
-                                   void const *const type) {
-    if (unlikely(!map || !type)) {
+                                   void const *const type,
+                                   CCC_Allocator const *const allocator) {
+    if (unlikely(!map || !type || !allocator)) {
         return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     void *const key = key_in_slot(map, type);
-    struct CCC_Flat_hash_map_entry ent = entry(map, key);
+    struct CCC_Flat_hash_map_entry ent = entry(map, key, allocator);
     if (ent.status & CCC_ENTRY_OCCUPIED) {
         (void)memcpy(data_at(map, ent.index), type, map->sizeof_type);
         return (CCC_Entry){
@@ -612,20 +604,20 @@ CCC_flat_hash_map_unwrap(CCC_Flat_hash_map_entry const *const e) {
 
 CCC_Result
 CCC_flat_hash_map_clear(CCC_Flat_hash_map *const map,
-                        CCC_Destructor_interface *const destroy) {
-    if (unlikely(!map)) {
+                        CCC_Destructor const *const destructor) {
+    if (unlikely(!map || !destructor)) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     if (unlikely(is_uninitialized(map) || !map->mask || !map->tag)) {
         return CCC_RESULT_OK;
     }
-    if (!destroy) {
+    if (!destructor->destroy) {
         (void)memset(map->tag, TAG_EMPTY, mask_to_tag_bytes(map->mask));
         map->remain = mask_to_capacity_with_load_factor(map->mask);
         map->count = 0;
         return CCC_RESULT_OK;
     }
-    destory_each(map, destroy);
+    destory_each(map, destructor);
     (void)memset(map->tag, TAG_EMPTY, mask_to_tag_bytes(map->mask));
     map->remain = mask_to_capacity_with_load_factor(map->mask);
     map->count = 0;
@@ -634,53 +626,27 @@ CCC_flat_hash_map_clear(CCC_Flat_hash_map *const map,
 
 CCC_Result
 CCC_flat_hash_map_clear_and_free(CCC_Flat_hash_map *const map,
-                                 CCC_Destructor_interface *const destroy) {
-    if (unlikely(!map || !map->data || !map->mask || is_uninitialized(map))) {
+                                 CCC_Destructor const *const destructor,
+                                 CCC_Allocator const *const allocator) {
+    if (unlikely(!map || !map->data || !destructor || !allocator || !map->mask
+                 || is_uninitialized(map))) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    if (!map->allocate) {
-        (void)CCC_flat_hash_map_clear(map, destroy);
+    if (!allocator->allocate) {
+        (void)CCC_flat_hash_map_clear(map, destructor);
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
-    if (destroy) {
-        destory_each(map, destroy);
+    if (destructor->destroy) {
+        destory_each(map, destructor);
     }
     map->remain = 0;
     map->mask = 0;
     map->count = 0;
     map->tag = NULL;
-    (void)map->allocate((CCC_Allocator_arguments){
+    (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .context = map->context,
-    });
-    map->data = NULL;
-    return CCC_RESULT_OK;
-}
-
-CCC_Result
-CCC_flat_hash_map_clear_and_free_reserve(
-    CCC_Flat_hash_map *const map, CCC_Destructor_interface *const destroy,
-    CCC_Allocator_interface *const allocate) {
-    if (unlikely(!map || !map->data || is_uninitialized(map) || !map->mask
-                 || (map->allocate && map->allocate != allocate))) {
-        return CCC_RESULT_ARGUMENT_ERROR;
-    }
-    if (!allocate) {
-        (void)CCC_flat_hash_map_clear(map, destroy);
-        return CCC_RESULT_NO_ALLOCATION_FUNCTION;
-    }
-    if (destroy) {
-        destory_each(map, destroy);
-    }
-    map->remain = 0;
-    map->mask = 0;
-    map->count = 0;
-    map->tag = NULL;
-    (void)allocate((CCC_Allocator_arguments){
-        .input = map->data,
-        .bytes = 0,
-        .context = map->context,
+        .context = allocator->context,
     });
     map->data = NULL;
     return CCC_RESULT_OK;
@@ -713,15 +679,15 @@ CCC_flat_hash_map_entry_status(CCC_Flat_hash_map_entry const *const e) {
 CCC_Result
 CCC_flat_hash_map_copy(CCC_Flat_hash_map *const destination,
                        CCC_Flat_hash_map const *const source,
-                       CCC_Allocator_interface *const allocate) {
-    if (!destination || !source || source == destination
+                       CCC_Allocator const *const allocator) {
+    if (!destination || !source || !allocator || source == destination
         || (source->mask && !is_power_of_two(source->mask + 1))) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    if (destination->mask < source->mask && !allocate) {
+    if (destination->mask < source->mask && !allocator->allocate) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
-    CCC_Result check = lazy_initialize(destination, 0, allocate);
+    CCC_Result check = lazy_initialize(destination, 0, allocator);
     if (check != CCC_RESULT_OK) {
         return check;
     }
@@ -731,10 +697,10 @@ CCC_flat_hash_map_copy(CCC_Flat_hash_map *const destination,
     size_t const source_bytes
         = mask_to_total_bytes(source->sizeof_type, source->mask);
     if (destination->mask < source->mask) {
-        void *const new_data = destination->allocate((CCC_Allocator_arguments){
+        void *const new_data = allocator->allocate((CCC_Allocator_arguments){
             .input = destination->data,
             .bytes = source_bytes,
-            .context = destination->context,
+            .context = allocator->context,
         });
         if (!new_data) {
             return CCC_RESULT_ALLOCATOR_ERROR;
@@ -778,11 +744,11 @@ CCC_flat_hash_map_copy(CCC_Flat_hash_map *const destination,
 
 CCC_Result
 CCC_flat_hash_map_reserve(CCC_Flat_hash_map *const map, size_t const to_add,
-                          CCC_Allocator_interface *const allocate) {
-    if (unlikely(!map || !to_add || !allocate || !to_add)) {
+                          CCC_Allocator const *const allocator) {
+    if (unlikely(!map || !to_add || !allocator || !to_add)) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    return maybe_rehash(map, to_add, allocate);
+    return maybe_rehash(map, to_add, allocator);
 }
 
 CCC_Tribool
@@ -858,8 +824,9 @@ check_replica_group(struct CCC_Flat_hash_map const *const h) {
 
 struct CCC_Flat_hash_map_entry
 CCC_private_flat_hash_map_entry(struct CCC_Flat_hash_map *const map,
-                                void const *const key) {
-    return entry(map, key);
+                                void const *const key,
+                                CCC_Allocator const *const allocator) {
+    return entry(map, key, allocator);
 }
 
 void
@@ -901,9 +868,10 @@ metadata and location info necessary for future actions. If this entry was
 obtained in hopes of insertions but insertion will cause an error. A status
 flag in the handle field will indicate the error. */
 static struct CCC_Flat_hash_map_entry
-entry(struct CCC_Flat_hash_map *const map, void const *const key) {
+entry(struct CCC_Flat_hash_map *const map, void const *const key,
+      CCC_Allocator const *const allocator) {
     uint64_t const hash = hasher(map, key);
-    struct Query const e = find(map, key, hash);
+    struct Query const e = find(map, key, hash, allocator);
     return (struct CCC_Flat_hash_map_entry){
         .map = (struct CCC_Flat_hash_map *)map,
         .tag = tag_from(hash),
@@ -917,8 +885,8 @@ must continue with that information. The status of the handle will indicate if
 an entry is occupied, vacant, or some error has occurred. */
 static struct Query
 find(struct CCC_Flat_hash_map *const map, void const *const key,
-     uint64_t const hash) {
-    CCC_Result const res = maybe_rehash(map, 1, map->allocate);
+     uint64_t const hash, CCC_Allocator const *const allocator) {
+    CCC_Result const res = maybe_rehash(map, 1, allocator);
     if (res == CCC_RESULT_OK) {
         return find_key_or_slot(map, key, hash);
     }
@@ -1184,8 +1152,8 @@ but only once and for a container that is not given permission to resize
 arbitrarily. */
 static CCC_Result
 maybe_rehash(struct CCC_Flat_hash_map *const map, size_t const to_add,
-             CCC_Allocator_interface *const fn) {
-    if (unlikely(!map->mask && !fn)) {
+             CCC_Allocator const *const allocator) {
+    if (unlikely(!map->mask && !allocator->allocate)) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
     size_t const required_total_cap
@@ -1193,7 +1161,7 @@ maybe_rehash(struct CCC_Flat_hash_map *const map, size_t const to_add,
     if (!required_total_cap) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
-    CCC_Result const init = lazy_initialize(map, required_total_cap, fn);
+    CCC_Result const init = lazy_initialize(map, required_total_cap, allocator);
     if (init != CCC_RESULT_OK) {
         return init;
     }
@@ -1201,8 +1169,8 @@ maybe_rehash(struct CCC_Flat_hash_map *const map, size_t const to_add,
         return CCC_RESULT_OK;
     }
     size_t const current_total_cap = map->mask + 1;
-    if (fn && (map->count + to_add) > current_total_cap / 2) {
-        return rehash_resize(map, to_add, fn);
+    if (allocator->allocate && (map->count + to_add) > current_total_cap / 2) {
+        return rehash_resize(map, to_add, allocator);
     }
     if (map->count == mask_to_capacity_with_load_factor(map->mask)) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
@@ -1304,7 +1272,7 @@ is_same_group(size_t const i, size_t const new_i, uint64_t const hash,
 
 static CCC_Result
 rehash_resize(struct CCC_Flat_hash_map *const map, size_t const to_add,
-              CCC_Allocator_interface *const allocate) {
+              CCC_Allocator const *const allocator) {
     assert(((map->mask + 1) & map->mask) == 0);
     size_t const new_pow2_cap
         = next_power_of_two((map->mask + 1 + to_add) << 1);
@@ -1317,10 +1285,10 @@ rehash_resize(struct CCC_Flat_hash_map *const map, size_t const to_add,
     if (total_bytes < prev_bytes) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
-    void *const new_buf = allocate((CCC_Allocator_arguments){
+    void *const new_buf = allocator->allocate((CCC_Allocator_arguments){
         .input = NULL,
         .bytes = total_bytes,
-        .context = map->context,
+        .context = allocator->context,
     });
     if (!new_buf) {
         return CCC_RESULT_ALLOCATOR_ERROR;
@@ -1353,10 +1321,10 @@ rehash_resize(struct CCC_Flat_hash_map *const map, size_t const to_add,
     }
     new_map.remain -= map->count;
     new_map.count = map->count;
-    (void)allocate((CCC_Allocator_arguments){
+    (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .context = map->context,
+        .context = allocator->context,
     });
     *map = new_map;
     return CCC_RESULT_OK;
@@ -1366,7 +1334,7 @@ rehash_resize(struct CCC_Flat_hash_map *const map, size_t const to_add,
 to support various sources of memory at compile and runtime. */
 static inline CCC_Result
 lazy_initialize(struct CCC_Flat_hash_map *const map, size_t required_total_cap,
-                CCC_Allocator_interface *const allocate) {
+                CCC_Allocator const *const allocator) {
     if (likely(!is_uninitialized(map))) {
         return CCC_RESULT_OK;
     }
@@ -1385,10 +1353,10 @@ lazy_initialize(struct CCC_Flat_hash_map *const map, size_t required_total_cap,
         required_total_cap = max(required_total_cap, GROUP_COUNT);
         size_t const total_bytes
             = mask_to_total_bytes(map->sizeof_type, required_total_cap - 1);
-        map->data = allocate((CCC_Allocator_arguments){
+        map->data = allocator->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = total_bytes,
-            .context = map->context,
+            .context = allocator->context,
         });
         if (!map->data) {
             return CCC_RESULT_ALLOCATOR_ERROR;
@@ -1403,12 +1371,12 @@ lazy_initialize(struct CCC_Flat_hash_map *const map, size_t required_total_cap,
 
 static inline void
 destory_each(struct CCC_Flat_hash_map *const map,
-             CCC_Destructor_interface *const destroy) {
+             CCC_Destructor const *const destructor) {
     for (void *i = CCC_flat_hash_map_begin(map);
          i != CCC_flat_hash_map_end(map); i = CCC_flat_hash_map_next(map, i)) {
-        destroy((CCC_Arguments){
+        destructor->destroy((CCC_Arguments){
             .type = i,
-            .context = map->context,
+            .context = destructor->context,
         });
     }
 }
@@ -1417,7 +1385,7 @@ static inline uint64_t
 hasher(struct CCC_Flat_hash_map const *const map, void const *const any_key) {
     return map->hash((CCC_Key_arguments){
         .key = any_key,
-        .context = map->context,
+        .context = map->hasher_context,
     });
 }
 
@@ -1427,7 +1395,7 @@ is_equal(struct CCC_Flat_hash_map const *const map, void const *const key,
     return map->compare((CCC_Key_comparator_arguments){
                .key_left = key,
                .type_right = data_at(map, i),
-               .context = map->context,
+               .context = map->hasher_context,
            })
         == CCC_ORDER_EQUAL;
 }

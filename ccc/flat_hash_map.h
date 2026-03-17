@@ -643,6 +643,7 @@ returned if resizing is required but fails or is not allowed. */
 /** @brief Invariantly inserts the key value wrapping out_handle.
 @param[in] map the pointer to the flat hash map.
 @param[out] type_output the complete key and value type to be inserted.
+@param[in] allocator the CCC_Allocator needed in case resizing is required.
 @return an entry. If Vacant, no prior element with key existed and entry may be
 unwrapped to view the new insertion in the table. If Occupied the old value is
 written to type_output and may be unwrapped to view. If more space is
@@ -652,12 +653,15 @@ Note that this function may write to the struct containing the second parameter
 and wraps it in an entry to provide information about the old value. */
 [[nodiscard]]
 CCC_Entry CCC_flat_hash_map_swap_entry(CCC_Flat_hash_map *map,
-                                       void *type_output);
+                                       void *type_output,
+                                       CCC_Allocator const *allocator);
 
 /** @brief Invariantly inserts the key value wrapping out_handle.
 @param[in] map_pointer the pointer to the flat hash map.
 @param[out] type_pointer the complete key and value type to be
 inserted.
+@param[in] allocator_pointer the CCC_Allocator needed in case resizing is
+required.
 @return a compound literal reference to an entry. If Vacant, no prior element
 with key existed and entry may be unwrapped to view the new insertion in the
 table. If Occupied the old value is written to type_output and may be
@@ -666,9 +670,11 @@ forbidden, an insert error is set.
 
 Note that this function may write to the struct containing the second parameter
 and wraps it in an entry to provide information about the old value. */
-#define CCC_flat_hash_map_swap_entry_wrap(map_pointer, type_pointer)           \
+#define CCC_flat_hash_map_swap_entry_wrap(map_pointer, type_pointer,           \
+                                          allocator_pointer)                   \
     &(struct { CCC_Entry private; }){                                          \
-        CCC_flat_hash_map_swap_entry(map_pointer, type_pointer)}               \
+        CCC_flat_hash_map_swap_entry(map_pointer, type_pointer,                \
+                                     allocator_pointer)}                       \
          .private
 
 /** @brief Remove the entry from the table if Occupied.
@@ -691,6 +697,7 @@ removed. */
 /** @brief Attempts to insert the key value wrapping key_val_handle
 @param[in] map the pointer to the flat hash map.
 @param[in] type the complete key and value type to be inserted.
+@param[in] allocator the CCC_Allocator needed in case resizing is required.
 @return an entry. If Occupied, the entry contains a reference to the key value
 user type in the table and may be unwrapped. If Vacant the entry contains a
 reference to the newly inserted entry in the table. If more space is needed but
@@ -698,12 +705,14 @@ allocation fails or has been forbidden, an insert error is set.
 @warning because this function returns a reference to a user type in the table
 any subsequent insertions or deletions invalidate this reference. */
 [[nodiscard]]
-CCC_Entry CCC_flat_hash_map_try_insert(CCC_Flat_hash_map *map,
-                                       void const *type);
+CCC_Entry CCC_flat_hash_map_try_insert(CCC_Flat_hash_map *map, void const *type,
+                                       CCC_Allocator const *allocator);
 
 /** @brief Attempts to insert the key value wrapping key_val_array_pointer.
 @param[in] map_pointer the pointer to the flat hash map.
 @param[in] type_pointer the complete key and value type to be inserted.
+@param[in] allocator_pointer the CCC_Allocator needed in case resizing is
+required.
 @return a compound literal reference to the entry. If Occupied, the entry
 contains a reference to the key value user type in the table and may be
 unwrapped. If Vacant the entry contains a reference to the newly inserted
@@ -711,9 +720,11 @@ entry in the table. If more space is needed but allocation fails or has been
 forbidden, an insert error is set.
 @warning because this function returns a reference to a user type in the table
 any subsequent insertions or deletions invalidate this reference. */
-#define CCC_flat_hash_map_try_insert_wrap(map_pointer, type_pointer)           \
+#define CCC_flat_hash_map_try_insert_wrap(map_pointer, type_pointer,           \
+                                          allocator_pointer)                   \
     &(struct { CCC_Entry private; }){                                          \
-        CCC_flat_hash_map_try_insert(map_pointer, type_pointer)}               \
+        CCC_flat_hash_map_try_insert(map_pointer, type_pointer,                \
+                                     allocator_pointer)}                       \
          .private
 
 /** @brief lazily insert type_compound_literal into the map at key if key is
@@ -721,6 +732,8 @@ absent.
 @param[in] map_pointer a pointer to the flat hash map.
 @param[in] key the direct key r-value.
 @param[in] type_compound_literal the compound literal specifying the value.
+@param[in] allocator_pointer the CCC_Allocator needed in case resizing is
+required.
 @return a compound literal reference to the entry of the existing or newly
 inserted value. Occupied indicates the key existed, Vacant indicates the key
 was absent. Unwrapping in any case provides the current value unless an error
@@ -732,16 +745,17 @@ key argument, you will overwrite adjacent bytes of your struct.
 Note that for brevity and convenience the user need not write the key to the
 lazy value compound literal as well. This function ensures the key in the
 compound literal matches the searched key. */
-#define CCC_flat_hash_map_try_insert_with(map_pointer, key,                    \
+#define CCC_flat_hash_map_try_insert_with(map_pointer, key, allocator_pointer, \
                                           type_compound_literal...)            \
     &(struct { CCC_Entry private; }){                                          \
-        CCC_private_flat_hash_map_try_insert_with(map_pointer, key,            \
-                                                  type_compound_literal)}      \
+        CCC_private_flat_hash_map_try_insert_with(                             \
+            map_pointer, key, allocator_pointer, type_compound_literal)}       \
          .private
 
 /** @brief Invariantly inserts or overwrites a user struct into the table.
 @param[in] map a pointer to the flat hash map.
 @param[in] type the complete key and value type to be inserted.
+@param[in] allocator the CCC_Allocator needed in case resizing is required.
 @return an entry. If Occupied an entry was overwritten by the new key value. If
 Vacant no prior table entry existed.
 
@@ -749,24 +763,31 @@ Note that this function can be used when the old user type is not needed but
 the information regarding its presence is helpful. */
 [[nodiscard]]
 CCC_Entry CCC_flat_hash_map_insert_or_assign(CCC_Flat_hash_map *map,
-                                             void const *type);
+                                             void const *type,
+                                             CCC_Allocator const *allocator);
 
 /** @brief Invariantly inserts or overwrites a user struct into the table.
 @param[in] map_pointer a pointer to the flat hash map.
 @param[in] type_pointer the complete key and value type to be inserted.
+@param[in] allocator_pointer the CCC_Allocator needed in case resizing is
+required.
 @return a compound literal reference to the entry. If Occupied an entry was
 overwritten by the new key value. If Vacant no prior table entry existed.
 
 Note that this function can be used when the old user type is not needed but
 the information regarding its presence is helpful. */
-#define CCC_flat_hash_map_insert_or_assign_wrap(map_pointer, type_pointer...)  \
+#define CCC_flat_hash_map_insert_or_assign_wrap(map_pointer, type_pointer,     \
+                                                allocator_pointer)             \
     &(struct { CCC_Entry private; }){                                          \
-        CCC_flat_hash_map_insert_or_assign(map_pointer, type_pointer)}         \
+        CCC_flat_hash_map_insert_or_assign(map_pointer, type_pointer,          \
+                                           allocator_pointer)}                 \
          .private
 
 /** @brief Inserts a new key value pair or overwrites the existing entry.
 @param[in] map_pointer the pointer to the flat hash map.
 @param[in] key the key to be searched in the table.
+@param[in] allocator_pointer the CCC_Allocator needed in case resizing is
+required.
 @param[in] type_compound_literal the compound literal specifying the value.
 @return a compound literal reference to the entry of the existing or newly
 inserted value. Occupied indicates the key existed, Vacant indicates the key
@@ -776,11 +797,11 @@ occurs that prevents insertion. An insertion error will flag such a case.
 Note that for brevity and convenience the user need not write the key to the
 lazy value compound literal as well. This function ensures the key in the
 compound literal matches the searched key. */
-#define CCC_flat_hash_map_insert_or_assign_with(map_pointer, key,              \
-                                                type_compound_literal...)      \
+#define CCC_flat_hash_map_insert_or_assign_with(                               \
+    map_pointer, key, allocator_pointer, type_compound_literal...)             \
     &(struct { CCC_Entry private; }){                                          \
         CCC_private_flat_hash_map_insert_or_assign_with(                       \
-            map_pointer, key, type_compound_literal)}                          \
+            map_pointer, key, allocator_pointer, type_compound_literal)}       \
          .private
 
 /** @brief Removes the key value in the map storing the old value, if present,
@@ -867,24 +888,21 @@ Destroy the container. */
 
 /** @brief Frees all slots in the table for use without affecting capacity.
 @param[in] map the table to be cleared.
-@param[in] destroy the destructor for each element. NULL can be passed if no
-maintenance is required on the elements in the table before their slots are
-forfeit.
-
-If NULL is passed as the destructor function time is O(1), else O(capacity). */
+@param[in] destructor the CCC_Destructor to call on each element if needed.
+If &(CCC_Destructor){} is passed runtime is O(1), else O(capacity). */
 CCC_Result CCC_flat_hash_map_clear(CCC_Flat_hash_map *map,
-                                   CCC_Destructor_interface *destroy);
+                                   CCC_Destructor const *destructor);
 
 /** @brief Frees all slots in the table and frees the underlying buffer.
 @param[in] map the table to be cleared.
-@param[in] destroy the destructor for each element. NULL can be passed if no
-maintenance is required on the elements in the table before their slots are
-forfeit.
-@return the result of free operation. If no allocate function is provided it is
+@param[in] destructor the CCC_Destructor to call on each element if needed.
+@param[in] allocator the CCC_Allocator to free the underlying storage.
+@return the result of free operation. If &(CCC_Allocator){} is provided it is
 an error to attempt to free the Buffer and a memory error is returned.
 Otherwise, an OK result is returned. */
 CCC_Result CCC_flat_hash_map_clear_and_free(CCC_Flat_hash_map *map,
-                                            CCC_Destructor_interface *destroy);
+                                            CCC_Destructor const *destructor,
+                                            CCC_Allocator const *allocator);
 
 /**@}*/
 
@@ -1007,8 +1025,6 @@ typedef CCC_Flat_hash_map_entry Flat_hash_map_entry;
 #    define flat_hash_map_entry(arguments...) CCC_flat_hash_map_entry(arguments)
 #    define flat_hash_map_and_modify(arguments...)                             \
         CCC_flat_hash_map_and_modify(arguments)
-#    define flat_hash_map_and_context_modify(arguments...)                     \
-        CCC_flat_hash_map_and_context_modify(arguments)
 #    define flat_hash_map_or_insert(arguments...)                              \
         CCC_flat_hash_map_or_insert(arguments)
 #    define flat_hash_map_insert_entry(arguments...)                           \
