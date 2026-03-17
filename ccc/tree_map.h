@@ -79,146 +79,49 @@ Initialize the container with memory, callbacks, and permissions. */
 @param[in] type_intruder_field_name the name of the intrusive map elem field.
 @param[in] type_key_field_name the name of the field in user type used
 as key.
-@param[in] compare the key comparison function (see types.h).
-@param[in] allocate the allocation function or NULL if allocation is banned.
-@param[in] context a pointer to any context data for comparison or
-destruction.
+@param[in] comparator_pointer the CCC_Key_comparator for type ordering.
+@return the struct initialized tree map for direct assignment. */
+#define CCC_tree_map_default(type_name, type_intruder_field_name,              \
+                             type_key_field_name, comparator_pointer...)       \
+    CCC_private_tree_map_default(type_name, type_intruder_field_name,          \
+                                 type_key_field_name, comparator_pointer)
+
+/** @brief Initializes the tree map at runtime or compile time.
+@param[in] type_name the user type wrapping the intrusive element.
+@param[in] type_intruder_field_name the name of the intrusive map elem field.
+@param[in] type_key_field_name the name of the field in user type used
+as key.
+@param[in] comparator_pointer the CCC_Key_comparator for type ordering.
 @return the struct initialized tree map for direct assignment
 (i.e. CCC_Tree_map m = CCC_tree_map_for(...);). */
 #define CCC_tree_map_for(type_name, type_intruder_field_name,                  \
-                         type_key_field_name, compare, allocate, context)      \
+                         type_key_field_name, comparator_pointer...)           \
     CCC_private_tree_map_for(type_name, type_intruder_field_name,              \
-                             type_key_field_name, compare, allocate, context)
-
-/** @brief Initialize an empty dynamic map at compile or runtime with an
-allocator.
-@param[in] type_name the user defined type stored in the map.
-@param[in] type_intruder_field the name of the intrusive map node element.
-@param[in] type_key_field the field of the struct used for key storage.
-@param[in] compare the CCC_Key_comparator_interface the user intends to use.
-@param[in] allocate the CCC_Allocator_interface function used to manage map
-memory.
-@return the map directly initialized on the right hand side of the equality
-operator (e.g. CCC_Tree_map map =
-CCC_tree_map_with_allocator(...);)
-
-Initialize a dynamic map at compile time.
-
-```
-#define TREE_MAP_USING_NAMESPACE_CCC
-struct Val
-{
-    tree_map_node node;
-    int key;
-    int val;
-};
-static Tree_map map = tree_map_with_allocator(
-    struct Val,
-    node,
-    key,
-    map_key_order,
-    stdlib_allocate,
-);
-```
-
-This can help eliminate boilerplate in initializers. */
-#define CCC_tree_map_with_allocator(type_name, type_intruder_field,            \
-                                    type_key_field, compare, allocate)         \
-    CCC_private_tree_map_with_allocator(type_name, type_intruder_field,        \
-                                        type_key_field, compare, allocate)
-
-/** @brief Initialize an empty dynamic map at compile or runtime with an
-allocator.
-@param[in] type_name the user defined type stored in the map.
-@param[in] type_intruder_field the name of the intrusive map node element.
-@param[in] type_key_field the field of the struct used for key storage.
-@param[in] compare the CCC_Key_comparator_interface the user intends to use.
-@param[in] allocate the CCC_Allocator_interface function used to manage map
-memory.
-@param[in] context any additional context needed for comparison or allocation.
-@return the map directly initialized on the right hand side of the equality
-operator (e.g. CCC_Tree_map map =
-CCC_tree_map_with_allocator(...);)
-
-Initialize a dynamic map at compile time.
-
-```
-#define TREE_MAP_USING_NAMESPACE_CCC
-struct Val
-{
-    tree_map_node node;
-    int key;
-    int val;
-};
-static Tree_map map = tree_map_with_allocator(
-    struct Val,
-    node,
-    key,
-    map_key_order,
-    arena_allocate,
-    &arena
-);
-```
-
-This can help eliminate boilerplate in initializers. */
-#define CCC_tree_map_context_with_allocator(type_name, type_intruder_field,    \
-                                            type_key_field, compare, allocate, \
-                                            context)                           \
-    CCC_private_tree_map_context_with_allocator(                               \
-        type_name, type_intruder_field, type_key_field, compare, allocate,     \
-        context)
+                             type_key_field_name, comparator_pointer)
 
 /** @brief Initializes a dynamic tree map at runtime.
 @param[in] type_intruder_field_name the name of the intrusive map elem field.
 @param[in] type_key_field_name the name of the field in user type used
 as key.
-@param[in] compare the key comparison function (see types.h).
-@param[in] allocate the allocation function or NULL if allocation is banned.
-@param[in] destroy the destructor function used to act on every node in case
-initialization of new nodes fails and map is emptied in a failure state.
+@param[in] comparator_pointer the CCC_Key_comparator for key comparison.
+@param[in] allocator_pointer the required CCC_Allocator to allocate nodes.
+@param[in] destructor_pointer the optional CCC_Destructor to act on every node
+in case initialization of new nodes fails and map is emptied in a failure state.
 @param[in] compound_literal_array the array of user types to insert into the
 map (e.g. (struct My_type[]){ {.key = 1, .val = 1}, {.key = 2, .val = 2}}).
-@return the struct initialized tree map for direct assignment
-(e.g. CCC_Tree_map m = CCC_tree_map_from(...);) or an empty map if
+@return the struct initialized tree map for direct assignment or an empty map if
 allocation fails.
 
 @warning If any node allocation fails while copying in the values in the
 compound literal array of user types, the map is cleared; if a destructor is
-provided, it is called on each node and they are freed using the provided
-allocate function. */
+provided, it is called on any allocated node and they are freed using the
+provided allocate function. */
 #define CCC_tree_map_from(type_intruder_field_name, type_key_field_name,       \
-                          compare, allocate, destroy,                          \
-                          compound_literal_array...)                           \
+                          comparator_pointer, allocator_pointer,               \
+                          destructor_pointer, compound_literal_array...)       \
     CCC_private_tree_map_from(type_intruder_field_name, type_key_field_name,   \
-                              compare, allocate, destroy,                      \
-                              compound_literal_array)
-
-/** @brief Initializes a dynamic tree map at runtime.
-@param[in] type_intruder_field_name the name of the intrusive map elem field.
-@param[in] type_key_field_name the name of the field in user type used
-as key.
-@param[in] compare the key comparison function (see types.h).
-@param[in] allocate the allocation function or NULL if allocation is banned.
-@param[in] destroy the destructor function used to act on every node in case
-initialization of new nodes fails and map is emptied in a failure state.
-@param[in] context a pointer to any context data for comparison or
-destruction.
-@param[in] compound_literal_array the array of user types to insert into the
-map (e.g. (struct My_type[]){ {.key = 1, .val = 1}, {.key = 2, .val = 2}}).
-@return the struct initialized tree map for direct assignment
-(e.g. CCC_Tree_map m = CCC_tree_map_context_from(...);) or an empty map if
-allocation fails.
-
-@warning If any node allocation fails while copying in the values in the
-compound literal array of user types, the map is cleared; if a destructor is
-provided, it is called on each node and they are freed using the provided
-allocate function. */
-#define CCC_tree_map_context_from(type_intruder_field_name,                    \
-                                  type_key_field_name, compare, allocate,      \
-                                  destroy, context, compound_literal_array...) \
-    CCC_private_tree_map_context_from(                                         \
-        type_intruder_field_name, type_key_field_name, compare, allocate,      \
-        destroy, context, compound_literal_array)
+                              comparator_pointer, allocator_pointer,           \
+                              destructor_pointer, compound_literal_array)
 
 /**@}*/
 
@@ -253,6 +156,7 @@ control flow is needed. */
 @param[in] type_intruder the handle to the user type wrapping map elem.
 @param[in] temp_intruder handle to space for swapping in the old value, if
 present. The same user type stored in the map should wrap temp_intruder.
+@param[in] allocator the CCC_Allocator for allocation of a node if needed.
 @return an entry. If Vacant, no prior element with key existed and the type
 wrapping temp_intruder remains unchanged. If Occupied the old value is written
 to the type wrapping temp_intruder and may be unwrapped to view. If more space
@@ -262,7 +166,8 @@ Note that this function may write to the struct containing temp_intruder and
 wraps it in an entry to provide information about the old value. */
 [[nodiscard]] CCC_Entry
 CCC_tree_map_swap_entry(CCC_Tree_map *map, CCC_Tree_map_node *type_intruder,
-                        CCC_Tree_map_node *temp_intruder);
+                        CCC_Tree_map_node *temp_intruder,
+                        CCC_Allocator const *allocator);
 
 /** @brief Invariantly inserts the key value wrapping type_intruder_pointer.
 @param[in] map_pointer the pointer to the tree map.
@@ -271,6 +176,7 @@ elem.
 @param[in] temp_intruder_pointer handle to space for swapping in the old value,
 if present. The same user type stored in the map should wrap
 temp_intruder_pointer.
+@param[in] allocator_pointer the CCC_Allocator for allocation of a node.
 @return a compound literal reference to an entry. If Vacant, no prior element
 with key existed and the type wrapping temp_intruder_pointer remains unchanged.
 If Occupied the old value is written to the type wrapping temp_intruder_pointer
@@ -280,40 +186,47 @@ has been forbidden, an insert error is set.
 Note that this function may write to the struct containing temp_intruder_pointer
 and wraps it in an entry to provide information about the old value. */
 #define CCC_tree_map_swap_entry_wrap(map_pointer, type_intruder_pointer,       \
-                                     temp_intruder_pointer)                    \
+                                     temp_intruder_pointer,                    \
+                                     allocator_pointer...)                     \
     &(struct { CCC_Entry private; }){                                          \
         CCC_tree_map_swap_entry((map_pointer), (type_intruder_pointer),        \
-                                (temp_intruder_pointer))}                      \
+                                (temp_intruder_pointer), allocator_pointer)}   \
          .private
 
 /** @brief Attempts to insert the key value wrapping type_intruder.
 @param[in] map the pointer to the map.
 @param[in] type_intruder the handle to the user type wrapping map elem.
+@param[in] allocator the CCC_Allocator for allocation of a node if needed.
 @return an entry. If Occupied, the entry contains a reference to the key value
 user type in the map and may be unwrapped. If Vacant the entry contains a
 reference to the newly inserted entry in the map. If more space is needed but
 allocation fails, an insert error is set. */
 [[nodiscard]] CCC_Entry
-CCC_tree_map_try_insert(CCC_Tree_map *map, CCC_Tree_map_node *type_intruder);
+CCC_tree_map_try_insert(CCC_Tree_map *map, CCC_Tree_map_node *type_intruder,
+                        CCC_Allocator const *allocator);
 
 /** @brief Attempts to insert the key value wrapping type_intruder.
 @param[in] map_pointer the pointer to the map.
 @param[in] type_intruder_pointer the handle to the user type wrapping map
 elem.
+@param[in] allocator_pointer the CCC_Allocator for allocation of a node.
 @return a compound literal reference to an entry. If Occupied, the entry
 contains a reference to the key value user type in the map and may be unwrapped.
 If Vacant the entry contains a reference to the newly inserted entry in the map.
 If more space is needed but allocation fails or has been forbidden, an insert
 error is set. */
-#define CCC_tree_map_try_insert_wrap(map_pointer, type_intruder_pointer)       \
+#define CCC_tree_map_try_insert_wrap(map_pointer, type_intruder_pointer,       \
+                                     allocator_pointer...)                     \
     &(struct { CCC_Entry private; }){                                          \
-        CCC_tree_map_try_insert((map_pointer), (type_intruder_pointer))}       \
+        CCC_tree_map_try_insert((map_pointer), (type_intruder_pointer),        \
+                                allocator_pointer)}                            \
          .private
 
 /** @brief lazily insert type_compound_literal into the map at key if key is
 absent.
 @param[in] map_pointer a pointer to the map.
 @param[in] key the direct key r-value.
+@param[in] allocator_pointer the CCC_Allocator for allocation of a node.
 @param[in] type_compound_literal the compound literal specifying the value.
 @return a compound literal reference to the entry of the existing or newly
 inserted value. Occupied indicates the key existed, Vacant indicates the key
@@ -323,16 +236,17 @@ occurs that prevents insertion. An insertion error will flag such a case.
 Note that for brevity and convenience the user need not write the key to the
 lazy value compound literal as well. This function ensures the key in the
 compound literal matches the searched key. */
-#define CCC_tree_map_try_insert_with(map_pointer, key,                         \
+#define CCC_tree_map_try_insert_with(map_pointer, key, allocator_pointer,      \
                                      type_compound_literal...)                 \
     &(struct { CCC_Entry private; }){                                          \
-        CCC_private_tree_map_try_insert_with(map_pointer, key,                 \
-                                             type_compound_literal)}           \
+        CCC_private_tree_map_try_insert_with(                                  \
+            map_pointer, key, allocator_pointer, type_compound_literal)}       \
          .private
 
 /** @brief Invariantly inserts or overwrites a user struct into the map.
 @param[in] map a pointer to the flat hash map.
 @param[in] type_intruder the handle to the wrapping user struct key value.
+@param[in] allocator the CCC_Allocator for allocation of a node if needed.
 @return an entry. If Occupied an entry was overwritten by the new key value. If
 Vacant no prior map entry existed.
 
@@ -340,11 +254,13 @@ Note that this function can be used when the old user type is not needed but
 the information regarding its presence is helpful. */
 [[nodiscard]] CCC_Entry
 CCC_tree_map_insert_or_assign(CCC_Tree_map *map,
-                              CCC_Tree_map_node *type_intruder);
+                              CCC_Tree_map_node *type_intruder,
+                              CCC_Allocator const *allocator);
 
 /** @brief Invariantly inserts or overwrites a user struct into the map.
 @param[in] map_pointer a pointer to the flat hash map.
 @param[in] type_intruder_pointer the handle to the wrapping user type.
+@param[in] allocator_pointer the CCC_Allocator for allocation of a node.
 @return a compound literal reference to an entry. If Occupied an entry was
 overwritten by the new key value. If Vacant no prior map entry existed. An
 insert error is returned if insertion failed, in which case unwrapping yields
@@ -354,15 +270,17 @@ Note that this function can be used when the old user type is not needed but
 the information regarding its presence is helpful. The compound literal
 reference resides in the automatic storage of the calling scope, like a normal
 return by value; the reference is returned to enable function chaining. */
-#define CCC_tree_map_insert_or_assign_wrap(map_pointer,                        \
-                                           type_intruder_pointer...)           \
+#define CCC_tree_map_insert_or_assign_wrap(map_pointer, type_intruder_pointer, \
+                                           allocator_pointer...)               \
     &(struct { CCC_Entry private; }){                                          \
-        CCC_tree_map_insert_or_assign((map_pointer), type_intruder_pointer)}   \
+        CCC_tree_map_insert_or_assign((map_pointer), (type_intruder_pointer),  \
+                                      allocator_pointer)}                      \
          .private
 
 /** @brief Inserts a new key value pair or overwrites the existing entry.
 @param[in] map_pointer the pointer to the flat hash map.
 @param[in] key the key to be searched in the map.
+@param[in] allocator_pointer the CCC_Allocator for allocation of a node.
 @param[in] type_compound_literal the compound literal to insert or use for
 overwrite.
 @return a compound literal reference to the entry of the existing or newly
@@ -373,17 +291,18 @@ occurs that prevents insertion. An insertion error will flag such a case.
 Note that for brevity and convenience the user need not write the key to the
 lazy value compound literal as well. This function ensures the key in the
 compound literal matches the searched key. */
-#define CCC_tree_map_insert_or_assign_with(map_pointer, key,                   \
-                                           type_compound_literal...)           \
+#define CCC_tree_map_insert_or_assign_with(                                    \
+    map_pointer, key, allocator_pointer, type_compound_literal...)             \
     &(struct { CCC_Entry private; }){                                          \
-        CCC_private_tree_map_insert_or_assign_with(map_pointer, key,           \
-                                                   type_compound_literal)}     \
+        CCC_private_tree_map_insert_or_assign_with(                            \
+            map_pointer, key, allocator_pointer, type_compound_literal)}       \
          .private
 
 /** @brief Removes the key value in the map storing the old value, if present,
 in the struct containing output_intruder provided by the user.
 @param[in] map the pointer to the tree map.
 @param[out] output_intruder the handle to the user type wrapping map elem.
+@param[in] allocator the CCC_Allocator for freeing of a node if needed.
 @return the removed entry. If Occupied it may be unwrapped to obtain the old key
 value pair. If Vacant the key value pair was not stored in the map. If bad input
 is provided an input error is set.
@@ -397,13 +316,15 @@ the output_intruder. It is then the user's responsibility to manage their
 previously stored memory as they see fit. */
 [[nodiscard]] CCC_Entry
 CCC_tree_map_remove_key_value(CCC_Tree_map *map,
-                              CCC_Tree_map_node *output_intruder);
+                              CCC_Tree_map_node *output_intruder,
+                              CCC_Allocator const *allocator);
 
 /** @brief Removes the key value in the map storing the old value, if present,
 in the struct containing output_intruder_pointer provided by the user.
 @param[in] map_pointer the pointer to the tree map.
 @param[out] output_intruder_pointer the handle to the user type wrapping map
 elem.
+@param[in] allocator_pointer the CCC_Allocator for freeing of a node if needed.
 @return a compound literal reference to the removed entry. If Occupied it may be
 unwrapped to obtain the old key value pair. If Vacant the key value pair was not
 stored in the map. If bad input is provided an input error is set.
@@ -415,11 +336,11 @@ If allocation has been prohibited upon initialization then the entry returned
 contains the previously stored user type, if any, and nothing is written to
 the output_intruder_pointer. It is then the user's responsibility to manage
 their previously stored memory as they see fit. */
-#define CCC_tree_map_remove_key_value_wrap(map_pointer,                        \
-                                           output_intruder_pointer)            \
+#define CCC_tree_map_remove_key_value_wrap(                                    \
+    map_pointer, output_intruder_pointer, allocator_pointer...)                \
     &(struct { CCC_Entry private; }){                                          \
-        CCC_tree_map_remove_key_value((map_pointer),                           \
-                                      (output_intruder_pointer))}              \
+        CCC_tree_map_remove_key_value(                                         \
+            (map_pointer), (output_intruder_pointer), allocator_pointer)}      \
          .private
 
 /** @brief Obtains an entry for the provided key in the map for future use.
@@ -455,35 +376,18 @@ where in the map such an element should be inserted.
 
 An entry is rarely useful on its own. It should be passed in a functional style
 to subsequent calls in the Entry Interface. */
-#define CCC_tree_map_entry_wrap(map_pointer, key_pointer)                      \
+#define CCC_tree_map_entry_wrap(map_pointer, key_pointer...)                   \
     &(struct { CCC_Tree_map_entry private; }){                                 \
-        CCC_tree_map_entry((map_pointer), (key_pointer))}                      \
+        CCC_tree_map_entry((map_pointer), key_pointer)}                        \
          .private
 
 /** @brief Modifies the provided entry if it is Occupied.
 @param[in] entry the entry obtained from an entry function or macro.
-@param[in] modify an update function in which the context argument is unused.
-@return the updated entry if it was Occupied or the unmodified vacant entry.
-
-This function is intended to make the function chaining in the Entry Interface
-more succinct if the entry will be modified in place based on its own value
-without the need of the context argument a CCC_Modifier_interface can provide.
-*/
+@param[in] modifier a CCC_Modifier to act on a user element.
+@return the updated entry if it was Occupied or the unmodified vacant entry. */
 [[nodiscard]] CCC_Tree_map_entry *
 CCC_tree_map_and_modify(CCC_Tree_map_entry *entry,
-                        CCC_Modifier_interface *modify);
-
-/** @brief Modifies the provided entry if it is Occupied.
-@param[in] entry the entry obtained from an entry function or macro.
-@param[in] modify an update function that requires context data.
-@param[in] context context data required for the update.
-@return the updated entry if it was Occupied or the unmodified vacant entry.
-
-This function makes full use of a CCC_Modifier_interface capability, meaning a
-complete CCC_update object will be passed to the update function callback. */
-[[nodiscard]] CCC_Tree_map_entry *
-CCC_tree_map_and_context_modify(CCC_Tree_map_entry *entry,
-                                CCC_Modifier_interface *modify, void *context);
+                        CCC_Modifier const *modifier);
 
 /** @brief Modify an Occupied entry with a closure over user type T.
 @param[in] map_pointer a pointer to the obtained entry.
@@ -532,6 +436,7 @@ evaluated in the closure scope. */
 @param[in] entry the entry obtained via function or macro call.
 @param[in] type_intruder the handle to the struct to be inserted to a Vacant
 entry.
+@param[in] allocator the CCC_Allocator for allocation of a node if needed.
 @return a pointer to entry in the map invariantly. NULL on error.
 
 Because this functions takes an entry and inserts if it is Vacant, the only
@@ -541,10 +446,12 @@ a user struct allocation failure.
 If no allocation is permitted, this function assumes the user struct wrapping
 elem has been allocated with the appropriate lifetime and scope by the user. */
 [[nodiscard]] void *CCC_tree_map_or_insert(CCC_Tree_map_entry const *entry,
-                                           CCC_Tree_map_node *type_intruder);
+                                           CCC_Tree_map_node *type_intruder,
+                                           CCC_Allocator const *allocator);
 
 /** @brief Lazily insert the desired key value into the entry if it is Vacant.
 @param[in] map_pointer a pointer to the obtained entry.
+@param[in] allocator_pointer the CCC_Allocator for freeing of a node if needed.
 @param[in] type_compound_literal the compound literal to construct in place if
 the entry is Vacant.
 @return a reference to the unwrapped user type in the entry, either the
@@ -554,43 +461,53 @@ is not allowed.
 
 Note that if the compound literal uses any function calls to generate values
 or other data, such functions will not be called if the entry is Occupied. */
-#define CCC_tree_map_or_insert_with(map_pointer, type_compound_literal...)     \
-    CCC_private_tree_map_or_insert_with(map_pointer, type_compound_literal)
+#define CCC_tree_map_or_insert_with(map_pointer, allocator_pointer,            \
+                                    type_compound_literal...)                  \
+    CCC_private_tree_map_or_insert_with(map_pointer, allocator_pointer,        \
+                                        type_compound_literal)
 
 /** @brief Inserts the provided entry invariantly.
 @param[in] entry the entry returned from a call obtaining an entry.
 @param[in] type_intruder a handle to the struct the user intends to insert.
+@param[in] allocator the CCC_Allocator for allocation of a node if needed.
 @return a pointer to the inserted element or NULL upon allocation failure.
 
 This method can be used when the old value in the map does not need to
 be preserved. See the regular insert method if the old value is of interest. */
 [[nodiscard]] void *CCC_tree_map_insert_entry(CCC_Tree_map_entry const *entry,
-                                              CCC_Tree_map_node *type_intruder);
+                                              CCC_Tree_map_node *type_intruder,
+                                              CCC_Allocator const *);
 
 /** @brief Write the contents of the compound literal type_compound_literal to a
 node.
 @param[in] map_pointer a pointer to the obtained entry.
+@param[in] allocator_pointer the CCC_Allocator for node allocation if needed.
 @param[in] type_compound_literal the compound literal to write to a new slot.
 @return a reference to the newly inserted or overwritten user type. NULL is
 returned if allocation failed or is not allowed when required. */
-#define CCC_tree_map_insert_entry_with(map_pointer, type_compound_literal...)  \
-    CCC_private_tree_map_insert_entry_with(map_pointer, type_compound_literal)
+#define CCC_tree_map_insert_entry_with(map_pointer, allocator_pointer,         \
+                                       type_compound_literal...)               \
+    CCC_private_tree_map_insert_entry_with(map_pointer, allocator_pointer,     \
+                                           type_compound_literal)
 
 /** @brief Remove the entry from the map if Occupied.
 @param[in] entry a pointer to the map entry.
+@param[in] allocator the CCC_Allocator for node freeing if needed.
 @return an entry containing NULL or a reference to the old entry. If Occupied an
 entry in the map existed and was removed. If Vacant, no prior entry existed to
 be removed.
 
-Note that if allocation is permitted the old element is freed and the entry
-will contain a NULL reference. If allocation is prohibited the entry can be
-unwrapped to obtain the old user struct stored in the map and the user may
+Note that if allocation is provided the old element is freed and the entry
+will contain a NULL reference. If `&(CCC_Allocator){}` is passed the entry can
+be unwrapped to obtain the old user struct stored in the map and the user may
 free or use as needed. */
 [[nodiscard]] CCC_Entry
-CCC_tree_map_remove_entry(CCC_Tree_map_entry const *entry);
+CCC_tree_map_remove_entry(CCC_Tree_map_entry const *entry,
+                          CCC_Allocator const *allocator);
 
 /** @brief Remove the entry from the map if Occupied.
 @param[in] map_pointer a pointer to the map entry.
+@param[in] allocator_pointer the CCC_Allocator for node freeing if needed.
 @return a compound literal reference to an entry containing NULL or a reference
 to the old entry. If Occupied an entry in the map existed and was removed. If
 Vacant, no prior entry existed to be removed.
@@ -599,8 +516,9 @@ Note that if allocation is permitted the old element is freed and the entry
 will contain a NULL reference. If allocation is prohibited the entry can be
 unwrapped to obtain the old user struct stored in the map and the user may
 free or use as needed. */
-#define CCC_tree_map_remove_entry_wrap(map_pointer)                            \
-    &(struct { CCC_Entry private; }){CCC_tree_map_remove_entry((map_pointer))} \
+#define CCC_tree_map_remove_entry_wrap(map_pointer, allocator_pointer...)      \
+    &(struct { CCC_Entry private; }){                                          \
+        CCC_tree_map_remove_entry((map_pointer), allocator_pointer)}           \
          .private
 
 /** @brief Unwraps the provided entry to obtain a view into the map element.
@@ -643,19 +561,17 @@ Deallocate the container. */
 /** @brief Pops every element from the map calling destructor if destructor is
 non-NULL. O(N).
 @param[in] map a pointer to the map.
-@param[in] destroy a destructor function if required. NULL if unneeded.
+@param[in] destructor a CCC_Destructor for each element if needed.
+@param[in] allocator a CCC_Allocator for freeing nodes in the map if needed.
 @return an input error if map points to NULL otherwise OK.
 
-Note that if the map has been given permission to allocate, the destructor will
-be called on each element before it uses the provided allocator to free the
-element. Therefore, the destructor should not free the element or a double free
-will occur.
-
-If the container has not been given allocation permission, then the destructor
-may free elements or not depending on how and when the user wishes to free
-elements of the map according to their own memory management schemes. */
+Note that if the map has been given an allocator, the destructor will be called
+on each element before it uses the provided allocator to free the element.
+Therefore, the destructor should not free the element or a double free will
+occur. */
 CCC_Result CCC_tree_map_clear(CCC_Tree_map *map,
-                              CCC_Destructor_interface *destroy);
+                              CCC_Destructor const *destructor,
+                              CCC_Allocator const *allocator);
 
 /**@}*/
 
@@ -812,14 +728,9 @@ NULL. */
 typedef CCC_Tree_map_node Tree_map_node;
 typedef CCC_Tree_map Tree_map;
 typedef CCC_Tree_map_entry Tree_map_entry;
+#    define tree_map_default(arguments...) CCC_tree_map_default(arguments)
 #    define tree_map_for(arguments...) CCC_tree_map_for(arguments)
-#    define tree_map_with_allocator(arguments...)                              \
-        CCC_tree_map_with_allocator(arguments)
-#    define tree_map_context_with_allocator(arguments...)                      \
-        CCC_tree_map_context_with_allocator(arguments)
 #    define tree_map_from(arguments...) CCC_tree_map_from(arguments)
-#    define tree_map_context_from(arguments...)                                \
-        CCC_tree_map_context_from(arguments)
 #    define tree_map_and_modify_with(arguments...)                             \
         CCC_tree_map_and_modify_with(arguments)
 #    define tree_map_or_insert_with(arguments...)                              \
@@ -843,8 +754,6 @@ typedef CCC_Tree_map_entry Tree_map_entry;
 #    define tree_map_entry_wrap(arguments...) CCC_tree_map_entry_wrap(arguments)
 #    define tree_map_and_modify_wrap(arguments...)                             \
         CCC_tree_map_and_modify_wrap(arguments)
-#    define tree_map_and_context_modify_wrap(arguments...)                     \
-        CCC_tree_map_and_context_modify_wrap(arguments)
 #    define tree_map_contains(arguments...) CCC_tree_map_contains(arguments)
 #    define tree_map_get_key_value(arguments...)                               \
         CCC_tree_map_get_key_value(arguments)

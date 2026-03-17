@@ -62,10 +62,8 @@ struct CCC_Tree_map {
     size_t sizeof_type;
     /** @internal The comparison function for three way comparison. */
     CCC_Key_comparator_interface *compare;
-    /** @internal An allocation function, if any. */
-    CCC_Allocator_interface *allocate;
-    /** @internal Auxiliary data, if any. */
-    void *context;
+    /** @internal Auxiliary data for comparison. */
+    void *comparator_context;
 };
 
 /** @internal An entry is a way to store a node or the information needed to
@@ -103,8 +101,8 @@ void *CCC_private_tree_map_insert(
 
 /** @internal */
 #define CCC_private_tree_map_for(private_struct_name, private_node_field,      \
-                                 private_key_node_field, private_key_order_fn, \
-                                 private_allocate, private_context)            \
+                                 private_key_node_field,                       \
+                                 private_comparator_pointer...)                \
     {                                                                          \
         .root = NULL,                                                          \
         .count = 0,                                                            \
@@ -112,40 +110,35 @@ void *CCC_private_tree_map_insert(
         .type_intruder_offset                                                  \
         = offsetof(private_struct_name, private_node_field),                   \
         .sizeof_type = sizeof(private_struct_name),                            \
-        .compare = (private_key_order_fn),                                     \
-        .allocate = (private_allocate),                                        \
-        .context = (private_context),                                          \
+        .compare = (private_comparator_pointer)->compare,                      \
+        .context = (private_comparator_pointer)->context,                      \
     }
 
 /** @internal */
-#define CCC_private_tree_map_with_allocator(                                   \
-    private_struct_name, private_node_field, private_key_node_field,           \
-    private_key_order_fn, private_allocate)                                    \
+#define CCC_private_tree_map_default(private_struct_name, private_node_field,  \
+                                     private_key_node_field,                   \
+                                     private_comparator_pointer...)            \
     CCC_private_tree_map_for(private_struct_name, private_node_field,          \
-                             private_key_node_field, private_key_order_fn,     \
-                             private_allocate, NULL)
+                             private_key_node_field,                           \
+                             private_comparator_pointer)
 
 /** @internal */
-#define CCC_private_tree_map_context_with_allocator(                           \
-    private_struct_name, private_node_field, private_key_node_field,           \
-    private_key_order_fn, private_allocate, private_context)                   \
-    CCC_private_tree_map_for(private_struct_name, private_node_field,          \
-                             private_key_node_field, private_key_order_fn,     \
-                             private_allocate, private_context)
-
-/** @internal */
-#define CCC_private_tree_map_context_from(                                     \
-    private_type_intruder_field_name, private_key_field_name, private_compare, \
-    private_allocate, private_destroy, private_context,                        \
-    private_compound_literal_array...)                                         \
+#define CCC_private_tree_map_from(                                             \
+    private_type_intruder_field_name, private_key_field_name,                  \
+    private_comparator_pointer, private_allocator_pointer,                     \
+    private_destructor_pointer, private_compound_literal_array...)             \
     (__extension__({                                                           \
         typeof(*private_compound_literal_array) *private_tree_map_type_array   \
             = private_compound_literal_array;                                  \
         struct CCC_Tree_map private_map = CCC_private_tree_map_for(            \
             typeof(*private_tree_map_type_array),                              \
             private_type_intruder_field_name, private_key_field_name,          \
-            private_compare, private_allocate, private_context);               \
-        if (private_map.allocate) {                                            \
+            private_comparator_pointer, private_allocator_pointer,             \
+            private_context);                                                  \
+        CCC_Allocator const *const private_tree_map_allocator                  \
+            = (private_allocator_pointer);                                     \
+        if (private_tree_map_allocator                                         \
+            && private_tree_map_allocator->allocate) {                         \
             size_t const private_count                                         \
                 = sizeof(private_compound_literal_array)                       \
                 / sizeof(*private_tree_map_type_array);                        \
@@ -160,14 +153,16 @@ void *CCC_private_tree_map_insert(
                       & CCC_ENTRY_OCCUPIED)) {                                 \
                     typeof(*private_tree_map_type_array) *const                \
                         private_new_slot                                       \
-                        = private_map.allocate((CCC_Allocator_arguments){      \
+                        = private_tree_map_allocator->allocate((               \
+                            CCC_Allocator_arguments){                          \
                             .input = NULL,                                     \
                             .bytes = private_map.sizeof_type,                  \
-                            .context = private_map.context,                    \
+                            .context = private_tree_map_allocator->context,    \
                         });                                                    \
                     if (!private_new_slot) {                                   \
                         (void)CCC_tree_map_clear(&private_map,                 \
-                                                 private_destroy);             \
+                                                 private_destructor_pointer,   \
+                                                 private_tree_map_allocator);  \
                         break;                                                 \
                     }                                                          \
                     *private_new_slot                                          \
@@ -195,56 +190,50 @@ void *CCC_private_tree_map_insert(
         private_map;                                                           \
     }))
 
-/** @internal */
-#define CCC_private_tree_map_from(                                             \
-    private_type_intruder_field_name, private_key_field_name, private_compare, \
-    private_allocate, private_destroy, private_compound_literal_array...)      \
-    CCC_private_tree_map_context_from(private_type_intruder_field_name,        \
-                                      private_key_field_name, private_compare, \
-                                      private_allocate, private_destroy, NULL, \
-                                      private_compound_literal_array)
-
 /*==================   Helper Macros for Repeated Logic     =================*/
 
 /** @internal */
-#define CCC_private_tree_map_new(Tree_map_entry)                               \
+#define CCC_private_tree_map_new(private_tree_map_entry,                       \
+                                 private_allocator_pointer)                    \
     (__extension__({                                                           \
         void *private_tree_map_ins_allocate_ret = NULL;                        \
-        if ((Tree_map_entry)->map->allocate) {                                 \
+        if ((private_allocator_pointer)->allocate) {                           \
             private_tree_map_ins_allocate_ret                                  \
-                = (Tree_map_entry)                                             \
-                      ->map->allocate((CCC_Allocator_arguments){               \
+                = (private_allocator_pointer)                                  \
+                      ->allocate((CCC_Allocator_arguments){                    \
                           .input = NULL,                                       \
-                          .bytes = (Tree_map_entry)->map->sizeof_type,         \
-                          .context = (Tree_map_entry)->map->context,           \
+                          .bytes = (private_tree_map_entry)->map->sizeof_type, \
+                          .context = (private_allocator_pointer)->context,     \
                       });                                                      \
         }                                                                      \
         private_tree_map_ins_allocate_ret;                                     \
     }))
 
 /** @internal */
-#define CCC_private_tree_map_insert_key_val(Tree_map_entry, new_data,          \
+#define CCC_private_tree_map_insert_key_val(private_tree_map_entry, new_data,  \
                                             type_compound_literal...)          \
     (__extension__({                                                           \
         if (new_data) {                                                        \
             *new_data = type_compound_literal;                                 \
             new_data = CCC_private_tree_map_insert(                            \
-                (Tree_map_entry)->map,                                         \
+                (private_tree_map_entry)->map,                                 \
                 CCC_private_tree_map_node_in_slot(                             \
-                    (Tree_map_entry)->map, (Tree_map_entry)->entry.type),      \
-                (Tree_map_entry)->last_order,                                  \
-                CCC_private_tree_map_node_in_slot((Tree_map_entry)->map,       \
-                                                  new_data));                  \
+                    (private_tree_map_entry)->map,                             \
+                    (private_tree_map_entry)->entry.type),                     \
+                (private_tree_map_entry)->last_order,                          \
+                CCC_private_tree_map_node_in_slot(                             \
+                    (private_tree_map_entry)->map, new_data));                 \
         }                                                                      \
     }))
 
 /** @internal */
 #define CCC_private_tree_map_insert_and_copy_key(                              \
     tree_map_insert_entry, tree_map_insert_entry_ret, key,                     \
-    type_compound_literal...)                                                  \
+    private_allocator_pointer, type_compound_literal...)                       \
     (__extension__({                                                           \
         typeof(type_compound_literal) *private_tree_map_new_ins_base           \
-            = CCC_private_tree_map_new((&tree_map_insert_entry));              \
+            = CCC_private_tree_map_new((&tree_map_insert_entry),               \
+                                       private_allocator_pointer);             \
         tree_map_insert_entry_ret = (CCC_Entry){                               \
             .type = private_tree_map_new_ins_base,                             \
             .status = CCC_ENTRY_INSERT_ERROR,                                  \
@@ -269,10 +258,11 @@ void *CCC_private_tree_map_insert(
 /*==================     Core Macro Implementations     =====================*/
 
 /** @internal */
-#define CCC_private_tree_map_and_modify_with(Tree_map_entry_pointer,           \
+#define CCC_private_tree_map_and_modify_with(private_tree_map_entry_pointer,   \
                                              type_name, closure_over_T...)     \
     (__extension__({                                                           \
-        __auto_type private_tree_map_ent_pointer = (Tree_map_entry_pointer);   \
+        __auto_type private_tree_map_ent_pointer                               \
+            = (private_tree_map_entry_pointer);                                \
         struct CCC_Tree_map_entry private_tree_map_mod_ent                     \
             = {.entry = {.status = CCC_ENTRY_ARGUMENT_ERROR}};                 \
         if (private_tree_map_ent_pointer) {                                    \
@@ -288,19 +278,23 @@ void *CCC_private_tree_map_insert(
     }))
 
 /** @internal */
-#define CCC_private_tree_map_or_insert_with(Tree_map_entry_pointer,            \
+#define CCC_private_tree_map_or_insert_with(private_tree_map_entry_pointer,    \
+                                            private_allocator_pointer,         \
                                             type_compound_literal...)          \
     (__extension__({                                                           \
-        __auto_type private_or_ins_entry_pointer = (Tree_map_entry_pointer);   \
+        __auto_type private_or_ins_entry_pointer                               \
+            = (private_tree_map_entry_pointer);                                \
         typeof(type_compound_literal) *private_tree_map_or_ins_ret = NULL;     \
-        if (private_or_ins_entry_pointer) {                                    \
+        CCC_Allocator const *const private_tree_map_allocator                  \
+            = (private_allocator_pointer);                                     \
+        if (private_tree_map_allocator && private_or_ins_entry_pointer) {      \
             if (private_or_ins_entry_pointer->entry.status                     \
                 == CCC_ENTRY_OCCUPIED) {                                       \
                 private_tree_map_or_ins_ret                                    \
                     = private_or_ins_entry_pointer->entry.type;                \
             } else {                                                           \
-                private_tree_map_or_ins_ret                                    \
-                    = CCC_private_tree_map_new(private_or_ins_entry_pointer);  \
+                private_tree_map_or_ins_ret = CCC_private_tree_map_new(        \
+                    private_or_ins_entry_pointer, private_tree_map_allocator); \
                 CCC_private_tree_map_insert_key_val(                           \
                     private_or_ins_entry_pointer, private_tree_map_or_ins_ret, \
                     type_compound_literal);                                    \
@@ -310,16 +304,20 @@ void *CCC_private_tree_map_insert(
     }))
 
 /** @internal */
-#define CCC_private_tree_map_insert_entry_with(Tree_map_entry_pointer,         \
+#define CCC_private_tree_map_insert_entry_with(private_tree_map_entry_pointer, \
+                                               private_allocator_pointer,      \
                                                type_compound_literal...)       \
     (__extension__({                                                           \
-        __auto_type private_ins_entry_pointer = (Tree_map_entry_pointer);      \
+        __auto_type private_ins_entry_pointer                                  \
+            = (private_tree_map_entry_pointer);                                \
         typeof(type_compound_literal) *private_tree_map_ins_ent_ret = NULL;    \
-        if (private_ins_entry_pointer) {                                       \
+        CCC_Allocator const *const private_tree_map_allocator                  \
+            = (private_allocator_pointer);                                     \
+        if (private_tree_map_allocator && private_ins_entry_pointer) {         \
             if (!(private_ins_entry_pointer->entry.status                      \
                   & CCC_ENTRY_OCCUPIED)) {                                     \
-                private_tree_map_ins_ent_ret                                   \
-                    = CCC_private_tree_map_new(private_ins_entry_pointer);     \
+                private_tree_map_ins_ent_ret = CCC_private_tree_map_new(       \
+                    private_ins_entry_pointer, private_allocator_pointer);     \
                 CCC_private_tree_map_insert_key_val(                           \
                     private_ins_entry_pointer, private_tree_map_ins_ent_ret,   \
                     type_compound_literal);                                    \
@@ -345,13 +343,16 @@ void *CCC_private_tree_map_insert(
 
 /** @internal */
 #define CCC_private_tree_map_try_insert_with(Tree_map_pointer, key,            \
+                                             private_allocator_pointer,        \
                                              type_compound_literal...)         \
     (__extension__({                                                           \
         struct CCC_Tree_map *const private_try_ins_map_pointer                 \
             = (Tree_map_pointer);                                              \
         CCC_Entry private_tree_map_try_ins_ent_ret                             \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                            \
-        if (private_try_ins_map_pointer) {                                     \
+        CCC_Allocator const *const private_tree_map_allocator                  \
+            = (private_allocator_pointer);                                     \
+        if (private_tree_map_allocator && private_try_ins_map_pointer) {       \
             __auto_type private_tree_map_key = (key);                          \
             struct CCC_Tree_map_entry private_tree_map_try_ins_ent             \
                 = CCC_private_tree_map_entry(private_try_ins_map_pointer,      \
@@ -361,7 +362,7 @@ void *CCC_private_tree_map_insert(
                 CCC_private_tree_map_insert_and_copy_key(                      \
                     private_tree_map_try_ins_ent,                              \
                     private_tree_map_try_ins_ent_ret, private_tree_map_key,    \
-                    type_compound_literal);                                    \
+                    private_tree_map_allocator, type_compound_literal);        \
             } else if (private_tree_map_try_ins_ent.entry.status               \
                        == CCC_ENTRY_OCCUPIED) {                                \
                 private_tree_map_try_ins_ent_ret                               \
@@ -373,13 +374,16 @@ void *CCC_private_tree_map_insert(
 
 /** @internal */
 #define CCC_private_tree_map_insert_or_assign_with(Tree_map_pointer, key,      \
+                                                   private_allocator_pointer,  \
                                                    type_compound_literal...)   \
     (__extension__({                                                           \
         struct CCC_Tree_map *const private_ins_or_assign_map_pointer           \
             = (Tree_map_pointer);                                              \
         CCC_Entry private_tree_map_ins_or_assign_ent_ret                       \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                            \
-        if (private_ins_or_assign_map_pointer) {                               \
+        CCC_Allocator const *const private_tree_map_allocator                  \
+            = (private_allocator_pointer);                                     \
+        if (private_tree_map_allocator && private_ins_or_assign_map_pointer) { \
             __auto_type private_tree_map_key = (key);                          \
             struct CCC_Tree_map_entry private_tree_map_ins_or_assign_ent       \
                 = CCC_private_tree_map_entry(                                  \
@@ -390,7 +394,8 @@ void *CCC_private_tree_map_insert(
                 CCC_private_tree_map_insert_and_copy_key(                      \
                     private_tree_map_ins_or_assign_ent,                        \
                     private_tree_map_ins_or_assign_ent_ret,                    \
-                    private_tree_map_key, type_compound_literal);              \
+                    private_tree_map_key, private_tree_map_allocator,          \
+                    type_compound_literal);                                    \
             } else if (private_tree_map_ins_or_assign_ent.entry.status         \
                        == CCC_ENTRY_OCCUPIED) {                                \
                 struct CCC_Tree_map_node private_ins_ent_saved                 \

@@ -452,7 +452,7 @@ CCC_flat_hash_map_and_modify(CCC_Flat_hash_map_entry *const entry,
         && ((entry->status & CCC_ENTRY_OCCUPIED) != 0)) {
         modifier->modify((CCC_Arguments){
             .type = data_at(entry->map, entry->index),
-            .context = NULL,
+            .context = modifier->context,
         });
     }
     return entry;
