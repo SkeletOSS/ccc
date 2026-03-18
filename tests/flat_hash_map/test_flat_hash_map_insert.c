@@ -14,13 +14,17 @@
 check_static_begin(flat_hash_map_test_insert) {
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        flat_hash_map_int_zero,
-        flat_hash_map_id_order,
+        (&(CCC_Hasher){
+            .hash = flat_hash_map_int_zero,
+            .compare = flat_hash_map_id_order,
+        }),
         (struct Val[SMALL_FIXED_CAP]){}
     );
 
     /* Nothing was there before so nothing is in the entry. */
-    CCC_Entry ent = swap_entry(&fh, &(struct Val){.key = 137, .val = 99});
+    CCC_Entry ent = swap_entry(
+        &fh, &(struct Val){.key = 137, .val = 99}, &(CCC_Allocator){}
+    );
     check(occupied(&ent), false);
     check(unwrap(&ent) != NULL, true);
     check(count(&fh).count, 1);
@@ -30,73 +34,81 @@ check_static_begin(flat_hash_map_test_insert) {
 check_static_begin(flat_hash_map_test_insert_macros) {
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        flat_hash_map_int_zero,
-        flat_hash_map_id_order,
+        (&(CCC_Hasher){
+            .hash = flat_hash_map_int_zero,
+            .compare = flat_hash_map_id_order,
+        }),
         (struct Val[SMALL_FIXED_CAP]){}
     );
 
     struct Val const *ins = flat_hash_map_or_insert_with(
-        entry_wrap(&fh, &(int){2}), (struct Val){.key = 2, .val = 0}
+        flat_hash_map_entry_wrap(&fh, &(int){2}, &(CCC_Allocator){}),
+        (struct Val){.key = 2, .val = 0}
     );
     check(ins != NULL, true);
     check(validate(&fh), true);
     check(count(&fh).count, 1);
     ins = flat_hash_map_insert_entry_with(
-        entry_wrap(&fh, &(int){2}), (struct Val){.key = 2, .val = 0}
+        flat_hash_map_entry_wrap(&fh, &(int){2}, &(CCC_Allocator){}),
+        (struct Val){.key = 2, .val = 0}
     );
     check(validate(&fh), true);
     check(ins != NULL, true);
     ins = flat_hash_map_insert_entry_with(
-        entry_wrap(&fh, &(int){9}), (struct Val){.key = 9, .val = 1}
+        flat_hash_map_entry_wrap(&fh, &(int){9}, &(CCC_Allocator){}),
+        (struct Val){.key = 9, .val = 1}
     );
     check(validate(&fh), true);
     check(ins != NULL, true);
-    ins = CCC_entry_unwrap(
-        flat_hash_map_insert_or_assign_with(&fh, 3, (struct Val){.val = 99})
-    );
+    ins = CCC_entry_unwrap(flat_hash_map_insert_or_assign_with(
+        &fh, 3, &(CCC_Allocator){}, (struct Val){.val = 99}
+    ));
     check(validate(&fh), true);
     check(ins == NULL, false);
     check(validate(&fh), true);
     check(ins->val, 99);
     check(count(&fh).count, 3);
-    ins = CCC_entry_unwrap(
-        flat_hash_map_insert_or_assign_with(&fh, 3, (struct Val){.val = 98})
-    );
+    ins = CCC_entry_unwrap(flat_hash_map_insert_or_assign_with(
+        &fh, 3, &(CCC_Allocator){}, (struct Val){.val = 98}
+    ));
     check(validate(&fh), true);
     check(ins == NULL, false);
     check(ins->val, 98);
     check(count(&fh).count, 3);
-    ins = CCC_entry_unwrap(
-        flat_hash_map_try_insert_with(&fh, 3, (struct Val){.val = 100})
-    );
+    ins = CCC_entry_unwrap(flat_hash_map_try_insert_with(
+        &fh, 3, &(CCC_Allocator){}, (struct Val){.val = 100}
+    ));
     check(ins == NULL, false);
     check(validate(&fh), true);
     check(ins->val, 98);
     check(count(&fh).count, 3);
-    ins = CCC_entry_unwrap(
-        flat_hash_map_try_insert_with(&fh, 4, (struct Val){.val = 100})
-    );
+    ins = CCC_entry_unwrap(flat_hash_map_try_insert_with(
+        &fh, 4, &(CCC_Allocator){}, (struct Val){.val = 100}
+    ));
     check(ins == NULL, false);
     check(validate(&fh), true);
     check(ins->val, 100);
     check(count(&fh).count, 4);
-    check_end(clear_and_free(&fh, NULL););
+    check_end(clear_and_free(&fh, &(CCC_Destructor){}, &(CCC_Allocator){}););
 }
 
 check_static_begin(flat_hash_map_test_insert_overwrite) {
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        flat_hash_map_int_zero,
-        flat_hash_map_id_order,
+        (&(CCC_Hasher){
+            .hash = flat_hash_map_int_zero,
+            .compare = flat_hash_map_id_order,
+        }),
         (struct Val[SMALL_FIXED_CAP]){}
     );
 
     struct Val q = {.key = 137, .val = 99};
-    CCC_Entry ent = swap_entry(&fh, &q);
+    CCC_Entry ent = swap_entry(&fh, &q, &(CCC_Allocator){});
     check(occupied(&ent), false);
     check(unwrap(&ent) != NULL, true);
 
-    struct Val const *v = unwrap(entry_wrap(&fh, &q.key));
+    struct Val const *v
+        = unwrap(flat_hash_map_entry_wrap(&fh, &q.key, &(CCC_Allocator){}));
     check(v != NULL, true);
     check(v->val, 99);
 
@@ -105,7 +117,7 @@ check_static_begin(flat_hash_map_test_insert_overwrite) {
     q = (struct Val){.key = 137, .val = 100};
 
     /* The contents of q are now in the table. */
-    CCC_Entry old_ent = swap_entry(&fh, &q);
+    CCC_Entry old_ent = swap_entry(&fh, &q, &(CCC_Allocator){});
     check(occupied(&old_ent), true);
 
     /* The old contents are now in q and the entry is in the table. */
@@ -113,7 +125,7 @@ check_static_begin(flat_hash_map_test_insert_overwrite) {
     check(v != NULL, true);
     check(v->val, 99);
     check(q.val, 99);
-    v = unwrap(entry_wrap(&fh, &q.key));
+    v = unwrap(flat_hash_map_entry_wrap(&fh, &q.key, &(CCC_Allocator){}));
     check(v != NULL, true);
     check(v->val, 100);
     check_end();
@@ -122,21 +134,24 @@ check_static_begin(flat_hash_map_test_insert_overwrite) {
 check_static_begin(flat_hash_map_test_insert_then_bad_ideas) {
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        flat_hash_map_int_zero,
-        flat_hash_map_id_order,
+        (&(CCC_Hasher){
+            .hash = flat_hash_map_int_zero,
+            .compare = flat_hash_map_id_order,
+        }),
         (struct Val[SMALL_FIXED_CAP]){}
     );
     struct Val q = {.key = 137, .val = 99};
-    CCC_Entry ent = swap_entry(&fh, &q);
+    CCC_Entry ent = swap_entry(&fh, &q, &(CCC_Allocator){});
     check(occupied(&ent), false);
     check(unwrap(&ent) != NULL, true);
-    struct Val const *v = unwrap(entry_wrap(&fh, &q.key));
+    struct Val const *v
+        = unwrap(flat_hash_map_entry_wrap(&fh, &q.key, &(CCC_Allocator){}));
     check(v != NULL, true);
     check(v->val, 99);
 
     q = (struct Val){.key = 137, .val = 100};
 
-    ent = swap_entry(&fh, &q);
+    ent = swap_entry(&fh, &q, &(CCC_Allocator){});
     check(occupied(&ent), true);
     v = unwrap(&ent);
     check(v != NULL, true);
@@ -155,8 +170,10 @@ check_static_begin(flat_hash_map_test_entry_api_functional) {
     /* Over allocate size now because we don't want to worry about resizing. */
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        flat_hash_map_int_zero,
-        flat_hash_map_id_order,
+        (&(CCC_Hasher){
+            .hash = flat_hash_map_int_zero,
+            .compare = flat_hash_map_id_order,
+        }),
         (struct Val[STANDARD_FIXED_CAP]){}
     );
     size_t const size = 200;
@@ -168,7 +185,9 @@ check_static_begin(flat_hash_map_test_entry_api_functional) {
     for (size_t i = 0; i < size / 2; i += 2) {
         def.key = (int)i;
         def.val = (int)i;
-        struct Val const *const d = or_insert(entry_wrap(&fh, &def.key), &def);
+        struct Val const *const d = or_insert(
+            flat_hash_map_entry_wrap(&fh, &def.key, &(CCC_Allocator){}), &def
+        );
         check((d != NULL), true);
         check(d->key, i);
         check(d->val, i);
@@ -179,7 +198,11 @@ check_static_begin(flat_hash_map_test_entry_api_functional) {
         def.key = (int)i;
         def.val = (int)i;
         struct Val const *const d = or_insert(
-            and_modify(entry_wrap(&fh, &def.key), flat_hash_map_modplus), &def
+            and_modify(
+                flat_hash_map_entry_wrap(&fh, &def.key, &(CCC_Allocator){}),
+                &(CCC_Modifier){.modify = flat_hash_map_modplus}
+            ),
+            &def
         );
         /* All values in the array should be odd now */
         check((d != NULL), true);
@@ -197,7 +220,9 @@ check_static_begin(flat_hash_map_test_entry_api_functional) {
     for (size_t i = 0; i < size / 2; ++i) {
         def.key = (int)i;
         def.val = (int)i;
-        struct Val *const in = or_insert(entry_wrap(&fh, &def.key), &def);
+        struct Val *const in = or_insert(
+            flat_hash_map_entry_wrap(&fh, &def.key, &(CCC_Allocator){}), &def
+        );
         in->val++;
         /* All values in the array should be odd now */
         check((in->val % 2 == 0), true);
@@ -211,8 +236,10 @@ check_static_begin(flat_hash_map_test_insert_via_entry) {
     size_t const size = 200;
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        flat_hash_map_int_zero,
-        flat_hash_map_id_order,
+        (&(CCC_Hasher){
+            .hash = flat_hash_map_int_zero,
+            .compare = flat_hash_map_id_order,
+        }),
         (struct Val[STANDARD_FIXED_CAP]){}
     );
 
@@ -223,8 +250,9 @@ check_static_begin(flat_hash_map_test_insert_via_entry) {
     for (size_t i = 0; i < size / 2; i += 2) {
         def.key = (int)i;
         def.val = (int)i;
-        struct Val const *const d
-            = insert_entry(entry_wrap(&fh, &def.key), &def);
+        struct Val const *const d = insert_entry(
+            flat_hash_map_entry_wrap(&fh, &def.key, &(CCC_Allocator){}), &def
+        );
         check((d != NULL), true);
         check(d->key, i);
         check(d->val, i);
@@ -234,8 +262,9 @@ check_static_begin(flat_hash_map_test_insert_via_entry) {
     for (size_t i = 0; i < size / 2; ++i) {
         def.key = (int)i;
         def.val = (int)i + 1;
-        struct Val const *const d
-            = insert_entry(entry_wrap(&fh, &def.key), &def);
+        struct Val const *const d = insert_entry(
+            flat_hash_map_entry_wrap(&fh, &def.key, &(CCC_Allocator){}), &def
+        );
         /* All values in the array should be odd now */
         check((d != NULL), true);
         check(d->val, i + 1);
@@ -254,8 +283,10 @@ check_static_begin(flat_hash_map_test_insert_via_entry_macros) {
     size_t const size = 200;
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        flat_hash_map_int_zero,
-        flat_hash_map_id_order,
+        (&(CCC_Hasher){
+            .hash = flat_hash_map_int_zero,
+            .compare = flat_hash_map_id_order,
+        }),
         (struct Val[STANDARD_FIXED_CAP]){}
     );
 
@@ -263,8 +294,10 @@ check_static_begin(flat_hash_map_test_insert_via_entry_macros) {
        inserted. All entries are hashed to last digit so many spread out
        collisions. */
     for (size_t i = 0; i < size / 2; i += 2) {
-        struct Val const *const d
-            = insert_entry(entry_wrap(&fh, &i), &(struct Val){i, i});
+        struct Val const *const d = insert_entry(
+            flat_hash_map_entry_wrap(&fh, &i, &(CCC_Allocator){}),
+            &(struct Val){i, i}
+        );
         check((d != NULL), true);
         check(d->key, i);
         check(d->val, i);
@@ -272,8 +305,10 @@ check_static_begin(flat_hash_map_test_insert_via_entry_macros) {
     check(count(&fh).count, (size / 2) / 2);
     /* The default insertion should not occur every other element. */
     for (size_t i = 0; i < size / 2; ++i) {
-        struct Val const *const d
-            = insert_entry(entry_wrap(&fh, &i), &(struct Val){i, i + 1});
+        struct Val const *const d = insert_entry(
+            flat_hash_map_entry_wrap(&fh, &i, &(CCC_Allocator){}),
+            &(struct Val){i, i + 1}
+        );
         /* All values in the array should be odd now */
         check((d != NULL), true);
         check(d->val, i + 1);
@@ -292,8 +327,10 @@ check_static_begin(flat_hash_map_test_entry_api_macros) {
     int const size = 200;
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        flat_hash_map_int_zero,
-        flat_hash_map_id_order,
+        (&(CCC_Hasher){
+            .hash = flat_hash_map_int_zero,
+            .compare = flat_hash_map_id_order,
+        }),
         (struct Val[STANDARD_FIXED_CAP]){}
     );
 
@@ -304,7 +341,8 @@ check_static_begin(flat_hash_map_test_entry_api_macros) {
         /* The macros support functions that will only execute if the or
            insert branch executes. */
         struct Val const *const d = flat_hash_map_or_insert_with(
-            entry_wrap(&fh, &i), flat_hash_map_create(i, i)
+            flat_hash_map_entry_wrap(&fh, &i, &(CCC_Allocator){}),
+            flat_hash_map_create(i, i)
         );
         check((d != NULL), true);
         check(d->key, i);
@@ -314,7 +352,10 @@ check_static_begin(flat_hash_map_test_entry_api_macros) {
     /* The default insertion should not occur every other element. */
     for (int i = 0; i < size / 2; ++i) {
         struct Val const *const d = flat_hash_map_or_insert_with(
-            and_modify(entry_wrap(&fh, &i), flat_hash_map_modplus),
+            and_modify(
+                flat_hash_map_entry_wrap(&fh, &i, &(CCC_Allocator){}),
+                &(CCC_Modifier){.modify = flat_hash_map_modplus}
+            ),
             flat_hash_map_create(i, i)
         );
         /* All values in the array should be odd now */
@@ -331,8 +372,10 @@ check_static_begin(flat_hash_map_test_entry_api_macros) {
     /* More simply modifications don't require the and modify function. All
        should be switched back to even now. */
     for (int i = 0; i < size / 2; ++i) {
-        struct Val *v
-            = flat_hash_map_or_insert_with(entry_wrap(&fh, &i), (struct Val){});
+        struct Val *v = flat_hash_map_or_insert_with(
+            flat_hash_map_entry_wrap(&fh, &i, &(CCC_Allocator){}),
+            (struct Val){}
+        );
         check(v != NULL, true);
         v->val++;
         /* All values in the array should be odd now */
@@ -345,8 +388,10 @@ check_static_begin(flat_hash_map_test_entry_api_macros) {
 check_static_begin(flat_hash_map_test_two_sum) {
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        flat_hash_map_int_to_u64,
-        flat_hash_map_id_order,
+        (&(CCC_Hasher){
+            .hash = flat_hash_map_int_to_u64,
+            .compare = flat_hash_map_id_order,
+        }),
         (struct Val[SMALL_FIXED_CAP]){}
     );
     int const addends[10] = {1, 3, -980, 6, 7, 13, 44, 32, 995, -1};
@@ -361,8 +406,9 @@ check_static_begin(flat_hash_map_test_two_sum) {
             solution_indices[1] = other_addend->val;
             break;
         }
-        CCC_Entry const e
-            = insert_or_assign(&fh, &(struct Val){.key = addends[i], .val = i});
+        CCC_Entry const e = insert_or_assign(
+            &fh, &(struct Val){.key = addends[i], .val = i}, &(CCC_Allocator){}
+        );
         check(insert_error(&e), false);
     }
     check(solution_indices[0], 8);
@@ -373,8 +419,10 @@ check_static_begin(flat_hash_map_test_two_sum) {
 check_static_begin(flat_hash_map_test_longest_consecutive_sequence) {
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        flat_hash_map_int_zero,
-        flat_hash_map_id_order,
+        (&(CCC_Hasher){
+            .hash = flat_hash_map_int_zero,
+            .compare = flat_hash_map_id_order,
+        }),
         (struct Val[STANDARD_FIXED_CAP]){}
     );
     /* Longest sequence is 1,2,3,4,5,6,7,8,9,10 of length 10. */
@@ -388,8 +436,9 @@ check_static_begin(flat_hash_map_test_longest_consecutive_sequence) {
     int max_run = 0;
     for (size_t i = 0; i < nums_size; ++i) {
         int const n = nums[i];
-        CCC_Entry const *const seen_n
-            = try_insert_wrap(&fh, &(struct Val){.key = n, .val = 1});
+        CCC_Entry const *const seen_n = flat_hash_map_try_insert_wrap(
+            &fh, &(struct Val){.key = n, .val = 1}, &(CCC_Allocator){}
+        );
         /* We have already connected this run as much as possible. */
         if (occupied(seen_n)) {
             continue;
@@ -409,11 +458,15 @@ check_static_begin(flat_hash_map_test_longest_consecutive_sequence) {
 
         /* Update the boundaries of the full run range. */
         ((struct Val *)unwrap(seen_n))->val = full_run;
-        CCC_Entry const *const run_min = insert_or_assign_wrap(
-            &fh, &(struct Val){.key = n - left_run, .val = full_run}
+        CCC_Entry const *const run_min = flat_hash_map_insert_or_assign_wrap(
+            &fh,
+            &(struct Val){.key = n - left_run, .val = full_run},
+            &(CCC_Allocator){}
         );
-        CCC_Entry const *const run_max = insert_or_assign_wrap(
-            &fh, &(struct Val){.key = n + right_run, .val = full_run}
+        CCC_Entry const *const run_max = flat_hash_map_insert_or_assign_wrap(
+            &fh,
+            &(struct Val){.key = n + right_run, .val = full_run},
+            &(CCC_Allocator){}
         );
 
         /* Validate for testing purposes. */
@@ -427,22 +480,22 @@ check_static_begin(flat_hash_map_test_longest_consecutive_sequence) {
 }
 
 check_static_begin(flat_hash_map_test_resize) {
-    Flat_hash_map fh = flat_hash_map_for(
+    Flat_hash_map fh = flat_hash_map_default(
         struct Val,
         key,
-        flat_hash_map_int_to_u64,
-        flat_hash_map_id_order,
-        std_allocate,
-        NULL,
-        0,
-        NULL
+        (&(CCC_Hasher){
+            .hash = flat_hash_map_int_to_u64,
+            .compare = flat_hash_map_id_order,
+        })
     );
     int const to_insert = 1000;
     int const larger_prime = 1009;
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
          ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert) {
         struct Val elem = {.key = shuffled_index, .val = i};
-        struct Val *v = insert_entry(entry_wrap(&fh, &elem.key), &elem);
+        struct Val *v = insert_entry(
+            flat_hash_map_entry_wrap(&fh, &elem.key, &std_allocator), &elem
+        );
         check(v != NULL, true);
         check(v->key, shuffled_index);
         check(v->val, i);
@@ -452,33 +505,37 @@ check_static_begin(flat_hash_map_test_resize) {
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
          ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert) {
         struct Val swap_slot = {shuffled_index, shuffled_index};
-        struct Val const *const in_table
-            = insert_entry(entry_wrap(&fh, &swap_slot.key), &swap_slot);
+        struct Val const *const in_table = insert_entry(
+            flat_hash_map_entry_wrap(&fh, &swap_slot.key, &std_allocator),
+            &swap_slot
+        );
         check(in_table != NULL, true);
         check(in_table->val, shuffled_index);
     }
     check(count(&fh).count, to_insert);
-    check(flat_hash_map_clear_and_free(&fh, NULL), CCC_RESULT_OK);
+    check(
+        flat_hash_map_clear_and_free(&fh, &(CCC_Destructor){}, &std_allocator),
+        CCC_RESULT_OK
+    );
     check_end();
 }
 
 check_static_begin(flat_hash_map_test_resize_macros) {
-    Flat_hash_map fh = flat_hash_map_for(
+    Flat_hash_map fh = flat_hash_map_default(
         struct Val,
         key,
-        flat_hash_map_int_to_u64,
-        flat_hash_map_id_order,
-        std_allocate,
-        NULL,
-        0,
-        NULL
+        (&(CCC_Hasher){
+            .hash = flat_hash_map_int_to_u64,
+            .compare = flat_hash_map_id_order,
+        })
     );
     int const to_insert = 1000;
     int const larger_prime = 1009;
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
          ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert) {
         struct Val *v = insert_entry(
-            entry_wrap(&fh, &shuffled_index), &(struct Val){shuffled_index, i}
+            flat_hash_map_entry_wrap(&fh, &shuffled_index, &std_allocator),
+            &(struct Val){shuffled_index, i}
         );
         check(v != NULL, true);
         check(v->key, shuffled_index);
@@ -489,7 +546,7 @@ check_static_begin(flat_hash_map_test_resize_macros) {
          ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert) {
         struct Val const *const in_table = flat_hash_map_or_insert_with(
             flat_hash_map_and_modify_with(
-                entry_wrap(&fh, &shuffled_index),
+                flat_hash_map_entry_wrap(&fh, &shuffled_index, &std_allocator),
                 struct Val,
                 { T->val = shuffled_index; }
             ),
@@ -498,7 +555,8 @@ check_static_begin(flat_hash_map_test_resize_macros) {
         check(in_table != NULL, true);
         check(in_table->val, shuffled_index);
         struct Val *v = flat_hash_map_or_insert_with(
-            entry_wrap(&fh, &shuffled_index), (struct Val){}
+            flat_hash_map_entry_wrap(&fh, &shuffled_index, &std_allocator),
+            (struct Val){}
         );
         check(v == NULL, false);
         v->val = i;
@@ -506,27 +564,30 @@ check_static_begin(flat_hash_map_test_resize_macros) {
         check(v != NULL, true);
         check(v->val, i);
     }
-    check(flat_hash_map_clear_and_free(&fh, NULL), CCC_RESULT_OK);
+    check(
+        flat_hash_map_clear_and_free(&fh, &(CCC_Destructor){}, &std_allocator),
+        CCC_RESULT_OK
+    );
     check_end();
 }
 
 check_static_begin(flat_hash_map_test_resize_from_null) {
-    Flat_hash_map fh = flat_hash_map_for(
+    Flat_hash_map fh = flat_hash_map_default(
         struct Val,
         key,
-        flat_hash_map_int_to_u64,
-        flat_hash_map_id_order,
-        std_allocate,
-        NULL,
-        0,
-        NULL
+        (&(CCC_Hasher){
+            .hash = flat_hash_map_int_to_u64,
+            .compare = flat_hash_map_id_order,
+        })
     );
     int const to_insert = 1000;
     int const larger_prime = 1009;
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
          ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert) {
         struct Val elem = {.key = shuffled_index, .val = i};
-        struct Val *v = insert_entry(entry_wrap(&fh, &elem.key), &elem);
+        struct Val *v = insert_entry(
+            flat_hash_map_entry_wrap(&fh, &elem.key, &std_allocator), &elem
+        );
         check(v != NULL, true);
         check(v->key, shuffled_index);
         check(v->val, i);
@@ -535,32 +596,36 @@ check_static_begin(flat_hash_map_test_resize_from_null) {
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
          ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert) {
         struct Val swap_slot = {shuffled_index, shuffled_index};
-        struct Val const *const in_table
-            = insert_entry(entry_wrap(&fh, &swap_slot.key), &swap_slot);
+        struct Val const *const in_table = insert_entry(
+            flat_hash_map_entry_wrap(&fh, &swap_slot.key, &std_allocator),
+            &swap_slot
+        );
         check(in_table != NULL, true);
         check(in_table->val, shuffled_index);
     }
-    check(flat_hash_map_clear_and_free(&fh, NULL), CCC_RESULT_OK);
+    check(
+        flat_hash_map_clear_and_free(&fh, &(CCC_Destructor){}, &std_allocator),
+        CCC_RESULT_OK
+    );
     check_end();
 }
 
 check_static_begin(flat_hash_map_test_resize_from_null_macros) {
-    Flat_hash_map fh = flat_hash_map_for(
+    Flat_hash_map fh = flat_hash_map_default(
         struct Val,
         key,
-        flat_hash_map_int_to_u64,
-        flat_hash_map_id_order,
-        std_allocate,
-        NULL,
-        0,
-        NULL
+        (&(CCC_Hasher){
+            .hash = flat_hash_map_int_to_u64,
+            .compare = flat_hash_map_id_order,
+        })
     );
     int const to_insert = 1000;
     int const larger_prime = 1009;
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
          ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert) {
         struct Val *v = insert_entry(
-            entry_wrap(&fh, &shuffled_index), &(struct Val){shuffled_index, i}
+            flat_hash_map_entry_wrap(&fh, &shuffled_index, &std_allocator),
+            &(struct Val){shuffled_index, i}
         );
         check(v != NULL, true);
         check(v->key, shuffled_index);
@@ -571,7 +636,7 @@ check_static_begin(flat_hash_map_test_resize_from_null_macros) {
          ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert) {
         struct Val const *const in_table = flat_hash_map_or_insert_with(
             flat_hash_map_and_modify_with(
-                entry_wrap(&fh, &shuffled_index),
+                flat_hash_map_entry_wrap(&fh, &shuffled_index, &std_allocator),
                 struct Val,
                 { T->val = shuffled_index; }
             ),
@@ -580,7 +645,8 @@ check_static_begin(flat_hash_map_test_resize_from_null_macros) {
         check(in_table != NULL, true);
         check(in_table->val, shuffled_index);
         struct Val *v = flat_hash_map_or_insert_with(
-            entry_wrap(&fh, &shuffled_index), (struct Val){}
+            flat_hash_map_entry_wrap(&fh, &shuffled_index, &std_allocator),
+            (struct Val){}
         );
         check(v == NULL, false);
         v->val = i;
@@ -588,15 +654,20 @@ check_static_begin(flat_hash_map_test_resize_from_null_macros) {
         check(v == NULL, false);
         check(v->val, i);
     }
-    check(flat_hash_map_clear_and_free(&fh, NULL), CCC_RESULT_OK);
+    check(
+        flat_hash_map_clear_and_free(&fh, &(CCC_Destructor){}, &std_allocator),
+        CCC_RESULT_OK
+    );
     check_end();
 }
 
 check_static_begin(flat_hash_map_test_insert_limit) {
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        flat_hash_map_int_to_u64,
-        flat_hash_map_id_order,
+        (&(CCC_Hasher){
+            .hash = flat_hash_map_int_to_u64,
+            .compare = flat_hash_map_id_order,
+        }),
         (struct Val[SMALL_FIXED_CAP]){}
     );
 
@@ -607,7 +678,8 @@ check_static_begin(flat_hash_map_test_insert_limit) {
     for (int i = 0; i < size;
          ++i, shuffled_index = (shuffled_index + larger_prime) % size) {
         struct Val *v = insert_entry(
-            entry_wrap(&fh, &shuffled_index), &(struct Val){shuffled_index, i}
+            flat_hash_map_entry_wrap(&fh, &shuffled_index, &(CCC_Allocator){}),
+            &(struct Val){shuffled_index, i}
         );
         if (!v) {
             break;
@@ -619,19 +691,21 @@ check_static_begin(flat_hash_map_test_insert_limit) {
     size_t const final_size = count(&fh).count;
     /* The last successful entry is still in the table and is overwritten. */
     struct Val v = {.key = last_index, .val = -1};
-    CCC_Entry ent = swap_entry(&fh, &v);
+    CCC_Entry ent = swap_entry(&fh, &v, &(CCC_Allocator){});
     check(unwrap(&ent) != NULL, true);
     check(insert_error(&ent), false);
     check(count(&fh).count, final_size);
 
     v = (struct Val){.key = last_index, .val = -2};
-    struct Val *in_table = insert_entry(entry_wrap(&fh, &v.key), &v);
+    struct Val *in_table = insert_entry(
+        flat_hash_map_entry_wrap(&fh, &v.key, &(CCC_Allocator){}), &v
+    );
     check(in_table != NULL, true);
     check(in_table->val, -2);
     check(count(&fh).count, final_size);
 
     in_table = insert_entry(
-        entry_wrap(&fh, &last_index),
+        flat_hash_map_entry_wrap(&fh, &last_index, &(CCC_Allocator){}),
         &(struct Val){.key = last_index, .val = -3}
     );
     check(in_table != NULL, true);
@@ -640,18 +714,20 @@ check_static_begin(flat_hash_map_test_insert_limit) {
 
     /* The shuffled index key that failed insertion should fail again. */
     v = (struct Val){.key = shuffled_index, .val = -4};
-    in_table = insert_entry(entry_wrap(&fh, &v.key), &v);
+    in_table = insert_entry(
+        flat_hash_map_entry_wrap(&fh, &v.key, &(CCC_Allocator){}), &v
+    );
     check(in_table == NULL, true);
     check(count(&fh).count, final_size);
 
     in_table = insert_entry(
-        entry_wrap(&fh, &shuffled_index),
+        flat_hash_map_entry_wrap(&fh, &shuffled_index, &(CCC_Allocator){}),
         &(struct Val){.key = shuffled_index, .val = -4}
     );
     check(in_table == NULL, true);
     check(count(&fh).count, final_size);
 
-    ent = swap_entry(&fh, &v);
+    ent = swap_entry(&fh, &v, &(CCC_Allocator){});
     check(unwrap(&ent) == NULL, true);
     check(insert_error(&ent), true);
     check(count(&fh).count, final_size);
@@ -661,17 +737,23 @@ check_static_begin(flat_hash_map_test_insert_limit) {
 check_static_begin(flat_hash_map_test_insert_and_find) {
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        flat_hash_map_int_to_u64,
-        flat_hash_map_id_order,
+        (&(CCC_Hasher){
+            .hash = flat_hash_map_int_to_u64,
+            .compare = flat_hash_map_id_order,
+        }),
         (struct Val[SMALL_FIXED_CAP]){}
     );
     int const size = SMALL_FIXED_CAP;
 
     for (int i = 0; i < size; i += 2) {
-        CCC_Entry e = try_insert(&fh, &(struct Val){.key = i, .val = i});
+        CCC_Entry e = try_insert(
+            &fh, &(struct Val){.key = i, .val = i}, &(CCC_Allocator){}
+        );
         check(occupied(&e), false);
         check(validate(&fh), true);
-        e = try_insert(&fh, &(struct Val){.key = i, .val = i});
+        e = try_insert(
+            &fh, &(struct Val){.key = i, .val = i}, &(CCC_Allocator){}
+        );
         check(occupied(&e), true);
         check(validate(&fh), true);
         struct Val const *const v = unwrap(&e);
@@ -681,31 +763,43 @@ check_static_begin(flat_hash_map_test_insert_and_find) {
     }
     for (int i = 0; i < size; i += 2) {
         check(contains(&fh, &i), true);
-        check(occupied(entry_wrap(&fh, &i)), true);
+        check(
+            occupied(flat_hash_map_entry_wrap(&fh, &i, &(CCC_Allocator){})),
+            true
+        );
         check(validate(&fh), true);
     }
     for (int i = 1; i < size; i += 2) {
         check(contains(&fh, &i), false);
-        check(occupied(entry_wrap(&fh, &i)), false);
+        check(
+            occupied(flat_hash_map_entry_wrap(&fh, &i, &(CCC_Allocator){})),
+            false
+        );
         check(validate(&fh), true);
     }
     check_end();
 }
 
 check_static_begin(flat_hash_map_test_reserve_without_permissions) {
-    Flat_hash_map fh = flat_hash_map_with_allocator(
-        struct Val, key, flat_hash_map_int_to_u64, flat_hash_map_id_order, NULL
+    Flat_hash_map fh = flat_hash_map_default(
+        struct Val,
+        key,
+        &(CCC_Hasher){
+            .hash = flat_hash_map_int_to_u64,
+            .compare = flat_hash_map_id_order,
+        }
     );
     /* The map must insert all of the requested elements but has no permission
        to resize. This ensures the reserve function works as expected. */
     int const to_insert = 1000;
     int const larger_prime = 1009;
-    CCC_Result const res = flat_hash_map_reserve(&fh, to_insert, std_allocate);
+    CCC_Result const res
+        = flat_hash_map_reserve(&fh, to_insert, &std_allocator);
     check(res, CCC_RESULT_OK);
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
          ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert) {
         struct Val *v = insert_entry(
-            entry_wrap(&fh, &shuffled_index),
+            flat_hash_map_entry_wrap(&fh, &shuffled_index, &(CCC_Allocator){}),
             &(struct Val){
                 .key = shuffled_index,
                 .val = i,
@@ -722,7 +816,9 @@ check_static_begin(flat_hash_map_test_reserve_without_permissions) {
         check(c, true);
     }
     check(count(&fh).count, to_insert);
-    check_end(flat_hash_map_clear_and_free_reserve(&fh, NULL, std_allocate););
+    check_end({
+        flat_hash_map_clear_and_free(&fh, &(CCC_Destructor){}, &std_allocator);
+    });
 }
 
 int

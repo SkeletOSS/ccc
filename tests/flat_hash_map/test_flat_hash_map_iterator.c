@@ -9,7 +9,6 @@
 #include "flat_hash_map_utility.h"
 #include "traits.h"
 #include "types.h"
-#include "utility/allocate.h"
 
 struct Owner {
     int key;
@@ -32,16 +31,22 @@ destroy_owner_allocation(CCC_Arguments const t) {
 check_static_begin(flat_hash_map_test_insert_then_iterate) {
     CCC_Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        flat_hash_map_int_to_u64,
-        flat_hash_map_id_order,
+        (&(CCC_Hasher){
+            .hash = flat_hash_map_int_to_u64,
+            .compare = flat_hash_map_id_order,
+        }),
         (struct Val[STANDARD_FIXED_CAP]){}
     );
     int const size = STANDARD_FIXED_CAP;
     for (int i = 0; i < size; i += 2) {
-        CCC_Entry e = try_insert(&fh, &(struct Val){.key = i, .val = i});
+        CCC_Entry e = try_insert(
+            &fh, &(struct Val){.key = i, .val = i}, &(CCC_Allocator){}
+        );
         check(occupied(&e), false);
         check(validate(&fh), true);
-        e = try_insert(&fh, &(struct Val){.key = i, .val = i});
+        e = try_insert(
+            &fh, &(struct Val){.key = i, .val = i}, &(CCC_Allocator){}
+        );
         check(occupied(&e), true);
         check(validate(&fh), true);
         struct Val const *const v = unwrap(&e);
@@ -52,7 +57,10 @@ check_static_begin(flat_hash_map_test_insert_then_iterate) {
     int seen = 0;
     for (int i = 0; i < size; i += 2) {
         check(contains(&fh, &i), true);
-        check(occupied(entry_wrap(&fh, &i)), true);
+        check(
+            occupied(flat_hash_map_entry_wrap(&fh, &i, &(CCC_Allocator){})),
+            true
+        );
         check(validate(&fh), true);
         ++seen;
     }
@@ -70,27 +78,34 @@ check_static_begin(flat_hash_map_test_insert_then_iterate) {
 efficient iterator is able to free all elements allocated with no leaks when
 run under sanitizers. */
 check_static_begin(flat_hash_map_test_insert_allocate_clear_free) {
-    CCC_Flat_hash_map fh = flat_hash_map_for(
+    CCC_Flat_hash_map fh = flat_hash_map_default(
         struct Owner,
         key,
-        flat_hash_map_int_to_u64,
-        owners_eq,
-        std_allocate,
-        NULL,
-        0,
-        NULL
+        (&(CCC_Hasher){
+            .hash = flat_hash_map_int_to_u64,
+            .compare = owners_eq,
+        })
     );
     int const size = 32;
     for (int i = 0; i < size; ++i) {
         CCC_Entry *e = flat_hash_map_try_insert_with(
-            &fh, i, (struct Owner){.allocation = malloc(sizeof(size_t))}
+            &fh,
+            i,
+            &(CCC_Allocator){},
+            (struct Owner){.allocation = malloc(sizeof(size_t))}
         );
         check(occupied(e), CCC_FALSE);
         struct Owner const *const o = unwrap(e);
         check(o != NULL, CCC_TRUE);
         check(o->allocation != NULL, CCC_TRUE);
     }
-    check_end(CCC_flat_hash_map_clear_and_free(&fh, destroy_owner_allocation););
+    check_end({
+        CCC_flat_hash_map_clear_and_free(
+            &fh,
+            &(CCC_Destructor){.destroy = destroy_owner_allocation},
+            &(CCC_Allocator){}
+        );
+    });
 }
 
 int

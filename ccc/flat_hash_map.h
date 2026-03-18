@@ -745,7 +745,7 @@ forbidden, an insert error is set.
 @warning because this function returns a reference to a user type in the table
 any subsequent insertions or deletions invalidate this reference. */
 #define CCC_flat_hash_map_try_insert_wrap(                                     \
-    map_pointer, type_pointer, allocator_pointer                               \
+    map_pointer, type_pointer, allocator_pointer...                            \
 )                                                                              \
     &(struct { CCC_Entry private; }){                                          \
         CCC_flat_hash_map_try_insert(                                          \
@@ -805,7 +805,7 @@ overwritten by the new key value. If Vacant no prior table entry existed.
 Note that this function can be used when the old user type is not needed but
 the information regarding its presence is helpful. */
 #define CCC_flat_hash_map_insert_or_assign_wrap(                               \
-    map_pointer, type_pointer, allocator_pointer                               \
+    map_pointer, type_pointer, allocator_pointer...                            \
 )                                                                              \
     &(struct { CCC_Entry private; }){                                          \
         CCC_flat_hash_map_insert_or_assign(                                    \

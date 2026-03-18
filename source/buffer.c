@@ -84,7 +84,9 @@ CCC_buffer_reserve(
 }
 
 CCC_Result
-CCC_buffer_clear(CCC_Buffer *const buffer, CCC_Destructor *const destructor) {
+CCC_buffer_clear(
+    CCC_Buffer *const buffer, CCC_Destructor const *const destructor
+) {
     if (!buffer || !destructor) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -106,7 +108,7 @@ CCC_buffer_clear(CCC_Buffer *const buffer, CCC_Destructor *const destructor) {
 CCC_Result
 CCC_buffer_clear_and_free(
     CCC_Buffer *const buffer,
-    CCC_Destructor *const destructor,
+    CCC_Destructor const *const destructor,
     CCC_Allocator const *const allocator
 ) {
     if (!buffer || !allocator || !destructor || !allocator->allocate) {

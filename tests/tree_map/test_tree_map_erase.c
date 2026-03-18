@@ -24,7 +24,7 @@ check_static_begin(tree_map_test_insert_erase_shuffled) {
     );
     size_t const size = 50;
     int const prime = 53;
-    check(insert_shuffled(&s, size, prime), CHECK_PASS);
+    check(insert_shuffled(&s, size, prime, &allocator), CHECK_PASS);
     int sorted_check[50];
     check(inorder_fill(sorted_check, size, &s), CHECK_PASS);
     struct Val *const vals = allocator.context;

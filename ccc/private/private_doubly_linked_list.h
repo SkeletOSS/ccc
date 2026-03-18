@@ -169,7 +169,9 @@ name of the list being on the left hand side of the assignment operator. */
 
 /** @internal */
 #define CCC_private_doubly_linked_list_emplace_back(                           \
-    doubly_linked_list_pointer, struct_initializer...                          \
+    doubly_linked_list_pointer,                                                \
+    private_allocator_pointer,                                                 \
+    struct_initializer...                                                      \
 )                                                                              \
     (__extension__({                                                           \
         typeof(struct_initializer) *private_doubly_linked_list_res = NULL;     \
@@ -203,7 +205,9 @@ name of the list being on the left hand side of the assignment operator. */
 
 /** @internal */
 #define CCC_private_doubly_linked_list_emplace_front(                          \
-    doubly_linked_list_pointer, struct_initializer...                          \
+    doubly_linked_list_pointer,                                                \
+    private_allocator_pointer,                                                 \
+    struct_initializer...                                                      \
 )                                                                              \
     (__extension__({                                                           \
         typeof(struct_initializer) *private_doubly_linked_list_res = NULL;     \

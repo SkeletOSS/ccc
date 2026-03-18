@@ -82,7 +82,7 @@ limitations under the License.
     )
 
 #define CCC_private_remove_entry(container_entry_pointer,                      \
-                                 allocator_arguments...)                       \
+                                 ...)                       \
     _Generic((container_entry_pointer),                                        \
         CCC_Flat_hash_map_entry *: CCC_flat_hash_map_remove_entry,             \
         CCC_Adaptive_map_entry *: CCC_adaptive_map_remove_entry,               \
@@ -90,7 +90,7 @@ limitations under the License.
         CCC_Flat_hash_map_entry const *: CCC_flat_hash_map_remove_entry,       \
         CCC_Adaptive_map_entry const *: CCC_adaptive_map_remove_entry,         \
         CCC_Tree_map_entry const *: CCC_tree_map_remove_entry)(                \
-        (container_entry_pointer), allocator_arguments                         \
+        (container_entry_pointer) __VA_OPT__(, __VA_ARGS__)                         \
     )
 
 #define CCC_private_remove_handle(container_array_pointer)                     \

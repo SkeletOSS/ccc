@@ -149,7 +149,7 @@ static SV_Str_view const help_flag = SV_from("-h");
         }                                                                      \
     } while (0)
 
-static void animate_maze(struct Maze *);
+static void animate_maze(struct Maze *, CCC_Allocator const *);
 static void fill_maze_with_walls(struct Maze *);
 static void build_wall(struct Maze *, int, int);
 static void print_square(struct Maze const *, int, int);
@@ -163,9 +163,9 @@ static void flush_cursor_maze_coordinate(struct Maze const *, int, int);
 static bool can_build_new_square(struct Maze const *, int, int);
 static void help(void);
 static struct Point rand_point(struct Maze const *);
-static Order order_prim_cells(Comparator_arguments);
+static Order prim_cell_element_order(Comparator_arguments);
 static struct Int_conversion parse_digits(SV_Str_view);
-static CCC_Order prim_cell_order(Key_comparator_arguments);
+static CCC_Order prim_cell_key_order(Key_comparator_arguments);
 static uint64_t prim_cell_hash_fn(Key_arguments);
 static uint64_t hash_64_bits(uint64_t);
 
@@ -229,7 +229,7 @@ main(int argc, char **argv) {
         (void)fprintf(stderr, "allocation failure for specified maze size.\n");
         return 1;
     }
-    animate_maze(&maze);
+    animate_maze(&maze, &std_allocator);
     /* The squares are mini so there are 2 per row. Halve the position. */
     set_cursor_position((maze.rows / 2) + 1, maze.cols + 1);
     printf("\n");
@@ -247,7 +247,7 @@ cases.
 However, we can still be "C" about it by thinking about reserving exactly
 the memory we need dynamically in the from initializer. */
 static void
-animate_maze(struct Maze *maze) {
+animate_maze(struct Maze *maze, CCC_Allocator const *const allocator) {
     int const speed = speeds[maze->speed];
     fill_maze_with_walls(maze);
     clear_and_flush_maze(maze);
@@ -258,26 +258,26 @@ animate_maze(struct Maze *maze) {
     };
     Flat_hash_map cost_map = flat_hash_map_from(
         cell,
-        prim_cell_hash_fn,
-        prim_cell_order,
-        std_allocate,
+        (&(CCC_Hasher){
+            .hash = prim_cell_hash_fn,
+            .compare = prim_cell_key_order,
+        }),
+        allocator,
         capacity,
-        (struct Prim_cell[]){
-            start,
-        }
+        (struct Prim_cell[]){start}
     );
     Flat_priority_queue cell_priority_queue = flat_priority_queue_from(
         CCC_ORDER_LESSER,
-        order_prim_cells,
-        std_allocate,
+        &(CCC_Comparator){.compare = prim_cell_element_order},
+        allocator,
         capacity,
-        (struct Prim_cell[]){
-            start,
-        }
+        (struct Prim_cell[]){start}
     );
     defer {
-        (void)clear_and_free(&cost_map, NULL);
-        (void)clear_and_free(&cell_priority_queue, NULL);
+        (void)clear_and_free(&cost_map, &(CCC_Destructor){}, allocator);
+        (void)clear_and_free(
+            &cell_priority_queue, &(CCC_Destructor){}, allocator
+        );
     }
     while (!is_empty(&cell_priority_queue)) {
         struct Prim_cell const *const c = front(&cell_priority_queue);
@@ -293,7 +293,7 @@ animate_maze(struct Maze *maze) {
             if (can_build_new_square(maze, n.r, n.c)) {
                 struct Prim_cell const *const cell
                     = flat_hash_map_or_insert_with(
-                        entry_wrap(&cost_map, &n),
+                        flat_hash_map_entry_wrap(&cost_map, &n, allocator),
                         (struct Prim_cell){
                             .cell = n,
                             .cost = rand_range(0, 100),
@@ -308,7 +308,12 @@ animate_maze(struct Maze *maze) {
         }
         if (min != INT_MAX) {
             join_squares_animated(maze, c->cell, min_cell.cell, speed);
-            (void)push(&cell_priority_queue, &min_cell, &(struct Prim_cell){});
+            (void)push(
+                &cell_priority_queue,
+                &min_cell,
+                &(struct Prim_cell){},
+                allocator
+            );
         } else {
             (void)pop(&cell_priority_queue, &(struct Prim_cell){});
         }
@@ -318,7 +323,7 @@ animate_maze(struct Maze *maze) {
 /*===================     Container Support Code     ========================*/
 
 static CCC_Order
-prim_cell_order(Key_comparator_arguments const c) {
+prim_cell_key_order(Key_comparator_arguments const c) {
     struct Point const *const left = c.key_left;
     struct Prim_cell const *const right = c.type_right;
     CCC_Order const order
@@ -350,7 +355,7 @@ hash_64_bits(uint64_t x) {
 }
 
 static Order
-order_prim_cells(Comparator_arguments const order_cells) {
+prim_cell_element_order(Comparator_arguments const order_cells) {
     struct Prim_cell const *const left = order_cells.type_left;
     struct Prim_cell const *const right = order_cells.type_right;
     return (left->cost > right->cost) - (left->cost < right->cost);

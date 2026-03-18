@@ -81,22 +81,25 @@ enum : size_t {
 static_assert(CAP * 1UL < SMALL_FIXED_CAP * 1UL);
 
 /* This is a good opportunity to test the static initialization capabilities
-   of the hash table and list. */
+   of the hash table and list. List gets allocator map no. */
 static struct Lru_cache lru_cache = {
     .cap = CAP,
-    .l = doubly_linked_list_for(struct Key_val, list_node, std_allocate, NULL),
+    .l = doubly_linked_list_default(struct Key_val, list_node),
     .fh = flat_hash_map_with_storage(
         key,
-        flat_hash_map_int_to_u64,
-        lru_lookup_order,
-        (struct Val[SMALL_FIXED_CAP]){}
+        (&(CCC_Hasher){
+            .hash = flat_hash_map_int_to_u64,
+            .compare = lru_lookup_order,
+        }),
+        (struct Lru_lookup[SMALL_FIXED_CAP]){}
     ),
 };
 
 check_static_begin(
     lru_put, struct Lru_cache *const lru, int const key, int const val
 ) {
-    CCC_Flat_hash_map_entry *const ent = entry_wrap(&lru->fh, &key);
+    CCC_Flat_hash_map_entry *const ent
+        = flat_hash_map_entry_wrap(&lru->fh, &key, &(CCC_Allocator){});
     if (occupied(ent)) {
         struct Lru_lookup const *const found = unwrap(ent);
         found->kv_in_list->key = key;
@@ -113,16 +116,17 @@ check_static_begin(
             = insert_entry(ent, &(struct Lru_lookup){.key = key});
         check(new == NULL, false);
         new->kv_in_list = doubly_linked_list_emplace_front(
-            &lru->l, (struct Key_val){.key = key, .val = val}
+            &lru->l, &std_allocator, (struct Key_val){.key = key, .val = val}
         );
         check(new->kv_in_list == NULL, false);
         if (count(&lru->l).count > lru->cap) {
             struct Key_val const *const to_drop = back(&lru->l);
             check(to_drop == NULL, false);
-            CCC_Entry const e
-                = remove_entry(entry_wrap(&lru->fh, &to_drop->key));
+            CCC_Entry const e = remove_entry(flat_hash_map_entry_wrap(
+                &lru->fh, &to_drop->key, &(CCC_Allocator){}
+            ));
             check(occupied(&e), true);
-            (void)pop_back(&lru->l);
+            (void)pop_back(&lru->l, &std_allocator);
         }
     }
     check_end();
@@ -210,8 +214,12 @@ check_static_begin(run_lru_cache) {
         }
     }
     check_end({
-        (void)CCC_flat_hash_map_clear_and_free(&lru_cache.fh, NULL);
-        (void)doubly_linked_list_clear(&lru_cache.l, NULL);
+        (void)CCC_flat_hash_map_clear_and_free(
+            &lru_cache.fh, &(CCC_Destructor){}, &(CCC_Allocator){}
+        );
+        (void)doubly_linked_list_clear(
+            &lru_cache.l, &(CCC_Destructor){}, &std_allocator
+        );
     });
 }
 
