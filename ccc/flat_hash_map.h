@@ -284,7 +284,7 @@ main(void)
 Only dynamic maps may be initialized this way due the inability of the hash
 map to protect its invariants from user error at compile time. */
 #define CCC_flat_hash_map_from(                                                \
-    key_field, hasher_poitner, optional_capacity, array_compound_literal...    \
+    key_field, hasher_pointer, optional_capacity, array_compound_literal...    \
 )                                                                              \
     CCC_private_flat_hash_map_from(                                            \
         key_field, hasher_pointer, optional_capacity, array_compound_literal   \

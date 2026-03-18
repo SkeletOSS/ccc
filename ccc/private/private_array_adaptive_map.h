@@ -263,7 +263,6 @@ metadata. */
     private_key_field,                                                         \
     private_comparator_pointer,                                                \
     private_allocator_pointer,                                                 \
-    private_context,                                                           \
     private_cap                                                                \
 )                                                                              \
     (__extension__({                                                           \
@@ -388,7 +387,9 @@ metadata. */
 
 /** @internal */
 #define CCC_private_array_adaptive_map_insert_handle_with(                     \
-    array_adaptive_map_array_pointer, type_compound_literal...                 \
+    array_adaptive_map_array_pointer,                                          \
+    private_allocator_pointer,                                                 \
+    type_compound_literal...                                                   \
 )                                                                              \
     (__extension__({                                                           \
         __auto_type private_array_adaptive_map_ins_hndl_pointer                \
@@ -433,7 +434,10 @@ metadata. */
 
 /** @internal */
 #define CCC_private_array_adaptive_map_try_insert_with(                        \
-    array_adaptive_map_pointer, key, type_compound_literal...                  \
+    array_adaptive_map_pointer,                                                \
+    key,                                                                       \
+    private_allocator_pointer,                                                 \
+    type_compound_literal...                                                   \
 )                                                                              \
     (__extension__({                                                           \
         __auto_type private_array_adaptive_map_try_ins_map_pointer             \
@@ -492,7 +496,10 @@ metadata. */
 
 /** @internal */
 #define CCC_private_array_adaptive_map_insert_or_assign_with(                       \
-    array_adaptive_map_pointer, key, type_compound_literal...                       \
+    array_adaptive_map_pointer,                                                     \
+    key,                                                                            \
+    private_allocator_pointer,                                                      \
+    type_compound_literal...                                                        \
 )                                                                                   \
     (__extension__({                                                                \
         __auto_type private_array_adaptive_map_ins_or_assign_map_pointer            \

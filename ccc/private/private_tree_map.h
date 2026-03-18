@@ -117,7 +117,7 @@ void *CCC_private_tree_map_insert(
         = offsetof(private_struct_name, private_node_field),                   \
         .sizeof_type = sizeof(private_struct_name),                            \
         .compare = (private_comparator_pointer)->compare,                      \
-        .context = (private_comparator_pointer)->context,                      \
+        .comparator_context = (private_comparator_pointer)->context,           \
     }
 
 /** @internal */
@@ -146,13 +146,11 @@ void *CCC_private_tree_map_insert(
     (__extension__({                                                           \
         typeof(*private_compound_literal_array) *private_tree_map_type_array   \
             = private_compound_literal_array;                                  \
-        struct CCC_Tree_map private_map = CCC_private_tree_map_for(            \
+        struct CCC_Tree_map private_map = CCC_private_tree_map_default(        \
             typeof(*private_tree_map_type_array),                              \
             private_type_intruder_field_name,                                  \
             private_key_field_name,                                            \
-            private_comparator_pointer,                                        \
-            private_allocator_pointer,                                         \
-            private_context                                                    \
+            private_comparator_pointer                                         \
         );                                                                     \
         CCC_Allocator const *const private_tree_map_allocator                  \
             = (private_allocator_pointer);                                     \

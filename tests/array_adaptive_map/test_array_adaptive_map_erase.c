@@ -16,11 +16,13 @@
 
 check_static_begin(array_adaptive_map_test_insert_erase_shuffled) {
     CCC_Array_adaptive_map s = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        (struct Val[SMALL_FIXED_CAP]){}
     );
     size_t const size = 50;
     int const prime = 53;
-    check(insert_shuffled(&s, size, prime), CHECK_PASS);
+    check(insert_shuffled(&s, size, prime, &(CCC_Allocator){}), CHECK_PASS);
     int sorted_check[50];
     check(inorder_fill(sorted_check, size, &s), size);
     for (size_t i = 0; i + 1 < size; ++i) {
@@ -28,8 +30,9 @@ check_static_begin(array_adaptive_map_test_insert_erase_shuffled) {
     }
     /* Now let's delete everything with no errors. */
     for (size_t i = 0; i < size; ++i) {
-        CCC_Handle const *const h
-            = remove_key_value_wrap(&s, &(struct Val){.id = (int)i});
+        CCC_Handle const *const h = array_adaptive_map_remove_key_value_wrap(
+            &s, &(struct Val){.id = (int)i}
+        );
         check(occupied(h), true);
         check(validate(&s), true);
     }
@@ -39,7 +42,9 @@ check_static_begin(array_adaptive_map_test_insert_erase_shuffled) {
 
 check_static_begin(array_adaptive_map_test_prime_shuffle) {
     CCC_Array_adaptive_map s = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        (struct Val[SMALL_FIXED_CAP]){}
     );
     size_t const size = 50;
     size_t const prime = 53;
@@ -50,10 +55,13 @@ check_static_begin(array_adaptive_map_test_prime_shuffle) {
     bool repeats[50];
     memset(repeats, false, sizeof(bool) * size);
     for (size_t i = 0; i < size; ++i) {
-        if (occupied(try_insert_wrap(
+        if (occupied(array_adaptive_map_try_insert_wrap(
                 &s,
-                &(struct Val){.id = (int)shuffled_index,
-                              .val = (int)shuffled_index}
+                (&(struct Val){
+                    .id = (int)shuffled_index,
+                    .val = (int)shuffled_index,
+                }),
+                &(CCC_Allocator){}
             ))) {
             repeats[i] = true;
         }
@@ -62,7 +70,9 @@ check_static_begin(array_adaptive_map_test_prime_shuffle) {
     }
     check(array_adaptive_map_count(&s).count < size, true);
     for (size_t i = 0; i < size; ++i) {
-        CCC_Handle const *const e = remove_handle_wrap(handle_wrap(&s, &i));
+        CCC_Handle const *const e = array_adaptive_map_remove_handle_wrap(
+            array_adaptive_map_handle_wrap(&s, &i)
+        );
         check(occupied(e) || repeats[i], true);
         check(validate(&s), true);
     }
@@ -71,7 +81,9 @@ check_static_begin(array_adaptive_map_test_prime_shuffle) {
 
 check_static_begin(array_adaptive_map_test_weak_srand) {
     CCC_Array_adaptive_map s = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[STANDARD_FIXED_CAP]){}
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        (struct Val[STANDARD_FIXED_CAP]){}
     );
     srand(time(NULL)); /* NOLINT */
     int const num_nodes = 100;
@@ -79,16 +91,19 @@ check_static_begin(array_adaptive_map_test_weak_srand) {
     bool repeats[100] = {};
     for (int i = 0; i < num_nodes; ++i) {
         int const rand_i = rand(); /* NOLINT */
-        if (occupied(try_insert_wrap(
+        if (occupied(array_adaptive_map_try_insert_wrap(
                 &s,
-                &(struct Val){
+                (&(struct Val){
                     .id = rand_i,
                     .val = i,
-                }
+                }),
+                &(CCC_Allocator){}
             ))) {
             repeats[i] = true;
         }
-        (void)swap_handle(&s, &(struct Val){.id = rand_i, .val = i});
+        (void)swap_handle(
+            &s, &(struct Val){.id = rand_i, .val = i}, &(CCC_Allocator){}
+        );
         id_keys[i] = rand_i;
         check(validate(&s), true);
     }
@@ -104,7 +119,9 @@ check_static_begin(array_adaptive_map_test_weak_srand) {
 
 check_static_begin(array_adaptive_map_test_insert_erase_cycles_no_allocate) {
     CCC_Array_adaptive_map s = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[STANDARD_FIXED_CAP]){}
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        (struct Val[STANDARD_FIXED_CAP]){}
     );
     srand(time(NULL)); /* NOLINT */
     int const num_nodes = 100;
@@ -112,12 +129,13 @@ check_static_begin(array_adaptive_map_test_insert_erase_cycles_no_allocate) {
     bool repeats[100] = {};
     for (int i = 0; i < num_nodes; ++i) {
         int const rand_i = rand(); /* NOLINT */
-        if (occupied(insert_or_assign_wrap(
+        if (occupied(array_adaptive_map_insert_or_assign_wrap(
                 &s,
-                &(struct Val){
+                (&(struct Val){
                     .id = rand_i,
                     .val = i,
-                }
+                }),
+                &(CCC_Allocator){}
             ))) {
             repeats[i] = true;
         }
@@ -131,7 +149,9 @@ check_static_begin(array_adaptive_map_test_insert_erase_cycles_no_allocate) {
         check(validate(&s), true);
     }
     for (int i = 0; i < num_nodes / 2; ++i) {
-        CCC_Handle h = insert_or_assign(&s, &(struct Val){.id = id_keys[i]});
+        CCC_Handle h = insert_or_assign(
+            &s, &(struct Val){.id = id_keys[i]}, &(CCC_Allocator){}
+        );
         check(occupied(&h), false);
         check(validate(&s), true);
     }
@@ -151,8 +171,8 @@ removing the same keys across resizes. The resizing logic for handle based
 containers is non-trivial and must be tested. Don't replace with stack
 allocator, which does not allow resizing. */
 check_static_begin(array_adaptive_map_test_insert_erase_cycles_allocate) {
-    CCC_Array_adaptive_map s = array_adaptive_map_for(
-        struct Val, id, id_order, std_allocate, NULL, 0, NULL
+    CCC_Array_adaptive_map s = array_adaptive_map_default(
+        struct Val, id, &(CCC_Key_comparator){.compare = id_order}
     );
     srand(time(NULL)); /* NOLINT */
     int const num_nodes = 100;
@@ -160,12 +180,13 @@ check_static_begin(array_adaptive_map_test_insert_erase_cycles_allocate) {
     bool repeats[100] = {};
     for (int i = 0; i < num_nodes; ++i) {
         int const rand_i = rand(); /* NOLINT */
-        if (occupied(insert_or_assign_wrap(
+        if (occupied(array_adaptive_map_insert_or_assign_wrap(
                 &s,
-                &(struct Val){
+                (&(struct Val){
                     .id = rand_i,
                     .val = i,
-                }
+                }),
+                &std_allocator
             ))) {
             repeats[i] = true;
         }
@@ -179,7 +200,9 @@ check_static_begin(array_adaptive_map_test_insert_erase_cycles_allocate) {
         check(validate(&s), true);
     }
     for (int i = 0; i < num_nodes / 2; ++i) {
-        CCC_Handle h = insert_or_assign(&s, &(struct Val){.id = id_keys[i]});
+        CCC_Handle h = insert_or_assign(
+            &s, &(struct Val){.id = id_keys[i]}, &std_allocator
+        );
         check(occupied(&h), false);
         check(validate(&s), true);
     }
@@ -190,7 +213,9 @@ check_static_begin(array_adaptive_map_test_insert_erase_cycles_allocate) {
         check(validate(&s), true);
     }
     check(is_empty(&s), true);
-    check_end(array_adaptive_map_clear_and_free(&s, NULL););
+    check_end(array_adaptive_map_clear_and_free(
+                  &s, &(CCC_Destructor){}, &std_allocator
+    ););
 }
 
 int

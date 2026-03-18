@@ -15,19 +15,24 @@
 #include "utility/stack_allocator.h"
 
 check_static_begin(tree_map_test_insert_erase_shuffled) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 50);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[50]){}),
+    };
     CCC_Tree_map s = tree_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
     );
     size_t const size = 50;
     int const prime = 53;
     check(insert_shuffled(&s, size, prime), CHECK_PASS);
     int sorted_check[50];
     check(inorder_fill(sorted_check, size, &s), CHECK_PASS);
-    struct Val *const vals = allocator.blocks;
+    struct Val *const vals = allocator.context;
     /* Now let's delete everything with no errors. */
     for (size_t i = 0; i < size; ++i) {
-        struct Val *v = unwrap(remove_key_value_wrap(&s, &vals[i].elem));
+        struct Val *v = unwrap(
+            tree_map_remove_key_value_wrap(&s, &vals[i].elem, &allocator)
+        );
         check(v != NULL, true);
         check(v->key, vals[i].key);
         check(validate(&s), true);
@@ -37,7 +42,9 @@ check_static_begin(tree_map_test_insert_erase_shuffled) {
 }
 
 check_static_begin(tree_map_test_prime_shuffle) {
-    CCC_Tree_map s = tree_map_for(struct Val, elem, key, id_order, NULL, NULL);
+    CCC_Tree_map s = tree_map_for(
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+    );
     size_t const size = 50;
     size_t const prime = 53;
     size_t const less = 10;
@@ -50,7 +57,9 @@ check_static_begin(tree_map_test_prime_shuffle) {
     for (size_t i = 0; i < size; ++i) {
         vals[i].val = (int)shuffled_index;
         vals[i].key = (int)shuffled_index;
-        CCC_Entry e = swap_entry(&s, &vals[i].elem, &(struct Val){}.elem);
+        CCC_Entry e = swap_entry(
+            &s, &vals[i].elem, &(struct Val){}.elem, &(CCC_Allocator){}
+        );
         if (unwrap(&e)) {
             repeats[i] = true;
         }
@@ -61,8 +70,9 @@ check_static_begin(tree_map_test_prime_shuffle) {
     check(tree_map_count(&s).count < size, true);
     for (size_t i = 0; i < size; ++i) {
         check(
-            occupied(remove_entry_wrap(entry_wrap(&s, &vals[i].key)))
-                || repeats[i],
+            occupied(tree_map_remove_entry_wrap(
+                tree_map_entry_wrap(&s, &vals[i].key), &(CCC_Allocator){}
+            )) || repeats[i],
             true
         );
         check(validate(&s), true);
@@ -71,7 +81,9 @@ check_static_begin(tree_map_test_prime_shuffle) {
 }
 
 check_static_begin(tree_map_test_weak_srand) {
-    CCC_Tree_map s = tree_map_for(struct Val, elem, key, id_order, NULL, NULL);
+    CCC_Tree_map s = tree_map_for(
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+    );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -81,15 +93,16 @@ check_static_begin(tree_map_test_weak_srand) {
     for (int i = 0; i < num_nodes; ++i) {
         vals[i].key = rand(); // NOLINT
         vals[i].val = i;
-        if (occupied(
-                swap_entry_wrap(&s, &vals[i].elem, &(struct Val){}.elem)
-            )) {
+        if (occupied(tree_map_swap_entry_wrap(
+                &s, &vals[i].elem, &(struct Val){}.elem, &(CCC_Allocator){}
+            ))) {
             repeats[i] = true;
         }
         check(validate(&s), true);
     }
     for (int i = 0; i < num_nodes; ++i) {
-        CCC_Entry entry = CCC_remove_key_value(&s, &vals[i].elem);
+        CCC_Entry entry
+            = CCC_remove_key_value(&s, &vals[i].elem, &(CCC_Allocator){});
         check(occupied(&entry) || repeats[i], true);
         check(validate(&s), true);
     }
@@ -99,9 +112,12 @@ check_static_begin(tree_map_test_weak_srand) {
 
 check_static_begin(tree_map_test_insert_erase_cycles) {
     /* Over allocate because we do more insertions near the end. */
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 200);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[200]){}),
+    };
     CCC_Tree_map s = CCC_tree_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
     );
     srand(time(NULL)); /* NOLINT */
     int const num_nodes = 100;
@@ -109,32 +125,35 @@ check_static_begin(tree_map_test_insert_erase_cycles) {
     bool repeats[100] = {};
     for (int i = 0; i < num_nodes; ++i) {
         keys[i] = rand(); /* NOLINT */
-        if (occupied(insert_or_assign_wrap(
+        if (occupied(tree_map_insert_or_assign_wrap(
                 &s,
-                &(struct Val){
+                (&(struct Val){
                     .key = keys[i],
                     .val = i,
                 }
-                     .elem
+                      .elem),
+                &allocator
             ))) {
             repeats[i] = true;
         }
         check(validate(&s), true);
     }
     for (int i = 0; i < num_nodes / 2; ++i) {
-        CCC_Entry h = remove_entry(entry_wrap(&s, &keys[i]));
+        CCC_Entry h
+            = remove_entry(tree_map_entry_wrap(&s, &keys[i]), &allocator);
         check(occupied(&h) || repeats[i], true);
         check(validate(&s), true);
     }
     for (int i = 0; i < num_nodes / 2; ++i) {
         CCC_Entry const *const entry = CCC_tree_map_insert_or_assign_with(
-            &s, keys[i], (struct Val){.val = i}
+            &s, keys[i], &allocator, (struct Val){.val = i}
         );
         check(occupied(entry), false);
         check(validate(&s), true);
     }
     for (int i = 0; i < num_nodes; ++i) {
-        CCC_Entry const entry = remove_entry(entry_wrap(&s, &keys[i]));
+        CCC_Entry const entry
+            = remove_entry(tree_map_entry_wrap(&s, &keys[i]), &allocator);
         check(occupied(&entry) || repeats[i], true);
         check(validate(&s), true);
     }

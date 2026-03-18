@@ -18,7 +18,11 @@ id_order(CCC_Key_comparator_arguments const order) {
 }
 
 check_begin(
-    insert_shuffled, CCC_Tree_map *m, size_t const size, int const larger_prime
+    insert_shuffled,
+    CCC_Tree_map *m,
+    size_t const size,
+    int const larger_prime,
+    CCC_Allocator const *const allocator
 ) {
     size_t shuffled_index = larger_prime % size;
     for (size_t i = 0; i < size; ++i) {
@@ -29,7 +33,8 @@ check_begin(
                 .val = (int)i,
             }
                  .elem,
-            &(struct Val){}.elem
+            &(struct Val){}.elem,
+            allocator
         );
         check(validate(m), true);
         shuffled_index = (shuffled_index + larger_prime) % size;

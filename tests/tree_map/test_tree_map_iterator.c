@@ -170,9 +170,12 @@ check_static_begin(iterator_check, Tree_map *s) {
 }
 
 check_static_begin(tree_map_test_forward_iterator) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 33);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[33]){}),
+    };
     Tree_map s = tree_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
     );
     /* We should have the expected behavior iteration over empty tree. */
     int j = 0;
@@ -190,7 +193,8 @@ check_static_begin(tree_map_test_forward_iterator) {
                 .val = i,
             }
                  .elem,
-            &(struct Val){}.elem
+            &(struct Val){}.elem,
+            &allocator
         );
         check(validate(&s), true);
         shuffled_index = (shuffled_index + prime) % num_nodes;
@@ -206,9 +210,12 @@ check_static_begin(tree_map_test_forward_iterator) {
 }
 
 check_static_begin(tree_map_test_iterate_removal) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 100);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[100]){}),
+    };
     Tree_map s = tree_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
@@ -223,7 +230,8 @@ check_static_begin(tree_map_test_iterate_removal) {
                 .val = (int)i,
             }
                  .elem,
-            &(struct Val){}.elem
+            &(struct Val){}.elem,
+            &allocator
         );
         check(validate(&s), true);
     }
@@ -232,7 +240,7 @@ check_static_begin(tree_map_test_iterate_removal) {
     for (struct Val *i = begin(&s), *next = NULL; i; i = next) {
         next = next(&s, &i->elem);
         if (i->key > limit) {
-            (void)remove_key_value(&s, &i->elem);
+            (void)remove_key_value(&s, &i->elem, &allocator);
             check(validate(&s), true);
         }
     }
@@ -240,9 +248,12 @@ check_static_begin(tree_map_test_iterate_removal) {
 }
 
 check_static_begin(tree_map_test_iterate_remove_key_value_reinsert) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 200);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[200]){}),
+    };
     Tree_map s = tree_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
@@ -257,7 +268,8 @@ check_static_begin(tree_map_test_iterate_remove_key_value_reinsert) {
                 .val = (int)i,
             }
                  .elem,
-            &(struct Val){}.elem
+            &(struct Val){}.elem,
+            &allocator
         );
         check(validate(&s), true);
     }
@@ -268,10 +280,13 @@ check_static_begin(tree_map_test_iterate_remove_key_value_reinsert) {
     for (struct Val *i = begin(&s), *next = NULL; i; i = next) {
         next = next(&s, &i->elem);
         if (i->key < limit) {
-            (void)remove_key_value(&s, &i->elem);
+            (void)remove_key_value(&s, &i->elem, &allocator);
             i->key = new_unique_entry_val;
             check(
-                insert_entry(entry_wrap(&s, &i->key), &i->elem) != NULL, true
+                insert_entry(
+                    tree_map_entry_wrap(&s, &i->key), &i->elem, &allocator
+                ) != NULL,
+                true
             );
             check(validate(&s), true);
             ++new_unique_entry_val;
@@ -282,9 +297,12 @@ check_static_begin(tree_map_test_iterate_remove_key_value_reinsert) {
 }
 
 check_static_begin(tree_map_test_valid_range) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 25);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[25]){}),
+    };
     Tree_map s = tree_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
     );
 
     int const num_nodes = 25;
@@ -296,7 +314,8 @@ check_static_begin(tree_map_test_valid_range) {
                 .key = id,
                 .val = i,
             }
-                 .elem
+                 .elem,
+            &allocator
         );
         check(validate(&s), true);
     }
@@ -306,7 +325,7 @@ check_static_begin(tree_map_test_valid_range) {
     check(
         check_range(
             &s,
-            equal_range_wrap(&s, &(int){6}, &(int){44}),
+            tree_map_equal_range_wrap(&s, &(int){6}, &(int){44}),
             8,
             (int[8]){10, 15, 20, 25, 30, 35, 40, 45}
         ),
@@ -318,7 +337,7 @@ check_static_begin(tree_map_test_valid_range) {
     check(
         check_range_reverse(
             &s,
-            equal_range_reverse_wrap(&s, &(int){119}, &(int){84}),
+            tree_map_equal_range_reverse_wrap(&s, &(int){119}, &(int){84}),
             8,
             (int[8]){115, 110, 105, 100, 95, 90, 85, 80}
         ),
@@ -328,9 +347,12 @@ check_static_begin(tree_map_test_valid_range) {
 }
 
 check_static_begin(tree_map_test_valid_range_equals) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 25);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[25]){}),
+    };
     Tree_map s = tree_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
     );
 
     int const num_nodes = 25;
@@ -342,7 +364,8 @@ check_static_begin(tree_map_test_valid_range_equals) {
                 .key = id,
                 .val = i,
             }
-                 .elem
+                 .elem,
+            &allocator
         );
         check(validate(&s), true);
     }
@@ -351,7 +374,7 @@ check_static_begin(tree_map_test_valid_range_equals) {
     check(
         check_range(
             &s,
-            equal_range_wrap(&s, &(int){10}, &(int){40}),
+            tree_map_equal_range_wrap(&s, &(int){10}, &(int){40}),
             8,
             (int[8]){10, 15, 20, 25, 30, 35, 40, 45}
         ),
@@ -363,7 +386,7 @@ check_static_begin(tree_map_test_valid_range_equals) {
     check(
         check_range_reverse(
             &s,
-            equal_range_reverse_wrap(&s, &(int){115}, &(int){85}),
+            tree_map_equal_range_reverse_wrap(&s, &(int){115}, &(int){85}),
             8,
             (int[8]){115, 110, 105, 100, 95, 90, 85, 80}
         ),
@@ -373,9 +396,12 @@ check_static_begin(tree_map_test_valid_range_equals) {
 }
 
 check_static_begin(tree_map_test_invalid_range) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 25);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[25]){}),
+    };
     Tree_map s = tree_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
     );
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
@@ -386,7 +412,8 @@ check_static_begin(tree_map_test_invalid_range) {
                 .key = id,
                 .val = i,
             }
-                 .elem
+                 .elem,
+            &allocator
         );
         check(validate(&s), true);
     }
@@ -396,7 +423,7 @@ check_static_begin(tree_map_test_invalid_range) {
     check(
         check_range(
             &s,
-            equal_range_wrap(&s, &(int){95}, &(int){999}),
+            tree_map_equal_range_wrap(&s, &(int){95}, &(int){999}),
             6,
             (int[6]){95, 100, 105, 110, 115, 120}
         ),
@@ -408,7 +435,7 @@ check_static_begin(tree_map_test_invalid_range) {
     check(
         check_range_reverse(
             &s,
-            equal_range_reverse_wrap(&s, &(int){36}, &(int){-999}),
+            tree_map_equal_range_reverse_wrap(&s, &(int){36}, &(int){-999}),
             8,
             (int[8]){35, 30, 25, 20, 15, 10, 5, 0}
         ),
@@ -418,9 +445,12 @@ check_static_begin(tree_map_test_invalid_range) {
 }
 
 check_static_begin(tree_map_test_empty_range) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 25);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[25]){}),
+    };
     Tree_map s = tree_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
     );
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
@@ -431,7 +461,8 @@ check_static_begin(tree_map_test_empty_range) {
                 .key = id,
                 .val = i,
             }
-                 .elem
+                 .elem,
+            &allocator
         );
         check(validate(&s), true);
     }

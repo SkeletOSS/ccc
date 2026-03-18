@@ -19,8 +19,12 @@ enum : size_t {
 
 CCC_Order id_order(CCC_Key_comparator_arguments);
 
-enum Check_result
-insert_shuffled(CCC_Array_adaptive_map *m, size_t size, int larger_prime);
+enum Check_result insert_shuffled(
+    CCC_Array_adaptive_map *m,
+    size_t size,
+    int larger_prime,
+    CCC_Allocator const *allocator
+);
 size_t inorder_fill(int vals[], size_t size, CCC_Array_adaptive_map const *m);
 
 #endif /* CCC_HOMAP_UTIL_H */

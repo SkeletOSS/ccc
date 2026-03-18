@@ -231,7 +231,7 @@ map to protect its invariants from user error at compile time. */
 )                                                                              \
     CCC_private_array_adaptive_map_from(                                       \
         type_key_field,                                                        \
-        compararator_pointer,                                                  \
+        comparator_pointer,                                                    \
         allocator_pointer,                                                     \
         optional_capacity,                                                     \
         type_compound_literal_array                                            \
@@ -591,7 +591,7 @@ the information regarding its presence is helpful. */
 )                                                                              \
     &(struct { CCC_Handle private; }){                                         \
         CCC_array_adaptive_map_insert_or_assign(                               \
-            (map_pointer), (type_pointer), allocator_pointer...                \
+            (map_pointer), (type_pointer), allocator_pointer                   \
         )}                                                                     \
          .private
 
@@ -1100,8 +1100,6 @@ typedef CCC_Array_adaptive_map_handle Array_adaptive_map_handle;
         CCC_array_adaptive_map_insert_handle_with(arguments)
 #    define array_adaptive_map_try_insert_with(arguments...)                   \
         CCC_array_adaptive_map_try_insert_with(arguments)
-#    define array_adaptive_map_insert_or_assign_with(arguments...)             \
-        CCC_array_adaptive_map_insert_or_assign_with(arguments)
 #    define array_adaptive_map_copy(arguments...)                              \
         CCC_array_adaptive_map_copy(arguments)
 #    define array_adaptive_map_reserve(arguments...)                           \
@@ -1124,6 +1122,10 @@ typedef CCC_Array_adaptive_map_handle Array_adaptive_map_handle;
         CCC_array_adaptive_map_try_insert(arguments)
 #    define array_adaptive_map_insert_or_assign(arguments...)                  \
         CCC_array_adaptive_map_insert_or_assign(arguments)
+#    define array_adaptive_map_insert_or_assign_wrap(arguments...)             \
+        CCC_array_adaptive_map_insert_or_assign_wrap(arguments)
+#    define array_adaptive_map_insert_or_assign_with(arguments...)             \
+        CCC_array_adaptive_map_insert_or_assign_with(arguments)
 #    define array_adaptive_map_remove_key_value(arguments...)                  \
         CCC_array_adaptive_map_remove_key_value(arguments)
 #    define array_adaptive_map_remove_handle(arguments...)                     \
@@ -1160,6 +1162,14 @@ typedef CCC_Array_adaptive_map_handle Array_adaptive_map_handle;
         CCC_array_adaptive_map_next(arguments)
 #    define array_adaptive_map_reverse_next(arguments...)                      \
         CCC_array_adaptive_map_reverse_next(arguments)
+#    define array_adaptive_map_equal_range(arguments...)                       \
+        CCC_array_adaptive_map_equal_range(arguments)
+#    define array_adaptive_map_equal_range_wrap(arguments...)                  \
+        CCC_array_adaptive_map_equal_range_wrap(arguments)
+#    define array_adaptive_map_equal_range_reverse(arguments...)               \
+        CCC_array_adaptive_map_equal_range_reverse(arguments)
+#    define array_adaptive_map_equal_range_reverse_wrap(arguments...)          \
+        CCC_array_adaptive_map_equal_range_reverse_wrap(arguments)
 #    define array_adaptive_map_count(arguments...)                             \
         CCC_array_adaptive_map_count(arguments)
 #    define array_adaptive_map_capacity(arguments...)                          \

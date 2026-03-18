@@ -74,16 +74,19 @@ lru_head(struct Lru_cache *const lru) {
    of the hash table and list. */
 static struct Lru_cache lru_cache = {
     .cap = 3,
-    .l = doubly_linked_list_for(struct Lru_node, list_node, NULL, NULL),
-    .map = tree_map_for(
-        struct Lru_node, map_node, key, order_by_key, std_allocate, NULL
+    .l = doubly_linked_list_default(struct Lru_node, list_node),
+    .map = tree_map_default(
+        struct Lru_node,
+        map_node,
+        key,
+        &(CCC_Key_comparator){.compare = order_by_key}
     ),
 };
 
 check_static_begin(
     lru_put, struct Lru_cache *const lru, int const key, int const val
 ) {
-    CCC_Tree_map_entry *const ent = entry_wrap(&lru->map, &key);
+    CCC_Tree_map_entry *const ent = tree_map_entry_wrap(&lru->map, &key);
     if (occupied(ent)) {
         struct Lru_node *const found = unwrap(ent);
         found->key = key;
@@ -97,17 +100,22 @@ check_static_begin(
         check(r, CCC_RESULT_OK);
     } else {
         struct Lru_node *new = insert_entry(
-            ent, &(struct Lru_node){.key = key, .val = val}.map_node
+            ent,
+            &(struct Lru_node){.key = key, .val = val}.map_node,
+            &std_allocator
         );
         check(new == NULL, false);
-        new = doubly_linked_list_push_front(&lru->l, &new->list_node);
+        new = doubly_linked_list_push_front(
+            &lru->l, &new->list_node, &(CCC_Allocator){}
+        );
         check(new == NULL, false);
         if (count(&lru->l).count > lru->cap) {
             struct Lru_node const *const to_drop = back(&lru->l);
             check(to_drop == NULL, false);
-            (void)pop_back(&lru->l);
-            CCC_Entry const e
-                = remove_entry(entry_wrap(&lru->map, &to_drop->key));
+            (void)pop_back(&lru->l, &(CCC_Allocator){});
+            CCC_Entry const e = remove_entry(
+                tree_map_entry_wrap(&lru->map, &to_drop->key), &std_allocator
+            );
             check(occupied(&e), true);
         }
     }
@@ -196,7 +204,11 @@ check_static_begin(run_lru_cache) {
                 break;
         }
     }
-    check_end({ (void)CCC_tree_map_clear(&lru_cache.map, NULL); });
+    check_end({
+        (void)CCC_tree_map_clear(
+            &lru_cache.map, &(CCC_Destructor){}, &std_allocator
+        );
+    });
 }
 
 int

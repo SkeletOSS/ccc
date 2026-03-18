@@ -269,9 +269,10 @@ static SV_Str_view const quit_cmd = SV_from("q");
         }                                                                      \
     } while (0)
 
-static void build_graph(struct Graph *);
+static void build_graph(struct Graph *, CCC_Allocator const *);
 static void find_shortest_paths(struct Graph *);
-static bool found_destination(struct Graph *, struct Vertex *);
+static bool
+found_destination(struct Graph *, struct Vertex *, CCC_Allocator const *);
 static void edge_construct(
     struct Graph *, Flat_hash_map *, struct Vertex *, struct Vertex *
 );
@@ -387,7 +388,7 @@ main(int argc, char **argv) {
         quit("allocation failure for specified graph size.\n", 1);
         return 1;
     }
-    build_graph(&graph);
+    build_graph(&graph, &std_allocator);
     find_shortest_paths(&graph);
     printf("\n");
 }
@@ -400,7 +401,7 @@ main(int argc, char **argv) {
    The number of cells taken to connect the edge to another other vertex is the
    cost/weight of that edge. */
 static void
-build_graph(struct Graph *const graph) {
+build_graph(struct Graph *const graph, CCC_Allocator const *const allocator) {
     build_path_outline(graph);
     clear_and_flush_graph(graph, MAG);
     defer {
@@ -424,7 +425,7 @@ build_graph(struct Graph *const graph) {
         char key = (char)vertex_title;
         struct Vertex *const source = vertex_at(graph, key);
         while (vertex_degree(source) < MAX_DEGREE
-               && found_destination(graph, source)) {}
+               && found_destination(graph, source, allocator)) {}
     }
 }
 
@@ -436,31 +437,29 @@ build_graph(struct Graph *const graph) {
    The graphs also are more visually pleasing and make some sense because routes
    are formed efficiently due to the bfs. */
 static bool
-found_destination(struct Graph *const graph, struct Vertex *const source) {
-
+found_destination(
+    struct Graph *const graph,
+    struct Vertex *const source,
+    CCC_Allocator const *const allocator
+) {
     Flat_hash_map parent_map = flat_hash_map_from(
         current,
-        hash_parent_cells,
-        order_parent_cells,
-        std_allocate,
+        (&(CCC_Hasher){
+            .hash = hash_parent_cells,
+            .compare = order_parent_cells,
+        }),
+        allocator,
         0,
         (struct Path_backtrack_cell[]){
-            {
-                .current = source->pos,
-                .parent = (struct Point){-1, -1},
-            },
+            {.current = source->pos, .parent = (struct Point){-1, -1}},
         }
     );
     Flat_double_ended_queue bfs = flat_double_ended_queue_from(
-        std_allocate,
-        0,
-        (struct Point[]){
-            source->pos,
-        }
+        allocator, 0, (struct Point[]){source->pos}
     );
     defer {
-        (void)clear_and_free(&bfs, NULL);
-        (void)clear_and_free(&parent_map, NULL);
+        (void)clear_and_free(&bfs, &(CCC_Destructor){}, allocator);
+        (void)clear_and_free(&parent_map, &(CCC_Destructor){}, allocator);
     }
     while (!is_empty(&bfs)) {
         struct Point const cur = *((struct Point *)front(&bfs));
@@ -480,15 +479,18 @@ found_destination(struct Graph *const graph, struct Vertex *const source) {
                     = vertex_at(graph, get_cell_vertex_title(next_cell));
                 if (source->name != nv->name && vertex_degree(nv) < MAX_DEGREE
                     && !has_edge_with(source, nv->name)) {
-                    Entry const in = insert_or_assign(&parent_map, &push);
+                    Entry const in
+                        = insert_or_assign(&parent_map, &push, allocator);
                     check(!insert_error(&in));
                     edge_construct(graph, &parent_map, source, nv);
                     return true;
                 }
             }
             if (!is_path_cell(next_cell)
-                && !occupied(try_insert_wrap(&parent_map, &push))) {
-                struct Point const *const n = push_back(&bfs, &next);
+                && !occupied(
+                    flat_hash_map_try_insert_wrap(&parent_map, &push, allocator)
+                )) {
+                struct Point const *const n = push_back(&bfs, &next, allocator);
                 check(n);
             }
         }
@@ -753,12 +755,11 @@ dijkstra_shortest_path(
        of all, maximum priority_queue/map size is known to be small [A-Z] so
        provide memory on the stack for speed and safety. */
     struct Cost map_priority_queue[MAX_VERTICES] = {};
-    Priority_queue costs = priority_queue_with_allocator(
+    Priority_queue costs = priority_queue_default(
         struct Cost,
         priority_queue_node,
         CCC_ORDER_LESSER,
-        order_priority_queue_costs,
-        NULL
+        &(CCC_Comparator){.compare = order_priority_queue_costs}
     );
     for (int i = 0, vx = BEGIN_VERTICES; i < graph->vertices; ++i, ++vx) {
         struct Cost *const v
@@ -768,15 +769,13 @@ dijkstra_shortest_path(
             .from = '\0',
             .cost = (char)vx == source ? 0 : INT_MAX,
         };
-        struct Cost const *const c = push(&costs, &v->priority_queue_node);
+        struct Cost const *const c
+            = push(&costs, &v->priority_queue_node, &(CCC_Allocator){});
         check(c);
     }
     while (!is_empty(&costs)) {
-        /* The reference to u is valid after the pop because the pop does not
-           deallocate any memory. The priority_queue has no allocation
-           permissions. */
         struct Cost const *const u = front(&costs);
-        (void)pop(&costs);
+        (void)pop(&costs, &(CCC_Allocator){});
         if (u->cost == INT_MAX) {
             return INT_MAX;
         }

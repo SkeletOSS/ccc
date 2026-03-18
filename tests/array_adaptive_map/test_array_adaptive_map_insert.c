@@ -26,12 +26,16 @@ array_adaptive_map_modplus(CCC_Arguments const t) {
 
 check_static_begin(array_adaptive_map_test_insert) {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        (struct Val[SMALL_FIXED_CAP]){}
     );
 
     /* Nothing was there before so nothing is in the handle. */
-    CCC_Handle *hndl = swap_handle_wrap(
-        &array_adaptive_map, &(struct Val){.id = 137, .val = 99}
+    CCC_Handle *hndl = array_adaptive_map_swap_handle_wrap(
+        &array_adaptive_map,
+        (&(struct Val){.id = 137, .val = 99}),
+        &(CCC_Allocator){}
     );
     check(occupied(hndl), false);
     check(count(&array_adaptive_map).count, 1);
@@ -40,13 +44,16 @@ check_static_begin(array_adaptive_map_test_insert) {
 
 check_static_begin(array_adaptive_map_test_insert_macros) {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        (struct Val[SMALL_FIXED_CAP]){}
     );
 
     struct Val const *ins = array_adaptive_map_at(
         &array_adaptive_map,
         CCC_array_adaptive_map_or_insert_with(
-            handle_wrap(&array_adaptive_map, &(int){2}),
+            array_adaptive_map_handle_wrap(&array_adaptive_map, &(int){2}),
+            &(CCC_Allocator){},
             (struct Val){.id = 2, .val = 0}
         )
     );
@@ -55,8 +62,9 @@ check_static_begin(array_adaptive_map_test_insert_macros) {
     check(count(&array_adaptive_map).count, 1);
     ins = array_adaptive_map_at(
         &array_adaptive_map,
-        array_adaptive_map_insert_array_with(
-            handle_wrap(&array_adaptive_map, &(int){2}),
+        array_adaptive_map_insert_handle_with(
+            array_adaptive_map_handle_wrap(&array_adaptive_map, &(int){2}),
+            &(CCC_Allocator){},
             (struct Val){.id = 2, .val = 0}
         )
     );
@@ -64,8 +72,9 @@ check_static_begin(array_adaptive_map_test_insert_macros) {
     check(ins != NULL, true);
     ins = array_adaptive_map_at(
         &array_adaptive_map,
-        array_adaptive_map_insert_array_with(
-            handle_wrap(&array_adaptive_map, &(int){9}),
+        array_adaptive_map_insert_handle_with(
+            array_adaptive_map_handle_wrap(&array_adaptive_map, &(int){9}),
+            &(CCC_Allocator){},
             (struct Val){.id = 9, .val = 1}
         )
     );
@@ -74,7 +83,7 @@ check_static_begin(array_adaptive_map_test_insert_macros) {
     ins = array_adaptive_map_at(
         &array_adaptive_map,
         unwrap(array_adaptive_map_insert_or_assign_with(
-            &array_adaptive_map, 3, (struct Val){.val = 99}
+            &array_adaptive_map, 3, &(CCC_Allocator){}, (struct Val){.val = 99}
         ))
     );
     check(validate(&array_adaptive_map), true);
@@ -85,7 +94,7 @@ check_static_begin(array_adaptive_map_test_insert_macros) {
     ins = array_adaptive_map_at(
         &array_adaptive_map,
         CCC_handle_unwrap(array_adaptive_map_insert_or_assign_with(
-            &array_adaptive_map, 3, (struct Val){.val = 98}
+            &array_adaptive_map, 3, &(CCC_Allocator){}, (struct Val){.val = 98}
         ))
     );
     check(validate(&array_adaptive_map), true);
@@ -95,7 +104,7 @@ check_static_begin(array_adaptive_map_test_insert_macros) {
     ins = array_adaptive_map_at(
         &array_adaptive_map,
         unwrap(array_adaptive_map_try_insert_with(
-            &array_adaptive_map, 3, (struct Val){.val = 100}
+            &array_adaptive_map, 3, &(CCC_Allocator){}, (struct Val){.val = 100}
         ))
     );
     check(ins == NULL, false);
@@ -105,27 +114,34 @@ check_static_begin(array_adaptive_map_test_insert_macros) {
     ins = array_adaptive_map_at(
         &array_adaptive_map,
         CCC_handle_unwrap(array_adaptive_map_try_insert_with(
-            &array_adaptive_map, 4, (struct Val){.val = 100}
+            &array_adaptive_map, 4, &(CCC_Allocator){}, (struct Val){.val = 100}
         ))
     );
     check(ins == NULL, false);
     check(validate(&array_adaptive_map), true);
     check(ins->val, 100);
     check(count(&array_adaptive_map).count, 4);
-    check_end(clear_and_free(&array_adaptive_map, NULL););
+    check_end({
+        clear_and_free(
+            &array_adaptive_map, &(CCC_Destructor){}, &(CCC_Allocator){}
+        );
+    });
 }
 
 check_static_begin(array_adaptive_map_test_insert_overwrite) {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        (struct Val[SMALL_FIXED_CAP]){}
     );
 
     struct Val q = {.id = 137, .val = 99};
-    CCC_Handle hndl = swap_handle(&array_adaptive_map, &q);
+    CCC_Handle hndl = swap_handle(&array_adaptive_map, &q, &(CCC_Allocator){});
     check(occupied(&hndl), false);
 
     struct Val const *v = array_adaptive_map_at(
-        &array_adaptive_map, unwrap(handle_wrap(&array_adaptive_map, &q.id))
+        &array_adaptive_map,
+        unwrap(array_adaptive_map_handle_wrap(&array_adaptive_map, &q.id))
     );
     check(v != NULL, true);
     check(v->val, 99);
@@ -135,7 +151,8 @@ check_static_begin(array_adaptive_map_test_insert_overwrite) {
     q = (struct Val){.id = 137, .val = 100};
 
     /* The contents of q are now in the table. */
-    CCC_Handle in_table = swap_handle(&array_adaptive_map, &q);
+    CCC_Handle in_table
+        = swap_handle(&array_adaptive_map, &q, &(CCC_Allocator){});
     check(occupied(&in_table), true);
 
     /* The old contents are now in q and the handle is in the table. */
@@ -144,7 +161,8 @@ check_static_begin(array_adaptive_map_test_insert_overwrite) {
     check(v->val, 100);
     check(q.val, 99);
     v = array_adaptive_map_at(
-        &array_adaptive_map, unwrap(handle_wrap(&array_adaptive_map, &q.id))
+        &array_adaptive_map,
+        unwrap(array_adaptive_map_handle_wrap(&array_adaptive_map, &q.id))
     );
     check(v != NULL, true);
     check(v->val, 100);
@@ -153,20 +171,23 @@ check_static_begin(array_adaptive_map_test_insert_overwrite) {
 
 check_static_begin(array_adaptive_map_test_insert_then_bad_ideas) {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        (struct Val[SMALL_FIXED_CAP]){}
     );
     struct Val q = {.id = 137, .val = 99};
-    CCC_Handle hndl = swap_handle(&array_adaptive_map, &q);
+    CCC_Handle hndl = swap_handle(&array_adaptive_map, &q, &(CCC_Allocator){});
     check(occupied(&hndl), false);
     struct Val const *v = array_adaptive_map_at(
-        &array_adaptive_map, unwrap(handle_wrap(&array_adaptive_map, &q.id))
+        &array_adaptive_map,
+        unwrap(array_adaptive_map_handle_wrap(&array_adaptive_map, &q.id))
     );
     check(v != NULL, true);
     check(v->val, 99);
 
     q = (struct Val){.id = 137, .val = 100};
 
-    hndl = swap_handle(&array_adaptive_map, &q);
+    hndl = swap_handle(&array_adaptive_map, &q, &(CCC_Allocator){});
     check(occupied(&hndl), true);
     v = array_adaptive_map_at(&array_adaptive_map, unwrap(&hndl));
     check(v != NULL, true);
@@ -186,7 +207,9 @@ check_static_begin(array_adaptive_map_test_insert_then_bad_ideas) {
 check_static_begin(array_adaptive_map_test_array_api_functional) {
     /* Over allocate size now because we don't want to worry about resizing. */
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[STANDARD_FIXED_CAP]){}
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        (struct Val[STANDARD_FIXED_CAP]){}
     );
     size_t const size = 200;
 
@@ -199,7 +222,11 @@ check_static_begin(array_adaptive_map_test_array_api_functional) {
         def.val = (int)i;
         struct Val const *const d = array_adaptive_map_at(
             &array_adaptive_map,
-            or_insert(handle_wrap(&array_adaptive_map, &def.id), &def)
+            or_insert(
+                array_adaptive_map_handle_wrap(&array_adaptive_map, &def.id),
+                &def,
+                &(CCC_Allocator){}
+            )
         );
         check((d != NULL), true);
         check(d->id, i);
@@ -212,11 +239,12 @@ check_static_begin(array_adaptive_map_test_array_api_functional) {
         def.val = (int)i;
         CCC_Handle_index const h = or_insert(
             array_adaptive_map_and_modify_with(
-                handle_wrap(&array_adaptive_map, &def.id),
+                array_adaptive_map_handle_wrap(&array_adaptive_map, &def.id),
                 struct Val,
                 { T->val++; }
             ),
-            &def
+            &def,
+            &(CCC_Allocator){}
         );
         struct Val const *const d
             = array_adaptive_map_at(&array_adaptive_map, h);
@@ -238,7 +266,11 @@ check_static_begin(array_adaptive_map_test_array_api_functional) {
         def.val = (int)i;
         struct Val *const in = array_adaptive_map_at(
             &array_adaptive_map,
-            or_insert(handle_wrap(&array_adaptive_map, &def.id), &def)
+            or_insert(
+                array_adaptive_map_handle_wrap(&array_adaptive_map, &def.id),
+                &def,
+                &(CCC_Allocator){}
+            )
         );
         in->val++;
         /* All values in the array should be odd now */
@@ -251,7 +283,9 @@ check_static_begin(array_adaptive_map_test_array_api_functional) {
 check_static_begin(array_adaptive_map_test_insert_via_handle) {
     /* Over allocate size now because we don't want to worry about resizing. */
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[STANDARD_FIXED_CAP]){}
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        (struct Val[STANDARD_FIXED_CAP]){}
     );
     size_t const size = 200;
 
@@ -264,7 +298,11 @@ check_static_begin(array_adaptive_map_test_insert_via_handle) {
         def.val = (int)i;
         struct Val const *const d = array_adaptive_map_at(
             &array_adaptive_map,
-            insert_handle(handle_wrap(&array_adaptive_map, &def.id), &def)
+            insert_handle(
+                array_adaptive_map_handle_wrap(&array_adaptive_map, &def.id),
+                &def,
+                &(CCC_Allocator){}
+            )
         );
         check((d != NULL), true);
         check(d->id, i);
@@ -277,7 +315,11 @@ check_static_begin(array_adaptive_map_test_insert_via_handle) {
         def.val = (int)i + 1;
         struct Val const *const d = array_adaptive_map_at(
             &array_adaptive_map,
-            insert_handle(handle_wrap(&array_adaptive_map, &def.id), &def)
+            insert_handle(
+                array_adaptive_map_handle_wrap(&array_adaptive_map, &def.id),
+                &def,
+                &(CCC_Allocator){}
+            )
         );
         /* All values in the array should be odd now */
         check((d != NULL), true);
@@ -295,7 +337,9 @@ check_static_begin(array_adaptive_map_test_insert_via_handle) {
 check_static_begin(array_adaptive_map_test_insert_via_array_macros) {
     /* Over allocate size now because we don't want to worry about resizing. */
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[STANDARD_FIXED_CAP]){}
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        (struct Val[STANDARD_FIXED_CAP]){}
     );
     size_t const size = 200;
 
@@ -306,7 +350,9 @@ check_static_begin(array_adaptive_map_test_insert_via_array_macros) {
         struct Val const *const d = array_adaptive_map_at(
             &array_adaptive_map,
             insert_handle(
-                handle_wrap(&array_adaptive_map, &i), &(struct Val){i, i}
+                array_adaptive_map_handle_wrap(&array_adaptive_map, &i),
+                &(struct Val){i, i},
+                &(CCC_Allocator){}
             )
         );
         check((d != NULL), true);
@@ -319,7 +365,9 @@ check_static_begin(array_adaptive_map_test_insert_via_array_macros) {
         struct Val const *const d = array_adaptive_map_at(
             &array_adaptive_map,
             insert_handle(
-                handle_wrap(&array_adaptive_map, &i), &(struct Val){i, i + 1}
+                array_adaptive_map_handle_wrap(&array_adaptive_map, &i),
+                &(struct Val){i, i + 1},
+                &(CCC_Allocator){}
             )
         );
         /* All values in the array should be odd now */
@@ -338,7 +386,9 @@ check_static_begin(array_adaptive_map_test_insert_via_array_macros) {
 check_static_begin(array_adaptive_map_test_array_api_macros) {
     /* Over allocate size now because we don't want to worry about resizing. */
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[STANDARD_FIXED_CAP]){}
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        (struct Val[STANDARD_FIXED_CAP]){}
     );
     int const size = 200;
 
@@ -351,7 +401,8 @@ check_static_begin(array_adaptive_map_test_array_api_macros) {
         struct Val const *const d = array_adaptive_map_at(
             &array_adaptive_map,
             array_adaptive_map_or_insert_with(
-                handle_wrap(&array_adaptive_map, &i),
+                array_adaptive_map_handle_wrap(&array_adaptive_map, &i),
+                &(CCC_Allocator){},
                 array_adaptive_map_create(i, i)
             )
         );
@@ -366,9 +417,10 @@ check_static_begin(array_adaptive_map_test_array_api_macros) {
             &array_adaptive_map,
             array_adaptive_map_or_insert_with(
                 and_modify(
-                    handle_wrap(&array_adaptive_map, &i),
-                    array_adaptive_map_modplus
+                    array_adaptive_map_handle_wrap(&array_adaptive_map, &i),
+                    &(CCC_Modifier){.modify = array_adaptive_map_modplus}
                 ),
+                &(CCC_Allocator){},
                 array_adaptive_map_create(i, i)
             )
         );
@@ -389,7 +441,9 @@ check_static_begin(array_adaptive_map_test_array_api_macros) {
         struct Val *v = array_adaptive_map_at(
             &array_adaptive_map,
             array_adaptive_map_or_insert_with(
-                handle_wrap(&array_adaptive_map, &i), (struct Val){}
+                array_adaptive_map_handle_wrap(&array_adaptive_map, &i),
+                &(CCC_Allocator){},
+                (struct Val){}
             )
         );
         check(v != NULL, true);
@@ -403,7 +457,9 @@ check_static_begin(array_adaptive_map_test_array_api_macros) {
 
 check_static_begin(array_adaptive_map_test_two_sum) {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        (struct Val[SMALL_FIXED_CAP]){}
     );
     int const addends[10] = {1, 3, -980, 6, 7, 13, 44, 32, 995, -1};
     int const target = 15;
@@ -420,7 +476,9 @@ check_static_begin(array_adaptive_map_test_two_sum) {
             break;
         }
         CCC_Handle const e = insert_or_assign(
-            &array_adaptive_map, &(struct Val){.id = addends[i], .val = i}
+            &array_adaptive_map,
+            &(struct Val){.id = addends[i], .val = i},
+            &(CCC_Allocator){}
         );
         check(insert_error(&e), false);
     }
@@ -430,8 +488,8 @@ check_static_begin(array_adaptive_map_test_two_sum) {
 }
 
 check_static_begin(array_adaptive_map_test_resize) {
-    CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_for(
-        struct Val, id, id_order, std_allocate, NULL, 0, NULL
+    CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_default(
+        struct Val, id, &(CCC_Key_comparator){.compare = id_order}
     );
     int const to_insert = 1000;
     int const larger_prime = 1009;
@@ -440,7 +498,11 @@ check_static_begin(array_adaptive_map_test_resize) {
         struct Val elem = {.id = shuffled_index, .val = i};
         struct Val *v = array_adaptive_map_at(
             &array_adaptive_map,
-            insert_handle(handle_wrap(&array_adaptive_map, &elem.id), &elem)
+            insert_handle(
+                array_adaptive_map_handle_wrap(&array_adaptive_map, &elem.id),
+                &elem,
+                &std_allocator
+            )
         );
         check(v != NULL, true);
         check(v->id, shuffled_index);
@@ -454,30 +516,38 @@ check_static_begin(array_adaptive_map_test_resize) {
         struct Val const *const in_table = array_adaptive_map_at(
             &array_adaptive_map,
             insert_handle(
-                handle_wrap(&array_adaptive_map, &swap_slot.id), &swap_slot
+                array_adaptive_map_handle_wrap(
+                    &array_adaptive_map, &swap_slot.id
+                ),
+                &swap_slot,
+                &std_allocator
             )
         );
         check(in_table != NULL, true);
         check(in_table->val, shuffled_index);
     }
-    check(clear_and_free(&array_adaptive_map, NULL), CCC_RESULT_OK);
+    check(
+        clear_and_free(
+            &array_adaptive_map, &(CCC_Destructor){}, &std_allocator
+        ),
+        CCC_RESULT_OK
+    );
     check_end();
 }
 
 check_static_begin(array_adaptive_map_test_reserve) {
-    struct Stack_allocator allocator = stack_allocator_for(
-        typeof(array_adaptive_map_storage_for(
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((typeof(array_adaptive_map_storage_for(
             (struct Val[STANDARD_FIXED_CAP]){}
-        )),
-        1
-    );
+        ))[1]){}),
+    };
     int const to_insert = 1000;
     CCC_Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_context_with_capacity(
+        = array_adaptive_map_with_capacity(
             struct Val,
             id,
-            id_order,
-            stack_allocator_allocate,
+            &(CCC_Key_comparator){.compare = id_order},
             &allocator,
             STANDARD_FIXED_CAP - 1
         );
@@ -492,7 +562,11 @@ check_static_begin(array_adaptive_map_test_reserve) {
         struct Val elem = {.id = shuffled_index, .val = i};
         struct Val *v = array_adaptive_map_at(
             &array_adaptive_map,
-            insert_handle(handle_wrap(&array_adaptive_map, &elem.id), &elem)
+            insert_handle(
+                array_adaptive_map_handle_wrap(&array_adaptive_map, &elem.id),
+                &elem,
+                &(CCC_Allocator){}
+            )
         );
         check(v != NULL, true);
         check(v->id, shuffled_index);
@@ -506,21 +580,25 @@ check_static_begin(array_adaptive_map_test_reserve) {
         struct Val const *const in_table = array_adaptive_map_at(
             &array_adaptive_map,
             insert_handle(
-                handle_wrap(&array_adaptive_map, &swap_slot.id), &swap_slot
+                array_adaptive_map_handle_wrap(
+                    &array_adaptive_map, &swap_slot.id
+                ),
+                &swap_slot,
+                &(CCC_Allocator){}
             )
         );
         check(in_table != NULL, true);
         check(in_table->val, shuffled_index);
     }
     check(count(&array_adaptive_map).count, to_insert);
-    check_end(clear_and_free_reserve(
-                  &array_adaptive_map, NULL, stack_allocator_allocate
-    ););
+    check_end({
+        clear_and_free(&array_adaptive_map, &(CCC_Destructor){}, &allocator);
+    });
 }
 
 check_static_begin(array_adaptive_map_test_resize_macros) {
-    CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_for(
-        struct Val, id, id_order, std_allocate, NULL, 0, NULL
+    CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_default(
+        struct Val, id, &(CCC_Key_comparator){.compare = id_order}
     );
     int const to_insert = 1000;
     int const larger_prime = 1009;
@@ -529,8 +607,11 @@ check_static_begin(array_adaptive_map_test_resize_macros) {
         struct Val *v = array_adaptive_map_at(
             &array_adaptive_map,
             insert_handle(
-                handle_wrap(&array_adaptive_map, &shuffled_index),
-                &(struct Val){shuffled_index, i}
+                array_adaptive_map_handle_wrap(
+                    &array_adaptive_map, &shuffled_index
+                ),
+                &(struct Val){shuffled_index, i},
+                &std_allocator
             )
         );
         check(v != NULL, true);
@@ -542,10 +623,13 @@ check_static_begin(array_adaptive_map_test_resize_macros) {
          ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert) {
         CCC_Handle_index const h = array_adaptive_map_or_insert_with(
             array_adaptive_map_and_modify_with(
-                handle_wrap(&array_adaptive_map, &shuffled_index),
+                array_adaptive_map_handle_wrap(
+                    &array_adaptive_map, &shuffled_index
+                ),
                 struct Val,
                 { T->val = shuffled_index; }
             ),
+            &std_allocator,
             (struct Val){}
         );
         struct Val const *const in_table
@@ -555,7 +639,10 @@ check_static_begin(array_adaptive_map_test_resize_macros) {
         struct Val *v = array_adaptive_map_at(
             &array_adaptive_map,
             array_adaptive_map_or_insert_with(
-                handle_wrap(&array_adaptive_map, &shuffled_index),
+                array_adaptive_map_handle_wrap(
+                    &array_adaptive_map, &shuffled_index
+                ),
+                &std_allocator,
                 (struct Val){}
             )
         );
@@ -568,13 +655,18 @@ check_static_begin(array_adaptive_map_test_resize_macros) {
         check(v != NULL, true);
         check(v->val, i);
     }
-    check(clear_and_free(&array_adaptive_map, NULL), CCC_RESULT_OK);
+    check(
+        clear_and_free(
+            &array_adaptive_map, &(CCC_Destructor){}, &std_allocator
+        ),
+        CCC_RESULT_OK
+    );
     check_end();
 }
 
 check_static_begin(array_adaptive_map_test_resize_from_null) {
-    CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_for(
-        struct Val, id, id_order, std_allocate, NULL, 0, NULL
+    CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_default(
+        struct Val, id, &(CCC_Key_comparator){.compare = id_order}
     );
     int const to_insert = 1000;
     int const larger_prime = 1009;
@@ -583,7 +675,11 @@ check_static_begin(array_adaptive_map_test_resize_from_null) {
         struct Val elem = {.id = shuffled_index, .val = i};
         struct Val *v = array_adaptive_map_at(
             &array_adaptive_map,
-            insert_handle(handle_wrap(&array_adaptive_map, &elem.id), &elem)
+            insert_handle(
+                array_adaptive_map_handle_wrap(&array_adaptive_map, &elem.id),
+                &elem,
+                &std_allocator
+            )
         );
         check(v != NULL, true);
         check(v->id, shuffled_index);
@@ -596,19 +692,28 @@ check_static_begin(array_adaptive_map_test_resize_from_null) {
         struct Val const *const in_table = array_adaptive_map_at(
             &array_adaptive_map,
             insert_handle(
-                handle_wrap(&array_adaptive_map, &swap_slot.id), &swap_slot
+                array_adaptive_map_handle_wrap(
+                    &array_adaptive_map, &swap_slot.id
+                ),
+                &swap_slot,
+                &std_allocator
             )
         );
         check(in_table != NULL, true);
         check(in_table->val, shuffled_index);
     }
-    check(clear_and_free(&array_adaptive_map, NULL), CCC_RESULT_OK);
+    check(
+        clear_and_free(
+            &array_adaptive_map, &(CCC_Destructor){}, &std_allocator
+        ),
+        CCC_RESULT_OK
+    );
     check_end();
 }
 
 check_static_begin(array_adaptive_map_test_resize_from_null_macros) {
-    CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_for(
-        struct Val, id, id_order, std_allocate, NULL, 0, NULL
+    CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_default(
+        struct Val, id, &(CCC_Key_comparator){.compare = id_order}
     );
     int const to_insert = 1000;
     int const larger_prime = 1009;
@@ -617,8 +722,11 @@ check_static_begin(array_adaptive_map_test_resize_from_null_macros) {
         struct Val *v = array_adaptive_map_at(
             &array_adaptive_map,
             insert_handle(
-                handle_wrap(&array_adaptive_map, &shuffled_index),
-                &(struct Val){shuffled_index, i}
+                array_adaptive_map_handle_wrap(
+                    &array_adaptive_map, &shuffled_index
+                ),
+                &(struct Val){shuffled_index, i},
+                &std_allocator
             )
         );
         check(v != NULL, true);
@@ -630,10 +738,13 @@ check_static_begin(array_adaptive_map_test_resize_from_null_macros) {
          ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert) {
         CCC_Handle_index const h = array_adaptive_map_or_insert_with(
             array_adaptive_map_and_modify_with(
-                handle_wrap(&array_adaptive_map, &shuffled_index),
+                array_adaptive_map_handle_wrap(
+                    &array_adaptive_map, &shuffled_index
+                ),
                 struct Val,
                 { T->val = shuffled_index; }
             ),
+            &std_allocator,
             (struct Val){}
         );
         struct Val const *const in_table
@@ -643,7 +754,10 @@ check_static_begin(array_adaptive_map_test_resize_from_null_macros) {
         struct Val *v = array_adaptive_map_at(
             &array_adaptive_map,
             array_adaptive_map_or_insert_with(
-                handle_wrap(&array_adaptive_map, &shuffled_index),
+                array_adaptive_map_handle_wrap(
+                    &array_adaptive_map, &shuffled_index
+                ),
+                &std_allocator,
                 (struct Val){}
             )
         );
@@ -656,14 +770,21 @@ check_static_begin(array_adaptive_map_test_resize_from_null_macros) {
         check(v == NULL, false);
         check(v->val, i);
     }
-    check(clear_and_free(&array_adaptive_map, NULL), CCC_RESULT_OK);
+    check(
+        clear_and_free(
+            &array_adaptive_map, &(CCC_Destructor){}, &std_allocator
+        ),
+        CCC_RESULT_OK
+    );
     check_end();
 }
 
 check_static_begin(array_adaptive_map_test_insert_limit) {
     int const size = SMALL_FIXED_CAP;
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        (struct Val[SMALL_FIXED_CAP]){}
     );
 
     int const larger_prime = 103;
@@ -674,8 +795,11 @@ check_static_begin(array_adaptive_map_test_insert_limit) {
         struct Val *v = array_adaptive_map_at(
             &array_adaptive_map,
             insert_handle(
-                handle_wrap(&array_adaptive_map, &shuffled_index),
-                &(struct Val){shuffled_index, i}
+                array_adaptive_map_handle_wrap(
+                    &array_adaptive_map, &shuffled_index
+                ),
+                &(struct Val){shuffled_index, i},
+                &(CCC_Allocator){}
             )
         );
         if (!v) {
@@ -688,7 +812,7 @@ check_static_begin(array_adaptive_map_test_insert_limit) {
     size_t const final_size = count(&array_adaptive_map).count;
     /* The last successful handle is still in the table and is overwritten. */
     struct Val v = {.id = last_index, .val = -1};
-    CCC_Handle hndl = swap_handle(&array_adaptive_map, &v);
+    CCC_Handle hndl = swap_handle(&array_adaptive_map, &v, &(CCC_Allocator){});
     check(unwrap(&hndl) != 0, true);
     check(insert_error(&hndl), false);
     check(count(&array_adaptive_map).count, final_size);
@@ -696,7 +820,11 @@ check_static_begin(array_adaptive_map_test_insert_limit) {
     v = (struct Val){.id = last_index, .val = -2};
     struct Val *in_table = array_adaptive_map_at(
         &array_adaptive_map,
-        insert_handle(handle_wrap(&array_adaptive_map, &v.id), &v)
+        insert_handle(
+            array_adaptive_map_handle_wrap(&array_adaptive_map, &v.id),
+            &v,
+            &(CCC_Allocator){}
+        )
     );
     check(in_table != NULL, true);
     check(in_table->val, -2);
@@ -705,8 +833,9 @@ check_static_begin(array_adaptive_map_test_insert_limit) {
     in_table = array_adaptive_map_at(
         &array_adaptive_map,
         insert_handle(
-            handle_wrap(&array_adaptive_map, &last_index),
-            &(struct Val){.id = last_index, .val = -3}
+            array_adaptive_map_handle_wrap(&array_adaptive_map, &last_index),
+            &(struct Val){.id = last_index, .val = -3},
+            &(CCC_Allocator){}
         )
     );
     check(in_table != NULL, true);
@@ -717,7 +846,11 @@ check_static_begin(array_adaptive_map_test_insert_limit) {
     v = (struct Val){.id = shuffled_index, .val = -4};
     in_table = array_adaptive_map_at(
         &array_adaptive_map,
-        insert_handle(handle_wrap(&array_adaptive_map, &v.id), &v)
+        insert_handle(
+            array_adaptive_map_handle_wrap(&array_adaptive_map, &v.id),
+            &v,
+            &(CCC_Allocator){}
+        )
     );
     check(in_table == NULL, true);
     check(count(&array_adaptive_map).count, final_size);
@@ -725,14 +858,17 @@ check_static_begin(array_adaptive_map_test_insert_limit) {
     in_table = array_adaptive_map_at(
         &array_adaptive_map,
         insert_handle(
-            handle_wrap(&array_adaptive_map, &shuffled_index),
-            &(struct Val){.id = shuffled_index, .val = -4}
+            array_adaptive_map_handle_wrap(
+                &array_adaptive_map, &shuffled_index
+            ),
+            &(struct Val){.id = shuffled_index, .val = -4},
+            &(CCC_Allocator){}
         )
     );
     check(in_table == NULL, true);
     check(count(&array_adaptive_map).count, final_size);
 
-    hndl = swap_handle(&array_adaptive_map, &v);
+    hndl = swap_handle(&array_adaptive_map, &v, &(CCC_Allocator){});
     check(unwrap(&hndl) == 0, true);
     check(insert_error(&hndl), true);
     check(count(&array_adaptive_map).count, final_size);
@@ -742,15 +878,24 @@ check_static_begin(array_adaptive_map_test_insert_limit) {
 check_static_begin(array_adaptive_map_test_insert_and_find) {
     int const size = SMALL_FIXED_CAP;
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        (struct Val[SMALL_FIXED_CAP]){}
     );
 
     for (int i = 0; i < size; i += 2) {
-        CCC_Handle e
-            = try_insert(&array_adaptive_map, &(struct Val){.id = i, .val = i});
+        CCC_Handle e = try_insert(
+            &array_adaptive_map,
+            &(struct Val){.id = i, .val = i},
+            &(CCC_Allocator){}
+        );
         check(occupied(&e), false);
         check(validate(&array_adaptive_map), true);
-        e = try_insert(&array_adaptive_map, &(struct Val){.id = i, .val = i});
+        e = try_insert(
+            &array_adaptive_map,
+            &(struct Val){.id = i, .val = i},
+            &(CCC_Allocator){}
+        );
         check(occupied(&e), true);
         check(validate(&array_adaptive_map), true);
         struct Val const *const v
@@ -761,12 +906,18 @@ check_static_begin(array_adaptive_map_test_insert_and_find) {
     }
     for (int i = 0; i < size; i += 2) {
         check(contains(&array_adaptive_map, &i), true);
-        check(occupied(handle_wrap(&array_adaptive_map, &i)), true);
+        check(
+            occupied(array_adaptive_map_handle_wrap(&array_adaptive_map, &i)),
+            true
+        );
         check(validate(&array_adaptive_map), true);
     }
     for (int i = 1; i < size; i += 2) {
         check(contains(&array_adaptive_map, &i), false);
-        check(occupied(handle_wrap(&array_adaptive_map, &i)), false);
+        check(
+            occupied(array_adaptive_map_handle_wrap(&array_adaptive_map, &i)),
+            false
+        );
         check(validate(&array_adaptive_map), true);
     }
     check_end();
@@ -775,11 +926,16 @@ check_static_begin(array_adaptive_map_test_insert_and_find) {
 check_static_begin(array_adaptive_map_test_insert_shuffle) {
     size_t const size = SMALL_FIXED_CAP - 1;
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        (struct Val[SMALL_FIXED_CAP]){}
     );
     check(size > 1, true);
     int const prime = 67;
-    check(insert_shuffled(&array_adaptive_map, size, prime), CHECK_PASS);
+    check(
+        insert_shuffled(&array_adaptive_map, size, prime, &(CCC_Allocator){}),
+        CHECK_PASS
+    );
     int sorted_check[SMALL_FIXED_CAP - 1];
     check(inorder_fill(sorted_check, size, &array_adaptive_map), size);
     for (size_t i = 1; i < size; ++i) {
@@ -791,13 +947,19 @@ check_static_begin(array_adaptive_map_test_insert_shuffle) {
 check_static_begin(array_adaptive_map_test_insert_weak_srand) {
     int const num_nodes = STANDARD_FIXED_CAP - 1;
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[STANDARD_FIXED_CAP]){}
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        (struct Val[STANDARD_FIXED_CAP]){}
     );
     srand(time(NULL)); /* NOLINT */
     for (int i = 0; i < num_nodes; ++i) {
         CCC_Handle const e = swap_handle(
             &array_adaptive_map,
-            &(struct Val){.id = rand() /* NOLINT */, .val = i}
+            &(struct Val){
+                .id = rand() /* NOLINT */,
+                .val = i,
+            },
+            &(CCC_Allocator){}
         );
         check(insert_error(&e), false);
         check(validate(&array_adaptive_map), true);

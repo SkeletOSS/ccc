@@ -842,6 +842,14 @@ typedef CCC_Tree_map_entry Tree_map_entry;
 #    define tree_map_end(arguments...) CCC_tree_map_end(arguments)
 #    define tree_map_reverse_end(arguments...)                                 \
         CCC_tree_map_reverse_end(arguments)
+#    define tree_map_equal_range(arguments...)                                 \
+        CCC_tree_map_equal_range(arguments)
+#    define tree_map_equal_range_wrap(arguments...)                            \
+        CCC_tree_map_equal_range_wrap(arguments)
+#    define tree_map_equal_range_reverse(arguments...)                         \
+        CCC_tree_map_equal_range_reverse(arguments)
+#    define tree_map_equal_range_reverse_wrap(arguments...)                    \
+        CCC_tree_map_equal_range_reverse_wrap(arguments)
 #    define tree_map_count(arguments...) CCC_tree_map_count(arguments)
 #    define tree_map_is_empty(arguments...) CCC_tree_map_is_empty(arguments)
 #    define tree_map_clear(arguments...) CCC_tree_map_clear(arguments)

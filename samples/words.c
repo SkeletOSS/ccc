@@ -59,8 +59,8 @@ struct Action_pack {
         SV_Str_view w;
     };
     union {
-        void (*freq_fn)(FILE *file, int n);
-        void (*find_fn)(FILE *file, SV_Str_view w);
+        void (*freq_fn)(FILE *file, int n, CCC_Allocator const *);
+        void (*find_fn)(FILE *file, SV_Str_view w, CCC_Allocator const *);
     };
 };
 
@@ -115,17 +115,24 @@ static SV_Str_view const directions = SV_from(
         }                                                                      \
     } while (0)
 
-static void print_found(FILE *, SV_Str_view);
-static void print_top_n(FILE *, int);
-static void print_last_n(FILE *, int);
-static void print_alpha_n(FILE *, int);
-static void print_ralpha_n(FILE *, int);
-static Buffer copy_frequencies(Array_adaptive_map const *);
-static void
-print_n(Array_adaptive_map *, CCC_Order, struct String_arena *, int);
+static void print_found(FILE *, SV_Str_view, CCC_Allocator const *);
+static void print_top_n(FILE *, int, CCC_Allocator const *);
+static void print_last_n(FILE *, int, CCC_Allocator const *);
+static void print_alpha_n(FILE *, int, CCC_Allocator const *);
+static void print_ralpha_n(FILE *, int, CCC_Allocator const *);
+static Buffer
+copy_frequencies(Array_adaptive_map const *, CCC_Allocator const *);
+static void print_n(
+    Array_adaptive_map *,
+    CCC_Order,
+    struct String_arena *,
+    int,
+    CCC_Allocator const *
+);
 static struct Int_conversion parse_n_ranks(SV_Str_view);
 static struct String_offset clean_word(struct String_arena *, SV_Str_view);
-static Array_adaptive_map create_frequency_map(struct String_arena *, FILE *);
+static Array_adaptive_map
+create_frequency_map(struct String_arena *, FILE *, CCC_Allocator const *);
 static Order order_string_keys(Key_comparator_arguments);
 static Order order_words(Comparator_arguments);
 static FILE *open_file(SV_Str_view);
@@ -218,9 +225,9 @@ main(int argc, char *argv[]) {
         return 1;
     }
     if (exe.type == COUNT) {
-        exe.freq_fn(f, exe.n);
+        exe.freq_fn(f, exe.n, &std_allocator);
     } else if (exe.type == FIND && SV_begin(exe.w)) {
-        exe.find_fn(f, exe.w);
+        exe.find_fn(f, exe.w, &std_allocator);
     } else {
         logerr("invalid count or empty word searched\n");
         return 1;
@@ -231,12 +238,16 @@ main(int argc, char *argv[]) {
 /*=======================   Static Impl    ==================================*/
 
 static void
-print_found(FILE *const f, SV_Str_view w) {
+print_found(
+    FILE *const f, SV_Str_view w, CCC_Allocator const *const allocator
+) {
     struct String_arena a = string_arena_create(ARENA_START_CAP);
-    Array_adaptive_map map = create_frequency_map(&a, f);
+    Array_adaptive_map map = create_frequency_map(&a, f, allocator);
     defer {
         string_arena_free(&a);
-        (void)array_adaptive_map_clear_and_free(&map, NULL);
+        (void)array_adaptive_map_clear_and_free(
+            &map, &(CCC_Destructor){}, allocator
+        );
     }
     check(a.arena);
     check(!is_empty(&map));
@@ -253,37 +264,37 @@ print_found(FILE *const f, SV_Str_view w) {
 }
 
 static void
-print_top_n(FILE *const f, int n) {
+print_top_n(FILE *const f, int n, CCC_Allocator const *const allocator) {
     struct String_arena a = string_arena_create(ARENA_START_CAP);
-    Array_adaptive_map map = create_frequency_map(&a, f);
+    Array_adaptive_map map = create_frequency_map(&a, f, allocator);
     defer {
-        (void)clear_and_free(&map, NULL);
+        (void)clear_and_free(&map, &(CCC_Destructor){}, allocator);
         string_arena_free(&a);
     }
     check(a.arena);
     check(!is_empty(&map));
-    print_n(&map, CCC_ORDER_GREATER, &a, n);
+    print_n(&map, CCC_ORDER_GREATER, &a, n, allocator);
 }
 
 static void
-print_last_n(FILE *const f, int n) {
+print_last_n(FILE *const f, int n, CCC_Allocator const *const allocator) {
     struct String_arena a = string_arena_create(ARENA_START_CAP);
-    Array_adaptive_map map = create_frequency_map(&a, f);
+    Array_adaptive_map map = create_frequency_map(&a, f, allocator);
     defer {
-        (void)clear_and_free(&map, NULL);
+        (void)clear_and_free(&map, &(CCC_Destructor){}, allocator);
         string_arena_free(&a);
     }
     check(a.arena);
     check(!is_empty(&map));
-    print_n(&map, CCC_ORDER_LESSER, &a, n);
+    print_n(&map, CCC_ORDER_LESSER, &a, n, allocator);
 }
 
 static void
-print_alpha_n(FILE *const f, int n) {
+print_alpha_n(FILE *const f, int n, CCC_Allocator const *const allocator) {
     struct String_arena a = string_arena_create(ARENA_START_CAP);
-    Array_adaptive_map map = create_frequency_map(&a, f);
+    Array_adaptive_map map = create_frequency_map(&a, f, allocator);
     defer {
-        (void)clear_and_free(&map, NULL);
+        (void)clear_and_free(&map, &(CCC_Destructor){}, allocator);
         string_arena_free(&a);
     }
     check(a.arena);
@@ -301,11 +312,11 @@ print_alpha_n(FILE *const f, int n) {
 }
 
 static void
-print_ralpha_n(FILE *const f, int n) {
+print_ralpha_n(FILE *const f, int n, CCC_Allocator const *const allocator) {
     struct String_arena a = string_arena_create(ARENA_START_CAP);
-    Array_adaptive_map map = create_frequency_map(&a, f);
+    Array_adaptive_map map = create_frequency_map(&a, f, allocator);
     defer {
-        (void)clear_and_free(&map, NULL);
+        (void)clear_and_free(&map, &(CCC_Destructor){}, allocator);
         string_arena_free(&a);
     }
     check(a.arena);
@@ -324,16 +335,18 @@ print_ralpha_n(FILE *const f, int n) {
 }
 
 static Buffer
-copy_frequencies(Array_adaptive_map const *const map) {
+copy_frequencies(
+    Array_adaptive_map const *const map, CCC_Allocator const *const allocator
+) {
     check(!is_empty(map));
-    Buffer freqs
-        = CCC_buffer_with_capacity(Word, std_allocate, count(map).count);
+    Buffer freqs = CCC_buffer_with_capacity(Word, allocator, count(map).count);
     size_t const cap = capacity(&freqs).count;
     size_t i = 0;
     for (CCC_Handle_index iter = begin(map); iter != end(map) && i < cap;
          iter = next(map, iter), ++i) {
         Word const *const w = array_adaptive_map_at(map, iter);
-        Word const *const pushed = buffer_push_back(&freqs, w);
+        Word const *const pushed
+            = buffer_push_back(&freqs, w, &(CCC_Allocator){});
         check(pushed);
     }
     return freqs;
@@ -344,18 +357,25 @@ print_n(
     CCC_Array_adaptive_map *const map,
     CCC_Order const order,
     struct String_arena *const arena,
-    int n
+    int n,
+    CCC_Allocator const *const allocator
 ) {
-    Buffer freqs = copy_frequencies(map);
+    Buffer freqs = copy_frequencies(map, allocator);
     defer {
-        (void)clear_and_free(&freqs, NULL);
+        (void)clear_and_free(&freqs, &(CCC_Destructor){}, allocator);
     }
     check(!buffer_is_empty(&freqs));
     if (!n) {
         n = count(&freqs).count;
     }
-    CCC_Result const result = CCC_sort_context_heapsort(
-        &freqs, order, order_words, arena, &(Word){}
+    CCC_Result const result = CCC_sort_heapsort(
+        &freqs,
+        &(Word){},
+        order,
+        &(CCC_Comparator){
+            .compare = order_words,
+            .context = arena,
+        }
     );
     check(result == CCC_RESULT_OK);
     int w = 0;
@@ -371,28 +391,36 @@ print_n(
 /*=====================    Container Construction     =======================*/
 
 static Array_adaptive_map
-create_frequency_map(struct String_arena *const a, FILE *const f) {
+create_frequency_map(
+    struct String_arena *const arena,
+    FILE *const f,
+    CCC_Allocator const *const allocator
+) {
     char *linepointer = NULL;
     size_t len = 0;
     ptrdiff_t read = 0;
-    Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_context_with_allocator(
-            Word, ofs, order_string_keys, std_allocate, a
-        );
+    Array_adaptive_map array_adaptive_map = array_adaptive_map_default(
+        Word,
+        ofs,
+        &(CCC_Key_comparator){
+            .compare = order_string_keys,
+            .context = arena,
+        }
+    );
     while ((read = getline(&linepointer, &len, f)) > 0) {
         SV_Str_view const line = {.str = linepointer, .len = read - 1};
         for (SV_Str_view word_view = SV_token_begin(line, space);
              !SV_token_end(line, word_view);
              word_view = SV_token_next(line, word_view, space)) {
-            struct String_offset const cw = clean_word(a, word_view);
+            struct String_offset const cw = clean_word(arena, word_view);
             if (!cw.error) {
                 Array_adaptive_map_handle const *e
-                    = handle_wrap(&array_adaptive_map, &cw);
+                    = array_adaptive_map_handle_wrap(&array_adaptive_map, &cw);
                 e = array_adaptive_map_and_modify_with(e, Word, { T->freq++; });
                 Word const *const w = array_adaptive_map_at(
                     &array_adaptive_map,
                     array_adaptive_map_or_insert_with(
-                        e, (Word){.ofs = cw, .freq = 1}
+                        e, allocator, (Word){.ofs = cw, .freq = 1}
                     )
                 );
                 check(w);
