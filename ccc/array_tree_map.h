@@ -1101,14 +1101,34 @@ typedef CCC_Array_tree_map_handle Array_tree_map_handle;
         CCC_array_tree_map_or_insert_with(arguments)
 #    define array_tree_map_insert_handle_with(arguments...)                    \
         CCC_array_tree_map_insert_handle_with(arguments)
+#    define array_tree_map_try_insert(arguments...)                            \
+        CCC_array_tree_map_try_insert(arguments)
+#    define array_tree_map_try_insert_wrap(arguments...)                       \
+        CCC_array_tree_map_try_insert_wrap(arguments)
 #    define array_tree_map_try_insert_with(arguments...)                       \
         CCC_array_tree_map_try_insert_with(arguments)
+#    define array_tree_map_insert_or_assign(arguments...)                      \
+        CCC_array_tree_map_insert_or_assign(arguments)
+#    define array_tree_map_insert_or_assign_wrap(arguments...)                 \
+        CCC_array_tree_map_insert_or_assign_wrap(arguments)
 #    define array_tree_map_insert_or_assign_with(arguments...)                 \
         CCC_array_tree_map_insert_or_assign_with(arguments)
 #    define array_tree_map_contains(arguments...)                              \
         CCC_array_tree_map_contains(arguments)
 #    define array_tree_map_get_key_value(arguments...)                         \
         CCC_array_tree_map_get_key_value(arguments)
+#    define array_tree_map_handle(arguments...)                                \
+        CCC_array_tree_map_handle(arguments)
+#    define array_tree_map_handle_wrap(arguments...)                           \
+        CCC_array_tree_map_handle_wrap(arguments)
+#    define array_tree_map_remove_handle(arguments...)                         \
+        CCC_array_tree_map_remove_handle(arguments)
+#    define array_tree_map_remove_handle_wrap(arguments...)                    \
+        CCC_array_tree_map_remove_handle_wrap(arguments)
+#    define array_tree_map_remove_key_value(arguments...)                      \
+        CCC_array_tree_map_remove_key_value(arguments)
+#    define array_tree_map_remove_key_value_wrap(arguments...)                 \
+        CCC_array_tree_map_remove_key_value_wrap(arguments)
 #    define array_tree_map_swap_handle(arguments...)                           \
         CCC_array_tree_map_swap_handle(arguments)
 #    define array_tree_map_swap_handle_wrap(arguments...)                      \
@@ -1123,6 +1143,14 @@ typedef CCC_Array_tree_map_handle Array_tree_map_handle;
 #    define array_tree_map_end(arguments...) CCC_array_tree_map_end(arguments)
 #    define array_tree_map_reverse_end(arguments...)                           \
         CCC_array_tree_map_reverse_end(arguments)
+#    define array_tree_map_equal_range(arguments...)                           \
+        CCC_array_tree_map_equal_range(arguments)
+#    define array_tree_map_equal_range_wrap(arguments...)                      \
+        CCC_array_tree_map_equal_range_wrap(arguments)
+#    define array_tree_map_equal_range_reverse(arguments...)                   \
+        CCC_array_tree_map_equal_range_reverse(arguments)
+#    define array_tree_map_equal_range_reverse_wrap(arguments...)              \
+        CCC_array_tree_map_equal_range_reverse_wrap(arguments)
 #    define array_tree_map_is_empty(arguments...)                              \
         CCC_array_tree_map_is_empty(arguments)
 #    define array_tree_map_count(arguments...)                                 \

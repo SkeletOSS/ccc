@@ -19,12 +19,15 @@ check_begin(
     insert_shuffled,
     CCC_Array_tree_map *m,
     size_t const size,
-    int const larger_prime
+    int const larger_prime,
+    CCC_Allocator const *const allocator
 ) {
     size_t shuffled_index = larger_prime % size;
     for (size_t i = 0; i < size; ++i) {
         (void)insert_or_assign(
-            m, &(struct Val){.id = (int)shuffled_index, .val = (int)i}
+            m,
+            &(struct Val){.id = (int)shuffled_index, .val = (int)i},
+            allocator
         );
         check(validate(m), true);
         shuffled_index = (shuffled_index + larger_prime) % size;

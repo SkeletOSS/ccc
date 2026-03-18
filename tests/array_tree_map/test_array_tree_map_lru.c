@@ -61,12 +61,14 @@ static enum Check_result run_lru_cache(void);
 /*===========================   Static Data  ================================*/
 
 /* This is a good opportunity to test the static initialization capabilities
-   of the hash table and list. */
+   of the map and list. No allocator will be needed. Fixed map. */
 static struct Lru_cache lru_cache = {
     .map = array_tree_map_with_storage(
-        key, order_by_key, (struct Lru_node[LRU_CAP]){}
+        key,
+        &(CCC_Key_comparator){.compare = order_by_key},
+        (struct Lru_node[LRU_CAP]){}
     ),
-    .l = doubly_linked_list_for(struct Lru_node, list_node, NULL, NULL),
+    .l = doubly_linked_list_default(struct Lru_node, list_node),
     .cap = 3,
 };
 
@@ -154,7 +156,8 @@ check_static_begin(run_lru_cache) {
 check_static_begin(
     lru_put, struct Lru_cache *const lru, int const key, int const val
 ) {
-    CCC_Array_tree_map_handle const *const ent = handle_wrap(&lru->map, &key);
+    CCC_Array_tree_map_handle const *const ent
+        = array_tree_map_handle_wrap(&lru->map, &key);
     if (occupied(ent)) {
         struct Lru_node *const found
             = array_tree_map_at(&lru->map, unwrap(ent));
@@ -170,17 +173,24 @@ check_static_begin(
     } else {
         struct Lru_node *new = array_tree_map_at(
             &lru->map,
-            insert_handle(ent, &(struct Lru_node){.key = key, .val = val})
+            insert_handle(
+                ent,
+                &(struct Lru_node){.key = key, .val = val},
+                &(CCC_Allocator){}
+            )
         );
         check(new == NULL, false);
-        new = doubly_linked_list_push_front(&lru->l, &new->list_node);
+        new = doubly_linked_list_push_front(
+            &lru->l, &new->list_node, &(CCC_Allocator){}
+        );
         check(new == NULL, false);
         if (count(&lru->l).count > lru->cap) {
             struct Lru_node const *const to_drop = back(&lru->l);
             check(to_drop == NULL, false);
-            (void)pop_back(&lru->l);
-            CCC_Handle const e
-                = remove_handle(handle_wrap(&lru->map, &to_drop->key));
+            (void)pop_back(&lru->l, &(CCC_Allocator){});
+            CCC_Handle const e = remove_handle(
+                array_tree_map_handle_wrap(&lru->map, &to_drop->key)
+            );
             check(occupied(&e), true);
         }
     }

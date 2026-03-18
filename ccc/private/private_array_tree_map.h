@@ -344,7 +344,6 @@ runtime. */
     private_key_field,                                                         \
     private_comparator_pointer,                                                \
     private_allocator_pointer,                                                 \
-    private_context,                                                           \
     private_cap                                                                \
 )                                                                              \
     (__extension__({                                                           \
@@ -352,9 +351,7 @@ runtime. */
             = CCC_private_array_tree_map_default(                              \
                 private_type_name,                                             \
                 private_key_field,                                             \
-                private_comparator_pointer,                                    \
-                private_allocator_pointer,                                     \
-                private_context                                                \
+                private_comparator_pointer                                     \
             );                                                                 \
         (void)CCC_array_tree_map_reserve(                                      \
             &private_array_tree_map, private_cap, private_allocator_pointer    \

@@ -9,18 +9,13 @@
 #include "checkers.h"
 #include "traits.h"
 #include "types.h"
-#include "utility/allocate.h"
 #include "utility/stack_allocator.h"
 
 check_static_begin(array_tree_map_test_empty) {
-    Array_tree_map s = array_tree_map_for(
-        struct Val,
+    Array_tree_map s = array_tree_map_with_storage(
         id,
-        id_order,
-        NULL,
-        NULL,
-        SMALL_FIXED_CAP,
-        &array_tree_map_storage_for((struct Val[SMALL_FIXED_CAP]){})
+        &(CCC_Key_comparator){.compare = id_order},
+        (struct Val[SMALL_FIXED_CAP]){}
     );
     check(is_empty(&s), true);
     check_end();
@@ -28,7 +23,9 @@ check_static_begin(array_tree_map_test_empty) {
 
 check_static_begin(array_tree_map_test_with_literal) {
     Array_tree_map s = array_tree_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        (struct Val[SMALL_FIXED_CAP]){}
     );
     check(is_empty(&s), true);
     check(capacity(&s).count, SMALL_FIXED_CAP);
@@ -37,14 +34,22 @@ check_static_begin(array_tree_map_test_with_literal) {
 
 check_static_begin(array_tree_map_test_copy_no_allocate) {
     Array_tree_map source = array_tree_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        (struct Val[SMALL_FIXED_CAP]){}
     );
     Array_tree_map destination = array_tree_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        (struct Val[SMALL_FIXED_CAP]){}
     );
-    (void)swap_handle(&source, &(struct Val){.id = 0});
-    (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1});
-    (void)swap_handle(&source, &(struct Val){.id = 2, .val = 2});
+    (void)swap_handle(&source, &(struct Val){.id = 0}, &(CCC_Allocator){});
+    (void)swap_handle(
+        &source, &(struct Val){.id = 1, .val = 1}, &(CCC_Allocator){}
+    );
+    (void)swap_handle(
+        &source, &(struct Val){.id = 2, .val = 2}, &(CCC_Allocator){}
+    );
     check(count(&source).count, 3);
     check(is_empty(&destination), true);
     CCC_Result res = array_tree_map_copy(&destination, &source, NULL);
@@ -67,14 +72,22 @@ check_static_begin(array_tree_map_test_copy_no_allocate) {
 
 check_static_begin(array_tree_map_test_copy_no_allocate_fail) {
     Array_tree_map source = array_tree_map_with_storage(
-        id, id_order, (struct Val[STANDARD_FIXED_CAP]){}
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        (struct Val[STANDARD_FIXED_CAP]){}
     );
     Array_tree_map destination = array_tree_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        (struct Val[SMALL_FIXED_CAP]){}
     );
-    (void)swap_handle(&source, &(struct Val){.id = 0});
-    (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1});
-    (void)swap_handle(&source, &(struct Val){.id = 2, .val = 2});
+    (void)swap_handle(&source, &(struct Val){.id = 0}, &(CCC_Allocator){});
+    (void)swap_handle(
+        &source, &(struct Val){.id = 1, .val = 1}, &(CCC_Allocator){}
+    );
+    (void)swap_handle(
+        &source, &(struct Val){.id = 2, .val = 2}, &(CCC_Allocator){}
+    );
     check(count(&source).count, 3);
     check(is_empty(&destination), true);
     CCC_Result res = array_tree_map_copy(&destination, &source, NULL);
@@ -83,27 +96,28 @@ check_static_begin(array_tree_map_test_copy_no_allocate_fail) {
 }
 
 check_static_begin(array_tree_map_test_copy_allocate) {
-    struct Stack_allocator allocator = stack_allocator_for(
-        typeof(array_tree_map_storage_for((struct Val[SMALL_FIXED_CAP]){})), 2
-    );
-    Array_tree_map source = array_tree_map_context_with_capacity(
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((typeof(array_tree_map_storage_for(
+            (struct Val[SMALL_FIXED_CAP]){}
+        ))[2]){}),
+    };
+    Array_tree_map source = array_tree_map_with_capacity(
         struct Val,
         id,
-        id_order,
-        stack_allocator_allocate,
+        &(CCC_Key_comparator){.compare = id_order},
         &allocator,
         SMALL_FIXED_CAP - 1
     );
-    Array_tree_map destination = array_tree_map_for(
-        struct Val, id, id_order, stack_allocator_allocate, &allocator, 0, NULL
+    Array_tree_map destination = array_tree_map_default(
+        struct Val, id, &(CCC_Key_comparator){.compare = id_order}
     );
-    (void)swap_handle(&source, &(struct Val){.id = 0});
-    (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1});
-    (void)swap_handle(&source, &(struct Val){.id = 2, .val = 2});
+    (void)swap_handle(&source, &(struct Val){.id = 0}, &allocator);
+    (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1}, &allocator);
+    (void)swap_handle(&source, &(struct Val){.id = 2, .val = 2}, &allocator);
     check(count(&source).count, 3);
     check(is_empty(&destination), true);
-    CCC_Result res
-        = array_tree_map_copy(&destination, &source, stack_allocator_allocate);
+    CCC_Result res = array_tree_map_copy(&destination, &source, &allocator);
     check(res, CCC_RESULT_OK);
     check(count(&destination).count, count(&source).count);
     for (int i = 0; i < 3; ++i) {
@@ -119,44 +133,57 @@ check_static_begin(array_tree_map_test_copy_allocate) {
     check(is_empty(&source), is_empty(&destination));
     check(is_empty(&destination), true);
     check_end({
-        (void)array_tree_map_clear_and_free(&source, NULL);
-        (void)array_tree_map_clear_and_free(&destination, NULL);
+        (void)array_tree_map_clear_and_free(
+            &source, &(CCC_Destructor){}, &allocator
+        );
+        (void)array_tree_map_clear_and_free(
+            &destination, &(CCC_Destructor){}, &allocator
+        );
     });
 }
 
 check_static_begin(array_tree_map_test_copy_allocate_fail) {
-    struct Stack_allocator allocator = stack_allocator_for(
-        typeof(array_tree_map_storage_for((struct Val[SMALL_FIXED_CAP]){})), 2
-    );
-    Array_tree_map source = array_tree_map_context_with_capacity(
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((typeof(array_tree_map_storage_for(
+            (struct Val[SMALL_FIXED_CAP]){}
+        ))[2]){}),
+    };
+    Array_tree_map source = array_tree_map_with_capacity(
         struct Val,
         id,
-        id_order,
-        stack_allocator_allocate,
+        &(CCC_Key_comparator){.compare = id_order},
         &allocator,
         SMALL_FIXED_CAP - 1
     );
-    Array_tree_map destination = array_tree_map_for(
-        struct Val, id, id_order, stack_allocator_allocate, &allocator, 0, NULL
+    Array_tree_map destination = array_tree_map_default(
+        struct Val, id, &(CCC_Key_comparator){.compare = id_order}
     );
-    (void)swap_handle(&source, &(struct Val){.id = 0});
-    (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1});
-    (void)swap_handle(&source, &(struct Val){.id = 2, .val = 2});
+    (void)swap_handle(&source, &(struct Val){.id = 0}, &allocator);
+    (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1}, &allocator);
+    (void)swap_handle(&source, &(struct Val){.id = 2, .val = 2}, &allocator);
     check(count(&source).count, 3);
     check(is_empty(&destination), true);
-    CCC_Result res = array_tree_map_copy(&destination, &source, NULL);
+    CCC_Result res
+        = array_tree_map_copy(&destination, &source, &(CCC_Allocator){});
     check(res != CCC_RESULT_OK, true);
-    check_end({ (void)array_tree_map_clear_and_free(&source, NULL); });
+    check_end({
+        (void)array_tree_map_clear_and_free(
+            &source, &(CCC_Destructor){}, &allocator
+        );
+    });
 }
 
 check_static_begin(array_tree_map_test_init_from) {
-    struct Stack_allocator allocator = stack_allocator_for(
-        typeof(array_tree_map_storage_for((struct Val[SMALL_FIXED_CAP]){})), 1
-    );
-    Array_tree_map map_from_list = array_tree_map_context_from(
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((typeof(array_tree_map_storage_for(
+            (struct Val[SMALL_FIXED_CAP]){}
+        ))[1]){}),
+    };
+    Array_tree_map map_from_list = array_tree_map_from(
         id,
-        id_order,
-        stack_allocator_allocate,
+        &(CCC_Key_comparator){.compare = id_order},
         &allocator,
         SMALL_FIXED_CAP - 1,
         (struct Val[]){
@@ -179,17 +206,23 @@ check_static_begin(array_tree_map_test_init_from) {
         ++seen;
     }
     check(seen, 3);
-    check_end(array_tree_map_clear_and_free(&map_from_list, NULL););
+    check_end({
+        (void)array_tree_map_clear_and_free(
+            &map_from_list, &(CCC_Destructor){}, &allocator
+        );
+    });
 }
 
 check_static_begin(array_tree_map_test_init_from_overwrite) {
-    struct Stack_allocator allocator = stack_allocator_for(
-        typeof(array_tree_map_storage_for((struct Val[SMALL_FIXED_CAP]){})), 1
-    );
-    Array_tree_map map_from_list = array_tree_map_context_from(
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((typeof(array_tree_map_storage_for(
+            (struct Val[SMALL_FIXED_CAP]){}
+        ))[1]){}),
+    };
+    Array_tree_map map_from_list = array_tree_map_from(
         id,
-        id_order,
-        stack_allocator_allocate,
+        &(CCC_Key_comparator){.compare = id_order},
         &allocator,
         SMALL_FIXED_CAP - 1,
         (struct Val[]){
@@ -209,15 +242,19 @@ check_static_begin(array_tree_map_test_init_from_overwrite) {
         ++seen;
     }
     check(seen, 1);
-    check_end(array_tree_map_clear_and_free(&map_from_list, NULL););
+    check_end({
+        (void)array_tree_map_clear_and_free(
+            &map_from_list, &(CCC_Destructor){}, &allocator
+        );
+    });
 }
 
 check_static_begin(array_tree_map_test_init_from_fail) {
     // Whoops forgot an allocation function.
     Array_tree_map map_from_list = array_tree_map_from(
         id,
-        id_order,
-        NULL,
+        &(CCC_Key_comparator){.compare = id_order},
+        &(CCC_Allocator){},
         0,
         (struct Val[]){
             {.id = 0, .val = 0},
@@ -237,21 +274,27 @@ check_static_begin(array_tree_map_test_init_from_fail) {
     }
     check(seen, 0);
     CCC_Handle h = CCC_array_tree_map_insert_or_assign(
-        &map_from_list, &(struct Val){.id = 1, .val = 1}
+        &map_from_list, &(struct Val){.id = 1, .val = 1}, &(CCC_Allocator){}
     );
     check(CCC_handle_insert_error(&h), CCC_TRUE);
-    check_end(array_tree_map_clear_and_free(&map_from_list, NULL););
+    check_end({
+        (void)array_tree_map_clear_and_free(
+            &map_from_list, &(CCC_Destructor){}, &(CCC_Allocator){}
+        );
+    });
 }
 
 check_static_begin(array_tree_map_test_init_with_capacity) {
-    struct Stack_allocator allocator = stack_allocator_for(
-        typeof(array_tree_map_storage_for((struct Val[SMALL_FIXED_CAP]){})), 1
-    );
-    Array_tree_map map = array_tree_map_context_with_capacity(
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((typeof(array_tree_map_storage_for(
+            (struct Val[SMALL_FIXED_CAP]){}
+        ))[1]){}),
+    };
+    Array_tree_map map = array_tree_map_with_capacity(
         struct Val,
         id,
-        id_order,
-        stack_allocator_allocate,
+        &(CCC_Key_comparator){.compare = id_order},
         &allocator,
         SMALL_FIXED_CAP - 1
     );
@@ -259,7 +302,7 @@ check_static_begin(array_tree_map_test_init_with_capacity) {
     check(array_tree_map_capacity(&map).count >= SMALL_FIXED_CAP - 1, true);
     for (int i = 0; i < 10; ++i) {
         CCC_Handle const h = CCC_array_tree_map_insert_or_assign(
-            &map, &(struct Val){.id = i, .val = i}
+            &map, &(struct Val){.id = i, .val = i}, &allocator
         );
         check(CCC_handle_insert_error(&h), CCC_FALSE);
         check(array_tree_map_validate(&map), CCC_TRUE);
@@ -274,28 +317,37 @@ check_static_begin(array_tree_map_test_init_with_capacity) {
         ++seen;
     }
     check(seen, 10);
-    check_end(array_tree_map_clear_and_free(&map, NULL););
+    check_end({
+        (void)array_tree_map_clear_and_free(
+            &map, &(CCC_Destructor){}, &allocator
+        );
+    });
 }
 
 check_static_begin(array_tree_map_test_init_with_capacity_no_op) {
     /* Initialize with 0 cap is OK just does nothing. */
-    struct Stack_allocator allocator = stack_allocator_for(
-        typeof(array_tree_map_storage_for((struct Val[SMALL_FIXED_CAP]){})), 1
-    );
-    Array_tree_map map = array_tree_map_context_with_capacity(
-        struct Val, id, id_order, stack_allocator_allocate, &allocator, 0
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((typeof(array_tree_map_storage_for(
+            (struct Val[SMALL_FIXED_CAP]){}
+        ))[1]){}),
+    };
+    Array_tree_map map = array_tree_map_with_capacity(
+        struct Val,
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        &allocator,
+        0
     );
     check(validate(&map), true);
     check(array_tree_map_capacity(&map).count, 0);
     check(array_tree_map_count(&map).count, 0);
     check(
-        array_tree_map_reserve(
-            &map, SMALL_FIXED_CAP - 1, stack_allocator_allocate
-        ),
+        array_tree_map_reserve(&map, SMALL_FIXED_CAP - 1, &allocator),
         CCC_RESULT_OK
     );
     CCC_Handle const h = CCC_array_tree_map_insert_or_assign(
-        &map, &(struct Val){.id = 1, .val = 1}
+        &map, &(struct Val){.id = 1, .val = 1}, &allocator
     );
     check(CCC_handle_insert_error(&h), CCC_FALSE);
     check(array_tree_map_validate(&map), CCC_TRUE);
@@ -309,17 +361,26 @@ check_static_begin(array_tree_map_test_init_with_capacity_no_op) {
     check(array_tree_map_count(&map).count, 1);
     check(array_tree_map_capacity(&map).count > 0, true);
     check(seen, 1);
-    check_end(array_tree_map_clear_and_free(&map, NULL););
+    check_end({
+        (void)array_tree_map_clear_and_free(
+            &map, &(CCC_Destructor){}, &allocator
+        );
+    });
 }
 
 check_static_begin(array_tree_map_test_init_with_capacity_fail) {
     /* Forgot allocation function. */
-    Array_tree_map map
-        = array_tree_map_with_capacity(struct Val, id, id_order, NULL, 32);
+    Array_tree_map map = array_tree_map_with_capacity(
+        struct Val,
+        id,
+        &(CCC_Key_comparator){.compare = id_order},
+        &(CCC_Allocator){},
+        32
+    );
     check(validate(&map), true);
     check(array_tree_map_capacity(&map).count, 0);
     CCC_Handle const e = CCC_array_tree_map_insert_or_assign(
-        &map, &(struct Val){.id = 1, .val = 1}
+        &map, &(struct Val){.id = 1, .val = 1}, &(CCC_Allocator){}
     );
     check(CCC_handle_insert_error(&e), CCC_TRUE);
     check(array_tree_map_validate(&map), CCC_TRUE);
@@ -332,36 +393,32 @@ check_static_begin(array_tree_map_test_init_with_capacity_fail) {
     }
     check(array_tree_map_count(&map).count, 0);
     check(seen, 0);
-    check_end(array_tree_map_clear_and_free(&map, NULL););
-}
-
-check_static_begin(array_tree_map_test_with_allocator) {
-    Array_tree_map map = CCC_array_tree_map_with_allocator(
-        struct Val, id, id_order, std_allocate
-    );
-    check(validate(&map), true);
-    check(CCC_array_tree_map_is_empty(&map), true);
-    check_end();
+    check_end({
+        (void)array_tree_map_clear_and_free(
+            &map, &(CCC_Destructor){}, &(CCC_Allocator){}
+        );
+    });
 }
 
 check_static_begin(array_tree_map_test_context_with_allocator) {
-    struct Stack_allocator allocator = stack_allocator_for(
-        typeof(array_tree_map_storage_for((struct Val[SMALL_FIXED_CAP]){})), 1
-    );
-    Array_tree_map map = CCC_array_tree_map_context_with_allocator(
-        struct Val, id, id_order, stack_allocator_allocate, &allocator
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((typeof(array_tree_map_storage_for(
+            (struct Val[SMALL_FIXED_CAP]){}
+        ))[1]){}),
+    };
+    Array_tree_map map = CCC_array_tree_map_default(
+        struct Val, id, &(CCC_Key_comparator){.compare = id_order}
     );
     check(validate(&map), true);
     check(
-        array_tree_map_reserve(
-            &map, SMALL_FIXED_CAP - 1, stack_allocator_allocate
-        ),
+        array_tree_map_reserve(&map, SMALL_FIXED_CAP - 1, &allocator),
         CCC_RESULT_OK
     );
     check(array_tree_map_capacity(&map).count >= SMALL_FIXED_CAP - 1, true);
     for (int i = 0; i < 10; ++i) {
         CCC_Handle const h = CCC_array_tree_map_insert_or_assign(
-            &map, &(struct Val){.id = i, .val = i}
+            &map, &(struct Val){.id = i, .val = i}, &allocator
         );
         check(CCC_handle_insert_error(&h), CCC_FALSE);
         check(array_tree_map_validate(&map), CCC_TRUE);
@@ -376,7 +433,11 @@ check_static_begin(array_tree_map_test_context_with_allocator) {
         ++seen;
     }
     check(seen, 10);
-    check_end(array_tree_map_clear_and_free(&map, NULL););
+    check_end({
+        (void)array_tree_map_clear_and_free(
+            &map, &(CCC_Destructor){}, &allocator
+        );
+    });
 }
 
 int
@@ -394,7 +455,6 @@ main(void) {
         array_tree_map_test_init_with_capacity(),
         array_tree_map_test_init_with_capacity_no_op(),
         array_tree_map_test_init_with_capacity_fail(),
-        array_tree_map_test_with_allocator(),
         array_tree_map_test_context_with_allocator()
     );
 }
