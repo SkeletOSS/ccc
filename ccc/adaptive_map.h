@@ -270,7 +270,7 @@ Note that this function can be used when the old user type is not needed but
 the information regarding its presence is helpful. */
 #define CCC_adaptive_map_insert_or_assign_wrap(map_pointer, type_pointer,      \
                                                allocator_pointer...)           \
-    &(struct { CCC_Handle private; }){                                         \
+    &(struct { CCC_Entry private; }){                                          \
         CCC_adaptive_map_insert_or_assign(map_pointer, type_pointer,           \
                                           allocator_pointer)}                  \
          .private
@@ -374,9 +374,9 @@ where in the map such an element should be inserted.
 
 An entry is rarely useful on its own. It should be passed in a functional style
 to subsequent calls in the Entry Interface. */
-#define CCC_adaptive_map_entry_wrap(map_pointer, key_pointer)                  \
+#define CCC_adaptive_map_entry_wrap(map_pointer, key_pointer...)               \
     &(struct { CCC_Adaptive_map_entry private; }){                             \
-        CCC_adaptive_map_entry((map_pointer), (key_pointer))}                  \
+        CCC_adaptive_map_entry((map_pointer), key_pointer)}                    \
          .private
 
 /** @brief Modifies the provided entry if it is Occupied.
@@ -519,9 +519,10 @@ unwrapped to obtain the old user struct stored in the map and the user may
 free or use as needed. */
 #define CCC_adaptive_map_remove_entry_wrap(adaptive_map_entry_pointer,         \
                                            allocator_pointer...)               \
-    &(CCC_Entry){CCC_adaptive_map_remove_entry((adaptive_map_entry_pointer),   \
-                                               allocator_pointer)              \
-                     .private}
+    &(struct { CCC_Entry private; }){                                          \
+        CCC_adaptive_map_remove_entry((adaptive_map_entry_pointer),            \
+                                      allocator_pointer)}                      \
+         .private
 
 /** @brief Unwraps the provided entry to obtain a view into the map element.
 @param[in] entry the entry from a query to the map via function or macro.
@@ -749,6 +750,10 @@ typedef CCC_Adaptive_map_entry Adaptive_map_entry;
         CCC_adaptive_map_insert_entry_with(arguments)
 #    define adaptive_map_try_insert_with(arguments...)                         \
         CCC_adaptive_map_try_insert_with(arguments)
+#    define adaptive_map_insert_or_assign(arguments...)                        \
+        CCC_adaptive_map_insert_or_assign(arguments)
+#    define adaptive_map_insert_or_assign_wrap(arguments...)                   \
+        CCC_adaptive_map_insert_or_assign_wrap(arguments)
 #    define adaptive_map_insert_or_assign_with(arguments...)                   \
         CCC_adaptive_map_insert_or_assign_with(arguments)
 #    define adaptive_map_swap_entry_wrap(arguments...)                         \
@@ -787,6 +792,14 @@ typedef CCC_Adaptive_map_entry Adaptive_map_entry;
         CCC_adaptive_map_reverse_begin(arguments)
 #    define adaptive_map_reverse_next(arguments...)                            \
         CCC_adaptive_map_reverse_next(arguments)
+#    define adaptive_map_equal_range(arguments...)                             \
+        CCC_adaptive_map_equal_range(arguments)
+#    define adaptive_map_equal_range_wrap(arguments...)                        \
+        CCC_adaptive_map_equal_range_wrap(arguments)
+#    define adaptive_map_equal_range_reverse(arguments...)                     \
+        CCC_adaptive_map_equal_range_reverse(arguments)
+#    define adaptive_map_equal_range_reverse_wrap(arguments...)                \
+        CCC_adaptive_map_equal_range_reverse_wrap(arguments)
 #    define adaptive_map_end(arguments...) CCC_adaptive_map_end(arguments)
 #    define adaptive_map_reverse_end(arguments...)                             \
         CCC_adaptive_map_reverse_end(arguments)

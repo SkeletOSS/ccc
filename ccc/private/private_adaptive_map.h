@@ -112,7 +112,7 @@ void *CCC_private_adaptive_map_insert(struct CCC_Adaptive_map *,
 /** @internal All other fields default to NULL or 0. */
 #define CCC_private_adaptive_map_default(                                      \
     private_struct_name, private_node_node_field, private_key_node_field,      \
-    private_key_comparator, private_allocate, private_context)                 \
+    private_comparator_pointer)                                                \
     {                                                                          \
         .sizeof_type = sizeof(private_struct_name),                            \
         .type_intruder_offset                                                  \
@@ -125,7 +125,7 @@ void *CCC_private_adaptive_map_insert(struct CCC_Adaptive_map *,
 /** @internal */
 #define CCC_private_adaptive_map_for(                                          \
     private_struct_name, private_node_node_field, private_key_node_field,      \
-    private_comparator_pointer, private_allocate, private_context)             \
+    private_comparator_pointer)                                                \
     {                                                                          \
         .root = NULL,                                                          \
         .size = 0,                                                             \
@@ -380,7 +380,8 @@ void *CCC_private_adaptive_map_insert(struct CCC_Adaptive_map *,
 
 /** @internal */
 #define CCC_private_adaptive_map_insert_or_assign_with(                        \
-    adaptive_map_pointer, key, type_compound_literal...)                       \
+    adaptive_map_pointer, key, private_allocator_pointer,                      \
+    type_compound_literal...)                                                  \
     (__extension__({                                                           \
         __auto_type private_ins_or_assign_map_pointer                          \
             = (adaptive_map_pointer);                                          \

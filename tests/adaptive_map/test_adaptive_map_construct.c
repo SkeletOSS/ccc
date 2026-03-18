@@ -8,19 +8,18 @@
 #include "checkers.h"
 #include "traits.h"
 #include "types.h"
-#include "utility/allocate.h"
 #include "utility/stack_allocator.h"
 
 static CCC_Adaptive_map
 construct_empty(void) {
-    CCC_Adaptive_map map
-        = CCC_adaptive_map_for(struct Val, elem, key, id_order, NULL, NULL);
+    CCC_Adaptive_map map = CCC_adaptive_map_default(
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order});
     return map;
 }
 
 check_static_begin(adaptive_map_test_empty) {
-    CCC_Adaptive_map s
-        = CCC_adaptive_map_for(struct Val, elem, key, id_order, NULL, NULL);
+    CCC_Adaptive_map s = CCC_adaptive_map_default(
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order});
     check(is_empty(&s), true);
     check_end();
 }
@@ -35,7 +34,8 @@ itself. */
 check_static_begin(adaptive_map_test_construct) {
     struct Val push = {};
     CCC_Adaptive_map map = construct_empty();
-    CCC_Entry entry = CCC_adaptive_map_insert_or_assign(&map, &push.elem);
+    CCC_Entry entry = CCC_adaptive_map_insert_or_assign(&map, &push.elem,
+                                                        &(CCC_Allocator){});
     check(CCC_adaptive_map_validate(&map), true);
     check(CCC_entry_insert_error(&entry), false);
     check(CCC_entry_occupied(&entry), false);
@@ -43,31 +43,14 @@ check_static_begin(adaptive_map_test_construct) {
     check_end();
 }
 
-check_static_begin(adaptive_map_test_with_allocator) {
-    CCC_Adaptive_map map = CCC_adaptive_map_with_allocator(
-        struct Val, elem, key, id_order, std_allocate);
-    check(CCC_adaptive_map_validate(&map), true);
-    check(CCC_adaptive_map_is_empty(&map), true);
-    check_end();
-}
-
-check_static_begin(adaptive_map_test_context_with_allocator) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
-    CCC_Adaptive_map map = CCC_adaptive_map_context_with_allocator(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
-    check(CCC_adaptive_map_validate(&map), true);
-    check(CCC_adaptive_map_is_empty(&map), true);
-    CCC_Entry one
-        = CCC_adaptive_map_insert_or_assign(&map, &(struct Val){}.elem);
-    check(insert_error(&one), CCC_FALSE);
-    check(CCC_adaptive_map_is_empty(&map), false);
-    check_end();
-}
-
 check_static_begin(adaptive_map_test_construct_from) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
-    CCC_Adaptive_map map = CCC_adaptive_map_context_from(
-        elem, key, id_order, stack_allocator_allocate, NULL, &allocator,
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[3]){}),
+    };
+    CCC_Adaptive_map map = CCC_adaptive_map_from(
+        elem, key, &(CCC_Key_comparator){.compare = id_order}, &allocator,
+        &(CCC_Destructor){},
         (struct Val[]){
             {.key = 0, .val = 0},
             {.key = 1, .val = 1},
@@ -75,13 +58,19 @@ check_static_begin(adaptive_map_test_construct_from) {
         });
     check(CCC_adaptive_map_validate(&map), true);
     check(CCC_adaptive_map_count(&map).count, 3);
-    check_end((void)CCC_adaptive_map_clear(&map, NULL););
+    check_end({
+        (void)CCC_adaptive_map_clear(&map, &(CCC_Destructor){}, &allocator);
+    });
 }
 
 check_static_begin(adaptive_map_test_construct_from_overwrite) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
-    CCC_Adaptive_map map = CCC_adaptive_map_context_from(
-        elem, key, id_order, stack_allocator_allocate, NULL, &allocator,
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[3]){}),
+    };
+    CCC_Adaptive_map map = CCC_adaptive_map_from(
+        elem, key, &(CCC_Key_comparator){.compare = id_order}, &allocator,
+        &(CCC_Destructor){},
         (struct Val[]){
             {.key = 0, .val = 0},
             {.key = 1, .val = 1},
@@ -93,27 +82,31 @@ check_static_begin(adaptive_map_test_construct_from_overwrite) {
     check(v != NULL, true);
     check(v->key, 1);
     check(v->val, 2);
-    check_end((void)CCC_adaptive_map_clear(&map, NULL););
+    check_end({
+        (void)CCC_adaptive_map_clear(&map, &(CCC_Destructor){}, &allocator);
+    });
 }
 
 check_static_begin(adaptive_map_test_construct_from_fail) {
-    CCC_Adaptive_map map
-        = CCC_adaptive_map_from(elem, key, id_order, NULL, NULL,
-                                (struct Val[]){
-                                    {.key = 0, .val = 0},
-                                    {.key = 1, .val = 1},
-                                    {.key = 2, .val = 2},
-                                });
+    CCC_Adaptive_map map = CCC_adaptive_map_from(
+        elem, key, &(CCC_Key_comparator){.compare = id_order},
+        &(CCC_Allocator){}, &(CCC_Destructor){},
+        (struct Val[]){
+            {.key = 0, .val = 0},
+            {.key = 1, .val = 1},
+            {.key = 2, .val = 2},
+        });
     check(CCC_adaptive_map_validate(&map), true);
     check(CCC_adaptive_map_is_empty(&map), true);
-    check_end((void)CCC_adaptive_map_clear(&map, NULL););
+    check_end({
+        (void)CCC_adaptive_map_clear(&map, &(CCC_Destructor){},
+                                     &(CCC_Allocator){});
+    });
 }
 
 int
 main(void) {
     return check_run(adaptive_map_test_empty(), adaptive_map_test_construct(),
-                     adaptive_map_test_with_allocator(),
-                     adaptive_map_test_context_with_allocator(),
                      adaptive_map_test_construct_from(),
                      adaptive_map_test_construct_from_overwrite(),
                      adaptive_map_test_construct_from_fail());

@@ -140,9 +140,12 @@ check_static_begin(iterator_check, CCC_Adaptive_map *s) {
 }
 
 check_static_begin(adaptive_map_test_forward_iterator) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 33);
-    CCC_Adaptive_map s = CCC_adaptive_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[33]){}),
+    };
+    Adaptive_map s = adaptive_map_default(
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order});
     /* We should have the expected behavior iteration over empty tree. */
     int j = 0;
     for (struct Val *e = begin(&s); e != end(&s); e = next(&s, &e->elem), ++j) {
@@ -157,7 +160,8 @@ check_static_begin(adaptive_map_test_forward_iterator) {
                                    .key = (int)shuffled_index,
                                    .val = i,
                                }
-                                    .elem);
+                                    .elem,
+                               &allocator);
         check(validate(&s), true);
         shuffled_index = (shuffled_index + prime) % num_nodes;
     }
@@ -172,9 +176,12 @@ check_static_begin(adaptive_map_test_forward_iterator) {
 }
 
 check_static_begin(adaptive_map_test_iterate_removal) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 100);
-    CCC_Adaptive_map s = CCC_adaptive_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[100]){}),
+    };
+    Adaptive_map s = adaptive_map_default(
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order});
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -187,7 +194,8 @@ check_static_begin(adaptive_map_test_iterate_removal) {
                                    .key = key,
                                    .val = (int)i,
                                }
-                                    .elem);
+                                    .elem,
+                               &allocator);
         check(validate(&s), true);
     }
     check(iterator_check(&s), CHECK_PASS);
@@ -195,7 +203,7 @@ check_static_begin(adaptive_map_test_iterate_removal) {
     for (struct Val *i = begin(&s), *next = NULL; i; i = next) {
         next = next(&s, &i->elem);
         if (i->key > limit) {
-            (void)remove_key_value(&s, &i->elem);
+            (void)remove_key_value(&s, &i->elem, &allocator);
             check(validate(&s), true);
         }
     }
@@ -203,9 +211,12 @@ check_static_begin(adaptive_map_test_iterate_removal) {
 }
 
 check_static_begin(adaptive_map_test_iterate_remove_key_value_reinsert) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 200);
-    CCC_Adaptive_map s = CCC_adaptive_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[200]){}),
+    };
+    Adaptive_map s = adaptive_map_default(
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order});
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -218,7 +229,8 @@ check_static_begin(adaptive_map_test_iterate_remove_key_value_reinsert) {
                                    .key = key,
                                    .val = (int)i,
                                }
-                                    .elem);
+                                    .elem,
+                               &allocator);
         check(validate(&s), true);
     }
     check(iterator_check(&s), CHECK_PASS);
@@ -228,9 +240,11 @@ check_static_begin(adaptive_map_test_iterate_remove_key_value_reinsert) {
     for (struct Val *i = begin(&s), *next = NULL; i; i = next) {
         next = next(&s, &i->elem);
         if (i->key < limit) {
-            (void)remove_key_value(&s, &i->elem);
+            (void)remove_key_value(&s, &i->elem, &allocator);
             i->key = new_unique_entry_val;
-            check(insert_entry(entry_wrap(&s, &i->key), &i->elem) != NULL,
+            check(insert_entry(adaptive_map_entry_wrap(&s, &i->key), &i->elem,
+                               &allocator)
+                      != NULL,
                   true);
             check(validate(&s), true);
             ++new_unique_entry_val;
@@ -241,9 +255,12 @@ check_static_begin(adaptive_map_test_iterate_remove_key_value_reinsert) {
 }
 
 check_static_begin(adaptive_map_test_valid_range) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 25);
-    CCC_Adaptive_map s = CCC_adaptive_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[25]){}),
+    };
+    Adaptive_map s = adaptive_map_default(
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order});
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
     for (int i = 0, id = 0; i < num_nodes; ++i, id += 5) {
@@ -252,29 +269,35 @@ check_static_begin(adaptive_map_test_valid_range) {
                                    .key = id,
                                    .val = i,
                                }
-                                    .elem);
+                                    .elem,
+                               &allocator);
         check(validate(&s), true);
     }
     /* This should be the following range [6,44). 6 should raise to
        next value not less than 6, 10 and 44 should be the first
        value greater than 44, 45. */
-    check(check_range(&s, equal_range_wrap(&s, &(int){6}, &(int){44}), 8,
-                      (int[8]){10, 15, 20, 25, 30, 35, 40, 45}),
+    check(check_range(&s,
+                      adaptive_map_equal_range_wrap(&s, &(int){6}, &(int){44}),
+                      8, (int[8]){10, 15, 20, 25, 30, 35, 40, 45}),
           CHECK_PASS);
     /* This should be the following range [119,84). 119 should be
        dropped to first value not greater than 119 and last should
        be dropped to first value less than 84. */
-    check(check_range_reverse(
-              &s, equal_range_reverse_wrap(&s, &(int){119}, &(int){84}), 8,
-              (int[8]){115, 110, 105, 100, 95, 90, 85, 80}),
+    check(check_range_reverse(&s,
+                              adaptive_map_equal_range_reverse_wrap(
+                                  &s, &(int){119}, &(int){84}),
+                              8, (int[8]){115, 110, 105, 100, 95, 90, 85, 80}),
           CHECK_PASS);
     check_end();
 }
 
 check_static_begin(adaptive_map_test_valid_range_equals) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 25);
-    CCC_Adaptive_map s = CCC_adaptive_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[25]){}),
+    };
+    Adaptive_map s = adaptive_map_default(
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order});
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
     for (int i = 0, id = 0; i < num_nodes; ++i, id += 5) {
@@ -283,23 +306,29 @@ check_static_begin(adaptive_map_test_valid_range_equals) {
                                    .key = id,
                                    .val = i,
                                }
-                                    .elem);
+                                    .elem,
+                               &allocator);
         check(validate(&s), true);
     }
-    check(check_range(&s, equal_range_wrap(&s, &(int){10}, &(int){40}), 8,
-                      (int[8]){10, 15, 20, 25, 30, 35, 40, 45}),
+    check(check_range(&s,
+                      adaptive_map_equal_range_wrap(&s, &(int){10}, &(int){40}),
+                      8, (int[8]){10, 15, 20, 25, 30, 35, 40, 45}),
           CHECK_PASS);
-    check(check_range_reverse(
-              &s, equal_range_reverse_wrap(&s, &(int){115}, &(int){85}), 8,
-              (int[8]){115, 110, 105, 100, 95, 90, 85, 80}),
+    check(check_range_reverse(&s,
+                              adaptive_map_equal_range_reverse_wrap(
+                                  &s, &(int){115}, &(int){85}),
+                              8, (int[8]){115, 110, 105, 100, 95, 90, 85, 80}),
           CHECK_PASS);
     check_end();
 }
 
 check_static_begin(adaptive_map_test_invalid_range) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 25);
-    CCC_Adaptive_map s = CCC_adaptive_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[25]){}),
+    };
+    Adaptive_map s = adaptive_map_default(
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order});
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
     for (int i = 0, id = 0; i < num_nodes; ++i, id += 5) {
@@ -308,29 +337,35 @@ check_static_begin(adaptive_map_test_invalid_range) {
                                    .key = id,
                                    .val = i,
                                }
-                                    .elem);
+                                    .elem,
+                               &allocator);
         check(validate(&s), true);
     }
     /* This should be the following range [95,999). 95 should raise to
        next value not less than 95, 95 and 999 should be the first
        value greater than 999, none or the end. */
-    check(check_range(&s, equal_range_wrap(&s, &(int){95}, &(int){999}), 6,
-                      (int[6]){95, 100, 105, 110, 115, 120}),
+    check(check_range(
+              &s, adaptive_map_equal_range_wrap(&s, &(int){95}, &(int){999}), 6,
+              (int[6]){95, 100, 105, 110, 115, 120}),
           CHECK_PASS);
     /* This should be the following range [36,-999). 36 should be
        dropped to first value not greater than 36 and last should
        be dropped to first value less than -999 which is end. */
-    check(check_range_reverse(
-              &s, equal_range_reverse_wrap(&s, &(int){36}, &(int){-999}), 8,
-              (int[8]){35, 30, 25, 20, 15, 10, 5, 0}),
+    check(check_range_reverse(&s,
+                              adaptive_map_equal_range_reverse_wrap(
+                                  &s, &(int){36}, &(int){-999}),
+                              8, (int[8]){35, 30, 25, 20, 15, 10, 5, 0}),
           CHECK_PASS);
     check_end();
 }
 
 check_static_begin(adaptive_map_test_empty_range) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 25);
-    CCC_Adaptive_map s = CCC_adaptive_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[25]){}),
+    };
+    Adaptive_map s = adaptive_map_default(
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order});
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
     for (int i = 0, id = 0; i < num_nodes; ++i, id += 5) {
@@ -339,7 +374,8 @@ check_static_begin(adaptive_map_test_empty_range) {
                                    .key = id,
                                    .val = i,
                                }
-                                    .elem);
+                                    .elem,
+                               &allocator);
         check(validate(&s), true);
     }
     /* Nonexistant range returns end [begin, end) in both positions.

@@ -529,7 +529,7 @@ where in the table such an element should be inserted.
 An entry is most often passed in a functional style to subsequent calls in the
 Entry Interface.*/
 #define CCC_flat_hash_map_entry_wrap(map_pointer, key_pointer,                 \
-                                     allocator_pointer)                        \
+                                     allocator_pointer...)                     \
     &(struct { CCC_Flat_hash_map_entry private; }){                            \
         CCC_flat_hash_map_entry(map_pointer, key_pointer, allocator_pointer)}  \
          .private

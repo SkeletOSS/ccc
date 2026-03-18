@@ -16,7 +16,7 @@ struct Val {
 CCC_Order id_order(CCC_Key_comparator_arguments);
 
 enum Check_result insert_shuffled(CCC_Adaptive_map *m, size_t size,
-                                  int larger_prime);
+                                  int larger_prime, CCC_Allocator const *);
 enum Check_result inorder_fill(int vals[], size_t size, CCC_Adaptive_map *m);
 
 #endif /* CCC_OMAP_UTIL_H */

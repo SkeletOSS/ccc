@@ -498,6 +498,16 @@ return CCC_ORDER_LESSER if the key is less than the key in key field of user
 type, CCC_ORDER_EQUAL if equal, and CCC_ORDER_GREATER if greater. */
 typedef CCC_Order CCC_Key_comparator_interface(CCC_Key_comparator_arguments);
 
+/** @brief The type passed by reference to any container function that may need
+to compare keys.  The context pointer is passed as the context argument of
+the `CCC_Key_comparator_arguments` type, when provided. */
+typedef struct {
+    /** The comparison function to be passed to comparing operation. */
+    CCC_Key_comparator_interface *compare;
+    /** Additional state to pass to the comparison. */
+    void *context;
+} CCC_Key_comparator;
+
 /** @brief A read only reference to a key type matching the key field type used
 for hash containers.
 
