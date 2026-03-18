@@ -15,9 +15,11 @@ AllowShortLoopsOnASingleLine: false
 BreakBeforeBinaryOperators: All
 AlignOperands: AlignAfterOperator
 AlignAfterOpenBracket: true
+BreakAfterOpenBracketFunction: true
+BreakBeforeCloseBracketFunction: true
 AlignTrailingComments: Always
-BinPackArguments: true
-BinPackParameters: true
+BinPackArguments: false
+BinPackParameters: false 
 QualifierAlignment: Custom
 QualifierOrder: [static, inline, type, volatile, const]
 ---
