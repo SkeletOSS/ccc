@@ -20,7 +20,8 @@ check_static_begin(adaptive_map_test_prime_shuffle) {
         .context = &stack_allocator_for((struct Val[50]){}),
     };
     Adaptive_map s = adaptive_map_default(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order});
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+    );
     size_t const size = 50;
     size_t const prime = 53;
     size_t const less = 10;
@@ -36,7 +37,8 @@ check_static_begin(adaptive_map_test_prime_shuffle) {
                     .key = (int)shuffled_index,
                 }
                      .elem,
-                &allocator))) {
+                &allocator
+            ))) {
             repeats[i] = true;
         }
         check(validate(&s), true);
@@ -45,10 +47,12 @@ check_static_begin(adaptive_map_test_prime_shuffle) {
     check(adaptive_map_count(&s).count < size, true);
     struct Val *const vals = allocator.context;
     for (size_t i = 0; i < size; ++i) {
-        check(occupied(adaptive_map_remove_entry_wrap(
-                  adaptive_map_entry_wrap(&s, &vals[i].key), &allocator))
-                  || repeats[i],
-              true);
+        check(
+            occupied(adaptive_map_remove_entry_wrap(
+                adaptive_map_entry_wrap(&s, &vals[i].key), &allocator
+            )) || repeats[i],
+            true
+        );
         check(validate(&s), true);
     }
     check_end();
@@ -60,7 +64,8 @@ check_static_begin(adaptive_map_test_insert_erase_shuffled) {
         .context = &stack_allocator_for((struct Val[50]){}),
     };
     Adaptive_map s = adaptive_map_default(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order});
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+    );
     size_t const size = 50;
     int const prime = 53;
     check(insert_shuffled(&s, size, prime, &allocator), CHECK_PASS);
@@ -70,7 +75,8 @@ check_static_begin(adaptive_map_test_insert_erase_shuffled) {
     struct Val *const vals = allocator.context;
     for (size_t i = 0; i < size; ++i) {
         struct Val *v = unwrap(
-            adaptive_map_remove_key_value_wrap(&s, &vals[i].elem, &allocator));
+            adaptive_map_remove_key_value_wrap(&s, &vals[i].elem, &allocator)
+        );
         check(v != NULL, true);
         check(v->key, vals[i].key);
         check(validate(&s), true);
@@ -85,7 +91,8 @@ check_static_begin(adaptive_map_test_weak_srand) {
         .context = &stack_allocator_for((struct Val[100]){}),
     };
     Adaptive_map s = adaptive_map_default(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order});
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+    );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand(time(NULL));
@@ -99,7 +106,8 @@ check_static_begin(adaptive_map_test_weak_srand) {
                     .val = i,
                 }
                       .elem),
-                &allocator))) {
+                &allocator
+            ))) {
             repeats[i] = true;
         }
         check(validate(&s), true);
@@ -121,42 +129,50 @@ check_static_begin(adaptive_map_test_insert_erase_cycles) {
         .context = &stack_allocator_for((struct Val[200]){}),
     };
     Adaptive_map s = adaptive_map_default(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order});
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+    );
     srand(time(NULL)); /* NOLINT */
     int const num_nodes = 100;
     int keys[100] = {};
     bool repeats[100] = {};
     for (int i = 0; i < num_nodes; ++i) {
         keys[i] = rand(); /* NOLINT */
-        if (occupied(adaptive_map_insert_or_assign_wrap(&s,
-                                                        &(struct Val){
-                                                            .key = keys[i],
-                                                            .val = i,
-                                                        }
-                                                             .elem,
-                                                        &allocator))) {
+        if (occupied(adaptive_map_insert_or_assign_wrap(
+                &s,
+                &(struct Val){
+                    .key = keys[i],
+                    .val = i,
+                }
+                     .elem,
+                &allocator
+            ))) {
             repeats[i] = true;
         }
         check(validate(&s), true);
     }
     for (int i = 0; i < num_nodes / 2; ++i) {
         CCC_Entry h = adaptive_map_remove_entry(
-            adaptive_map_entry_wrap(&s, &keys[i]), &allocator);
+            adaptive_map_entry_wrap(&s, &keys[i]), &allocator
+        );
         check(occupied(&h) || repeats[i], true);
         check(validate(&s), true);
     }
     for (int i = 0; i < num_nodes / 2; ++i) {
-        CCC_Entry const *const entry
-            = adaptive_map_insert_or_assign_with(&s, keys[i], &allocator,
-                                                 (struct Val){
-                                                     .val = i,
-                                                 });
+        CCC_Entry const *const entry = adaptive_map_insert_or_assign_with(
+            &s,
+            keys[i],
+            &allocator,
+            (struct Val){
+                .val = i,
+            }
+        );
         check(occupied(entry), false);
         check(validate(&s), true);
     }
     for (int i = 0; i < num_nodes; ++i) {
         CCC_Entry const entry = adaptive_map_remove_entry(
-            adaptive_map_entry_wrap(&s, &keys[i]), &allocator);
+            adaptive_map_entry_wrap(&s, &keys[i]), &allocator
+        );
         check(occupied(&entry) || repeats[i], true);
         check(validate(&s), true);
     }
@@ -166,8 +182,10 @@ check_static_begin(adaptive_map_test_insert_erase_cycles) {
 
 int
 main(void) {
-    return check_run(adaptive_map_test_insert_erase_shuffled(),
-                     adaptive_map_test_prime_shuffle(),
-                     adaptive_map_test_weak_srand(),
-                     adaptive_map_test_insert_erase_cycles());
+    return check_run(
+        adaptive_map_test_insert_erase_shuffled(),
+        adaptive_map_test_prime_shuffle(),
+        adaptive_map_test_weak_srand(),
+        adaptive_map_test_insert_erase_cycles()
+    );
 }

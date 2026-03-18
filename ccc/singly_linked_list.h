@@ -107,12 +107,18 @@ operator.
 @note The list is constructed as specified in the compound literal array
 provided. The list will be constructed with the element at index 0 of the array
 as the front of the list and the final index element at the back of the list. */
-#define CCC_singly_linked_list_from(type_intruder_field, allocator_pointer,    \
-                                    destructor_pointer,                        \
-                                    compound_literal_array...)                 \
-    CCC_private_singly_linked_list_from(type_intruder_field,                   \
-                                        allocator_pointer, destructor_pointer, \
-                                        compound_literal_array)
+#define CCC_singly_linked_list_from(                                           \
+    type_intruder_field,                                                       \
+    allocator_pointer,                                                         \
+    destructor_pointer,                                                        \
+    compound_literal_array...                                                  \
+)                                                                              \
+    CCC_private_singly_linked_list_from(                                       \
+        type_intruder_field,                                                   \
+        allocator_pointer,                                                     \
+        destructor_pointer,                                                    \
+        compound_literal_array                                                 \
+    )
 
 /**@}*/
 
@@ -131,10 +137,11 @@ wrapping elem has been allocated appropriately and with the correct lifetime by
 the user.
 
 If allocation is allowed the provided element is copied to a new allocation. */
-[[nodiscard]] void *
-CCC_singly_linked_list_push_front(CCC_Singly_linked_list *list,
-                                  CCC_Singly_linked_list_node *type_intruder,
-                                  CCC_Allocator const *allocator);
+[[nodiscard]] void *CCC_singly_linked_list_push_front(
+    CCC_Singly_linked_list *list,
+    CCC_Singly_linked_list_node *type_intruder,
+    CCC_Allocator const *allocator
+);
 
 /** @brief Write a compound literal directly to allocated memory at the front.
 O(1).
@@ -149,18 +156,21 @@ Note that it only makes sense to use this method when the container is given
 an allocator to copy in the provided compound literal. If an empty allocator is
 provided NULL is returned due to an inability for the container to allocate
 memory. */
-#define CCC_singly_linked_list_emplace_front(list_pointer, allocator_pointer,  \
-                                             type_compound_literal...)         \
+#define CCC_singly_linked_list_emplace_front(                                  \
+    list_pointer, allocator_pointer, type_compound_literal...                  \
+)                                                                              \
     CCC_private_singly_linked_list_emplace_front(                              \
-        list_pointer, allocator_pointer, type_compound_literal)
+        list_pointer, allocator_pointer, type_compound_literal                 \
+    )
 
 /** @brief Pop the front element from the list. O(1).
 @param[in] list a pointer to the singly linked list.
 @param[in] allocator the CCC_Allocator to free if needed.
 @return ok if the list is non-empty and the pop is successful. An input error
 is returned if list is NULL or the list is empty. */
-CCC_Result CCC_singly_linked_list_pop_front(CCC_Singly_linked_list *list,
-                                            CCC_Allocator const *allocator);
+CCC_Result CCC_singly_linked_list_pop_front(
+    CCC_Singly_linked_list *list, CCC_Allocator const *allocator
+);
 
 /** @brief Inserts splice element after the provided position. O(N).
 @param[in] position_list the list to which position belongs.
@@ -178,7 +188,8 @@ CCC_Result CCC_singly_linked_list_splice(
     CCC_Singly_linked_list *position_list,
     CCC_Singly_linked_list_node *type_intruder_position,
     CCC_Singly_linked_list *splice_list,
-    CCC_Singly_linked_list_node *type_intruder_splice);
+    CCC_Singly_linked_list_node *type_intruder_splice
+);
 
 /** @brief Inserts the `[begin, end)` of spliced elements after the provided
 position. `O(N)`.
@@ -201,7 +212,8 @@ CCC_Result CCC_singly_linked_list_splice_range(
     CCC_Singly_linked_list_node *type_intruder_position,
     CCC_Singly_linked_list *to_cut_list,
     CCC_Singly_linked_list_node *type_intruder_to_cut_begin,
-    CCC_Singly_linked_list_node *type_intruder_to_cut_exclusive_end);
+    CCC_Singly_linked_list_node *type_intruder_to_cut_exclusive_end
+);
 
 /** @brief Erases type_intruder from the list returning the following element.
 O(N).
@@ -216,9 +228,11 @@ the list is empty or any bad input is provided to the function.
 Note that if allocation permission is given to the container it will free the
 element. Otherwise, it is the user's responsibility to free the type wrapping
 elem. */
-void *CCC_singly_linked_list_erase(CCC_Singly_linked_list *list,
-                                   CCC_Singly_linked_list_node *type_intruder,
-                                   CCC_Allocator const *allocator);
+void *CCC_singly_linked_list_erase(
+    CCC_Singly_linked_list *list,
+    CCC_Singly_linked_list_node *type_intruder,
+    CCC_Allocator const *allocator
+);
 
 /** @brief Erases a range from the list returning the element after end. O(N).
 @param[in] list a pointer to the singly linked list.
@@ -236,7 +250,8 @@ void *CCC_singly_linked_list_erase_range(
     CCC_Singly_linked_list *list,
     CCC_Singly_linked_list_node *type_intruder_begin,
     CCC_Singly_linked_list_node *type_intruder_end,
-    CCC_Allocator const *allocator);
+    CCC_Allocator const *allocator
+);
 
 /** @brief Extracts an element from the list without freeing it. O(N).
 @param[in] list a pointer to the singly linked list.
@@ -246,9 +261,9 @@ list.
 
 Note that regardless of allocation permission this method will not free the
 type wrapping elem. It only removes it from the list. */
-void *
-CCC_singly_linked_list_extract(CCC_Singly_linked_list *list,
-                               CCC_Singly_linked_list_node *type_intruder);
+void *CCC_singly_linked_list_extract(
+    CCC_Singly_linked_list *list, CCC_Singly_linked_list_node *type_intruder
+);
 
 /** @brief Extracts a range of elements from the list without freeing them.
 O(N).
@@ -263,7 +278,8 @@ as they no longer belong to any list. */
 void *CCC_singly_linked_list_extract_range(
     CCC_Singly_linked_list *list,
     CCC_Singly_linked_list_node *type_intruder_begin,
-    CCC_Singly_linked_list_node *type_intruder_end);
+    CCC_Singly_linked_list_node *type_intruder_end
+);
 
 /**@}*/
 
@@ -287,11 +303,12 @@ If a non-increasing order is desired, return opposite results from the user
 comparison function. If an element is CCC_ORDER_LESSERERS return
 CCC_ORDER_GREATER and vice versa. If elements are equal, return CCC_ORDER_EQUAL.
 */
-void *
-CCC_singly_linked_list_insert_sorted(CCC_Singly_linked_list *singly_linked_list,
-                                     CCC_Singly_linked_list_node *type_intruder,
-                                     CCC_Comparator const *comparator,
-                                     CCC_Allocator const *allocator);
+void *CCC_singly_linked_list_insert_sorted(
+    CCC_Singly_linked_list *singly_linked_list,
+    CCC_Singly_linked_list_node *type_intruder,
+    CCC_Comparator const *comparator,
+    CCC_Allocator const *allocator
+);
 
 /** @brief Returns true if the list is sorted in non-decreasing order according
 to the user provided comparison function.
@@ -307,8 +324,10 @@ If a non-increasing order is desired, return opposite results from the user
 comparison function. If an element is CCC_ORDER_LESSER return CCC_ORDER_GREATER
 and vice versa. If elements are equal, return CCC_ORDER_EQUAL. */
 CCC_Tribool CCC_singly_linked_list_is_sorted(
-    CCC_Singly_linked_list const *singly_linked_list, CCC_Order order,
-    CCC_Comparator const *comparator);
+    CCC_Singly_linked_list const *singly_linked_list,
+    CCC_Order order,
+    CCC_Comparator const *comparator
+);
 
 /**@}*/
 
@@ -328,9 +347,11 @@ provided.
 
 If an allocator is not provided the user is responsible for the behavior of
 the destructor and any memory management. */
-CCC_Result CCC_singly_linked_list_clear(CCC_Singly_linked_list *list,
-                                        CCC_Destructor const *destructor,
-                                        CCC_Allocator const *allocator);
+CCC_Result CCC_singly_linked_list_clear(
+    CCC_Singly_linked_list *list,
+    CCC_Destructor const *destructor,
+    CCC_Allocator const *allocator
+);
 
 /**@}*/
 
@@ -373,9 +394,10 @@ CCC_singly_linked_list_end(CCC_Singly_linked_list const *list);
 list.
 @return the user type following type_intruder or the end sentinel if none
 follow. NULL is returned if list or type_intruder are NULL. */
-[[nodiscard]] void *
-CCC_singly_linked_list_next(CCC_Singly_linked_list const *list,
-                            CCC_Singly_linked_list_node const *type_intruder);
+[[nodiscard]] void *CCC_singly_linked_list_next(
+    CCC_Singly_linked_list const *list,
+    CCC_Singly_linked_list_node const *type_intruder
+);
 
 /**@}*/
 

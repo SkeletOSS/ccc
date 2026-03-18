@@ -67,8 +67,10 @@ check_static_begin(buffer_test_copy_allocate) {
     };
     int push[PUSHCAP] = {0, 1, 2, 3, 4};
     for (size_t i = 0; i < PUSHCAP; ++i) {
-        check(buffer_push_back(&source, &push[i], &std_allocator) != NULL,
-              CCC_TRUE);
+        check(
+            buffer_push_back(&source, &push[i], &std_allocator) != NULL,
+            CCC_TRUE
+        );
     }
     CCC_Result const res = buffer_copy(&destination, &source, &std_allocator);
     check(res, CCC_RESULT_OK);
@@ -83,24 +85,28 @@ check_static_begin(buffer_test_copy_allocate) {
     }
     check(buffer_is_empty(&source), buffer_is_empty(&destination));
     check_end({
-        (void)buffer_clear_and_free(&source, &(CCC_Destructor){},
-                                    &std_allocator);
-        (void)buffer_clear_and_free(&destination, &(CCC_Destructor){},
-                                    &std_allocator);
+        (void)buffer_clear_and_free(
+            &source, &(CCC_Destructor){}, &std_allocator
+        );
+        (void)buffer_clear_and_free(
+            &destination, &(CCC_Destructor){}, &std_allocator
+        );
     });
 }
 
 check_static_begin(buffer_test_copy_allocate_fail) {
     Buffer source = buffer_default(int);
     Buffer destination = buffer_default(int);
-    check(buffer_push_back(&source, &(int){88}, &std_allocator) != NULL,
-          CCC_TRUE);
+    check(
+        buffer_push_back(&source, &(int){88}, &std_allocator) != NULL, CCC_TRUE
+    );
     CCC_Result const res
         = buffer_copy(&destination, &source, &(CCC_Allocator){});
     check(res != CCC_RESULT_OK, CCC_TRUE);
     check_end({
-        (void)buffer_clear_and_free(&source, &(CCC_Destructor){},
-                                    &std_allocator);
+        (void)buffer_clear_and_free(
+            &source, &(CCC_Destructor){}, &std_allocator
+        );
     });
 }
 
@@ -117,7 +123,8 @@ check_static_begin(buffer_test_init_from) {
     check(CCC_buffer_count(&b).count, elem - 1);
     check(CCC_buffer_capacity(&b).count, elem);
     check_end(
-        (void)buffer_clear_and_free(&b, &(CCC_Destructor){}, &std_allocator););
+        (void)buffer_clear_and_free(&b, &(CCC_Destructor){}, &std_allocator);
+    );
 }
 
 check_static_begin(buffer_test_init_from_fail) {
@@ -135,14 +142,16 @@ check_static_begin(buffer_test_init_from_fail) {
     check(CCC_buffer_capacity(&b).count, 0);
     check(CCC_buffer_push_back(&b, &(int){}, &std_allocator), NULL);
     check_end(
-        (void)buffer_clear_and_free(&b, &(CCC_Destructor){}, &std_allocator););
+        (void)buffer_clear_and_free(&b, &(CCC_Destructor){}, &std_allocator);
+    );
 }
 
 check_static_begin(buffer_test_init_with_capacity) {
     CCC_Buffer b = CCC_buffer_with_capacity(int, &std_allocator, 8);
     check(CCC_buffer_capacity(&b).count, 8);
-    check(CCC_buffer_push_back(&b, &(int){9}, &std_allocator) != NULL,
-          CCC_TRUE);
+    check(
+        CCC_buffer_push_back(&b, &(int){9}, &std_allocator) != NULL, CCC_TRUE
+    );
     size_t count = 0;
     for (int const *i = CCC_buffer_begin(&b); i != CCC_buffer_capacity_end(&b);
          i = CCC_buffer_next(&b, i)) {
@@ -150,7 +159,8 @@ check_static_begin(buffer_test_init_with_capacity) {
     }
     check(count, 8);
     check_end(
-        (void)buffer_clear_and_free(&b, &(CCC_Destructor){}, &std_allocator););
+        (void)buffer_clear_and_free(&b, &(CCC_Destructor){}, &std_allocator);
+    );
 }
 
 check_static_begin(buffer_test_default) {
@@ -172,7 +182,8 @@ check_static_begin(buffer_test_context_with_allocator) {
     check(*i, 2);
     check(CCC_buffer_count(&b).count, 1);
     check_end(
-        CCC_buffer_clear_and_free(&b, &(CCC_Destructor){}, &stack_allocator););
+        CCC_buffer_clear_and_free(&b, &(CCC_Destructor){}, &stack_allocator);
+    );
 }
 
 check_static_begin(buffer_test_init_with_capacity_fail) {
@@ -187,16 +198,25 @@ check_static_begin(buffer_test_init_with_capacity_fail) {
     }
     check(count, 0);
     check_end(
-        (void)buffer_clear_and_free(&b, &(CCC_Destructor){}, &std_allocator););
+        (void)buffer_clear_and_free(&b, &(CCC_Destructor){}, &std_allocator);
+    );
 }
 
 int
 main(void) {
     return check_run(
-        buffer_test_fixed(), buffer_test_full(), buffer_test_reserve(),
-        buffer_test_copy_no_allocate(), buffer_test_copy_no_allocate_fail(),
-        buffer_test_copy_allocate(), buffer_test_copy_allocate_fail(),
-        buffer_test_init_from(), buffer_test_init_from_fail(),
-        buffer_test_init_with_capacity(), buffer_test_init_with_capacity_fail(),
-        buffer_test_default(), buffer_test_context_with_allocator());
+        buffer_test_fixed(),
+        buffer_test_full(),
+        buffer_test_reserve(),
+        buffer_test_copy_no_allocate(),
+        buffer_test_copy_no_allocate_fail(),
+        buffer_test_copy_allocate(),
+        buffer_test_copy_allocate_fail(),
+        buffer_test_init_from(),
+        buffer_test_init_from_fail(),
+        buffer_test_init_with_capacity(),
+        buffer_test_init_with_capacity_fail(),
+        buffer_test_default(),
+        buffer_test_context_with_allocator()
+    );
 }

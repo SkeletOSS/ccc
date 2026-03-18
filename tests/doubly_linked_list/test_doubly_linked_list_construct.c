@@ -21,10 +21,12 @@ check_static_begin(doubly_linked_list_test_construct) {
     Doubly_linked_list doubly_linked_list
         = doubly_linked_list_for(struct Val, e);
     check(is_empty(&doubly_linked_list), true);
-    check(doubly_linked_list_push_front(&doubly_linked_list, &val.e,
-                                        &(CCC_Allocator){})
-              != NULL,
-          true);
+    check(
+        doubly_linked_list_push_front(
+            &doubly_linked_list, &val.e, &(CCC_Allocator){}
+        ) != NULL,
+        true
+    );
     check(is_empty(&doubly_linked_list), false);
     check(count(&doubly_linked_list).count, 1);
     check_end();
@@ -43,17 +45,21 @@ check_static_begin(doubly_linked_list_test_constructor_copy) {
     struct Val val1 = {};
     struct Val val2 = {};
     check(is_empty(&copy_constructed), true);
-    check(doubly_linked_list_push_front(&copy_constructed, &val1.e,
-                                        &(CCC_Allocator){})
-              != NULL,
-          true);
+    check(
+        doubly_linked_list_push_front(
+            &copy_constructed, &val1.e, &(CCC_Allocator){}
+        ) != NULL,
+        true
+    );
     check(is_empty(&copy_constructed), false);
     check(count(&copy_constructed).count, 1);
     check(validate(&copy_constructed), true);
-    check(doubly_linked_list_push_back(&copy_constructed, &val2.e,
-                                       &(CCC_Allocator){})
-              != NULL,
-          true);
+    check(
+        doubly_linked_list_push_back(
+            &copy_constructed, &val2.e, &(CCC_Allocator){}
+        ) != NULL,
+        true
+    );
     check(count(&copy_constructed).count, 2);
     check(validate(&copy_constructed), true);
     check_end();
@@ -64,44 +70,54 @@ check_static_begin(doubly_linked_list_test_construct_from) {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for((struct Val[3]){}),
     };
-    CCC_Doubly_linked_list list
-        = CCC_doubly_linked_list_from(e, &allocator, &(CCC_Destructor){},
-                                      (struct Val[]){
-                                          {.val = 0},
-                                          {.val = 1},
-                                          {.val = 2},
-                                      });
+    CCC_Doubly_linked_list list = CCC_doubly_linked_list_from(
+        e,
+        &allocator,
+        &(CCC_Destructor){},
+        (struct Val[]){
+            {.val = 0},
+            {.val = 1},
+            {.val = 2},
+        }
+    );
     check(CCC_doubly_linked_list_validate(&list), true);
     check(CCC_doubly_linked_list_count(&list).count, 3);
     struct Val const *const v = CCC_doubly_linked_list_front(&list);
     check(v != NULL, true);
     check(v->val, 0);
     check_end({
-        (void)CCC_doubly_linked_list_clear(&list, &(CCC_Destructor){},
-                                           &allocator);
+        (void)CCC_doubly_linked_list_clear(
+            &list, &(CCC_Destructor){}, &allocator
+        );
     });
 }
 
 check_static_begin(doubly_linked_list_test_construct_from_fail) {
     CCC_Doubly_linked_list list = CCC_doubly_linked_list_from(
-        e, &(CCC_Allocator){}, &(CCC_Destructor){},
+        e,
+        &(CCC_Allocator){},
+        &(CCC_Destructor){},
         (struct Val[]){
             {.val = 0},
             {.val = 1},
             {.val = 2},
-        });
+        }
+    );
     check(CCC_doubly_linked_list_validate(&list), true);
     check(CCC_doubly_linked_list_is_empty(&list), true);
     check_end({
-        (void)CCC_doubly_linked_list_clear(&list, &(CCC_Destructor){},
-                                           &(CCC_Allocator){});
+        (void)CCC_doubly_linked_list_clear(
+            &list, &(CCC_Destructor){}, &(CCC_Allocator){}
+        );
     });
 }
 
 int
 main(void) {
-    return check_run(doubly_linked_list_test_construct(),
-                     doubly_linked_list_test_constructor_copy(),
-                     doubly_linked_list_test_construct_from(),
-                     doubly_linked_list_test_construct_from_fail());
+    return check_run(
+        doubly_linked_list_test_construct(),
+        doubly_linked_list_test_constructor_copy(),
+        doubly_linked_list_test_construct_from(),
+        doubly_linked_list_test_construct_from_fail()
+    );
 }

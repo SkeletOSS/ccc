@@ -36,8 +36,9 @@ check_static_begin(buffer_test_push_fixed) {
         check(*p, push[i]);
     }
     check(buffer_count(&b).count, sizeof(push) / sizeof(*push));
-    check(buffer_push_back(&b, &(int){99}, &(CCC_Allocator){}) == NULL,
-          CCC_TRUE);
+    check(
+        buffer_push_back(&b, &(int){99}, &(CCC_Allocator){}) == NULL, CCC_TRUE
+    );
     check_end();
 }
 
@@ -68,16 +69,28 @@ check_static_begin(buffer_test_push_qsort) {
     int ref[BUF_SORT_CAP] = {};
     iota(ref, BUF_SORT_CAP, 0);
     iota(buffer_begin(&b), BUF_SORT_CAP, 0);
-    check(memcmp(ref, buffer_begin(&b), BUF_SORT_CAP * sizeof(*ref)),
-          CCC_ORDER_EQUAL);
+    check(
+        memcmp(ref, buffer_begin(&b), BUF_SORT_CAP * sizeof(*ref)),
+        CCC_ORDER_EQUAL
+    );
     rand_shuffle(sizeof(*ref), ref, BUF_SORT_CAP, &(int){});
-    rand_shuffle(buffer_sizeof_type(&b).count, buffer_begin(&b),
-                 buffer_count(&b).count, &(int){});
+    rand_shuffle(
+        buffer_sizeof_type(&b).count,
+        buffer_begin(&b),
+        buffer_count(&b).count,
+        &(int){}
+    );
     qsort(ref, BUF_SORT_CAP, sizeof(*ref), std_order_ints);
-    qsort(buffer_begin(&b), buffer_capacity(&b).count,
-          buffer_sizeof_type(&b).count, std_order_ints);
-    check(memcmp(ref, buffer_begin(&b), BUF_SORT_CAP * sizeof(*ref)),
-          CCC_ORDER_EQUAL);
+    qsort(
+        buffer_begin(&b),
+        buffer_capacity(&b).count,
+        buffer_sizeof_type(&b).count,
+        std_order_ints
+    );
+    check(
+        memcmp(ref, buffer_begin(&b), BUF_SORT_CAP * sizeof(*ref)),
+        CCC_ORDER_EQUAL
+    );
     int prev = INT_MIN;
     size_t count = 0;
     for (int const *i = buffer_begin(&b); i != buffer_end(&b);
@@ -97,10 +110,18 @@ check_static_begin(buffer_test_push_sort) {
     };
     Buffer b = buffer_with_storage(BUF_SORT_CAP, (int[BUF_SORT_CAP]){});
     iota(buffer_begin(&b), BUF_SORT_CAP, 0);
-    rand_shuffle(buffer_sizeof_type(&b).count, buffer_begin(&b),
-                 buffer_count(&b).count, &(int){});
-    (void)quicksort(&b, &(int){}, CCC_ORDER_LESSER,
-                    &(CCC_Comparator){.compare = ccc_order_ints});
+    rand_shuffle(
+        buffer_sizeof_type(&b).count,
+        buffer_begin(&b),
+        buffer_count(&b).count,
+        &(int){}
+    );
+    (void)quicksort(
+        &b,
+        &(int){},
+        CCC_ORDER_LESSER,
+        &(CCC_Comparator){.compare = ccc_order_ints}
+    );
     int prev = INT_MIN;
     size_t count = 0;
     for (int const *i = buffer_begin(&b); i != buffer_end(&b);
@@ -190,9 +211,13 @@ int
 main(void) {
     /* NOLINTNEXTLINE Random only needs to be seeded once. */
     srand(time(NULL));
-    return check_run(buffer_test_push_fixed(), buffer_test_push_resize(),
-                     buffer_test_push_qsort(), buffer_test_push_sort(),
-                     buffer_test_insert_no_allocate(),
-                     buffer_test_insert_no_allocate_fail(),
-                     buffer_test_insert_allocate());
+    return check_run(
+        buffer_test_push_fixed(),
+        buffer_test_push_resize(),
+        buffer_test_push_qsort(),
+        buffer_test_push_sort(),
+        buffer_test_insert_no_allocate(),
+        buffer_test_insert_no_allocate_fail(),
+        buffer_test_insert_allocate()
+    );
 }

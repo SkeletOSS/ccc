@@ -23,8 +23,13 @@ val_update(CCC_Arguments const u) {
     old->val = *(int *)u.context;
 }
 
-check_begin(insert_shuffled, CCC_Priority_queue *queue, size_t const size,
-            int const larger_prime, CCC_Allocator const *const allocator) {
+check_begin(
+    insert_shuffled,
+    CCC_Priority_queue *queue,
+    size_t const size,
+    int const larger_prime,
+    CCC_Allocator const *const allocator
+) {
     check(allocator != NULL && allocator->allocate != NULL, true);
     /* Math magic ahead so that we iterate over every index
        eventually but in a shuffled order. Not necessarily
@@ -43,14 +48,21 @@ check_begin(insert_shuffled, CCC_Priority_queue *queue, size_t const size,
 }
 
 /* Iterative inorder traversal to check the heap is sorted. */
-check_begin(private_inorder_fill, CCC_Allocator const *const stack_allocator,
-            int vals[const], size_t const size,
-            CCC_Priority_queue *const queue) {
+check_begin(
+    private_inorder_fill,
+    CCC_Allocator const *const stack_allocator,
+    int vals[const],
+    size_t const size,
+    CCC_Priority_queue *const queue
+) {
     check(count(queue).count, size);
     size_t i = 0;
     CCC_Priority_queue copy = CCC_priority_queue_for(
-        struct Val, elem, CCC_priority_queue_order(queue),
-        &(CCC_Comparator){.compare = val_order});
+        struct Val,
+        elem,
+        CCC_priority_queue_order(queue),
+        &(CCC_Comparator){.compare = val_order}
+    );
     int prev_val = queue->order == CCC_ORDER_LESSER ? INT_MIN : INT_MAX;
     while (!is_empty(queue)) {
         struct Val *const front = front(queue);

@@ -17,17 +17,25 @@ id_order(CCC_Key_comparator_arguments const order) {
     return (key > c->key) - (key < c->key);
 }
 
-check_begin(insert_shuffled, CCC_Adaptive_map *m, size_t const size,
-            int const larger_prime, CCC_Allocator const *const allocator) {
+check_begin(
+    insert_shuffled,
+    CCC_Adaptive_map *m,
+    size_t const size,
+    int const larger_prime,
+    CCC_Allocator const *const allocator
+) {
     size_t shuffled_index = larger_prime % size;
     for (size_t i = 0; i < size; ++i) {
-        (void)CCC_adaptive_map_swap_entry(m,
-                                          &(struct Val){
-                                              .key = (int)shuffled_index,
-                                              .val = (int)i,
-                                          }
-                                               .elem,
-                                          &(struct Val){}.elem, allocator);
+        (void)CCC_adaptive_map_swap_entry(
+            m,
+            &(struct Val){
+                .key = (int)shuffled_index,
+                .val = (int)i,
+            }
+                 .elem,
+            &(struct Val){}.elem,
+            allocator
+        );
         check(validate(m), true);
         shuffled_index = (shuffled_index + larger_prime) % size;
     }
@@ -36,8 +44,9 @@ check_begin(insert_shuffled, CCC_Adaptive_map *m, size_t const size,
 }
 
 /* Iterative inorder traversal to check the heap is sorted. */
-check_begin(inorder_fill, int vals[const], size_t size,
-            CCC_Adaptive_map *const m) {
+check_begin(
+    inorder_fill, int vals[const], size_t size, CCC_Adaptive_map *const m
+) {
     check(CCC_adaptive_map_count(m).count, size);
     struct Val const *prev = begin(m);
     struct Val const *e = end(m);

@@ -467,10 +467,14 @@ needed.
 @return the result of the operation.
 
 See container documentation for specific behavior. */
-#define CCC_copy(destination_container_pointer, source_container_pointer,      \
-                 allocate_pointer)                                             \
-    CCC_private_copy(destination_container_pointer, source_container_pointer,  \
-                     allocate_pointer)
+#define CCC_copy(                                                              \
+    destination_container_pointer, source_container_pointer, allocate_pointer  \
+)                                                                              \
+    CCC_private_copy(                                                          \
+        destination_container_pointer,                                         \
+        source_container_pointer,                                              \
+        allocate_pointer                                                       \
+    )
 
 /** @brief Reserve capacity for n_to_add new elements to be inserted.
 @param[in] container_pointer a pointer to the container.
@@ -499,8 +503,9 @@ element.
 @return the result of the operation.
 
 See container documentation for specific behavior. */
-#define CCC_clear_and_free(container_pointer,                                  \
-                           destructor_and_free_arguments...)                   \
+#define CCC_clear_and_free(                                                    \
+    container_pointer, destructor_and_free_arguments...                        \
+)                                                                              \
     CCC_private_clear_and_free(container_pointer, destructor_and_free_arguments)
 
 /** @brief Clears the container previously reserved and frees its underlying
@@ -512,10 +517,12 @@ called on each element and the required allocation function to free memory.
 @return the result of the operation.
 
 See container documentation for specific behavior. */
-#define CCC_clear_and_free_reserve(container_pointer,                          \
-                                   destructor_and_free_arguments...)           \
-    CCC_private_clear_and_free_reserve(container_pointer,                      \
-                                       destructor_and_free_arguments)
+#define CCC_clear_and_free_reserve(                                            \
+    container_pointer, destructor_and_free_arguments...                        \
+)                                                                              \
+    CCC_private_clear_and_free_reserve(                                        \
+        container_pointer, destructor_and_free_arguments                       \
+    )
 
 /**@}*/
 

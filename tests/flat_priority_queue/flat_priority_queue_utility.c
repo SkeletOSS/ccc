@@ -33,9 +33,13 @@ rand_range(size_t const min, size_t const max) {
     return min + (rand() / (RAND_MAX / (max - min + 1) + 1));
 }
 
-check_begin(insert_shuffled, CCC_Flat_priority_queue *const priority_queue,
-            size_t const size, int const larger_prime,
-            CCC_Allocator const *const allocator) {
+check_begin(
+    insert_shuffled,
+    CCC_Flat_priority_queue *const priority_queue,
+    size_t const size,
+    int const larger_prime,
+    CCC_Allocator const *const allocator
+) {
     /* Math magic ahead so that we iterate over every index
        eventually but in a shuffled order. Not necessarily
        random but a repeatable sequence that makes it
@@ -43,14 +47,18 @@ check_begin(insert_shuffled, CCC_Flat_priority_queue *const priority_queue,
        of the prime number as a random seed, kind of. */
     size_t shuffled_index = larger_prime % size;
     for (size_t i = 0; i < size; ++i) {
-        check(push(priority_queue,
-                   &(struct Val){
-                       .id = (int)shuffled_index,
-                       .val = (int)shuffled_index,
-                   },
-                   &(struct Val){}, allocator)
-                  != NULL,
-              CCC_TRUE);
+        check(
+            push(
+                priority_queue,
+                &(struct Val){
+                    .id = (int)shuffled_index,
+                    .val = (int)shuffled_index,
+                },
+                &(struct Val){},
+                allocator
+            ) != NULL,
+            CCC_TRUE
+        );
         check(CCC_flat_priority_queue_count(priority_queue).count, i + 1);
         check(validate(priority_queue), true);
         shuffled_index = (shuffled_index + larger_prime) % size;
@@ -60,8 +68,12 @@ check_begin(insert_shuffled, CCC_Flat_priority_queue *const priority_queue,
 }
 
 /* Iterative inorder traversal to check the heap is sorted. */
-check_begin(inorder_fill, int vals[const], size_t const size,
-            CCC_Flat_priority_queue const *const flat_priority_queue) {
+check_begin(
+    inorder_fill,
+    int vals[const],
+    size_t const size,
+    CCC_Flat_priority_queue const *const flat_priority_queue
+) {
     if (CCC_flat_priority_queue_count(flat_priority_queue).count != size) {
         return CHECK_FAIL;
     }
@@ -69,14 +81,19 @@ check_begin(inorder_fill, int vals[const], size_t const size,
     CCC_Result r
         = buffer_copy(&copy, &flat_priority_queue->buffer, &std_allocator);
     check(r, CCC_RESULT_OK);
-    r = CCC_sort_heapsort(&copy, &(struct Val){}, flat_priority_queue->order,
-                          &flat_priority_queue->comparator);
+    r = CCC_sort_heapsort(
+        &copy,
+        &(struct Val){},
+        flat_priority_queue->order,
+        &flat_priority_queue->comparator
+    );
     check(r, CCC_RESULT_OK);
     check(CCC_buffer_is_empty(&copy), CCC_FALSE);
     vals[0] = *CCC_buffer_front_as(&copy, int);
     size_t i = 1;
     for (struct Val const *prev = begin(&copy), *v = next(&copy, prev);
-         v != end(&copy); prev = v, v = next(&copy, v)) {
+         v != end(&copy);
+         prev = v, v = next(&copy, v)) {
         check(prev->val <= v->val, CCC_TRUE);
         vals[i++] = v->val;
     }

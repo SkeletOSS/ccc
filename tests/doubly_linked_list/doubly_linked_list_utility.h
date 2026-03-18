@@ -20,9 +20,14 @@ enum Push_direction {
 
 CCC_Order val_order(CCC_Comparator_arguments);
 
-enum Check_result check_order(CCC_Doubly_linked_list const *, size_t n,
-                              int const order[]);
-enum Check_result push_list(CCC_Doubly_linked_list *, enum Push_direction,
-                            size_t n, struct Val vals[], CCC_Allocator const *);
+enum Check_result
+check_order(CCC_Doubly_linked_list const *, size_t n, int const order[]);
+enum Check_result push_list(
+    CCC_Doubly_linked_list *,
+    enum Push_direction,
+    size_t n,
+    struct Val vals[],
+    CCC_Allocator const *
+);
 
 #endif /* DLL_UTIL_H */

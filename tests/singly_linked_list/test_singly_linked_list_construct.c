@@ -36,9 +36,11 @@ check_static_begin(singly_linked_list_test_constructor_copy) {
     CCC_Singly_linked_list copy = construct_empty();
     struct Val val1 = {};
     check(is_empty(&copy), true);
-    check(singly_linked_list_push_front(&copy, &val1.e, &(CCC_Allocator){})
-              != NULL,
-          true);
+    check(
+        singly_linked_list_push_front(&copy, &val1.e, &(CCC_Allocator){})
+            != NULL,
+        true
+    );
     check(is_empty(&copy), false);
     check(count(&copy).count, 1);
     check(validate(&copy), true);
@@ -50,44 +52,54 @@ check_static_begin(singly_linked_list_test_construct_from) {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for((struct Val[3]){}),
     };
-    CCC_Singly_linked_list list
-        = CCC_singly_linked_list_from(e, &allocator, &(CCC_Destructor){},
-                                      (struct Val[]){
-                                          {.val = 0},
-                                          {.val = 1},
-                                          {.val = 2},
-                                      });
+    CCC_Singly_linked_list list = CCC_singly_linked_list_from(
+        e,
+        &allocator,
+        &(CCC_Destructor){},
+        (struct Val[]){
+            {.val = 0},
+            {.val = 1},
+            {.val = 2},
+        }
+    );
     check(CCC_singly_linked_list_validate(&list), true);
     check(CCC_singly_linked_list_count(&list).count, 3);
     struct Val const *const v = CCC_singly_linked_list_front(&list);
     check(v != NULL, true);
     check(v->val, 0);
     check_end({
-        (void)CCC_singly_linked_list_clear(&list, &(CCC_Destructor){},
-                                           &allocator);
+        (void)CCC_singly_linked_list_clear(
+            &list, &(CCC_Destructor){}, &allocator
+        );
     });
 }
 
 check_static_begin(singly_linked_list_test_construct_from_fail) {
     CCC_Singly_linked_list list = CCC_singly_linked_list_from(
-        e, &(CCC_Allocator){}, &(CCC_Destructor){},
+        e,
+        &(CCC_Allocator){},
+        &(CCC_Destructor){},
         (struct Val[]){
             {.val = 0},
             {.val = 1},
             {.val = 2},
-        });
+        }
+    );
     check(CCC_singly_linked_list_validate(&list), true);
     check(CCC_singly_linked_list_is_empty(&list), true);
     check_end({
-        (void)CCC_singly_linked_list_clear(&list, &(CCC_Destructor){},
-                                           &(CCC_Allocator){});
+        (void)CCC_singly_linked_list_clear(
+            &list, &(CCC_Destructor){}, &(CCC_Allocator){}
+        );
     });
 }
 
 int
 main(void) {
-    return check_run(singly_linked_list_test_construct(),
-                     singly_linked_list_test_constructor_copy(),
-                     singly_linked_list_test_construct_from(),
-                     singly_linked_list_test_construct_from_fail());
+    return check_run(
+        singly_linked_list_test_construct(),
+        singly_linked_list_test_constructor_copy(),
+        singly_linked_list_test_construct_from(),
+        singly_linked_list_test_construct_from_fail()
+    );
 }

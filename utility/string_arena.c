@@ -38,8 +38,9 @@ string_arena_allocate(struct String_arena *const a, size_t const bytes) {
 }
 
 enum String_arena_result
-string_arena_push_back(struct String_arena *const a,
-                       struct String_offset *const str, char const c) {
+string_arena_push_back(
+    struct String_arena *const a, struct String_offset *const str, char const c
+) {
     if (!a || !str || str->error) {
         return STRING_ARENA_ARGUMENT_ERROR;
     }
@@ -60,8 +61,9 @@ string_arena_push_back(struct String_arena *const a,
 }
 
 static enum String_arena_result
-string_arena_maybe_resize(struct String_arena *const a,
-                          size_t const byte_request) {
+string_arena_maybe_resize(
+    struct String_arena *const a, size_t const byte_request
+) {
     if (!a) {
         return STRING_ARENA_ARGUMENT_ERROR;
     }
@@ -69,8 +71,9 @@ string_arena_maybe_resize(struct String_arena *const a,
 }
 
 static enum String_arena_result
-string_arena_maybe_resize_pos(struct String_arena *const a,
-                              size_t const furthest_pos) {
+string_arena_maybe_resize_pos(
+    struct String_arena *const a, size_t const furthest_pos
+) {
     if (!a) {
         return STRING_ARENA_ARGUMENT_ERROR;
     }
@@ -88,8 +91,9 @@ string_arena_maybe_resize_pos(struct String_arena *const a,
 }
 
 enum String_arena_result
-string_arena_pop_str(struct String_arena *const a,
-                     struct String_offset *const last_str) {
+string_arena_pop_str(
+    struct String_arena *const a, struct String_offset *const last_str
+) {
     if (!a || !a->arena || !a->cap || !a->next_free_pos || !last_str
         || last_str->error) {
         return STRING_ARENA_ARGUMENT_ERROR;
@@ -134,8 +138,9 @@ string_arena_free(struct String_arena *const a) {
 }
 
 char *
-string_arena_at(struct String_arena const *const a,
-                struct String_offset const *const i) {
+string_arena_at(
+    struct String_arena const *const a, struct String_offset const *const i
+) {
     if (!a || !i || i->error || i->ofs >= a->cap) {
         return NULL;
     }

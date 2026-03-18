@@ -19,10 +19,18 @@ check_static_begin(flat_priority_queue_test_insert_one) {
     };
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_capacity(
-            struct Val, CCC_ORDER_LESSER,
-            &(CCC_Comparator){.compare = val_order}, &allocator, 8);
-    (void)push(&flat_priority_queue, &(struct Val){.val = 1}, &(struct Val){},
-               &allocator);
+            struct Val,
+            CCC_ORDER_LESSER,
+            &(CCC_Comparator){.compare = val_order},
+            &allocator,
+            8
+        );
+    (void)push(
+        &flat_priority_queue,
+        &(struct Val){.val = 1},
+        &(struct Val){},
+        &allocator
+    );
     check(CCC_flat_priority_queue_is_empty(&flat_priority_queue), false);
     check_end();
 }
@@ -35,14 +43,21 @@ check_static_begin(flat_priority_queue_test_insert_three) {
     };
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_capacity(
-            struct Val, CCC_ORDER_LESSER,
-            &(CCC_Comparator){.compare = val_order}, &allocator, 8);
+            struct Val,
+            CCC_ORDER_LESSER,
+            &(CCC_Comparator){.compare = val_order},
+            &allocator,
+            8
+        );
     for (size_t i = 0; i < size; ++i) {
-        (void)push(&flat_priority_queue,
-                   &(struct Val){
-                       .val = (int)i,
-                   },
-                   &(struct Val){}, &allocator);
+        (void)push(
+            &flat_priority_queue,
+            &(struct Val){
+                .val = (int)i,
+            },
+            &(struct Val){},
+            &allocator
+        );
         check(validate(&flat_priority_queue), true);
         check(CCC_flat_priority_queue_count(&flat_priority_queue).count, i + 1);
     }
@@ -57,17 +72,26 @@ check_static_begin(flat_priority_queue_test_insert_three_dups) {
     };
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_capacity(
-            struct Val, CCC_ORDER_LESSER,
-            &(CCC_Comparator){.compare = val_order}, &allocator, 8);
+            struct Val,
+            CCC_ORDER_LESSER,
+            &(CCC_Comparator){.compare = val_order},
+            &allocator,
+            8
+        );
     for (int i = 0; i < 3; ++i) {
-        (void)push(&flat_priority_queue,
-                   &(struct Val){
-                       .val = 0,
-                   },
-                   &(struct Val){}, &allocator);
+        (void)push(
+            &flat_priority_queue,
+            &(struct Val){
+                .val = 0,
+            },
+            &(struct Val){},
+            &allocator
+        );
         check(validate(&flat_priority_queue), true);
-        check(CCC_flat_priority_queue_count(&flat_priority_queue).count,
-              (size_t)i + 1);
+        check(
+            CCC_flat_priority_queue_count(&flat_priority_queue).count,
+            (size_t)i + 1
+        );
     }
     check(CCC_flat_priority_queue_count(&flat_priority_queue).count, (size_t)3);
     check_end();
@@ -82,10 +106,16 @@ check_static_begin(flat_priority_queue_test_insert_shuffle) {
     };
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_capacity(
-            struct Val, CCC_ORDER_LESSER,
-            &(CCC_Comparator){.compare = val_order}, &allocator, 50);
-    check(insert_shuffled(&flat_priority_queue, size, prime, &allocator),
-          CHECK_PASS);
+            struct Val,
+            CCC_ORDER_LESSER,
+            &(CCC_Comparator){.compare = val_order},
+            &allocator,
+            50
+        );
+    check(
+        insert_shuffled(&flat_priority_queue, size, prime, &allocator),
+        CHECK_PASS
+    );
 
     struct Val const *min = front(&flat_priority_queue);
     check(min->val, 0);
@@ -105,10 +135,14 @@ check_static_begin(flat_priority_queue_test_insert_shuffle_grow) {
     int const prime = 53;
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_default(
-            struct Val, CCC_ORDER_LESSER,
-            &(CCC_Comparator){.compare = val_order});
-    check(insert_shuffled(&flat_priority_queue, size, prime, &std_allocator),
-          CHECK_PASS);
+            struct Val,
+            CCC_ORDER_LESSER,
+            &(CCC_Comparator){.compare = val_order}
+        );
+    check(
+        insert_shuffled(&flat_priority_queue, size, prime, &std_allocator),
+        CHECK_PASS
+    );
 
     struct Val const *min = front(&flat_priority_queue);
     check(min->val, 0);
@@ -120,7 +154,8 @@ check_static_begin(flat_priority_queue_test_insert_shuffle_grow) {
         prev = sorted_check[i];
     }
     check_end((void)CCC_flat_priority_queue_clear_and_free(
-                  &flat_priority_queue, &(CCC_Destructor){}, &std_allocator););
+                  &flat_priority_queue, &(CCC_Destructor){}, &std_allocator
+    ););
 }
 
 check_static_begin(flat_priority_queue_test_insert_shuffle_reserve) {
@@ -132,12 +167,17 @@ check_static_begin(flat_priority_queue_test_insert_shuffle_reserve) {
     };
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_capacity(
-            struct Val, CCC_ORDER_LESSER,
-            &(CCC_Comparator){.compare = val_order}, &allocator, 50);
+            struct Val,
+            CCC_ORDER_LESSER,
+            &(CCC_Comparator){.compare = val_order},
+            &allocator,
+            50
+        );
     check(capacity(&flat_priority_queue).count, 50);
     check(
         insert_shuffled(&flat_priority_queue, size, prime, &(CCC_Allocator){}),
-        CHECK_PASS);
+        CHECK_PASS
+    );
     struct Val const *min = front(&flat_priority_queue);
     check(min->val, 0);
     int sorted_check[50];
@@ -148,7 +188,8 @@ check_static_begin(flat_priority_queue_test_insert_shuffle_reserve) {
         prev = sorted_check[i];
     }
     check_end(
-        clear_and_free(&flat_priority_queue, &(CCC_Destructor){}, &allocator););
+        clear_and_free(&flat_priority_queue, &(CCC_Destructor){}, &allocator);
+    );
 }
 
 check_static_begin(flat_priority_queue_test_read_max_min) {
@@ -159,19 +200,27 @@ check_static_begin(flat_priority_queue_test_read_max_min) {
     };
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_capacity(
-            struct Val, CCC_ORDER_LESSER,
-            &(CCC_Comparator){.compare = val_order}, &allocator, 10);
+            struct Val,
+            CCC_ORDER_LESSER,
+            &(CCC_Comparator){.compare = val_order},
+            &allocator,
+            10
+        );
     for (size_t i = 0; i < size; ++i) {
-        (void)push(&flat_priority_queue,
-                   &(struct Val){
-                       .val = (int)size - (int)i,
-                   },
-                   &(struct Val){}, &allocator);
+        (void)push(
+            &flat_priority_queue,
+            &(struct Val){
+                .val = (int)size - (int)i,
+            },
+            &(struct Val){},
+            &allocator
+        );
         check(validate(&flat_priority_queue), true);
         check(CCC_flat_priority_queue_count(&flat_priority_queue).count, i + 1);
     }
-    check(CCC_flat_priority_queue_count(&flat_priority_queue).count,
-          (size_t)10);
+    check(
+        CCC_flat_priority_queue_count(&flat_priority_queue).count, (size_t)10
+    );
     struct Val const *min = front(&flat_priority_queue);
     check(min->val, size - (size - 1));
     check_end();
@@ -179,11 +228,13 @@ check_static_begin(flat_priority_queue_test_read_max_min) {
 
 int
 main(void) {
-    return check_run(flat_priority_queue_test_insert_one(),
-                     flat_priority_queue_test_insert_three(),
-                     flat_priority_queue_test_insert_three_dups(),
-                     flat_priority_queue_test_insert_shuffle(),
-                     flat_priority_queue_test_insert_shuffle_grow(),
-                     flat_priority_queue_test_insert_shuffle_reserve(),
-                     flat_priority_queue_test_read_max_min());
+    return check_run(
+        flat_priority_queue_test_insert_one(),
+        flat_priority_queue_test_insert_three(),
+        flat_priority_queue_test_insert_three_dups(),
+        flat_priority_queue_test_insert_shuffle(),
+        flat_priority_queue_test_insert_shuffle_grow(),
+        flat_priority_queue_test_insert_shuffle_reserve(),
+        flat_priority_queue_test_read_max_min()
+    );
 }

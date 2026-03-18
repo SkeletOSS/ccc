@@ -30,8 +30,11 @@ static size_t max(size_t, size_t);
 /*==========================    Interface    ================================*/
 
 CCC_Result
-CCC_buffer_allocate(CCC_Buffer *const buffer, size_t const capacity,
-                    CCC_Allocator const *const allocator) {
+CCC_buffer_allocate(
+    CCC_Buffer *const buffer,
+    size_t const capacity,
+    CCC_Allocator const *const allocator
+) {
     if (!buffer || !allocator) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -52,8 +55,11 @@ CCC_buffer_allocate(CCC_Buffer *const buffer, size_t const capacity,
 }
 
 CCC_Result
-CCC_buffer_reserve(CCC_Buffer *const buffer, size_t const to_add,
-                   CCC_Allocator const *const allocator) {
+CCC_buffer_reserve(
+    CCC_Buffer *const buffer,
+    size_t const to_add,
+    CCC_Allocator const *const allocator
+) {
     if (!buffer || !allocator || !allocator->allocate || !to_add) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -98,9 +104,11 @@ CCC_buffer_clear(CCC_Buffer *const buffer, CCC_Destructor *const destructor) {
 }
 
 CCC_Result
-CCC_buffer_clear_and_free(CCC_Buffer *const buffer,
-                          CCC_Destructor *const destructor,
-                          CCC_Allocator const *const allocator) {
+CCC_buffer_clear_and_free(
+    CCC_Buffer *const buffer,
+    CCC_Destructor *const destructor,
+    CCC_Allocator const *const allocator
+) {
     if (!buffer || !allocator || !destructor || !allocator->allocate) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -143,14 +151,16 @@ CCC_buffer_front(CCC_Buffer const *const buffer) {
 }
 
 void *
-CCC_buffer_allocate_back(CCC_Buffer *const buffer,
-                         CCC_Allocator const *const allocator) {
+CCC_buffer_allocate_back(
+    CCC_Buffer *const buffer, CCC_Allocator const *const allocator
+) {
     if (!buffer || !allocator) {
         return NULL;
     }
     if (buffer->count == buffer->capacity) {
         CCC_Result const resize_res = CCC_buffer_allocate(
-            buffer, max(buffer->capacity * 2, START_CAPACITY), allocator);
+            buffer, max(buffer->capacity * 2, START_CAPACITY), allocator
+        );
         if (resize_res != CCC_RESULT_OK) {
             return NULL;
         }
@@ -162,8 +172,11 @@ CCC_buffer_allocate_back(CCC_Buffer *const buffer,
 }
 
 void *
-CCC_buffer_push_back(CCC_Buffer *const buffer, void const *const data,
-                     CCC_Allocator const *const allocator) {
+CCC_buffer_push_back(
+    CCC_Buffer *const buffer,
+    void const *const data,
+    CCC_Allocator const *const allocator
+) {
     void *const slot = CCC_buffer_allocate_back(buffer, allocator);
     if (slot) {
         (void)memcpy(slot, data, buffer->sizeof_type);
@@ -172,22 +185,30 @@ CCC_buffer_push_back(CCC_Buffer *const buffer, void const *const data,
 }
 
 CCC_Result
-CCC_buffer_swap(CCC_Buffer const *const buffer, void *const temp,
-                size_t const index, size_t const swap_index) {
+CCC_buffer_swap(
+    CCC_Buffer const *const buffer,
+    void *const temp,
+    size_t const index,
+    size_t const swap_index
+) {
     if (!buffer || !temp || index >= buffer->capacity
         || swap_index >= buffer->capacity || swap_index == index) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     (void)memcpy(temp, at(buffer, index), buffer->sizeof_type);
-    (void)memcpy(at(buffer, index), at(buffer, swap_index),
-                 buffer->sizeof_type);
+    (void)memcpy(
+        at(buffer, index), at(buffer, swap_index), buffer->sizeof_type
+    );
     (void)memcpy(at(buffer, swap_index), temp, buffer->sizeof_type);
     return CCC_RESULT_OK;
 }
 
 void *
-CCC_buffer_move(CCC_Buffer const *const buffer, size_t const destination,
-                size_t const source) {
+CCC_buffer_move(
+    CCC_Buffer const *const buffer,
+    size_t const destination,
+    size_t const source
+) {
     if (!buffer || destination >= buffer->capacity
         || source >= buffer->capacity) {
         return NULL;
@@ -195,13 +216,15 @@ CCC_buffer_move(CCC_Buffer const *const buffer, size_t const destination,
     if (destination == source) {
         return at(buffer, destination);
     }
-    return memcpy(at(buffer, destination), at(buffer, source),
-                  buffer->sizeof_type);
+    return memcpy(
+        at(buffer, destination), at(buffer, source), buffer->sizeof_type
+    );
 }
 
 CCC_Result
-CCC_buffer_write(CCC_Buffer const *const buffer, size_t const i,
-                 void const *const data) {
+CCC_buffer_write(
+    CCC_Buffer const *const buffer, size_t const i, void const *const data
+) {
     if (!buffer || !buffer->data || !data) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -226,16 +249,22 @@ CCC_buffer_erase(CCC_Buffer *const buffer, size_t const i) {
         --buffer->count;
         return CCC_RESULT_OK;
     }
-    (void)memmove(at(buffer, i), at(buffer, i + 1),
-                  buffer->sizeof_type * (buffer->count - (i + 1)));
+    (void)memmove(
+        at(buffer, i),
+        at(buffer, i + 1),
+        buffer->sizeof_type * (buffer->count - (i + 1))
+    );
     --buffer->count;
     return CCC_RESULT_OK;
 }
 
 void *
-CCC_buffer_insert(CCC_Buffer *const buffer, size_t const i,
-                  void const *const data,
-                  CCC_Allocator const *const allocator) {
+CCC_buffer_insert(
+    CCC_Buffer *const buffer,
+    size_t const i,
+    void const *const data,
+    CCC_Allocator const *const allocator
+) {
     if (!buffer || !buffer->data || i > buffer->count || !allocator) {
         return NULL;
     }
@@ -244,13 +273,17 @@ CCC_buffer_insert(CCC_Buffer *const buffer, size_t const i,
     }
     if (buffer->count == buffer->capacity) {
         CCC_Result const r = CCC_buffer_allocate(
-            buffer, max(buffer->count * 2, START_CAPACITY), allocator);
+            buffer, max(buffer->count * 2, START_CAPACITY), allocator
+        );
         if (r != CCC_RESULT_OK) {
             return NULL;
         }
     }
-    (void)memmove(at(buffer, i + 1), at(buffer, i),
-                  buffer->sizeof_type * (buffer->count - i));
+    (void)memmove(
+        at(buffer, i + 1),
+        at(buffer, i),
+        buffer->sizeof_type * (buffer->count - i)
+    );
     ++buffer->count;
     return memcpy(at(buffer, i), data, buffer->sizeof_type);
 }
@@ -339,8 +372,9 @@ CCC_buffer_next(CCC_Buffer const *const buffer, void const *const iterator) {
 }
 
 void *
-CCC_buffer_reverse_next(CCC_Buffer const *const buffer,
-                        void const *const iterator) {
+CCC_buffer_reverse_next(
+    CCC_Buffer const *const buffer, void const *const iterator
+) {
     if (!buffer || !buffer->data) {
         return NULL;
     }
@@ -385,8 +419,9 @@ CCC_buffer_capacity_end(CCC_Buffer const *const buffer) {
 CCC_Count
 CCC_buffer_index(CCC_Buffer const *const buffer, void const *const slot) {
     if (!buffer || !buffer->data || !slot || slot < buffer->data
-        || (char *)slot >= ((char *)buffer->data
-                            + (buffer->capacity * buffer->sizeof_type))) {
+        || (char *)slot
+               >= ((char *)buffer->data
+                   + (buffer->capacity * buffer->sizeof_type))) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
     return (CCC_Count){
@@ -454,8 +489,11 @@ CCC_buffer_capacity_bytes(CCC_Buffer const *buffer) {
 }
 
 CCC_Result
-CCC_buffer_copy(CCC_Buffer *const destination, CCC_Buffer const *const source,
-                CCC_Allocator const *const allocator) {
+CCC_buffer_copy(
+    CCC_Buffer *const destination,
+    CCC_Buffer const *const source,
+    CCC_Allocator const *const allocator
+) {
     if (!destination || !source || source == destination || !allocator
         || (destination->capacity < source->capacity && !allocator->allocate)) {
         return CCC_RESULT_ARGUMENT_ERROR;
@@ -475,8 +513,9 @@ CCC_buffer_copy(CCC_Buffer *const destination, CCC_Buffer const *const source,
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     destination->count = source->count;
-    (void)memcpy(destination->data, source->data,
-                 source->capacity * source->sizeof_type);
+    (void)memcpy(
+        destination->data, source->data, source->capacity * source->sizeof_type
+    );
     return CCC_RESULT_OK;
 }
 

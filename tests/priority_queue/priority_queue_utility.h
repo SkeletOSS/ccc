@@ -18,8 +18,9 @@ void val_update(CCC_Arguments);
 CCC_Order val_order(CCC_Comparator_arguments);
 
 /** Expects queue to have allocator permissions. */
-enum Check_result insert_shuffled(CCC_Priority_queue *, size_t, int,
-                                  CCC_Allocator const *allocator);
+enum Check_result insert_shuffled(
+    CCC_Priority_queue *, size_t, int, CCC_Allocator const *allocator
+);
 
 /** @brief Checks that the priority queue deterministically orders elements
 in strictly increasing or decreasing order as determined by the initialization
@@ -32,8 +33,9 @@ queue. This will be used to copy over elements and check ordering.
 @return a passing check result if successful a failing check result if not.
 @warning Buffers are allocated on the stack so only relatively small test cases
 should be used. */
-#define check_inorder_fill(priority_queue_pointer,                             \
-                           type_compound_literal_array...)                     \
+#define check_inorder_fill(                                                    \
+    priority_queue_pointer, type_compound_literal_array...                     \
+)                                                                              \
     (__extension__({                                                           \
         CCC_Priority_queue *const check_priority_queue_pointer                 \
             = (priority_queue_pointer);                                        \
@@ -48,17 +50,21 @@ should be used. */
                     .context                                                   \
                     = &stack_allocator_for(type_compound_literal_array),       \
                 },                                                             \
-                (int[sizeof(type_compound_literal_array)                       \
-                     / sizeof(*type_compound_literal_array)]){},               \
+                (                                                              \
+                    int[sizeof(type_compound_literal_array)                    \
+                        / sizeof(*type_compound_literal_array)]                \
+                ){},                                                           \
                 sizeof(type_compound_literal_array)                            \
                     / sizeof(*type_compound_literal_array),                    \
-                priority_queue_pointer);                                       \
+                priority_queue_pointer                                         \
+            );                                                                 \
         }                                                                      \
         check_inorder_result;                                                  \
     }))
 
 /** Private for this header. Do not use directly. Use macro instead. */
-enum Check_result private_inorder_fill(CCC_Allocator const *stack_allocator,
-                                       int[], size_t, CCC_Priority_queue *);
+enum Check_result private_inorder_fill(
+    CCC_Allocator const *stack_allocator, int[], size_t, CCC_Priority_queue *
+);
 
 #endif /* CCC_PQ_UTIL_H */

@@ -42,12 +42,17 @@ pluscontext(CCC_Arguments const t) {
 /* Fills the container with n elements with id and val starting at the provided
    value and incrementing by 1 until n is reached. Assumes id_and_val are
    not present by key in the table and all subsequent inserts are unique. */
-check_static_begin(fill_n, CCC_Array_adaptive_map *const array_adaptive_map,
-                   size_t const n, int id_and_val) {
+check_static_begin(
+    fill_n,
+    CCC_Array_adaptive_map *const array_adaptive_map,
+    size_t const n,
+    int id_and_val
+) {
     for (size_t i = 0; i < n; ++i, ++id_and_val) {
-        CCC_Handle hndl
-            = swap_handle(array_adaptive_map,
-                          &(struct Val){.id = id_and_val, .val = id_and_val});
+        CCC_Handle hndl = swap_handle(
+            array_adaptive_map,
+            &(struct Val){.id = id_and_val, .val = id_and_val}
+        );
         check(insert_error(&hndl), false);
         check(occupied(&hndl), false);
         check(validate(array_adaptive_map), true);
@@ -59,7 +64,8 @@ check_static_begin(fill_n, CCC_Array_adaptive_map *const array_adaptive_map,
    the user on insert. Leave this test here to always catch this. */
 check_static_begin(array_adaptive_map_test_validate) {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
+        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+    );
     CCC_Handle hndl
         = swap_handle(&array_adaptive_map, &(struct Val){.id = -1, .val = -1});
     check(validate(&array_adaptive_map), true);
@@ -78,7 +84,8 @@ check_static_begin(array_adaptive_map_test_validate) {
 
 check_static_begin(array_adaptive_map_test_insert) {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
+        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+    );
     int size = 30;
     CCC_Handle hndl
         = swap_handle(&array_adaptive_map, &(struct Val){.id = -1, .val = -1});
@@ -132,10 +139,12 @@ check_static_begin(array_adaptive_map_test_insert) {
 
 check_static_begin(array_adaptive_map_test_remove_key_value) {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
+        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+    );
     int size = 30;
-    CCC_Handle hndl = CCC_remove_key_value(&array_adaptive_map,
-                                           &(struct Val){.id = -1, .val = -1});
+    CCC_Handle hndl = CCC_remove_key_value(
+        &array_adaptive_map, &(struct Val){.id = -1, .val = -1}
+    );
     check(validate(&array_adaptive_map), true);
     check(occupied(&hndl), false);
     check(count(&array_adaptive_map).count, 0);
@@ -154,8 +163,9 @@ check_static_begin(array_adaptive_map_test_remove_key_value) {
     check(fill_n(&array_adaptive_map, size / 2, i), CHECK_PASS);
 
     i += (size / 2);
-    hndl = CCC_remove_key_value(&array_adaptive_map,
-                                &(struct Val){.id = i, .val = i});
+    hndl = CCC_remove_key_value(
+        &array_adaptive_map, &(struct Val){.id = i, .val = i}
+    );
     check(validate(&array_adaptive_map), true);
     check(occupied(&hndl), false);
     check(count(&array_adaptive_map).count, i);
@@ -174,8 +184,9 @@ check_static_begin(array_adaptive_map_test_remove_key_value) {
     check(fill_n(&array_adaptive_map, size - i, i), CHECK_PASS);
 
     i = size;
-    hndl = CCC_remove_key_value(&array_adaptive_map,
-                                &(struct Val){.id = i, .val = i});
+    hndl = CCC_remove_key_value(
+        &array_adaptive_map, &(struct Val){.id = i, .val = i}
+    );
     check(validate(&array_adaptive_map), true);
     check(occupied(&hndl), false);
     check(count(&array_adaptive_map).count, i);
@@ -195,7 +206,8 @@ check_static_begin(array_adaptive_map_test_remove_key_value) {
 
 check_static_begin(array_adaptive_map_test_try_insert) {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
+        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+    );
     int size = 30;
     CCC_Handle hndl
         = try_insert(&array_adaptive_map, &(struct Val){.id = -1, .val = -1});
@@ -248,7 +260,8 @@ check_static_begin(array_adaptive_map_test_try_insert) {
 
 check_static_begin(array_adaptive_map_test_try_insert_with) {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
+        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+    );
     int size = 30;
     CCC_Handle *hndl
         = array_adaptive_map_try_insert_with(&array_adaptive_map, -1, val(-1));
@@ -302,15 +315,18 @@ check_static_begin(array_adaptive_map_test_try_insert_with) {
 
 check_static_begin(array_adaptive_map_test_insert_or_assign) {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
+        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+    );
     int size = 30;
-    CCC_Handle hndl = insert_or_assign(&array_adaptive_map,
-                                       &(struct Val){.id = -1, .val = -1});
+    CCC_Handle hndl = insert_or_assign(
+        &array_adaptive_map, &(struct Val){.id = -1, .val = -1}
+    );
     check(validate(&array_adaptive_map), true);
     check(occupied(&hndl), false);
     check(count(&array_adaptive_map).count, 1);
-    hndl = insert_or_assign(&array_adaptive_map,
-                            &(struct Val){.id = -1, .val = -2});
+    hndl = insert_or_assign(
+        &array_adaptive_map, &(struct Val){.id = -1, .val = -2}
+    );
     check(validate(&array_adaptive_map), true);
     check(occupied(&hndl), true);
     check(count(&array_adaptive_map).count, 1);
@@ -323,13 +339,15 @@ check_static_begin(array_adaptive_map_test_insert_or_assign) {
     check(fill_n(&array_adaptive_map, size / 2, i), CHECK_PASS);
 
     i += (size / 2);
-    hndl = insert_or_assign(&array_adaptive_map,
-                            &(struct Val){.id = i, .val = i});
+    hndl = insert_or_assign(
+        &array_adaptive_map, &(struct Val){.id = i, .val = i}
+    );
     check(validate(&array_adaptive_map), true);
     check(occupied(&hndl), false);
     check(count(&array_adaptive_map).count, i + 2);
-    hndl = insert_or_assign(&array_adaptive_map,
-                            &(struct Val){.id = i, .val = i + 1});
+    hndl = insert_or_assign(
+        &array_adaptive_map, &(struct Val){.id = i, .val = i + 1}
+    );
     check(occupied(&hndl), true);
     check(count(&array_adaptive_map).count, i + 2);
     v = array_adaptive_map_at(&array_adaptive_map, unwrap(&hndl));
@@ -341,13 +359,15 @@ check_static_begin(array_adaptive_map_test_insert_or_assign) {
     check(fill_n(&array_adaptive_map, size - i, i), CHECK_PASS);
 
     i = size;
-    hndl = insert_or_assign(&array_adaptive_map,
-                            &(struct Val){.id = i, .val = i});
+    hndl = insert_or_assign(
+        &array_adaptive_map, &(struct Val){.id = i, .val = i}
+    );
     check(validate(&array_adaptive_map), true);
     check(occupied(&hndl), false);
     check(count(&array_adaptive_map).count, i + 2);
-    hndl = insert_or_assign(&array_adaptive_map,
-                            &(struct Val){.id = i, .val = i + 1});
+    hndl = insert_or_assign(
+        &array_adaptive_map, &(struct Val){.id = i, .val = i + 1}
+    );
     check(validate(&array_adaptive_map), true);
     check(occupied(&hndl), true);
     check(count(&array_adaptive_map).count, i + 2);
@@ -360,15 +380,18 @@ check_static_begin(array_adaptive_map_test_insert_or_assign) {
 
 check_static_begin(array_adaptive_map_test_insert_or_assign_with) {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
+        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+    );
     int size = 30;
     CCC_Handle *hndl = array_adaptive_map_insert_or_assign_with(
-        &array_adaptive_map, -1, val(-1));
+        &array_adaptive_map, -1, val(-1)
+    );
     check(validate(&array_adaptive_map), true);
     check(occupied(hndl), false);
     check(count(&array_adaptive_map).count, 1);
-    hndl = array_adaptive_map_insert_or_assign_with(&array_adaptive_map, -1,
-                                                    val(-2));
+    hndl = array_adaptive_map_insert_or_assign_with(
+        &array_adaptive_map, -1, val(-2)
+    );
     check(validate(&array_adaptive_map), true);
     check(occupied(hndl), true);
     check(count(&array_adaptive_map).count, 1);
@@ -381,13 +404,15 @@ check_static_begin(array_adaptive_map_test_insert_or_assign_with) {
     check(fill_n(&array_adaptive_map, size / 2, i), CHECK_PASS);
 
     i += (size / 2);
-    hndl = array_adaptive_map_insert_or_assign_with(&array_adaptive_map, i,
-                                                    val(i));
+    hndl = array_adaptive_map_insert_or_assign_with(
+        &array_adaptive_map, i, val(i)
+    );
     check(validate(&array_adaptive_map), true);
     check(occupied(hndl), false);
     check(count(&array_adaptive_map).count, i + 2);
-    hndl = array_adaptive_map_insert_or_assign_with(&array_adaptive_map, i,
-                                                    val(i + 1));
+    hndl = array_adaptive_map_insert_or_assign_with(
+        &array_adaptive_map, i, val(i + 1)
+    );
     check(occupied(hndl), true);
     check(count(&array_adaptive_map).count, i + 2);
     v = array_adaptive_map_at(&array_adaptive_map, unwrap(hndl));
@@ -399,13 +424,15 @@ check_static_begin(array_adaptive_map_test_insert_or_assign_with) {
     check(fill_n(&array_adaptive_map, size - i, i), CHECK_PASS);
 
     i = size;
-    hndl = array_adaptive_map_insert_or_assign_with(&array_adaptive_map, i,
-                                                    val(i));
+    hndl = array_adaptive_map_insert_or_assign_with(
+        &array_adaptive_map, i, val(i)
+    );
     check(validate(&array_adaptive_map), true);
     check(occupied(hndl), false);
     check(count(&array_adaptive_map).count, i + 2);
-    hndl = array_adaptive_map_insert_or_assign_with(&array_adaptive_map, i,
-                                                    val(i + 1));
+    hndl = array_adaptive_map_insert_or_assign_with(
+        &array_adaptive_map, i, val(i + 1)
+    );
     check(validate(&array_adaptive_map), true);
     check(occupied(hndl), true);
     check(count(&array_adaptive_map).count, i + 2);
@@ -418,7 +445,8 @@ check_static_begin(array_adaptive_map_test_insert_or_assign_with) {
 
 check_static_begin(array_adaptive_map_test_array_and_modify) {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
+        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+    );
     int size = 30;
     CCC_Array_adaptive_map_handle *hndl
         = handle_wrap(&array_adaptive_map, &(int){-1});
@@ -428,8 +456,9 @@ check_static_begin(array_adaptive_map_test_array_and_modify) {
     hndl = and_modify(hndl, plus);
     check(occupied(hndl), false);
     check(count(&array_adaptive_map).count, 0);
-    (void)array_adaptive_map_insert_or_assign_with(&array_adaptive_map, -1,
-                                                   val(-1));
+    (void)array_adaptive_map_insert_or_assign_with(
+        &array_adaptive_map, -1, val(-1)
+    );
     check(validate(&array_adaptive_map), true);
     hndl = handle_wrap(&array_adaptive_map, &(int){-1});
     check(occupied(hndl), true);
@@ -451,8 +480,9 @@ check_static_begin(array_adaptive_map_test_array_and_modify) {
     hndl = handle_wrap(&array_adaptive_map, &i);
     check(occupied(hndl), false);
     check(count(&array_adaptive_map).count, i + 1);
-    (void)array_adaptive_map_insert_or_assign_with(&array_adaptive_map, i,
-                                                   val(i));
+    (void)array_adaptive_map_insert_or_assign_with(
+        &array_adaptive_map, i, val(i)
+    );
     check(validate(&array_adaptive_map), true);
     hndl = handle_wrap(&array_adaptive_map, &i);
     check(occupied(hndl), true);
@@ -470,8 +500,9 @@ check_static_begin(array_adaptive_map_test_array_and_modify) {
     hndl = handle_wrap(&array_adaptive_map, &i);
     check(occupied(hndl), false);
     check(count(&array_adaptive_map).count, i + 1);
-    (void)array_adaptive_map_insert_or_assign_with(&array_adaptive_map, i,
-                                                   val(i));
+    (void)array_adaptive_map_insert_or_assign_with(
+        &array_adaptive_map, i, val(i)
+    );
     check(validate(&array_adaptive_map), true);
     hndl = handle_wrap(&array_adaptive_map, &i);
     check(occupied(hndl), true);
@@ -486,7 +517,8 @@ check_static_begin(array_adaptive_map_test_array_and_modify) {
 
 check_static_begin(array_adaptive_map_test_array_and_context_modify) {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
+        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+    );
     int size = 30;
     int context = 1;
     CCC_Array_adaptive_map_handle *hndl
@@ -494,8 +526,9 @@ check_static_begin(array_adaptive_map_test_array_and_context_modify) {
     hndl = and_context_modify(hndl, pluscontext, &context);
     check(occupied(hndl), false);
     check(count(&array_adaptive_map).count, 0);
-    (void)array_adaptive_map_insert_or_assign_with(&array_adaptive_map, -1,
-                                                   val(-1));
+    (void)array_adaptive_map_insert_or_assign_with(
+        &array_adaptive_map, -1, val(-1)
+    );
     check(validate(&array_adaptive_map), true);
     hndl = handle_wrap(&array_adaptive_map, &(int){-1});
     check(occupied(hndl), true);
@@ -518,8 +551,9 @@ check_static_begin(array_adaptive_map_test_array_and_context_modify) {
     hndl = and_context_modify(hndl, pluscontext, &context);
     check(occupied(hndl), false);
     check(count(&array_adaptive_map).count, i + 1);
-    (void)array_adaptive_map_insert_or_assign_with(&array_adaptive_map, i,
-                                                   val(i));
+    (void)array_adaptive_map_insert_or_assign_with(
+        &array_adaptive_map, i, val(i)
+    );
     check(validate(&array_adaptive_map), true);
     hndl = handle_wrap(&array_adaptive_map, &i);
     hndl = and_context_modify(hndl, pluscontext, &context);
@@ -537,8 +571,9 @@ check_static_begin(array_adaptive_map_test_array_and_context_modify) {
     hndl = and_context_modify(hndl, pluscontext, &context);
     check(occupied(hndl), false);
     check(count(&array_adaptive_map).count, i + 1);
-    (void)array_adaptive_map_insert_or_assign_with(&array_adaptive_map, i,
-                                                   val(i));
+    (void)array_adaptive_map_insert_or_assign_with(
+        &array_adaptive_map, i, val(i)
+    );
     check(validate(&array_adaptive_map), true);
     hndl = handle_wrap(&array_adaptive_map, &i);
     hndl = and_context_modify(hndl, pluscontext, &context);
@@ -552,7 +587,8 @@ check_static_begin(array_adaptive_map_test_array_and_context_modify) {
 
 check_static_begin(array_adaptive_map_test_array_and_modify_with) {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
+        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+    );
     int size = 30;
     CCC_Array_adaptive_map_handle *hndl
         = handle_wrap(&array_adaptive_map, &(int){-1});
@@ -560,8 +596,9 @@ check_static_begin(array_adaptive_map_test_array_and_modify_with) {
     check(count(&array_adaptive_map).count, 0);
     check(occupied(hndl), false);
     check(count(&array_adaptive_map).count, 0);
-    (void)array_adaptive_map_insert_or_assign_with(&array_adaptive_map, -1,
-                                                   val(-1));
+    (void)array_adaptive_map_insert_or_assign_with(
+        &array_adaptive_map, -1, val(-1)
+    );
     check(validate(&array_adaptive_map), true);
     hndl = handle_wrap(&array_adaptive_map, &(int){-1});
     struct Val *v = array_adaptive_map_at(&array_adaptive_map, unwrap(hndl));
@@ -583,8 +620,9 @@ check_static_begin(array_adaptive_map_test_array_and_modify_with) {
     hndl = array_adaptive_map_and_modify_with(hndl, struct Val, { T->val++; });
     check(occupied(hndl), false);
     check(count(&array_adaptive_map).count, i + 1);
-    (void)array_adaptive_map_insert_or_assign_with(&array_adaptive_map, i,
-                                                   val(i));
+    (void)array_adaptive_map_insert_or_assign_with(
+        &array_adaptive_map, i, val(i)
+    );
     check(validate(&array_adaptive_map), true);
     hndl = handle_wrap(&array_adaptive_map, &i);
     hndl = array_adaptive_map_and_modify_with(hndl, struct Val, { T->val++; });
@@ -602,8 +640,9 @@ check_static_begin(array_adaptive_map_test_array_and_modify_with) {
     hndl = array_adaptive_map_and_modify_with(hndl, struct Val, { T->val++; });
     check(occupied(hndl), false);
     check(count(&array_adaptive_map).count, i + 1);
-    (void)array_adaptive_map_insert_or_assign_with(&array_adaptive_map, i,
-                                                   val(i));
+    (void)array_adaptive_map_insert_or_assign_with(
+        &array_adaptive_map, i, val(i)
+    );
     check(validate(&array_adaptive_map), true);
     hndl = handle_wrap(&array_adaptive_map, &i);
     hndl = array_adaptive_map_and_modify_with(hndl, struct Val, { T->val++; });
@@ -617,12 +656,16 @@ check_static_begin(array_adaptive_map_test_array_and_modify_with) {
 
 check_static_begin(array_adaptive_map_test_or_insert) {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
+        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+    );
     int size = 30;
     struct Val *v = array_adaptive_map_at(
         &array_adaptive_map,
-        or_insert(handle_wrap(&array_adaptive_map, &(int){-1}),
-                  &(struct Val){.id = -1, .val = -1}));
+        or_insert(
+            handle_wrap(&array_adaptive_map, &(int){-1}),
+            &(struct Val){.id = -1, .val = -1}
+        )
+    );
     check(validate(&array_adaptive_map), true);
     check(v != NULL, true);
     check(v->id, -1);
@@ -630,8 +673,11 @@ check_static_begin(array_adaptive_map_test_or_insert) {
     check(count(&array_adaptive_map).count, 1);
     v = array_adaptive_map_at(
         &array_adaptive_map,
-        or_insert(handle_wrap(&array_adaptive_map, &(int){-1}),
-                  &(struct Val){.id = -1, .val = -2}));
+        or_insert(
+            handle_wrap(&array_adaptive_map, &(int){-1}),
+            &(struct Val){.id = -1, .val = -2}
+        )
+    );
     check(v != NULL, true);
     check(v->id, -1);
     check(v->val, -1);
@@ -641,17 +687,25 @@ check_static_begin(array_adaptive_map_test_or_insert) {
     check(fill_n(&array_adaptive_map, size / 2, i), CHECK_PASS);
 
     i += (size / 2);
-    v = array_adaptive_map_at(&array_adaptive_map,
-                              or_insert(handle_wrap(&array_adaptive_map, &i),
-                                        &(struct Val){.id = i, .val = i}));
+    v = array_adaptive_map_at(
+        &array_adaptive_map,
+        or_insert(
+            handle_wrap(&array_adaptive_map, &i),
+            &(struct Val){.id = i, .val = i}
+        )
+    );
     check(validate(&array_adaptive_map), true);
     check(v != NULL, true);
     check(v->id, i);
     check(v->val, i);
     check(count(&array_adaptive_map).count, i + 2);
-    v = array_adaptive_map_at(&array_adaptive_map,
-                              or_insert(handle_wrap(&array_adaptive_map, &i),
-                                        &(struct Val){.id = i, .val = i + 1}));
+    v = array_adaptive_map_at(
+        &array_adaptive_map,
+        or_insert(
+            handle_wrap(&array_adaptive_map, &i),
+            &(struct Val){.id = i, .val = i + 1}
+        )
+    );
     check(v != NULL, true);
     check(v->id, i);
     check(v->val, i);
@@ -661,17 +715,25 @@ check_static_begin(array_adaptive_map_test_or_insert) {
     check(fill_n(&array_adaptive_map, size - i, i), CHECK_PASS);
 
     i = size;
-    v = array_adaptive_map_at(&array_adaptive_map,
-                              or_insert(handle_wrap(&array_adaptive_map, &i),
-                                        &(struct Val){.id = i, .val = i}));
+    v = array_adaptive_map_at(
+        &array_adaptive_map,
+        or_insert(
+            handle_wrap(&array_adaptive_map, &i),
+            &(struct Val){.id = i, .val = i}
+        )
+    );
     check(validate(&array_adaptive_map), true);
     check(v != NULL, true);
     check(v->id, i);
     check(v->val, i);
     check(count(&array_adaptive_map).count, i + 2);
-    v = array_adaptive_map_at(&array_adaptive_map,
-                              or_insert(handle_wrap(&array_adaptive_map, &i),
-                                        &(struct Val){.id = i, .val = i + 1}));
+    v = array_adaptive_map_at(
+        &array_adaptive_map,
+        or_insert(
+            handle_wrap(&array_adaptive_map, &i),
+            &(struct Val){.id = i, .val = i + 1}
+        )
+    );
     check(v != NULL, true);
     check(v->id, i);
     check(v->val, i);
@@ -681,12 +743,15 @@ check_static_begin(array_adaptive_map_test_or_insert) {
 
 check_static_begin(array_adaptive_map_test_or_insert_with) {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
+        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+    );
     int size = 30;
     struct Val *v = array_adaptive_map_at(
         &array_adaptive_map,
         array_adaptive_map_or_insert_with(
-            handle_wrap(&array_adaptive_map, &(int){-1}), idval(-1, -1)));
+            handle_wrap(&array_adaptive_map, &(int){-1}), idval(-1, -1)
+        )
+    );
     check(validate(&array_adaptive_map), true);
     check(v != NULL, true);
     check(v->id, -1);
@@ -695,7 +760,9 @@ check_static_begin(array_adaptive_map_test_or_insert_with) {
     v = array_adaptive_map_at(
         &array_adaptive_map,
         array_adaptive_map_or_insert_with(
-            handle_wrap(&array_adaptive_map, &(int){-1}), idval(-1, -2)));
+            handle_wrap(&array_adaptive_map, &(int){-1}), idval(-1, -2)
+        )
+    );
     check(v != NULL, true);
     check(v->id, -1);
     check(v->val, -1);
@@ -707,8 +774,10 @@ check_static_begin(array_adaptive_map_test_or_insert_with) {
     i += (size / 2);
     v = array_adaptive_map_at(
         &array_adaptive_map,
-        array_adaptive_map_or_insert_with(handle_wrap(&array_adaptive_map, &i),
-                                          idval(i, i)));
+        array_adaptive_map_or_insert_with(
+            handle_wrap(&array_adaptive_map, &i), idval(i, i)
+        )
+    );
     check(validate(&array_adaptive_map), true);
     check(v != NULL, true);
     check(v->id, i);
@@ -716,8 +785,10 @@ check_static_begin(array_adaptive_map_test_or_insert_with) {
     check(count(&array_adaptive_map).count, i + 2);
     v = array_adaptive_map_at(
         &array_adaptive_map,
-        array_adaptive_map_or_insert_with(handle_wrap(&array_adaptive_map, &i),
-                                          idval(i, i + 1)));
+        array_adaptive_map_or_insert_with(
+            handle_wrap(&array_adaptive_map, &i), idval(i, i + 1)
+        )
+    );
     check(v != NULL, true);
     check(v->id, i);
     check(v->val, i);
@@ -729,8 +800,10 @@ check_static_begin(array_adaptive_map_test_or_insert_with) {
     i = size;
     v = array_adaptive_map_at(
         &array_adaptive_map,
-        array_adaptive_map_or_insert_with(handle_wrap(&array_adaptive_map, &i),
-                                          idval(i, i)));
+        array_adaptive_map_or_insert_with(
+            handle_wrap(&array_adaptive_map, &i), idval(i, i)
+        )
+    );
     check(validate(&array_adaptive_map), true);
     check(v != NULL, true);
     check(v->id, i);
@@ -738,8 +811,10 @@ check_static_begin(array_adaptive_map_test_or_insert_with) {
     check(count(&array_adaptive_map).count, i + 2);
     v = array_adaptive_map_at(
         &array_adaptive_map,
-        array_adaptive_map_or_insert_with(handle_wrap(&array_adaptive_map, &i),
-                                          idval(i, i + 1)));
+        array_adaptive_map_or_insert_with(
+            handle_wrap(&array_adaptive_map, &i), idval(i, i + 1)
+        )
+    );
     check(v != NULL, true);
     check(v->id, i);
     check(v->val, i);
@@ -749,12 +824,16 @@ check_static_begin(array_adaptive_map_test_or_insert_with) {
 
 check_static_begin(array_adaptive_map_test_insert_handle) {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
+        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+    );
     int size = 30;
     struct Val *v = array_adaptive_map_at(
         &array_adaptive_map,
-        insert_handle(handle_wrap(&array_adaptive_map, &(int){-1}),
-                      &(struct Val){.id = -1, .val = -1}));
+        insert_handle(
+            handle_wrap(&array_adaptive_map, &(int){-1}),
+            &(struct Val){.id = -1, .val = -1}
+        )
+    );
     check(validate(&array_adaptive_map), true);
     check(v != NULL, true);
     check(v->id, -1);
@@ -762,8 +841,11 @@ check_static_begin(array_adaptive_map_test_insert_handle) {
     check(count(&array_adaptive_map).count, 1);
     v = array_adaptive_map_at(
         &array_adaptive_map,
-        insert_handle(handle_wrap(&array_adaptive_map, &(int){-1}),
-                      &(struct Val){.id = -1, .val = -2}));
+        insert_handle(
+            handle_wrap(&array_adaptive_map, &(int){-1}),
+            &(struct Val){.id = -1, .val = -2}
+        )
+    );
     check(v != NULL, true);
     check(v->id, -1);
     check(v->val, -2);
@@ -774,8 +856,12 @@ check_static_begin(array_adaptive_map_test_insert_handle) {
 
     i += (size / 2);
     v = array_adaptive_map_at(
-        &array_adaptive_map, insert_handle(handle_wrap(&array_adaptive_map, &i),
-                                           &(struct Val){.id = i, .val = i}));
+        &array_adaptive_map,
+        insert_handle(
+            handle_wrap(&array_adaptive_map, &i),
+            &(struct Val){.id = i, .val = i}
+        )
+    );
     check(validate(&array_adaptive_map), true);
     check(v != NULL, true);
     check(v->id, i);
@@ -783,8 +869,11 @@ check_static_begin(array_adaptive_map_test_insert_handle) {
     check(count(&array_adaptive_map).count, i + 2);
     v = array_adaptive_map_at(
         &array_adaptive_map,
-        insert_handle(handle_wrap(&array_adaptive_map, &i),
-                      &(struct Val){.id = i, .val = i + 1}));
+        insert_handle(
+            handle_wrap(&array_adaptive_map, &i),
+            &(struct Val){.id = i, .val = i + 1}
+        )
+    );
     check(v != NULL, true);
     check(v->id, i);
     check(v->val, i + 1);
@@ -795,8 +884,12 @@ check_static_begin(array_adaptive_map_test_insert_handle) {
 
     i = size;
     v = array_adaptive_map_at(
-        &array_adaptive_map, insert_handle(handle_wrap(&array_adaptive_map, &i),
-                                           &(struct Val){.id = i, .val = i}));
+        &array_adaptive_map,
+        insert_handle(
+            handle_wrap(&array_adaptive_map, &i),
+            &(struct Val){.id = i, .val = i}
+        )
+    );
     check(validate(&array_adaptive_map), true);
     check(v != NULL, true);
     check(v->id, i);
@@ -804,8 +897,11 @@ check_static_begin(array_adaptive_map_test_insert_handle) {
     check(count(&array_adaptive_map).count, i + 2);
     v = array_adaptive_map_at(
         &array_adaptive_map,
-        insert_handle(handle_wrap(&array_adaptive_map, &i),
-                      &(struct Val){.id = i, .val = i + 1}));
+        insert_handle(
+            handle_wrap(&array_adaptive_map, &i),
+            &(struct Val){.id = i, .val = i + 1}
+        )
+    );
     check(v != NULL, true);
     check(v->id, i);
     check(v->val, i + 1);
@@ -815,12 +911,15 @@ check_static_begin(array_adaptive_map_test_insert_handle) {
 
 check_static_begin(array_adaptive_map_test_insert_array_with) {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
+        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+    );
     int size = 30;
     struct Val *v = array_adaptive_map_at(
         &array_adaptive_map,
         array_adaptive_map_insert_array_with(
-            handle_wrap(&array_adaptive_map, &(int){-1}), idval(-1, -1)));
+            handle_wrap(&array_adaptive_map, &(int){-1}), idval(-1, -1)
+        )
+    );
     check(validate(&array_adaptive_map), true);
     check(v != NULL, true);
     check(v->id, -1);
@@ -829,7 +928,9 @@ check_static_begin(array_adaptive_map_test_insert_array_with) {
     v = array_adaptive_map_at(
         &array_adaptive_map,
         array_adaptive_map_insert_array_with(
-            handle_wrap(&array_adaptive_map, &(int){-1}), idval(-1, -2)));
+            handle_wrap(&array_adaptive_map, &(int){-1}), idval(-1, -2)
+        )
+    );
     check(v != NULL, true);
     check(v->id, -1);
     check(v->val, -2);
@@ -842,7 +943,9 @@ check_static_begin(array_adaptive_map_test_insert_array_with) {
     v = array_adaptive_map_at(
         &array_adaptive_map,
         array_adaptive_map_insert_array_with(
-            handle_wrap(&array_adaptive_map, &i), idval(i, i)));
+            handle_wrap(&array_adaptive_map, &i), idval(i, i)
+        )
+    );
     check(validate(&array_adaptive_map), true);
     check(v != NULL, true);
     check(v->id, i);
@@ -851,7 +954,9 @@ check_static_begin(array_adaptive_map_test_insert_array_with) {
     v = array_adaptive_map_at(
         &array_adaptive_map,
         array_adaptive_map_insert_array_with(
-            handle_wrap(&array_adaptive_map, &i), idval(i, i + 1)));
+            handle_wrap(&array_adaptive_map, &i), idval(i, i + 1)
+        )
+    );
     check(v != NULL, true);
     check(v->id, i);
     check(v->val, i + 1);
@@ -864,7 +969,9 @@ check_static_begin(array_adaptive_map_test_insert_array_with) {
     v = array_adaptive_map_at(
         &array_adaptive_map,
         array_adaptive_map_insert_array_with(
-            handle_wrap(&array_adaptive_map, &i), idval(i, i)));
+            handle_wrap(&array_adaptive_map, &i), idval(i, i)
+        )
+    );
     check(validate(&array_adaptive_map), true);
     check(v != NULL, true);
     check(v->id, i);
@@ -873,7 +980,9 @@ check_static_begin(array_adaptive_map_test_insert_array_with) {
     v = array_adaptive_map_at(
         &array_adaptive_map,
         array_adaptive_map_insert_array_with(
-            handle_wrap(&array_adaptive_map, &i), idval(i, i + 1)));
+            handle_wrap(&array_adaptive_map, &i), idval(i, i + 1)
+        )
+    );
     check(v != NULL, true);
     check(v->id, i);
     check(v->val, i + 1);
@@ -883,12 +992,16 @@ check_static_begin(array_adaptive_map_test_insert_array_with) {
 
 check_static_begin(array_adaptive_map_test_remove_handle) {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
+        id, id_order, (struct Val[SMALL_FIXED_CAP]){}
+    );
     int size = 30;
     struct Val *v = array_adaptive_map_at(
         &array_adaptive_map,
-        or_insert(handle_wrap(&array_adaptive_map, &(int){-1}),
-                  &(struct Val){.id = -1, .val = -1}));
+        or_insert(
+            handle_wrap(&array_adaptive_map, &(int){-1}),
+            &(struct Val){.id = -1, .val = -1}
+        )
+    );
     check(validate(&array_adaptive_map), true);
     check(v != NULL, true);
     check(v->id, -1);
@@ -908,9 +1021,13 @@ check_static_begin(array_adaptive_map_test_remove_handle) {
     check(fill_n(&array_adaptive_map, size / 2, i), CHECK_PASS);
 
     i += (size / 2);
-    v = array_adaptive_map_at(&array_adaptive_map,
-                              or_insert(handle_wrap(&array_adaptive_map, &i),
-                                        &(struct Val){.id = i, .val = i}));
+    v = array_adaptive_map_at(
+        &array_adaptive_map,
+        or_insert(
+            handle_wrap(&array_adaptive_map, &i),
+            &(struct Val){.id = i, .val = i}
+        )
+    );
     check(validate(&array_adaptive_map), true);
     check(v != NULL, true);
     check(v->id, i);
@@ -928,9 +1045,13 @@ check_static_begin(array_adaptive_map_test_remove_handle) {
     check(fill_n(&array_adaptive_map, size - i, i), CHECK_PASS);
 
     i = size;
-    v = array_adaptive_map_at(&array_adaptive_map,
-                              or_insert(handle_wrap(&array_adaptive_map, &i),
-                                        &(struct Val){.id = i, .val = i}));
+    v = array_adaptive_map_at(
+        &array_adaptive_map,
+        or_insert(
+            handle_wrap(&array_adaptive_map, &i),
+            &(struct Val){.id = i, .val = i}
+        )
+    );
     check(validate(&array_adaptive_map), true);
     check(v != NULL, true);
     check(v->id, i);
@@ -949,19 +1070,21 @@ check_static_begin(array_adaptive_map_test_remove_handle) {
 
 int
 main(void) {
-    return check_run(array_adaptive_map_test_insert(),
-                     array_adaptive_map_test_remove_key_value(),
-                     array_adaptive_map_test_validate(),
-                     array_adaptive_map_test_try_insert(),
-                     array_adaptive_map_test_try_insert_with(),
-                     array_adaptive_map_test_insert_or_assign(),
-                     array_adaptive_map_test_insert_or_assign_with(),
-                     array_adaptive_map_test_array_and_modify(),
-                     array_adaptive_map_test_array_and_context_modify(),
-                     array_adaptive_map_test_array_and_modify_with(),
-                     array_adaptive_map_test_or_insert(),
-                     array_adaptive_map_test_or_insert_with(),
-                     array_adaptive_map_test_insert_handle(),
-                     array_adaptive_map_test_insert_array_with(),
-                     array_adaptive_map_test_remove_handle());
+    return check_run(
+        array_adaptive_map_test_insert(),
+        array_adaptive_map_test_remove_key_value(),
+        array_adaptive_map_test_validate(),
+        array_adaptive_map_test_try_insert(),
+        array_adaptive_map_test_try_insert_with(),
+        array_adaptive_map_test_insert_or_assign(),
+        array_adaptive_map_test_insert_or_assign_with(),
+        array_adaptive_map_test_array_and_modify(),
+        array_adaptive_map_test_array_and_context_modify(),
+        array_adaptive_map_test_array_and_modify_with(),
+        array_adaptive_map_test_or_insert(),
+        array_adaptive_map_test_or_insert_with(),
+        array_adaptive_map_test_insert_handle(),
+        array_adaptive_map_test_insert_array_with(),
+        array_adaptive_map_test_remove_handle()
+    );
 }

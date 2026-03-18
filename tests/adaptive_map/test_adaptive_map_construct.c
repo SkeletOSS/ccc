@@ -13,13 +13,15 @@
 static CCC_Adaptive_map
 construct_empty(void) {
     CCC_Adaptive_map map = CCC_adaptive_map_default(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order});
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+    );
     return map;
 }
 
 check_static_begin(adaptive_map_test_empty) {
     CCC_Adaptive_map s = CCC_adaptive_map_default(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order});
+        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+    );
     check(is_empty(&s), true);
     check_end();
 }
@@ -34,8 +36,9 @@ itself. */
 check_static_begin(adaptive_map_test_construct) {
     struct Val push = {};
     CCC_Adaptive_map map = construct_empty();
-    CCC_Entry entry = CCC_adaptive_map_insert_or_assign(&map, &push.elem,
-                                                        &(CCC_Allocator){});
+    CCC_Entry entry = CCC_adaptive_map_insert_or_assign(
+        &map, &push.elem, &(CCC_Allocator){}
+    );
     check(CCC_adaptive_map_validate(&map), true);
     check(CCC_entry_insert_error(&entry), false);
     check(CCC_entry_occupied(&entry), false);
@@ -49,13 +52,17 @@ check_static_begin(adaptive_map_test_construct_from) {
         .context = &stack_allocator_for((struct Val[3]){}),
     };
     CCC_Adaptive_map map = CCC_adaptive_map_from(
-        elem, key, &(CCC_Key_comparator){.compare = id_order}, &allocator,
+        elem,
+        key,
+        &(CCC_Key_comparator){.compare = id_order},
+        &allocator,
         &(CCC_Destructor){},
         (struct Val[]){
             {.key = 0, .val = 0},
             {.key = 1, .val = 1},
             {.key = 2, .val = 2},
-        });
+        }
+    );
     check(CCC_adaptive_map_validate(&map), true);
     check(CCC_adaptive_map_count(&map).count, 3);
     check_end({
@@ -69,13 +76,17 @@ check_static_begin(adaptive_map_test_construct_from_overwrite) {
         .context = &stack_allocator_for((struct Val[3]){}),
     };
     CCC_Adaptive_map map = CCC_adaptive_map_from(
-        elem, key, &(CCC_Key_comparator){.compare = id_order}, &allocator,
+        elem,
+        key,
+        &(CCC_Key_comparator){.compare = id_order},
+        &allocator,
         &(CCC_Destructor){},
         (struct Val[]){
             {.key = 0, .val = 0},
             {.key = 1, .val = 1},
             {.key = 1, .val = 2},
-        });
+        }
+    );
     check(CCC_adaptive_map_validate(&map), true);
     check(CCC_adaptive_map_count(&map).count, 2);
     struct Val const *const v = CCC_adaptive_map_reverse_begin(&map);
@@ -89,25 +100,33 @@ check_static_begin(adaptive_map_test_construct_from_overwrite) {
 
 check_static_begin(adaptive_map_test_construct_from_fail) {
     CCC_Adaptive_map map = CCC_adaptive_map_from(
-        elem, key, &(CCC_Key_comparator){.compare = id_order},
-        &(CCC_Allocator){}, &(CCC_Destructor){},
+        elem,
+        key,
+        &(CCC_Key_comparator){.compare = id_order},
+        &(CCC_Allocator){},
+        &(CCC_Destructor){},
         (struct Val[]){
             {.key = 0, .val = 0},
             {.key = 1, .val = 1},
             {.key = 2, .val = 2},
-        });
+        }
+    );
     check(CCC_adaptive_map_validate(&map), true);
     check(CCC_adaptive_map_is_empty(&map), true);
     check_end({
-        (void)CCC_adaptive_map_clear(&map, &(CCC_Destructor){},
-                                     &(CCC_Allocator){});
+        (void)CCC_adaptive_map_clear(
+            &map, &(CCC_Destructor){}, &(CCC_Allocator){}
+        );
     });
 }
 
 int
 main(void) {
-    return check_run(adaptive_map_test_empty(), adaptive_map_test_construct(),
-                     adaptive_map_test_construct_from(),
-                     adaptive_map_test_construct_from_overwrite(),
-                     adaptive_map_test_construct_from_fail());
+    return check_run(
+        adaptive_map_test_empty(),
+        adaptive_map_test_construct(),
+        adaptive_map_test_construct_from(),
+        adaptive_map_test_construct_from_overwrite(),
+        adaptive_map_test_construct_from_fail()
+    );
 }

@@ -15,12 +15,17 @@ id_order(CCC_Key_comparator_arguments const order) {
     return (key > c->id) - (key < c->id);
 }
 
-check_begin(insert_shuffled, CCC_Array_adaptive_map *m, size_t const size,
-            int const larger_prime) {
+check_begin(
+    insert_shuffled,
+    CCC_Array_adaptive_map *m,
+    size_t const size,
+    int const larger_prime
+) {
     size_t shuffled_index = larger_prime % size;
     for (size_t i = 0; i < size; ++i) {
         (void)insert_or_assign(
-            m, &(struct Val){.id = (int)shuffled_index, .val = (int)i});
+            m, &(struct Val){.id = (int)shuffled_index, .val = (int)i}
+        );
         check(validate(m), true);
         shuffled_index = (shuffled_index + larger_prime) % size;
     }

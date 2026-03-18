@@ -37,8 +37,10 @@ check_static_begin(bitset_test_push_pop_back_no_reallocate) {
     check(CCC_bitset_capacity(&bs).count, 16);
     check(CCC_bitset_clear(&bs), CCC_RESULT_OK);
     check(CCC_bitset_capacity(&bs).count, 16);
-    check(CCC_bitset_clear_and_free(&bs, &(CCC_Allocator){}),
-          CCC_RESULT_NO_ALLOCATION_FUNCTION);
+    check(
+        CCC_bitset_clear_and_free(&bs, &(CCC_Allocator){}),
+        CCC_RESULT_NO_ALLOCATION_FUNCTION
+    );
     check(CCC_bitset_capacity(&bs).count, 16);
     check(CCC_bitset_count(&bs).count, 0);
     check_end();
@@ -50,11 +52,15 @@ check_static_begin(bitset_test_push_pop_back_allocate) {
     check(CCC_bitset_count(&bs).count, 0);
     for (size_t i = 0; CCC_bitset_count(&bs).count < 16; ++i) {
         if (i % 2) {
-            check(CCC_bitset_push_back(&bs, CCC_TRUE, &std_allocator),
-                  CCC_RESULT_OK);
+            check(
+                CCC_bitset_push_back(&bs, CCC_TRUE, &std_allocator),
+                CCC_RESULT_OK
+            );
         } else {
-            check(CCC_bitset_push_back(&bs, CCC_FALSE, &std_allocator),
-                  CCC_RESULT_OK);
+            check(
+                CCC_bitset_push_back(&bs, CCC_FALSE, &std_allocator),
+                CCC_RESULT_OK
+            );
         }
     }
     check(CCC_bitset_count(&bs).count, 16);
@@ -79,6 +85,8 @@ check_static_begin(bitset_test_push_pop_back_allocate) {
 
 int
 main(void) {
-    return check_run(bitset_test_push_pop_back_no_reallocate(),
-                     bitset_test_push_pop_back_allocate());
+    return check_run(
+        bitset_test_push_pop_back_no_reallocate(),
+        bitset_test_push_pop_back_allocate()
+    );
 }

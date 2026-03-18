@@ -18,18 +18,22 @@ check_static_begin(flat_priority_queue_test_insert_iterate_pop) {
     size_t const num_nodes = 1000;
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_storage(
-            CCC_ORDER_LESSER, &(CCC_Comparator){.compare = val_order},
-            (struct Val[1000 + 1]){});
+            CCC_ORDER_LESSER,
+            &(CCC_Comparator){.compare = val_order},
+            (struct Val[1000 + 1]){}
+        );
     for (size_t i = 0; i < num_nodes; ++i) {
         /* Force duplicates. */
         struct Val val = {
             .val = rand() % (num_nodes + 1), /* NOLINT */
             .id = (int)i,
         };
-        check(push(&flat_priority_queue, &val, &(struct Val){},
-                   &(CCC_Allocator){})
-                  != NULL,
-              true);
+        check(
+            push(
+                &flat_priority_queue, &val, &(struct Val){}, &(CCC_Allocator){}
+            ) != NULL,
+            true
+        );
         check(validate(&flat_priority_queue), true);
     }
     size_t pop_count = 0;
@@ -49,16 +53,22 @@ check_static_begin(flat_priority_queue_test_priority_removal) {
     size_t const num_nodes = 1000;
     struct Val vals[1000 + 1];
     CCC_Flat_priority_queue flat_priority_queue = CCC_flat_priority_queue_for(
-        struct Val, CCC_ORDER_LESSER, &(CCC_Comparator){.compare = val_order},
-        (sizeof(vals) / sizeof(*vals)), vals);
+        struct Val,
+        CCC_ORDER_LESSER,
+        &(CCC_Comparator){.compare = val_order},
+        (sizeof(vals) / sizeof(*vals)),
+        vals
+    );
     for (size_t i = 0; i < num_nodes; ++i) {
         /* Force duplicates. */
         struct Val const *res = CCC_flat_priority_queue_emplace(
-            &flat_priority_queue, &(CCC_Allocator){},
+            &flat_priority_queue,
+            &(CCC_Allocator){},
             (struct Val){
                 .val = rand() % (num_nodes + 1), /*NOLINT*/
                 .id = (int)i,
-            });
+            }
+        );
         check(res != NULL, true);
         check(validate(&flat_priority_queue), true);
     }
@@ -81,16 +91,22 @@ check_static_begin(flat_priority_queue_test_priority_update) {
     size_t const num_nodes = 1000;
     struct Val vals[1000 + 1];
     CCC_Flat_priority_queue flat_priority_queue = CCC_flat_priority_queue_for(
-        struct Val, CCC_ORDER_LESSER, &(CCC_Comparator){.compare = val_order},
-        (sizeof(vals) / sizeof(vals[0])), vals);
+        struct Val,
+        CCC_ORDER_LESSER,
+        &(CCC_Comparator){.compare = val_order},
+        (sizeof(vals) / sizeof(vals[0])),
+        vals
+    );
     for (size_t i = 0; i < num_nodes; ++i) {
         /* Force duplicates. */
         struct Val const *res = CCC_flat_priority_queue_emplace(
-            &flat_priority_queue, &(CCC_Allocator){},
+            &flat_priority_queue,
+            &(CCC_Allocator){},
             (struct Val){
                 .val = rand() % (num_nodes + 1), /*NOLINT*/
                 .id = (int)i,
-            });
+            }
+        );
         check(res != NULL, true);
         check(validate(&flat_priority_queue), true);
     }
@@ -99,12 +115,15 @@ check_static_begin(flat_priority_queue_test_priority_update) {
         struct Val *cur = &vals[val];
         int backoff = cur->val / 2;
         if (cur->val > limit) {
-            struct Val const *const updated
-                = update(&flat_priority_queue, cur, &(struct Val){},
-                         &(CCC_Modifier){
-                             .modify = val_update,
-                             .context = &backoff,
-                         });
+            struct Val const *const updated = update(
+                &flat_priority_queue,
+                cur,
+                &(struct Val){},
+                &(CCC_Modifier){
+                    .modify = val_update,
+                    .context = &backoff,
+                }
+            );
             check(updated != NULL, true);
             check(updated->val, backoff);
             check(validate(&flat_priority_queue), true);
@@ -121,16 +140,22 @@ check_static_begin(flat_priority_queue_test_priority_update_with) {
     size_t const num_nodes = 1000;
     struct Val vals[1000 + 1];
     CCC_Flat_priority_queue flat_priority_queue = CCC_flat_priority_queue_for(
-        struct Val, CCC_ORDER_LESSER, &(CCC_Comparator){.compare = val_order},
-        (sizeof(vals) / sizeof(vals[0])), vals);
+        struct Val,
+        CCC_ORDER_LESSER,
+        &(CCC_Comparator){.compare = val_order},
+        (sizeof(vals) / sizeof(vals[0])),
+        vals
+    );
     for (size_t i = 0; i < num_nodes; ++i) {
         /* Force duplicates. */
         struct Val const *res = CCC_flat_priority_queue_emplace(
-            &flat_priority_queue, &(CCC_Allocator){},
+            &flat_priority_queue,
+            &(CCC_Allocator){},
             (struct Val){
                 .val = rand() % (num_nodes + 1), /*NOLINT*/
                 .id = (int)i,
-            });
+            }
+        );
         check(res != NULL, true);
         check(validate(&flat_priority_queue), true);
     }
@@ -140,7 +165,8 @@ check_static_begin(flat_priority_queue_test_priority_update_with) {
         if (vals[val].val > limit) {
             struct Val const *const updated
                 = CCC_flat_priority_queue_update_with(
-                    &flat_priority_queue, &vals[val], { T->val = backoff; });
+                    &flat_priority_queue, &vals[val], { T->val = backoff; }
+                );
             check(updated != NULL, true);
             check(updated->val, backoff);
             check(validate(&flat_priority_queue), true);
@@ -152,8 +178,10 @@ check_static_begin(flat_priority_queue_test_priority_update_with) {
 
 int
 main(void) {
-    return check_run(flat_priority_queue_test_insert_iterate_pop(),
-                     flat_priority_queue_test_priority_update(),
-                     flat_priority_queue_test_priority_update_with(),
-                     flat_priority_queue_test_priority_removal());
+    return check_run(
+        flat_priority_queue_test_insert_iterate_pop(),
+        flat_priority_queue_test_priority_update(),
+        flat_priority_queue_test_priority_update_with(),
+        flat_priority_queue_test_priority_removal()
+    );
 }

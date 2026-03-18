@@ -132,20 +132,24 @@ However, the reserve interface only guarantees that at least the needed bytes
 are allocated. When the user must know the exact size of the backing object due
 to strict memory requirements, this is helpful. Such a use case may be rare, but
 must be supported by this container. */
-#define CCC_array_adaptive_map_storage_for(user_type_compound_literal_array,   \
-                                           optional_storage_specifier...)      \
+#define CCC_array_adaptive_map_storage_for(                                    \
+    user_type_compound_literal_array, optional_storage_specifier...            \
+)                                                                              \
     CCC_private_array_adaptive_map_storage_for(                                \
-        user_type_compound_literal_array, optional_storage_specifier)
+        user_type_compound_literal_array, optional_storage_specifier           \
+    )
 
 /** @brief Initializes the map at runtime or compile time.
 @param[in] type_name the name of the user type stored in the map.
 @param[in] type_key_field the name of the field in user type used as key.
 @param[in] comparator_pointer the CCC_Key_comparator for key comparison.
 @return the struct initialized adaptive map for direct assignment. */
-#define CCC_array_adaptive_map_default(type_name, type_key_field,              \
-                                       private_comparator_pointer...)          \
-    CCC_private_array_adaptive_map_default(type_name, type_key_field,          \
-                                           private_comparator_pointer)
+#define CCC_array_adaptive_map_default(                                        \
+    type_name, type_key_field, private_comparator_pointer...                   \
+)                                                                              \
+    CCC_private_array_adaptive_map_default(                                    \
+        type_name, type_key_field, private_comparator_pointer                  \
+    )
 
 /** @brief Initializes the map at runtime or compile time.
 @param[in] type_name the name of the user type stored in the map.
@@ -155,10 +159,15 @@ must be supported by this container. */
 @param[in] memory_pointer a pointer to the contiguous user types or NULL.
 @return the struct initialized adaptive map for direct assignment. */
 #define CCC_array_adaptive_map_for(                                            \
-    type_name, type_key_field, comparator_pointer, capacity, memory_pointer)   \
-    CCC_private_array_adaptive_map_for(type_name, type_key_field,              \
-                                       comparator_pointer, capacity,           \
-                                       memory_pointer)
+    type_name, type_key_field, comparator_pointer, capacity, memory_pointer    \
+)                                                                              \
+    CCC_private_array_adaptive_map_for(                                        \
+        type_name,                                                             \
+        type_key_field,                                                        \
+        comparator_pointer,                                                    \
+        capacity,                                                              \
+        memory_pointer                                                         \
+    )
 
 /** @brief Initialize a dynamic map at runtime from an initializer list.
 @param[in] type_key_field the field of the struct used for key storage.
@@ -213,12 +222,20 @@ main(void)
 
 Only dynamic maps may be initialized this way due the inability of the map
 map to protect its invariants from user error at compile time. */
-#define CCC_array_adaptive_map_from(type_key_field, comparator_pointer,        \
-                                    allocator_pointer, optional_capacity,      \
-                                    type_compound_literal_array...)            \
-    CCC_private_array_adaptive_map_from(type_key_field, compararator_pointer,  \
-                                        allocator_pointer, optional_capacity,  \
-                                        type_compound_literal_array)
+#define CCC_array_adaptive_map_from(                                           \
+    type_key_field,                                                            \
+    comparator_pointer,                                                        \
+    allocator_pointer,                                                         \
+    optional_capacity,                                                         \
+    type_compound_literal_array...                                             \
+)                                                                              \
+    CCC_private_array_adaptive_map_from(                                       \
+        type_key_field,                                                        \
+        compararator_pointer,                                                  \
+        allocator_pointer,                                                     \
+        optional_capacity,                                                     \
+        type_compound_literal_array                                            \
+    )
 
 /** @brief Initialize a dynamic map at runtime with at least the specified
 capacity.
@@ -261,12 +278,16 @@ main(void)
 
 Only dynamic maps may be initialized this way as it simply combines the steps
 of initialization and reservation. */
-#define CCC_array_adaptive_map_with_capacity(type_name, type_key_field,        \
-                                             comparator_pointer,               \
-                                             allocator_pointer, capacity)      \
-    CCC_private_array_adaptive_map_with_capacity(type_name, type_key_field,    \
-                                                 comparator_pointer,           \
-                                                 allocator_pointer, capacity)
+#define CCC_array_adaptive_map_with_capacity(                                  \
+    type_name, type_key_field, comparator_pointer, allocator_pointer, capacity \
+)                                                                              \
+    CCC_private_array_adaptive_map_with_capacity(                              \
+        type_name,                                                             \
+        type_key_field,                                                        \
+        comparator_pointer,                                                    \
+        allocator_pointer,                                                     \
+        capacity                                                               \
+    )
 
 /** @brief Initialize a fixed map at compile or runtime from any user chosen
 type with no allocation permission or context.
@@ -298,11 +319,17 @@ static Array_adaptive_map map = array_adaptive_map_with_storage(
 
 This can help eliminate boilerplate in initializers. */
 #define CCC_array_adaptive_map_with_storage(                                   \
-    type_key_field, comparator_pointer, compound_literal,                      \
-    optional_storage_specifier...)                                             \
+    type_key_field,                                                            \
+    comparator_pointer,                                                        \
+    compound_literal,                                                          \
+    optional_storage_specifier...                                              \
+)                                                                              \
     CCC_private_array_adaptive_map_with_storage(                               \
-        type_key_field, comparator_pointer, compound_literal,                  \
-        optional_storage_specifier)
+        type_key_field,                                                        \
+        comparator_pointer,                                                    \
+        compound_literal,                                                      \
+        optional_storage_specifier                                             \
+    )
 
 /** @brief Copy the map at source to destination.
 @param[in] destination the initialized destination for the copy of the source
@@ -374,9 +401,11 @@ CCC_Result res
 
 These options allow users to stay consistent across containers with their
 memory management strategies. */
-CCC_Result CCC_array_adaptive_map_copy(CCC_Array_adaptive_map *destination,
-                                       CCC_Array_adaptive_map const *source,
-                                       CCC_Allocator const *allocator);
+CCC_Result CCC_array_adaptive_map_copy(
+    CCC_Array_adaptive_map *destination,
+    CCC_Array_adaptive_map const *source,
+    CCC_Allocator const *allocator
+);
 
 /** @brief Reserves space for at least to_add more elements.
 @param[in] map a pointer to the array adaptive map.
@@ -384,9 +413,9 @@ CCC_Result CCC_array_adaptive_map_copy(CCC_Array_adaptive_map *destination,
 @param[in] allocator the required CCC_Allocator for resizing.
 @return the result of the reservation. OK if successful, otherwise an error
 status is returned. */
-CCC_Result CCC_array_adaptive_map_reserve(CCC_Array_adaptive_map *map,
-                                          size_t to_add,
-                                          CCC_Allocator const *allocator);
+CCC_Result CCC_array_adaptive_map_reserve(
+    CCC_Array_adaptive_map *map, size_t to_add, CCC_Allocator const *allocator
+);
 
 /**@}*/
 
@@ -405,8 +434,9 @@ old one has been removed that new element data will be returned.
 @warning do not try to access data in the table manually with a handle.
 Always use this provided interface function when a reference to data is
 needed. */
-[[nodiscard]] void *CCC_array_adaptive_map_at(CCC_Array_adaptive_map const *map,
-                                              CCC_Handle_index index);
+[[nodiscard]] void *CCC_array_adaptive_map_at(
+    CCC_Array_adaptive_map const *map, CCC_Handle_index index
+);
 
 /** @brief Returns a reference to the user type in the table at the handle.
 @param[in] map_pointer a pointer to the map.
@@ -429,9 +459,9 @@ CCC_array_adaptive_map_contains(CCC_Array_adaptive_map *map, void const *key);
 @param[in] map the adaptive map to search.
 @param[in] key the key to search matching stored key type.
 @return a view of the map handle if it is present, else NULL. */
-[[nodiscard]] CCC_Handle_index
-CCC_array_adaptive_map_get_key_value(CCC_Array_adaptive_map *map,
-                                     void const *key);
+[[nodiscard]] CCC_Handle_index CCC_array_adaptive_map_get_key_value(
+    CCC_Array_adaptive_map *map, void const *key
+);
 
 /**@}*/
 
@@ -451,10 +481,11 @@ fails or has been forbidden, an insert error is set.
 
 Note that this function may write to type_output and wraps it in a handle to
 provide information about the old value. */
-[[nodiscard]] CCC_Handle
-CCC_array_adaptive_map_swap_handle(CCC_Array_adaptive_map *map,
-                                   void *type_output,
-                                   CCC_Allocator const *allocator);
+[[nodiscard]] CCC_Handle CCC_array_adaptive_map_swap_handle(
+    CCC_Array_adaptive_map *map,
+    void *type_output,
+    CCC_Allocator const *allocator
+);
 
 /** @brief Invariantly inserts the key value type.
 @param[in] map_pointer the pointer to the adaptive map.
@@ -469,10 +500,12 @@ set.
 Note that this function may write to type_output and wraps it in a handle to
 provide information about the old value. */
 #define CCC_array_adaptive_map_swap_handle_wrap(                               \
-    map_pointer, type_output_pointer, allocator_pointer...)                    \
+    map_pointer, type_output_pointer, allocator_pointer...                     \
+)                                                                              \
     &(struct { CCC_Handle private; }){                                         \
         CCC_array_adaptive_map_swap_handle(                                    \
-            (map_pointer), (type_output_pointer), allocator_pointer)}          \
+            (map_pointer), (type_output_pointer), allocator_pointer            \
+        )}                                                                     \
          .private
 
 /** @brief Attempts to insert the key value type.
@@ -483,9 +516,11 @@ provide information about the old value. */
 user type in the map and may be unwrapped. If Vacant the handle contains a
 reference to the newly inserted handle in the map. If more space is needed but
 allocation fails, an insert error is set. */
-[[nodiscard]] CCC_Handle
-CCC_array_adaptive_map_try_insert(CCC_Array_adaptive_map *map, void const *type,
-                                  CCC_Allocator const *allocator);
+[[nodiscard]] CCC_Handle CCC_array_adaptive_map_try_insert(
+    CCC_Array_adaptive_map *map,
+    void const *type,
+    CCC_Allocator const *allocator
+);
 
 /** @brief Attempts to insert the key value type.
 @param[in] map_pointer the pointer to the map.
@@ -495,11 +530,13 @@ CCC_array_adaptive_map_try_insert(CCC_Array_adaptive_map *map, void const *type,
 contains a reference to the key value user type in the map and may be unwrapped.
 If Vacant the handle contains a reference to the newly inserted handle in the
 map. If more space is needed but allocation fails an insert error is set. */
-#define CCC_array_adaptive_map_try_insert_wrap(map_pointer, type_pointer,      \
-                                               allocator_pointer...)           \
+#define CCC_array_adaptive_map_try_insert_wrap(                                \
+    map_pointer, type_pointer, allocator_pointer...                            \
+)                                                                              \
     &(struct { CCC_Handle private; }){                                         \
-        CCC_array_adaptive_map_try_insert((map_pointer), (type_pointer),       \
-                                          allocator_pointer)}                  \
+        CCC_array_adaptive_map_try_insert(                                     \
+            (map_pointer), (type_pointer), allocator_pointer                   \
+        )}                                                                     \
          .private
 
 /** @brief lazily insert type_compound_literal into the map at key if key is
@@ -517,10 +554,12 @@ Note that for brevity and convenience the user need not write the key to the
 lazy value compound literal as well. This function ensures the key in the
 compound literal matches the searched key. */
 #define CCC_array_adaptive_map_try_insert_with(                                \
-    map_pointer, key, allocator_pointer, type_compound_literal...)             \
+    map_pointer, key, allocator_pointer, type_compound_literal...              \
+)                                                                              \
     &(struct { CCC_Handle private; }){                                         \
         CCC_private_array_adaptive_map_try_insert_with(                        \
-            map_pointer, key, allocator_pointer, type_compound_literal)}       \
+            map_pointer, key, allocator_pointer, type_compound_literal         \
+        )}                                                                     \
          .private
 
 /** @brief Invariantly inserts or overwrites a user struct into the map.
@@ -532,10 +571,11 @@ If Vacant no prior map handle existed.
 
 Note that this function can be used when the old user type is not needed but
 the information regarding its presence is helpful. */
-[[nodiscard]] CCC_Handle
-CCC_array_adaptive_map_insert_or_assign(CCC_Array_adaptive_map *map,
-                                        void const *type,
-                                        CCC_Allocator const *allocator);
+[[nodiscard]] CCC_Handle CCC_array_adaptive_map_insert_or_assign(
+    CCC_Array_adaptive_map *map,
+    void const *type,
+    CCC_Allocator const *allocator
+);
 
 /** @brief Invariantly inserts or overwrites a user struct into the map.
 @param[in] map_pointer a pointer to the handle map.
@@ -547,10 +587,12 @@ overwritten by the new key value. If Vacant no prior map handle existed.
 Note that this function can be used when the old user type is not needed but
 the information regarding its presence is helpful. */
 #define CCC_array_adaptive_map_insert_or_assign_wrap(                          \
-    map_pointer, type_pointer, allocator_pointer...)                           \
+    map_pointer, type_pointer, allocator_pointer...                            \
+)                                                                              \
     &(struct { CCC_Handle private; }){                                         \
-        CCC_array_adaptive_map_insert_or_assign((map_pointer), (type_pointer), \
-                                                allocator_pointer...)}         \
+        CCC_array_adaptive_map_insert_or_assign(                               \
+            (map_pointer), (type_pointer), allocator_pointer...                \
+        )}                                                                     \
          .private
 
 /** @brief Inserts a new key value pair or overwrites the existing handle.
@@ -568,10 +610,12 @@ Note that for brevity and convenience the user need not write the key to the
 lazy value compound literal as well. This function ensures the key in the
 compound literal matches the searched key. */
 #define CCC_array_adaptive_map_insert_or_assign_with(                          \
-    map_pointer, key, allocator_pointer, type_compound_literal...)             \
+    map_pointer, key, allocator_pointer, type_compound_literal...              \
+)                                                                              \
     &(struct { CCC_Handle private; }){                                         \
         CCC_private_array_adaptive_map_insert_or_assign_with(                  \
-            map_pointer, key, allocator_pointer, type_compound_literal)}       \
+            map_pointer, key, allocator_pointer, type_compound_literal         \
+        )}                                                                     \
          .private
 
 /** @brief Removes the key value in the map storing the old value, if present,
@@ -584,9 +628,9 @@ bad input is provided an input error is set.
 
 Note that this function may write to the struct containing the second parameter
 and wraps it in a handle to provide information about the old value. */
-[[nodiscard]] CCC_Handle
-CCC_array_adaptive_map_remove_key_value(CCC_Array_adaptive_map *map,
-                                        void *type_output);
+[[nodiscard]] CCC_Handle CCC_array_adaptive_map_remove_key_value(
+    CCC_Array_adaptive_map *map, void *type_output
+);
 
 /** @brief Removes the key value in the map storing the old value, if present,
 in the struct containing type_output provided by the user.
@@ -599,11 +643,12 @@ not stored in the map. If bad input is provided an input error is set.
 
 Note that this function may write to the struct containing the second parameter
 and wraps it in a handle to provide information about the old value. */
-#define CCC_array_adaptive_map_remove_key_value_wrap(map_pointer,              \
-                                                     type_output_pointer)      \
-    &(struct { CCC_Handle private; }){                                         \
-        CCC_array_adaptive_map_remove_key_value((map_pointer),                 \
-                                                (type_output_pointer))}        \
+#define CCC_array_adaptive_map_remove_key_value_wrap(                          \
+    map_pointer, type_output_pointer                                           \
+)                                                                              \
+    &(struct { CCC_Handle private; }){CCC_array_adaptive_map_remove_key_value( \
+                                          (map_pointer), (type_output_pointer) \
+                                      )}                                       \
          .private
 
 /** @brief Obtains a handle for the provided key in the map for future use.
@@ -649,9 +694,9 @@ to subsequent calls in the Handle Interface. */
 @param[in] handle the handle obtained from a handle function or macro.
 @param[in] modifier a CCC_Modifier to operate on an Occupied entry.
 @return the updated handle if it was Occupied or unmodified Vacant handle. */
-[[nodiscard]] CCC_Array_adaptive_map_handle *
-CCC_array_adaptive_map_and_modify(CCC_Array_adaptive_map_handle *handle,
-                                  CCC_Modifier const *modifier);
+[[nodiscard]] CCC_Array_adaptive_map_handle *CCC_array_adaptive_map_and_modify(
+    CCC_Array_adaptive_map_handle *handle, CCC_Modifier const *modifier
+);
 
 /** @brief Modify an Occupied handle with a closure over user type T.
 @param[in] array_pointer a pointer to the obtained handle.
@@ -689,11 +734,13 @@ Handle_index w =
 Note that any code written is only evaluated if the handle is Occupied and the
 container can deliver the user type T. This means any function calls are lazily
 evaluated in the closure scope. */
-#define CCC_array_adaptive_map_and_modify_with(array_pointer, type_name,       \
-                                               closure_over_T...)              \
+#define CCC_array_adaptive_map_and_modify_with(                                \
+    array_pointer, type_name, closure_over_T...                                \
+)                                                                              \
     &(struct { CCC_Array_adaptive_map_handle private; }){                      \
         CCC_private_array_adaptive_map_and_modify_with(                        \
-            array_pointer, type_name, closure_over_T)}                         \
+            array_pointer, type_name, closure_over_T                           \
+        )}                                                                     \
          .private
 
 /** @brief Inserts the struct with user type if the handle is Vacant.
@@ -708,10 +755,11 @@ a user struct allocation failure.
 
 If no allocation is permitted, this function assumes the user struct wrapping
 elem has been allocated with the appropriate lifetime and scope by the user. */
-[[nodiscard]] CCC_Handle_index
-CCC_array_adaptive_map_or_insert(CCC_Array_adaptive_map_handle const *handle,
-                                 void const *type,
-                                 CCC_Allocator const *allocator);
+[[nodiscard]] CCC_Handle_index CCC_array_adaptive_map_or_insert(
+    CCC_Array_adaptive_map_handle const *handle,
+    void const *type,
+    CCC_Allocator const *allocator
+);
 
 /** @brief Lazily insert the desired key value into the handle if it is Vacant.
 @param[in] array_pointer a pointer to the obtained handle.
@@ -726,9 +774,11 @@ is not allowed.
 Note that if the compound literal uses any function calls to generate values
 or other data, such functions will not be called if the handle is Occupied. */
 #define CCC_array_adaptive_map_or_insert_with(                                 \
-    array_pointer, allocator_pointer, type_compound_literal...)                \
+    array_pointer, allocator_pointer, type_compound_literal...                 \
+)                                                                              \
     CCC_private_array_adaptive_map_or_insert_with(                             \
-        array_pointer, allocator_pointer, type_compound_literal)
+        array_pointer, allocator_pointer, type_compound_literal                \
+    )
 
 /** @brief Inserts the provided handle invariantly.
 @param[in] handle the handle returned from a call obtaining a handle.
@@ -739,8 +789,10 @@ or other data, such functions will not be called if the handle is Occupied. */
 This method can be used when the old value in the map does not need to
 be preserved. See the regular insert method if the old value is of interest. */
 [[nodiscard]] CCC_Handle_index CCC_array_adaptive_map_insert_handle(
-    CCC_Array_adaptive_map_handle const *handle, void const *type,
-    CCC_Allocator const *allocator);
+    CCC_Array_adaptive_map_handle const *handle,
+    void const *type,
+    CCC_Allocator const *allocator
+);
 
 /** @brief Write the contents of the compound literal type_compound_literal to a
 node.
@@ -750,9 +802,11 @@ node.
 @return a reference to the newly inserted or overwritten user type. NULL is
 returned if allocation failed or is not allowed when required. */
 #define CCC_array_adaptive_map_insert_handle_with(                             \
-    array_pointer, allocator_pointer, type_compound_literal...)                \
+    array_pointer, allocator_pointer, type_compound_literal...                 \
+)                                                                              \
     CCC_private_array_adaptive_map_insert_handle_with(                         \
-        array_pointer, allocator_pointer, type_compound_literal)
+        array_pointer, allocator_pointer, type_compound_literal                \
+    )
 
 /** @brief Remove the handle from the map if Occupied.
 @param[in] handle a pointer to the map handle.
@@ -790,7 +844,8 @@ CCC_array_adaptive_map_occupied(CCC_Array_adaptive_map_handle const *handle);
 due to an allocation failure when allocation success was expected. Error if h is
 NULL. */
 [[nodiscard]] CCC_Tribool CCC_array_adaptive_map_insert_error(
-    CCC_Array_adaptive_map_handle const *handle);
+    CCC_Array_adaptive_map_handle const *handle
+);
 
 /** @brief Obtain the handle status from a container handle.
 @param[in] handle a pointer to the handle.
@@ -802,7 +857,8 @@ Note that this function can be useful for debugging or if more detailed
 messages are needed for logging purposes. See CCC_handle_status_message() in
 ccc/types.h for more information on detailed handle statuses. */
 [[nodiscard]] CCC_Handle_status CCC_array_adaptive_map_handle_status(
-    CCC_Array_adaptive_map_handle const *handle);
+    CCC_Array_adaptive_map_handle const *handle
+);
 
 /**@}*/
 
@@ -831,9 +887,9 @@ for (CCC_Handle_index index = range_begin(&range);
 
 This avoids any possible errors in handling an end range element that is in the
 map versus the end map sentinel. */
-[[nodiscard]] CCC_Handle_range
-CCC_array_adaptive_map_equal_range(CCC_Array_adaptive_map *map,
-                                   void const *begin_key, void const *end_key);
+[[nodiscard]] CCC_Handle_range CCC_array_adaptive_map_equal_range(
+    CCC_Array_adaptive_map *map, void const *begin_key, void const *end_key
+);
 
 /** @brief Returns a compound literal reference to the desired range. Amortized
 O(lg N).
@@ -842,11 +898,13 @@ O(lg N).
 range.
 @return a compound literal reference to the produced range associated with the
 enclosing scope. This reference is always be valid. */
-#define CCC_array_adaptive_map_equal_range_wrap(map_pointer,                   \
-                                                begin_and_end_key_pointers...) \
+#define CCC_array_adaptive_map_equal_range_wrap(                               \
+    map_pointer, begin_and_end_key_pointers...                                 \
+)                                                                              \
     &(struct { CCC_Handle_range private; }){                                   \
-        CCC_array_adaptive_map_equal_range(map_pointer,                        \
-                                           begin_and_end_key_pointers)}        \
+        CCC_array_adaptive_map_equal_range(                                    \
+            map_pointer, begin_and_end_key_pointers                            \
+        )}                                                                     \
          .private
 
 /** @brief Return an iterable range_reverse of values from [reverse_begin_key,
@@ -873,9 +931,11 @@ for (CCC_Handle_index index = range_reverse_begin(&range);
 This avoids any possible errors in handling an reverse_end range_reverse element
 that is in the map versus the end map sentinel. */
 [[nodiscard]] CCC_Handle_range_reverse
-CCC_array_adaptive_map_equal_range_reverse(CCC_Array_adaptive_map *map,
-                                           void const *reverse_begin_key,
-                                           void const *reverse_end_key);
+CCC_array_adaptive_map_equal_range_reverse(
+    CCC_Array_adaptive_map *map,
+    void const *reverse_begin_key,
+    void const *reverse_end_key
+);
 
 /** @brief Returns a compound literal reference to the desired range_reverse.
 Amortized O(lg N).
@@ -885,10 +945,12 @@ reverse_begin and reverse_end of the range.
 @return a compound literal reference to the produced range_reverse associated
 with the enclosing scope. This reference is always valid. */
 #define CCC_array_adaptive_map_equal_range_reverse_wrap(                       \
-    map_pointer, reverse_begin_and_reverse_end_key_pointers...)                \
+    map_pointer, reverse_begin_and_reverse_end_key_pointers...                 \
+)                                                                              \
     &(struct { CCC_Handle_range_reverse private; }){                           \
         CCC_array_adaptive_map_equal_range_reverse(                            \
-            map_pointer, reverse_begin_and_reverse_end_key_pointers)}          \
+            map_pointer, reverse_begin_and_reverse_end_key_pointers            \
+        )}                                                                     \
          .private
 
 /** @brief Return the start of an inorder traversal of the map. Amortized
@@ -910,9 +972,9 @@ CCC_array_adaptive_map_reverse_begin(CCC_Array_adaptive_map const *map);
 @param[in] iterator pointer to the current iterator user type.
 @return a handle for the next user type stored in the map in an inorder
 traversal. */
-[[nodiscard]] CCC_Handle_index
-CCC_array_adaptive_map_next(CCC_Array_adaptive_map const *map,
-                            CCC_Handle_index iterator);
+[[nodiscard]] CCC_Handle_index CCC_array_adaptive_map_next(
+    CCC_Array_adaptive_map const *map, CCC_Handle_index iterator
+);
 
 /** @brief Return the reverse_next element in a reverse inorder traversal of the
 map. O(1).
@@ -920,9 +982,9 @@ map. O(1).
 @param[in] iterator pointer to the current iterator user type.
 @return a handle for the reverse_next user type stored in the map in a reverse
 inorder traversal. */
-[[nodiscard]] CCC_Handle_index
-CCC_array_adaptive_map_reverse_next(CCC_Array_adaptive_map const *map,
-                                    CCC_Handle_index iterator);
+[[nodiscard]] CCC_Handle_index CCC_array_adaptive_map_reverse_next(
+    CCC_Array_adaptive_map const *map, CCC_Handle_index iterator
+);
 
 /** @brief Return the end of an inorder traversal of the map. O(1).
 @param[in] map a pointer to the map.
@@ -950,8 +1012,9 @@ maintenance is required on the elements in the map before their slots are
 forfeit.
 
 If the destructor is empty runtime is O(1), else O(size). */
-CCC_Result CCC_array_adaptive_map_clear(CCC_Array_adaptive_map *map,
-                                        CCC_Destructor const *destructor);
+CCC_Result CCC_array_adaptive_map_clear(
+    CCC_Array_adaptive_map *map, CCC_Destructor const *destructor
+);
 
 /** @brief Frees all slots in the map and frees the underlying buffer.
 @param[in] map the map to be cleared.
@@ -966,10 +1029,11 @@ an error to attempt to free the Buffer and a memory error is returned.
 Otherwise, an OK result is returned.
 
 If the destructor is empty runtime is O(1), else O(size). */
-CCC_Result
-CCC_array_adaptive_map_clear_and_free(CCC_Array_adaptive_map *map,
-                                      CCC_Destructor const *destructor,
-                                      CCC_Allocator const *allocator);
+CCC_Result CCC_array_adaptive_map_clear_and_free(
+    CCC_Array_adaptive_map *map,
+    CCC_Destructor const *destructor,
+    CCC_Allocator const *allocator
+);
 
 /**@}*/
 

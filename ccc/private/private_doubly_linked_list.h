@@ -82,24 +82,25 @@ struct CCC_Doubly_linked_list {
 /*=======================     Private Interface   ===========================*/
 
 /** @internal */
-void
-CCC_private_doubly_linked_list_push_back(struct CCC_Doubly_linked_list *,
-                                         struct CCC_Doubly_linked_list_node *);
+void CCC_private_doubly_linked_list_push_back(
+    struct CCC_Doubly_linked_list *, struct CCC_Doubly_linked_list_node *
+);
 /** @internal */
-void
-CCC_private_doubly_linked_list_push_front(struct CCC_Doubly_linked_list *,
-                                          struct CCC_Doubly_linked_list_node *);
+void CCC_private_doubly_linked_list_push_front(
+    struct CCC_Doubly_linked_list *, struct CCC_Doubly_linked_list_node *
+);
 /** @internal */
-struct CCC_Doubly_linked_list_node *
-CCC_private_doubly_linked_list_node_in(struct CCC_Doubly_linked_list const *,
-                                       void const *any_struct);
+struct CCC_Doubly_linked_list_node *CCC_private_doubly_linked_list_node_in(
+    struct CCC_Doubly_linked_list const *, void const *any_struct
+);
 
 /*=======================     Macro Implementations   =======================*/
 
 /** @internal Initialization at compile time is allowed in C due to the provided
 name of the list being on the left hand side of the assignment operator. */
-#define CCC_private_doubly_linked_list_for(private_struct_name,                \
-                                           private_type_intruder_field)        \
+#define CCC_private_doubly_linked_list_for(                                    \
+    private_struct_name, private_type_intruder_field                           \
+)                                                                              \
     {                                                                          \
         .head = NULL,                                                          \
         .tail = NULL,                                                          \
@@ -112,8 +113,11 @@ name of the list being on the left hand side of the assignment operator. */
 
 /** @internal */
 #define CCC_private_doubly_linked_list_from(                                   \
-    private_type_intruder_field, private_allocator_pointer,                    \
-    private_destructor_pointer, private_compound_literal_array...)             \
+    private_type_intruder_field,                                               \
+    private_allocator_pointer,                                                 \
+    private_destructor_pointer,                                                \
+    private_compound_literal_array...                                          \
+)                                                                              \
     (__extension__({                                                           \
         typeof(*private_compound_literal_array)                                \
             *private_doubly_linked_list_type_array                             \
@@ -121,7 +125,8 @@ name of the list being on the left hand side of the assignment operator. */
         struct CCC_Doubly_linked_list private_doubly_linked_list               \
             = CCC_private_doubly_linked_list_for(                              \
                 typeof(*private_doubly_linked_list_type_array),                \
-                private_type_intruder_field);                                  \
+                private_type_intruder_field                                    \
+            );                                                                 \
         CCC_Allocator const *const private_doubly_linked_list_allocator        \
             = (private_allocator_pointer);                                     \
         if (private_doubly_linked_list_allocator                               \
@@ -139,12 +144,14 @@ name of the list being on the left hand side of the assignment operator. */
                             .bytes = private_doubly_linked_list.sizeof_type,   \
                             .context                                           \
                             = private_doubly_linked_list_allocator->context,   \
-                        });                                                    \
+                        }                                                      \
+                    );                                                         \
                 if (!private_new_node) {                                       \
                     CCC_doubly_linked_list_clear(                              \
                         &private_doubly_linked_list,                           \
                         private_destructor_pointer,                            \
-                        private_doubly_linked_list_allocator);                 \
+                        private_doubly_linked_list_allocator                   \
+                    );                                                         \
                     break;                                                     \
                 }                                                              \
                 *private_new_node                                              \
@@ -152,7 +159,9 @@ name of the list being on the left hand side of the assignment operator. */
                 CCC_private_doubly_linked_list_push_back(                      \
                     &private_doubly_linked_list,                               \
                     CCC_private_doubly_linked_list_node_in(                    \
-                        &private_doubly_linked_list, private_new_node));       \
+                        &private_doubly_linked_list, private_new_node          \
+                    )                                                          \
+                );                                                             \
             }                                                                  \
         }                                                                      \
         private_doubly_linked_list;                                            \
@@ -160,7 +169,8 @@ name of the list being on the left hand side of the assignment operator. */
 
 /** @internal */
 #define CCC_private_doubly_linked_list_emplace_back(                           \
-    doubly_linked_list_pointer, struct_initializer...)                         \
+    doubly_linked_list_pointer, struct_initializer...                          \
+)                                                                              \
     (__extension__({                                                           \
         typeof(struct_initializer) *private_doubly_linked_list_res = NULL;     \
         struct CCC_Doubly_linked_list *private_doubly_linked_list              \
@@ -171,7 +181,8 @@ name of the list being on the left hand side of the assignment operator. */
             && private_doubly_linked_list_allocator->allocate) {               \
             private_doubly_linked_list_res                                     \
                 = private_doubly_linked_list_allocator->allocate((             \
-                    CCC_Allocator_arguments){                                  \
+                    CCC_Allocator_arguments                                    \
+                ){                                                             \
                     .input = NULL,                                             \
                     .bytes = private_doubly_linked_list->sizeof_type,          \
                     .context = private_doubly_linked_list_allocator->context,  \
@@ -182,7 +193,9 @@ name of the list being on the left hand side of the assignment operator. */
                     private_doubly_linked_list,                                \
                     CCC_private_doubly_linked_list_node_in(                    \
                         private_doubly_linked_list,                            \
-                        private_doubly_linked_list_res));                      \
+                        private_doubly_linked_list_res                         \
+                    )                                                          \
+                );                                                             \
             }                                                                  \
         }                                                                      \
         private_doubly_linked_list_res;                                        \
@@ -190,7 +203,8 @@ name of the list being on the left hand side of the assignment operator. */
 
 /** @internal */
 #define CCC_private_doubly_linked_list_emplace_front(                          \
-    doubly_linked_list_pointer, struct_initializer...)                         \
+    doubly_linked_list_pointer, struct_initializer...                          \
+)                                                                              \
     (__extension__({                                                           \
         typeof(struct_initializer) *private_doubly_linked_list_res = NULL;     \
         struct CCC_Doubly_linked_list *private_doubly_linked_list              \
@@ -201,7 +215,8 @@ name of the list being on the left hand side of the assignment operator. */
             && private_doubly_linked_list_allocator->allocate) {               \
             private_doubly_linked_list_res                                     \
                 = private_doubly_linked_list_allocator->allocate((             \
-                    CCC_Allocator_arguments){                                  \
+                    CCC_Allocator_arguments                                    \
+                ){                                                             \
                     .input = NULL,                                             \
                     .bytes = private_doubly_linked_list->sizeof_type,          \
                     .context = private_doubly_linked_list_allocator->context,  \
@@ -212,7 +227,9 @@ name of the list being on the left hand side of the assignment operator. */
                     private_doubly_linked_list,                                \
                     CCC_private_doubly_linked_list_node_in(                    \
                         private_doubly_linked_list,                            \
-                        private_doubly_linked_list_res));                      \
+                        private_doubly_linked_list_res                         \
+                    )                                                          \
+                );                                                             \
             }                                                                  \
         }                                                                      \
         private_doubly_linked_list_res;                                        \

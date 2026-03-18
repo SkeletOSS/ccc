@@ -18,8 +18,8 @@ CCC_Order id_order(CCC_Key_comparator_arguments);
 /** Runs a prime shuffle over the map using size as N and larger_prime as the
 larger prime to run the shuffle. Expects the map to have allocation permission.
 Use a heap or stack allocator. */
-enum Check_result insert_shuffled(CCC_Tree_map *m, size_t size,
-                                  int larger_prime);
+enum Check_result
+insert_shuffled(CCC_Tree_map *m, size_t size, int larger_prime);
 enum Check_result inorder_fill(int vals[], size_t size, CCC_Tree_map const *m);
 
 #endif /* CCC_ROMAP_UTIL_H */

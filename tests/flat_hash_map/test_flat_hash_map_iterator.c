@@ -31,8 +31,11 @@ destroy_owner_allocation(CCC_Arguments const t) {
 
 check_static_begin(flat_hash_map_test_insert_then_iterate) {
     CCC_Flat_hash_map fh = flat_hash_map_with_storage(
-        key, flat_hash_map_int_to_u64, flat_hash_map_id_order,
-        (struct Val[STANDARD_FIXED_CAP]){});
+        key,
+        flat_hash_map_int_to_u64,
+        flat_hash_map_id_order,
+        (struct Val[STANDARD_FIXED_CAP]){}
+    );
     int const size = STANDARD_FIXED_CAP;
     for (int i = 0; i < size; i += 2) {
         CCC_Entry e = try_insert(&fh, &(struct Val){.key = i, .val = i});
@@ -67,13 +70,21 @@ check_static_begin(flat_hash_map_test_insert_then_iterate) {
 efficient iterator is able to free all elements allocated with no leaks when
 run under sanitizers. */
 check_static_begin(flat_hash_map_test_insert_allocate_clear_free) {
-    CCC_Flat_hash_map fh
-        = flat_hash_map_for(struct Owner, key, flat_hash_map_int_to_u64,
-                            owners_eq, std_allocate, NULL, 0, NULL);
+    CCC_Flat_hash_map fh = flat_hash_map_for(
+        struct Owner,
+        key,
+        flat_hash_map_int_to_u64,
+        owners_eq,
+        std_allocate,
+        NULL,
+        0,
+        NULL
+    );
     int const size = 32;
     for (int i = 0; i < size; ++i) {
         CCC_Entry *e = flat_hash_map_try_insert_with(
-            &fh, i, (struct Owner){.allocation = malloc(sizeof(size_t))});
+            &fh, i, (struct Owner){.allocation = malloc(sizeof(size_t))}
+        );
         check(occupied(e), CCC_FALSE);
         struct Owner const *const o = unwrap(e);
         check(o != NULL, CCC_TRUE);
@@ -84,6 +95,8 @@ check_static_begin(flat_hash_map_test_insert_allocate_clear_free) {
 
 int
 main(void) {
-    return check_run(flat_hash_map_test_insert_then_iterate(),
-                     flat_hash_map_test_insert_allocate_clear_free());
+    return check_run(
+        flat_hash_map_test_insert_then_iterate(),
+        flat_hash_map_test_insert_allocate_clear_free()
+    );
 }

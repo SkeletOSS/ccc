@@ -16,8 +16,9 @@ tests and uses the containers I will happily use defer. */
 #    define _Defer_C(F, V)                                                     \
         auto void F(int *);                                                    \
         __attribute__((__cleanup__(F), __deprecated__, __unused__)) int V;     \
-        __attribute__((__always_inline__, __deprecated__,                      \
-                       __unused__)) inline auto void                           \
+        __attribute__((                                                        \
+            __always_inline__, __deprecated__, __unused__                      \
+        )) inline auto void                                                    \
         F(__attribute__((__unused__)) int *)
 #else
 #    error "The _Defer feature seems not available"

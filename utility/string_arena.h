@@ -60,8 +60,8 @@ remains valid. If this function is called on a string that is not the most
 recently allocated that region is simply zeroed out and the arena's next free
 position remains unchanged; in this case the last_str argument is then made
 invalid and will not be usable in further API functions. */
-enum String_arena_result string_arena_pop_str(struct String_arena *,
-                                              struct String_offset *last_str);
+enum String_arena_result
+string_arena_pop_str(struct String_arena *, struct String_offset *last_str);
 
 /** Push a character back to the last string allocation. This is possible
 and useful when a string may be edited depending on other factors before it is
@@ -73,8 +73,8 @@ string_arena_push_back(struct String_arena *, struct String_offset *str, char);
 
 /** Returns the NULL terminated string starting at the string offset provided.
 NULL is returned if the input offset has an error or is out of range. */
-char *string_arena_at(struct String_arena const *,
-                      struct String_offset const *);
+char *
+string_arena_at(struct String_arena const *, struct String_offset const *);
 
 /** Maintain the arena allocation but clear all strings from the arena such
 the next request receives the first free position. */

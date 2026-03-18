@@ -18,7 +18,8 @@ typedef enum Check_result (*Tester)(void);
 
 #define check_fail_print(result, result_string, expected, expected_string)     \
     do {                                                                       \
-        char const *const check_private_format_string = _Generic((result),     \
+        char const *const check_private_format_string = _Generic(              \
+            (result),                                                          \
             _Bool: "%d",                                                       \
             char: "%c",                                                        \
             signed char: "%hhd",                                               \
@@ -40,12 +41,24 @@ typedef enum Check_result (*Tester)(void);
             wchar_t const *: "%ls",                                            \
             void *: "%p",                                                      \
             void const *: "%p",                                                \
-            default: "%p");                                                    \
-        (void)fprintf(stderr, "%s\n--\nfailure in %s, line %d%s\n",            \
-                      CHECK_CYAN, __func__, __LINE__, CHECK_NONE);             \
-        (void)fprintf(stderr, "%scheck: result( %s ) == expected( %s )%s\n",   \
-                      CHECK_GREEN, result_string, expected_string,             \
-                      CHECK_NONE);                                             \
+            default: "%p"                                                      \
+        );                                                                     \
+        (void)fprintf(                                                         \
+            stderr,                                                            \
+            "%s\n--\nfailure in %s, line %d%s\n",                              \
+            CHECK_CYAN,                                                        \
+            __func__,                                                          \
+            __LINE__,                                                          \
+            CHECK_NONE                                                         \
+        );                                                                     \
+        (void)fprintf(                                                         \
+            stderr,                                                            \
+            "%scheck: result( %s ) == expected( %s )%s\n",                     \
+            CHECK_GREEN,                                                       \
+            result_string,                                                     \
+            expected_string,                                                   \
+            CHECK_NONE                                                         \
+        );                                                                     \
         (void)fprintf(stderr, "%serror: result( ", CHECK_RED);                 \
         (void)fprintf(stderr, check_private_format_string, result);            \
         (void)fprintf(stderr, " ) != expected( ");                             \
@@ -143,8 +156,12 @@ though the braces are not required. */
         const typeof(check_private_result) check_private_expected              \
             = (test_expected);                                                 \
         if (check_private_result != check_private_expected) {                  \
-            check_fail_print(check_private_result, #test_result,               \
-                             check_private_expected, #test_expected);          \
+            check_fail_print(                                                  \
+                check_private_result,                                          \
+                #test_result,                                                  \
+                check_private_expected,                                        \
+                #test_expected                                                 \
+            );                                                                 \
             check_private_macro_res = CHECK_FAIL;                              \
             __VA_OPT__((void)({__VA_ARGS__});)                                 \
             goto please_use_at_least_one_check_and_a_check_end_macro;          \
@@ -180,8 +197,12 @@ though the braces are not required. */
         const typeof(check_private_result) check_private_expected              \
             = (test_expected);                                                 \
         if (check_private_result != check_private_expected) {                  \
-            check_fail_print(check_private_result, #test_result,               \
-                             check_private_expected, #test_expected);          \
+            check_fail_print(                                                  \
+                check_private_result,                                          \
+                #test_result,                                                  \
+                check_private_expected,                                        \
+                #test_expected                                                 \
+            );                                                                 \
             check_private_macro_res = CHECK_ERROR;                             \
             __VA_OPT__((void)({__VA_ARGS__});)                                 \
             goto please_use_at_least_one_check_and_a_check_end_macro;          \

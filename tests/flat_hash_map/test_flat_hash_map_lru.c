@@ -85,28 +85,36 @@ static_assert(CAP * 1UL < SMALL_FIXED_CAP * 1UL);
 static struct Lru_cache lru_cache = {
     .cap = CAP,
     .l = doubly_linked_list_for(struct Key_val, list_node, std_allocate, NULL),
-    .fh = flat_hash_map_with_storage(key, flat_hash_map_int_to_u64,
-                                     lru_lookup_order,
-                                     (struct Val[SMALL_FIXED_CAP]){}),
+    .fh = flat_hash_map_with_storage(
+        key,
+        flat_hash_map_int_to_u64,
+        lru_lookup_order,
+        (struct Val[SMALL_FIXED_CAP]){}
+    ),
 };
 
-check_static_begin(lru_put, struct Lru_cache *const lru, int const key,
-                   int const val) {
+check_static_begin(
+    lru_put, struct Lru_cache *const lru, int const key, int const val
+) {
     CCC_Flat_hash_map_entry *const ent = entry_wrap(&lru->fh, &key);
     if (occupied(ent)) {
         struct Lru_lookup const *const found = unwrap(ent);
         found->kv_in_list->key = key;
         found->kv_in_list->val = val;
         CCC_Result r = doubly_linked_list_splice(
-            &lru->l, doubly_linked_list_node_begin(&lru->l), &lru->l,
-            &found->kv_in_list->list_node);
+            &lru->l,
+            doubly_linked_list_node_begin(&lru->l),
+            &lru->l,
+            &found->kv_in_list->list_node
+        );
         check(r, CCC_RESULT_OK);
     } else {
         struct Lru_lookup *const new
             = insert_entry(ent, &(struct Lru_lookup){.key = key});
         check(new == NULL, false);
         new->kv_in_list = doubly_linked_list_emplace_front(
-            &lru->l, (struct Key_val){.key = key, .val = val});
+            &lru->l, (struct Key_val){.key = key, .val = val}
+        );
         check(new->kv_in_list == NULL, false);
         if (count(&lru->l).count > lru->cap) {
             struct Key_val const *const to_drop = back(&lru->l);
@@ -120,16 +128,20 @@ check_static_begin(lru_put, struct Lru_cache *const lru, int const key,
     check_end();
 }
 
-check_static_begin(lru_get, struct Lru_cache *const lru, int const key,
-                   int *val) {
+check_static_begin(
+    lru_get, struct Lru_cache *const lru, int const key, int *val
+) {
     check_error(val != NULL, true);
     struct Lru_lookup const *const found = get_key_value(&lru->fh, &key);
     if (!found) {
         *val = -1;
     } else {
         CCC_Result r = doubly_linked_list_splice(
-            &lru->l, doubly_linked_list_node_begin(&lru->l), &lru->l,
-            &found->kv_in_list->list_node);
+            &lru->l,
+            doubly_linked_list_node_begin(&lru->l),
+            &lru->l,
+            &found->kv_in_list->list_node
+        );
         check(r, CCC_RESULT_OK);
         *val = found->kv_in_list->val;
     }
@@ -154,26 +166,40 @@ check_static_begin(run_lru_cache) {
     for (size_t i = 0; i < REQS; ++i) {
         switch (requests[i].call) {
             case PUT: {
-                check(requests[i].putter(&lru_cache, requests[i].key,
-                                         requests[i].val),
-                      CHECK_PASS);
-                quiet_print("PUT -> {key: %d, val: %d}\n", requests[i].key,
-                            requests[i].val);
+                check(
+                    requests[i].putter(
+                        &lru_cache, requests[i].key, requests[i].val
+                    ),
+                    CHECK_PASS
+                );
+                quiet_print(
+                    "PUT -> {key: %d, val: %d}\n",
+                    requests[i].key,
+                    requests[i].val
+                );
                 check(validate(&lru_cache.fh), true);
                 check(validate(&lru_cache.l), true);
             } break;
             case GET: {
-                quiet_print("GET -> {key: %d, val: %d}\n", requests[i].key,
-                            requests[i].val);
+                quiet_print(
+                    "GET -> {key: %d, val: %d}\n",
+                    requests[i].key,
+                    requests[i].val
+                );
                 int val = 0;
-                check(requests[i].getter(&lru_cache, requests[i].key, &val),
-                      CHECK_PASS);
+                check(
+                    requests[i].getter(&lru_cache, requests[i].key, &val),
+                    CHECK_PASS
+                );
                 check(val, requests[i].val);
                 check(validate(&lru_cache.l), true);
             } break;
             case HED: {
-                quiet_print("HED -> {key: %d, val: %d}\n", requests[i].key,
-                            requests[i].val);
+                quiet_print(
+                    "HED -> {key: %d, val: %d}\n",
+                    requests[i].key,
+                    requests[i].val
+                );
                 struct Key_val const *const kv = requests[i].header(&lru_cache);
                 check(kv != NULL, true);
                 check(kv->key, requests[i].key);

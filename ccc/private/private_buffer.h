@@ -51,8 +51,9 @@ struct CCC_Buffer {
 can specify that the Buffer has some count of elements from index
 `[0, capacity - 1)` at initialization time. The Buffer assumes these elements
 are contiguous. */
-#define CCC_private_buffer_for(private_type_name, private_capacity,            \
-                               private_count, private_data...)                 \
+#define CCC_private_buffer_for(                                                \
+    private_type_name, private_capacity, private_count, private_data...        \
+)                                                                              \
     {                                                                          \
         .data = (private_data),                                                \
         .sizeof_type = sizeof(private_type_name),                              \
@@ -62,25 +63,31 @@ are contiguous. */
 
 /** @internal For dynamic containers to perform the allocation and
 initialization in one convenient step for user. */
-#define CCC_private_buffer_from(private_allocator_pointer,                     \
-                                private_optional_capacity,                     \
-                                private_compound_literal_array...)             \
+#define CCC_private_buffer_from(                                               \
+    private_allocator_pointer,                                                 \
+    private_optional_capacity,                                                 \
+    private_compound_literal_array...                                          \
+)                                                                              \
     (__extension__({                                                           \
         typeof(*private_compound_literal_array)                                \
             *private_buffer_initializer_list = private_compound_literal_array; \
         struct CCC_Buffer private_buf = CCC_private_buffer_default(            \
-            typeof(*private_buffer_initializer_list));                         \
+            typeof(*private_buffer_initializer_list)                           \
+        );                                                                     \
         size_t const private_n = sizeof(private_compound_literal_array)        \
                                / sizeof(*private_buffer_initializer_list);     \
         size_t const private_cap = private_optional_capacity;                  \
         if (CCC_buffer_reserve(                                                \
                 &private_buf,                                                  \
                 (private_n > private_cap ? private_n : private_cap),           \
-                (private_allocator_pointer))                                   \
+                (private_allocator_pointer)                                    \
+            )                                                                  \
             == CCC_RESULT_OK) {                                                \
-            (void)memcpy(private_buf.data, private_buffer_initializer_list,    \
-                         private_n                                             \
-                             * sizeof(*private_buffer_initializer_list));      \
+            (void)memcpy(                                                      \
+                private_buf.data,                                              \
+                private_buffer_initializer_list,                               \
+                private_n * sizeof(*private_buffer_initializer_list)           \
+            );                                                                 \
             private_buf.count = private_n;                                     \
         }                                                                      \
         private_buf;                                                           \
@@ -89,26 +96,33 @@ initialization in one convenient step for user. */
 /** @internal For dynamic containers to perform initialization and reservation
 of memory in one step. */
 #define CCC_private_buffer_with_capacity(                                      \
-    private_type_name, private_allocator_pointer, private_capacity)            \
+    private_type_name, private_allocator_pointer, private_capacity             \
+)                                                                              \
     (__extension__({                                                           \
         struct CCC_Buffer private_buf                                          \
             = CCC_private_buffer_default(private_type_name);                   \
-        (void)CCC_buffer_reserve(&private_buf, (private_capacity),             \
-                                 (private_allocator_pointer));                 \
+        (void)CCC_buffer_reserve(                                              \
+            &private_buf, (private_capacity), (private_allocator_pointer)      \
+        );                                                                     \
         private_buf;                                                           \
     }))
 
 /** @internal Initializes a fixed size buffer with no allocation or context. */
-#define CCC_private_buffer_with_storage(private_count,                         \
-                                        private_compound_literal_array...)     \
+#define CCC_private_buffer_with_storage(                                       \
+    private_count, private_compound_literal_array...                           \
+)                                                                              \
     (struct {                                                                  \
-        static_assert(sizeof(private_compound_literal_array) > 0,              \
-                      "provide non-zero capacity compound literal array");     \
-        static_assert(private_count                                            \
-                          <= (sizeof(private_compound_literal_array)           \
-                              / sizeof(*private_compound_literal_array)),      \
-                      "provide count less than or equal to capacity of "       \
-                      "compound literal array");                               \
+        static_assert(                                                         \
+            sizeof(private_compound_literal_array) > 0,                        \
+            "provide non-zero capacity compound literal array"                 \
+        );                                                                     \
+        static_assert(                                                         \
+            private_count                                                      \
+                <= (sizeof(private_compound_literal_array)                     \
+                    / sizeof(*private_compound_literal_array)),                \
+            "provide count less than or equal to capacity of "                 \
+            "compound literal array"                                           \
+        );                                                                     \
         CCC_Buffer private;                                                    \
     }){{                                                                       \
            .data = (private_compound_literal_array),                           \
@@ -120,8 +134,9 @@ of memory in one step. */
         .private
 
 /** @internal */
-#define CCC_private_buffer_emplace(private_buffer_pointer, index,              \
-                                   private_type_compound_literal...)           \
+#define CCC_private_buffer_emplace(                                            \
+    private_buffer_pointer, index, private_type_compound_literal...            \
+)                                                                              \
     (__extension__({                                                           \
         typeof(private_type_compound_literal) *private_buffer_res = NULL;      \
         __auto_type private_i = (index);                                       \
@@ -134,13 +149,16 @@ of memory in one step. */
     }))
 
 /** @internal */
-#define CCC_private_buffer_emplace_back(private_buffer_pointer,                \
-                                        private_allocator_pointer,             \
-                                        private_type_compound_literal...)      \
+#define CCC_private_buffer_emplace_back(                                       \
+    private_buffer_pointer,                                                    \
+    private_allocator_pointer,                                                 \
+    private_type_compound_literal...                                           \
+)                                                                              \
     (__extension__({                                                           \
         typeof(private_type_compound_literal) *private_buffer_res = NULL;      \
         private_buffer_res = CCC_buffer_allocate_back(                         \
-            (private_buffer_pointer), (private_allocator_pointer));            \
+            (private_buffer_pointer), (private_allocator_pointer)              \
+        );                                                                     \
         if (private_buffer_res) {                                              \
             *private_buffer_res = private_type_compound_literal;               \
         }                                                                      \

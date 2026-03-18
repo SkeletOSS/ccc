@@ -43,8 +43,10 @@ and capacity record. The allocator starts empty, assuming no allocations yet
 exist. */
 #define stack_allocator_for(type_compound_literal_array)                       \
     (struct {                                                                  \
-        static_assert(sizeof(type_compound_literal_array) > 0,                 \
-                      "provide non-empty compound literal array");             \
+        static_assert(                                                         \
+            sizeof(type_compound_literal_array) > 0,                           \
+            "provide non-empty compound literal array"                         \
+        );                                                                     \
         struct Stack_allocator private;                                        \
     }){{                                                                       \
            .blocks = (type_compound_literal_array),                            \

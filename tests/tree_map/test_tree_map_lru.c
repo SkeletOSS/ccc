@@ -75,24 +75,30 @@ lru_head(struct Lru_cache *const lru) {
 static struct Lru_cache lru_cache = {
     .cap = 3,
     .l = doubly_linked_list_for(struct Lru_node, list_node, NULL, NULL),
-    .map = tree_map_for(struct Lru_node, map_node, key, order_by_key,
-                        std_allocate, NULL),
+    .map = tree_map_for(
+        struct Lru_node, map_node, key, order_by_key, std_allocate, NULL
+    ),
 };
 
-check_static_begin(lru_put, struct Lru_cache *const lru, int const key,
-                   int const val) {
+check_static_begin(
+    lru_put, struct Lru_cache *const lru, int const key, int const val
+) {
     CCC_Tree_map_entry *const ent = entry_wrap(&lru->map, &key);
     if (occupied(ent)) {
         struct Lru_node *const found = unwrap(ent);
         found->key = key;
         found->val = val;
         CCC_Result r = doubly_linked_list_splice(
-            &lru->l, doubly_linked_list_node_begin(&lru->l), &lru->l,
-            &found->list_node);
+            &lru->l,
+            doubly_linked_list_node_begin(&lru->l),
+            &lru->l,
+            &found->list_node
+        );
         check(r, CCC_RESULT_OK);
     } else {
         struct Lru_node *new = insert_entry(
-            ent, &(struct Lru_node){.key = key, .val = val}.map_node);
+            ent, &(struct Lru_node){.key = key, .val = val}.map_node
+        );
         check(new == NULL, false);
         new = doubly_linked_list_push_front(&lru->l, &new->list_node);
         check(new == NULL, false);
@@ -108,16 +114,20 @@ check_static_begin(lru_put, struct Lru_cache *const lru, int const key,
     check_end();
 }
 
-check_static_begin(lru_get, struct Lru_cache *const lru, int const key,
-                   int *val) {
+check_static_begin(
+    lru_get, struct Lru_cache *const lru, int const key, int *val
+) {
     check_error(val != NULL, true);
     struct Lru_node *const found = get_key_value(&lru->map, &key);
     if (!found) {
         *val = -1;
     } else {
         CCC_Result r = doubly_linked_list_splice(
-            &lru->l, doubly_linked_list_node_begin(&lru->l), &lru->l,
-            &found->list_node);
+            &lru->l,
+            doubly_linked_list_node_begin(&lru->l),
+            &lru->l,
+            &found->list_node
+        );
         check(r, CCC_RESULT_OK);
         *val = found->val;
     }
@@ -142,26 +152,40 @@ check_static_begin(run_lru_cache) {
     for (size_t i = 0; i < REQS; ++i) {
         switch (requests[i].call) {
             case PUT: {
-                check(requests[i].putter(&lru_cache, requests[i].key,
-                                         requests[i].val),
-                      CHECK_PASS);
-                quiet_print("PUT -> {key: %d, val: %d}\n", requests[i].key,
-                            requests[i].val);
+                check(
+                    requests[i].putter(
+                        &lru_cache, requests[i].key, requests[i].val
+                    ),
+                    CHECK_PASS
+                );
+                quiet_print(
+                    "PUT -> {key: %d, val: %d}\n",
+                    requests[i].key,
+                    requests[i].val
+                );
                 check(validate(&lru_cache.map), true);
                 check(validate(&lru_cache.l), true);
             } break;
             case GET: {
-                quiet_print("GET -> {key: %d, val: %d}\n", requests[i].key,
-                            requests[i].val);
+                quiet_print(
+                    "GET -> {key: %d, val: %d}\n",
+                    requests[i].key,
+                    requests[i].val
+                );
                 int val = 0;
-                check(requests[i].getter(&lru_cache, requests[i].key, &val),
-                      CHECK_PASS);
+                check(
+                    requests[i].getter(&lru_cache, requests[i].key, &val),
+                    CHECK_PASS
+                );
                 check(val, requests[i].val);
                 check(validate(&lru_cache.l), true);
             } break;
             case HED: {
-                quiet_print("HED -> {key: %d, val: %d}\n", requests[i].key,
-                            requests[i].val);
+                quiet_print(
+                    "HED -> {key: %d, val: %d}\n",
+                    requests[i].key,
+                    requests[i].val
+                );
                 struct Lru_node const *const kv
                     = requests[i].header(&lru_cache);
                 check(kv != NULL, true);

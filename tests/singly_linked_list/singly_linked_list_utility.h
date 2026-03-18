@@ -14,9 +14,13 @@ struct Val {
 };
 
 CCC_Order val_order(CCC_Comparator_arguments);
-enum Check_result check_order(CCC_Singly_linked_list const *, size_t n,
-                              int const order[]);
-enum Check_result push_list(CCC_Singly_linked_list *, size_t n,
-                            struct Val vals[], CCC_Allocator const *allocator);
+enum Check_result
+check_order(CCC_Singly_linked_list const *, size_t n, int const order[]);
+enum Check_result push_list(
+    CCC_Singly_linked_list *,
+    size_t n,
+    struct Val vals[],
+    CCC_Allocator const *allocator
+);
 
 #endif /* SLL_UTIL_H */

@@ -17,8 +17,9 @@ rand_range(int const min, int const max) {
 }
 
 void
-rand_shuffle(size_t const elem_size, void *const elems, size_t const n,
-             void *const temp) {
+rand_shuffle(
+    size_t const elem_size, void *const elems, size_t const n, void *const temp
+) {
     if (n <= 1) {
         return;
     }

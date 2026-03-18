@@ -51,43 +51,52 @@ enum {
 
 /*=======================        Prototypes       ===========================*/
 
-static struct CCC_Adaptive_map_entry entry(struct CCC_Adaptive_map *,
-                                           void const *);
+static struct CCC_Adaptive_map_entry
+entry(struct CCC_Adaptive_map *, void const *);
 static void init_node(struct CCC_Adaptive_map_node *);
 static void swap(void *, void *, void *, size_t);
-static void link(struct CCC_Adaptive_map_node *, enum Link,
-                 struct CCC_Adaptive_map_node *);
+static void
+link(struct CCC_Adaptive_map_node *, enum Link, struct CCC_Adaptive_map_node *);
 static CCC_Tribool empty(struct CCC_Adaptive_map const *);
 static CCC_Tribool contains(struct CCC_Adaptive_map *, void const *);
 static CCC_Tribool validate(struct CCC_Adaptive_map const *);
-static void *struct_base(struct CCC_Adaptive_map const *,
-                         struct CCC_Adaptive_map_node const *);
+static void *struct_base(
+    struct CCC_Adaptive_map const *, struct CCC_Adaptive_map_node const *
+);
 static void *find(struct CCC_Adaptive_map *, void const *);
 static void *erase(struct CCC_Adaptive_map *, void const *);
-static void *allocate_insert(struct CCC_Adaptive_map *,
-                             struct CCC_Adaptive_map_node *,
-                             CCC_Allocator const *);
+static void *allocate_insert(
+    struct CCC_Adaptive_map *,
+    struct CCC_Adaptive_map_node *,
+    CCC_Allocator const *
+);
 static void *insert(struct CCC_Adaptive_map *, struct CCC_Adaptive_map_node *);
-static void *connect_new_root(struct CCC_Adaptive_map *,
-                              struct CCC_Adaptive_map_node *, CCC_Order);
+static void *connect_new_root(
+    struct CCC_Adaptive_map *, struct CCC_Adaptive_map_node *, CCC_Order
+);
 static void *max(struct CCC_Adaptive_map const *);
 static void *min(struct CCC_Adaptive_map const *);
 static void *key_in_slot(struct CCC_Adaptive_map const *, void const *);
-static void *key_from_node(struct CCC_Adaptive_map const *,
-                           CCC_Adaptive_map_node const *);
-static CCC_Range equal_range(struct CCC_Adaptive_map *, void const *,
-                             void const *, enum Link);
+static void *
+key_from_node(struct CCC_Adaptive_map const *, CCC_Adaptive_map_node const *);
+static CCC_Range
+equal_range(struct CCC_Adaptive_map *, void const *, void const *, enum Link);
 static struct CCC_Adaptive_map_node *
 remove_from_tree(struct CCC_Adaptive_map *, struct CCC_Adaptive_map_node *);
-static struct CCC_Adaptive_map_node const *
-next(struct CCC_Adaptive_map const *, struct CCC_Adaptive_map_node const *,
-     enum Link);
+static struct CCC_Adaptive_map_node const *next(
+    struct CCC_Adaptive_map const *,
+    struct CCC_Adaptive_map_node const *,
+    enum Link
+);
 static struct CCC_Adaptive_map_node *
 splay(struct CCC_Adaptive_map *, struct CCC_Adaptive_map_node *, void const *);
 static struct CCC_Adaptive_map_node *
 elem_in_slot(struct CCC_Adaptive_map const *, void const *);
-static CCC_Order order(struct CCC_Adaptive_map const *, void const *,
-                       struct CCC_Adaptive_map_node const *);
+static CCC_Order order(
+    struct CCC_Adaptive_map const *,
+    void const *,
+    struct CCC_Adaptive_map_node const *
+);
 
 /*=======================        Map Interface      =========================*/
 
@@ -126,18 +135,22 @@ CCC_adaptive_map_entry(CCC_Adaptive_map *const map, void const *const key) {
 }
 
 void *
-CCC_adaptive_map_insert_entry(CCC_Adaptive_map_entry const *const entry,
-                              CCC_Adaptive_map_node *const type_intruder,
-                              CCC_Allocator const *const allocator) {
+CCC_adaptive_map_insert_entry(
+    CCC_Adaptive_map_entry const *const entry,
+    CCC_Adaptive_map_node *const type_intruder,
+    CCC_Allocator const *const allocator
+) {
     if (!entry || !type_intruder || !allocator) {
         return NULL;
     }
     if (entry->entry.status == CCC_ENTRY_OCCUPIED) {
         if (entry->entry.type) {
             *type_intruder = *elem_in_slot(entry->map, entry->entry.type);
-            (void)memcpy(entry->entry.type,
-                         struct_base(entry->map, type_intruder),
-                         entry->map->sizeof_type);
+            (void)memcpy(
+                entry->entry.type,
+                struct_base(entry->map, type_intruder),
+                entry->map->sizeof_type
+            );
         }
         return entry->entry.type;
     }
@@ -145,9 +158,11 @@ CCC_adaptive_map_insert_entry(CCC_Adaptive_map_entry const *const entry,
 }
 
 void *
-CCC_adaptive_map_or_insert(CCC_Adaptive_map_entry const *const entry,
-                           CCC_Adaptive_map_node *const type_intruder,
-                           CCC_Allocator const *const allocator) {
+CCC_adaptive_map_or_insert(
+    CCC_Adaptive_map_entry const *const entry,
+    CCC_Adaptive_map_node *const type_intruder,
+    CCC_Allocator const *const allocator
+) {
     if (!entry || !type_intruder || !allocator) {
         return NULL;
     }
@@ -158,8 +173,9 @@ CCC_adaptive_map_or_insert(CCC_Adaptive_map_entry const *const entry,
 }
 
 CCC_Adaptive_map_entry *
-CCC_adaptive_map_and_modify(CCC_Adaptive_map_entry *const entry,
-                            CCC_Modifier const *const modifier) {
+CCC_adaptive_map_and_modify(
+    CCC_Adaptive_map_entry *const entry, CCC_Modifier const *const modifier
+) {
     if (!entry || !modifier) {
         return NULL;
     }
@@ -174,10 +190,12 @@ CCC_adaptive_map_and_modify(CCC_Adaptive_map_entry *const entry,
 }
 
 CCC_Entry
-CCC_adaptive_map_swap_entry(CCC_Adaptive_map *const map,
-                            CCC_Adaptive_map_node *const type_intruder,
-                            CCC_Adaptive_map_node *const temp_intruder,
-                            CCC_Allocator const *const allocator) {
+CCC_adaptive_map_swap_entry(
+    CCC_Adaptive_map *const map,
+    CCC_Adaptive_map_node *const type_intruder,
+    CCC_Adaptive_map_node *const temp_intruder,
+    CCC_Allocator const *const allocator
+) {
     if (!map || !type_intruder || !temp_intruder || !allocator) {
         return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
@@ -212,9 +230,11 @@ CCC_adaptive_map_swap_entry(CCC_Adaptive_map *const map,
 }
 
 CCC_Entry
-CCC_adaptive_map_try_insert(CCC_Adaptive_map *const map,
-                            CCC_Adaptive_map_node *const type_intruder,
-                            CCC_Allocator const *const allocator) {
+CCC_adaptive_map_try_insert(
+    CCC_Adaptive_map *const map,
+    CCC_Adaptive_map_node *const type_intruder,
+    CCC_Allocator const *const allocator
+) {
     if (!map || !type_intruder || !allocator) {
         return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
@@ -240,9 +260,11 @@ CCC_adaptive_map_try_insert(CCC_Adaptive_map *const map,
 }
 
 CCC_Entry
-CCC_adaptive_map_insert_or_assign(CCC_Adaptive_map *const map,
-                                  CCC_Adaptive_map_node *const type_intruder,
-                                  CCC_Allocator const *const allocator) {
+CCC_adaptive_map_insert_or_assign(
+    CCC_Adaptive_map *const map,
+    CCC_Adaptive_map_node *const type_intruder,
+    CCC_Allocator const *const allocator
+) {
     if (!map || !type_intruder || !allocator) {
         return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
@@ -273,7 +295,8 @@ CCC_Entry
 CCC_adaptive_map_remove_key_value(
     CCC_Adaptive_map *const map,
     CCC_Adaptive_map_node *const type_output_intruder,
-    CCC_Allocator const *const allocator) {
+    CCC_Allocator const *const allocator
+) {
     if (!map || !type_output_intruder || !allocator) {
         return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
@@ -304,8 +327,9 @@ CCC_adaptive_map_remove_key_value(
 }
 
 CCC_Entry
-CCC_adaptive_map_remove_entry(CCC_Adaptive_map_entry *const e,
-                              CCC_Allocator const *const allocator) {
+CCC_adaptive_map_remove_entry(
+    CCC_Adaptive_map_entry *const e, CCC_Allocator const *const allocator
+) {
     if (!e || !allocator) {
         return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
@@ -335,8 +359,9 @@ CCC_adaptive_map_remove_entry(CCC_Adaptive_map_entry *const e,
 }
 
 void *
-CCC_adaptive_map_get_key_value(CCC_Adaptive_map *const map,
-                               void const *const key) {
+CCC_adaptive_map_get_key_value(
+    CCC_Adaptive_map *const map, void const *const key
+) {
     if (!map || !key) {
         return NULL;
     }
@@ -393,8 +418,10 @@ CCC_adaptive_map_reverse_end(CCC_Adaptive_map const *const) {
 }
 
 void *
-CCC_adaptive_map_next(CCC_Adaptive_map const *const map,
-                      CCC_Adaptive_map_node const *const iterator_intruder) {
+CCC_adaptive_map_next(
+    CCC_Adaptive_map const *const map,
+    CCC_Adaptive_map_node const *const iterator_intruder
+) {
     if (!map || !iterator_intruder) {
         return NULL;
     }
@@ -406,7 +433,8 @@ CCC_adaptive_map_next(CCC_Adaptive_map const *const map,
 void *
 CCC_adaptive_map_reverse_next(
     CCC_Adaptive_map const *const map,
-    CCC_Adaptive_map_node const *const iterator_intruder) {
+    CCC_Adaptive_map_node const *const iterator_intruder
+) {
     if (!map || !iterator_intruder) {
         return NULL;
     }
@@ -416,9 +444,11 @@ CCC_adaptive_map_reverse_next(
 }
 
 CCC_Range
-CCC_adaptive_map_equal_range(CCC_Adaptive_map *const map,
-                             void const *const begin_key,
-                             void const *const end_key) {
+CCC_adaptive_map_equal_range(
+    CCC_Adaptive_map *const map,
+    void const *const begin_key,
+    void const *const end_key
+) {
     if (!map || !begin_key || !end_key) {
         return (CCC_Range){};
     }
@@ -426,9 +456,11 @@ CCC_adaptive_map_equal_range(CCC_Adaptive_map *const map,
 }
 
 CCC_Range_reverse
-CCC_adaptive_map_equal_range_reverse(CCC_Adaptive_map *const map,
-                                     void const *const reverse_begin_key,
-                                     void const *const reverse_end_key)
+CCC_adaptive_map_equal_range_reverse(
+    CCC_Adaptive_map *const map,
+    void const *const reverse_begin_key,
+    void const *const reverse_end_key
+)
 
 {
     if (!map || !reverse_begin_key || !reverse_end_key) {
@@ -445,9 +477,11 @@ CCC_adaptive_map_equal_range_reverse(CCC_Adaptive_map *const map,
 /** This is a linear time constant space deletion of tree nodes via left
 rotations so element fields are modified during progression of deletes. */
 CCC_Result
-CCC_adaptive_map_clear(CCC_Adaptive_map *const map,
-                       CCC_Destructor const *const destructor,
-                       CCC_Allocator const *const allocator) {
+CCC_adaptive_map_clear(
+    CCC_Adaptive_map *const map,
+    CCC_Destructor const *const destructor,
+    CCC_Allocator const *const allocator
+) {
     if (!map || !allocator || !destructor) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -493,26 +527,30 @@ CCC_adaptive_map_validate(CCC_Adaptive_map const *const map) {
 /*==========================  Private Interface  ============================*/
 
 struct CCC_Adaptive_map_entry
-CCC_private_adaptive_map_entry(struct CCC_Adaptive_map *const t,
-                               void const *const key) {
+CCC_private_adaptive_map_entry(
+    struct CCC_Adaptive_map *const t, void const *const key
+) {
     return entry(t, key);
 }
 
 void *
-CCC_private_adaptive_map_insert(struct CCC_Adaptive_map *const t,
-                                struct CCC_Adaptive_map_node *n) {
+CCC_private_adaptive_map_insert(
+    struct CCC_Adaptive_map *const t, struct CCC_Adaptive_map_node *n
+) {
     return insert(t, n);
 }
 
 void *
-CCC_private_adaptive_map_key_in_slot(struct CCC_Adaptive_map const *const t,
-                                     void const *const slot) {
+CCC_private_adaptive_map_key_in_slot(
+    struct CCC_Adaptive_map const *const t, void const *const slot
+) {
     return key_in_slot(t, slot);
 }
 
 struct CCC_Adaptive_map_node *
-CCC_private_adaptive_map_node_in_slot(struct CCC_Adaptive_map const *const t,
-                                      void const *slot) {
+CCC_private_adaptive_map_node_in_slot(
+    struct CCC_Adaptive_map const *const t, void const *slot
+) {
     return elem_in_slot(t, slot);
 }
 
@@ -540,8 +578,9 @@ entry(struct CCC_Adaptive_map *const t, void const *const key) {
 }
 
 static inline void *
-key_from_node(struct CCC_Adaptive_map const *const t,
-              CCC_Adaptive_map_node const *const n) {
+key_from_node(
+    struct CCC_Adaptive_map const *const t, CCC_Adaptive_map_node const *const n
+) {
     return n ? (char *)struct_base(t, n) + t->key_offset : NULL;
 }
 
@@ -591,8 +630,11 @@ min(struct CCC_Adaptive_map const *t) {
 }
 
 static struct CCC_Adaptive_map_node const *
-next(struct CCC_Adaptive_map const *const t [[maybe_unused]],
-     struct CCC_Adaptive_map_node const *n, enum Link const traversal) {
+next(
+    struct CCC_Adaptive_map const *const t [[maybe_unused]],
+    struct CCC_Adaptive_map_node const *n,
+    enum Link const traversal
+) {
     if (!n) {
         return NULL;
     }
@@ -610,8 +652,12 @@ next(struct CCC_Adaptive_map const *const t [[maybe_unused]],
 }
 
 static CCC_Range
-equal_range(struct CCC_Adaptive_map *const t, void const *const begin_key,
-            void const *const end_key, enum Link const traversal) {
+equal_range(
+    struct CCC_Adaptive_map *const t,
+    void const *const begin_key,
+    void const *const end_key,
+    enum Link const traversal
+) {
     if (!t->size) {
         return (CCC_Range){};
     }
@@ -652,9 +698,11 @@ contains(struct CCC_Adaptive_map *const t, void const *const key) {
 }
 
 static void *
-allocate_insert(struct CCC_Adaptive_map *const t,
-                struct CCC_Adaptive_map_node *out_handle,
-                CCC_Allocator const *const allocator) {
+allocate_insert(
+    struct CCC_Adaptive_map *const t,
+    struct CCC_Adaptive_map_node *out_handle,
+    CCC_Allocator const *const allocator
+) {
     init_node(out_handle);
     CCC_Order root_order = CCC_ORDER_ERROR;
     if (!empty(t)) {
@@ -689,8 +737,9 @@ allocate_insert(struct CCC_Adaptive_map *const t,
 }
 
 static void *
-insert(struct CCC_Adaptive_map *const t,
-       struct CCC_Adaptive_map_node *const n) {
+insert(
+    struct CCC_Adaptive_map *const t, struct CCC_Adaptive_map_node *const n
+) {
     init_node(n);
     if (empty(t)) {
         t->root = n;
@@ -708,9 +757,11 @@ insert(struct CCC_Adaptive_map *const t,
 }
 
 static void *
-connect_new_root(struct CCC_Adaptive_map *const t,
-                 struct CCC_Adaptive_map_node *const new_root,
-                 CCC_Order const order_result) {
+connect_new_root(
+    struct CCC_Adaptive_map *const t,
+    struct CCC_Adaptive_map_node *const new_root,
+    CCC_Order const order_result
+) {
     assert(new_root);
     enum Link const dir = CCC_ORDER_GREATER == order_result;
     link(new_root, dir, t->root->branch[dir]);
@@ -738,8 +789,9 @@ erase(struct CCC_Adaptive_map *const t, void const *const key) {
 }
 
 static struct CCC_Adaptive_map_node *
-remove_from_tree(struct CCC_Adaptive_map *const t,
-                 struct CCC_Adaptive_map_node *const ret) {
+remove_from_tree(
+    struct CCC_Adaptive_map *const t, struct CCC_Adaptive_map_node *const ret
+) {
     if (ret->branch[L] == NULL) {
         t->root = ret->branch[R];
         if (t->root) {
@@ -761,8 +813,11 @@ This implementation has been modified to unite the left and right symmetries
 and manage the parent pointers. Parent pointers are not usual for splay trees
 but are necessary for a clean iteration API. */
 static struct CCC_Adaptive_map_node *
-splay(struct CCC_Adaptive_map *const t, struct CCC_Adaptive_map_node *root,
-      void const *const key) {
+splay(
+    struct CCC_Adaptive_map *const t,
+    struct CCC_Adaptive_map_node *root,
+    void const *const key
+) {
     assert(root);
     /* Splaying brings the key element up to the root. The zigzag fixes of
        splaying repair the tree and we remember the roots of these changes in
@@ -820,8 +875,10 @@ splay(struct CCC_Adaptive_map *const t, struct CCC_Adaptive_map_node *root,
 }
 
 static inline void *
-struct_base(struct CCC_Adaptive_map const *const t,
-            struct CCC_Adaptive_map_node const *const n) {
+struct_base(
+    struct CCC_Adaptive_map const *const t,
+    struct CCC_Adaptive_map_node const *const n
+) {
     /* Link is the first field of the struct and is an array so no need to get
        pointer address of [0] element of array. That's the same as just the
        array field. */
@@ -829,8 +886,11 @@ struct_base(struct CCC_Adaptive_map const *const t,
 }
 
 static inline CCC_Order
-order(struct CCC_Adaptive_map const *const t, void const *const key,
-      struct CCC_Adaptive_map_node const *const node) {
+order(
+    struct CCC_Adaptive_map const *const t,
+    void const *const key,
+    struct CCC_Adaptive_map_node const *const node
+) {
     return t->compare((CCC_Key_comparator_arguments){
         .key_left = key,
         .type_right = struct_base(t, node),
@@ -849,8 +909,11 @@ swap(void *const temp, void *const a, void *const b, size_t sizeof_type) {
 }
 
 static inline void
-link(struct CCC_Adaptive_map_node *const parent, enum Link const dir,
-     struct CCC_Adaptive_map_node *const subtree) {
+link(
+    struct CCC_Adaptive_map_node *const parent,
+    enum Link const dir,
+    struct CCC_Adaptive_map_node *const subtree
+) {
     if (parent) {
         parent->branch[dir] = subtree;
     }
@@ -881,8 +944,10 @@ struct Parent_status {
 };
 
 static size_t
-recursive_count(struct CCC_Adaptive_map const *const t,
-                struct CCC_Adaptive_map_node const *const r) {
+recursive_count(
+    struct CCC_Adaptive_map const *const t,
+    struct CCC_Adaptive_map_node const *const r
+) {
     if (r == NULL) {
         return 0;
     }
@@ -891,9 +956,11 @@ recursive_count(struct CCC_Adaptive_map const *const t,
 }
 
 static CCC_Tribool
-are_subtrees_valid(struct CCC_Adaptive_map const *const t,
-                   struct Tree_range const r,
-                   struct CCC_Adaptive_map_node const *const nil) {
+are_subtrees_valid(
+    struct CCC_Adaptive_map const *const t,
+    struct Tree_range const r,
+    struct CCC_Adaptive_map_node const *const nil
+) {
     if (r.root == nil) {
         return CCC_TRUE;
     }
@@ -905,26 +972,32 @@ are_subtrees_valid(struct CCC_Adaptive_map const *const t,
         && order(t, key_from_node(t, r.high), r.root) != CCC_ORDER_GREATER) {
         return CCC_FALSE;
     }
-    return are_subtrees_valid(t,
-                              (struct Tree_range){
-                                  .low = r.low,
-                                  .root = r.root->branch[L],
-                                  .high = r.root,
-                              },
-                              nil)
-        && are_subtrees_valid(t,
-                              (struct Tree_range){
-                                  .low = r.root,
-                                  .root = r.root->branch[R],
-                                  .high = r.high,
-                              },
-                              nil);
+    return are_subtrees_valid(
+               t,
+               (struct Tree_range){
+                   .low = r.low,
+                   .root = r.root->branch[L],
+                   .high = r.root,
+               },
+               nil
+           )
+        && are_subtrees_valid(
+               t,
+               (struct Tree_range){
+                   .low = r.root,
+                   .root = r.root->branch[R],
+                   .high = r.high,
+               },
+               nil
+        );
 }
 
 static CCC_Tribool
-is_parent_correct(struct CCC_Adaptive_map const *const t,
-                  struct CCC_Adaptive_map_node const *const parent,
-                  struct CCC_Adaptive_map_node const *const root) {
+is_parent_correct(
+    struct CCC_Adaptive_map const *const t,
+    struct CCC_Adaptive_map_node const *const parent,
+    struct CCC_Adaptive_map_node const *const root
+) {
     if (root == NULL) {
         return CCC_TRUE;
     }
@@ -943,13 +1016,15 @@ is_parent_correct(struct CCC_Adaptive_map const *const t,
    information. */
 static CCC_Tribool
 validate(struct CCC_Adaptive_map const *const t) {
-    if (!are_subtrees_valid(t,
-                            (struct Tree_range){
-                                .low = NULL,
-                                .root = t->root,
-                                .high = NULL,
-                            },
-                            NULL)) {
+    if (!are_subtrees_valid(
+            t,
+            (struct Tree_range){
+                .low = NULL,
+                .root = t->root,
+                .high = NULL,
+            },
+            NULL
+        )) {
         return CCC_FALSE;
     }
     if (!is_parent_correct(t, NULL, t->root)) {

@@ -23,8 +23,9 @@ check_static_begin(buffer_test_push_pop_fixed) {
     }
     check(buffer_count(&b).count, sizeof(push) / sizeof(*push));
     check(buffer_count(&b).count, count);
-    check(buffer_push_back(&b, &(int){99}, &(CCC_Allocator){}) == NULL,
-          CCC_TRUE);
+    check(
+        buffer_push_back(&b, &(int){99}, &(CCC_Allocator){}) == NULL, CCC_TRUE
+    );
     while (!buffer_is_empty(&b)) {
         int const v = *(int *)buffer_back(&b);
         check(buffer_pop_back(&b), CCC_RESULT_OK);
@@ -71,7 +72,8 @@ check_static_begin(buffer_test_daily_temperatures) {
         TMPCAP = 8,
     };
     Buffer const temps = buffer_with_storage(
-        TMPCAP, (int[TMPCAP]){73, 74, 75, 71, 69, 72, 76, 73});
+        TMPCAP, (int[TMPCAP]){73, 74, 75, 71, 69, 72, 76, 73}
+    );
     Buffer const correct
         = buffer_with_storage(TMPCAP, (int[TMPCAP]){1, 1, 4, 2, 1, 1, 0, 0});
     Buffer res = buffer_with_storage(TMPCAP, (int[TMPCAP]){});
@@ -79,10 +81,13 @@ check_static_begin(buffer_test_daily_temperatures) {
     for (int i = 0, end = (int)buffer_count(&temps).count; i < end; ++i) {
         while (!buffer_is_empty(&idx_stack)
                && *buffer_as(&temps, int, i) > *buffer_as(
-                      &temps, int, *buffer_back_as(&idx_stack, int))) {
-            int const *const pointer
-                = buffer_emplace(&res, *buffer_back_as(&idx_stack, int),
-                                 i - *buffer_back_as(&idx_stack, int));
+                      &temps, int, *buffer_back_as(&idx_stack, int)
+                  )) {
+            int const *const pointer = buffer_emplace(
+                &res,
+                *buffer_back_as(&idx_stack, int),
+                i - *buffer_back_as(&idx_stack, int)
+            );
             check(pointer != NULL, CCC_TRUE);
             CCC_Result const r = buffer_pop_back(&idx_stack);
             check(r, CCC_RESULT_OK);
@@ -91,9 +96,14 @@ check_static_begin(buffer_test_daily_temperatures) {
             = buffer_push_back(&idx_stack, &i, &(CCC_Allocator){});
         check(pointer != NULL, CCC_TRUE);
     }
-    check(memcmp(buffer_begin(&res), buffer_begin(&correct),
-                 buffer_count_bytes(&correct).count),
-          0);
+    check(
+        memcmp(
+            buffer_begin(&res),
+            buffer_begin(&correct),
+            buffer_count_bytes(&correct).count
+        ),
+        0
+    );
     check_end();
 }
 
@@ -121,11 +131,15 @@ check_static_begin(buffer_test_car_fleet) {
     int const correct_fleet_count = 3;
     Buffer car_idx = buffer_with_storage(CARCAP, (int[CARCAP]){});
     iota(buffer_begin(&car_idx), CARCAP, 0);
-    quicksort(&car_idx, &(int){}, CCC_ORDER_LESSER,
-              &(CCC_Comparator){
-                  .compare = order_car_idx,
-                  .context = &positions,
-              });
+    quicksort(
+        &car_idx,
+        &(int){},
+        CCC_ORDER_LESSER,
+        &(CCC_Comparator){
+            .compare = order_car_idx,
+            .context = &positions,
+        }
+    );
     int target = 12;
     int fleets = 1;
     double slowest_time_to_target
@@ -159,7 +173,8 @@ check_static_begin(buffer_test_largest_rectangle_in_histogram) {
         while (!buffer_is_empty(&bar_indices)
                && (i == end
                    || *buffer_as(&heights, int, i) < *buffer_as(
-                          &heights, int, *buffer_back_as(&bar_indices, int)))) {
+                          &heights, int, *buffer_back_as(&bar_indices, int)
+                      ))) {
             int const stack_top_i = *buffer_back_as(&bar_indices, int);
             int const stack_top_height = *buffer_as(&heights, int, stack_top_i);
             CCC_Result const r = buffer_pop_back(&bar_indices);
@@ -205,7 +220,11 @@ check_static_begin(buffer_test_erase) {
 int
 main(void) {
     return check_run(
-        buffer_test_push_pop_fixed(), buffer_test_push_resize_pop(),
-        buffer_test_daily_temperatures(), buffer_test_car_fleet(),
-        buffer_test_largest_rectangle_in_histogram(), buffer_test_erase());
+        buffer_test_push_pop_fixed(),
+        buffer_test_push_resize_pop(),
+        buffer_test_daily_temperatures(),
+        buffer_test_car_fleet(),
+        buffer_test_largest_rectangle_in_histogram(),
+        buffer_test_erase()
+    );
 }

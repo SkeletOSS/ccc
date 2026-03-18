@@ -79,12 +79,33 @@ there are two for every cell and the terminal cannot help us with that. Notably
 when printing to a position on the screen you need to halve the position because
 there are two of these mini squares per cell of the terminal. */
 static char const *const walls[16] = {
-    "▀", "▀", "▀", "▀", "█", "█", "█", "█",
-    "▀", "▀", "▀", "▀", "█", "█", "█", "█",
+    "▀",
+    "▀",
+    "▀",
+    "▀",
+    "█",
+    "█",
+    "█",
+    "█",
+    "▀",
+    "▀",
+    "▀",
+    "▀",
+    "█",
+    "█",
+    "█",
+    "█",
 };
 
 static int const speeds[] = {
-    0, 5000000, 2500000, 1000000, 500000, 250000, 100000, 1000,
+    0,
+    5000000,
+    2500000,
+    1000000,
+    500000,
+    250000,
+    100000,
+    1000,
 };
 
 static struct Point const dir_offsets[] = {{-2, 0}, {0, 2}, {2, 0}, {0, -2}};
@@ -121,8 +142,9 @@ static SV_Str_view const help_flag = SV_from("-h");
     do {                                                                       \
         if (!(cond)) {                                                         \
             __VA_OPT__(__VA_ARGS__)                                            \
-            printf("%s, %d, condition is false: %s\n", __FILE__, __LINE__,     \
-                   #cond);                                                     \
+            printf(                                                            \
+                "%s, %d, condition is false: %s\n", __FILE__, __LINE__, #cond  \
+            );                                                                 \
             exit(1);                                                           \
         }                                                                      \
     } while (0)
@@ -135,8 +157,8 @@ static uint16_t *maze_at_wrap(struct Maze const *, int, int);
 static uint16_t maze_at(struct Maze const *, int, int);
 static void clear_and_flush_maze(struct Maze const *);
 static void carve_path_walls_animated(struct Maze *, struct Point, int);
-static void join_squares_animated(struct Maze *, struct Point, struct Point,
-                                  int);
+static void
+join_squares_animated(struct Maze *, struct Point, struct Point, int);
 static void flush_cursor_maze_coordinate(struct Maze const *, int, int);
 static bool can_build_new_square(struct Maze const *, int, int);
 static void help(void);
@@ -189,9 +211,11 @@ main(int argc, char **argv) {
             help();
             return 0;
         } else {
-            quit("can only specify rows, columns, or speed "
-                 "for now (-r=N, -c=N, -s=N)\n",
-                 1);
+            quit(
+                "can only specify rows, columns, or speed "
+                "for now (-r=N, -c=N, -s=N)\n",
+                1
+            );
         }
     }
     /* This type of maze generation requires odd rows and cols. */
@@ -233,15 +257,24 @@ animate_maze(struct Maze *maze) {
         .cost = rand_range(0, 100),
     };
     Flat_hash_map cost_map = flat_hash_map_from(
-        cell, prim_cell_hash_fn, prim_cell_order, std_allocate, capacity,
+        cell,
+        prim_cell_hash_fn,
+        prim_cell_order,
+        std_allocate,
+        capacity,
         (struct Prim_cell[]){
             start,
-        });
+        }
+    );
     Flat_priority_queue cell_priority_queue = flat_priority_queue_from(
-        CCC_ORDER_LESSER, order_prim_cells, std_allocate, capacity,
+        CCC_ORDER_LESSER,
+        order_prim_cells,
+        std_allocate,
+        capacity,
         (struct Prim_cell[]){
             start,
-        });
+        }
+    );
     defer {
         (void)clear_and_free(&cost_map, NULL);
         (void)clear_and_free(&cell_priority_queue, NULL);
@@ -264,7 +297,8 @@ animate_maze(struct Maze *maze) {
                         (struct Prim_cell){
                             .cell = n,
                             .cost = rand_range(0, 100),
-                        });
+                        }
+                    );
                 check(cell);
                 if (cell->cost < min) {
                     min = cell->cost;
@@ -299,9 +333,11 @@ static uint64_t
 prim_cell_hash_fn(Key_arguments const k) {
     struct Prim_cell const *const p = k.key;
     uint64_t const wr = p->cell.r;
-    static_assert(sizeof((struct Point){}.r) * CHAR_BIT == 32,
-                  "hashing a row and column requires shifting half the size of "
-                  "the hash code");
+    static_assert(
+        sizeof((struct Point){}.r) * CHAR_BIT == 32,
+        "hashing a row and column requires shifting half the size of "
+        "the hash code"
+    );
     return hash_64_bits((wr << 31) | p->cell.c);
 }
 
@@ -352,8 +388,12 @@ clear_and_flush_maze(struct Maze const *const maze) {
 }
 
 static void
-join_squares_animated(struct Maze *maze, struct Point const cur,
-                      struct Point const next, int const time) {
+join_squares_animated(
+    struct Maze *maze,
+    struct Point const cur,
+    struct Point const next,
+    int const time
+) {
     struct Point wall = cur;
     if (next.r < cur.r) {
         wall.r--;
@@ -372,8 +412,9 @@ join_squares_animated(struct Maze *maze, struct Point const cur,
 }
 
 static void
-carve_path_walls_animated(struct Maze *maze, struct Point const p,
-                          int const time) {
+carve_path_walls_animated(
+    struct Maze *maze, struct Point const p, int const time
+) {
     *maze_at_wrap(maze, p.r, p.c) |= PATH_BIT;
     flush_cursor_maze_coordinate(maze, p.r, p.c);
     struct timespec ts = {.tv_sec = 0, .tv_nsec = time};
@@ -421,8 +462,9 @@ build_wall(struct Maze *m, int const r, int const c) {
 }
 
 static void
-flush_cursor_maze_coordinate(struct Maze const *maze, int const r,
-                             int const c) {
+flush_cursor_maze_coordinate(
+    struct Maze const *maze, int const r, int const c
+) {
     set_cursor_position(r / 2, c);
     print_square(maze, r, c);
     (void)fflush(stdout);
@@ -502,5 +544,6 @@ help(void) {
         "row flag lets you specify maze rows > 7.\n-c=N The col flag "
         "lets you specify maze cols > 7.\n-s=N The speed flag lets "
         "you specify the speed of the animation "
-        "0-7.\nExample:\n./build/[debug/]bin/maze -c=111 -r=33 -s=4\n");
+        "0-7.\nExample:\n./build/[debug/]bin/maze -c=111 -r=33 -s=4\n"
+    );
 }

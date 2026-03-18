@@ -27,44 +27,64 @@ if they refactor. */
 
 /*===========================   Prototypes    ===============================*/
 
-static void push_back(struct CCC_Doubly_linked_list *,
-                      struct CCC_Doubly_linked_list_node *);
-static void push_front(struct CCC_Doubly_linked_list *,
-                       struct CCC_Doubly_linked_list_node *);
-static void remove_node(struct CCC_Doubly_linked_list *,
-                        struct CCC_Doubly_linked_list_node *);
-static void insert_node(struct CCC_Doubly_linked_list *,
-                        struct CCC_Doubly_linked_list_node *,
-                        struct CCC_Doubly_linked_list_node *);
-static void *struct_base(struct CCC_Doubly_linked_list const *,
-                         struct CCC_Doubly_linked_list_node const *);
-static size_t erase_range(struct CCC_Doubly_linked_list const *,
-                          struct CCC_Doubly_linked_list_node *,
-                          struct CCC_Doubly_linked_list_node *,
-                          CCC_Allocator const *);
-static size_t len(struct CCC_Doubly_linked_list_node const *,
-                  struct CCC_Doubly_linked_list_node const *);
+static void push_back(
+    struct CCC_Doubly_linked_list *, struct CCC_Doubly_linked_list_node *
+);
+static void push_front(
+    struct CCC_Doubly_linked_list *, struct CCC_Doubly_linked_list_node *
+);
+static void remove_node(
+    struct CCC_Doubly_linked_list *, struct CCC_Doubly_linked_list_node *
+);
+static void insert_node(
+    struct CCC_Doubly_linked_list *,
+    struct CCC_Doubly_linked_list_node *,
+    struct CCC_Doubly_linked_list_node *
+);
+static void *struct_base(
+    struct CCC_Doubly_linked_list const *,
+    struct CCC_Doubly_linked_list_node const *
+);
+static size_t erase_range(
+    struct CCC_Doubly_linked_list const *,
+    struct CCC_Doubly_linked_list_node *,
+    struct CCC_Doubly_linked_list_node *,
+    CCC_Allocator const *
+);
+static size_t
+len(struct CCC_Doubly_linked_list_node const *,
+    struct CCC_Doubly_linked_list_node const *);
 static struct CCC_Doubly_linked_list_node *
 type_intruder_in(CCC_Doubly_linked_list const *, void const *);
-static struct CCC_Doubly_linked_list_node *
-first_out_of_order(struct CCC_Doubly_linked_list const *,
-                   struct CCC_Doubly_linked_list_node *, CCC_Order,
-                   CCC_Comparator const *);
-static struct CCC_Doubly_linked_list_node *
-merge(struct CCC_Doubly_linked_list *, struct CCC_Doubly_linked_list_node *,
-      struct CCC_Doubly_linked_list_node *,
-      struct CCC_Doubly_linked_list_node *, CCC_Order, CCC_Comparator const *);
-static CCC_Order get_order(struct CCC_Doubly_linked_list const *,
-                           struct CCC_Doubly_linked_list_node const *,
-                           struct CCC_Doubly_linked_list_node const *,
-                           CCC_Comparator const *);
+static struct CCC_Doubly_linked_list_node *first_out_of_order(
+    struct CCC_Doubly_linked_list const *,
+    struct CCC_Doubly_linked_list_node *,
+    CCC_Order,
+    CCC_Comparator const *
+);
+static struct CCC_Doubly_linked_list_node *merge(
+    struct CCC_Doubly_linked_list *,
+    struct CCC_Doubly_linked_list_node *,
+    struct CCC_Doubly_linked_list_node *,
+    struct CCC_Doubly_linked_list_node *,
+    CCC_Order,
+    CCC_Comparator const *
+);
+static CCC_Order get_order(
+    struct CCC_Doubly_linked_list const *,
+    struct CCC_Doubly_linked_list_node const *,
+    struct CCC_Doubly_linked_list_node const *,
+    CCC_Comparator const *
+);
 
 /*===========================     Interface   ===============================*/
 
 void *
-CCC_doubly_linked_list_push_front(CCC_Doubly_linked_list *const list,
-                                  CCC_Doubly_linked_list_node *type_intruder,
-                                  CCC_Allocator const *const allocator) {
+CCC_doubly_linked_list_push_front(
+    CCC_Doubly_linked_list *const list,
+    CCC_Doubly_linked_list_node *type_intruder,
+    CCC_Allocator const *const allocator
+) {
     if (!list || !type_intruder || !allocator) {
         return NULL;
     }
@@ -88,9 +108,11 @@ CCC_doubly_linked_list_push_front(CCC_Doubly_linked_list *const list,
 }
 
 void *
-CCC_doubly_linked_list_push_back(CCC_Doubly_linked_list *const list,
-                                 CCC_Doubly_linked_list_node *type_intruder,
-                                 CCC_Allocator const *const allocator) {
+CCC_doubly_linked_list_push_back(
+    CCC_Doubly_linked_list *const list,
+    CCC_Doubly_linked_list_node *type_intruder,
+    CCC_Allocator const *const allocator
+) {
     if (!list || !type_intruder || allocator) {
         return NULL;
     }
@@ -129,8 +151,9 @@ CCC_doubly_linked_list_back(CCC_Doubly_linked_list const *list) {
 }
 
 CCC_Result
-CCC_doubly_linked_list_pop_front(CCC_Doubly_linked_list *const list,
-                                 CCC_Allocator const *const allocator) {
+CCC_doubly_linked_list_pop_front(
+    CCC_Doubly_linked_list *const list, CCC_Allocator const *const allocator
+) {
     if (!list || !list->count || !allocator) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -149,8 +172,9 @@ CCC_doubly_linked_list_pop_front(CCC_Doubly_linked_list *const list,
 }
 
 CCC_Result
-CCC_doubly_linked_list_pop_back(CCC_Doubly_linked_list *const list,
-                                CCC_Allocator const *const allocator) {
+CCC_doubly_linked_list_pop_back(
+    CCC_Doubly_linked_list *const list, CCC_Allocator const *const allocator
+) {
     if (!list || !list->count || !allocator) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -168,10 +192,12 @@ CCC_doubly_linked_list_pop_back(CCC_Doubly_linked_list *const list,
 }
 
 void *
-CCC_doubly_linked_list_insert(CCC_Doubly_linked_list *const list,
-                              CCC_Doubly_linked_list_node *const position,
-                              CCC_Doubly_linked_list_node *type_intruder,
-                              CCC_Allocator const *const allocator) {
+CCC_doubly_linked_list_insert(
+    CCC_Doubly_linked_list *const list,
+    CCC_Doubly_linked_list_node *const position,
+    CCC_Doubly_linked_list_node *type_intruder,
+    CCC_Allocator const *const allocator
+) {
     if (!list || !allocator) {
         return NULL;
     }
@@ -194,9 +220,11 @@ CCC_doubly_linked_list_insert(CCC_Doubly_linked_list *const list,
 }
 
 void *
-CCC_doubly_linked_list_erase(CCC_Doubly_linked_list *const list,
-                             CCC_Doubly_linked_list_node *type_intruder,
-                             CCC_Allocator const *const allocator) {
+CCC_doubly_linked_list_erase(
+    CCC_Doubly_linked_list *const list,
+    CCC_Doubly_linked_list_node *type_intruder,
+    CCC_Allocator const *const allocator
+) {
     if (!list || !type_intruder || !allocator || !list->count) {
         return NULL;
     }
@@ -218,15 +246,17 @@ CCC_doubly_linked_list_erase_range(
     CCC_Doubly_linked_list *const list,
     CCC_Doubly_linked_list_node *const type_intruder_begin,
     CCC_Doubly_linked_list_node *type_intruder_end,
-    CCC_Allocator const *const allocator) {
+    CCC_Allocator const *const allocator
+) {
     if (!list || !allocator || list->count == 0 || !type_intruder_begin
         || !type_intruder_end) {
         return NULL;
     }
 
     if (type_intruder_begin == type_intruder_end) {
-        return CCC_doubly_linked_list_erase(list, type_intruder_begin,
-                                            allocator);
+        return CCC_doubly_linked_list_erase(
+            list, type_intruder_begin, allocator
+        );
     }
 
     CCC_Doubly_linked_list_node *const previous = type_intruder_begin->previous;
@@ -259,8 +289,10 @@ CCC_doubly_linked_list_node_begin(CCC_Doubly_linked_list const *const list) {
 }
 
 void *
-CCC_doubly_linked_list_extract(CCC_Doubly_linked_list *const list,
-                               CCC_Doubly_linked_list_node *type_intruder) {
+CCC_doubly_linked_list_extract(
+    CCC_Doubly_linked_list *const list,
+    CCC_Doubly_linked_list_node *type_intruder
+) {
     if (!list || !type_intruder) {
         return NULL;
     }
@@ -273,7 +305,8 @@ void *
 CCC_doubly_linked_list_extract_range(
     CCC_Doubly_linked_list *const list,
     CCC_Doubly_linked_list_node *type_intruder_begin,
-    CCC_Doubly_linked_list_node *type_intruder_end) {
+    CCC_Doubly_linked_list_node *type_intruder_end
+) {
     if (!list || !list->count || !type_intruder_begin
         || type_intruder_begin == type_intruder_end) {
         return NULL;
@@ -326,7 +359,8 @@ CCC_doubly_linked_list_splice(
     CCC_Doubly_linked_list *const position_doubly_linked_list,
     CCC_Doubly_linked_list_node *position,
     CCC_Doubly_linked_list *const to_cut_doubly_linked_list,
-    CCC_Doubly_linked_list_node *to_cut) {
+    CCC_Doubly_linked_list_node *to_cut
+) {
     if (!position_doubly_linked_list || !to_cut_doubly_linked_list || !to_cut) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -350,7 +384,8 @@ CCC_doubly_linked_list_splice_range(
     CCC_Doubly_linked_list_node *const type_intruder_position,
     CCC_Doubly_linked_list *const to_cut_doubly_linked_list,
     CCC_Doubly_linked_list_node *const type_intruder_to_cut_begin,
-    CCC_Doubly_linked_list_node *const type_intruder_to_cut_exclusive_end) {
+    CCC_Doubly_linked_list_node *const type_intruder_to_cut_exclusive_end
+) {
     if (!position_doubly_linked_list || !to_cut_doubly_linked_list
         || !type_intruder_to_cut_begin
         || type_intruder_to_cut_begin == type_intruder_to_cut_exclusive_end) {
@@ -363,8 +398,11 @@ CCC_doubly_linked_list_splice_range(
             : to_cut_doubly_linked_list->tail;
     if (type_intruder_to_cut_begin == to_cut_inclusive_end) {
         return CCC_doubly_linked_list_splice(
-            position_doubly_linked_list, type_intruder_position,
-            to_cut_doubly_linked_list, type_intruder_to_cut_begin);
+            position_doubly_linked_list,
+            type_intruder_position,
+            to_cut_doubly_linked_list,
+            type_intruder_to_cut_begin
+        );
     }
 
     size_t count = 0;
@@ -449,8 +487,10 @@ CCC_doubly_linked_list_reverse_end(CCC_Doubly_linked_list const *const) {
 }
 
 void *
-CCC_doubly_linked_list_next(CCC_Doubly_linked_list const *const list,
-                            CCC_Doubly_linked_list_node const *type_intruder) {
+CCC_doubly_linked_list_next(
+    CCC_Doubly_linked_list const *const list,
+    CCC_Doubly_linked_list_node const *type_intruder
+) {
     if (!list || !type_intruder || type_intruder->next == NULL) {
         return NULL;
     }
@@ -460,7 +500,8 @@ CCC_doubly_linked_list_next(CCC_Doubly_linked_list const *const list,
 void *
 CCC_doubly_linked_list_reverse_next(
     CCC_Doubly_linked_list const *const list,
-    CCC_Doubly_linked_list_node const *type_intruder) {
+    CCC_Doubly_linked_list_node const *type_intruder
+) {
     if (!list || !type_intruder || type_intruder->previous == NULL) {
         return NULL;
     }
@@ -481,9 +522,11 @@ CCC_doubly_linked_list_is_empty(CCC_Doubly_linked_list const *const list) {
 }
 
 CCC_Result
-CCC_doubly_linked_list_clear(CCC_Doubly_linked_list *const list,
-                             CCC_Destructor const *const destructor,
-                             CCC_Allocator const *const allocator) {
+CCC_doubly_linked_list_clear(
+    CCC_Doubly_linked_list *const list,
+    CCC_Destructor const *const destructor,
+    CCC_Allocator const *const allocator
+) {
     if (!list || !destructor || !allocator) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -555,9 +598,11 @@ CCC_doubly_linked_list_validate(CCC_Doubly_linked_list const *const list) {
 flip the return values of their comparison function if they want a different
 order for elements.*/
 CCC_Tribool
-CCC_doubly_linked_list_is_sorted(CCC_Doubly_linked_list const *const list,
-                                 CCC_Order const order,
-                                 CCC_Comparator const *const comparator) {
+CCC_doubly_linked_list_is_sorted(
+    CCC_Doubly_linked_list const *const list,
+    CCC_Order const order,
+    CCC_Comparator const *const comparator
+) {
     if (!list || !comparator || !comparator->compare
         || (order != CCC_ORDER_LESSER && order != CCC_ORDER_GREATER)) {
         return CCC_TRIBOOL_ERROR;
@@ -572,7 +617,8 @@ CCC_doubly_linked_list_is_sorted(CCC_Doubly_linked_list const *const list,
     CCC_Order const wrong_order
         = order == CCC_ORDER_LESSER ? CCC_ORDER_GREATER : CCC_ORDER_LESSER;
     for (struct CCC_Doubly_linked_list_node const *cur = list->head->next;
-         cur != NULL; cur = cur->next) {
+         cur != NULL;
+         cur = cur->next) {
         if (get_order(list, cur->previous, cur, comparator) == wrong_order) {
             return CCC_FALSE;
         }
@@ -584,10 +630,12 @@ CCC_doubly_linked_list_is_sorted(CCC_Doubly_linked_list const *const list,
 to the end of a section of duplicate values which is good for round-robin style
 list use. */
 void *
-CCC_doubly_linked_list_insert_sorted(CCC_Doubly_linked_list *const list,
-                                     CCC_Doubly_linked_list_node *type_intruder,
-                                     CCC_Comparator const *const comparator,
-                                     CCC_Allocator const *const allocator) {
+CCC_doubly_linked_list_insert_sorted(
+    CCC_Doubly_linked_list *const list,
+    CCC_Doubly_linked_list_node *type_intruder,
+    CCC_Comparator const *const comparator,
+    CCC_Allocator const *const allocator
+) {
     if (!list || !allocator || !comparator || !comparator->compare
         || !type_intruder || list->order == CCC_ORDER_ERROR
         || list->order == CCC_ORDER_EQUAL) {
@@ -639,9 +687,11 @@ each merge step. Therefore the number of times we must perform the merge step is
 `O(log(N))`. The most elements we would have to merge in the merge step is all
 `N` elements so together that gives us the runtime of `O(N * log(N))`. */
 CCC_Result
-CCC_sort_doubly_linked_list_mergesort(CCC_Doubly_linked_list *const list,
-                                      CCC_Order const order,
-                                      CCC_Comparator const *const comparator) {
+CCC_sort_doubly_linked_list_mergesort(
+    CCC_Doubly_linked_list *const list,
+    CCC_Order const order,
+    CCC_Comparator const *const comparator
+) {
     if (!list || !comparator || !comparator->compare
         || (order != CCC_ORDER_LESSER && order != CCC_ORDER_GREATER)) {
         return CCC_RESULT_ARGUMENT_ERROR;
@@ -665,9 +715,13 @@ CCC_sort_doubly_linked_list_mergesort(CCC_Doubly_linked_list *const list,
                fixing. Merge returns the end of B to indicate it is the final
                sentinel node yet to be examined. */
             a_first = merge(
-                list, a_first, a_count_b_first,
+                list,
+                a_first,
+                a_count_b_first,
                 first_out_of_order(list, a_count_b_first, order, comparator),
-                order, comparator);
+                order,
+                comparator
+            );
             merging = CCC_TRUE;
         }
     } while (merging);
@@ -682,11 +736,14 @@ Notice that all ranges treat the end of their range as an exclusive sentinel for
 consistency. This function assumes the provided lists are already sorted
 separately. */
 static inline struct CCC_Doubly_linked_list_node *
-merge(struct CCC_Doubly_linked_list *const list,
-      struct CCC_Doubly_linked_list_node *a_first,
-      struct CCC_Doubly_linked_list_node *a_count_b_first,
-      struct CCC_Doubly_linked_list_node *const b_count, CCC_Order const order,
-      CCC_Comparator const *const comparator) {
+merge(
+    struct CCC_Doubly_linked_list *const list,
+    struct CCC_Doubly_linked_list_node *a_first,
+    struct CCC_Doubly_linked_list_node *a_count_b_first,
+    struct CCC_Doubly_linked_list_node *const b_count,
+    CCC_Order const order,
+    CCC_Comparator const *const comparator
+) {
     while (a_first && a_first != a_count_b_first && a_count_b_first
            && a_count_b_first != b_count) {
         if (get_order(list, a_count_b_first, a_first, comparator) == order) {
@@ -721,10 +778,12 @@ merge(struct CCC_Doubly_linked_list *const list,
 the user comparison callback function. If no out of order element can be
 found the list sentinel is returned. */
 static inline struct CCC_Doubly_linked_list_node *
-first_out_of_order(struct CCC_Doubly_linked_list const *const list,
-                   struct CCC_Doubly_linked_list_node *start,
-                   CCC_Order const order,
-                   CCC_Comparator const *const comparator) {
+first_out_of_order(
+    struct CCC_Doubly_linked_list const *const list,
+    struct CCC_Doubly_linked_list_node *start,
+    CCC_Order const order,
+    CCC_Comparator const *const comparator
+) {
     assert(list && start);
     do {
         start = start->next;
@@ -738,7 +797,8 @@ first_out_of_order(struct CCC_Doubly_linked_list const *const list,
 void
 CCC_private_doubly_linked_list_push_back(
     struct CCC_Doubly_linked_list *const list,
-    struct CCC_Doubly_linked_list_node *type_intruder) {
+    struct CCC_Doubly_linked_list_node *type_intruder
+) {
     push_back(list, type_intruder);
     ++list->count;
 }
@@ -746,7 +806,8 @@ CCC_private_doubly_linked_list_push_back(
 void
 CCC_private_doubly_linked_list_push_front(
     struct CCC_Doubly_linked_list *const list,
-    struct CCC_Doubly_linked_list_node *const type_intruder) {
+    struct CCC_Doubly_linked_list_node *const type_intruder
+) {
     push_front(list, type_intruder);
     ++list->count;
 }
@@ -754,15 +815,18 @@ CCC_private_doubly_linked_list_push_front(
 struct CCC_Doubly_linked_list_node *
 CCC_private_doubly_linked_list_node_in(
     struct CCC_Doubly_linked_list const *const list,
-    void const *const any_struct) {
+    void const *const any_struct
+) {
     return type_intruder_in(list, any_struct);
 }
 
 /*=======================       Static Helpers    ===========================*/
 
 static inline void
-push_front(struct CCC_Doubly_linked_list *const list,
-           struct CCC_Doubly_linked_list_node *const node) {
+push_front(
+    struct CCC_Doubly_linked_list *const list,
+    struct CCC_Doubly_linked_list_node *const node
+) {
     node->previous = NULL;
     node->next = list->head;
     if (list->head) {
@@ -774,8 +838,10 @@ push_front(struct CCC_Doubly_linked_list *const list,
 }
 
 static inline void
-push_back(struct CCC_Doubly_linked_list *const list,
-          struct CCC_Doubly_linked_list_node *const node) {
+push_back(
+    struct CCC_Doubly_linked_list *const list,
+    struct CCC_Doubly_linked_list_node *const node
+) {
     node->next = NULL;
     node->previous = list->tail;
     if (list->tail) {
@@ -787,9 +853,11 @@ push_back(struct CCC_Doubly_linked_list *const list,
 }
 
 static inline void
-insert_node(struct CCC_Doubly_linked_list *const list,
-            struct CCC_Doubly_linked_list_node *const position,
-            struct CCC_Doubly_linked_list_node *const node) {
+insert_node(
+    struct CCC_Doubly_linked_list *const list,
+    struct CCC_Doubly_linked_list_node *const position,
+    struct CCC_Doubly_linked_list_node *const node
+) {
     if (!position) {
         return push_back(list, node);
     }
@@ -805,8 +873,10 @@ insert_node(struct CCC_Doubly_linked_list *const list,
 }
 
 static inline void
-remove_node(struct CCC_Doubly_linked_list *const list,
-            struct CCC_Doubly_linked_list_node *const node) {
+remove_node(
+    struct CCC_Doubly_linked_list *const list,
+    struct CCC_Doubly_linked_list_node *const node
+) {
     if (node->previous) {
         node->previous->next = node->next;
     } else {
@@ -821,10 +891,12 @@ remove_node(struct CCC_Doubly_linked_list *const list,
 }
 
 static size_t
-erase_range(struct CCC_Doubly_linked_list const *const list,
-            struct CCC_Doubly_linked_list_node *begin,
-            struct CCC_Doubly_linked_list_node *const end,
-            CCC_Allocator const *const allocator) {
+erase_range(
+    struct CCC_Doubly_linked_list const *const list,
+    struct CCC_Doubly_linked_list_node *begin,
+    struct CCC_Doubly_linked_list_node *const end,
+    CCC_Allocator const *const allocator
+) {
     if (!allocator->allocate) {
         return len(begin, end);
     }
@@ -860,14 +932,18 @@ len(struct CCC_Doubly_linked_list_node const *begin,
 }
 
 static inline void *
-struct_base(struct CCC_Doubly_linked_list const *const list,
-            struct CCC_Doubly_linked_list_node const *const node) {
+struct_base(
+    struct CCC_Doubly_linked_list const *const list,
+    struct CCC_Doubly_linked_list_node const *const node
+) {
     return node ? ((char *)&node->next) - list->type_intruder_offset : NULL;
 }
 
 static inline struct CCC_Doubly_linked_list_node *
-type_intruder_in(struct CCC_Doubly_linked_list const *const list,
-                 void const *const struct_base) {
+type_intruder_in(
+    struct CCC_Doubly_linked_list const *const list,
+    void const *const struct_base
+) {
     return struct_base
              ? (struct CCC_Doubly_linked_list_node
                     *)((char *)struct_base + list->type_intruder_offset)
@@ -878,10 +954,12 @@ type_intruder_in(struct CCC_Doubly_linked_list const *const list,
 type wrapping the provided intrusive handles. Returns the three way comparison
 result value. */
 static inline CCC_Order
-get_order(struct CCC_Doubly_linked_list const *const list,
-          struct CCC_Doubly_linked_list_node const *const left,
-          struct CCC_Doubly_linked_list_node const *const right,
-          CCC_Comparator const *const comparator) {
+get_order(
+    struct CCC_Doubly_linked_list const *const list,
+    struct CCC_Doubly_linked_list_node const *const left,
+    struct CCC_Doubly_linked_list_node const *const right,
+    CCC_Comparator const *const comparator
+) {
     return comparator->compare((CCC_Comparator_arguments){
         .type_left = struct_base(list, left),
         .type_right = struct_base(list, right),
