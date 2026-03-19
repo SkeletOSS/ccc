@@ -120,8 +120,7 @@ static void print_top_n(FILE *, int, CCC_Allocator const *);
 static void print_last_n(FILE *, int, CCC_Allocator const *);
 static void print_alpha_n(FILE *, int, CCC_Allocator const *);
 static void print_ralpha_n(FILE *, int, CCC_Allocator const *);
-static Buffer
-copy_frequencies(Array_adaptive_map const *, CCC_Allocator const *);
+static Buffer map_to_buffer(Array_adaptive_map const *, CCC_Allocator const *);
 static void print_n(
     Array_adaptive_map *,
     CCC_Order,
@@ -336,7 +335,7 @@ print_ralpha_n(FILE *const f, int n, CCC_Allocator const *const allocator) {
 }
 
 static Buffer
-copy_frequencies(
+map_to_buffer(
     Array_adaptive_map const *const map, CCC_Allocator const *const allocator
 ) {
     check(!is_empty(map));
@@ -361,7 +360,7 @@ print_n(
     int n,
     CCC_Allocator const *const allocator
 ) {
-    Buffer freqs = copy_frequencies(map, allocator);
+    Buffer freqs = map_to_buffer(map, allocator);
     defer {
         (void)clear_and_free(&freqs, &(CCC_Destructor){}, allocator);
     }

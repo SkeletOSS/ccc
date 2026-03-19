@@ -119,6 +119,27 @@ Now that tooling is set up, the workflow is roughly as follows.
 
 Formatting should be taken care of by the tools. Clang tidy will settle some small style matters. Defer to clang tidy suggestions when it makes them. Here are more general guidelines.
 
+### No NULL Arguments
+
+> [!IMPORTANT]
+> `NULL` is never an acceptable argument at any C Container Collection function call site. If `NULL` appears as an argument in user code, a programmer error has occurred.
+
+This is a critical rule that users should internalize immediately. The collection API accepts pointers whenever possible to alleviate register pressure and remain consistent across the code base. Also, with C23 semantics, passing anonymous compound literal references is an excellent way to write explicit code that communicates with the C type system rather than obtuse NULL arguments. Consider three uses of a function in the flat priority queue API.
+
+```c
+[[nodiscard]] void *CCC_flat_priority_queue_push(
+    CCC_Flat_priority_queue *priority_queue,
+    void const *type,
+    void *temp,
+    CCC_Allocator const *allocator
+);
+CCC_flat_priority_queue_push(&pq, &(int){4}, &(int){}, &allocator);
+CCC_flat_priority_queue_push(&pq, &(int){5}, &(int){}, &(CCC_Allocator){});
+CCC_flat_priority_queue_push(&pq, &(int){5}, &(int){}, /*  WRONG! */ NULL);
+```
+
+The first function call site tells us the following: in this queue, push the value 4, here is a swap slot, and here is an allocator to resize the underlying storage if needed. The second signature instead says in this queue, push the value 4, here is a swap slot, and this function may not allocate if resizing is required. The third example is wrong. An empty compound literal is much more readable at the call site. The reader requires no API knowledge to understand the general idea of the code, while they would need to check our API documentation to understand the third example. The function would reject any NULL arguments and return either an error specifying a bad argument or NULL depending on the API contract.
+
 ### Naming
 
 > [!IMPORTANT]

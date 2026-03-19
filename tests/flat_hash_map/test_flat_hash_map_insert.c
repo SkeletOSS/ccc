@@ -420,7 +420,7 @@ check_static_begin(flat_hash_map_test_longest_consecutive_sequence) {
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
         ((CCC_Hasher){
-            .hash = flat_hash_map_int_zero,
+            .hash = flat_hash_map_int_to_u64,
             .compare = flat_hash_map_id_order,
         }),
         (struct Val[STANDARD_FIXED_CAP]){}

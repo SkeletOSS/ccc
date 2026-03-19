@@ -208,15 +208,12 @@ int_cmp(CCC_Comparator_arguments const cmp) {
 
 int
 main(void) {
-    /* doubly linked list l, list elem field e, no allocation permission,
-       comparing integers, no context data. */
-    Doubly_linked_list l = doubly_linked_list_for(l, struct Int_node, e,
-                                                  int_cmp, NULL, NULL);
+    Doubly_linked_list l = doubly_linked_list_default(l, struct Int_node, e);
     struct Int_node elems[3] = {{.i = 3}, {.i = 2}, {.i = 1}};
-    (void)push_back(&l, &elems[0].e);
-    (void)push_front(&l, &elems[1].e);
-    (void)push_back(&l, &elems[2].e);
-    (void)pop_back(&l);
+    (void)push_back(&l, &elems[0].e, &(CCC_Allocator){});
+    (void)push_front(&l, &elems[1].e, &(CCC_Allocator){});
+    (void)push_back(&l, &elems[2].e, &(CCC_Allocator){});
+    (void)pop_back(&l, &(CCC_Allocator){});
     struct Int_node *e = back(&l);
     assert(e->i == 3);
     return 0;
@@ -238,12 +235,11 @@ A dynamic or fixed size double ended queue offering contiguously stored elements
 
 int
 main(void) {
-    /* stack array, no allocation permission, no context data, capacity 2 */
     Flat_doubled_ended_queue q
         = flat_doubled_ended_queue_with_storage(2, (int[2]){});
-    (void)push_back(&q, &(int){3});
-    (void)push_front(&q, &(int){2});
-    (void)push_back(&q, &(int){1}); /* Overwrite 2. */
+    (void)push_back(&q, &(int){3}, &(CCC_Allocator){});
+    (void)push_front(&q, &(int){2}, &(CCC_Allocator){});
+    (void)push_back(&q, &(int){1}, &(CCC_Allocator){}); /* Overwrite 2. */
     int *i = front(&q);
     assert(*i == 3);
     i = back(&q);
@@ -287,8 +283,8 @@ flat_hash_map_int_to_u64(CCC_Key_arguments const k) {
     return x;
 }
 
-CCC_Order
-flat_hash_map_id_cmp(CCC_Key_comparator_arguments const cmp) {
+static CCC_Order
+flat_hash_map_id_order(CCC_Key_comparator_arguments const cmp) {
     struct Key_val const *const right = cmp.type_right;
     int const left = *((int *)cmp.key_left;
     return (left > right->key) - (left < right->key);
@@ -301,9 +297,14 @@ enum : size_t {
 /* Longest Consecutive Sequence Leetcode Problem */
 int
 main(void) {
-    CCC_Flat_hash_map fh = flat_hash_map_with_storage(
-        key, flat_hash_map_int_to_u64, flat_hash_map_id_cmp,
-        (struct Key_val[STANDARD_FIXED_CAP]){});
+    Flat_hash_map fh = flat_hash_map_with_storage(
+        key,
+        ((CCC_Hasher){
+            .hash = flat_hash_map_int_to_u64,
+            .compare = flat_hash_map_id_order,
+        }),
+        (struct Key_val[STANDARD_FIXED_CAP]){}
+    );
     /* Longest sequence is 1,2,3,4,5,6,7,8,9,10 of length 10. */
     int const nums[] = {
         99, 54, 1, 4, 9,  2, 3,   4,  8,  271, 32, 45, 86, 44, 7,  777, 6,  20,
@@ -315,13 +316,13 @@ main(void) {
     int max_run = 0;
     for (size_t i = 0; i < nums_size; ++i) {
         int const n = nums[i];
-        CCC_Entry const *const seen_n
-            = try_insert_wrap(&fh, &(struct Key_val){.key = n, .val = 1});
+        CCC_Entry const *const seen_n = flat_hash_map_try_insert_wrap(
+            &fh, &(struct Key_val){.key = n, .val = 1}, &(CCC_Allocator){}
+        );
         /* We have already connected this run as much as possible. */
         if (occupied(seen_n)) {
             continue;
         }
-        assert(!insert_error(seen_n));
 
         /* There may or may not be runs already existing to left and right. */
         struct Key_val const *const connect_left
@@ -337,10 +338,18 @@ main(void) {
 
         /* Update the boundaries of the full run range. */
         ((struct Key_val *)unwrap(seen_n))->val = full_run;
-        CCC_Entry const *const run_min = insert_or_assign_wrap(
-            &fh, &(struct Key_val){.key = n - left_run, .val = full_run});
-        CCC_Entry const *const run_max = insert_or_assign_wrap(
-            &fh, &(struct Key_val){.key = n + right_run, .val = full_run});
+        CCC_Entry const *const run_min = flat_hash_map_insert_or_assign_wrap(
+            &fh,
+            &(struct Key_val){.key = n - left_run, .val = full_run},
+            &(CCC_Allocator){}
+        );
+        CCC_Entry const *const run_max = flat_hash_map_insert_or_assign_wrap(
+            &fh,
+            &(struct Key_val){.key = n + right_run, .val = full_run},
+            &(CCC_Allocator){}
+        );
+
+        /* Validate for testing purposes. */
         assert(occupied(run_min));
         assert(occupied(run_max));
         assert(!insert_error(run_min));
@@ -365,14 +374,14 @@ main(void) {
 #include "ccc/flat_priority_queue.h"
 #include "ccc/traits.h"
 
-CCC_Order
+static CCC_Order
 int_cmp(CCC_Comparator_arguments const ints) {
     int const left = *(int *)ints.type_left;
     int const right = *(int *)ints.type_right;
     return (left > right) - (left < right);
 }
 
-/* In place O(N * log(N)) time O(1) space sort. */
+/* In place O(N) heapify. */
 int
 main(void) {
     int heap[20] = {12, 61, -39, 76, 48, -93, -77, -81, 35, 21,
@@ -381,18 +390,20 @@ main(void) {
         HCAP = sizeof(heap) / sizeof(*heap),
     };
     Flat_priority_queue priority_queue = flat_priority_queue_heapify(
-        int, CCC_LES, int_cmp, NULL, NULL, HCAP, HCAP, heap);
-    Buffer const b = flat_priority_queue_heapsort(&priority_queue, &(int){});
-    int const *prev = begin(&b);
-    assert(prev != NULL);
-    assert(buffer_count(&b).count == HCAP);
-    size_t count = 1;
-    for (int const *cur = next(&b, prev); cur != end(&b); cur = next(&b, cur)) {
-        assert(*prev >= *cur);
-        prev = cur;
-        ++count;
+        int,
+        CCC_ORDER_LESSER,
+        (CCC_Comparator){.compare = int_cmp},
+        HCAP,
+        HCAP,
+        heap
+    );
+    int const prev = INT_MIN;
+    while (!is_empty(&priority_queue))
+        int const *const cur = front(&priority_queue);
+        assert(prev <= *cur);
+        prev = *cur;
+        pop(&priority_queue, &(int){});
     }
-    assert(count == HCAP);
     return 0;
 }
 ```
@@ -418,7 +429,7 @@ struct Key_val {
 };
 
 static CCC_Order
-Key_val_cmp(CCC_Key_comparator_arguments const cmp) {
+key_val_cmp(CCC_Key_comparator_arguments const cmp) {
     struct Key_val const *const right = cmp.type_right;
     int const key_left = *((int *)cmp.key_left);
     return (key_left > right->key) - (key_left < right->key);
@@ -430,11 +441,16 @@ main(void) {
        named elem, key field named key, no allocation permission, key comparison
        function, no context data. */
     Array_adaptive_map s = array_adaptive_map_with_storage(
-        key, Key_val_cmp, (struct Key_val[26]){});
+        key,
+        (CCC_Key_comparator){.compare = key_val_cmp},
+        (struct Key_val[26]){}
+    );
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
     for (int i = 0, id = 0; i < num_nodes; ++i, id += 5) {
-        (void)insert_or_assign(&s, &(struct Key_val){.key = id, .val = i}.elem);
+        (void)insert_or_assign(
+            &s, &(struct Key_val){.key = id, .val = i}.elem, &(CCC_Allocator){}
+        );
     }
     /* This should be the following Range [6,44). 6 should raise to
        next value not less than 6, 10 and 44 should be the first
@@ -485,7 +501,7 @@ struct Key_val {
 };
 
 static CCC_Order
-Key_val_cmp(CCC_Key_comparator_arguments const cmp) {
+key_val_cmp(CCC_Key_comparator_arguments const cmp) {
     struct Key_val const *const right = cmp.type_right;
     int const key_left = *((int *)cmp.key_left);
     return (key_left > right->key) - (key_left < right->key);
@@ -496,11 +512,18 @@ main(void) {
     /* stack array, user defined type, key field named key, no allocation
        permission, key comparison function, no context data. */
     Array_tree_map s = array_tree_map_with_storage(
-        key, hrmap_key_cmp, (struct Kay_val[64]){});
+        key,
+        (CCC_Key_comparator){.compare = key_val_cmp},
+        (struct Kay_val[64]){}
+    );
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
     for (int i = 0, id = 0; i < num_nodes; ++i, id += 5) {
-        (void)insert_or_assign(&s, &(struct Key_val){.key = id, .val = i}.elem);
+        (void)insert_or_assign(
+            &s,
+            &(struct Key_val){.key = id, .val = i}.elem,
+            &(CCC_Allocator){}
+        );
     }
     /* This should be the following Range [6,44). 6 should raise to
        next value not less than 6, 10 and 44 should be the first
@@ -550,33 +573,39 @@ struct Name {
 };
 
 CCC_Order
-Key_val_cmp(CCC_Key_comparator_arguments cmp) {
+key_val_cmp(CCC_Key_comparator_arguments cmp) {
     char const *const key = *(char **)cmp.key_left;
     struct Name const *const right = cmp.type_right;
     int const res = strcmp(key, right->name);
     if (res == 0) {
-        return CCC_EQL;
+        return CCC_ORDER_EQUAL;
     }
     if (res < 0) {
-        return CCC_LES;
+        return CCC_ORDER_LESSER;
     }
-    return CCC_GRT;
+    return CCC_ORDER_GREATER;
 }
 
 int
 main(void) {
     struct Name nodes[5];
-    /* adaptive_map named om, stores struct Name, intrusive field e, key field
-       name, no allocation permission, comparison fn, no context */
-    Adaptive_map om = adaptive_map_for(struct Name, e, name, Key_val_cmp,
-                                       NULL, NULL);
+    Adaptive_map om = adaptive_map_default(
+        struct Name,
+        e,
+        name,
+        (CCC_Key_comparator){.compare = key_val_cmp}
+    );
     char const *const sorted_names[5]
         = {"Ferris", "Glenda", "Rocky", "Tux", "Ziggy"};
     size_t const size = sizeof(sorted_names) / sizeof(sorted_names[0]);
     size_t j = 7 % size;
     for (size_t i = 0; i < size; ++i, j = (j + 7) % size) {
         nodes[count(&om).count].name = sorted_names[j];
-        CCC_Entry e = insert_or_assign(&om, &nodes[count(&om).count].e);
+        CCC_Entry e = insert_or_assign(
+            &om,
+            &nodes[count(&om).count].e
+            &(CCC_Allocator){}
+        );
         assert(!insert_error(&e) && !occupied(&e));
     }
     j = 0;
@@ -587,7 +616,11 @@ main(void) {
         ++j;
     }
     assert(count(&om).count == size);
-    CCC_Entry e = try_insert(&om, &(struct Name){.name = "Ferris"}.e);
+    CCC_Entry e = try_insert(
+        &om,
+        &(struct Name){.name = "Ferris"}.e,
+        &(CCC_Allocator){}
+    );
     assert(count(&om).count == size);
     assert(occupied(&e));
     return 0;
@@ -625,14 +658,20 @@ int
 main(void) {
     struct Val elems[5]
         = {{.val = 3}, {.val = 3}, {.val = 7}, {.val = -1}, {.val = 5}};
-    Priority_queue priority_queue = priority_queue_for(
-        struct Val, elem, CCC_LES, val_cmp, NULL, NULL);
+    Priority_queue priority_queue = priority_queue_default(
+        struct Val,
+        elem,
+        CCC_ORDER_LESSER,
+        (CCC_Comparator){.compare = val_cmp}
+    );
     for (size_t i = 0; i < (sizeof(elems) / sizeof(elems[0])); ++i) {
-        struct Val const *const v = push(&priority_queue, &elems[i].elem);
+        struct Val const *const v
+            = push(&priority_queue, &elems[i].elem, &(CCC_Allocator){});
         assert(v && v->val == elems[i].val);
     }
     bool const decreased = priority_queue_decrease_with(
-        &priority_queue, &elems[4].elem, { elems[4].val = -99; });
+        &priority_queue, &elems[4].elem, { elems[4].val = -99; }
+    );
     assert(decreased);
     struct Val const *const v = front(&priority_queue);
     assert(v->val == -99);
@@ -661,7 +700,7 @@ struct Key_val {
 };
 
 static CCC_Order
-Key_val_cmp(CCC_Key_comparator_arguments const cmp) {
+key_val_cmp(CCC_Key_comparator_arguments const cmp) {
     struct Key_val const *const right = cmp.type_right;
     int const key_left = *((int *)cmp.key_left);
     return (key_left > right->key) - (key_left < right->key);
@@ -670,17 +709,18 @@ Key_val_cmp(CCC_Key_comparator_arguments const cmp) {
 int
 main(void) {
     struct Key_val elems[25];
-    /* stack array of 25 elements with one slot for sentinel, intrusive field
-       named elem, key field named key, no allocation permission, key comparison
-       function, no context data. */
-    Tree_map s = tree_map_for(struct Key_val, elem, key, Key_val_cmp, NULL,
-                              NULL);
+    Tree_map s = tree_map_default(
+        struct Key_val,
+        elem,
+        key,
+        (CCC_Key_comparator){.compare = key_val_cmp}
+    );
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
     for (int i = 0, id = 0; i < num_nodes; ++i, id += 5) {
         elems[i].key = id;
         elems[i].val = i;
-        (void)insert_or_assign(&s, &elems[i].elem);
+        (void)insert_or_assign(&s, &elems[i].elem, &(CCC_Allocator){});
     }
     /* This should be the following Range [6,44). 6 should raise to
        next value not less than 6, 10 and 44 should be the first
@@ -737,15 +777,14 @@ int
 main(void) {
     /* singly linked list l, list elem field e, no allocation permission,
        comparing integers, no context data. */
-    Singly_linked_list l = singly_linked_list_for(struct Int_node, e, int_cmp,
-                                                  NULL, NULL);
+    Singly_linked_list l = singly_linked_list_default(struct Int_node, e);
     struct Int_node elems[3] = {{.i = 3}, {.i = 2}, {.i = 1}};
-    (void)push_front(&l, &elems[0].e);
-    (void)push_front(&l, &elems[1].e);
-    (void)push_front(&l, &elems[2].e);
+    (void)push_front(&l, &elems[0].e, &(CCC_Allocator){});
+    (void)push_front(&l, &elems[1].e, &(CCC_Allocator){});
+    (void)push_front(&l, &elems[2].e, &(CCC_Allocator){});
     struct Int_node const *i = front(&l);
     assert(i->i == 1);
-    pop_front(&l);
+    pop_front(&l, &(CCC_Allocator){});
     i = front(&l);
     assert(i->i == 2);
     return 0;
@@ -757,7 +796,7 @@ main(void) {
 ## Features
 
 - [Intrusive and non-intrusive containers](#intrusive-and-non-intrusive-containers).
-- [Non-allocating container options](#non-allocating-containers).
+- [Allocator passing](#allocator-passing).
 - [Compile time initialization](#compile-time-initialization).
 - [Metadata is trivially copyable](#metadata-is-trivially-copyable).
 - [No `container_of` macro required of the user to get to their type after a function call](#no-container-of-macros).
@@ -781,82 +820,113 @@ struct Cost {
 The interface may then ask for a handle to this type for certain operations. For example, a priority queue has the following interface for pushing an element.
 
 ```c
-void *CCC_priority_queue_push(CCC_Priority_queue *priority_queue,
-                              CCC_Priority_queue_node *elem);
+void *CCC_priority_queue_push(
+    CCC_Priority_queue *priority_queue,
+    CCC_Priority_queue_node *elem,
+    CCC_Allocator const *allocator
+);
 ```
 
 Non-Intrusive containers exist when a flat container can operate without such help from the user. The `Flat_priority_queue` is a good example of this. When initializing we give it the following information.
 
 ```c
 CCC_Flat_priority_queue flat_priority_queue
-    = CCC_flat_priority_queue_with_storage(CCC_LESSER, int_cmp,
-                                                    (int[40]){});
+    = CCC_flat_priority_queue_with_storage(
+        CCC_ORDER_LESSER,
+        (CCC_Comparator){.compare = int_cmp},
+        (int[40]){}
+    );
 ```
 
-Here a small min priority queue of integers with a maximum capacity of 40 has been allocated on the stack with no allocation permission and no context data needed. As long as the flat priority queue knows the type upon initialization no intrusive elements are needed. We could have also initialized this container as empty if we provide an allocation function (see [allocation](#allocation) for more on allocation permission).
+Here a small min priority queue of integers with a maximum capacity of 40 has been allocated on the stack with no allocation permission and no context data needed. As long as the flat priority queue knows the type upon initialization no intrusive elements are needed. We could have also initialized this container as empty.
 
 ```c
 CCC_Flat_priority_queue flat_priority_queue
-    = CCC_flat_priority_queue_with_allocator(int, CCC_LESSER, int_cmp,
-                                             std_allocate);
+    = CCC_flat_priority_queue_default(
+        int,
+        CCC_ORDER_LESSER,
+        (CCC_Comparator){.compare = int_cmp},
+    );
 ```
 
 The interface then looks like this.
 
 ```c
-void *CCC_flat_priority_queue_push(CCC_Flat_priority_queue *flat_priority_queue,
-                                   void const *e, void *temp);
+void *CCC_flat_priority_queue_push(
+    CCC_Flat_priority_queue *flat_priority_queue,
+    void const *e,
+    void *temp,
+    CCC_Allocator const *allocator
+);
 ```
 
 The element `e` here is just a generic reference to whatever type the user stores in the container and `temp` is a swap slot provided by the user.
 
-### Non-Allocating Containers
+### Allocator Passing
 
-As was mentioned in the previous section, all containers can be forbidden from allocating memory. In the flat priority queue example we had this initialization.
+The C Container Collection does not call malloc, realloc, or free directly. Instead, containers that may need to allocate memory accept an allocator argument at every call site where allocation could occur. This makes allocation visible in code rather than hidden inside container operations.
+
+An allocator is a small struct bundling a function pointer and optional context.
 
 ```c
-CCC_Flat_priority_queue flat_priority_queue
-    = CCC_flat_priority_queue_with_storage(
-    CCC_LES, int_compare, (int[40]){});
+typedef struct {
+    CCC_Allocator_interface *allocate;
+    void *context;
+} CCC_Allocator;
 ```
 
-This reduces the need for the user to implement boilerplate allocator interfaces and the guarantees of the container are more clear and direct. If the user does not provide an allocator function there is no way for the container to allocate, re-size, or free memory by default.
-
-For flat containers, fixed capacity is straightforward. Once space runs out, further insertion functions will fail and report that failure in different ways depending on the function used. If other behavior occurs when space runs out, such as ring buffer behavior for the flat double ended queue, it will be documented in the header of that container.
-
-For intrusive containers that can't assume they are stored contiguously in memory, the initialization looks like this when allocation is prohibited.
+The CCC_Allocator_interface function type implements a unified interface for allocation, reallocation, and deallocation. See `types.h` for the full contract. A standard library backed allocator might look like this:
 
 ```c
-struct Id_val {
-    CCC_Doubly_linked_list_node e;
-    int id;
-    int val;
-};
-
-CCC_Doubly_linked_list dll
-    = CCC_doubly_linked_list_with_allocator(struct Id_val, e, val_cmp, NULL);
-```
-
-All interface functions now expect the memory containing the intrusive elements to exist with the appropriate scope and lifetime for the programmer's needs. Consider the following classic problem with scoping in C.
-
-```c
-/* !WARNING: THIS IS A BAD IDEA FOR DEMONSTRATION PURPOSES! */
-void
-push_three(CCC_Doubly_linked_list *const dll) {
-    struct Id_val v0 = {};
-    struct Id_val *v = push_back(dll, &v0.e);
-    assert(v == &v0);
-    struct Id_val v1 = {.id = 1, .val = 1};
-    v = push_back(dll, &v1.e);
-    assert(v == &v1);
-    struct Id_val v2 = {.id = 2, .val = 2};
-    v = push_back(dll, &v2.e);
-    assert(v == &v2);
-    /* WHOOPS! FUNCTION IS ABOUT TO RETURN! */
+void *
+std_allocate(CCC_Allocator_arguments const arguments)
+{
+    if (!arguments.input && !arguments.bytes) {
+        return NULL;
+    }
+    if (!arguments.input) {
+        return malloc(arguments.bytes);
+    }
+    if (!arguments.bytes) {
+        free(arguments.input);
+        return NULL;
+    }
+    return realloc(arguments.input, arguments.bytes);
 }
+
+static CCC_Allocator const std_allocator = {.allocate = std_allocate};
 ```
 
-Here, the container pushes stack allocated structs directly into the list. The container has not been given allocation permission so it assumes the memory it is given has the appropriate lifetime for the programmer's needs. When this function ends, that memory is invalid because its scope and lifetime has ended. Using `malloc` in this case would be the traditional approach, but there are a variety of ways a programmer can control scope and lifetime. This library does not prescribe any specific strategy to managing memory when allocation is prohibited. For example compositions of allocating and non-allocating containers, see the `samples/`.
+Container code always accepts the allocator by `const *`, so sharing an allocator instance across threads is safe if the allocator provided is thread safe.
+
+Any function that may need to allocate accepts a `CCC_Allocator const *` as its last argument:
+
+```c
+CCC_flat_priority_queue_push(&pq, &(int){1}, &(int){}, &std_allocator);
+CCC_flat_priority_queue_push(
+    &pq,
+    &(int){2},
+    &(int){},
+    &(CCC_Allocator){.allocate = arena_alloc, .context = &arena}
+);
+```
+
+Functions that never allocate do not accept an allocator argument. The presence or absence of the allocator argument in a function signature is the signal of whether that function may allocate.
+
+To explicitly prevent allocation pass an empty allocator.
+
+```c
+CCC_flat_priority_queue_push(&pq, &(int){1}, &(int){}, &(CCC_Allocator){});
+```
+
+An empty `CCC_Allocator` has NULL internal fields. The container checks for this and returns an appropriate error rather than attempting allocation. Never pass `NULL` to any function in the C Container Collection.
+
+Passing allocators makes auditing CCC code easy.
+
+> ![!IMPORTANT]
+> A non-empty allocator allocator argument signals allocation may occur.
+> An empty allocator argument signals allocation is forbidden.
+> A `NULL` argument at any C Container Collection function call site is always a programmer error.
 
 ### Compile Time Initialization
 
@@ -871,33 +941,53 @@ struct Key_val {
 };
 static CCC_Array_adaptive_map adaptive_map
     = CCC_array_adaptive_map_with_storage(
-    key, compare_int_key, (struct Key_val[1024]){});
+        key,
+        (CCC_Key_comparator){.compare = compare_int_key},
+        (struct Key_val[1024]){}
+    );
 static CCC_Array_tree_map tree_map
     = CCC_array_tree_map_with_storage(
-    key, compare_int_key, (struct Key_val[1024]){});
+        key,
+        (CCC_Key_comparator){.compare = compare_int_key},
+        (struct Key_val[1024]){}
+    );
 static CCC_Flat_hash_map hash_map
     = CCC_flat_hash_map_with_storage(
-    key, hash_int, compare_int_key, (struct Key_val[1024]){});
+        key,
+        ((CCC_Hasher){.hash = hash_int, .compare = compare_int_key}),
+        (struct Key_val[1024]){}
+    );
 static CCC_Flat_priority_queue priority_queue
     = CCC_flat_priority_queue_with_storage(
-    CCC_ORDER_LESSER, compare_int, (int[1024]){});
+        CCC_ORDER_LESSER,
+        (CCC_Comparator){.compare = compare_int},
+        (int[1024]){}
+    );
 static CCC_Flat_double_ended_queue ring_buffer
     = CCC_flat_double_ended_queue_with_storage(
-    0, (int[1024]){});
+        0,
+        (int[1024]){}
+    );
 static CCC_Buffer buffer
     = CCC_buffer_with_storage(
-    0, (int[1024]){});
+        0,
+        (int[1024]){}
+    );
 static CCC_Bitset bitset
     = CCC_bitset_with_storage(
-    1024, (CCC_Bit[1024]){});
+        1024,
+        (CCC_Bit[1024]){}
+    );
 ```
 
 All of these containers can also be initialized in preparation for dynamic allocation at compile time if an allocation function is provided (see [allocation](#allocation) for more on `std_alloc`). Here is the flat hash map as an example.
 
 ```c
-static CCC_Flat_hash_map hash_map
-    = CCC_flat_hash_map_with_allocator(
-    struct Key_val, key, hash_int, compare_int_key, std_allocate);
+static CCC_Flat_hash_map hash_map = CCC_flat_hash_map_default(
+    struct Key_val,
+    key,
+    ((CCC_Hasher){.hash = hash_int, .compare = compare_int_key})
+);
 ```
 
 ### Metadata is Trivially Copyable
@@ -947,14 +1037,6 @@ struct Id {
     int id;
     struct List_node id_node;
 };
-/* Or when writing a comparison callback. */
-bool
-is_id_a_less(struct List_node const *const a, struct List_node const *const b,
-             void *const context) {
-    struct Id const *const a_ = list_entry(a, struct Id, id_node);
-    struct Id const *const b_ = list_entry(b, struct Id, id_node);
-    return a_->id < b_->id;
-}
 
 int
 main(void) {
@@ -973,24 +1055,17 @@ struct Id {
     int id;
     CCC_Doubly_linked_list_node id_node;
 };
-/* Or when writing a comparison callback. */
-CCC_Order
-id_cmp(CCC_Comparator_arguments const cmp) {
-    struct Id const *const left = cmp.type_left;
-    struct Id const *const right = cmp.type_right;
-    return (left->id > right->id) - (left->id < right->id);
-}
 
 int
 main(void) {
     static CCC_Doubly_linked_list id_list
-    = CCC_doubly_linked_list_with_allocator(
-    struct Id, id_node, id_cmp, NULL);
+    = CCC_doubly_linked_list_default(struct Id, id_node);
     /* ...fill list... */
     struct Id *front = CCC_doubly_linked_list_front(&id_list);
     struct Id *new_id = generate_id();
-    struct Id *new_front
-        = CCC_doubly_linked_list_push_front(&id_list, &new_id->id_node);
+    struct Id *new_front = CCC_doubly_linked_list_push_front(
+        &id_list, &new_id->id_node, &std_allocator
+    );
 }
 ```
 
@@ -1020,9 +1095,12 @@ typedef struct {
 } Word;
 /* Increment a found Word or insert a default count of 1. */
 CCC_Handle_index const h = array_adaptive_map_or_insert_with(
-    array_adaptive_map_and_modify_with(handle_wrap(&hom, &key_ofs), Word,
-                                       { T->cnt++; }),
-    (Word){.ofs = ofs, .cnt = 1});
+    array_adaptive_map_and_modify_with(
+        handle_wrap(&hom, &key_ofs), Word, { T->cnt++; }
+    ),
+    &std_allocator,
+    (Word){.ofs = ofs, .cnt = 1}
+);
 ```
 
 This is possible because of the details discussed in the previous section. Containers can always provide the user type stored in the container directly. However, there are other options to achieve the same result.
@@ -1051,7 +1129,9 @@ struct Prim_cell new = (struct Prim_cell){
     .cell = next,
     .cost = rand_range(0, 100),
 };
-struct Prim_cell *const cell = or_insert(entry_wrap(&cost_map, &next), &new);
+struct Prim_cell *const cell = or_insert(
+    entry_wrap(&cost_map, &next, &std_allocator), &new
+);
 ```
 
 The lazily evaluated macro version.
@@ -1062,38 +1142,12 @@ struct Point const next = {
     .c = c->cell.c + dir_offsets[i].c,
 };
 struct Prim_cell const *const cell = flat_hash_map_or_insert_with(
-    entry_wrap(&cost_map, &next), (struct Prim_cell){
-                                      .cell = next,
-                                      .cost = rand_range(0, 100),
-                                  });
+    entry_wrap(&cost_map, &next, &std_allocator),
+    (struct Prim_cell){ .cell = next, .cost = rand_range(0, 100)}
+);
 ```
 
 The second example is slightly more convenient and efficient. The compound literal is provided to be directly assigned to a Vacant memory location allowing the compiler to decide how the copy should be performed; it is only constructed if there is no entry present. This also means the random generation function is only called if a Vacant entry requires the insertion of a new value. So, expensive function calls can be lazily evaluated only when needed.
-
-Here is another example illustrating the difference between the two.
-
-```c
-struct Val {
-    Adaptive_map_node e;
-    int key;
-    int val;
-};
-
-CCC_Entry e = adaptive_map_try_insert(&om, &(struct Val){.key = 3, .val = 1}.e);
-```
-
-The same insertion with the "with" variant.
-
-```c
-static inline struct Val
-val(int val_arg) {
-    return (struct Val){.val = val_arguments};
-}
-
-CCC_Entry *e = adaptive_map_try_insert_with(&om, 3, val(1));
-```
-
-This second version illustrates a few key points. R-values are provided directly as keys and values, not references to keys and values. Also, a function call to generate a value to be inserted is completely acceptable; the function is only called if insertion is required. Finally, the functions `try_insert_with` and `insert_or_assign_with` will ensure the key in the newly inserted value matches the key searched, saving the user some typing and ensuring they don't make a mistake in this regard.
 
 The lazy evaluation of the `_with` family of functions offer an expressive way to write C code when needed. See each container's header for more.
 
@@ -1111,8 +1165,11 @@ typedef struct {
 } Word;
 /* ... Elsewhere generate offset ofs as key. */
 Word default = {.ofs = ofs, .cnt = 1};
-CCC_Handle_index const h
-    = or_insert(and_modify(handle_wrap(&hom, &ofs), increment), &default);
+CCC_Handle_index const h = or_insert(
+    and_modify(array_tree_map_wrap(&map, &ofs), increment),
+    &default,
+    &std_allocator
+);
 ```
 
 Or the following.
@@ -1125,56 +1182,12 @@ typedef struct {
 } Word;
 /* ... Elsewhere generate offset ofs as key. */
 Word default = {.ofs = ofs, .cnt = 1};
-Array_adaptive_map_handle *h = handle_wrap(&hom, &ofs);
-h = and_modify(h, increment) Word *w
-    = array_adaptive_map_at(&hom, or_insert(h, &default));
+Array_adaptive_map_handle *h = array_tree_map_wrap(&map, &ofs);
+h = and_modify(h, increment);
+Word *w = array_adaptive_map_at(&map, or_insert(h, &default, &std_allocator));
 ```
 
 Traits are completely opt-in by including the `traits.h` header.
-
-## Allocation
-
-When allocation is required, this collection offers the following interface. The user provides this function to containers upon initialization.
-
-```c
-typedef struct {
-    void *input;
-    size_t bytes;
-    void *context;
-} CCC_Allocator_arguments;
-typedef void *CCC_Allocator_interface(CCC_Allocator_arguments);
-```
-
-An allocation function implements the following behavior, where `input` is pointer to memory, `bytes` is number of bytes to allocate, and `context` is a reference to any supplementary information required for allocation, deallocation, or reallocation. The `context` parameter is passed to a container upon its initialization and the programmer may choose how to best utilize this reference (read on for more on `context`).
-
-- If NULL is provided with a `bytes` of 0, NULL is returned.
-- If NULL is provided with a non-zero `bytes`, new memory is allocated/returned.
-- If `input` is non-NULL it has been previously allocated by the allocate function.
-- If `input` is non-NULL with non-zero `bytes`, `input` is resized to at least `bytes`
-  bytes. The pointer returned is NULL if resizing fails. Upon success, the
-  pointer returned might not be equal to the pointer provided.
-- If `input` is non-NULL and `bytes` is 0, `input` is freed and NULL is returned.
-
-One may be tempted to use realloc to check all of these boxes but realloc is implementation defined on some of these points. The `context` parameter also discourages users from providing realloc. For example, one solution using the standard library allocator might be implemented as follows (`context` is not needed):
-
-```c
-void *
-std_allocator(CCC_Allocator_arguments const context) {
-    if (!context.input && !context.bytes) {
-        return NULL;
-    }
-    if (!context.input) {
-        return malloc(context.bytes);
-    }
-    if (!context.bytes) {
-        free(context.input);
-        return NULL;
-    }
-    return realloc(context.input, context.bytes);
-}
-```
-
-However, the above example is only useful if the standard library allocator is used. Any allocator that implements the required behavior is sufficient. For ideas of how to utilize the `context` parameter, see the sample programs. Using custom arena allocators or container compositions are cases when `context` is helpful in taming lifetimes and simplifying allocation. See the tests for extensive use of a minimal stack allocator that helps speed up tests by avoiding calls into the standard library heap allocator.
 
 ### Constructors
 
@@ -1183,7 +1196,7 @@ Another concern for the programmer related to allocation may be constructors and
 Consider a constructor. If the container is allowed to allocate, and the user wants to insert a new element, they may see an interface like this (pseudocode as all containers are slightly different).
 
 ```c
-void *insert_or_assign(Container *c, Container_node *e);
+void *insert_or_assign(Container *c, Container_node *e, Allocator const *);
 ```
 
 Because the user has wrapped the intrusive container element in their type, the entire user type will be written to the new allocation. All interfaces can also confirm when insertion succeeds if global state needs to be set in this case. So, if some action beyond setting values needs to be performed, there are multiple opportunities to do so.
@@ -1195,16 +1208,20 @@ For destructors, the argument is similar but the container does offer more help.
 The clear function works for pointer stable containers and flat containers.
 
 ```c
-Result clear(Container *c, Destructor_interface *fn);
+Result clear(Container *c, Destructor const *destuctor);
 ```
 
 The clear and free function works for flat containers.
 
 ```c
-Result clear_and_free(Container *c, Destructor_interface *fn);
+Result clear_and_free(
+    Container *c,
+    Destructor const *destructor,
+    Allocator const *allocator
+);
 ```
 
-The above functions free the resources of the container. Because there is no way to access each element before it is freed when this function is called, a destructor callback can be passed to operate on each element before deallocation.
+The above functions free the resources of the container. Because there is no way to access each element before it is freed when this function is called, a destructor callback can be passed to operate on each element before the allocator is called.
 
 ## Samples
 
@@ -1234,25 +1251,25 @@ Clang.
 
 ```zsh
 make all-clang-rel
-make rtest
+make test
 ```
 
 GCC.
 
 ```zsh
 make all-gcc-rel
-make rtest
+make test
 ```
 
 ## Miscellaneous Why?
-
+- Why explicit allocator passing? The C Container Collection does not  call `malloc`, `realloc`, or `free` directly. Passing allocators at call sites makes allocation visible and auditable rather than hidden inside container operations. It also decouples the container from any specific memory strategy. This is particularly valuable in kernel and embedded contexts where allocation in certain code paths is forbidden. The overall idea is taken from Zig, which I think got this approach right in terms of useful patterns. See the [Allocator Passing](#allocator-passing) section for more.
 - Why are non-allocating containers needed? They are quite common in Operating Systems development. Kernel code may manage a process or thread that is part of many OS subsystems: the CPU scheduler, the virtual memory paging system, the child and parent process spawn and wait mechanisms. All of these systems require that the process use or be a part of some data structures. It is easiest to separate participation in these data structures from memory allocation. The process holds handles to intrusive elements to participate in these data structures because the thread/task/process will live until it has finished executing meaning its lifetime is greater than or equal to the longest lifetime data structure of which it is a part. Embedded developers also often seem interested in non-allocating containers when an entire program's memory use is known before execution begins. However, this library explores if non-allocating containers can have more general applications for creative C programming.
 - Why is initialization so ugly? Yes, this is a valid concern. Upfront complexity helps eliminate the need for a `container_of` macro for the user see the [no container_of macros](#no-container-of-macros) section for more. Later code becomes much cleaner and simpler.
 - Why callbacks? Freedom for more varied comparisons and allocations. Learn to love context data. Also you have the chance to craft the optimal function for your application; for example writing a perfectly tailored hash function for your data set.
 - Why not header only? Readability, maintainability, and update ability, for changing implementations in the source files. If the user wants to explore the implementation everything should be easily understandable. This can also be helpful if the user wants to fork and change a data structure to fit their needs. Smaller object size and easier modular compilation is also nice.
 - Why not opaque pointers and true implementation hiding? This is not possible in C if the user is in charge of memory. The container types must be complete if the user wishes to store them on the stack or data segment. I try to present a clean interface.
 - Why `Array_` and `Flat_` maps? Mostly experimenting. A flat hash map offers the ability to pack user data and fingerprint meta data in separate contiguous arrays within the same allocation. The handle variants of containers offer the same benefit along with handle stability. Many also follow the example of Zig with its Struct of Arrays approach to many data structures. Struct of Array (SOA) style data structures focus on space optimizations due to perfect alignment of user types, container metadata, and any supplementary data in separate arrays but within the same allocation.
-- Why `C23`? It is a great standard that helps with some initialization and macro ideas implemented in the library. Clang covers all of the features used on many platforms. Newer GCC versions also have them covered.
+- Why `C23`? Several C23 features are foundational to this library: typed enums for precise constant types, `static_assert` in more contexts for compile time validation, improved compound literal semantics for compile time initialization, and `typeof` for macro type safety. Clang 19.1.1 and GCC 14.2 cover the features needed for release packages.
 
 ## Related
 
