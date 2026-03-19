@@ -103,7 +103,9 @@ check_static_begin(priority_queue_test_insert_shuffle) {
     struct Val const *min = front(&priority_queue);
     check(min->val, 0);
     check(
-        check_inorder_fill(&priority_queue, (struct Val[STANDARD_CAP]){}),
+        check_inorder_fill(
+            &priority_queue, &allocator, (struct Val[STANDARD_CAP]){}
+        ),
         CHECK_PASS
     );
     check_end();

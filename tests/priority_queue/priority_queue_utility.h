@@ -27,6 +27,7 @@ in strictly increasing or decreasing order as determined by the initialization
 order. Copies elements between priority queues to confirm this, checking the
 keys remain in the same order.
 @param[in] priority_queue_pointer the priority queue to test.
+@param[in] priority_queue_allocator the allocator used by the priority queue.
 @param[in] type_compound_literal_array the compound literal array specifying
 space for the exact same number of elements as exists in the passed priority
 queue. This will be used to copy over elements and check ordering.
@@ -34,7 +35,9 @@ queue. This will be used to copy over elements and check ordering.
 @warning Buffers are allocated on the stack so only relatively small test cases
 should be used. */
 #define check_inorder_fill(                                                    \
-    priority_queue_pointer, type_compound_literal_array...                     \
+    priority_queue_pointer,                                                    \
+    priority_queue_allocator,                                                  \
+    type_compound_literal_array...                                             \
 )                                                                              \
     (__extension__({                                                           \
         CCC_Priority_queue *const check_priority_queue_pointer                 \
@@ -56,7 +59,8 @@ should be used. */
                 ){},                                                           \
                 sizeof(type_compound_literal_array)                            \
                     / sizeof(*type_compound_literal_array),                    \
-                priority_queue_pointer                                         \
+                priority_queue_pointer,                                        \
+                priority_queue_allocator                                       \
             );                                                                 \
         }                                                                      \
         check_inorder_result;                                                  \
@@ -64,7 +68,11 @@ should be used. */
 
 /** Private for this header. Do not use directly. Use macro instead. */
 enum Check_result private_inorder_fill(
-    CCC_Allocator const *stack_allocator, int[], size_t, CCC_Priority_queue *
+    CCC_Allocator const *copy_allocator,
+    int[],
+    size_t,
+    CCC_Priority_queue *queue,
+    CCC_Allocator const *queue_allocator
 );
 
 #endif /* CCC_PQ_UTIL_H */

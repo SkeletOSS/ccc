@@ -45,7 +45,8 @@ check_static_begin(adaptive_map_test_prime_shuffle) {
         shuffled_index = (shuffled_index + prime) % (size - less);
     }
     check(adaptive_map_count(&s).count < size, true);
-    struct Val *const vals = allocator.context;
+    struct Val *const vals
+        = ((struct Stack_allocator *)allocator.context)->blocks;
     for (size_t i = 0; i < size; ++i) {
         check(
             occupied(adaptive_map_remove_entry_wrap(
@@ -72,7 +73,8 @@ check_static_begin(adaptive_map_test_insert_erase_shuffled) {
     int sorted_check[50];
     check(inorder_fill(sorted_check, size, &s), CHECK_PASS);
     /* Now let's delete everything with no errors. */
-    struct Val *const vals = allocator.context;
+    struct Val *const vals
+        = ((struct Stack_allocator *)allocator.context)->blocks;
     for (size_t i = 0; i < size; ++i) {
         struct Val *v = unwrap(
             adaptive_map_remove_key_value_wrap(&s, &vals[i].elem, &allocator)
@@ -112,7 +114,8 @@ check_static_begin(adaptive_map_test_weak_srand) {
         }
         check(validate(&s), true);
     }
-    struct Val *const vals = allocator.context;
+    struct Val *const vals
+        = ((struct Stack_allocator *)allocator.context)->blocks;
     for (int i = 0; i < num_nodes; ++i) {
         CCC_Entry entry = CCC_remove_key_value(&s, &vals[i].elem, &allocator);
         check(occupied(&entry) || repeats[i], true);

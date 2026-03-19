@@ -114,7 +114,7 @@ CCC_buffer_clear_and_free(
     if (!buffer || !allocator || !destructor || !allocator->allocate) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    if (destructor) {
+    if (destructor->destroy) {
         for (void *i = CCC_buffer_begin(buffer); i != CCC_buffer_end(buffer);
              i = CCC_buffer_next(buffer, i)) {
             destructor->destroy((CCC_Arguments){

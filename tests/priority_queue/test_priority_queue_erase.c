@@ -65,12 +65,14 @@ check_static_begin(priority_queue_test_insert_extract_shuffled) {
     check(insert_shuffled(&queue, STANDARD_CAP, prime, &allocator), CHECK_PASS);
     struct Val const *min = front(&queue);
     check(min->val, 0);
-    check(check_inorder_fill(&queue, (struct Val[STANDARD_CAP]){}), CHECK_PASS);
+    enum Check_result const result
+        = check_inorder_fill(&queue, &allocator, (struct Val[STANDARD_CAP]){});
+    check(result, CHECK_PASS);
     /* Now let's delete everything with no errors. */
+    struct Stack_allocator *const stack_meta = allocator.context;
     struct Val const *const end
-        = (struct Val *)((char *)allocator.context
-                         + (sizeof(struct Val) * STANDARD_CAP));
-    for (struct Val *i = allocator.context; i != end; ++i) {
+        = (struct Val *)stack_meta->blocks + STANDARD_CAP;
+    for (struct Val *i = stack_meta->blocks; i != end; ++i) {
         (void)CCC_priority_queue_extract(&queue, &i->elem);
         check(validate(&queue), true);
     }
@@ -93,7 +95,10 @@ check_static_begin(priority_queue_test_pop_max) {
     check(insert_shuffled(&queue, STANDARD_CAP, prime, &allocator), CHECK_PASS);
     struct Val const *min = front(&queue);
     check(min->val, 0);
-    check(check_inorder_fill(&queue, (struct Val[STANDARD_CAP]){}), CHECK_PASS);
+    check(
+        check_inorder_fill(&queue, &allocator, (struct Val[STANDARD_CAP]){}),
+        CHECK_PASS
+    );
     /* Now let's pop from the front of the queue until empty. */
     int prev_val = INT_MIN;
     for (size_t i = 0; i < STANDARD_CAP; ++i) {
@@ -121,7 +126,10 @@ check_static_begin(priority_queue_test_pop_min) {
     check(insert_shuffled(&queue, STANDARD_CAP, prime, &allocator), CHECK_PASS);
     struct Val const *min = front(&queue);
     check(min->val, 0);
-    check(check_inorder_fill(&queue, (struct Val[STANDARD_CAP]){}), CHECK_PASS);
+    check(
+        check_inorder_fill(&queue, &allocator, (struct Val[STANDARD_CAP]){}),
+        CHECK_PASS
+    );
     /* Now let's pop from the front of the queue until empty. */
     int prev_val = INT_MIN;
     for (size_t i = 0; i < STANDARD_CAP; ++i) {
@@ -166,7 +174,8 @@ check_static_begin(priority_queue_test_delete_prime_shuffle_duplicates) {
 
     shuffled_index = prime % (LARGE_CAP - less);
     size_t cur_size = LARGE_CAP;
-    struct Val *const val_array = allocator.context;
+    struct Stack_allocator *const stack_meta = allocator.context;
+    struct Val *const val_array = (struct Val *)stack_meta->blocks;
     for (int i = 0; i < LARGE_CAP; ++i) {
         (void)CCC_priority_queue_extract(
             &queue, &val_array[shuffled_index].elem
@@ -209,7 +218,8 @@ check_static_begin(priority_queue_test_prime_shuffle) {
     /* Now we go through and free all the elements in order but
        their positions in the tree will be somewhat random */
     size_t cur_size = STANDARD_CAP;
-    struct Val *const val_array = allocator.context;
+    struct Stack_allocator *const stack_meta = allocator.context;
+    struct Val *const val_array = (struct Val *)stack_meta->blocks;
     for (int i = 0; i < STANDARD_CAP; ++i) {
         (void)CCC_priority_queue_extract(&queue, &val_array[i].elem);
         check(validate(&queue), true);
@@ -246,7 +256,8 @@ check_static_begin(priority_queue_test_weak_srand) {
         check(pushed != NULL, true);
         check(validate(&queue), true);
     }
-    struct Val *const val_array = allocator.context;
+    struct Stack_allocator *const stack_meta = allocator.context;
+    struct Val *const val_array = (struct Val *)stack_meta->blocks;
     for (int i = 0; i < WEAK_SRAND_HEAP_CAP; ++i) {
         (void)CCC_priority_queue_extract(&queue, &val_array[i].elem);
         check(validate(&queue), true);

@@ -362,7 +362,7 @@ check_static_begin(flat_double_ended_queue_test_insert_ranges) {
 
 check_static_begin(flat_double_ended_queue_test_insert_ranges_reserve) {
     Flat_double_ended_queue q
-        = flat_double_ended_queue_with_capacity(int, &std_allocator, 6);
+        = flat_double_ended_queue_with_capacity(int, &std_allocator, 8);
     check(flat_double_ended_queue_capacity(&q).count > 0, true);
     (void)flat_double_ended_queue_push_back_range(
         &q, &CCC_buffer_with_storage(3, (int[3]){0, 1, 2}), &(CCC_Allocator){}
@@ -389,7 +389,7 @@ check_static_begin(flat_double_ended_queue_test_insert_ranges_reserve) {
     );
     check(
         check_order(
-            &q, &CCC_buffer_with_storage(6, (int[6]){5, 6, 7, 3, 4, 1})
+            &q, &CCC_buffer_with_storage(8, (int[8]){0, 5, 6, 7, 3, 4, 1, 2})
         ),
         CHECK_PASS
     );
@@ -401,7 +401,7 @@ check_static_begin(flat_double_ended_queue_test_insert_ranges_reserve) {
     );
     check(
         check_order(
-            &q, &CCC_buffer_with_storage(6, (int[6]){8, 9, 10, 11, 7, 3})
+            &q, &CCC_buffer_with_storage(8, (int[8]){8, 9, 10, 11, 6, 7, 3, 4})
         ),
         CHECK_PASS
     );
@@ -413,7 +413,8 @@ check_static_begin(flat_double_ended_queue_test_insert_ranges_reserve) {
     );
     check(
         check_order(
-            &q, &CCC_buffer_with_storage(6, (int[6]){12, 13, 14, 15, 16, 11})
+            &q,
+            &CCC_buffer_with_storage(8, (int[8]){12, 13, 14, 15, 16, 11, 6, 7})
         ),
         CHECK_PASS
     );
@@ -425,7 +426,10 @@ check_static_begin(flat_double_ended_queue_test_insert_ranges_reserve) {
     );
     check(
         check_order(
-            &q, &CCC_buffer_with_storage(6, (int[6]){17, 18, 19, 20, 21, 22})
+            &q,
+            &CCC_buffer_with_storage(
+                8, (int[8]){17, 18, 19, 20, 21, 22, 15, 16}
+            )
         ),
         CHECK_PASS
     );
@@ -437,7 +441,10 @@ check_static_begin(flat_double_ended_queue_test_insert_ranges_reserve) {
     );
     check(
         check_order(
-            &q, &CCC_buffer_with_storage(6, (int[6]){24, 25, 26, 27, 28, 29})
+            &q,
+            &CCC_buffer_with_storage(
+                8, (int[8]){23, 24, 25, 26, 27, 28, 29, 20}
+            )
         ),
         CHECK_PASS
     );

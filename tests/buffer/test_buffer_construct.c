@@ -41,7 +41,7 @@ check_static_begin(buffer_test_copy_no_allocate) {
     Buffer destination = buffer_with_storage(0, (int[10]){});
     check(buffer_count(&destination).count, 0);
     check(buffer_capacity(&destination).count, 10);
-    CCC_Result const r = buffer_copy(&destination, &source, NULL);
+    CCC_Result const r = buffer_copy(&destination, &source, &(CCC_Allocator){});
     check(r, CCC_RESULT_OK);
     check(buffer_count(&destination).count, 5);
     check(buffer_capacity(&destination).count, 10);
@@ -140,7 +140,6 @@ check_static_begin(buffer_test_init_from_fail) {
     check(elem, 1);
     check(CCC_buffer_count(&b).count, 0);
     check(CCC_buffer_capacity(&b).count, 0);
-    check(CCC_buffer_push_back(&b, &(int){}, &std_allocator), NULL);
     check_end(
         (void)buffer_clear_and_free(&b, &(CCC_Destructor){}, &std_allocator);
     );

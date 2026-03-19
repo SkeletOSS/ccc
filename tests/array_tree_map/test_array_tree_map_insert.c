@@ -524,7 +524,7 @@ check_static_begin(array_tree_map_test_reserve) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for((typeof(array_tree_map_storage_for(
-            (struct Val[SMALL_FIXED_CAP]){}
+            (struct Val[STANDARD_FIXED_CAP]){}
         ))[1]){}),
     };
     CCC_Array_tree_map map = array_tree_map_with_capacity(

@@ -187,7 +187,8 @@ check_static_begin(flat_hash_map_test_copy_no_allocate) {
     );
     check(count(&source).count, 3);
     check(is_empty(&destination), CCC_TRUE);
-    CCC_Result res = flat_hash_map_copy(&destination, &source, NULL);
+    CCC_Result res
+        = flat_hash_map_copy(&destination, &source, &(CCC_Allocator){});
     check(res, CCC_RESULT_OK);
     check(count(&destination).count, count(&source).count);
     for (int i = 0; i < 3; ++i) {
@@ -297,12 +298,12 @@ check_static_begin(flat_hash_map_test_copy_allocate_fail) {
             .compare = flat_hash_map_id_order,
         }
     );
-    (void)swap_entry(&source, &(struct Val){.key = 0}, &(CCC_Allocator){});
+    (void)swap_entry(&source, &(struct Val){.key = 0}, &std_allocator);
     (void)swap_entry(
-        &source, &(struct Val){.key = 1, .val = 1}, &(CCC_Allocator){}
+        &source, &(struct Val){.key = 1, .val = 1}, &std_allocator
     );
     (void)swap_entry(
-        &source, &(struct Val){.key = 2, .val = 2}, &(CCC_Allocator){}
+        &source, &(struct Val){.key = 2, .val = 2}, &std_allocator
     );
     check(count(&source).count, 3);
     check(is_empty(&destination), CCC_TRUE);
@@ -311,7 +312,7 @@ check_static_begin(flat_hash_map_test_copy_allocate_fail) {
     check(res != CCC_RESULT_OK, CCC_TRUE);
     check_end({
         (void)flat_hash_map_clear_and_free(
-            &source, &(CCC_Destructor){}, &(CCC_Allocator){}
+            &source, &(CCC_Destructor){}, &std_allocator
         );
     });
 }

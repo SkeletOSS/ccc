@@ -113,7 +113,7 @@ CCC_doubly_linked_list_push_back(
     CCC_Doubly_linked_list_node *type_intruder,
     CCC_Allocator const *const allocator
 ) {
-    if (!list || !type_intruder || allocator) {
+    if (!list || !type_intruder || !allocator) {
         return NULL;
     }
     list->order = CCC_ORDER_ERROR;

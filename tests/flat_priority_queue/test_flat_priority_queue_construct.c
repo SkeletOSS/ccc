@@ -113,7 +113,7 @@ check_static_begin(flat_priority_queue_test_raw_type) {
     Flat_priority_queue priority_queue = flat_priority_queue_for(
         int,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order},
+        &(CCC_Comparator){.compare = int_order},
         (sizeof(vals) / sizeof(int)),
         vals
     );

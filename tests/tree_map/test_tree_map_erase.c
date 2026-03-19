@@ -27,7 +27,8 @@ check_static_begin(tree_map_test_insert_erase_shuffled) {
     check(insert_shuffled(&s, size, prime, &allocator), CHECK_PASS);
     int sorted_check[50];
     check(inorder_fill(sorted_check, size, &s), CHECK_PASS);
-    struct Val *const vals = allocator.context;
+    struct Val *const vals
+        = ((struct Stack_allocator *)allocator.context)->blocks;
     /* Now let's delete everything with no errors. */
     for (size_t i = 0; i < size; ++i) {
         struct Val *v = unwrap(

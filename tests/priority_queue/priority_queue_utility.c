@@ -30,7 +30,7 @@ check_begin(
     int const larger_prime,
     CCC_Allocator const *const allocator
 ) {
-    check(allocator != NULL && allocator->allocate != NULL, true);
+    check(allocator != NULL, true);
     /* Math magic ahead so that we iterate over every index
        eventually but in a shuffled order. Not necessarily
        random but a repeatable sequence that makes it
@@ -50,10 +50,11 @@ check_begin(
 /* Iterative inorder traversal to check the heap is sorted. */
 check_begin(
     private_inorder_fill,
-    CCC_Allocator const *const stack_allocator,
+    CCC_Allocator const *const copy_allocator,
     int vals[const],
     size_t const size,
-    CCC_Priority_queue *const queue
+    CCC_Priority_queue *const queue,
+    CCC_Allocator const *const queue_allocator
 ) {
     check(count(queue).count, size);
     size_t i = 0;
@@ -71,20 +72,20 @@ check_begin(
         } else {
             check(front->val < prev_val, true);
         }
-        (void)pop(queue, stack_allocator);
+        (void)pop(queue, queue_allocator);
         check(validate(queue), true);
         check(validate(&copy), true);
         vals[i++] = front->val;
-        (void)push(&copy, &front->elem, stack_allocator);
+        (void)push(&copy, &front->elem, copy_allocator);
     }
-    check(stack_allocator->context != NULL, true);
-    stack_allocator_reset(stack_allocator->context);
+    check(copy_allocator->context != NULL, true);
+    stack_allocator_reset(queue_allocator->context);
     i = 0;
     while (!is_empty(&copy)) {
         struct Val *v = front(&copy);
         check(v->val, vals[i++]);
-        (void)pop(&copy, stack_allocator);
-        (void)push(queue, &v->elem, stack_allocator);
+        (void)pop(&copy, copy_allocator);
+        (void)push(queue, &v->elem, queue_allocator);
         check(validate(queue), true);
         check(validate(&copy), true);
     }

@@ -52,7 +52,8 @@ check_static_begin(array_tree_map_test_copy_no_allocate) {
     );
     check(count(&source).count, 3);
     check(is_empty(&destination), true);
-    CCC_Result res = array_tree_map_copy(&destination, &source, NULL);
+    CCC_Result res
+        = array_tree_map_copy(&destination, &source, &(CCC_Allocator){});
     check(res, CCC_RESULT_OK);
     check(count(&destination).count, count(&source).count);
     for (int i = 0; i < 3; ++i) {

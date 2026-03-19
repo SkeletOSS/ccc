@@ -9,6 +9,7 @@
 #include "flat_hash_map_utility.h"
 #include "traits.h"
 #include "types.h"
+#include "utility/allocate.h"
 
 struct Owner {
     int key;
@@ -91,7 +92,7 @@ check_static_begin(flat_hash_map_test_insert_allocate_clear_free) {
         CCC_Entry *e = flat_hash_map_try_insert_with(
             &fh,
             i,
-            &(CCC_Allocator){},
+            &std_allocator,
             (struct Owner){.allocation = malloc(sizeof(size_t))}
         );
         check(occupied(e), CCC_FALSE);
@@ -103,7 +104,7 @@ check_static_begin(flat_hash_map_test_insert_allocate_clear_free) {
         CCC_flat_hash_map_clear_and_free(
             &fh,
             &(CCC_Destructor){.destroy = destroy_owner_allocation},
-            &(CCC_Allocator){}
+            &std_allocator
         );
     });
 }

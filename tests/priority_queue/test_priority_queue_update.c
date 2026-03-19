@@ -83,7 +83,8 @@ check_static_begin(priority_queue_test_priority_removal) {
         check(validate(&priority_queue), true);
     }
     int const limit = 400;
-    struct Val *const val_array = allocator.context;
+    struct Val *const val_array
+        = ((struct Stack_allocator *)allocator.context)->blocks;
     for (size_t val = 0; val < HEAP_CAP; ++val) {
         struct Val *const i = &val_array[val];
         if (i->val > limit) {
@@ -123,7 +124,8 @@ check_static_begin(priority_queue_test_priority_update) {
         check(validate(&priority_queue), true);
     }
     int const limit = 400;
-    struct Val *const val_array = allocator.context;
+    struct Val *const val_array
+        = ((struct Stack_allocator *)allocator.context)->blocks;
     for (size_t val = 0; val < HEAP_CAP; ++val) {
         struct Val *const i = &val_array[val];
         int backoff = i->val / 2;
@@ -175,7 +177,8 @@ check_static_begin(priority_queue_test_priority_update_with) {
         check(validate(&priority_queue), true);
     }
     int const limit = 400;
-    struct Val *const val_array = allocator.context;
+    struct Val *const val_array
+        = ((struct Stack_allocator *)allocator.context)->blocks;
     for (size_t val = 0; val < HEAP_CAP; ++val) {
         int backoff = val_array[val].val / 2;
         if (val_array[val].val > limit) {
@@ -221,7 +224,8 @@ check_static_begin(priority_queue_test_priority_increase) {
         check(validate(&priority_queue), true);
     }
     int const limit = 400;
-    struct Val *const val_array = allocator.context;
+    struct Val *const val_array
+        = ((struct Stack_allocator *)allocator.context)->blocks;
     for (size_t val = 0; val < HEAP_CAP; ++val) {
         struct Val *const i = &val_array[val];
         int inc = (limit * 2) + 1;
@@ -287,7 +291,8 @@ check_static_begin(priority_queue_test_priority_increase_with) {
         check(validate(&priority_queue), true);
     }
     int const limit = 400;
-    struct Val *const val_array = allocator.context;
+    struct Val *const val_array
+        = ((struct Stack_allocator *)allocator.context)->blocks;
     for (size_t val = 0; val < HEAP_CAP; ++val) {
         int inc = (limit * 2) + 1;
         int dec = (val_array[val].val / 2) - 1;
@@ -342,7 +347,8 @@ check_static_begin(priority_queue_test_priority_decrease) {
         check(validate(&priority_queue), true);
     }
     int const limit = 400;
-    struct Val *const val_array = allocator.context;
+    struct Val *const val_array
+        = ((struct Stack_allocator *)allocator.context)->blocks;
     for (size_t val = 0; val < HEAP_CAP; ++val) {
         struct Val *const i = &val_array[val];
         int inc = (limit * 2) + 1;
@@ -408,7 +414,8 @@ check_static_begin(priority_queue_test_priority_decrease_with) {
         check(validate(&priority_queue), true);
     }
     int const limit = 400;
-    struct Val *const val_array = allocator.context;
+    struct Val *const val_array
+        = ((struct Stack_allocator *)allocator.context)->blocks;
     for (size_t val = 0; val < HEAP_CAP; ++val) {
         struct Val *const i = &val_array[val];
         int inc = (limit * 2) + 1;
