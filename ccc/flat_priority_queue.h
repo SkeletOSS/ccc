@@ -99,8 +99,7 @@ operator. */
 @param[in] type_name the name of the user type.
 @param[in] order CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max
 heap, respectively.
-@param[in] comparator a pointer to
-CCC_Comparator.
+@param[in] comparator a CCC_Comparator for comparing two user types.
 @param[in] capacity the capacity of contiguous elements at data_pointer.
 @param[in] data_pointer a pointer to an array of user types or NULL.
 @return the initialized priority queue on the right hand side of an equality
@@ -115,10 +114,9 @@ operator. */
 /** @brief Partial order an array of elements as a min or max heap at runtime
 in O(N) time and space equal to the provided data capacity.
 @param[in] type_name the name of the user type.
-@param[in] order CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max
-heap, respectively.
-@param[in] comparator a pointer to
-CCC_Comparator.
+@param[in] order CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max heap,
+respectively.
+@param[in] comparator a CCC_Comparator for comparing two user types.
 @param[in] capacity the capacity of contiguous elements at data_pointer.
 @param[in] count the count <= capacity of valid elements.
 @param[in] data_pointer a pointer to an array of user types or NULL.
@@ -137,11 +135,9 @@ for swapping purposes. */
 heap. O(N).
 @param[in] order CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max heap,
 respectively.
-@param[in] comparator a pointer to
-CCC_Comparator.
-@param[in] allocator a pointer to
-CCC_Allocator for allocating the needed memory to copy in the
-provided compound literal data.
+@param[in] comparator a CCC_Comparator for comparing two user types.
+@param[in] allocator a CCC_Allocator for allocating the needed memory to copy in
+the provided compound literal data.
 @param[in] optional_capacity the optional capacity larger than the input
 compound literal array array to reserve. If capacity provided is less than the
 size of the input compound literal array, the capacity is set to the size of the
@@ -162,8 +158,8 @@ main(void)
 {
     Flat_priority_queue f = flat_priority_queue_from(
         CCC_ORDER_LESSER,
-        &int_comparator,
-        &std_allocator,
+        int_comparator,
+        std_allocator,
         0,
         (int[]){6, 99, 32, 44, 1, 0}
     );
@@ -180,8 +176,8 @@ main(void)
 {
     Flat_priority_queue f = flat_priority_queue_from(
         CCC_ORDER_LESSER,
-        &int_comparator,
-        &std_allocator,
+        int_comparator,
+        std_allocator,
         4096,
         (int[]){6, 99, 32, 44, 1, 0}
     );
@@ -207,11 +203,9 @@ the CCC_flat_priority_queue_with_storage() macro. */
 @param[in] type_name the name of the user type.
 @param[in] order CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max
 heap, respectively.
-@param[in] comparator a pointer to
-CCC_Comparator.
-@param[in] allocator a pointer to
-CCC_Allocator for allocating the needed memory to reserve
-capacity.
+@param[in] comparator a CCC_Comparator for comparing user types.
+@param[in] allocator a pointer to CCC_Allocator for allocating the needed memory
+to reserve capacity.
 @param[in] capacity the capacity of contiguous elements at data_pointer.
 @return the initialized flat_priority_queue. Directly assign to
 Flat_priority_queue on the right hand side of the equality operator.
@@ -248,8 +242,7 @@ the CCC_flat_priority_queue_with_storage() macro. */
 permission, no context data, and a compound literal as backing storage.
 @param[in] order CCC_ORDER_LESSER or CCC_ORDER_GREATER for min or max heap,
 respectively.
-@param[in] comparator a pointer to
-CCC_Comparator.
+@param[in] comparator CCC_Comparator for comparing user types.
 @param[in] compound_literal_array the compound literal array of fixed capacity.
 @return the initialized priority queue on the right hand side of an equality
 operator. Capacity of the compound literal is capacity of the priority queue.
@@ -268,7 +261,7 @@ destination.
 @param[in] destination the destination that will copy the source
 flat_priority_queue.
 @param[in] source the source of the flat_priority_queue.
-@param[in] allocator a pointer to CCC_Allocator for resizing.
+@param[in] allocator a CCC_Allocator for resizing.
 @return the result of the copy operation. If the destination capacity is less
 than the source capacity and no allocation function is provided an input error
 is returned. If resizing is required and resizing of destination fails a memory
@@ -285,19 +278,15 @@ Manual memory management with no allocation function provided.
 
 ```
 #define FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC
-Flat_priority_queue source = flat_priority_queue_for(
-    int,
+Flat_priority_queue source = flat_priority_queue_with_storage(
     CCC_ORDER_LESSER,
-    &int_comparator,
-    10,
+    int_comparator,
     (int[10]){}
 );
-push_rand_ints(&source);
-Flat_priority_queue destination = flat_priority_queue_for(
-    int,
+push_rand_ints(&source, &std_allocator);
+Flat_priority_queue destination = flat_priority_queue_with_storage(
     CCC_ORDER_LESSER,
-    &int_comparator,
-    11,
+    int_comparator,
     (int[11]){}
 );
 CCC_Result res = flat_priority_queue_copy(&destination, &source,
@@ -309,20 +298,16 @@ capacity. Here is memory management handed over to the copy function.
 
 ```
 #define FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC
-Flat_priority_queue source = flat_priority_queue_for(
+Flat_priority_queue source = flat_priority_queue_default(
     int,
     CCC_ORDER_LESSER,
-    &int_comparator,
-    0,
-    NULL
+    int_comparator,
 );
 push_rand_ints(&source);
-Flat_priority_queue destination = flat_priority_queue_for(
+Flat_priority_queue destination = flat_priority_queue_default(
     int,
     CCC_ORDER_LESSER,
-    &int_comparator,
-    0,
-    NULL
+    int_comparator,
 );
 CCC_Result res
     = flat_priority_queue_copy(&destination, &source, &std_allocator);

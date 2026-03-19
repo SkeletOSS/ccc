@@ -147,7 +147,7 @@ int
 main(void)
 {
     Buffer b = buffer_from(
-        &(CCC_Allocator){.allocator = std_allocate},
+        (CCC_Allocator){.allocator = std_allocate},
         0,
         (int[]){ 0, 1, 2, 3 }
     );
@@ -164,7 +164,7 @@ int
 main(void)
 {
     Buffer b = buffer_from(
-        (&(CCC_Allocator){
+        ((CCC_Allocator){
             .allocator = arena_allocate,
             .context = &arena,
         }),
@@ -203,7 +203,7 @@ main(void)
 {
     Buffer b = buffer_with_capacity(
         int,
-        &(CCC_Allocator){.allocator = std_allocate},
+        (CCC_Allocator){.allocator = std_allocate},
         4096
     );
     return 0;
@@ -273,8 +273,7 @@ Buffer source = buffer_with_storage(0, (int[10]){});
 int *new_data = malloc(sizeof(int) * buffer_capacity(&source).count);
 Buffer destination
     = buffer_for(int, buffer_capacity(&source).count, 0, new_data);
-CCC_Result res = buffer_copy(&destination, &source,
-&(CCC_Allocator){});
+CCC_Result res = buffer_copy(&destination, &source, &(CCC_Allocator){});
 ```
 
 The above requires destination capacity be greater than or equal to source
@@ -282,30 +281,11 @@ capacity. Here is memory management handed over to the copy function.
 
 ```
 #define BUFFER_USING_NAMESPACE_CCC
-Buffer source = buffer_for(int, 0, 0, NULL);
-(void)CCC_buffer_push_back_range(&source, 5, (int[5]){0,1,2,3,4});
-Buffer destination = buffer_for(NULL, int, std_allocate, NULL, 0);
-CCC_Result res = buffer_copy(&destination, &source,
-                             &(CCC_Allocator){std_allocate});
-```
-
-The above allows destination to have a capacity less than that of the source as
-long as copy has been provided an allocation function to resize destination.
-
-```
-#define BUFFER_USING_NAMESPACE_CCC
 Buffer source = buffer_default(int);
-(void)CCC_buffer_push_back_range(&source, 5, (int[5]){0,1,2,3,4});
-Buffer destination = buffer_for(NULL, int, NULL, NULL, 0);
-CCC_Result res = buffer_copy(&destination, &source,
-                             &(CCC_Allocator){std_allocate});
+(void)push_back_range(&source, 5, (int[5]){0,1,2,3,4}, &std_allocator);
+Buffer destination = buffer_default(int);
+CCC_Result res = buffer_copy(&destination, &source, &std_allocator);
 ```
-
-Because an allocation function is provided, the destination is resized once for
-the copy and retains its fixed size after the copy is complete. This would
-require the user to manually free the underlying Buffer at destination
-eventually if this method is used. Usually it is better to allocate the memory
-explicitly before the copy if copying between ring buffers.
 
 These options allow users to stay consistent across containers with their
 memory management strategies. */

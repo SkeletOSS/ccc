@@ -195,8 +195,8 @@ equality operator. */
 /** @brief Initialize a map of types at compile time or runtime.
 @param[in] type_name the name of the user defined type stored in the map.
 @param[in] key_field the field of the struct used for key storage.
-@param[in] hasher a pointer to the CCC_Hasher that configures the hash
-function, key comparator function, and context for both hashing and comparison.
+@param[in] hasher a CCC_Hasher that configures the hash function, key comparator
+function, and context for both hashing and comparison.
 @param[in] capacity the capacity of a fixed size map or 0.
 @param[in] map_pointer a pointer to a fixed map allocation or NULL.
 @return the flat hash map directly initialized on the right hand side of the
@@ -215,7 +215,7 @@ struct Val
 static Flat_hash_map static_map = flat_hash_map_for(
     struct Val,
     key,
-    (&(CCC_Hasher){.hash = hash_int, .compare = key_order}),
+    ((CCC_Hasher){.hash = hash_int, .compare = key_order}),
     64,
     &flat_hash_map_storage_for((struct Val[64]){})
 );
@@ -299,8 +299,8 @@ map to protect its invariants from user error at compile time. */
 capacity.
 @param[in] type_name the name of the type being stored in the map.
 @param[in] key_field the field of the struct used for key storage.
-@param[in] hasher a pointer to the CCC_Hasher that configures the hash
-function, key comparator function, and context for both hashing and comparison.
+@param[in] hasher a CCC_Hasher that configures the hash function, key comparator
+function, and context for both hashing and comparison.
 @param[in] capacity the desired capacity for the map. A capacity of 0 results
 in an argument error and is a no-op after the map is initialized empty.
 @return the flat hash map directly initialized on the right hand side of the
@@ -327,7 +327,7 @@ main(void)
     Flat_hash_map map = flat_hash_map_with_capacity(
         struct Val,
         key,
-        (&(CCC_Hasher){.hash = hash_int, .compare = key_order}),
+        ((CCC_Hasher){.hash = hash_int, .compare = key_order}),
         &std_allocator,
         4096
     );
@@ -348,8 +348,8 @@ of initialization and reservation. */
 declared type using a compound literal with no allocation permissions or
 context.
 @param[in] key_field the field of the struct used for key storage.
-@param[in] hasher a pointer to the CCC_Hasher that configures the hash
-function, key comparator function, and context for both hashing and comparison.
+@param[in] hasher a CCC_Hasher that configures the hash function, key comparator
+function, and context for both hashing and comparison.
 @param[in] compound_literal the compound literal array of a type provided by the
 user around which the struct of arrays backing storage for the map is built.
 @param[in] optional_storage_specifier lifetime specifier of the backing struct
@@ -372,7 +372,7 @@ struct Val
 };
 static Flat_hash_map static_map = flat_hash_map_with_storage(
     key,
-    (&(CCC_Hasher){.hash = hash_int, .compare = key_order}),
+    ((CCC_Hasher){.hash = hash_int, .compare = key_order}),
     (struct Val[64]){}
 );
 ```
@@ -413,13 +413,13 @@ struct Val
 };
 Flat_hash_map source = flat_hash_map_with_storage(
     key,
-    (&(CCC_Hasher){.hash = hash_int, .compare = key_order}),
+    ((CCC_Hasher){.hash = hash_int, .compare = key_order}),
     (struct Val[64]){}
 );
 insert_rand_vals(&source);
 Flat_hash_map destination = flat_hash_map_with_storage(
     key,
-    (&(CCC_Hasher){.hash = hash_int, .compare = key_order}),
+    ((CCC_Hasher){.hash = hash_int, .compare = key_order}),
     (struct Val[64]){}
 );
 CCC_Result res = flat_hash_map_copy(&destination, &source, NULL);
@@ -438,13 +438,13 @@ struct Val
 Flat_hash_map source = flat_hash_map_default(
     struct Val,
     key,
-    &(CCC_Hasher){.hash = hash_int, .compare = key_order}
+    (CCC_Hasher){.hash = hash_int, .compare = key_order}
 );
 insert_rand_vals(&source, &std_allocator);
 Flat_hash_map destination = flat_hash_map_default(
     struct Val,
     key,
-    &(CCC_Hasher){.hash = hash_int, .compare = key_order}
+    (CCC_Hasher){.hash = hash_int, .compare = key_order}
 );
 CCC_Result res = flat_hash_map_copy(&destination, &source, &std_allocator);
 ```

@@ -127,7 +127,6 @@ main(void)
     CCC_Array_tree_map map = CCC_array_tree_map_for(
         struct Val,
         key,
-        hash_key,
         order_vals,
         NULL,
         NULL,
@@ -208,8 +207,8 @@ main(void)
 {
     Array_tree_map static_map = array_tree_map_from(
         key,
-        &val_key_comparator,
-        &std_allocator,
+        val_key_comparator,
+        std_allocator,
         0,
         (struct Val[]) {
             {.key = 1, .val = 1},
@@ -271,8 +270,8 @@ main(void)
     Array_tree_map map = array_tree_map_with_capacity(
         struct Val,
         key,
-        &val_key_comparator,
-        &std_allocator,
+        val_key_comparator,
+        std_allocator,
         4096
     );
     return 0;
@@ -311,7 +310,7 @@ struct Val
 };
 static Array_tree_map map = array_tree_map_with_storage(
     key,
-    &val_key_comparator,
+    val_key_comparator,
     (struct Val[4096]){}
 );
 ```
@@ -359,14 +358,14 @@ struct Val
 static map source = array_tree_map_with_storage(
     struct Val,
     key,
-    &val_key_comparator,
+    val_key_comparator,
     &(struct Val[64]){}
 );
 insert_rand_vals(&source, &(CCC_Allocator){});
 static map destination = array_tree_map_with_storage(
     struct Val,
     key,
-    &val_key_comparator,
+    val_key_comparator,
     &(struct Val[64]){}
 );
 CCC_Result res
@@ -386,13 +385,13 @@ struct Val
 static Array_adaptive_map source = array_tree_map_default(
     struct Val,
     key,
-    &val_key_comparator
+    val_key_comparator
 );
 insert_rand_vals(&source, &std_allocator);
 static Array_adaptive_map destination = array_tree_map_default(
     struct Val,
     key,
-    &val_key_comparator
+    val_key_comparator
 );
 CCC_Result res = array_tree_map_copy(&destination, &source, &std_allocator);
 ```

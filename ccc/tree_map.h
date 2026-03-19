@@ -77,8 +77,7 @@ Initialize the container with memory, callbacks, and permissions. */
 /** @brief Initializes the tree map at runtime or compile time.
 @param[in] type_name the user type wrapping the intrusive element.
 @param[in] type_intruder_field_name the name of the intrusive map elem field.
-@param[in] type_key_field_name the name of the field in user type used
-as key.
+@param[in] type_key_field_name the name of the field in user type used as key.
 @param[in] comparator the CCC_Key_comparator for type ordering.
 @return the struct initialized tree map for direct assignment. */
 #define CCC_tree_map_default(                                                  \
@@ -91,8 +90,7 @@ as key.
 /** @brief Initializes the tree map at runtime or compile time.
 @param[in] type_name the user type wrapping the intrusive element.
 @param[in] type_intruder_field_name the name of the intrusive map elem field.
-@param[in] type_key_field_name the name of the field in user type used
-as key.
+@param[in] type_key_field_name the name of the field in user type used as key.
 @param[in] comparator the CCC_Key_comparator for type ordering.
 @return the struct initialized tree map for direct assignment
 (i.e. CCC_Tree_map m = CCC_tree_map_for(...);). */
@@ -105,8 +103,7 @@ as key.
 
 /** @brief Initializes a dynamic tree map at runtime.
 @param[in] type_intruder_field_name the name of the intrusive map elem field.
-@param[in] type_key_field_name the name of the field in user type used
-as key.
+@param[in] type_key_field_name the name of the field in user type used as key.
 @param[in] comparator the CCC_Key_comparator for key comparison.
 @param[in] allocator the required CCC_Allocator to allocate nodes.
 @param[in] destructor the optional CCC_Destructor to act on every node

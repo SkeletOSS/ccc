@@ -123,7 +123,7 @@ int
 main(void)
 {
     Flat_double_ended_queue f
-        = flat_double_ended_queue_from(&std_allocator, 0,
+        = flat_double_ended_queue_from(std_allocator, 0,
                                        (int[]){ 0, 1, 2, 3 });
     return 0;
 }
@@ -138,7 +138,7 @@ int
 main(void)
 {
     Flat_double_ended_queue f
-        = flat_double_ended_queue_from(&std_allocator, 4096,
+        = flat_double_ended_queue_from(std_allocator, 4096,
                                        (int[]){ 0, 1, 2, 3 }
     );
     return 0;
@@ -158,8 +158,7 @@ known at compile time, see the CCC_flat_double_ended_queue_with_storage() macro.
 
 /** @brief Initialize a Flat_double_ended_queue with a capacity.
 @param[in] type_name any user or language standard type name.
-@param[in] allocator the CCC_Allocator for
-resizing.
+@param[in] allocator the CCC_Allocator for resizing.
 @param[in] capacity the capacity of the Flat_double_ended_queue to reserve.
 @return the initialized flat_double_ended_queue. Directly assign to
 Flat_double_ended_queue on the right hand side of the equality operator (e.g.
@@ -173,7 +172,7 @@ int
 main(void)
 {
     Flat_double_ended_queue f
-        = flat_double_ended_queue_with_capacity(int, &std_allocator, 4096);
+        = flat_double_ended_queue_with_capacity(int, std_allocator, 4096);
     return 0;
 }
 ```

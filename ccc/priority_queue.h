@@ -70,12 +70,12 @@ Initialize the container with memory, callbacks, and permissions. */
 /**@{*/
 
 /** @brief Initialize a default priority queue at runtime or compile time.
-@param[in] type_name the name of the user type_intruder wrapping
-priority_queue elems.
-@param[in] type_intruder_field the name of the field for the
-priority_queue elem.
-@param[in] order CCC_ORDER_LESSER for a min priority_queue or
-CCC_ORDER_GREATER for a max priority_queue.
+@param[in] type_name the name of the user type_intruder wrapping priority_queue
+elems.
+@param[in] type_intruder_field the name of the field for the priority_queue
+elem.
+@param[in] order CCC_ORDER_LESSER for a min priority_queue or CCC_ORDER_GREATER
+for a max priority_queue.
 @param[in] comparator the pointer to CCC_Comparator for type comparison.
 @return the initialized priority_queue on the right side of an equality operator
 (e.g. CCC_Priority_queue priority_queue = CCC_priority_queue_for(...);)
@@ -88,16 +88,14 @@ CCC_ORDER_GREATER for a max priority_queue.
     )
 
 /** @brief Initialize a priority queue at runtime or compile time.
-@param[in] type_name the name of the user type_intruder wrapping
-priority_queue elems.
-@param[in] type_intruder_field the name of the field for the
-priority_queue elem.
-@param[in] order CCC_ORDER_LESSER for a min priority_queue or
-CCC_ORDER_GREATER for a max priority_queue.
-@param[in] comparator the pointer to CCC_Comparator for type comparison.
-@return the initialized priority_queue on the right side of an equality operator
-(e.g. CCC_Priority_queue priority_queue = CCC_priority_queue_for(...);)
-*/
+@param[in] type_name the name of the user type_intruder wrapping priority_queue
+elems.
+@param[in] type_intruder_field the name of the field for the priority_queue
+elem.
+@param[in] order CCC_ORDER_LESSER for a min priority_queue or CCC_ORDER_GREATER
+for a max priority_queue.
+@param[in] comparator the CCC_Comparator for type comparison.
+@return the priority_queue on the right side of equality operator. */
 #define CCC_priority_queue_for(                                                \
     type_name, type_intruder_field, order, comparator...                       \
 )                                                                              \

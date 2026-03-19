@@ -44,13 +44,13 @@ requiring a pointer to empty user data.
 CCC_Buffer buffer = CCC_buffer_for(int, 0, 0, CCC_DEFAULT);
 ```
 
-Instead, a more specific initializer is appropriate.
+However, even then, a more specific initializer is appropriate.
 
 ```
 CCC_Buffer buffer = CCC_buffer_default(int);
 ```
 
-In most cases, a more expressive initializer exists for use instead. */
+In most cases, an expressive initializer exists for any use. */
 #define CCC_DEFAULT NULL
 
 /** @brief The result of a range query on iterable containers.

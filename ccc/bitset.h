@@ -215,13 +215,13 @@ A dynamic bit set with input string pushed.
 
 ```
 #define BITSET_USING_NAMESPACE_CCC
-Bitset bitset = bitset_from(&std_allocator, 0, 4, '1', "1011");
+Bitset bitset = bitset_from(std_allocator, 0, 4, '1', "1011");
 ```
 A dynamic bit set that allocates greater capacity.
 
 ```
 #define BITSET_USING_NAMESPACE_CCC
-Bitset bitset = bitset_from(&std_allocator, 0, 4, 'A', "GCAT", 4096);
+Bitset bitset = bitset_from(std_allocator, 0, 4, 'A', "GCAT", 4096);
 ```
 
 This initializer is only available to dynamic bit sets due to the inability to
@@ -259,7 +259,7 @@ A fixed size bit set with size equal to capacity.
 int
 main(void)
 {
-    Bitset bitset = bitset_with_capacity(&std_allocator, 4096);
+    Bitset bitset = bitset_with_capacity(std_allocator, 4096);
 }
 ```
 A bit set with dynamic push and pop.
@@ -269,7 +269,7 @@ A bit set with dynamic push and pop.
 int
 main(void)
 {
-    Bitset bitset = bitset_with_capacity(&std_allocator, 4096, 0);
+    Bitset bitset = bitset_with_capacity(std_allocator, 4096, 0);
 }
 ```
 
