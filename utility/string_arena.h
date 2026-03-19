@@ -1,6 +1,7 @@
 #ifndef STRING_ARENA_H
 #define STRING_ARENA_H
 
+#include "ccc/types.h"
 #include <stddef.h>
 #include <stdint.h>
 
@@ -45,13 +46,16 @@ struct String_arena {
 };
 
 /** Creates an arena of strings of the requested starting capacity in bytes. */
-struct String_arena string_arena_create(size_t capacity);
+struct String_arena
+string_arena_create(size_t capacity, CCC_Allocator const *allocator);
 
 /** Services the requested allocation of bytes. If successful the position
 returned is the string offset in the arena at which contiguous bytes are
 located. The bytes requested are the total allotted so do not forget to account
 for the null terminator. */
-struct String_offset string_arena_allocate(struct String_arena *, size_t bytes);
+struct String_offset string_arena_allocate(
+    struct String_arena *, size_t bytes, CCC_Allocator const *allocator
+);
 
 /** Pop the last string from the arena and resets the next free position to the
 starting position of last_str. If the last_str argument is the last string
@@ -68,8 +72,12 @@ and useful when a string may be edited depending on other factors before it is
 finally recorded for later use. One would overwrite other strings if this is not
 the last element. This will result in unexpected string reads for the
 overwritten string but all strings will remain NULL terminated. */
-enum String_arena_result
-string_arena_push_back(struct String_arena *, struct String_offset *str, char);
+enum String_arena_result string_arena_push_back(
+    struct String_arena *,
+    struct String_offset *str,
+    char,
+    CCC_Allocator const *allocator
+);
 
 /** Returns the NULL terminated string starting at the string offset provided.
 NULL is returned if the input offset has an error or is out of range. */
@@ -81,6 +89,7 @@ the next request receives the first free position. */
 enum String_arena_result string_arena_clear(struct String_arena *);
 
 /** Frees the entire arena and resets all struct fields to NULL or 0. */
-enum String_arena_result string_arena_free(struct String_arena *);
+enum String_arena_result
+string_arena_free(struct String_arena *, CCC_Allocator const *allocator);
 
 #endif /* STRING_ARENA_H */

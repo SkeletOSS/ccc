@@ -24,6 +24,7 @@ target_link_libraries(stack_allocator ccc)
 add_dependencies(utility stack_allocator)
 
 add_library(string_arena string_arena.h string_arena.c)
+target_link_libraries(string_arena ccc)
 add_dependencies(utility string_arena)
 
 add_library(defer INTERFACE defer.h)

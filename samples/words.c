@@ -130,7 +130,8 @@ static void print_n(
     CCC_Allocator const *
 );
 static struct Int_conversion parse_n_ranks(SV_Str_view);
-static struct String_offset clean_word(struct String_arena *, SV_Str_view);
+static struct String_offset
+clean_word(struct String_arena *, SV_Str_view, CCC_Allocator const *);
 static Array_adaptive_map
 create_frequency_map(struct String_arena *, FILE *, CCC_Allocator const *);
 static Order order_string_keys(Key_comparator_arguments);
@@ -241,17 +242,17 @@ static void
 print_found(
     FILE *const f, SV_Str_view w, CCC_Allocator const *const allocator
 ) {
-    struct String_arena a = string_arena_create(ARENA_START_CAP);
+    struct String_arena a = string_arena_create(ARENA_START_CAP, allocator);
     Array_adaptive_map map = create_frequency_map(&a, f, allocator);
     defer {
-        string_arena_free(&a);
+        string_arena_free(&a, allocator);
         (void)array_adaptive_map_clear_and_free(
             &map, &(CCC_Destructor){}, allocator
         );
     }
     check(a.arena);
     check(!is_empty(&map));
-    struct String_offset wc = clean_word(&a, w);
+    struct String_offset wc = clean_word(&a, w, allocator);
     if (!wc.error) {
         Word const *const found_w
             = array_adaptive_map_at(&map, get_key_value(&map, &wc));
@@ -265,11 +266,11 @@ print_found(
 
 static void
 print_top_n(FILE *const f, int n, CCC_Allocator const *const allocator) {
-    struct String_arena a = string_arena_create(ARENA_START_CAP);
+    struct String_arena a = string_arena_create(ARENA_START_CAP, allocator);
     Array_adaptive_map map = create_frequency_map(&a, f, allocator);
     defer {
         (void)clear_and_free(&map, &(CCC_Destructor){}, allocator);
-        string_arena_free(&a);
+        string_arena_free(&a, allocator);
     }
     check(a.arena);
     check(!is_empty(&map));
@@ -278,11 +279,11 @@ print_top_n(FILE *const f, int n, CCC_Allocator const *const allocator) {
 
 static void
 print_last_n(FILE *const f, int n, CCC_Allocator const *const allocator) {
-    struct String_arena a = string_arena_create(ARENA_START_CAP);
+    struct String_arena a = string_arena_create(ARENA_START_CAP, allocator);
     Array_adaptive_map map = create_frequency_map(&a, f, allocator);
     defer {
         (void)clear_and_free(&map, &(CCC_Destructor){}, allocator);
-        string_arena_free(&a);
+        string_arena_free(&a, allocator);
     }
     check(a.arena);
     check(!is_empty(&map));
@@ -291,11 +292,11 @@ print_last_n(FILE *const f, int n, CCC_Allocator const *const allocator) {
 
 static void
 print_alpha_n(FILE *const f, int n, CCC_Allocator const *const allocator) {
-    struct String_arena a = string_arena_create(ARENA_START_CAP);
+    struct String_arena a = string_arena_create(ARENA_START_CAP, allocator);
     Array_adaptive_map map = create_frequency_map(&a, f, allocator);
     defer {
         (void)clear_and_free(&map, &(CCC_Destructor){}, allocator);
-        string_arena_free(&a);
+        string_arena_free(&a, allocator);
     }
     check(a.arena);
     check(!is_empty(&map));
@@ -313,11 +314,11 @@ print_alpha_n(FILE *const f, int n, CCC_Allocator const *const allocator) {
 
 static void
 print_ralpha_n(FILE *const f, int n, CCC_Allocator const *const allocator) {
-    struct String_arena a = string_arena_create(ARENA_START_CAP);
+    struct String_arena a = string_arena_create(ARENA_START_CAP, allocator);
     Array_adaptive_map map = create_frequency_map(&a, f, allocator);
     defer {
         (void)clear_and_free(&map, &(CCC_Destructor){}, allocator);
-        string_arena_free(&a);
+        string_arena_free(&a, allocator);
     }
     check(a.arena);
     check(!is_empty(&map));
@@ -412,7 +413,8 @@ create_frequency_map(
         for (SV_Str_view word_view = SV_token_begin(line, space);
              !SV_token_end(line, word_view);
              word_view = SV_token_next(line, word_view, space)) {
-            struct String_offset const cw = clean_word(arena, word_view);
+            struct String_offset const cw
+                = clean_word(arena, word_view, allocator);
             if (!cw.error) {
                 Array_adaptive_map_handle const *e
                     = array_adaptive_map_handle_wrap(&array_adaptive_map, &cw);
@@ -432,10 +434,14 @@ create_frequency_map(
 }
 
 static struct String_offset
-clean_word(struct String_arena *const a, SV_Str_view wv) {
+clean_word(
+    struct String_arena *const a,
+    SV_Str_view wv,
+    CCC_Allocator const *const allocator
+) {
     /* It is hard to know how many characters will make it to a cleaned word
        and one pass is ideal so arena api allows push back on last alloc. */
-    struct String_offset str = string_arena_allocate(a, 0);
+    struct String_offset str = string_arena_allocate(a, 0, allocator);
     if (str.error) {
         return str;
     }
@@ -445,7 +451,7 @@ clean_word(struct String_arena *const a, SV_Str_view wv) {
             return (struct String_offset){.error = STRING_ARENA_INVALID};
         }
         enum String_arena_result const pushed_char
-            = string_arena_push_back(a, &str, (char)tolower(*c));
+            = string_arena_push_back(a, &str, (char)tolower(*c), allocator);
         check(pushed_char == STRING_ARENA_OK);
     }
     if (!str.len) {
