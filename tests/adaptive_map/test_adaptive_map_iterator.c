@@ -168,7 +168,7 @@ check_static_begin(adaptive_map_test_forward_iterator) {
         .context = &stack_allocator_for((struct Val[33]){}),
     };
     Adaptive_map s = adaptive_map_default(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     /* We should have the expected behavior iteration over empty tree. */
     int j = 0;
@@ -207,7 +207,7 @@ check_static_begin(adaptive_map_test_iterate_removal) {
         .context = &stack_allocator_for((struct Val[100]){}),
     };
     Adaptive_map s = adaptive_map_default(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
@@ -245,7 +245,7 @@ check_static_begin(adaptive_map_test_iterate_remove_key_value_reinsert) {
         .context = &stack_allocator_for((struct Val[200]){}),
     };
     Adaptive_map s = adaptive_map_default(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
@@ -294,7 +294,7 @@ check_static_begin(adaptive_map_test_valid_range) {
         .context = &stack_allocator_for((struct Val[25]){}),
     };
     Adaptive_map s = adaptive_map_default(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
@@ -343,7 +343,7 @@ check_static_begin(adaptive_map_test_valid_range_equals) {
         .context = &stack_allocator_for((struct Val[25]){}),
     };
     Adaptive_map s = adaptive_map_default(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
@@ -386,7 +386,7 @@ check_static_begin(adaptive_map_test_invalid_range) {
         .context = &stack_allocator_for((struct Val[25]){}),
     };
     Adaptive_map s = adaptive_map_default(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
@@ -435,7 +435,7 @@ check_static_begin(adaptive_map_test_empty_range) {
         .context = &stack_allocator_for((struct Val[25]){}),
     };
     Adaptive_map s = adaptive_map_default(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */

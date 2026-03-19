@@ -83,38 +83,26 @@ Initialize the container with memory, callbacks, and permissions. */
 @param[in] struct_name the user type wrapping the intrusive element.
 @param[in] type_intruder_field_name the name of the intrusive map element field.
 @param[in] type_key_field_name the name of the field in user type used as key.
-@param[in] comparator_pointer the CCC_Key_comparator for key comparison.
+@param[in] comparator the CCC_Key_comparator for key comparison.
 @return the struct initialized adaptive map for direct assignment. */
 #define CCC_adaptive_map_default(                                              \
-    struct_name,                                                               \
-    type_intruder_field_name,                                                  \
-    type_key_field_name,                                                       \
-    comparator_pointer                                                         \
+    struct_name, type_intruder_field_name, type_key_field_name, comparator     \
 )                                                                              \
     CCC_private_adaptive_map_default(                                          \
-        struct_name,                                                           \
-        type_intruder_field_name,                                              \
-        type_key_field_name,                                                   \
-        comparator_pointer                                                     \
+        struct_name, type_intruder_field_name, type_key_field_name, comparator \
     )
 
 /** @brief Initializes the adaptive map at runtime or compile time.
 @param[in] struct_name the user type wrapping the intrusive element.
 @param[in] type_intruder_field_name the name of the intrusive map element field.
 @param[in] type_key_field_name the name of the field in user type used as key.
-@param[in] comparator_pointer the CCC_Key_comparator for key comparison.
+@param[in] comparator the CCC_Key_comparator for key comparison.
 @return the struct initialized adaptive map for direct assignment. */
 #define CCC_adaptive_map_for(                                                  \
-    struct_name,                                                               \
-    type_intruder_field_name,                                                  \
-    type_key_field_name,                                                       \
-    comparator_pointer                                                         \
+    struct_name, type_intruder_field_name, type_key_field_name, comparator     \
 )                                                                              \
     CCC_private_adaptive_map_for(                                              \
-        struct_name,                                                           \
-        type_intruder_field_name,                                              \
-        type_key_field_name,                                                   \
-        comparator_pointer                                                     \
+        struct_name, type_intruder_field_name, type_key_field_name, comparator \
     )
 
 /** @brief Initializes a dynamic adaptive map at runtime.
@@ -122,9 +110,9 @@ Initialize the container with memory, callbacks, and permissions. */
 field.
 @param[in] type_key_field_name the name of the field in user type used
 as key.
-@param[in] comparator_pointer the CCC_Key_comparator for key comparison.
-@param[in] allocator_pointer the required CCC_Allocator for node allocation.
-@param[in] destructor_pointer the optional CCC_Destructor for cleanup in the
+@param[in] comparator the CCC_Key_comparator for key comparison.
+@param[in] allocator the required CCC_Allocator for node allocation.
+@param[in] destructor the optional CCC_Destructor for cleanup in the
 case of a failed allocation, or `&(CCC_Destructor){}`
 @param[in] compound_literal_array the array of user types to insert into the
 map (e.g. (struct My_type[]){ {.key = 1, .val = 1}, {.key = 2, .val = 2}}).
@@ -137,17 +125,17 @@ allocate function. */
 #define CCC_adaptive_map_from(                                                 \
     type_intruder_field_name,                                                  \
     type_key_field_name,                                                       \
-    comparator_pointer,                                                        \
-    allocator_pointer,                                                         \
-    destructor_pointer,                                                        \
+    comparator,                                                                \
+    allocator,                                                                 \
+    destructor,                                                                \
     compound_literal_array...                                                  \
 )                                                                              \
     CCC_private_adaptive_map_from(                                             \
         type_intruder_field_name,                                              \
         type_key_field_name,                                                   \
-        comparator_pointer,                                                    \
-        allocator_pointer,                                                     \
-        destructor_pointer,                                                    \
+        comparator,                                                            \
+        allocator,                                                             \
+        destructor,                                                            \
         compound_literal_array                                                 \
     )
 

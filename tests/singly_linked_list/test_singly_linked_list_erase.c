@@ -31,8 +31,8 @@ check_static_begin(singly_linked_list_test_push_pop_three) {
     };
     Singly_linked_list singly_linked_list = singly_linked_list_from(
         e,
-        &allocator,
-        &(CCC_Destructor){},
+        allocator,
+        (CCC_Destructor){},
         (struct Val[3]){
             {.val = 0},
             {.val = 1},

@@ -112,8 +112,8 @@ struct CCC_Singly_linked_list_node *CCC_private_singly_linked_list_node_in(
 /** @internal */
 #define CCC_private_singly_linked_list_from(                                   \
     private_type_intruder_field,                                               \
-    private_allocator_pointer,                                                 \
-    private_destructor_pointer,                                                \
+    private_allocator,                                                         \
+    private_destructor,                                                        \
     private_compound_literal_array...                                          \
 )                                                                              \
     (__extension__({                                                           \
@@ -126,9 +126,8 @@ struct CCC_Singly_linked_list_node *CCC_private_singly_linked_list_node_in(
                 private_type_intruder_field                                    \
             );                                                                 \
         CCC_Allocator const *const private_singly_linked_list_allocator        \
-            = (private_allocator_pointer);                                     \
-        if (private_singly_linked_list_allocator                               \
-            && private_singly_linked_list_allocator->allocate) {               \
+            = &(private_allocator);                                            \
+        if (private_singly_linked_list_allocator->allocate) {                  \
             size_t private_count                                               \
                 = sizeof(private_compound_literal_array)                       \
                 / sizeof(*private_singly_linked_list_type_array);              \
@@ -146,7 +145,7 @@ struct CCC_Singly_linked_list_node *CCC_private_singly_linked_list_node_in(
                 if (!private_new_node) {                                       \
                     CCC_singly_linked_list_clear(                              \
                         &private_singly_linked_list,                           \
-                        private_destructor_pointer,                            \
+                        &private_destructor,                                   \
                         private_singly_linked_list_allocator                   \
                     );                                                         \
                     break;                                                     \

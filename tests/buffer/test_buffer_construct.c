@@ -112,7 +112,7 @@ check_static_begin(buffer_test_copy_allocate_fail) {
 
 check_static_begin(buffer_test_init_from) {
     CCC_Buffer b
-        = CCC_buffer_from(&std_allocator, 8, (int[]){1, 2, 3, 4, 5, 6, 7});
+        = CCC_buffer_from(std_allocator, 8, (int[]){1, 2, 3, 4, 5, 6, 7});
     int elem = 1;
     for (int const *i = CCC_buffer_begin(&b); i != CCC_buffer_end(&b);
          i = CCC_buffer_next(&b, i)) {
@@ -130,7 +130,7 @@ check_static_begin(buffer_test_init_from) {
 check_static_begin(buffer_test_init_from_fail) {
     /* Whoops forgot allocation function. */
     CCC_Buffer b
-        = CCC_buffer_from(&(CCC_Allocator){}, 0, (int[]){1, 2, 3, 4, 5, 6, 7});
+        = CCC_buffer_from((CCC_Allocator){}, 0, (int[]){1, 2, 3, 4, 5, 6, 7});
     int elem = 1;
     for (int const *i = CCC_buffer_begin(&b); i != CCC_buffer_end(&b);
          i = CCC_buffer_next(&b, i)) {
@@ -146,7 +146,7 @@ check_static_begin(buffer_test_init_from_fail) {
 }
 
 check_static_begin(buffer_test_init_with_capacity) {
-    CCC_Buffer b = CCC_buffer_with_capacity(int, &std_allocator, 8);
+    CCC_Buffer b = CCC_buffer_with_capacity(int, std_allocator, 8);
     check(CCC_buffer_capacity(&b).count, 8);
     check(
         CCC_buffer_push_back(&b, &(int){9}, &std_allocator) != NULL, CCC_TRUE
@@ -187,7 +187,7 @@ check_static_begin(buffer_test_context_with_allocator) {
 
 check_static_begin(buffer_test_init_with_capacity_fail) {
     /* Forgot allocation function. */
-    CCC_Buffer b = CCC_buffer_with_capacity(int, &(CCC_Allocator){}, 8);
+    CCC_Buffer b = CCC_buffer_with_capacity(int, (CCC_Allocator){}, 8);
     check(CCC_buffer_capacity(&b).count, 0);
     check(CCC_buffer_push_back(&b, &(int){9}, &(CCC_Allocator){}), NULL);
     size_t count = 0;

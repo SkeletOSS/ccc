@@ -78,10 +78,7 @@ struct Query {
 
 static void init_node(struct CCC_Tree_map *, struct CCC_Tree_map_node *);
 static CCC_Order order(
-    struct CCC_Tree_map const *,
-    void const *,
-    struct CCC_Tree_map_node const *,
-    CCC_Key_comparator_interface *
+    struct CCC_Tree_map const *, void const *, struct CCC_Tree_map_node const *
 );
 static void *
 struct_base(struct CCC_Tree_map const *, struct CCC_Tree_map_node const *);
@@ -759,7 +756,7 @@ find(struct CCC_Tree_map const *const map, void const *const key) {
         .found = map->root,
     };
     while (q.found != NULL) {
-        q.last_order = order(map, key, q.found, map->compare);
+        q.last_order = order(map, key, q.found);
         if (CCC_ORDER_EQUAL == q.last_order) {
             return q;
         }
@@ -841,13 +838,12 @@ static inline CCC_Order
 order(
     struct CCC_Tree_map const *const map,
     void const *const key,
-    struct CCC_Tree_map_node const *const node,
-    CCC_Key_comparator_interface *const compare
+    struct CCC_Tree_map_node const *const node
 ) {
-    return compare((CCC_Key_comparator_arguments){
+    return map->comparator.compare((CCC_Key_comparator_arguments){
         .key_left = key,
         .type_right = struct_base(map, node),
-        .context = map->comparator_context,
+        .context = map->comparator.context,
     });
 }
 
@@ -1335,13 +1331,11 @@ are_subtrees_valid(struct CCC_Tree_map const *t, struct Tree_range const r) {
         return CCC_TRUE;
     }
     if (r.low
-        && order(t, key_from_node(t, r.low), r.root, t->compare)
-               != CCC_ORDER_LESSER) {
+        && order(t, key_from_node(t, r.low), r.root) != CCC_ORDER_LESSER) {
         return CCC_FALSE;
     }
     if (r.high
-        && order(t, key_from_node(t, r.high), r.root, t->compare)
-               != CCC_ORDER_GREATER) {
+        && order(t, key_from_node(t, r.high), r.root) != CCC_ORDER_GREATER) {
         return CCC_FALSE;
     }
     return are_subtrees_valid(

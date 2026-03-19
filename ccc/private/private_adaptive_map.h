@@ -64,10 +64,8 @@ struct CCC_Adaptive_map {
     size_t type_intruder_offset;
     /** @internal The byte offset of the user key in the user type. */
     size_t key_offset;
-    /** @internal The user defined comparison callback function. */
-    CCC_Key_comparator_interface *compare;
-    /** @internal Context for comparison if needed. */
-    void *comparator_context;
+    /** @internal The user defined comparison callback and context. */
+    CCC_Key_comparator comparator;
 };
 
 /** @internal An entry is a way to store a node or the information needed to
@@ -116,15 +114,14 @@ void *CCC_private_adaptive_map_insert(
     private_struct_name,                                                       \
     private_node_node_field,                                                   \
     private_key_node_field,                                                    \
-    private_comparator_pointer                                                 \
+    private_comparator...                                                      \
 )                                                                              \
     {                                                                          \
         .sizeof_type = sizeof(private_struct_name),                            \
         .type_intruder_offset                                                  \
         = offsetof(private_struct_name, private_node_node_field),              \
         .key_offset = offsetof(private_struct_name, private_key_node_field),   \
-        .compare = (private_comparator_pointer)->compare,                      \
-        .comparator_context = (private_comparator_pointer)->context,           \
+        .comparator = private_comparator,                                      \
     }
 
 /** @internal */
@@ -132,7 +129,7 @@ void *CCC_private_adaptive_map_insert(
     private_struct_name,                                                       \
     private_node_node_field,                                                   \
     private_key_node_field,                                                    \
-    private_comparator_pointer                                                 \
+    private_comparator...                                                      \
 )                                                                              \
     {                                                                          \
         .root = NULL,                                                          \
@@ -141,17 +138,16 @@ void *CCC_private_adaptive_map_insert(
         .type_intruder_offset                                                  \
         = offsetof(private_struct_name, private_node_node_field),              \
         .key_offset = offsetof(private_struct_name, private_key_node_field),   \
-        .compare = (private_comparator_pointer)->compare,                      \
-        .comparator_context = (private_comparator_pointer)->context,           \
+        .comparator = private_comparator,                                      \
     }
 
 /** @internal */
 #define CCC_private_adaptive_map_from(                                         \
     private_type_intruder_field_name,                                          \
     private_key_field_name,                                                    \
-    private_comparator_pointer,                                                \
-    private_allocator_pointer,                                                 \
-    private_destructor_pointer,                                                \
+    private_comparator,                                                        \
+    private_allocator,                                                         \
+    private_destructor,                                                        \
     private_compound_literal_array...                                          \
 )                                                                              \
     (__extension__({                                                           \
@@ -162,12 +158,11 @@ void *CCC_private_adaptive_map_insert(
                 typeof(*private_adaptive_map_type_array),                      \
                 private_type_intruder_field_name,                              \
                 private_key_field_name,                                        \
-                private_comparator_pointer                                     \
+                private_comparator                                             \
             );                                                                 \
-        CCC_Allocator const *const private_adaptive_map_allocator              \
-            = (private_allocator_pointer);                                     \
-        if (private_adaptive_map_allocator                                     \
-            && private_adaptive_map_allocator->allocate) {                     \
+        CCC_Allocator const private_adaptive_map_allocator                     \
+            = private_allocator;                                               \
+        if (private_adaptive_map_allocator.allocate) {                         \
             size_t const private_count                                         \
                 = sizeof(private_compound_literal_array)                       \
                 / sizeof(*private_adaptive_map_type_array);                    \
@@ -183,19 +178,18 @@ void *CCC_private_adaptive_map_insert(
                       & CCC_ENTRY_OCCUPIED)) {                                 \
                     typeof(*private_adaptive_map_type_array) *const            \
                         private_new_slot                                       \
-                        = private_adaptive_map_allocator->allocate(            \
-                            (CCC_Allocator_arguments){                         \
-                                .input = NULL,                                 \
-                                .bytes = private_map.sizeof_type,              \
-                                .context                                       \
-                                = private_adaptive_map_allocator->context,     \
-                            }                                                  \
-                        );                                                     \
+                        = private_adaptive_map_allocator.allocate((            \
+                            CCC_Allocator_arguments                            \
+                        ){                                                     \
+                            .input = NULL,                                     \
+                            .bytes = private_map.sizeof_type,                  \
+                            .context = private_adaptive_map_allocator.context, \
+                        });                                                    \
                     if (!private_new_slot) {                                   \
                         (void)CCC_adaptive_map_clear(                          \
                             &private_map,                                      \
-                            private_destructor_pointer,                        \
-                            private_adaptive_map_allocator                     \
+                            &(private_destructor),                             \
+                            &private_adaptive_map_allocator                    \
                         );                                                     \
                         break;                                                 \
                     }                                                          \

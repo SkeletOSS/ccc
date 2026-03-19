@@ -142,37 +142,33 @@ must be supported by this container. */
 /** @brief Initializes the map at runtime or compile time.
 @param[in] type_name the name of the user type stored in the map.
 @param[in] type_key_field the name of the field in user type used as key.
-@param[in] comparator_pointer the CCC_Key_comparator for key comparison.
+@param[in] comparator the CCC_Key_comparator for key comparison.
 @return the struct initialized adaptive map for direct assignment. */
 #define CCC_array_adaptive_map_default(                                        \
-    type_name, type_key_field, private_comparator_pointer...                   \
+    type_name, type_key_field, comparator...                                   \
 )                                                                              \
     CCC_private_array_adaptive_map_default(                                    \
-        type_name, type_key_field, private_comparator_pointer                  \
+        type_name, type_key_field, comparator                                  \
     )
 
 /** @brief Initializes the map at runtime or compile time.
 @param[in] type_name the name of the user type stored in the map.
 @param[in] type_key_field the name of the field in user type used as key.
-@param[in] comparator_pointer the CCC_Key_comparator for key comparison.
+@param[in] comparator the CCC_Key_comparator for key comparison.
 @param[in] capacity the capacity at data_pointer or 0.
 @param[in] memory_pointer a pointer to the contiguous user types or NULL.
 @return the struct initialized adaptive map for direct assignment. */
 #define CCC_array_adaptive_map_for(                                            \
-    type_name, type_key_field, comparator_pointer, capacity, memory_pointer    \
+    type_name, type_key_field, comparator, capacity, memory_pointer            \
 )                                                                              \
     CCC_private_array_adaptive_map_for(                                        \
-        type_name,                                                             \
-        type_key_field,                                                        \
-        comparator_pointer,                                                    \
-        capacity,                                                              \
-        memory_pointer                                                         \
+        type_name, type_key_field, comparator, capacity, memory_pointer        \
     )
 
 /** @brief Initialize a dynamic map at runtime from an initializer list.
 @param[in] type_key_field the field of the struct used for key storage.
-@param[in] comparator_pointer the CCC_Key_comparator for key comparison.
-@param[in] allocator_pointer the required CCC_Allocator for resizing.
+@param[in] comparator the CCC_Key_comparator for key comparison.
+@param[in] allocator the required CCC_Allocator for resizing.
 @param[in] optional_capacity optionally specify the capacity of the map if
 different from the size of the compound literal array initializer. If the
 capacity is greater than the size of the compound literal array initializer, it
@@ -224,15 +220,15 @@ Only dynamic maps may be initialized this way due the inability of the map
 map to protect its invariants from user error at compile time. */
 #define CCC_array_adaptive_map_from(                                           \
     type_key_field,                                                            \
-    comparator_pointer,                                                        \
-    allocator_pointer,                                                         \
+    comparator,                                                                \
+    allocator,                                                                 \
     optional_capacity,                                                         \
     type_compound_literal_array...                                             \
 )                                                                              \
     CCC_private_array_adaptive_map_from(                                       \
         type_key_field,                                                        \
-        comparator_pointer,                                                    \
-        allocator_pointer,                                                     \
+        comparator,                                                            \
+        allocator,                                                             \
         optional_capacity,                                                     \
         type_compound_literal_array                                            \
     )
@@ -241,8 +237,8 @@ map to protect its invariants from user error at compile time. */
 capacity.
 @param[in] type_name the name of the type being stored in the map.
 @param[in] type_key_field the field of the struct used for key storage.
-@param[in] comparator_pointer the CCC_Key_comparator for key comparison.
-@param[in] allocator_pointer the required CCC_Allocator for resizing.
+@param[in] comparator the CCC_Key_comparator for key comparison.
+@param[in] allocator the required CCC_Allocator for resizing.
 @param[in] capacity the desired capacity for the map. A capacity of 0 results
 in an argument error and is a no-op after the map is initialized empty.
 @return the map directly initialized on the right hand side of the equality
@@ -279,20 +275,16 @@ main(void)
 Only dynamic maps may be initialized this way as it simply combines the steps
 of initialization and reservation. */
 #define CCC_array_adaptive_map_with_capacity(                                  \
-    type_name, type_key_field, comparator_pointer, allocator_pointer, capacity \
+    type_name, type_key_field, comparator, allocator, capacity                 \
 )                                                                              \
     CCC_private_array_adaptive_map_with_capacity(                              \
-        type_name,                                                             \
-        type_key_field,                                                        \
-        comparator_pointer,                                                    \
-        allocator_pointer,                                                     \
-        capacity                                                               \
+        type_name, type_key_field, comparator, allocator, capacity             \
     )
 
 /** @brief Initialize a fixed map at compile or runtime from any user chosen
 type with no allocation permission or context.
 @param[in] type_key_field the field of the struct used for key storage.
-@param[in] comparator_pointer the CCC_Key_comparator for key comparison.
+@param[in] comparator the CCC_Key_comparator for key comparison.
 @param[in] compound_literal the compound literal array of a type provided by the
 user around which the struct of array backing storage for the map will be built.
 @param[in] optional_storage_specifier lifetime specifier of the backing struct
@@ -320,13 +312,13 @@ static Array_adaptive_map map = array_adaptive_map_with_storage(
 This can help eliminate boilerplate in initializers. */
 #define CCC_array_adaptive_map_with_storage(                                   \
     type_key_field,                                                            \
-    comparator_pointer,                                                        \
+    comparator,                                                                \
     compound_literal,                                                          \
     optional_storage_specifier...                                              \
 )                                                                              \
     CCC_private_array_adaptive_map_with_storage(                               \
         type_key_field,                                                        \
-        comparator_pointer,                                                    \
+        comparator,                                                            \
         compound_literal,                                                      \
         optional_storage_specifier                                             \
     )

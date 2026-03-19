@@ -217,8 +217,8 @@ check_static_begin(doubly_linked_list_test_sort_even) {
     };
     Doubly_linked_list doubly_linked_list = doubly_linked_list_from(
         e,
-        &allocator,
-        &(CCC_Destructor){},
+        allocator,
+        (CCC_Destructor){},
         (struct Val[8]){
             {.val = 9},
             {.val = 4},
@@ -276,8 +276,8 @@ check_static_begin(doubly_linked_list_test_sort_odd) {
     };
     Doubly_linked_list doubly_linked_list = doubly_linked_list_from(
         e,
-        &allocator,
-        &(CCC_Destructor){},
+        allocator,
+        (CCC_Destructor){},
         (struct Val[9]){
             {.val = 9},
             {.val = 4},
@@ -336,8 +336,8 @@ check_static_begin(doubly_linked_list_test_sort_reverse) {
     };
     Doubly_linked_list doubly_linked_list = doubly_linked_list_from(
         e,
-        &allocator,
-        &(CCC_Destructor){},
+        allocator,
+        (CCC_Destructor){},
         (struct Val[8]){
             {.val = 9},
             {.val = 8},
@@ -391,8 +391,8 @@ check_static_begin(doubly_linked_list_test_sort_runs) {
     };
     Doubly_linked_list doubly_linked_list = doubly_linked_list_from(
         e,
-        &allocator,
-        &(CCC_Destructor){},
+        allocator,
+        (CCC_Destructor){},
         (struct Val[12]){
             {.val = 99},
             {.val = 101},
@@ -454,8 +454,8 @@ check_static_begin(doubly_linked_list_test_sort_halves) {
     };
     Doubly_linked_list doubly_linked_list = doubly_linked_list_from(
         e,
-        &allocator,
-        &(CCC_Destructor){},
+        allocator,
+        (CCC_Destructor){},
         (struct Val[12]){
             {.val = 25},
             {.val = 20},

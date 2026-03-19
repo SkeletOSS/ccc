@@ -25,7 +25,7 @@ check_static_begin(priority_queue_test_insert_iterate_pop) {
         struct Val,
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
@@ -63,7 +63,7 @@ check_static_begin(priority_queue_test_priority_removal) {
         struct Val,
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
@@ -104,7 +104,7 @@ check_static_begin(priority_queue_test_priority_update) {
         struct Val,
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
@@ -157,7 +157,7 @@ check_static_begin(priority_queue_test_priority_update_with) {
         struct Val,
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
@@ -204,7 +204,7 @@ check_static_begin(priority_queue_test_priority_increase) {
         struct Val,
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
@@ -271,7 +271,7 @@ check_static_begin(priority_queue_test_priority_increase_with) {
         struct Val,
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
@@ -327,7 +327,7 @@ check_static_begin(priority_queue_test_priority_decrease) {
         struct Val,
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
@@ -394,7 +394,7 @@ check_static_begin(priority_queue_test_priority_decrease_with) {
         struct Val,
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */

@@ -71,7 +71,7 @@ check_static_begin(flat_double_ended_queue_test_copy_allocate) {
         .context = &stack_allocator_for((int[16]){}),
     };
     Flat_double_ended_queue q1
-        = flat_double_ended_queue_with_capacity(int, &allocator, 8);
+        = flat_double_ended_queue_with_capacity(int, allocator, 8);
     Flat_double_ended_queue q2 = CCC_flat_double_ended_queue_default(int);
     CCC_Result res = flat_double_ended_queue_push_back_range(
         &q1, &buffer_with_storage(5, (int[5]){0, 1, 2, 3, 4}), &allocator
@@ -106,7 +106,7 @@ check_static_begin(flat_double_ended_queue_test_copy_allocate_fail) {
         .context = &stack_allocator_for((int[16]){}),
     };
     Flat_double_ended_queue q1
-        = flat_double_ended_queue_with_capacity(int, &allocator, 8);
+        = flat_double_ended_queue_with_capacity(int, allocator, 8);
     Flat_double_ended_queue q2 = CCC_flat_double_ended_queue_default(int);
     CCC_Result res = flat_double_ended_queue_push_back_range(
         &q1, &buffer_with_storage(5, (int[5]){0, 1, 2, 3, 4}), &allocator
@@ -129,7 +129,7 @@ check_static_begin(flat_double_ended_queue_test_init_from) {
         .context = &stack_allocator_for((int[8]){}),
     };
     CCC_Flat_double_ended_queue queue = CCC_flat_double_ended_queue_from(
-        &allocator, 8, (int[7]){1, 2, 3, 4, 5, 6, 7}
+        allocator, 8, (int[7]){1, 2, 3, 4, 5, 6, 7}
     );
     int elem = 1;
     for (int const *i = CCC_flat_double_ended_queue_begin(&queue);
@@ -151,7 +151,7 @@ check_static_begin(flat_double_ended_queue_test_init_from) {
 check_static_begin(flat_double_ended_queue_test_init_from_fail) {
     /* Whoops forgot allocation function. */
     CCC_Flat_double_ended_queue queue = CCC_flat_double_ended_queue_from(
-        &(CCC_Allocator){}, 0, (int[]){1, 2, 3, 4, 5, 6, 7}
+        (CCC_Allocator){}, 0, (int[]){1, 2, 3, 4, 5, 6, 7}
     );
     int elem = 1;
     for (int const *i = CCC_flat_double_ended_queue_begin(&queue);
@@ -182,7 +182,7 @@ check_static_begin(flat_double_ended_queue_test_init_with_capacity) {
         .context = &stack_allocator_for((int[8]){}),
     };
     CCC_Flat_double_ended_queue queue
-        = CCC_flat_double_ended_queue_with_capacity(int, &allocator, 8);
+        = CCC_flat_double_ended_queue_with_capacity(int, allocator, 8);
     check(CCC_flat_double_ended_queue_capacity(&queue).count, 8);
     check(
         CCC_flat_double_ended_queue_push_back(&queue, &(int){9}, &allocator)
@@ -197,7 +197,7 @@ check_static_begin(flat_double_ended_queue_test_init_with_capacity) {
 check_static_begin(flat_double_ended_queue_test_init_with_capacity_fail) {
     /* Forgot allocation function. */
     CCC_Flat_double_ended_queue queue
-        = CCC_flat_double_ended_queue_with_capacity(int, &(CCC_Allocator){}, 8);
+        = CCC_flat_double_ended_queue_with_capacity(int, (CCC_Allocator){}, 8);
     check(CCC_flat_double_ended_queue_capacity(&queue).count, 0);
     check(
         CCC_flat_double_ended_queue_push_back(

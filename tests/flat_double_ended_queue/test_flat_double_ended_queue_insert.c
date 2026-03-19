@@ -362,7 +362,7 @@ check_static_begin(flat_double_ended_queue_test_insert_ranges) {
 
 check_static_begin(flat_double_ended_queue_test_insert_ranges_reserve) {
     Flat_double_ended_queue q
-        = flat_double_ended_queue_with_capacity(int, &std_allocator, 8);
+        = flat_double_ended_queue_with_capacity(int, std_allocator, 8);
     check(flat_double_ended_queue_capacity(&q).count > 0, true);
     (void)flat_double_ended_queue_push_back_range(
         &q, &CCC_buffer_with_storage(3, (int[3]){0, 1, 2}), &(CCC_Allocator){}

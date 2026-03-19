@@ -121,7 +121,7 @@ argument. */
 /** @internal Determine if user wants capacity different than count. Then pass
 to inline function for bit set construction. */
 #define CCC_private_bitset_from(                                               \
-    private_allocator_pointer,                                                 \
+    private_allocator,                                                         \
     private_start_index,                                                       \
     private_count,                                                             \
     private_on_char,                                                           \
@@ -136,7 +136,7 @@ to inline function for bit set construction. */
         if (CCC_private_bitset_reserve(                                        \
                 &private_bitset,                                               \
                 private_cap < private_count ? private_count : private_cap,     \
-                private_allocator_pointer                                      \
+                &private_allocator                                             \
             )                                                                  \
             == CCC_RESULT_OK) {                                                \
             private_bitset.count = private_count;                              \
@@ -161,7 +161,7 @@ to inline function for bit set construction. */
         size_t const private_count                                             \
             = CCC_private_bitset_optional_size((private_cap), __VA_ARGS__);    \
         if (CCC_private_bitset_reserve(                                        \
-                &private_bitset, private_cap, private_allocate                 \
+                &private_bitset, private_cap, &private_allocate                \
             )                                                                  \
             == CCC_RESULT_OK) {                                                \
             private_bitset.count = private_count;                              \

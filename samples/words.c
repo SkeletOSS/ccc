@@ -339,7 +339,7 @@ copy_frequencies(
     Array_adaptive_map const *const map, CCC_Allocator const *const allocator
 ) {
     check(!is_empty(map));
-    Buffer freqs = CCC_buffer_with_capacity(Word, allocator, count(map).count);
+    Buffer freqs = CCC_buffer_with_capacity(Word, *allocator, count(map).count);
     size_t const cap = capacity(&freqs).count;
     size_t i = 0;
     for (CCC_Handle_index iter = begin(map); iter != end(map) && i < cap;
@@ -402,7 +402,7 @@ create_frequency_map(
     Array_adaptive_map array_adaptive_map = array_adaptive_map_default(
         Word,
         ofs,
-        &(CCC_Key_comparator){
+        (CCC_Key_comparator){
             .compare = order_string_keys,
             .context = arena,
         }

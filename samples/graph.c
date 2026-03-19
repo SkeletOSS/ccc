@@ -444,18 +444,18 @@ found_destination(
 ) {
     Flat_hash_map parent_map = flat_hash_map_from(
         current,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = hash_parent_cells,
             .compare = order_parent_cells,
         }),
-        allocator,
+        *allocator,
         0,
         (struct Path_backtrack_cell[]){
             {.current = source->pos, .parent = (struct Point){-1, -1}},
         }
     );
     Flat_double_ended_queue bfs = flat_double_ended_queue_from(
-        allocator, 0, (struct Point[]){source->pos}
+        *allocator, 0, (struct Point[]){source->pos}
     );
     defer {
         (void)clear_and_free(&bfs, &(CCC_Destructor){}, allocator);
@@ -759,7 +759,7 @@ dijkstra_shortest_path(
         struct Cost,
         priority_queue_node,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = order_priority_queue_costs}
+        (CCC_Comparator){.compare = order_priority_queue_costs}
     );
     for (int i = 0, vx = BEGIN_VERTICES; i < graph->vertices; ++i, ++vx) {
         struct Cost *const v

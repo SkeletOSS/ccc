@@ -10,14 +10,14 @@
 static CCC_Tree_map
 construct_empty(void) {
     CCC_Tree_map map = CCC_tree_map_default(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     return map;
 }
 
 check_static_begin(tree_map_test_empty) {
     CCC_Tree_map s = CCC_tree_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     check(CCC_tree_map_is_empty(&s), true);
     check_end();
@@ -50,9 +50,9 @@ check_static_begin(tree_map_test_construct_from) {
     CCC_Tree_map map = CCC_tree_map_from(
         elem,
         key,
-        &(CCC_Key_comparator){.compare = id_order},
-        &allocator,
-        &(CCC_Destructor){},
+        (CCC_Key_comparator){.compare = id_order},
+        allocator,
+        (CCC_Destructor){},
         (struct Val[]){
             {.key = 0, .val = 0},
             {.key = 1, .val = 1},
@@ -74,9 +74,9 @@ check_static_begin(tree_map_test_construct_from_overwrite) {
     CCC_Tree_map map = CCC_tree_map_from(
         elem,
         key,
-        &(CCC_Key_comparator){.compare = id_order},
-        &allocator,
-        &(CCC_Destructor){},
+        (CCC_Key_comparator){.compare = id_order},
+        allocator,
+        (CCC_Destructor){},
         (struct Val[]){
             {.key = 0, .val = 0},
             {.key = 1, .val = 1},
@@ -98,9 +98,9 @@ check_static_begin(tree_map_test_construct_from_fail) {
     CCC_Tree_map map = CCC_tree_map_from(
         elem,
         key,
-        &(CCC_Key_comparator){.compare = id_order},
-        &(CCC_Allocator){},
-        &(CCC_Destructor){},
+        (CCC_Key_comparator){.compare = id_order},
+        (CCC_Allocator){},
+        (CCC_Destructor){},
         (struct Val[]){
             {.key = 0, .val = 0},
             {.key = 1, .val = 1},

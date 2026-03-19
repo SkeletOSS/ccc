@@ -62,7 +62,7 @@ check_begin(
         struct Val,
         elem,
         CCC_priority_queue_order(queue),
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     int prev_val = queue->order == CCC_ORDER_LESSER ? INT_MIN : INT_MAX;
     while (!is_empty(queue)) {

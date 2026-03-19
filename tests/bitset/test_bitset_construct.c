@@ -79,7 +79,7 @@ check_static_begin(bitset_test_copy_allocate) {
         .context
         = &stack_allocator_for(CCC_bitset_storage_for((CCC_Bit[1024]){})),
     };
-    CCC_Bitset source = CCC_bitset_with_capacity(&allocator, 512, 0);
+    CCC_Bitset source = CCC_bitset_with_capacity(allocator, 512, 0);
     for (size_t i = 0; i < 512; ++i) {
         if (i % 2) {
             check(
@@ -127,7 +127,7 @@ check_static_begin(bitset_test_init_from) {
         = &stack_allocator_for(CCC_bitset_storage_for((CCC_Bit[256]){})),
     };
     CCC_Bitset b
-        = CCC_bitset_from(&allocator, 0, SV_len(input), '1', SV_begin(input));
+        = CCC_bitset_from(allocator, 0, SV_len(input), '1', SV_begin(input));
     check(CCC_bitset_count(&b).count, SV_len(input));
     check(CCC_bitset_capacity(&b).count, SV_len(input));
     check(CCC_bitset_popcount(&b).count, 4);
@@ -144,7 +144,7 @@ check_static_begin(bitset_test_init_from_cap) {
         = &stack_allocator_for(CCC_bitset_storage_for((CCC_Bit[256]){})),
     };
     CCC_Bitset b = CCC_bitset_from(
-        &allocator, 0, SV_len(input), '1', SV_begin(input), SV_len(input) * 2
+        allocator, 0, SV_len(input), '1', SV_begin(input), SV_len(input) * 2
     );
     check(CCC_bitset_count(&b).count, SV_len(input));
     check(CCC_bitset_capacity(&b).count, (SV_len(input)) * 2);
@@ -162,7 +162,7 @@ check_static_begin(bitset_test_init_from_fail) {
     SV_Str_view input = SV_from("110110");
     /* Forgot allocation function. */
     CCC_Bitset b = CCC_bitset_from(
-        &(CCC_Allocator){}, 0, SV_len(input), '1', SV_begin(input)
+        (CCC_Allocator){}, 0, SV_len(input), '1', SV_begin(input)
     );
     check(CCC_bitset_count(&b).count, 0);
     check(CCC_bitset_capacity(&b).count, 0);
@@ -176,7 +176,7 @@ check_static_begin(bitset_test_init_from_cap_fail) {
     SV_Str_view input = SV_from("110110");
     /* Forgot allocation function. */
     CCC_Bitset b = CCC_bitset_from(
-        &(CCC_Allocator){}, 0, SV_len(input), '1', SV_begin(input), 99
+        (CCC_Allocator){}, 0, SV_len(input), '1', SV_begin(input), 99
     );
     check(CCC_bitset_count(&b).count, 0);
     check(CCC_bitset_capacity(&b).count, 0);
@@ -192,7 +192,7 @@ check_static_begin(bitset_test_init_with_capacity) {
         .context
         = &stack_allocator_for(CCC_bitset_storage_for((CCC_Bit[10]){})),
     };
-    CCC_Bitset b = CCC_bitset_with_capacity(&allocator, 10);
+    CCC_Bitset b = CCC_bitset_with_capacity(allocator, 10);
     check(CCC_bitset_popcount(&b).count, 0);
     check(CCC_bitset_set(&b, 0, CCC_TRUE), CCC_FALSE);
     check(CCC_bitset_set(&b, 9, CCC_TRUE), CCC_FALSE);
@@ -202,7 +202,7 @@ check_static_begin(bitset_test_init_with_capacity) {
 }
 
 check_static_begin(bitset_test_init_with_capacity_fail) {
-    CCC_Bitset b = CCC_bitset_with_capacity(&(CCC_Allocator){}, 10);
+    CCC_Bitset b = CCC_bitset_with_capacity((CCC_Allocator){}, 10);
     check(CCC_bitset_popcount(&b).count, 0);
     check(CCC_TRIBOOL_ERROR, CCC_bitset_set(&b, 0, CCC_TRUE));
     check(CCC_TRIBOOL_ERROR, CCC_bitset_set(&b, 9, CCC_TRUE));

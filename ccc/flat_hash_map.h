@@ -185,17 +185,17 @@ must be supported by this container. */
 /** @brief Initialize a default empty map at compile time or runtime.
 @param[in] type_name the name of the user defined type stored in the map.
 @param[in] key_field the field of the struct used for key storage.
-@param[in] hasher_pointer a pointer to the CCC_Hasher that configures the hash
+@param[in] hasher a pointer to the CCC_Hasher that configures the hash
 function, key comparator function, and context for both hashing and comparison.
 @return the flat hash map directly initialized on the right hand side of the
 equality operator. */
-#define CCC_flat_hash_map_default(type_name, key_field, hasher_pointer...)     \
-    CCC_private_flat_hash_map_default(type_name, key_field, hasher_pointer)
+#define CCC_flat_hash_map_default(type_name, key_field, hasher...)             \
+    CCC_private_flat_hash_map_default(type_name, key_field, hasher)
 
 /** @brief Initialize a map of types at compile time or runtime.
 @param[in] type_name the name of the user defined type stored in the map.
 @param[in] key_field the field of the struct used for key storage.
-@param[in] hasher_pointer a pointer to the CCC_Hasher that configures the hash
+@param[in] hasher a pointer to the CCC_Hasher that configures the hash
 function, key comparator function, and context for both hashing and comparison.
 @param[in] capacity the capacity of a fixed size map or 0.
 @param[in] map_pointer a pointer to a fixed map allocation or NULL.
@@ -223,16 +223,17 @@ static Flat_hash_map static_map = flat_hash_map_for(
 
 See other, more specific, initializers for less boilerplate. */
 #define CCC_flat_hash_map_for(                                                 \
-    type_name, key_field, hasher_pointer, capacity, map_pointer                \
+    type_name, key_field, hasher, capacity, map_pointer                        \
 )                                                                              \
     CCC_private_flat_hash_map_for(                                             \
-        type_name, key_field, hasher_pointer, capacity, map_pointer            \
+        type_name, key_field, hasher, capacity, map_pointer                    \
     )
 
 /** @brief Initialize a dynamic map at runtime from an initializer list.
 @param[in] key_field the field of the struct used for key storage.
-@param[in] hasher_pointer a pointer to the CCC_Hasher that configures the hash
-function, key comparator function, and context for both hashing and comparison.
+@param[in] hasher a CCC_Hasher that configures the hash function, key comparator
+function, and context for both hashing and comparison.
+@param[in] allocator a CCC_Allocator for resizing.
 @param[in] optional_capacity optionally specify the capacity of the map if
 different from the size of the compound literal array initializer. If the
 capacity is greater than the size of the compound literal array initializer, it
@@ -268,8 +269,8 @@ main(void)
 {
     Flat_hash_map map = flat_hash_map_from(
         key,
-        (&(CCC_Hasher){.hash = hash_int, .compare = key_order}),
-        &std_allocator,
+        ((CCC_Hasher){.hash = hash_int, .compare = key_order}),
+        std_allocator,
         0,
         (struct Val[]) {
             {.key = 1, .val = 1},
@@ -284,17 +285,21 @@ main(void)
 Only dynamic maps may be initialized this way due the inability of the hash
 map to protect its invariants from user error at compile time. */
 #define CCC_flat_hash_map_from(                                                \
-    key_field, hasher_pointer, optional_capacity, array_compound_literal...    \
+    key_field, hasher, allocator, optional_capacity, array_compound_literal... \
 )                                                                              \
     CCC_private_flat_hash_map_from(                                            \
-        key_field, hasher_pointer, optional_capacity, array_compound_literal   \
+        key_field,                                                             \
+        hasher,                                                                \
+        allocator,                                                             \
+        optional_capacity,                                                     \
+        array_compound_literal                                                 \
     )
 
 /** @brief Initialize a dynamic map at runtime with at least the specified
 capacity.
 @param[in] type_name the name of the type being stored in the map.
 @param[in] key_field the field of the struct used for key storage.
-@param[in] hasher_pointer a pointer to the CCC_Hasher that configures the hash
+@param[in] hasher a pointer to the CCC_Hasher that configures the hash
 function, key comparator function, and context for both hashing and comparison.
 @param[in] capacity the desired capacity for the map. A capacity of 0 results
 in an argument error and is a no-op after the map is initialized empty.
@@ -333,17 +338,17 @@ main(void)
 Only dynamic maps may be initialized this way as it simply combines the steps
 of initialization and reservation. */
 #define CCC_flat_hash_map_with_capacity(                                       \
-    type_name, key_field, hasher_pointer, allocator_pointer, capacity          \
+    type_name, key_field, hasher, allocator, capacity                          \
 )                                                                              \
     CCC_private_flat_hash_map_with_capacity(                                   \
-        type_name, key_field, hasher_pointer, allocator_pointer, capacity      \
+        type_name, key_field, hasher, allocator, capacity                      \
     )
 
 /** @brief Initialize a fixed map at compile time or runtime from its previously
 declared type using a compound literal with no allocation permissions or
 context.
 @param[in] key_field the field of the struct used for key storage.
-@param[in] hasher_pointer a pointer to the CCC_Hasher that configures the hash
+@param[in] hasher a pointer to the CCC_Hasher that configures the hash
 function, key comparator function, and context for both hashing and comparison.
 @param[in] compound_literal the compound literal array of a type provided by the
 user around which the struct of arrays backing storage for the map is built.
@@ -374,13 +379,10 @@ static Flat_hash_map static_map = flat_hash_map_with_storage(
 
 This saves on boilerplate compared to the raw initializer. */
 #define CCC_flat_hash_map_with_storage(                                        \
-    key_field, hasher_pointer, compound_literal, optional_storage_specifier... \
+    key_field, hasher, compound_literal, optional_storage_specifier...         \
 )                                                                              \
     CCC_private_flat_hash_map_with_storage(                                    \
-        key_field,                                                             \
-        hasher_pointer,                                                        \
-        compound_literal,                                                      \
-        optional_storage_specifier                                             \
+        key_field, hasher, compound_literal, optional_storage_specifier        \
     )
 
 /** @brief Copy the map at source to destination.

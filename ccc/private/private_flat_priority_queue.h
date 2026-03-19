@@ -61,19 +61,19 @@ void *CCC_private_flat_priority_queue_update_fixup(
 
 /** @internal */
 #define CCC_private_flat_priority_queue_default(                               \
-    private_type_name, private_order, private_comparator_pointer...            \
+    private_type_name, private_order, private_comparator...                    \
 )                                                                              \
     {                                                                          \
         .buffer = CCC_buffer_default(private_type_name),                       \
         .order = (private_order),                                              \
-        .comparator = *private_comparator_pointer,                             \
+        .comparator = private_comparator,                                      \
     }
 
 /** @internal */
 #define CCC_private_flat_priority_queue_for(                                   \
     private_type_name,                                                         \
     private_order,                                                             \
-    private_comparator_pointer,                                                \
+    private_comparator,                                                        \
     private_capacity,                                                          \
     private_data_pointer                                                       \
 )                                                                              \
@@ -82,14 +82,14 @@ void *CCC_private_flat_priority_queue_update_fixup(
             private_type_name, private_capacity, 0, private_data_pointer       \
         ),                                                                     \
         .order = (private_order),                                              \
-        .comparator = *(private_comparator_pointer),                           \
+        .comparator = (private_comparator),                                    \
     }
 
 /** @internal */
 #define CCC_private_flat_priority_queue_heapify(                               \
     private_type_name,                                                         \
     private_order,                                                             \
-    private_comparator_pointer,                                                \
+    private_comparator,                                                        \
     private_capacity,                                                          \
     private_size,                                                              \
     private_data_pointer...                                                    \
@@ -102,7 +102,7 @@ void *CCC_private_flat_priority_queue_update_fixup(
             = CCC_private_flat_priority_queue_for(                             \
                 private_type_name,                                             \
                 private_order,                                                 \
-                private_comparator_pointer,                                    \
+                private_comparator,                                            \
                 private_capacity,                                              \
                 private_flat_priority_queue_heapify_data                       \
             );                                                                 \
@@ -116,20 +116,20 @@ void *CCC_private_flat_priority_queue_update_fixup(
 /** @internal */
 #define CCC_private_flat_priority_queue_from(                                  \
     private_order,                                                             \
-    private_comparator_pointer,                                                \
-    private_allocator_pointer,                                                 \
+    private_comparator,                                                        \
+    private_allocator,                                                         \
     private_optional_capacity,                                                 \
     private_compound_literal_array...                                          \
 )                                                                              \
     (struct { struct CCC_Flat_priority_queue private; }){(__extension__({      \
         struct CCC_Flat_priority_queue private_flat_priority_queue = {         \
             .buffer = CCC_buffer_from(                                         \
-                private_allocator_pointer,                                     \
+                private_allocator,                                             \
                 private_optional_capacity,                                     \
                 private_compound_literal_array                                 \
             ),                                                                 \
             .order = (private_order),                                          \
-            .comparator = *(private_comparator_pointer),                       \
+            .comparator = (private_comparator),                                \
         };                                                                     \
         if (private_flat_priority_queue.buffer.count) {                        \
             CCC_private_flat_priority_queue_heap_order(                        \
@@ -144,24 +144,24 @@ void *CCC_private_flat_priority_queue_update_fixup(
 #define CCC_private_flat_priority_queue_with_capacity(                         \
     private_type_name,                                                         \
     private_order,                                                             \
-    private_comparator_pointer,                                                \
-    private_allocator_pointer,                                                 \
+    private_comparator,                                                        \
+    private_allocator,                                                         \
     private_capacity                                                           \
 )                                                                              \
     (__extension__({                                                           \
         struct CCC_Flat_priority_queue private_flat_priority_queue = {         \
             .buffer = CCC_buffer_with_capacity(                                \
-                private_type_name, private_allocator_pointer, private_capacity \
+                private_type_name, private_allocator, private_capacity         \
             ),                                                                 \
             .order = (private_order),                                          \
-            .comparator = *(private_comparator_pointer),                       \
+            .comparator = (private_comparator),                                \
         };                                                                     \
         private_flat_priority_queue;                                           \
     }))
 
 /** @internal */
 #define CCC_private_flat_priority_queue_with_storage(                          \
-    private_order, private_comparator_pointer, private_compound_literal        \
+    private_order, private_comparator, private_compound_literal                \
 )                                                                              \
     (struct {                                                                  \
         static_assert(                                                         \
@@ -173,7 +173,7 @@ void *CCC_private_flat_priority_queue_update_fixup(
     }){{                                                                       \
            .buffer = CCC_buffer_with_storage(0, private_compound_literal),     \
            .order = (private_order),                                           \
-           .comparator = *(private_comparator_pointer),                        \
+           .comparator = (private_comparator),                                 \
        }}                                                                      \
         .private
 

@@ -15,7 +15,7 @@
 check_static_begin(flat_hash_map_test_erase) {
     CCC_Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_zero,
             .compare = flat_hash_map_id_order,
         }),
@@ -57,7 +57,7 @@ check_static_begin(flat_hash_map_test_shuffle_insert_erase) {
     CCC_Flat_hash_map h = flat_hash_map_default(
         struct Val,
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
             .compare = flat_hash_map_id_order,
         })
@@ -111,7 +111,7 @@ check_static_begin(flat_hash_map_test_shuffle_insert_erase) {
 check_static_begin(flat_hash_map_test_shuffle_erase_fixed) {
     CCC_Flat_hash_map h = flat_hash_map_with_storage(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
             .compare = flat_hash_map_id_order,
         }),
@@ -191,7 +191,7 @@ check_static_begin(flat_hash_map_test_shuffle_erase_reserved) {
     CCC_Flat_hash_map h = flat_hash_map_default(
         struct Val,
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
             .compare = flat_hash_map_id_order,
         })
@@ -275,7 +275,7 @@ check_static_begin(flat_hash_map_test_shuffle_erase_dynamic) {
     CCC_Flat_hash_map h = flat_hash_map_default(
         struct Val,
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
             .compare = flat_hash_map_id_order,
         })

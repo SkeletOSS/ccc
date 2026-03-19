@@ -27,7 +27,7 @@ array_tree_map_modplus(CCC_Arguments const t) {
 check_static_begin(array_tree_map_test_insert) {
     CCC_Array_tree_map map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
 
@@ -48,7 +48,7 @@ check_static_begin(array_tree_map_test_insert) {
 check_static_begin(array_tree_map_test_insert_macros) {
     CCC_Array_tree_map map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
 
@@ -130,7 +130,7 @@ check_static_begin(array_tree_map_test_insert_macros) {
 check_static_begin(array_tree_map_test_insert_overwrite) {
     CCC_Array_tree_map map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
 
@@ -168,7 +168,7 @@ check_static_begin(array_tree_map_test_insert_overwrite) {
 check_static_begin(array_tree_map_test_insert_then_bad_ideas) {
     CCC_Array_tree_map map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
     struct Val q = {.id = 137, .val = 99};
@@ -201,7 +201,7 @@ check_static_begin(array_tree_map_test_array_api_functional) {
     /* Over allocate size now because we don't want to worry about resizing. */
     CCC_Array_tree_map map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[STANDARD_FIXED_CAP]){}
     );
     size_t const size = 200;
@@ -276,7 +276,7 @@ check_static_begin(array_tree_map_test_insert_via_handle) {
     /* Over allocate size now because we don't want to worry about resizing. */
     CCC_Array_tree_map map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[STANDARD_FIXED_CAP]){}
     );
     size_t const size = 200;
@@ -330,7 +330,7 @@ check_static_begin(array_tree_map_test_insert_via_array_macros) {
     /* Over allocate size now because we don't want to worry about resizing. */
     CCC_Array_tree_map map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[STANDARD_FIXED_CAP]){}
     );
     size_t const size = 200;
@@ -379,7 +379,7 @@ check_static_begin(array_tree_map_test_array_api_macros) {
     /* Over allocate size now because we don't want to worry about resizing. */
     CCC_Array_tree_map map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[STANDARD_FIXED_CAP]){}
     );
     int const size = 200;
@@ -450,7 +450,7 @@ check_static_begin(array_tree_map_test_array_api_macros) {
 check_static_begin(array_tree_map_test_two_sum) {
     CCC_Array_tree_map map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
     int const addends[10] = {1, 3, -980, 6, 7, 13, 44, 32, 995, -1};
@@ -478,7 +478,7 @@ check_static_begin(array_tree_map_test_two_sum) {
 
 check_static_begin(array_tree_map_test_resize) {
     CCC_Array_tree_map map = array_tree_map_default(
-        struct Val, id, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, id, (CCC_Key_comparator){.compare = id_order}
     );
     int const to_insert = 1000;
     int const larger_prime = 1009;
@@ -530,8 +530,8 @@ check_static_begin(array_tree_map_test_reserve) {
     CCC_Array_tree_map map = array_tree_map_with_capacity(
         struct Val,
         id,
-        &(CCC_Key_comparator){.compare = id_order},
-        &allocator,
+        (CCC_Key_comparator){.compare = id_order},
+        allocator,
         STANDARD_FIXED_CAP - 1
     );
     check(array_tree_map_capacity(&map).count >= STANDARD_FIXED_CAP - 1, true);
@@ -570,7 +570,7 @@ check_static_begin(array_tree_map_test_reserve) {
 
 check_static_begin(array_tree_map_test_resize_macros) {
     CCC_Array_tree_map map = array_tree_map_default(
-        struct Val, id, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, id, (CCC_Key_comparator){.compare = id_order}
     );
     int const to_insert = 1000;
     int const larger_prime = 1009;
@@ -625,7 +625,7 @@ check_static_begin(array_tree_map_test_resize_macros) {
 
 check_static_begin(array_tree_map_test_resize_from_null) {
     CCC_Array_tree_map map = array_tree_map_default(
-        struct Val, id, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, id, (CCC_Key_comparator){.compare = id_order}
     );
     int const to_insert = 1000;
     int const larger_prime = 1009;
@@ -667,7 +667,7 @@ check_static_begin(array_tree_map_test_resize_from_null) {
 
 check_static_begin(array_tree_map_test_resize_from_null_macros) {
     CCC_Array_tree_map map = array_tree_map_default(
-        struct Val, id, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, id, (CCC_Key_comparator){.compare = id_order}
     );
     int const to_insert = 1000;
     int const larger_prime = 1009;
@@ -724,7 +724,7 @@ check_static_begin(array_tree_map_test_insert_limit) {
     int const size = SMALL_FIXED_CAP;
     CCC_Array_tree_map map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
 
@@ -812,7 +812,7 @@ check_static_begin(array_tree_map_test_insert_and_find) {
     int const size = SMALL_FIXED_CAP;
     CCC_Array_tree_map map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
 
@@ -849,7 +849,7 @@ check_static_begin(array_tree_map_test_insert_shuffle) {
     size_t const size = SMALL_FIXED_CAP - 1;
     CCC_Array_tree_map map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
     check(size > 1, true);
@@ -867,7 +867,7 @@ check_static_begin(array_tree_map_test_insert_weak_srand) {
     int const num_nodes = STANDARD_FIXED_CAP - 1;
     CCC_Array_tree_map map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[STANDARD_FIXED_CAP]){}
     );
     srand(time(NULL)); /* NOLINT */

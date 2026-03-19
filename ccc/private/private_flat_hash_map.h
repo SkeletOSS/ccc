@@ -150,12 +150,8 @@ struct CCC_Flat_hash_map {
     size_t sizeof_type;
     /** @internal The location of the key field in user type. */
     size_t key_offset;
-    /** @internal The user provided hash function. */
-    CCC_Key_hasher_interface *hash;
-    /** @internal The user provided comparison function. */
-    CCC_Key_comparator_interface *compare;
-    /** @internal The user provided context for hashing and comparison. */
-    void *hasher_context;
+    /** @internal The provided hash function, key comparator, and context. */
+    CCC_Hasher hasher;
 };
 
 /** @internal A struct for containing all relevant information for a query
@@ -249,14 +245,12 @@ be exposed to the user if they wish to know the size in bytes of this object. */
 
 /** @internal All other fields default to 0 or NULL. */
 #define CCC_private_flat_hash_map_default(                                     \
-    private_type_name, private_key_field, private_hasher_pointer...            \
+    private_type_name, private_key_field, private_hasher...                    \
 )                                                                              \
     {                                                                          \
         .sizeof_type = sizeof(private_type_name),                              \
         .key_offset = offsetof(private_type_name, private_key_field),          \
-        .hash = (private_hasher_pointer)->hash,                                \
-        .compare = (private_hasher_pointer)->compare,                          \
-        .hasher_context = (private_hasher_pointer)->context,                   \
+        .hasher = private_hasher,                                              \
     }
 
 /** @internal Initialization is tricky but we simplify by only accepting a
@@ -278,7 +272,7 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
 #define CCC_private_flat_hash_map_for(                                         \
     private_type_name,                                                         \
     private_key_field,                                                         \
-    private_hasher_pointer,                                                    \
+    private_hasher,                                                            \
     private_capacity,                                                          \
     private_map_pointer                                                        \
 )                                                                              \
@@ -292,16 +286,14 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
                                             : (size_t)0),                      \
         .sizeof_type = sizeof(private_type_name),                              \
         .key_offset = offsetof(private_type_name, private_key_field),          \
-        .hash = (private_hasher_pointer)->hash,                                \
-        .compare = (private_hasher_pointer)->compare,                          \
-        .hasher_context = (private_hasher_pointer)->context,                   \
+        .hasher = (private_hasher),                                            \
     }
 
 /** @internal Initialize  dynamic container with a compound literal array. */
 #define CCC_private_flat_hash_map_from(                                        \
     private_key_field,                                                         \
-    private_hasher_pointer,                                                    \
-    private_allocator_pointer,                                                 \
+    private_hasher,                                                            \
+    private_allocator,                                                         \
     private_optional_cap,                                                      \
     private_array_compound_literal...                                          \
 )                                                                              \
@@ -309,21 +301,22 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
         typeof(*private_array_compound_literal)                                \
             *private_flat_hash_map_initializer_list                            \
             = private_array_compound_literal;                                  \
-        struct CCC_Flat_hash_map private_map = CCC_private_flat_hash_map_for(  \
-            typeof(*private_flat_hash_map_initializer_list),                   \
-            private_key_field,                                                 \
-            private_hasher_pointer,                                            \
-            0,                                                                 \
-            NULL                                                               \
-        );                                                                     \
+        struct CCC_Flat_hash_map private_map                                   \
+            = CCC_private_flat_hash_map_default(                               \
+                typeof(*private_flat_hash_map_initializer_list),               \
+                private_key_field,                                             \
+                private_hasher                                                 \
+            );                                                                 \
         size_t const private_n                                                 \
             = sizeof(private_array_compound_literal)                           \
             / sizeof(*private_flat_hash_map_initializer_list);                 \
         size_t const private_cap = private_optional_cap;                       \
+        CCC_Allocator const *const private_flat_hash_map_allocator             \
+            = &(private_allocator);                                            \
         if (CCC_flat_hash_map_reserve(                                         \
                 &private_map,                                                  \
                 (private_n > private_cap ? private_n : private_cap),           \
-                private_allocator_pointer                                      \
+                private_flat_hash_map_allocator                                \
             )                                                                  \
             == CCC_RESULT_OK) {                                                \
             for (size_t i = 0; i < private_n; ++i) {                           \
@@ -334,7 +327,7 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
                             void const *                                       \
                         )&private_flat_hash_map_initializer_list[i]            \
                             .private_key_field,                                \
-                        private_allocator_pointer                              \
+                        private_flat_hash_map_allocator                        \
                     );                                                         \
                 *((typeof(*private_flat_hash_map_initializer_list) *)          \
                       CCC_private_flat_hash_map_data_at(                       \
@@ -352,17 +345,17 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
 #define CCC_private_flat_hash_map_with_capacity(                               \
     private_type_name,                                                         \
     private_key_field,                                                         \
-    private_hasher_pointer,                                                    \
-    private_allocator_pointer,                                                 \
+    private_hasher,                                                            \
+    private_allocator,                                                         \
     private_cap                                                                \
 )                                                                              \
     (__extension__({                                                           \
         struct CCC_Flat_hash_map private_map                                   \
             = CCC_private_flat_hash_map_default(                               \
-                private_type_name, private_key_field, private_hasher_pointer   \
+                private_type_name, private_key_field, private_hasher           \
             );                                                                 \
         (void)CCC_flat_hash_map_reserve(                                       \
-            &private_map, private_cap, private_allocator_pointer               \
+            &private_map, private_cap, &(private_allocator)                    \
         );                                                                     \
         private_map;                                                           \
     }))
@@ -370,7 +363,7 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
 /** @internal We can cut out boilerplate by assuming fixed size map. */
 #define CCC_private_flat_hash_map_with_storage(                                \
     private_key_field,                                                         \
-    private_hasher_pointer,                                                    \
+    private_hasher,                                                            \
     private_compound_literal,                                                  \
     private_optional_storage_specifier...                                      \
 )                                                                              \
@@ -393,9 +386,7 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
         .sizeof_type = sizeof(*(private_compound_literal)),                    \
         .key_offset                                                            \
         = offsetof(typeof(*(private_compound_literal)), private_key_field),    \
-        .hash = (private_hasher_pointer)->hash,                                \
-        .compare = (private_hasher_pointer)->compare,                          \
-        .hasher_context = (private_hasher_pointer)->context,                   \
+        .hasher = (private_hasher),                                            \
     }
 
 /*========================    Construct In Place    =========================*/

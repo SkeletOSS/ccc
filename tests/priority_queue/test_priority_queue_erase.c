@@ -29,7 +29,7 @@ check_static_begin(priority_queue_test_insert_remove_key_value_four_dups) {
         struct Val,
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     for (int i = 0; i < 4; ++i) {
         check(
@@ -59,7 +59,7 @@ check_static_begin(priority_queue_test_insert_extract_shuffled) {
         struct Val,
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     int const prime = 53;
     check(insert_shuffled(&queue, STANDARD_CAP, prime, &allocator), CHECK_PASS);
@@ -89,7 +89,7 @@ check_static_begin(priority_queue_test_pop_max) {
         struct Val,
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     int const prime = 53;
     check(insert_shuffled(&queue, STANDARD_CAP, prime, &allocator), CHECK_PASS);
@@ -120,7 +120,7 @@ check_static_begin(priority_queue_test_pop_min) {
         struct Val,
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     int const prime = 53;
     check(insert_shuffled(&queue, STANDARD_CAP, prime, &allocator), CHECK_PASS);
@@ -152,7 +152,7 @@ check_static_begin(priority_queue_test_delete_prime_shuffle_duplicates) {
         struct Val,
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     int const prime = 101;
     /* Make the prime shuffle shorter than size for many duplicates. */
@@ -198,7 +198,7 @@ check_static_begin(priority_queue_test_prime_shuffle) {
         struct Val,
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     int const prime = 53;
     int const less = 10;
@@ -238,7 +238,7 @@ check_static_begin(priority_queue_test_weak_srand) {
         struct Val,
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
@@ -271,7 +271,7 @@ check_static_begin(priority_queue_test_weak_srand_allocate) {
         struct Val,
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */

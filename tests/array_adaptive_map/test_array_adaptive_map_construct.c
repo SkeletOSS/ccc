@@ -14,7 +14,7 @@
 check_static_begin(array_adaptive_map_test_empty) {
     Array_adaptive_map s = array_adaptive_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
     check(is_empty(&s), true);
@@ -24,7 +24,7 @@ check_static_begin(array_adaptive_map_test_empty) {
 check_static_begin(array_adaptive_map_test_with_literal) {
     Array_adaptive_map s = array_adaptive_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
     check(is_empty(&s), true);
@@ -35,12 +35,12 @@ check_static_begin(array_adaptive_map_test_with_literal) {
 check_static_begin(array_adaptive_map_test_copy_no_allocate) {
     Array_adaptive_map source = array_adaptive_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
     Array_adaptive_map destination = array_adaptive_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
     (void)swap_handle(&source, &(struct Val){.id = 0}, &(CCC_Allocator){});
@@ -74,12 +74,12 @@ check_static_begin(array_adaptive_map_test_copy_no_allocate) {
 check_static_begin(array_adaptive_map_test_copy_no_allocate_fail) {
     Array_adaptive_map source = array_adaptive_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[STANDARD_FIXED_CAP]){}
     );
     Array_adaptive_map destination = array_adaptive_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
     (void)swap_handle(&source, &(struct Val){.id = 0}, &(CCC_Allocator){});
@@ -107,12 +107,12 @@ check_static_begin(array_adaptive_map_test_copy_allocate) {
     Array_adaptive_map source = array_adaptive_map_with_capacity(
         struct Val,
         id,
-        &(CCC_Key_comparator){.compare = id_order},
-        &allocator,
+        (CCC_Key_comparator){.compare = id_order},
+        allocator,
         SMALL_FIXED_CAP - 1
     );
     Array_adaptive_map destination = array_adaptive_map_default(
-        struct Val, id, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, id, (CCC_Key_comparator){.compare = id_order}
     );
     (void)swap_handle(&source, &(struct Val){.id = 0}, &allocator);
     (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1}, &allocator);
@@ -154,12 +154,12 @@ check_static_begin(array_adaptive_map_test_copy_allocate_fail) {
     Array_adaptive_map source = array_adaptive_map_with_capacity(
         struct Val,
         id,
-        &(CCC_Key_comparator){.compare = id_order},
-        &allocator,
+        (CCC_Key_comparator){.compare = id_order},
+        allocator,
         SMALL_FIXED_CAP - 1
     );
     Array_adaptive_map destination = array_adaptive_map_default(
-        struct Val, id, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, id, (CCC_Key_comparator){.compare = id_order}
     );
     (void)swap_handle(&source, &(struct Val){.id = 0}, &allocator);
     (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1}, &allocator);
@@ -185,8 +185,8 @@ check_static_begin(array_adaptive_map_test_init_from) {
     };
     Array_adaptive_map map_from_list = array_adaptive_map_from(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
-        &allocator,
+        (CCC_Key_comparator){.compare = id_order},
+        allocator,
         SMALL_FIXED_CAP - 1,
         (struct Val[]){
             {.id = 0, .val = 0},
@@ -224,8 +224,8 @@ check_static_begin(array_adaptive_map_test_init_from_overwrite) {
     };
     Array_adaptive_map map_from_list = array_adaptive_map_from(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
-        &allocator,
+        (CCC_Key_comparator){.compare = id_order},
+        allocator,
         SMALL_FIXED_CAP - 1,
         (struct Val[]){
             {.id = 0, .val = 0},
@@ -255,8 +255,8 @@ check_static_begin(array_adaptive_map_test_init_from_fail) {
     /* Whoops forgot an allocation function. */
     Array_adaptive_map map_from_list = array_adaptive_map_from(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
-        &(CCC_Allocator){},
+        (CCC_Key_comparator){.compare = id_order},
+        (CCC_Allocator){},
         0,
         (struct Val[]){
             {.id = 0, .val = 0},
@@ -296,8 +296,8 @@ check_static_begin(array_adaptive_map_test_init_with_capacity) {
     Array_adaptive_map map = array_adaptive_map_with_capacity(
         struct Val,
         id,
-        &(CCC_Key_comparator){.compare = id_order},
-        &allocator,
+        (CCC_Key_comparator){.compare = id_order},
+        allocator,
         SMALL_FIXED_CAP - 1
     );
     check(validate(&map), true);
@@ -335,11 +335,7 @@ check_static_begin(array_adaptive_map_test_init_with_capacity_no_op) {
         ))[1]){}),
     };
     Array_adaptive_map map = array_adaptive_map_with_capacity(
-        struct Val,
-        id,
-        &(CCC_Key_comparator){.compare = id_order},
-        &allocator,
-        0
+        struct Val, id, (CCC_Key_comparator){.compare = id_order}, allocator, 0
     );
     check(validate(&map), true);
     check(array_adaptive_map_capacity(&map).count, 0);
@@ -375,8 +371,8 @@ check_static_begin(array_adaptive_map_test_init_with_capacity_fail) {
     Array_adaptive_map map = array_adaptive_map_with_capacity(
         struct Val,
         id,
-        &(CCC_Key_comparator){.compare = id_order},
-        &(CCC_Allocator){},
+        (CCC_Key_comparator){.compare = id_order},
+        (CCC_Allocator){},
         32
     );
     check(validate(&map), true);

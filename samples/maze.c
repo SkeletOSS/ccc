@@ -258,18 +258,18 @@ animate_maze(struct Maze *maze, CCC_Allocator const *const allocator) {
     };
     Flat_hash_map cost_map = flat_hash_map_from(
         cell,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = prim_cell_hash_fn,
             .compare = prim_cell_key_order,
         }),
-        allocator,
+        *allocator,
         capacity,
         (struct Prim_cell[]){start}
     );
     Flat_priority_queue cell_priority_queue = flat_priority_queue_from(
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = prim_cell_element_order},
-        allocator,
+        (CCC_Comparator){.compare = prim_cell_element_order},
+        *allocator,
         capacity,
         (struct Prim_cell[]){start}
     );

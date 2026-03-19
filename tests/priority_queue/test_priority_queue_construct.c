@@ -13,7 +13,7 @@ construct_empty(void) {
         struct Val,
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     return result;
 }
@@ -23,7 +23,7 @@ check_static_begin(priority_queue_test_empty) {
         struct Val,
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     check(CCC_priority_queue_is_empty(&priority_queue), true);
     check_end();
@@ -54,9 +54,9 @@ check_static_begin(priority_queue_test_construct_from) {
     CCC_Priority_queue pq = CCC_priority_queue_from(
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order},
-        &allocator,
-        &(CCC_Destructor){},
+        (CCC_Comparator){.compare = val_order},
+        allocator,
+        (CCC_Destructor){},
         (struct Val[]){
             {.val = 0},
             {.val = 1},
@@ -77,9 +77,9 @@ check_static_begin(priority_queue_test_construct_from_fail) {
     CCC_Priority_queue pq = CCC_priority_queue_from(
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order},
-        &(CCC_Allocator){},
-        &(CCC_Destructor){},
+        (CCC_Comparator){.compare = val_order},
+        (CCC_Allocator){},
+        (CCC_Destructor){},
         (struct Val[]){
             {.val = 0},
             {.val = 1},

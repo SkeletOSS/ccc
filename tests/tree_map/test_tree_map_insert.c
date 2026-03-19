@@ -25,7 +25,7 @@ tree_map_modplus(CCC_Arguments const t) {
 
 check_static_begin(tree_map_test_insert) {
     CCC_Tree_map rom = tree_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
 
     /* Nothing was there before so nothing is in the entry. */
@@ -47,7 +47,7 @@ check_static_begin(tree_map_test_insert_macros) {
         .context = &stack_allocator_for((struct Val[10]){}),
     };
     CCC_Tree_map rom = tree_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
 
     struct Val const *ins = CCC_tree_map_or_insert_with(
@@ -106,7 +106,7 @@ check_static_begin(tree_map_test_insert_macros) {
 
 check_static_begin(tree_map_test_insert_overwrite) {
     CCC_Tree_map rom = tree_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
 
     struct Val q = {.key = 137, .val = 99};
@@ -141,7 +141,7 @@ check_static_begin(tree_map_test_insert_overwrite) {
 
 check_static_begin(tree_map_test_insert_then_bad_ideas) {
     CCC_Tree_map rom = tree_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     struct Val q = {.key = 137, .val = 99};
     CCC_Entry ent
@@ -176,7 +176,7 @@ check_static_begin(tree_map_test_entry_api_functional) {
         .context = &stack_allocator_for((struct Val[200]){}),
     };
     CCC_Tree_map rom = tree_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     size_t const size = 200;
 
@@ -240,7 +240,7 @@ check_static_begin(tree_map_test_insert_via_entry) {
         .context = &stack_allocator_for((struct Val[200]){}),
     };
     CCC_Tree_map rom = tree_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     size_t const size = 200;
 
@@ -287,7 +287,7 @@ check_static_begin(tree_map_test_insert_via_entry_macros) {
         .context = &stack_allocator_for((struct Val[200]){}),
     };
     CCC_Tree_map rom = tree_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
 
     /* Test entry or insert with for all even values. Default should be
@@ -332,7 +332,7 @@ check_static_begin(tree_map_test_entry_api_macros) {
         .context = &stack_allocator_for((struct Val[200]){}),
     };
     CCC_Tree_map rom = tree_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
 
     /* Test entry or insert with for all even values. Default should be
@@ -391,7 +391,7 @@ check_static_begin(tree_map_test_two_sum) {
         .context = &stack_allocator_for((struct Val[10]){}),
     };
     CCC_Tree_map rom = tree_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     int const addends[10] = {1, 3, -980, 6, 7, 13, 44, 32, 995, -1};
     int const target = 15;
@@ -421,7 +421,7 @@ check_static_begin(tree_map_test_insert_and_find) {
         .context = &stack_allocator_for((struct Val[100]){}),
     };
     CCC_Tree_map rom = tree_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     int const size = 100;
 
@@ -461,7 +461,7 @@ check_static_begin(tree_map_test_insert_shuffle) {
         .context = &stack_allocator_for((struct Val[50]){}),
     };
     CCC_Tree_map rom = tree_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     check(size > 1, true);
     int const prime = 53;
@@ -481,7 +481,7 @@ check_static_begin(tree_map_test_insert_weak_srand) {
         .context = &stack_allocator_for((struct Val[100]){}),
     };
     CCC_Tree_map rom = tree_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     srand(time(NULL)); /* NOLINT */
     for (int i = 0; i < num_nodes; ++i) {

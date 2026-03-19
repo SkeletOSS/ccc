@@ -150,15 +150,15 @@ or stack based initialization of fixed flat_double_ended_queues with contents
 known at compile time, see the CCC_flat_double_ended_queue_with_storage() macro.
 */
 #define CCC_flat_double_ended_queue_from(                                      \
-    allocator_pointer, optional_capacity, compound_literal_array...            \
+    allocator, optional_capacity, compound_literal_array...                    \
 )                                                                              \
     CCC_private_flat_double_ended_queue_from(                                  \
-        allocator_pointer, optional_capacity, compound_literal_array           \
+        allocator, optional_capacity, compound_literal_array                   \
     )
 
 /** @brief Initialize a Flat_double_ended_queue with a capacity.
 @param[in] type_name any user or language standard type name.
-@param[in] allocator_pointer the CCC_Allocator for
+@param[in] allocator the CCC_Allocator for
 resizing.
 @param[in] capacity the capacity of the Flat_double_ended_queue to reserve.
 @return the initialized flat_double_ended_queue. Directly assign to
@@ -182,10 +182,10 @@ Only dynamic flat_double_ended_queues may be initialized this way. For static or
 stack based initialization of fixed flat_double_ended_queues with contents known
 at compile time, see the CCC_flat_double_ended_queue_with_storage() macro. */
 #define CCC_flat_double_ended_queue_with_capacity(                             \
-    type_name, allocator_pointer, capacity                                     \
+    type_name, allocator, capacity                                             \
 )                                                                              \
     CCC_private_flat_double_ended_queue_with_capacity(                         \
-        type_name, allocator_pointer, capacity                                 \
+        type_name, allocator, capacity                                         \
     )
 
 /** @brief Initialize the queue from a compound literal array with no allocation

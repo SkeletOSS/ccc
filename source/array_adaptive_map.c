@@ -1065,10 +1065,10 @@ order_nodes(
     void const *const key,
     size_t const node
 ) {
-    return map->compare((CCC_Key_comparator_arguments){
+    return map->comparator.compare((CCC_Key_comparator_arguments){
         .key_left = key,
         .type_right = data_at(map, node),
-        .context = map->comparator_context,
+        .context = map->comparator.context,
     });
 }
 

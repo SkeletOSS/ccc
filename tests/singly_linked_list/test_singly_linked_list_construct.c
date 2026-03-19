@@ -54,8 +54,8 @@ check_static_begin(singly_linked_list_test_construct_from) {
     };
     CCC_Singly_linked_list list = CCC_singly_linked_list_from(
         e,
-        &allocator,
-        &(CCC_Destructor){},
+        allocator,
+        (CCC_Destructor){},
         (struct Val[]){
             {.val = 0},
             {.val = 1},
@@ -77,8 +77,8 @@ check_static_begin(singly_linked_list_test_construct_from) {
 check_static_begin(singly_linked_list_test_construct_from_fail) {
     CCC_Singly_linked_list list = CCC_singly_linked_list_from(
         e,
-        &(CCC_Allocator){},
-        &(CCC_Destructor){},
+        (CCC_Allocator){},
+        (CCC_Destructor){},
         (struct Val[]){
             {.val = 0},
             {.val = 1},

@@ -14,7 +14,7 @@
 check_static_begin(flat_hash_map_test_insert) {
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_zero,
             .compare = flat_hash_map_id_order,
         }),
@@ -34,7 +34,7 @@ check_static_begin(flat_hash_map_test_insert) {
 check_static_begin(flat_hash_map_test_insert_macros) {
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_zero,
             .compare = flat_hash_map_id_order,
         }),
@@ -95,7 +95,7 @@ check_static_begin(flat_hash_map_test_insert_macros) {
 check_static_begin(flat_hash_map_test_insert_overwrite) {
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_zero,
             .compare = flat_hash_map_id_order,
         }),
@@ -134,7 +134,7 @@ check_static_begin(flat_hash_map_test_insert_overwrite) {
 check_static_begin(flat_hash_map_test_insert_then_bad_ideas) {
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_zero,
             .compare = flat_hash_map_id_order,
         }),
@@ -170,7 +170,7 @@ check_static_begin(flat_hash_map_test_entry_api_functional) {
     /* Over allocate size now because we don't want to worry about resizing. */
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_zero,
             .compare = flat_hash_map_id_order,
         }),
@@ -236,7 +236,7 @@ check_static_begin(flat_hash_map_test_insert_via_entry) {
     size_t const size = 200;
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_zero,
             .compare = flat_hash_map_id_order,
         }),
@@ -283,7 +283,7 @@ check_static_begin(flat_hash_map_test_insert_via_entry_macros) {
     size_t const size = 200;
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_zero,
             .compare = flat_hash_map_id_order,
         }),
@@ -327,7 +327,7 @@ check_static_begin(flat_hash_map_test_entry_api_macros) {
     int const size = 200;
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_zero,
             .compare = flat_hash_map_id_order,
         }),
@@ -388,7 +388,7 @@ check_static_begin(flat_hash_map_test_entry_api_macros) {
 check_static_begin(flat_hash_map_test_two_sum) {
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
             .compare = flat_hash_map_id_order,
         }),
@@ -419,7 +419,7 @@ check_static_begin(flat_hash_map_test_two_sum) {
 check_static_begin(flat_hash_map_test_longest_consecutive_sequence) {
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_zero,
             .compare = flat_hash_map_id_order,
         }),
@@ -483,7 +483,7 @@ check_static_begin(flat_hash_map_test_resize) {
     Flat_hash_map fh = flat_hash_map_default(
         struct Val,
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
             .compare = flat_hash_map_id_order,
         })
@@ -524,7 +524,7 @@ check_static_begin(flat_hash_map_test_resize_macros) {
     Flat_hash_map fh = flat_hash_map_default(
         struct Val,
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
             .compare = flat_hash_map_id_order,
         })
@@ -575,7 +575,7 @@ check_static_begin(flat_hash_map_test_resize_from_null) {
     Flat_hash_map fh = flat_hash_map_default(
         struct Val,
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
             .compare = flat_hash_map_id_order,
         })
@@ -614,7 +614,7 @@ check_static_begin(flat_hash_map_test_resize_from_null_macros) {
     Flat_hash_map fh = flat_hash_map_default(
         struct Val,
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
             .compare = flat_hash_map_id_order,
         })
@@ -664,7 +664,7 @@ check_static_begin(flat_hash_map_test_resize_from_null_macros) {
 check_static_begin(flat_hash_map_test_insert_limit) {
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
             .compare = flat_hash_map_id_order,
         }),
@@ -737,7 +737,7 @@ check_static_begin(flat_hash_map_test_insert_limit) {
 check_static_begin(flat_hash_map_test_insert_and_find) {
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
             .compare = flat_hash_map_id_order,
         }),
@@ -784,7 +784,7 @@ check_static_begin(flat_hash_map_test_reserve_without_permissions) {
     Flat_hash_map fh = flat_hash_map_default(
         struct Val,
         key,
-        &(CCC_Hasher){
+        (CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
             .compare = flat_hash_map_id_order,
         }

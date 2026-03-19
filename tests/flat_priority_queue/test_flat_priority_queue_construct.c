@@ -30,7 +30,7 @@ check_static_begin(flat_priority_queue_test_empty) {
     Flat_priority_queue priority_queue = flat_priority_queue_for(
         struct Val,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order},
+        (CCC_Comparator){.compare = val_order},
         (sizeof(vals) / sizeof(struct Val)),
         vals
     );
@@ -41,7 +41,7 @@ check_static_begin(flat_priority_queue_test_empty) {
 check_static_begin(flat_priority_queue_test_with_storage) {
     Flat_priority_queue priority_queue = flat_priority_queue_with_storage(
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order},
+        (CCC_Comparator){.compare = val_order},
         (struct Val[3]){}
     );
     check(flat_priority_queue_is_empty(&priority_queue), true);
@@ -54,7 +54,7 @@ check_static_begin(flat_priority_queue_test_macro) {
     Flat_priority_queue priority_queue = flat_priority_queue_for(
         struct Val,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order},
+        (CCC_Comparator){.compare = val_order},
         (sizeof(vals) / sizeof(struct Val)),
         vals
     );
@@ -74,7 +74,7 @@ check_static_begin(flat_priority_queue_test_macro_grow) {
     Flat_priority_queue priority_queue = flat_priority_queue_for(
         struct Val,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order},
+        (CCC_Comparator){.compare = val_order},
         0,
         CCC_DEFAULT
     );
@@ -97,7 +97,7 @@ check_static_begin(flat_priority_queue_test_push) {
     Flat_priority_queue priority_queue = flat_priority_queue_for(
         struct Val,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order},
+        (CCC_Comparator){.compare = val_order},
         (sizeof(vals) / sizeof(struct Val)),
         vals
     );
@@ -113,7 +113,7 @@ check_static_begin(flat_priority_queue_test_raw_type) {
     Flat_priority_queue priority_queue = flat_priority_queue_for(
         int,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = int_order},
+        (CCC_Comparator){.compare = int_order},
         (sizeof(vals) / sizeof(int)),
         vals
     );
@@ -141,7 +141,7 @@ check_static_begin(flat_priority_queue_test_heapify) {
     Flat_priority_queue priority_queue = flat_priority_queue_heapify(
         int,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = int_order},
+        (CCC_Comparator){.compare = int_order},
         HEAPIFY_CAP,
         HEAPIFY_CAP,
         heap
@@ -164,7 +164,7 @@ check_static_begin(flat_priority_queue_test_heapify_copy) {
     };
     Flat_priority_queue priority_queue = CCC_flat_priority_queue_with_storage(
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = int_order},
+        (CCC_Comparator){.compare = int_order},
         (int[HEAPIFY_COPY_CAP]){}
     );
     Buffer input
@@ -224,10 +224,10 @@ check_static_begin(flat_priority_queue_test_heapsort) {
 
 check_static_begin(flat_priority_queue_test_copy_no_allocate) {
     Flat_priority_queue source = flat_priority_queue_with_storage(
-        CCC_ORDER_LESSER, &(CCC_Comparator){.compare = int_order}, (int[4]){}
+        CCC_ORDER_LESSER, (CCC_Comparator){.compare = int_order}, (int[4]){}
     );
     Flat_priority_queue destination = flat_priority_queue_with_storage(
-        CCC_ORDER_LESSER, &(CCC_Comparator){.compare = int_order}, (int[5]){}
+        CCC_ORDER_LESSER, (CCC_Comparator){.compare = int_order}, (int[5]){}
     );
     (void)push(&source, &(int){}, &(int){}, &(CCC_Allocator){});
     (void)push(&source, &(int){1}, &(int){}, &(CCC_Allocator){});
@@ -252,10 +252,10 @@ check_static_begin(flat_priority_queue_test_copy_no_allocate) {
 
 check_static_begin(flat_priority_queue_test_copy_no_allocate_fail) {
     Flat_priority_queue source = flat_priority_queue_with_storage(
-        CCC_ORDER_LESSER, &(CCC_Comparator){.compare = int_order}, (int[4]){}
+        CCC_ORDER_LESSER, (CCC_Comparator){.compare = int_order}, (int[4]){}
     );
     Flat_priority_queue destination = flat_priority_queue_with_storage(
-        CCC_ORDER_LESSER, &(CCC_Comparator){.compare = int_order}, (int[2]){}
+        CCC_ORDER_LESSER, (CCC_Comparator){.compare = int_order}, (int[2]){}
     );
     (void)push(&source, &(int){}, &(int){}, &(CCC_Allocator){});
     (void)push(&source, &(int){1}, &(int){}, &(CCC_Allocator){});
@@ -277,12 +277,12 @@ check_static_begin(flat_priority_queue_test_copy_allocate) {
     Flat_priority_queue source = flat_priority_queue_with_capacity(
         int,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = int_order},
-        &stack_allocator,
+        (CCC_Comparator){.compare = int_order},
+        stack_allocator,
         8
     );
     Flat_priority_queue destination = flat_priority_queue_default(
-        int, CCC_ORDER_LESSER, &(CCC_Comparator){.compare = int_order}
+        int, CCC_ORDER_LESSER, (CCC_Comparator){.compare = int_order}
     );
     (void)push(&source, &(int){}, &(int){}, &stack_allocator);
     (void)push(&source, &(int){1}, &(int){}, &stack_allocator);
@@ -319,12 +319,12 @@ check_static_begin(flat_priority_queue_test_copy_allocate_fail) {
     Flat_priority_queue source = flat_priority_queue_with_capacity(
         int,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = int_order},
-        &stack_allocator,
+        (CCC_Comparator){.compare = int_order},
+        stack_allocator,
         8
     );
     Flat_priority_queue destination = flat_priority_queue_default(
-        int, CCC_ORDER_LESSER, &(CCC_Comparator){.compare = int_order}
+        int, CCC_ORDER_LESSER, (CCC_Comparator){.compare = int_order}
     );
     (void)push(&source, &(int){}, &(int){}, &stack_allocator);
     (void)push(&source, &(int){1}, &(int){}, &stack_allocator);
@@ -348,8 +348,8 @@ check_static_begin(flat_priority_queue_test_init_from) {
     };
     CCC_Flat_priority_queue queue = CCC_flat_priority_queue_from(
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = int_order},
-        &stack_allocator,
+        (CCC_Comparator){.compare = int_order},
+        stack_allocator,
         8,
         (int[7]){8, 6, 7, 5, 3, 0, 9}
     );
@@ -376,8 +376,8 @@ check_static_begin(flat_priority_queue_test_init_from_fail) {
     /* Whoops forgot allocation function. */
     CCC_Flat_priority_queue queue = CCC_flat_priority_queue_from(
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = int_order},
-        &(CCC_Allocator){},
+        (CCC_Comparator){.compare = int_order},
+        (CCC_Allocator){},
         0,
         (int[]){8, 6, 7, 5, 3, 0, 9}
     );
@@ -414,8 +414,8 @@ check_static_begin(flat_priority_queue_test_init_with_capacity) {
     CCC_Flat_priority_queue queue = CCC_flat_priority_queue_with_capacity(
         int,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = int_order},
-        &stack_allocator,
+        (CCC_Comparator){.compare = int_order},
+        stack_allocator,
         8
     );
     check(CCC_flat_priority_queue_capacity(&queue).count, 8);
@@ -437,8 +437,8 @@ check_static_begin(flat_priority_queue_test_init_with_capacity_fail) {
     CCC_Flat_priority_queue queue = CCC_flat_priority_queue_with_capacity(
         int,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = int_order},
-        &(CCC_Allocator){},
+        (CCC_Comparator){.compare = int_order},
+        (CCC_Allocator){},
         8
     );
     check(CCC_flat_priority_queue_capacity(&queue).count, 0);

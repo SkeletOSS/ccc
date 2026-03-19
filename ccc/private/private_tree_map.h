@@ -60,10 +60,8 @@ struct CCC_Tree_map {
     size_t type_intruder_offset;
     /** @internal The size of the user struct holding the intruder. */
     size_t sizeof_type;
-    /** @internal The comparison function for three way comparison. */
-    CCC_Key_comparator_interface *compare;
-    /** @internal Auxiliary data for comparison. */
-    void *comparator_context;
+    /** @internal The comparator and context pointer. */
+    CCC_Key_comparator comparator;
 };
 
 /** @internal An entry is a way to store a node or the information needed to
@@ -107,7 +105,7 @@ void *CCC_private_tree_map_insert(
     private_struct_name,                                                       \
     private_node_field,                                                        \
     private_key_node_field,                                                    \
-    private_comparator_pointer...                                              \
+    private_comparator...                                                      \
 )                                                                              \
     {                                                                          \
         .root = NULL,                                                          \
@@ -116,8 +114,7 @@ void *CCC_private_tree_map_insert(
         .type_intruder_offset                                                  \
         = offsetof(private_struct_name, private_node_field),                   \
         .sizeof_type = sizeof(private_struct_name),                            \
-        .compare = (private_comparator_pointer)->compare,                      \
-        .comparator_context = (private_comparator_pointer)->context,           \
+        .comparator = (private_comparator),                                    \
     }
 
 /** @internal */
@@ -125,22 +122,22 @@ void *CCC_private_tree_map_insert(
     private_struct_name,                                                       \
     private_node_field,                                                        \
     private_key_node_field,                                                    \
-    private_comparator_pointer...                                              \
+    private_comparator...                                                      \
 )                                                                              \
     CCC_private_tree_map_for(                                                  \
         private_struct_name,                                                   \
         private_node_field,                                                    \
         private_key_node_field,                                                \
-        private_comparator_pointer                                             \
+        private_comparator                                                     \
     )
 
 /** @internal */
 #define CCC_private_tree_map_from(                                             \
     private_type_intruder_field_name,                                          \
     private_key_field_name,                                                    \
-    private_comparator_pointer,                                                \
-    private_allocator_pointer,                                                 \
-    private_destructor_pointer,                                                \
+    private_comparator,                                                        \
+    private_allocator,                                                         \
+    private_destructor,                                                        \
     private_compound_literal_array...                                          \
 )                                                                              \
     (__extension__({                                                           \
@@ -150,12 +147,11 @@ void *CCC_private_tree_map_insert(
             typeof(*private_tree_map_type_array),                              \
             private_type_intruder_field_name,                                  \
             private_key_field_name,                                            \
-            private_comparator_pointer                                         \
+            private_comparator                                                 \
         );                                                                     \
         CCC_Allocator const *const private_tree_map_allocator                  \
-            = (private_allocator_pointer);                                     \
-        if (private_tree_map_allocator                                         \
-            && private_tree_map_allocator->allocate) {                         \
+            = &(private_allocator);                                            \
+        if (private_tree_map_allocator->allocate) {                            \
             size_t const private_count                                         \
                 = sizeof(private_compound_literal_array)                       \
                 / sizeof(*private_tree_map_type_array);                        \
@@ -181,7 +177,7 @@ void *CCC_private_tree_map_insert(
                     if (!private_new_slot) {                                   \
                         (void)CCC_tree_map_clear(                              \
                             &private_map,                                      \
-                            private_destructor_pointer,                        \
+                            &private_destructor,                               \
                             private_tree_map_allocator                         \
                         );                                                     \
                         break;                                                 \

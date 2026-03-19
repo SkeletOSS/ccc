@@ -20,7 +20,7 @@ check_static_begin(adaptive_map_test_prime_shuffle) {
         .context = &stack_allocator_for((struct Val[50]){}),
     };
     Adaptive_map s = adaptive_map_default(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     size_t const size = 50;
     size_t const prime = 53;
@@ -65,7 +65,7 @@ check_static_begin(adaptive_map_test_insert_erase_shuffled) {
         .context = &stack_allocator_for((struct Val[50]){}),
     };
     Adaptive_map s = adaptive_map_default(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     size_t const size = 50;
     int const prime = 53;
@@ -93,7 +93,7 @@ check_static_begin(adaptive_map_test_weak_srand) {
         .context = &stack_allocator_for((struct Val[100]){}),
     };
     Adaptive_map s = adaptive_map_default(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
@@ -132,7 +132,7 @@ check_static_begin(adaptive_map_test_insert_erase_cycles) {
         .context = &stack_allocator_for((struct Val[200]){}),
     };
     Adaptive_map s = adaptive_map_default(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     srand(time(NULL)); /* NOLINT */
     int const num_nodes = 100;

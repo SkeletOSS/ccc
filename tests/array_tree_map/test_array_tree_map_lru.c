@@ -65,7 +65,7 @@ static enum Check_result run_lru_cache(void);
 static struct Lru_cache lru_cache = {
     .map = array_tree_map_with_storage(
         key,
-        &(CCC_Key_comparator){.compare = order_by_key},
+        (CCC_Key_comparator){.compare = order_by_key},
         (struct Lru_node[LRU_CAP]){}
     ),
     .l = doubly_linked_list_default(struct Lru_node, list_node),

@@ -21,8 +21,8 @@ check_static_begin(flat_priority_queue_test_insert_remove_key_value_four_dups) {
         = CCC_flat_priority_queue_with_capacity(
             struct Val,
             CCC_ORDER_LESSER,
-            &(CCC_Comparator){.compare = val_order},
-            &allocator,
+            (CCC_Comparator){.compare = val_order},
+            allocator,
             8
         );
     for (int i = 0; i < 4; ++i) {
@@ -65,8 +65,8 @@ check_static_begin(flat_priority_queue_test_insert_erase_shuffled) {
         = CCC_flat_priority_queue_with_capacity(
             struct Val,
             CCC_ORDER_LESSER,
-            &(CCC_Comparator){.compare = val_order},
-            &allocator,
+            (CCC_Comparator){.compare = val_order},
+            allocator,
             50
         );
     check(
@@ -105,8 +105,8 @@ check_static_begin(flat_priority_queue_test_pop_max) {
         = CCC_flat_priority_queue_with_capacity(
             struct Val,
             CCC_ORDER_LESSER,
-            &(CCC_Comparator){.compare = val_order},
-            &allocator,
+            (CCC_Comparator){.compare = val_order},
+            allocator,
             50
         );
     check(
@@ -138,8 +138,8 @@ check_static_begin(flat_priority_queue_test_pop_min) {
         = CCC_flat_priority_queue_with_capacity(
             struct Val,
             CCC_ORDER_LESSER,
-            &(CCC_Comparator){.compare = val_order},
-            &allocator,
+            (CCC_Comparator){.compare = val_order},
+            allocator,
             50
         );
     check(
@@ -176,8 +176,8 @@ check_static_begin(flat_priority_queue_test_delete_prime_shuffle_duplicates) {
         = CCC_flat_priority_queue_with_capacity(
             struct Val,
             CCC_ORDER_LESSER,
-            &(CCC_Comparator){.compare = val_order},
-            &allocator,
+            (CCC_Comparator){.compare = val_order},
+            allocator,
             100
         );
     int shuffled_index = prime % (size - less);
@@ -235,8 +235,8 @@ check_static_begin(flat_priority_queue_test_prime_shuffle) {
         = CCC_flat_priority_queue_with_capacity(
             struct Val,
             CCC_ORDER_LESSER,
-            &(CCC_Comparator){.compare = val_order},
-            &allocator,
+            (CCC_Comparator){.compare = val_order},
+            allocator,
             50
         );
     for (int i = 0; i < size; ++i) {
@@ -293,8 +293,8 @@ check_static_begin(flat_priority_queue_test_weak_srand) {
         = CCC_flat_priority_queue_with_capacity(
             struct Val,
             CCC_ORDER_LESSER,
-            &(CCC_Comparator){.compare = val_order},
-            &allocator,
+            (CCC_Comparator){.compare = val_order},
+            allocator,
             200
         );
     for (int i = 0; i < num_stack_nodes; ++i) {

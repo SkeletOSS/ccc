@@ -76,15 +76,15 @@ priority_queue elems.
 priority_queue elem.
 @param[in] order CCC_ORDER_LESSER for a min priority_queue or
 CCC_ORDER_GREATER for a max priority_queue.
-@param[in] comparator_pointer the pointer to CCC_Comparator for type comparison.
+@param[in] comparator the pointer to CCC_Comparator for type comparison.
 @return the initialized priority_queue on the right side of an equality operator
 (e.g. CCC_Priority_queue priority_queue = CCC_priority_queue_for(...);)
 */
 #define CCC_priority_queue_default(                                            \
-    type_name, type_intruder_field, order, comparator_pointer                  \
+    type_name, type_intruder_field, order, comparator                          \
 )                                                                              \
     CCC_private_priority_queue_for(                                            \
-        type_name, type_intruder_field, order, comparator_pointer              \
+        type_name, type_intruder_field, order, comparator                      \
     )
 
 /** @brief Initialize a priority queue at runtime or compile time.
@@ -94,40 +94,40 @@ priority_queue elems.
 priority_queue elem.
 @param[in] order CCC_ORDER_LESSER for a min priority_queue or
 CCC_ORDER_GREATER for a max priority_queue.
-@param[in] comparator_pointer the pointer to CCC_Comparator for type comparison.
+@param[in] comparator the pointer to CCC_Comparator for type comparison.
 @return the initialized priority_queue on the right side of an equality operator
 (e.g. CCC_Priority_queue priority_queue = CCC_priority_queue_for(...);)
 */
 #define CCC_priority_queue_for(                                                \
-    type_name, type_intruder_field, order, comparator_pointer...               \
+    type_name, type_intruder_field, order, comparator...                       \
 )                                                                              \
     CCC_private_priority_queue_for(                                            \
-        type_name, type_intruder_field, order, comparator_pointer              \
+        type_name, type_intruder_field, order, comparator                      \
     )
 
 /** @brief Initialize a priority queue at runtime from a compound literal array.
 @param[in] type_intruder_field the name of the field intruding on user's type.
 @param[in] order CCC_ORDER_LESSER for a min priority queue or CCC_ORDER_GREATER
 for a max priority queue.
-@param[in] comparator_pointer the CCC_Comparator to compare two user types.
-@param[in] allocator_pointer the CCC_Allocator for construction.
-@param[in] destructor_pointer optional CCC_Destructor if insertion fails.
+@param[in] comparator the CCC_Comparator to compare two user types.
+@param[in] allocator the CCC_Allocator for construction.
+@param[in] destructor optional CCC_Destructor if insertion fails.
 @param[in] compound_literal_array the array of user types to insert.
 @return the priority_queue on the right side of an equality operator */
 #define CCC_priority_queue_from(                                               \
     type_intruder_field,                                                       \
     order,                                                                     \
-    comparator_pointer,                                                        \
-    allocator_pointer,                                                         \
-    destructor_pointer,                                                        \
+    comparator,                                                                \
+    allocator,                                                                 \
+    destructor,                                                                \
     compound_literal_array...                                                  \
 )                                                                              \
     CCC_private_priority_queue_from(                                           \
         type_intruder_field,                                                   \
         order,                                                                 \
-        comparator_pointer,                                                    \
-        allocator_pointer,                                                     \
-        destructor_pointer,                                                    \
+        comparator,                                                            \
+        allocator,                                                             \
+        destructor,                                                            \
         compound_literal_array                                                 \
     )
 

@@ -1494,9 +1494,9 @@ destory_each(
 
 static inline uint64_t
 hasher(struct CCC_Flat_hash_map const *const map, void const *const any_key) {
-    return map->hash((CCC_Key_arguments){
+    return map->hasher.hash((CCC_Key_arguments){
         .key = any_key,
-        .context = map->hasher_context,
+        .context = map->hasher.context,
     });
 }
 
@@ -1506,10 +1506,10 @@ is_equal(
     void const *const key,
     size_t const i
 ) {
-    return map->compare((CCC_Key_comparator_arguments){
+    return map->hasher.compare((CCC_Key_comparator_arguments){
                .key_left = key,
                .type_right = data_at(map, i),
-               .context = map->hasher_context,
+               .context = map->hasher.context,
            })
         == CCC_ORDER_EQUAL;
 }

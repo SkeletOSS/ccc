@@ -191,7 +191,7 @@ Pushing bits would continue until capacity is reached. */
     CCC_private_bitset_for(cap, count, bitblock_pointer)
 
 /** @brief Initialize the bit set with a custom input string.
-@param[in] allocator_pointer the allocator for memory.
+@param[in] allocator the allocator for memory.
 @param[in] start_string_index the index of the input string to start reading
 is CCC_Tribool input.
 @param[in] count number of characters to read from start_string_index.
@@ -227,7 +227,7 @@ Bitset bitset = bitset_from(&std_allocator, 0, 4, 'A', "GCAT", 4096);
 This initializer is only available to dynamic bit sets due to the inability to
 run such input code at compile time. */
 #define CCC_bitset_from(                                                       \
-    allocator_pointer,                                                         \
+    allocator,                                                                 \
     start_string_index,                                                        \
     count,                                                                     \
     bit_on_char,                                                               \
@@ -235,7 +235,7 @@ run such input code at compile time. */
     optional_capacity...                                                       \
 )                                                                              \
     CCC_private_bitset_from(                                                   \
-        allocator_pointer,                                                     \
+        allocator,                                                             \
         start_string_index,                                                    \
         count,                                                                 \
         bit_on_char,                                                           \
@@ -244,7 +244,7 @@ run such input code at compile time. */
     )
 
 /** @brief Initialize the bit set with a starting capacity and size at runtime.
-@param[in] allocator_pointer a pointer to CCC_Allocator for resizing.
+@param[in] allocator a pointer to CCC_Allocator for resizing.
 @param[in] capacity the number of bits that will be stored in this bit set.
 @param[in] optional_count an optional starting size <= capacity. This value
 defaults to the same value as capacity which is appropriate for most cases. For
@@ -275,12 +275,8 @@ main(void)
 
 This initialization can only be used at runtime. See the normal initializer for
 static and stack based initialization options. */
-#define CCC_bitset_with_capacity(                                              \
-    allocator_pointer, capacity, optional_count...                             \
-)                                                                              \
-    CCC_private_bitset_with_capacity(                                          \
-        allocator_pointer, capacity, optional_count                            \
-    )
+#define CCC_bitset_with_capacity(allocator, capacity, optional_count...)       \
+    CCC_private_bitset_with_capacity(allocator, capacity, optional_count)
 
 /** @brief Initialize the bit set with a starting capacity and size at runtime
 or compile time with no allocation permissions or context from a compound

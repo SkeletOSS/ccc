@@ -19,7 +19,7 @@ check_static_begin(flat_priority_queue_test_insert_iterate_pop) {
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_storage(
             CCC_ORDER_LESSER,
-            &(CCC_Comparator){.compare = val_order},
+            (CCC_Comparator){.compare = val_order},
             (struct Val[1000 + 1]){}
         );
     for (size_t i = 0; i < num_nodes; ++i) {
@@ -55,7 +55,7 @@ check_static_begin(flat_priority_queue_test_priority_removal) {
     CCC_Flat_priority_queue flat_priority_queue = CCC_flat_priority_queue_for(
         struct Val,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order},
+        (CCC_Comparator){.compare = val_order},
         (sizeof(vals) / sizeof(*vals)),
         vals
     );
@@ -93,7 +93,7 @@ check_static_begin(flat_priority_queue_test_priority_update) {
     CCC_Flat_priority_queue flat_priority_queue = CCC_flat_priority_queue_for(
         struct Val,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order},
+        (CCC_Comparator){.compare = val_order},
         (sizeof(vals) / sizeof(vals[0])),
         vals
     );
@@ -142,7 +142,7 @@ check_static_begin(flat_priority_queue_test_priority_update_with) {
     CCC_Flat_priority_queue flat_priority_queue = CCC_flat_priority_queue_for(
         struct Val,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order},
+        (CCC_Comparator){.compare = val_order},
         (sizeof(vals) / sizeof(vals[0])),
         vals
     );

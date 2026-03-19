@@ -32,7 +32,7 @@ destroy_owner_allocation(CCC_Arguments const t) {
 check_static_begin(flat_hash_map_test_insert_then_iterate) {
     CCC_Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
             .compare = flat_hash_map_id_order,
         }),
@@ -82,7 +82,7 @@ check_static_begin(flat_hash_map_test_insert_allocate_clear_free) {
     CCC_Flat_hash_map fh = flat_hash_map_default(
         struct Owner,
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
             .compare = owners_eq,
         })

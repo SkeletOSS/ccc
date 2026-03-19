@@ -79,7 +79,7 @@ static struct Lru_cache lru_cache = {
         struct Lru_node,
         map_node,
         key,
-        &(CCC_Key_comparator){.compare = order_by_key}
+        (CCC_Key_comparator){.compare = order_by_key}
     ),
 };
 

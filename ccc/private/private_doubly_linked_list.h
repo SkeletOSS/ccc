@@ -114,8 +114,8 @@ name of the list being on the left hand side of the assignment operator. */
 /** @internal */
 #define CCC_private_doubly_linked_list_from(                                   \
     private_type_intruder_field,                                               \
-    private_allocator_pointer,                                                 \
-    private_destructor_pointer,                                                \
+    private_allocator,                                                         \
+    private_destructor,                                                        \
     private_compound_literal_array...                                          \
 )                                                                              \
     (__extension__({                                                           \
@@ -128,9 +128,8 @@ name of the list being on the left hand side of the assignment operator. */
                 private_type_intruder_field                                    \
             );                                                                 \
         CCC_Allocator const *const private_doubly_linked_list_allocator        \
-            = (private_allocator_pointer);                                     \
-        if (private_doubly_linked_list_allocator                               \
-            && private_doubly_linked_list_allocator->allocate) {               \
+            = &(private_allocator);                                            \
+        if (private_doubly_linked_list_allocator->allocate) {                  \
             size_t const private_count                                         \
                 = sizeof(private_compound_literal_array)                       \
                 / sizeof(*private_doubly_linked_list_type_array);              \
@@ -149,7 +148,7 @@ name of the list being on the left hand side of the assignment operator. */
                 if (!private_new_node) {                                       \
                     CCC_doubly_linked_list_clear(                              \
                         &private_doubly_linked_list,                           \
-                        private_destructor_pointer,                            \
+                        &private_destructor,                                   \
                         private_doubly_linked_list_allocator                   \
                     );                                                         \
                     break;                                                     \

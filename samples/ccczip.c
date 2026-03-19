@@ -398,7 +398,7 @@ build_encoding_priority_queue(FILE *const f, struct Huffman_tree *const tree) {
     Flat_hash_map frequencies = flat_hash_map_default(
         struct Character_frequency,
         ch,
-        &(CCC_Hasher){.hash = hash_char, .compare = char_order}
+        (CCC_Hasher){.hash = hash_char, .compare = char_order}
     );
     defer {
         (void)clear_and_free(&frequencies, &(CCC_Destructor){}, &std_allocator);
@@ -433,7 +433,7 @@ build_encoding_priority_queue(FILE *const f, struct Huffman_tree *const tree) {
     /* Use a Buffer to simply push back elements we will heapify at the end. */
     Buffer flat_priority_queue_storage = buffer_with_capacity(
         struct Flat_priority_queue_node,
-        &std_allocator,
+        std_allocator,
         flat_hash_map_count(&frequencies).count
     );
     check(buffer_capacity(&flat_priority_queue_storage).count);
@@ -464,7 +464,7 @@ build_encoding_priority_queue(FILE *const f, struct Huffman_tree *const tree) {
     return CCC_flat_priority_queue_heapify(
         struct Flat_priority_queue_node,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = order_freqs},
+        (CCC_Comparator){.compare = order_freqs},
         capacity(&flat_priority_queue_storage).count,
         count(&flat_priority_queue_storage).count,
         begin(&flat_priority_queue_storage)
@@ -487,11 +487,11 @@ build_encoding_bitq(FILE *const f, struct Huffman_tree *const tree) {
     Flat_hash_map memo = CCC_flat_hash_map_with_capacity(
         struct Path_memo,
         ch,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = hash_char,
             .compare = path_memo_order,
         }),
-        &std_allocator,
+        std_allocator,
         tree->num_leaves
     );
     defer {
@@ -837,7 +837,7 @@ reconstruct_tree(struct Compressed_huffman_tree *const blueprint) {
     struct Huffman_tree tree = {
         /* 0 index is NULL so real data can't be there. */
         .bump_arena = CCC_buffer_from(
-            &std_allocator,
+            std_allocator,
             bq_count,
             (struct Huffman_node[]){
                 {}, /* nil */

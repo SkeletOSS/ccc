@@ -98,8 +98,8 @@ the intrusive list elem.
 /** @brief Initialize a singly linked list at runtime from a compound literal
 array.
 @param[in] type_intruder_field the name of the field intruding on user's type.
-@param[in] allocator_pointer the allocation function required for construction.
-@param[in] destructor_pointer the optional destructor to run if insertion fails.
+@param[in] allocator the allocation function required for construction.
+@param[in] destructor the optional destructor to run if insertion fails.
 @param[in] compound_literal_array the array of user types to insert into the
 map (e.g. (struct My_type[]){ {.val = 1}, {.val = 2}}).
 @return the initialized singly linked list on the right side of an equality
@@ -108,16 +108,10 @@ operator.
 provided. The list will be constructed with the element at index 0 of the array
 as the front of the list and the final index element at the back of the list. */
 #define CCC_singly_linked_list_from(                                           \
-    type_intruder_field,                                                       \
-    allocator_pointer,                                                         \
-    destructor_pointer,                                                        \
-    compound_literal_array...                                                  \
+    type_intruder_field, allocator, destructor, compound_literal_array...      \
 )                                                                              \
     CCC_private_singly_linked_list_from(                                       \
-        type_intruder_field,                                                   \
-        allocator_pointer,                                                     \
-        destructor_pointer,                                                    \
-        compound_literal_array                                                 \
+        type_intruder_field, allocator, destructor, compound_literal_array     \
     )
 
 /**@}*/

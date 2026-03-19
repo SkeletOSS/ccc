@@ -87,7 +87,7 @@ static struct Lru_cache lru_cache = {
     .l = doubly_linked_list_default(struct Key_val, list_node),
     .fh = flat_hash_map_with_storage(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
             .compare = lru_lookup_order,
         }),

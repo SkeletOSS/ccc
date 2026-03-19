@@ -76,14 +76,14 @@ void *CCC_private_flat_double_ended_queue_allocate_back(
 
 /** @internal Takes a compound literal array to initialize the buffer. */
 #define CCC_private_flat_double_ended_queue_from(                              \
-    private_allocator_pointer,                                                 \
+    private_allocator,                                                         \
     private_optional_capacity,                                                 \
     private_compound_literal_array...                                          \
 )                                                                              \
     (__extension__({                                                           \
         struct CCC_Flat_double_ended_queue private_flat_double_ended_queue = { \
             .buffer = CCC_buffer_from(                                         \
-                private_allocator_pointer,                                     \
+                private_allocator,                                             \
                 private_optional_capacity,                                     \
                 private_compound_literal_array                                 \
             ),                                                                 \
@@ -94,12 +94,12 @@ void *CCC_private_flat_double_ended_queue_allocate_back(
 
 /** @internal */
 #define CCC_private_flat_double_ended_queue_with_capacity(                     \
-    private_type_name, private_allocator_pointer, private_capacity             \
+    private_type_name, private_allocator, private_capacity                     \
 )                                                                              \
     (__extension__({                                                           \
         struct CCC_Flat_double_ended_queue private_flat_double_ended_queue = { \
             .buffer = CCC_buffer_with_capacity(                                \
-                private_type_name, private_allocator_pointer, private_capacity \
+                private_type_name, private_allocator, private_capacity         \
             ),                                                                 \
             .front = 0,                                                        \
         };                                                                     \

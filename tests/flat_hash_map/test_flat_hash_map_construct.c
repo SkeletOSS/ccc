@@ -32,7 +32,7 @@ flat_hash_map_int_order(CCC_Key_comparator_arguments const order) {
 
 static CCC_Flat_hash_map static_fh = flat_hash_map_with_storage(
     key,
-    &((CCC_Hasher){
+    ((CCC_Hasher){
         .hash = flat_hash_map_int_to_u64,
         .compare = flat_hash_map_id_order,
     }),
@@ -99,7 +99,7 @@ check_static_begin(flat_hash_map_test_static_initialize) {
 check_static_begin(flat_hash_map_test_with_literal) {
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
             .compare = flat_hash_map_id_order,
         }),
@@ -164,7 +164,7 @@ check_static_begin(flat_hash_map_test_with_literal) {
 check_static_begin(flat_hash_map_test_copy_no_allocate) {
     Flat_hash_map source = flat_hash_map_with_storage(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_zero,
             .compare = flat_hash_map_id_order,
         }),
@@ -172,7 +172,7 @@ check_static_begin(flat_hash_map_test_copy_no_allocate) {
     );
     Flat_hash_map destination = flat_hash_map_with_storage(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_zero,
             .compare = flat_hash_map_id_order,
         }),
@@ -206,7 +206,7 @@ check_static_begin(flat_hash_map_test_copy_no_allocate) {
 check_static_begin(flat_hash_map_test_copy_no_allocate_fail) {
     Flat_hash_map source = flat_hash_map_with_storage(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_zero,
             .compare = flat_hash_map_id_order,
         }),
@@ -214,7 +214,7 @@ check_static_begin(flat_hash_map_test_copy_no_allocate_fail) {
     );
     Flat_hash_map destination = flat_hash_map_with_storage(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_zero,
             .compare = flat_hash_map_id_order,
         }),
@@ -238,18 +238,18 @@ check_static_begin(flat_hash_map_test_copy_allocate) {
     Flat_hash_map destination = flat_hash_map_default(
         struct Val,
         key,
-        &(CCC_Hasher){
+        (CCC_Hasher){
             .hash = flat_hash_map_int_zero,
             .compare = flat_hash_map_id_order,
         }
     );
     Flat_hash_map source = flat_hash_map_from(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_zero,
             .compare = flat_hash_map_id_order,
         }),
-        &std_allocator,
+        std_allocator,
         0,
         (struct Val[]){
             {.key = 0},
@@ -285,7 +285,7 @@ check_static_begin(flat_hash_map_test_copy_allocate_fail) {
     Flat_hash_map source = flat_hash_map_default(
         struct Val,
         key,
-        &(CCC_Hasher){
+        (CCC_Hasher){
             .hash = flat_hash_map_int_zero,
             .compare = flat_hash_map_id_order,
         }
@@ -293,7 +293,7 @@ check_static_begin(flat_hash_map_test_copy_allocate_fail) {
     Flat_hash_map destination = flat_hash_map_default(
         struct Val,
         key,
-        &(CCC_Hasher){
+        (CCC_Hasher){
             .hash = flat_hash_map_int_zero,
             .compare = flat_hash_map_id_order,
         }
@@ -320,7 +320,7 @@ check_static_begin(flat_hash_map_test_copy_allocate_fail) {
 check_static_begin(flat_hash_map_test_empty) {
     Flat_hash_map fh = flat_hash_map_with_storage(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_zero,
             .compare = flat_hash_map_id_order,
         }),
@@ -333,11 +333,11 @@ check_static_begin(flat_hash_map_test_empty) {
 check_static_begin(flat_hash_map_test_init_from) {
     Flat_hash_map map_from_list = flat_hash_map_from(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
             .compare = flat_hash_map_id_order,
         }),
-        &std_allocator,
+        std_allocator,
         0,
         (struct Val[]){
             {.key = 0, .val = 0},
@@ -368,11 +368,11 @@ check_static_begin(flat_hash_map_test_init_from) {
 check_static_begin(flat_hash_map_test_init_from_overwrite) {
     Flat_hash_map map_from_list = flat_hash_map_from(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
             .compare = flat_hash_map_id_order,
         }),
-        &std_allocator,
+        std_allocator,
         0,
         (struct Val[]){
             {.key = 0, .val = 0},
@@ -401,11 +401,11 @@ check_static_begin(flat_hash_map_test_init_from_fail) {
     // Whoops forgot an allocation function.
     Flat_hash_map map_from_list = flat_hash_map_from(
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
             .compare = flat_hash_map_id_order,
         }),
-        &(CCC_Allocator){},
+        (CCC_Allocator){},
         0,
         (struct Val[]){
             {.key = 0, .val = 0},
@@ -438,11 +438,11 @@ check_static_begin(flat_hash_map_test_init_with_capacity) {
     Flat_hash_map fh = flat_hash_map_with_capacity(
         struct Val,
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
             .compare = flat_hash_map_id_order,
         }),
-        &std_allocator,
+        std_allocator,
         32
     );
     check(validate(&fh), CCC_TRUE);
@@ -473,11 +473,11 @@ check_static_begin(flat_hash_map_test_init_with_capacity_no_op) {
     Flat_hash_map fh = flat_hash_map_with_capacity(
         struct Val,
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
             .compare = flat_hash_map_id_order,
         }),
-        &std_allocator,
+        std_allocator,
         0
     );
     check(validate(&fh), CCC_TRUE);
@@ -507,11 +507,11 @@ check_static_begin(flat_hash_map_test_init_with_capacity_fail) {
     Flat_hash_map fh = flat_hash_map_with_capacity(
         struct Val,
         key,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
             .compare = flat_hash_map_id_order,
         }),
-        &(CCC_Allocator){},
+        (CCC_Allocator){},
         32
     );
     check(validate(&fh), CCC_TRUE);
@@ -552,7 +552,7 @@ check_static_begin(flat_hash_map_test_with_anonymous_struct) {
     );
     Flat_hash_map fh = flat_hash_map_with_storage(
         _,
-        (&(CCC_Hasher){
+        ((CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
             .compare = flat_hash_map_int_order,
         }),

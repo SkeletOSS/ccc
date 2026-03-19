@@ -67,7 +67,7 @@ check_static_begin(
 check_static_begin(array_tree_map_test_validate) {
     CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
     CCC_Handle hndl = swap_handle(
@@ -92,7 +92,7 @@ check_static_begin(array_tree_map_test_validate) {
 check_static_begin(array_tree_map_test_insert) {
     CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
     int size = 30;
@@ -160,7 +160,7 @@ check_static_begin(array_tree_map_test_insert) {
 check_static_begin(array_tree_map_test_remove_key_value) {
     CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
     int size = 30;
@@ -235,7 +235,7 @@ check_static_begin(array_tree_map_test_remove_key_value) {
 check_static_begin(array_tree_map_test_try_insert) {
     CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
     int size = 30;
@@ -302,7 +302,7 @@ check_static_begin(array_tree_map_test_try_insert) {
 check_static_begin(array_tree_map_test_try_insert_with) {
     CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
     int size = 30;
@@ -370,7 +370,7 @@ check_static_begin(array_tree_map_test_try_insert_with) {
 check_static_begin(array_tree_map_test_insert_or_assign) {
     CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
     int size = 30;
@@ -441,7 +441,7 @@ check_static_begin(array_tree_map_test_insert_or_assign) {
 check_static_begin(array_tree_map_test_insert_or_assign_with) {
     CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
     int size = 30;
@@ -508,7 +508,7 @@ check_static_begin(array_tree_map_test_insert_or_assign_with) {
 check_static_begin(array_tree_map_test_array_and_modify) {
     CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
     int size = 30;
@@ -582,7 +582,7 @@ check_static_begin(array_tree_map_test_array_and_modify) {
 check_static_begin(array_tree_map_test_array_and_context_modify) {
     CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
     int size = 30;
@@ -666,7 +666,7 @@ check_static_begin(array_tree_map_test_array_and_context_modify) {
 check_static_begin(array_tree_map_test_array_and_modify_with) {
     CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
     int size = 30;
@@ -737,7 +737,7 @@ check_static_begin(array_tree_map_test_array_and_modify_with) {
 check_static_begin(array_tree_map_test_or_insert) {
     CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
     int size = 30;
@@ -832,7 +832,7 @@ check_static_begin(array_tree_map_test_or_insert) {
 check_static_begin(array_tree_map_test_or_insert_with) {
     CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
     int size = 30;
@@ -927,7 +927,7 @@ check_static_begin(array_tree_map_test_or_insert_with) {
 check_static_begin(array_tree_map_test_insert_handle) {
     CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
     int size = 30;
@@ -1022,7 +1022,7 @@ check_static_begin(array_tree_map_test_insert_handle) {
 check_static_begin(array_tree_map_test_insert_handle_with) {
     CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
     int size = 30;
@@ -1117,7 +1117,7 @@ check_static_begin(array_tree_map_test_insert_handle_with) {
 check_static_begin(array_tree_map_test_remove_handle) {
     CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
         id,
-        &(CCC_Key_comparator){.compare = id_order},
+        (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
     int size = 30;

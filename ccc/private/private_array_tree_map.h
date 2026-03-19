@@ -147,10 +147,8 @@ struct CCC_Array_tree_map {
     size_t sizeof_type;
     /** @internal Where user key can be found in type. */
     size_t key_offset;
-    /** @internal The provided key comparison function. */
-    CCC_Key_comparator_interface *compare;
-    /** @internal The provided context data, if any. */
-    void *comparator_context;
+    /** @internal The provided key comparison function and context. */
+    CCC_Key_comparator comparator;
 };
 
 /** @internal */
@@ -238,13 +236,12 @@ metadata. */
 
 /** @internal All other fields default to NULL or 0. */
 #define CCC_private_array_tree_map_default(                                    \
-    private_type_name, private_key_field, private_comparator_pointer...        \
+    private_type_name, private_key_field, private_comparator...                \
 )                                                                              \
     {                                                                          \
         .sizeof_type = sizeof(private_type_name),                              \
         .key_offset = offsetof(private_type_name, private_key_field),          \
-        .compare = (private_comparator_pointer)->compare,                      \
-        .comparator_context = (private_comparator_pointer)->context,           \
+        .comparator = (private_comparator),                                    \
     }
 
 /** @internal Initialization only tracks pointers to support a variety of memory
@@ -255,7 +252,7 @@ runtime. */
 #define CCC_private_array_tree_map_for(                                        \
     private_type_name,                                                         \
     private_key_field,                                                         \
-    private_comparator_pointer,                                                \
+    private_comparator,                                                        \
     private_capacity,                                                          \
     private_memory_pointer                                                     \
 )                                                                              \
@@ -269,15 +266,14 @@ runtime. */
         .free_list = 0,                                                        \
         .sizeof_type = sizeof(private_type_name),                              \
         .key_offset = offsetof(private_type_name, private_key_field),          \
-        .compare = (private_comparator_pointer)->compare,                      \
-        .comparator_context = (private_comparator_pointer)->context,           \
+        .comparator = (private_comparator),                                    \
     }
 
 /** @internal Initialize an array tree map from user input list. */
 #define CCC_private_array_tree_map_from(                                       \
     private_key_field,                                                         \
-    private_comparator_pointer,                                                \
-    private_allocator_pointer,                                                 \
+    private_comparator,                                                        \
+    private_allocator,                                                         \
     private_optional_cap,                                                      \
     private_array_compound_literal...                                          \
 )                                                                              \
@@ -289,14 +285,14 @@ runtime. */
             = CCC_private_array_tree_map_default(                              \
                 typeof(*private_array_tree_map_initializer_list),              \
                 private_key_field,                                             \
-                private_comparator_pointer                                     \
+                private_comparator                                             \
             );                                                                 \
         size_t const private_array_tree_n                                      \
             = sizeof(private_array_compound_literal)                           \
             / sizeof(*private_array_tree_map_initializer_list);                \
         size_t const private_cap = private_optional_cap;                       \
         CCC_Allocator const *const private_array_tree_map_allocator            \
-            = (private_allocator_pointer);                                     \
+            = &(private_allocator);                                            \
         if (CCC_array_tree_map_reserve(                                        \
                 &private_array_tree_map,                                       \
                 (private_array_tree_n > private_cap ? private_array_tree_n     \
@@ -342,19 +338,17 @@ runtime. */
 #define CCC_private_array_tree_map_with_capacity(                              \
     private_type_name,                                                         \
     private_key_field,                                                         \
-    private_comparator_pointer,                                                \
-    private_allocator_pointer,                                                 \
+    private_comparator,                                                        \
+    private_allocator,                                                         \
     private_cap                                                                \
 )                                                                              \
     (__extension__({                                                           \
         struct CCC_Array_tree_map private_array_tree_map                       \
             = CCC_private_array_tree_map_default(                              \
-                private_type_name,                                             \
-                private_key_field,                                             \
-                private_comparator_pointer                                     \
+                private_type_name, private_key_field, private_comparator       \
             );                                                                 \
         (void)CCC_array_tree_map_reserve(                                      \
-            &private_array_tree_map, private_cap, private_allocator_pointer    \
+            &private_array_tree_map, private_cap, &(private_allocator)         \
         );                                                                     \
         private_array_tree_map;                                                \
     }))
@@ -362,7 +356,7 @@ runtime. */
 /** @internal */
 #define CCC_private_array_tree_map_with_storage(                               \
     private_key_node_field,                                                    \
-    private_comparator_pointer,                                                \
+    private_comparator,                                                        \
     private_compound_literal,                                                  \
     private_optional_storage_specifier...                                      \
 )                                                                              \
@@ -383,8 +377,7 @@ runtime. */
         .key_offset = offsetof(                                                \
             typeof(*(private_compound_literal)), private_key_node_field        \
         ),                                                                     \
-        .compare = (private_comparator_pointer)->compare,                      \
-        .comparator_context = (private_comparator_pointer)->context,           \
+        .comparator = (private_comparator),                                    \
     }
 
 /** @internal */

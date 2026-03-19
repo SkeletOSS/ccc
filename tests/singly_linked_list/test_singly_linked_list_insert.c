@@ -252,8 +252,8 @@ check_static_begin(singly_linked_list_test_sort_reverse) {
     };
     Singly_linked_list singly_linked_list = singly_linked_list_from(
         e,
-        &allocator,
-        &(CCC_Destructor){},
+        allocator,
+        (CCC_Destructor){},
         (struct Val[6]){
             {.val = 5},
             {.val = 4},
@@ -304,8 +304,8 @@ check_static_begin(singly_linked_list_test_sort_even) {
     };
     Singly_linked_list singly_linked_list = singly_linked_list_from(
         e,
-        &allocator,
-        &(CCC_Destructor){},
+        allocator,
+        (CCC_Destructor){},
         (struct Val[8]){
             {.val = 9},
             {.val = 4},
@@ -363,8 +363,8 @@ check_static_begin(singly_linked_list_test_sort_odd) {
     };
     Singly_linked_list singly_linked_list = singly_linked_list_from(
         e,
-        &allocator,
-        &(CCC_Destructor){},
+        allocator,
+        (CCC_Destructor){},
         (struct Val[9]){
             {.val = 10},
             {.val = 9},
@@ -423,8 +423,8 @@ check_static_begin(singly_linked_list_test_sort_runs) {
     };
     Singly_linked_list singly_linked_list = singly_linked_list_from(
         e,
-        &allocator,
-        &(CCC_Destructor){},
+        allocator,
+        (CCC_Destructor){},
         (struct Val[12]){
             {.val = 10},
             {.val = 7},
@@ -486,8 +486,8 @@ check_static_begin(singly_linked_list_test_sort_halves) {
     };
     Singly_linked_list singly_linked_list = singly_linked_list_from(
         e,
-        &allocator,
-        &(CCC_Destructor){},
+        allocator,
+        (CCC_Destructor){},
         (struct Val[12]){
             {.val = 25},
             {.val = 20},

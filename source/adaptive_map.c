@@ -891,10 +891,10 @@ order(
     void const *const key,
     struct CCC_Adaptive_map_node const *const node
 ) {
-    return t->compare((CCC_Key_comparator_arguments){
+    return t->comparator.compare((CCC_Key_comparator_arguments){
         .key_left = key,
         .type_right = struct_base(t, node),
-        .context = t->comparator_context,
+        .context = t->comparator.context,
     });
 }
 

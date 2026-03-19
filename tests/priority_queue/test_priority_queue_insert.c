@@ -19,7 +19,7 @@ check_static_begin(priority_queue_test_insert_one) {
         struct Val,
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     struct Val single;
     single.val = 0;
@@ -39,7 +39,7 @@ check_static_begin(priority_queue_test_insert_three) {
         struct Val,
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     for (int i = 0; i < 3; ++i) {
         check(
@@ -66,7 +66,7 @@ check_static_begin(priority_queue_test_insert_three_dups) {
         struct Val,
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     for (int i = 0; i < 3; ++i) {
         check(
@@ -93,7 +93,7 @@ check_static_begin(priority_queue_test_insert_shuffle) {
         struct Val,
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     int const prime = 53;
     check(
@@ -116,7 +116,7 @@ check_static_begin(priority_queue_test_read_max_min) {
         struct Val,
         elem,
         CCC_ORDER_LESSER,
-        &(CCC_Comparator){.compare = val_order}
+        (CCC_Comparator){.compare = val_order}
     );
     struct Val vals[10];
     for (int i = 0; i < 10; ++i) {

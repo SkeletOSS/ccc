@@ -73,7 +73,7 @@ check_static_begin(adaptive_map_test_validate) {
         .context = &stack_allocator_for((struct Val[3]){}),
     };
     Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     CCC_Entry ent = swap_entry(
         &om,
@@ -107,7 +107,7 @@ check_static_begin(adaptive_map_test_insert) {
         .context = &stack_allocator_for((struct Val[35]){}),
     };
     Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     int size = 30;
     CCC_Entry ent = swap_entry(
@@ -198,7 +198,7 @@ check_static_begin(adaptive_map_test_remove_key_value) {
         .context = &stack_allocator_for((struct Val[35]){}),
     };
     Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     int size = 30;
     CCC_Entry ent = CCC_remove_key_value(
@@ -298,7 +298,7 @@ check_static_begin(adaptive_map_test_try_insert) {
         .context = &stack_allocator_for((struct Val[35]){}),
     };
     Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     int size = 30;
     CCC_Entry ent
@@ -359,7 +359,7 @@ check_static_begin(adaptive_map_test_try_insert_with) {
         .context = &stack_allocator_for((struct Val[35]){}),
     };
     Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     int size = 30;
     CCC_Entry *ent = adaptive_map_try_insert_with(&om, -1, &allocator, val(-1));
@@ -420,7 +420,7 @@ check_static_begin(adaptive_map_test_insert_or_assign) {
         .context = &stack_allocator_for((struct Val[35]){}),
     };
     Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     int size = 30;
     CCC_Entry ent = insert_or_assign(
@@ -492,7 +492,7 @@ check_static_begin(adaptive_map_test_insert_or_assign_with) {
         .context = &stack_allocator_for((struct Val[35]){}),
     };
     Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     int size = 30;
     CCC_Entry *ent
@@ -553,7 +553,7 @@ check_static_begin(adaptive_map_test_entry_and_modify) {
         .context = &stack_allocator_for((struct Val[35]){}),
     };
     Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     int size = 30;
     CCC_Adaptive_map_entry ent = entry(&om, &(int){-1});
@@ -626,7 +626,7 @@ check_static_begin(adaptive_map_test_entry_and_context_modify) {
         .context = &stack_allocator_for((struct Val[35]){}),
     };
     Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     int size = 30;
     int context = 1;
@@ -732,7 +732,7 @@ check_static_begin(adaptive_map_test_entry_and_modify_with) {
         .context = &stack_allocator_for((struct Val[35]){}),
     };
     Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     int size = 30;
     CCC_Adaptive_map_entry *ent = adaptive_map_entry_wrap(&om, &(int){-1});
@@ -801,7 +801,7 @@ check_static_begin(adaptive_map_test_or_insert) {
         .context = &stack_allocator_for((struct Val[35]){}),
     };
     Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     int size = 30;
     struct Val *v = or_insert(
@@ -880,7 +880,7 @@ check_static_begin(adaptive_map_test_or_insert_with) {
         .context = &stack_allocator_for((struct Val[35]){}),
     };
     Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     int size = 30;
     struct Val *v = adaptive_map_or_insert_with(
@@ -947,7 +947,7 @@ check_static_begin(adaptive_map_test_insert_entry) {
         .context = &stack_allocator_for((struct Val[35]){}),
     };
     Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     int size = 30;
     struct Val *v = insert_entry(
@@ -1026,7 +1026,7 @@ check_static_begin(adaptive_map_test_insert_entry_with) {
         .context = &stack_allocator_for((struct Val[35]){}),
     };
     Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     int size = 30;
     struct Val *v = adaptive_map_insert_entry_with(
@@ -1093,7 +1093,7 @@ check_static_begin(adaptive_map_test_remove_entry) {
         .context = &stack_allocator_for((struct Val[35]){}),
     };
     Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, &(CCC_Key_comparator){.compare = id_order}
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     int size = 30;
     struct Val *v = or_insert(

@@ -64,7 +64,7 @@ are contiguous. */
 /** @internal For dynamic containers to perform the allocation and
 initialization in one convenient step for user. */
 #define CCC_private_buffer_from(                                               \
-    private_allocator_pointer,                                                 \
+    private_allocator,                                                         \
     private_optional_capacity,                                                 \
     private_compound_literal_array...                                          \
 )                                                                              \
@@ -80,7 +80,7 @@ initialization in one convenient step for user. */
         if (CCC_buffer_reserve(                                                \
                 &private_buf,                                                  \
                 (private_n > private_cap ? private_n : private_cap),           \
-                (private_allocator_pointer)                                    \
+                &(private_allocator)                                           \
             )                                                                  \
             == CCC_RESULT_OK) {                                                \
             (void)memcpy(                                                      \
@@ -96,13 +96,13 @@ initialization in one convenient step for user. */
 /** @internal For dynamic containers to perform initialization and reservation
 of memory in one step. */
 #define CCC_private_buffer_with_capacity(                                      \
-    private_type_name, private_allocator_pointer, private_capacity             \
+    private_type_name, private_allocator, private_capacity                     \
 )                                                                              \
     (__extension__({                                                           \
         struct CCC_Buffer private_buf                                          \
             = CCC_private_buffer_default(private_type_name);                   \
         (void)CCC_buffer_reserve(                                              \
-            &private_buf, (private_capacity), (private_allocator_pointer)      \
+            &private_buf, (private_capacity), &(private_allocator)             \
         );                                                                     \
         private_buf;                                                           \
     }))

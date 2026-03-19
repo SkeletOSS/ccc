@@ -37,8 +37,8 @@ check_static_begin(doubly_linked_list_test_push_pop_front) {
     };
     Doubly_linked_list doubly_linked_list = doubly_linked_list_from(
         e,
-        &allocator,
-        &(CCC_Destructor){},
+        allocator,
+        (CCC_Destructor){},
         (struct Val[3]){
             {.val = 0},
             {.val = 1},
@@ -71,8 +71,8 @@ check_static_begin(doubly_linked_list_test_push_pop_back) {
     };
     Doubly_linked_list doubly_linked_list = doubly_linked_list_from(
         e,
-        &allocator,
-        &(CCC_Destructor){},
+        allocator,
+        (CCC_Destructor){},
         (struct Val[3]){
             {.val = 0},
             {.val = 1},
