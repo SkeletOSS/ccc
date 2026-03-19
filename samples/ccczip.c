@@ -303,7 +303,7 @@ zip_file(SV_Str_view const to_compress) {
         (void)fclose(f);
     }
     if (!f) {
-        (void)fprintf(stderr, "%s", strerror(errno));
+        (void)fprintf(stderr, "%s\n", strerror(errno));
         return;
     }
     size_t const fsize = file_size(f);
@@ -773,7 +773,7 @@ unzip_file(SV_Str_view unzip) {
         (void)fclose(copy_of_original);
     }
     if (!copy_of_original) {
-        (void)fprintf(stderr, "%s", strerror(errno));
+        (void)fprintf(stderr, "%s\n", strerror(errno));
         return;
     }
     reconstruct_text(copy_of_original, &tree, &he.file_bits);
@@ -791,7 +791,7 @@ read_from_file(SV_Str_view const unzip) {
     defer {
         (void)fclose(cccz);
     }
-    check(cccz, (void)fprintf(stderr, "%s", strerror(errno)););
+    check(cccz, (void)fprintf(stderr, "%s\n", strerror(errno)););
     printf("Unzip %s (%zu bytes).\n", SV_begin(unzip), file_size(cccz));
     struct Huffman_encoding encoding = {
         .file_bits = {
