@@ -1409,10 +1409,11 @@ first_leading_bits_range(
     /* If we passed the earlier signed range check this cast is safe because
        (i / block bits) for some block index must be less than i. */
     Block_signed_count cur_block
-        = (Block_signed_count)block_count_index(bits_start);
+        = (Block_signed_count)block_count_index((size_t)bits_start);
     ptrdiff_t cur_end = (ptrdiff_t)((cur_block * BIT_BLOCK_BITS) - 1);
-    Bit_signed_count bit_index = bit_count_index(bits_start);
+    Bit_signed_count bit_index = bit_count_index((size_t)bits_start);
     for (;;) {
+        assert(cur_block >= 0 && "current block is safe as index");
         /* After the first iteration the bit index is always the Most
            Significant bit of the block, so the supplemental AND with
            the shifted expression returns the original block. Makes code
@@ -1425,21 +1426,30 @@ first_leading_bits_range(
                 : ~bitset->blocks[cur_block]
                       & (BIT_BLOCK_ON >> ((BIT_BLOCK_BITS - bit_index) - 1));
         if (cur_end < range_end) {
-            bits &= (BIT_BLOCK_ON << bit_count_index(range_end + 1));
+            assert(
+                range_end + 1 >= 0
+                && "If range end is less than -1 it is caught at entry to "
+                   "function"
+            );
+            bits &= (BIT_BLOCK_ON << bit_count_index((size_t)(range_end + 1)));
         }
         struct Group_signed_count const ones
             = max_leading_ones(bits, bit_index, num_bits - num_found);
         if (ones.count >= num_bits) {
+            /* The index cannot be negative if ones were found and num bits is
+               positive non-zero. Cast index to size_t is safe. */
             return (CCC_Count){
-                .count = (cur_block * BIT_BLOCK_BITS) + ones.index,
+                .count
+                = ((size_t)cur_block * BIT_BLOCK_BITS) + (size_t)ones.index,
             };
         }
         if (ones.index == BIT_BLOCK_BITS - 1) {
             num_found += ones.count;
-            /* Continuation from prefix blocks has resulted in
-             * success. */
+            /* Continuation from prefix blocks has resulted in success. */
             if (num_found >= num_bits) {
-                return (CCC_Count){.count = bits_start};
+                /* Bits starting point cannot be less than end of range or end
+                   of range plus number of bits. Either guarantees positive. */
+                return (CCC_Count){.count = (size_t)bits_start};
             }
         } else {
             /* If the new block start index is -1, then this
@@ -1450,6 +1460,7 @@ first_leading_bits_range(
                 = (cur_block * (Bit_signed_count)BIT_BLOCK_BITS) + ones.index;
             num_found = ones.count;
         }
+        /* Cast was checked at entry to function for safety. */
         if (bits_start < range_end + (ptrdiff_t)num_bits) {
             return (CCC_Count){.error = CCC_RESULT_FAIL};
         }
@@ -1499,11 +1510,11 @@ max_leading_ones(
     }
     Bit_signed_count const trailing_ones
         = (Bit_signed_count)count_trailing_zeros(~block);
+    assert(trailing_ones >= 0);
     return (struct Group_signed_count){
-        /* May be -1 if no ones found. This make backward iteration easier.
-         */
+        /* May be -1 if no ones found. This make backward iteration easier. */
         .index = (Bit_signed_count)(trailing_ones - 1),
-        .count = trailing_ones,
+        .count = (size_t)trailing_ones,
     };
 }
 

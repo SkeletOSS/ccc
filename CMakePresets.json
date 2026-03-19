@@ -7,29 +7,41 @@
     },
     "configurePresets": [
         {
-            "name": "default-debug",
+            "name": "base",
+            "hidden": true,
             "binaryDir": "${sourceDir}/build",
             "installDir": "${sourceDir}/install",
-            "hidden": true,
             "cacheVariables": {
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-                "CMAKE_C_STANDARD": "23",
+                "CMAKE_C_STANDARD": "23"
+            }
+        },
+        {
+            "name": "warnings",
+            "hidden": true,
+            "inherits": "base",
+            "environment": {
+                "CCC_WARNING_C_FLAGS": "-Wall -Wextra -Wvla -Wconversion -Wnull-dereference -Wundef -Wstrict-prototypes -Wwrite-strings -Wfloat-equal -Wtype-limits -Wpointer-arith -Wshadow -Winit-self -Wno-variadic-macros -Wno-gnu-alignof-expression -fno-common"
+            }
+        },
+        {
+            "name": "default-debug",
+            "hidden": true,
+            "inherits": "warnings",
+            "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_RUNTIME_OUTPUT_DIRECTORY": "${sourceDir}/build/debug/bin",
-                "CMAKE_C_FLAGS": "-g3 -Wall -Wextra -Wvla -Wfloat-equal -Wtype-limits -Wpointer-arith -Wshadow -Winit-self -Wno-variadic-macros -Wno-gnu-alignof-expression"
+                "CMAKE_C_FLAGS": "$env{CCC_WARNING_C_FLAGS} -g3"
             }
         },
         {
             "name": "default-release",
-            "binaryDir": "${sourceDir}/build",
-            "installDir": "${sourceDir}/install",
             "hidden": true,
+            "inherits": "warnings",
             "cacheVariables": {
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-                "CMAKE_C_STANDARD": "23",
                 "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_RUNTIME_OUTPUT_DIRECTORY": "${sourceDir}/build/bin",
-                "CMAKE_C_FLAGS": "-Wall -Wextra -Wvla -Wfloat-equal -Wtype-limits -Wpointer-arith -Wshadow -Winit-self -Wno-variadic-macros -Wno-gnu-alignof-expression"
+                "CMAKE_C_FLAGS": "$env{CCC_WARNING_C_FLAGS}"
             }
         },
         {
@@ -65,7 +77,7 @@
             "inherits": "default-debug",
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "gcc",
-                "CMAKE_C_FLAGS": "-g3 -Wall -Wextra -Wvla -fanalyzer -Wfloat-equal -Wtype-limits -Wpointer-arith -Wshadow -Winit-self -Wno-variadic-macros -Wno-gnu-alignof-expression -fno-diagnostics-show-option -fsanitize=address,leak,undefined,shift,shift-exponent,integer-divide-by-zero,unreachable,null,return,signed-integer-overflow,bounds,bounds-strict,alignment,object-size,float-divide-by-zero,float-cast-overflow,enum,pointer-overflow",
+                "CMAKE_C_FLAGS": "$env{CCC_WARNING_C_FLAGS} -g3 -fanalyzer -fno-omit-frame-pointer -fsanitize-address-use-after-scope -fsanitize=address,leak,undefined,shift,shift-exponent,integer-divide-by-zero,unreachable,null,return,signed-integer-overflow,bounds,bounds-strict,alignment,object-size,float-divide-by-zero,float-cast-overflow,enum,pointer-overflow",
                 "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=address,leak,undefined,shift,shift-exponent,integer-divide-by-zero,unreachable,null,return,signed-integer-overflow,bounds,bounds-strict,alignment,object-size,float-divide-by-zero,float-cast-overflow,enum,pointer-overflow"
             }
         },
@@ -74,7 +86,7 @@
             "inherits": "default-release",
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "gcc",
-                "CMAKE_C_FLAGS": "-Wall -Wextra -Wvla -Wfloat-equal -Wtype-limits -Wpointer-arith -Wshadow -Winit-self -Wno-variadic-macros -Wno-gnu-alignof-expression -fno-diagnostics-show-option -fsanitize=address,leak,undefined,shift,shift-exponent,integer-divide-by-zero,unreachable,null,return,signed-integer-overflow,bounds,bounds-strict,alignment,object-size,float-divide-by-zero,float-cast-overflow,enum,pointer-overflow",
+                "CMAKE_C_FLAGS": "$env{CCC_WARNING_C_FLAGS} -fanalyzer -fno-omit-frame-pointer -fsanitize-address-use-after-scope -fsanitize=address,leak,undefined,shift,shift-exponent,integer-divide-by-zero,unreachable,null,return,signed-integer-overflow,bounds,bounds-strict,alignment,object-size,float-divide-by-zero,float-cast-overflow,enum,pointer-overflow",
                 "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=address,leak,undefined,shift,shift-exponent,integer-divide-by-zero,unreachable,null,return,signed-integer-overflow,bounds,bounds-strict,alignment,object-size,float-divide-by-zero,float-cast-overflow,enum,pointer-overflow"
             }
         }

@@ -703,9 +703,13 @@ CCC_array_tree_map_reserve(
     old_cap = old_count ? old_cap : 0;
     size_t const new_cap = map->capacity;
     size_t prev = 0;
-    for (ptrdiff_t i = (ptrdiff_t)new_cap - 1; i > 0 && i >= (ptrdiff_t)old_cap;
-         prev = i, --i) {
+    size_t i = new_cap;
+    while (i--) {
+        if (i <= old_cap) {
+            break;
+        }
         node_at(map, i)->next_free = prev;
+        prev = i;
     }
     if (!map->free_list) {
         map->free_list = prev;
