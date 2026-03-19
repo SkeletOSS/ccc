@@ -1273,7 +1273,7 @@ make test
 
 ## Related
 
-If these containers do not fit your needs, here are some excellent data structure libraries I have found for C. They are clever, fast, and elegant. They lean into creating a C++ template-like system for C that offers C's version of type safety. These are good if you are transitioning from higher level languages like C++ and Rust and want a similar data structure experience.
+If these containers do not fit your needs, here are some other data structure libraries I have found for C. If your project is at the application layer, where type safety and ergonomics are the primary concerns, these libraries are excellent choices and may be simpler to integrate than the C Container Collection. This collection is designed for projects where explicit memory control, allocation auditability, and separations between data structure and data memory management may be required.
 
 - [STC - Smart Template Containers](https://github.com/stclib/STC)
 - [C Template Library (CTL)](https://github.com/glouw/ctl)
