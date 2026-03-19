@@ -155,7 +155,7 @@ has been allocated with the appropriate lifetime for the user's needs. */
 
 /** @brief Write user type_intruder directly to a newly allocated priority queue
 elem.
-@param[in] Priority_queue_pointer a pointer to the priority queue.
+@param[in] priority_queue_pointer a pointer to the priority queue.
 @param[in] allocator_pointer the pointer for allocation. It is required.
 @param[in] type_compound_literal the compound literal to write to the
 allocation.

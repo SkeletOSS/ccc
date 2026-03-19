@@ -516,7 +516,7 @@ be preserved. See the regular insert method if the old value is of interest. */
 [[nodiscard]] void *CCC_tree_map_insert_entry(
     CCC_Tree_map_entry const *entry,
     CCC_Tree_map_node *type_intruder,
-    CCC_Allocator const *
+    CCC_Allocator const *allocator
 );
 
 /** @brief Write the contents of the compound literal type_compound_literal to a

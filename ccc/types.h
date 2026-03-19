@@ -60,7 +60,9 @@ of search-by-key containers. Use the provided range iteration functions in
 this header to iterate from beginning to end in forward order relative to
 the containers default ordering. */
 typedef struct {
+    /** The pointer to the begin slot of the range. */
     void *begin;
+    /** The pointer to the end slot of the range. */
     void *end;
 } CCC_Range;
 
@@ -71,7 +73,9 @@ criteria of search-by-key containers. Use the provided range iteration functions
 in this header to iterate from beginning to end in reverse order relative to the
 containers default ordering. */
 typedef struct {
+    /** The pointer to the reverse begin slot of the range. */
     void *reverse_begin;
+    /** The pointer to the reverse end slot of the range. */
     void *reverse_end;
 } CCC_Range_reverse;
 
@@ -94,7 +98,9 @@ of search-by-key containers. Use the provided range iteration functions in
 this header to iterate from beginning to end in forward order relative to
 the containers default ordering. */
 typedef struct {
+    /** The stable index to the begin slot of the range. */
     CCC_Handle_index begin;
+    /** The stable index to the end slot of the range. */
     CCC_Handle_index end;
 } CCC_Handle_range;
 
@@ -105,7 +111,9 @@ criteria of search-by-key containers. Use the provided range iteration functions
 in this header to iterate from beginning to end in reverse order relative to the
 containers default ordering. */
 typedef struct {
+    /** The stable index to the reverse begin slot of the range. */
     CCC_Handle_index reverse_begin;
+    /** The stable index to the reverse end slot of the range. */
     CCC_Handle_index reverse_end;
 } CCC_Handle_range_reverse;
 

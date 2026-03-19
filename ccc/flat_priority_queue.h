@@ -530,11 +530,10 @@ Note that whether the key increases or decreases does not affect runtime. */
 /** @brief Increase e that is a handle to the stored flat_priority_queue
 element. O(lgN).
 @param[in] priority_queue a pointer to the flat priority queue.
-@param[in] type a pointer to the stored priority_queue element. Must be in
-the flat_priority_queue.
+@param[in] type a pointer to the stored priority_queue element. Must be in the
+flat_priority_queue.
 @param[in] temp a pointer to a dummy user type that will be used for swapping.
-@param[in] modifier the modifier function to call with context, if needed.
-@param[in] context any context data needed for the update function.
+@param[in] modifier the CCC_Modifier to operate on an element.
 @return a reference to the element at its new position in the
 flat_priority_queue on success, NULL if parameters are invalid or
 flat_priority_queue is empty.
@@ -582,8 +581,7 @@ element. O(lgN).
 @param[in] type a pointer to the stored priority_queue element. Must be in
 the flat_priority_queue.
 @param[in] temp a pointer to a dummy user type that will be used for swapping.
-@param[in] modifier the modifier function to call with context, if needed.
-@param[in] context any context data needed for the update function.
+@param[in] modifier the CCC_Modifier to operate on an element.
 @return a reference to the element at its new position in the
 flat_priority_queue on success, NULL if parameters are invalid or
 flat_priority_queue is empty.

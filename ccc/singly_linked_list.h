@@ -286,7 +286,8 @@ non-decreasing order of the list determined by the user provided comparison
 function. `O(1)`.
 @param[in] singly_linked_list a pointer to the singly linked list.
 @param[in] type_intruder a pointer to the element to be inserted in order.
-@param[in] comparator a pointer to the type comparison context.
+@param[in] comparator a CCC_Comparator for comparing user elements.
+@param[in] allocator an optional CCC_Allocator for allocating a new element.
 @return a pointer to the element that has been inserted or NULL if allocation
 is required and has failed. NULL is also returned if the list has never been
 formally sorted from sort.h.

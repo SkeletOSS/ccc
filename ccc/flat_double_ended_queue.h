@@ -101,8 +101,8 @@ CCC_flat_double_ended_queue_for(...);) */
 
 /** @brief Initialize a Flat_double_ended_queue from a compound literal array
 initializer.
-@param[in] allocator_pointer the CCC_Allocator needed
-to copy in the compound literal array elements.
+@param[in] allocator the CCC_Allocator needed to copy in the compound literal
+array elements.
 @param[in] optional_capacity optionally specify the capacity of the queue if
 different from the size of the compound literal array initializer. If the
 capacity is greater than the size of the compound literal array initializer, it

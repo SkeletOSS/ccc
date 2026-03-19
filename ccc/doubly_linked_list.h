@@ -336,7 +336,7 @@ non-decreasing order of the list determined by the user provided comparison
 function. `O(1)`.
 @param[in] doubly_linked_list a pointer to the doubly linked list.
 @param[in] type_intruder a pointer to the element to be inserted in order.
-@param[in] comparator the comparator context for comparing list elements.
+@param[in] comparator the CCC_Comparator for comparing list elements.
 @param[in] allocator the CCC_Allocator for allocating a user type.
 @return a pointer to the element that has been inserted or NULL if allocation
 is required and has failed. NULL is also returned if the list has never been
@@ -346,8 +346,7 @@ last sorted ordering. If the list has never been sorted NULL is returned.
 
 If a non-increasing order is desired, return opposite results from the user
 comparison function. If an element is CCC_ORDER_LESSERERS return
-CCC_ORDER_GREATER and vice versa. If elements are equal, return CCC_ORDER_EQUAL.
-*/
+CCC_ORDER_GREATER and vice versa. If elements are equal, CCC_ORDER_EQUAL. */
 void *CCC_doubly_linked_list_insert_sorted(
     CCC_Doubly_linked_list *doubly_linked_list,
     CCC_Doubly_linked_list_node *type_intruder,
@@ -383,7 +382,7 @@ Deallocate the container. */
 /** @brief Clear the contents of the list freeing elements, if given allocation
 permission. O(N).
 @param[in] list a pointer to the doubly linked list.
-@param[in] destroy a destructor function to run on each element.
+@param[in] destructor an optional CCC_Destructor to run on each element.
 @param[in] allocator the CCC_Allocator for freeing a user type.
 @return ok if the clearing was a success or an input error if list or destroy is
 NULL.

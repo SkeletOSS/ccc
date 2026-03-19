@@ -165,10 +165,10 @@ must be supported by this container. */
 @return the struct initialized tree map for direct assignment
 (i.e. CCC_Array_tree_map m = CCC_array_tree_map_for(...);). */
 #define CCC_array_tree_map_for(                                                \
-    type_name, type_key_field, compare, capacity, memory_pointer               \
+    type_name, type_key_field, comparator, capacity, memory_pointer            \
 )                                                                              \
     CCC_private_array_tree_map_for(                                            \
-        type_name, type_key_field, compare, capacity, memory_pointer           \
+        type_name, type_key_field, comparator, capacity, memory_pointer        \
     )
 
 /** @brief Initialize a dynamic map at runtime from an initializer list.
