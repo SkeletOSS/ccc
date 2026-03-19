@@ -239,13 +239,14 @@ main(int argc, char **argv) {
 
 /* This function presents a very traditional implementation of an algorithm
 that requires multiple containers. This is implemented in a manner that one
-would normally see in Rust or C++, where each container manages its own memory.
-For examples of non-owning container use and composition see other samples.
-This style of data structure use can be comfortable and convenient in some
-cases.
+would normally see in Rust or C++. However, the allocator they use to obtain
+memory is passed every time it is needed to clearly signal if an operation may
+allocate.
 
-However, we can still be "C" about it by thinking about reserving exactly
-the memory we need dynamically in the from initializer. */
+Note that initializers always accept configuration directly by name or compound
+literal. This is why you see the allocator dereferenced. Allocators should be
+thought of as cheap, copyable bundles holding a pointer to an allocator
+interface and a pointer to context. */
 static void
 animate_maze(struct Maze *maze, CCC_Allocator const *const allocator) {
     int const speed = speeds[maze->speed];
