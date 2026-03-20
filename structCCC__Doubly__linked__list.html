@@ -125,59 +125,10 @@ Data Fields</h2></td></tr>
 <tr class="separator:a23daaf5757a53a3b924a7d450f7efa04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a744f84dbe7aa9c60b6756a026f7d669c"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Doubly__linked__list.html#a744f84dbe7aa9c60b6756a026f7d669c">type_intruder_offset</a></td></tr>
 <tr class="separator:a744f84dbe7aa9c60b6756a026f7d669c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57849d7255c0233474c19c1ab5eccf36"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa4b6dbfefd7f8ebd16d95dfafde4d9e4">CCC_Type_comparator</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Doubly__linked__list.html#a57849d7255c0233474c19c1ab5eccf36">compare</a></td></tr>
-<tr class="separator:a57849d7255c0233474c19c1ab5eccf36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa04b4b343f1f4305a87110a630d25f97"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Doubly__linked__list.html#aa04b4b343f1f4305a87110a630d25f97">allocate</a></td></tr>
-<tr class="separator:aa04b4b343f1f4305a87110a630d25f97"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc55f0f3496877d609cd6d7b2c2a24be"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Doubly__linked__list.html#abc55f0f3496877d609cd6d7b2c2a24be">context</a></td></tr>
-<tr class="separator:abc55f0f3496877d609cd6d7b2c2a24be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc02e366b825927f5c6779984b8b6cad"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Doubly__linked__list.html#adc02e366b825927f5c6779984b8b6cad">order</a></td></tr>
+<tr class="separator:adc02e366b825927f5c6779984b8b6cad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
-<a id="aa04b4b343f1f4305a87110a630d25f97" name="aa04b4b343f1f4305a87110a630d25f97"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa04b4b343f1f4305a87110a630d25f97">&#9670;&#160;</a></span>allocate</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a>* CCC_Doubly_linked_list::allocate</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>The user provided allocation function, if any. </p>
-
-</div>
-</div>
-<a id="a57849d7255c0233474c19c1ab5eccf36" name="a57849d7255c0233474c19c1ab5eccf36"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a57849d7255c0233474c19c1ab5eccf36">&#9670;&#160;</a></span>compare</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="types_8h.html#aa4b6dbfefd7f8ebd16d95dfafde4d9e4">CCC_Type_comparator</a>* CCC_Doubly_linked_list::compare</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>The user provided comparison callback for sorting. </p>
-
-</div>
-</div>
-<a id="abc55f0f3496877d609cd6d7b2c2a24be" name="abc55f0f3496877d609cd6d7b2c2a24be"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abc55f0f3496877d609cd6d7b2c2a24be">&#9670;&#160;</a></span>context</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void* CCC_Doubly_linked_list::context</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>User provided context data, if any. </p>
-
-</div>
-</div>
 <a id="ab35488646119272f70ffdae6855c2b9e" name="ab35488646119272f70ffdae6855c2b9e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab35488646119272f70ffdae6855c2b9e">&#9670;&#160;</a></span>count</h2>
 
@@ -205,6 +156,21 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Pointer to the head element or NULL if list empty. </p>
+
+</div>
+</div>
+<a id="adc02e366b825927f5c6779984b8b6cad" name="adc02e366b825927f5c6779984b8b6cad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc02e366b825927f5c6779984b8b6cad">&#9670;&#160;</a></span>order</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a> CCC_Doubly_linked_list::order</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The internal state of ordering. Remembers last sort. </p>
 
 </div>
 </div>

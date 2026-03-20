@@ -103,10 +103,9 @@ Include dependency graph for array_adaptive_map.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="array__adaptive__map_8h__incl.png" border="0" usemap="#accc_2array__adaptive__map_8h" alt=""/></div>
 <map name="accc_2array__adaptive__map_8h" id="accc_2array__adaptive__map_8h">
-<area shape="rect" title="The Array Adaptive Map Interface." alt="" coords="5,5,151,45"/>
-<area shape="rect" href="private__array__adaptive__map_8h_source.html" title=" " alt="" coords="57,93,216,133"/>
-<area shape="rect" href="types_8h.html" title="The C Container Collection Fundamental Types." alt="" coords="17,181,99,207"/>
-<area shape="rect" href="private__types_8h_source.html" title=" " alt="" coords="10,255,183,280"/>
+<area shape="rect" title="The Array Adaptive Map Interface." alt="" coords="71,5,216,45"/>
+<area shape="rect" href="private__array__adaptive__map_8h_source.html" title=" " alt="" coords="5,93,164,133"/>
+<area shape="rect" href="types_8h.html" title="The C Container Collection Fundamental Types." alt="" coords="102,181,185,207"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -134,42 +133,30 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Initialization Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Initialize the container with memory, callbacks, and permissions. </p>
 </td></tr>
-<tr class="memitem:a601c8adfbe08523b6a147b2071db585b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a601c8adfbe08523b6a147b2071db585b">CCC_array_adaptive_map_storage_for</a>(user_type_compound_literal_array,  optional_storage_specifier...)</td></tr>
-<tr class="memdesc:a601c8adfbe08523b6a147b2071db585b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create the underlying fixed size storage for a user declared compound literal array of the type the user intends to store.  <br /></td></tr>
-<tr class="separator:a601c8adfbe08523b6a147b2071db585b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab490f2b19c228af1fc5bf0c294323056"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#ab490f2b19c228af1fc5bf0c294323056">CCC_array_adaptive_map_for</a>(type_name,  type_key_field,  compare,  allocate,  context,  capacity,  memory_pointer)</td></tr>
-<tr class="memdesc:ab490f2b19c228af1fc5bf0c294323056"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the map at runtime or compile time.  <br /></td></tr>
-<tr class="separator:ab490f2b19c228af1fc5bf0c294323056"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7efc7e38dcb391edd7920460cca6ca26"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a7efc7e38dcb391edd7920460cca6ca26">CCC_array_adaptive_map_from</a>(type_key_field,  compare,  allocate,  optional_capacity,  type_compound_literal_array...)</td></tr>
-<tr class="memdesc:a7efc7e38dcb391edd7920460cca6ca26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a dynamic map at runtime from an initializer list.  <br /></td></tr>
-<tr class="separator:a7efc7e38dcb391edd7920460cca6ca26"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe0c5d6c47ff39ccd18f6c7e870239cb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#afe0c5d6c47ff39ccd18f6c7e870239cb">CCC_array_adaptive_map_context_from</a>(type_key_field,  compare,  allocate,  context,  optional_capacity,  type_compound_literal_array...)</td></tr>
-<tr class="memdesc:afe0c5d6c47ff39ccd18f6c7e870239cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a dynamic map at runtime from an initializer list.  <br /></td></tr>
-<tr class="separator:afe0c5d6c47ff39ccd18f6c7e870239cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d0738a224ebb688483e35d6ed6fa49f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a0d0738a224ebb688483e35d6ed6fa49f">CCC_array_adaptive_map_with_capacity</a>(type_name,  type_key_field,  compare,  allocate,  capacity)</td></tr>
-<tr class="memdesc:a0d0738a224ebb688483e35d6ed6fa49f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a dynamic map at runtime with at least the specified capacity.  <br /></td></tr>
-<tr class="separator:a0d0738a224ebb688483e35d6ed6fa49f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae78e8380227ceeaf13b61c635c8bab60"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#ae78e8380227ceeaf13b61c635c8bab60">CCC_array_adaptive_map_context_with_capacity</a>( type_name,  type_key_field,  compare,  allocate,  context,  capacity)</td></tr>
-<tr class="memdesc:ae78e8380227ceeaf13b61c635c8bab60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a dynamic map at runtime with at least the specified capacity.  <br /></td></tr>
-<tr class="separator:ae78e8380227ceeaf13b61c635c8bab60"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9bd25f93410bb63d318a8639da32bf08"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a9bd25f93410bb63d318a8639da32bf08">CCC_array_adaptive_map_with_storage</a>( type_key_field,  compare,  compound_literal,  optional_storage_specifier...)</td></tr>
-<tr class="memdesc:a9bd25f93410bb63d318a8639da32bf08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a fixed map at compile or runtime from any user chosen type with no allocation permission or context.  <br /></td></tr>
-<tr class="separator:a9bd25f93410bb63d318a8639da32bf08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab95b4d29331414ecb06e4a975d0e008e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#ab95b4d29331414ecb06e4a975d0e008e">CCC_array_adaptive_map_context_with_storage</a>( type_key_field,  compare,  context,  compound_literal,  optional_storage_specifier...)</td></tr>
-<tr class="memdesc:ab95b4d29331414ecb06e4a975d0e008e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a fixed map at compile or runtime from any user chosen type with no allocation permission.  <br /></td></tr>
-<tr class="separator:ab95b4d29331414ecb06e4a975d0e008e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa425985d1ddf181e8bec88492b398b19"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#aa425985d1ddf181e8bec88492b398b19">CCC_array_adaptive_map_with_allocator</a>(type_name,  type_key_field,  compare,  allocate)</td></tr>
-<tr class="memdesc:aa425985d1ddf181e8bec88492b398b19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an empty dynamic map at compile or runtime with an allocator.  <br /></td></tr>
-<tr class="separator:aa425985d1ddf181e8bec88492b398b19"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9533390f89ef978bbcea0bbebd60586e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a9533390f89ef978bbcea0bbebd60586e">CCC_array_adaptive_map_context_with_allocator</a>( type_name,  type_key_field,  compare,  allocate,  context)</td></tr>
-<tr class="memdesc:a9533390f89ef978bbcea0bbebd60586e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an empty dynamic map at compile or runtime with an allocator and supplementary context.  <br /></td></tr>
-<tr class="separator:a9533390f89ef978bbcea0bbebd60586e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0547f59ae3d0b1297228816fa22e39df"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a0547f59ae3d0b1297228816fa22e39df">CCC_array_adaptive_map_copy</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *destination, <a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> const *source, <a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a> *allocate)</td></tr>
-<tr class="memdesc:a0547f59ae3d0b1297228816fa22e39df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the map at source to destination.  <br /></td></tr>
-<tr class="separator:a0547f59ae3d0b1297228816fa22e39df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a052a37b91d2460ef5415c4a21fa92494"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a052a37b91d2460ef5415c4a21fa92494">CCC_array_adaptive_map_reserve</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *map, size_t to_add, <a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a> *allocate)</td></tr>
-<tr class="memdesc:a052a37b91d2460ef5415c4a21fa92494"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reserves space for at least to_add more elements.  <br /></td></tr>
-<tr class="separator:a052a37b91d2460ef5415c4a21fa92494"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abff7c6b484028f65da64384591642561"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#abff7c6b484028f65da64384591642561">CCC_array_adaptive_map_storage_for</a>( user_type_compound_literal_array,  optional_storage_specifier...)</td></tr>
+<tr class="memdesc:abff7c6b484028f65da64384591642561"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create the underlying fixed size storage for a user declared compound literal array of the type the user intends to store.  <br /></td></tr>
+<tr class="separator:abff7c6b484028f65da64384591642561"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afba8bc3a297564dec6e8296845189b49"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#afba8bc3a297564dec6e8296845189b49">CCC_array_adaptive_map_default</a>( type_name,  type_key_field,  comparator...)</td></tr>
+<tr class="memdesc:afba8bc3a297564dec6e8296845189b49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the map at runtime or compile time.  <br /></td></tr>
+<tr class="separator:afba8bc3a297564dec6e8296845189b49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa084ec33c9432b1671f56f7587d2882b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#aa084ec33c9432b1671f56f7587d2882b">CCC_array_adaptive_map_for</a>( type_name,  type_key_field,  comparator,  capacity,  memory_pointer)</td></tr>
+<tr class="memdesc:aa084ec33c9432b1671f56f7587d2882b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the map at runtime or compile time.  <br /></td></tr>
+<tr class="separator:aa084ec33c9432b1671f56f7587d2882b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafea65cf4a88972c911730476a3cbc09"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#aafea65cf4a88972c911730476a3cbc09">CCC_array_adaptive_map_from</a>( type_key_field,  comparator,  allocator,  optional_capacity,  type_compound_literal_array...)</td></tr>
+<tr class="memdesc:aafea65cf4a88972c911730476a3cbc09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a dynamic map at runtime from an initializer list.  <br /></td></tr>
+<tr class="separator:aafea65cf4a88972c911730476a3cbc09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58d5cf3ff6ef2104837671a910061d89"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a58d5cf3ff6ef2104837671a910061d89">CCC_array_adaptive_map_with_capacity</a>( type_name,  type_key_field,  comparator,  allocator,  capacity)</td></tr>
+<tr class="memdesc:a58d5cf3ff6ef2104837671a910061d89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a dynamic map at runtime with at least the specified capacity.  <br /></td></tr>
+<tr class="separator:a58d5cf3ff6ef2104837671a910061d89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21ba76d3a7228d1cc7465ca982f63032"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a21ba76d3a7228d1cc7465ca982f63032">CCC_array_adaptive_map_with_storage</a>( type_key_field,  comparator,  compound_literal,  optional_storage_specifier...)</td></tr>
+<tr class="memdesc:a21ba76d3a7228d1cc7465ca982f63032"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a fixed map at compile or runtime from any user chosen type with no allocation permission or context.  <br /></td></tr>
+<tr class="separator:a21ba76d3a7228d1cc7465ca982f63032"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a2cf3a448bd5bae51d37b6e49f0b040"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a6a2cf3a448bd5bae51d37b6e49f0b040">CCC_array_adaptive_map_copy</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *destination, <a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> const *source, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:a6a2cf3a448bd5bae51d37b6e49f0b040"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the map at source to destination.  <br /></td></tr>
+<tr class="separator:a6a2cf3a448bd5bae51d37b6e49f0b040"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac894ffcd7c30d50d98c1b15805ac1d1b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#ac894ffcd7c30d50d98c1b15805ac1d1b">CCC_array_adaptive_map_reserve</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *map, size_t to_add, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:ac894ffcd7c30d50d98c1b15805ac1d1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reserves space for at least to_add more elements.  <br /></td></tr>
+<tr class="separator:ac894ffcd7c30d50d98c1b15805ac1d1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Membership Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Test membership or obtain references to stored user types directly. </p>
@@ -190,63 +177,63 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Handle Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Obtain and operate on container handles for efficient queries when non-trivial control flow is needed. </p>
 </td></tr>
-<tr class="memitem:ae38d277c09750eaf0a57250b8122f808"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#ae38d277c09750eaf0a57250b8122f808">CCC_array_adaptive_map_swap_handle_wrap</a>(map_pointer,  type_output_pointer)</td></tr>
-<tr class="memdesc:ae38d277c09750eaf0a57250b8122f808"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invariantly inserts the key value type.  <br /></td></tr>
-<tr class="separator:ae38d277c09750eaf0a57250b8122f808"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69c9caa87fd345aeedb51f1a6bbd7051"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a69c9caa87fd345aeedb51f1a6bbd7051">CCC_array_adaptive_map_try_insert_wrap</a>(map_pointer,  type_pointer)</td></tr>
-<tr class="memdesc:a69c9caa87fd345aeedb51f1a6bbd7051"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts to insert the key value type.  <br /></td></tr>
-<tr class="separator:a69c9caa87fd345aeedb51f1a6bbd7051"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe39139c57071844161f3bfdb9a38b14"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#abe39139c57071844161f3bfdb9a38b14">CCC_array_adaptive_map_try_insert_with</a>(map_pointer,  key,  type_compound_literal...)</td></tr>
-<tr class="memdesc:abe39139c57071844161f3bfdb9a38b14"><td class="mdescLeft">&#160;</td><td class="mdescRight">lazily insert type_compound_literal into the map at key if key is absent.  <br /></td></tr>
-<tr class="separator:abe39139c57071844161f3bfdb9a38b14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a778a7ef33e0baa380904d704e3137a1b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a778a7ef33e0baa380904d704e3137a1b">CCC_array_adaptive_map_insert_or_assign_with</a>(map_pointer,  key,  type_compound_literal...)</td></tr>
-<tr class="memdesc:a778a7ef33e0baa380904d704e3137a1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a new key value pair or overwrites the existing handle.  <br /></td></tr>
-<tr class="separator:a778a7ef33e0baa380904d704e3137a1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe7e3b59cd02463e1724f493d590d91e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#abe7e3b59cd02463e1724f493d590d91e">CCC_array_adaptive_map_remove_key_value_wrap</a>(map_pointer,  type_output_pointer)</td></tr>
-<tr class="memdesc:abe7e3b59cd02463e1724f493d590d91e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the key value in the map storing the old value, if present, in the struct containing type_output provided by the user.  <br /></td></tr>
-<tr class="separator:abe7e3b59cd02463e1724f493d590d91e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80c80aa95c4380a4c710c37c01aadc46"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a80c80aa95c4380a4c710c37c01aadc46">CCC_array_adaptive_map_swap_handle_wrap</a>( map_pointer,  type_output_pointer,  allocator_pointer...)</td></tr>
+<tr class="memdesc:a80c80aa95c4380a4c710c37c01aadc46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invariantly inserts the key value type.  <br /></td></tr>
+<tr class="separator:a80c80aa95c4380a4c710c37c01aadc46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83e85b77c5c19640c3a710ee4bb30509"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a83e85b77c5c19640c3a710ee4bb30509">CCC_array_adaptive_map_try_insert_wrap</a>( map_pointer,  type_pointer,  allocator_pointer...)</td></tr>
+<tr class="memdesc:a83e85b77c5c19640c3a710ee4bb30509"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts to insert the key value type.  <br /></td></tr>
+<tr class="separator:a83e85b77c5c19640c3a710ee4bb30509"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00e135ccf1dc8f7afa42a37faf73e024"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a00e135ccf1dc8f7afa42a37faf73e024">CCC_array_adaptive_map_try_insert_with</a>( map_pointer,  key,  allocator_pointer,  type_compound_literal...)</td></tr>
+<tr class="memdesc:a00e135ccf1dc8f7afa42a37faf73e024"><td class="mdescLeft">&#160;</td><td class="mdescRight">lazily insert type_compound_literal into the map at key if key is absent.  <br /></td></tr>
+<tr class="separator:a00e135ccf1dc8f7afa42a37faf73e024"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a364059796a8cd73c2858a7680f96b7d6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a364059796a8cd73c2858a7680f96b7d6">CCC_array_adaptive_map_insert_or_assign_wrap</a>( map_pointer,  type_pointer,  allocator_pointer...)</td></tr>
+<tr class="memdesc:a364059796a8cd73c2858a7680f96b7d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invariantly inserts or overwrites a user struct into the map.  <br /></td></tr>
+<tr class="separator:a364059796a8cd73c2858a7680f96b7d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad188ba650d0894cd16161ff0386f737e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#ad188ba650d0894cd16161ff0386f737e">CCC_array_adaptive_map_insert_or_assign_with</a>( map_pointer,  key,  allocator_pointer,  type_compound_literal...)</td></tr>
+<tr class="memdesc:ad188ba650d0894cd16161ff0386f737e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a new key value pair or overwrites the existing handle.  <br /></td></tr>
+<tr class="separator:ad188ba650d0894cd16161ff0386f737e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae03eb8f38ca34d0deed047ba3f24daaf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#ae03eb8f38ca34d0deed047ba3f24daaf">CCC_array_adaptive_map_remove_key_value_wrap</a>( map_pointer,  type_output_pointer)</td></tr>
+<tr class="memdesc:ae03eb8f38ca34d0deed047ba3f24daaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the key value in the map storing the old value, if present, in the struct containing type_output provided by the user.  <br /></td></tr>
+<tr class="separator:ae03eb8f38ca34d0deed047ba3f24daaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1746c2db663f3408059b8a025b6cfb96"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a1746c2db663f3408059b8a025b6cfb96">CCC_array_adaptive_map_handle_wrap</a>(array_pointer,  key_pointer)</td></tr>
 <tr class="memdesc:a1746c2db663f3408059b8a025b6cfb96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtains a handle for the provided key in the map for future use.  <br /></td></tr>
 <tr class="separator:a1746c2db663f3408059b8a025b6cfb96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d9d55c908afc361a54596c0bb3d3be3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a3d9d55c908afc361a54596c0bb3d3be3">CCC_array_adaptive_map_and_modify_with</a>(array_pointer,  type_name,  closure_over_T...)</td></tr>
-<tr class="memdesc:a3d9d55c908afc361a54596c0bb3d3be3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modify an Occupied handle with a closure over user type T.  <br /></td></tr>
-<tr class="separator:a3d9d55c908afc361a54596c0bb3d3be3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b1ea6b149b2e49f2cf6484e747e40f6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a4b1ea6b149b2e49f2cf6484e747e40f6">CCC_array_adaptive_map_or_insert_with</a>(array_pointer,  type_compound_literal...)</td></tr>
-<tr class="memdesc:a4b1ea6b149b2e49f2cf6484e747e40f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lazily insert the desired key value into the handle if it is Vacant.  <br /></td></tr>
-<tr class="separator:a4b1ea6b149b2e49f2cf6484e747e40f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f15a63d7c037f810617791c38e9d4d4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a6f15a63d7c037f810617791c38e9d4d4">CCC_array_adaptive_map_insert_array_with</a>(array_pointer,  type_compound_literal...)</td></tr>
-<tr class="memdesc:a6f15a63d7c037f810617791c38e9d4d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the contents of the compound literal type_compound_literal to a node.  <br /></td></tr>
-<tr class="separator:a6f15a63d7c037f810617791c38e9d4d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a331d96f78d0c0706c60a44eb53fd29ae"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a331d96f78d0c0706c60a44eb53fd29ae">CCC_array_adaptive_map_remove_handle_wrap</a>(array_pointer)&#160;&#160;&#160;    &amp;(<a class="el" href="structCCC__Handle.html">CCC_Handle</a>){<a class="el" href="array__adaptive__map_8h.html#a7ead4b3654a7cb197b2236e27c6e06e6">CCC_array_adaptive_map_remove_handle</a>((array_pointer)).private}</td></tr>
+<tr class="memitem:afd4aed2751f42813731905936c6ccb8d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#afd4aed2751f42813731905936c6ccb8d">CCC_array_adaptive_map_and_modify_with</a>( array_pointer,  type_name,  closure_over_T...)</td></tr>
+<tr class="memdesc:afd4aed2751f42813731905936c6ccb8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modify an Occupied handle with a closure over user type T.  <br /></td></tr>
+<tr class="separator:afd4aed2751f42813731905936c6ccb8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3095d4cd63ed20c090ade8e3270a9737"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a3095d4cd63ed20c090ade8e3270a9737">CCC_array_adaptive_map_or_insert_with</a>( array_pointer,  allocator_pointer,  type_compound_literal...)</td></tr>
+<tr class="memdesc:a3095d4cd63ed20c090ade8e3270a9737"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lazily insert the desired key value into the handle if it is Vacant.  <br /></td></tr>
+<tr class="separator:a3095d4cd63ed20c090ade8e3270a9737"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03a572ab89008a1be6e36eec3318ecba"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a03a572ab89008a1be6e36eec3318ecba">CCC_array_adaptive_map_insert_handle_with</a>( array_pointer,  allocator_pointer,  type_compound_literal...)</td></tr>
+<tr class="memdesc:a03a572ab89008a1be6e36eec3318ecba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the contents of the compound literal type_compound_literal to a node.  <br /></td></tr>
+<tr class="separator:a03a572ab89008a1be6e36eec3318ecba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a331d96f78d0c0706c60a44eb53fd29ae"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a331d96f78d0c0706c60a44eb53fd29ae">CCC_array_adaptive_map_remove_handle_wrap</a>(array_pointer)</td></tr>
 <tr class="memdesc:a331d96f78d0c0706c60a44eb53fd29ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the handle from the map if Occupied.  <br /></td></tr>
 <tr class="separator:a331d96f78d0c0706c60a44eb53fd29ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12e3313f0460ecdb3140ad48de2e3d61"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Handle.html">CCC_Handle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a12e3313f0460ecdb3140ad48de2e3d61">CCC_array_adaptive_map_swap_handle</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *map, void *type_output)</td></tr>
-<tr class="memdesc:a12e3313f0460ecdb3140ad48de2e3d61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invariantly inserts the key value type.  <br /></td></tr>
-<tr class="separator:a12e3313f0460ecdb3140ad48de2e3d61"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a615526c758a02c6c994784d21eb756fe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Handle.html">CCC_Handle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a615526c758a02c6c994784d21eb756fe">CCC_array_adaptive_map_try_insert</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *map, void const *type)</td></tr>
-<tr class="memdesc:a615526c758a02c6c994784d21eb756fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts to insert the key value type.  <br /></td></tr>
-<tr class="separator:a615526c758a02c6c994784d21eb756fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aacdf570b3ea9a14f0e6c3e32c30bb29c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Handle.html">CCC_Handle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#aacdf570b3ea9a14f0e6c3e32c30bb29c">CCC_array_adaptive_map_insert_or_assign</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *map, void const *type)</td></tr>
-<tr class="memdesc:aacdf570b3ea9a14f0e6c3e32c30bb29c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invariantly inserts or overwrites a user struct into the map.  <br /></td></tr>
-<tr class="separator:aacdf570b3ea9a14f0e6c3e32c30bb29c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab235b8b65ad4493ada83a00f676bbc21"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Handle.html">CCC_Handle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#ab235b8b65ad4493ada83a00f676bbc21">CCC_array_adaptive_map_swap_handle</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *map, void *type_output, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:ab235b8b65ad4493ada83a00f676bbc21"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invariantly inserts the key value type.  <br /></td></tr>
+<tr class="separator:ab235b8b65ad4493ada83a00f676bbc21"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac03106ed5da63d190ff2f7ee509177d0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Handle.html">CCC_Handle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#ac03106ed5da63d190ff2f7ee509177d0">CCC_array_adaptive_map_try_insert</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *map, void const *type, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:ac03106ed5da63d190ff2f7ee509177d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts to insert the key value type.  <br /></td></tr>
+<tr class="separator:ac03106ed5da63d190ff2f7ee509177d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06c5696b291d3a907e333996c48aa52b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Handle.html">CCC_Handle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a06c5696b291d3a907e333996c48aa52b">CCC_array_adaptive_map_insert_or_assign</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *map, void const *type, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:a06c5696b291d3a907e333996c48aa52b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invariantly inserts or overwrites a user struct into the map.  <br /></td></tr>
+<tr class="separator:a06c5696b291d3a907e333996c48aa52b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab51d4696e0a25ea272e46c35c200dd8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Handle.html">CCC_Handle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#aab51d4696e0a25ea272e46c35c200dd8">CCC_array_adaptive_map_remove_key_value</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *map, void *type_output)</td></tr>
 <tr class="memdesc:aab51d4696e0a25ea272e46c35c200dd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the key value in the map storing the old value, if present, in the struct containing type_output provided by the user.  <br /></td></tr>
 <tr class="separator:aab51d4696e0a25ea272e46c35c200dd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc4229d887c2308cc660616136695726"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#adc4229d887c2308cc660616136695726">CCC_array_adaptive_map_handle</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *map, void const *key)</td></tr>
 <tr class="memdesc:adc4229d887c2308cc660616136695726"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtains a handle for the provided key in the map for future use.  <br /></td></tr>
 <tr class="separator:adc4229d887c2308cc660616136695726"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a058ecd325865647858f89b14e6e6a9e3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a058ecd325865647858f89b14e6e6a9e3">CCC_array_adaptive_map_and_modify</a> (<a class="el" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a> *handle, <a class="el" href="types_8h.html#af3851f6fdc1c8255c6b1713c8ffc1bdd">CCC_Type_modifier</a> *modify)</td></tr>
-<tr class="memdesc:a058ecd325865647858f89b14e6e6a9e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modifies the provided handle if it is Occupied.  <br /></td></tr>
-<tr class="separator:a058ecd325865647858f89b14e6e6a9e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a548de9bd7a9ce9f9ce561950fb09cd7a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a548de9bd7a9ce9f9ce561950fb09cd7a">CCC_array_adaptive_map_and_context_modify</a> (<a class="el" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a> *handle, <a class="el" href="types_8h.html#af3851f6fdc1c8255c6b1713c8ffc1bdd">CCC_Type_modifier</a> *modify, void *context)</td></tr>
-<tr class="memdesc:a548de9bd7a9ce9f9ce561950fb09cd7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modifies the provided handle if it is Occupied.  <br /></td></tr>
-<tr class="separator:a548de9bd7a9ce9f9ce561950fb09cd7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44f38daab50a3397e9f8f13f27aa6cef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a4043390f03f4ec5162e3782152360be9">CCC_Handle_index</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a44f38daab50a3397e9f8f13f27aa6cef">CCC_array_adaptive_map_or_insert</a> (<a class="el" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a> const *handle, void const *type)</td></tr>
-<tr class="memdesc:a44f38daab50a3397e9f8f13f27aa6cef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts the struct with user type if the handle is Vacant.  <br /></td></tr>
-<tr class="separator:a44f38daab50a3397e9f8f13f27aa6cef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad57ee6a897f22ff36add416aeda62363"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a4043390f03f4ec5162e3782152360be9">CCC_Handle_index</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#ad57ee6a897f22ff36add416aeda62363">CCC_array_adaptive_map_insert_handle</a> (<a class="el" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a> const *handle, void const *type)</td></tr>
-<tr class="memdesc:ad57ee6a897f22ff36add416aeda62363"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts the provided handle invariantly.  <br /></td></tr>
-<tr class="separator:ad57ee6a897f22ff36add416aeda62363"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6187267d7956c2cdd255749e4ee69cc9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a6187267d7956c2cdd255749e4ee69cc9">CCC_array_adaptive_map_and_modify</a> (<a class="el" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a> *handle, <a class="el" href="structCCC__Modifier.html">CCC_Modifier</a> const *modifier)</td></tr>
+<tr class="memdesc:a6187267d7956c2cdd255749e4ee69cc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modifies the provided handle if it is Occupied.  <br /></td></tr>
+<tr class="separator:a6187267d7956c2cdd255749e4ee69cc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace72fba0dc6daa6bab0fb0c07feefc07"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a4043390f03f4ec5162e3782152360be9">CCC_Handle_index</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#ace72fba0dc6daa6bab0fb0c07feefc07">CCC_array_adaptive_map_or_insert</a> (<a class="el" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a> const *handle, void const *type, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:ace72fba0dc6daa6bab0fb0c07feefc07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts the struct with user type if the handle is Vacant.  <br /></td></tr>
+<tr class="separator:ace72fba0dc6daa6bab0fb0c07feefc07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d761189928c67a98592baac7e99d7e3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a4043390f03f4ec5162e3782152360be9">CCC_Handle_index</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a9d761189928c67a98592baac7e99d7e3">CCC_array_adaptive_map_insert_handle</a> (<a class="el" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a> const *handle, void const *type, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:a9d761189928c67a98592baac7e99d7e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts the provided handle invariantly.  <br /></td></tr>
+<tr class="separator:a9d761189928c67a98592baac7e99d7e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ead4b3654a7cb197b2236e27c6e06e6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Handle.html">CCC_Handle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a7ead4b3654a7cb197b2236e27c6e06e6">CCC_array_adaptive_map_remove_handle</a> (<a class="el" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a> *handle)</td></tr>
 <tr class="memdesc:a7ead4b3654a7cb197b2236e27c6e06e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the handle from the map if Occupied.  <br /></td></tr>
 <tr class="separator:a7ead4b3654a7cb197b2236e27c6e06e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -259,23 +246,23 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:a2bf8f60286f2b25f56244f12f84ef1b6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a8dbb03cfc2070934832841f50f146bcd">CCC_Tribool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a2bf8f60286f2b25f56244f12f84ef1b6">CCC_array_adaptive_map_insert_error</a> (<a class="el" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a> const *handle)</td></tr>
 <tr class="memdesc:a2bf8f60286f2b25f56244f12f84ef1b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides the status of the handle should an insertion follow.  <br /></td></tr>
 <tr class="separator:a2bf8f60286f2b25f56244f12f84ef1b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c5ccaca69382f2733c1b38776ef4cea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a282e45f45cb2493ec1709942eb5d958d">CCC_Handle_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a8c5ccaca69382f2733c1b38776ef4cea">CCC_array_adaptive_map_handle_status</a> (<a class="el" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a> const *handle)</td></tr>
+<tr class="memitem:a8c5ccaca69382f2733c1b38776ef4cea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8">CCC_Handle_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a8c5ccaca69382f2733c1b38776ef4cea">CCC_array_adaptive_map_handle_status</a> (<a class="el" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a> const *handle)</td></tr>
 <tr class="memdesc:a8c5ccaca69382f2733c1b38776ef4cea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtain the handle status from a container handle.  <br /></td></tr>
 <tr class="separator:a8c5ccaca69382f2733c1b38776ef4cea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Iterator Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Obtain and manage iterators over the container. </p>
 </td></tr>
-<tr class="memitem:ac6d689f62b1ae8bffbe5443dc65f3491"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#ac6d689f62b1ae8bffbe5443dc65f3491">CCC_array_adaptive_map_equal_range_wrap</a>(map_pointer,  begin_and_end_key_pointers...)</td></tr>
-<tr class="memdesc:ac6d689f62b1ae8bffbe5443dc65f3491"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a compound literal reference to the desired range. Amortized O(lg N).  <br /></td></tr>
-<tr class="separator:ac6d689f62b1ae8bffbe5443dc65f3491"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6b42c21066c892a2e3515e6a8599c44"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#ac6b42c21066c892a2e3515e6a8599c44">CCC_array_adaptive_map_equal_range_wrap</a>( map_pointer,  begin_and_end_key_pointers...)</td></tr>
+<tr class="memdesc:ac6b42c21066c892a2e3515e6a8599c44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a compound literal reference to the desired range. Amortized O(lg N).  <br /></td></tr>
+<tr class="separator:ac6b42c21066c892a2e3515e6a8599c44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3cd82daf7a8cb0624eebefabb795d733"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a3cd82daf7a8cb0624eebefabb795d733">CCC_array_adaptive_map_equal_range_reverse_wrap</a>( map_pointer,  reverse_begin_and_reverse_end_key_pointers...)</td></tr>
 <tr class="memdesc:a3cd82daf7a8cb0624eebefabb795d733"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a compound literal reference to the desired range_reverse. Amortized O(lg N).  <br /></td></tr>
 <tr class="separator:a3cd82daf7a8cb0624eebefabb795d733"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb4a40014feb193966eeeaf61e8392db"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Handle__range.html">CCC_Handle_range</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#acb4a40014feb193966eeeaf61e8392db">CCC_array_adaptive_map_equal_range</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *map, void const *begin_key, void const *end_key)</td></tr>
 <tr class="memdesc:acb4a40014feb193966eeeaf61e8392db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return an iterable range of values from [begin_key, end_key). Amortized O(lg N).  <br /></td></tr>
 <tr class="separator:acb4a40014feb193966eeeaf61e8392db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac72607889c33e4fe4aee675bb7562fc5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa24094a0fb5618980a629b4accdd37d7">CCC_Handle_range_reverse</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#ac72607889c33e4fe4aee675bb7562fc5">CCC_array_adaptive_map_equal_range_reverse</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *map, void const *reverse_begin_key, void const *reverse_end_key)</td></tr>
+<tr class="memitem:ac72607889c33e4fe4aee675bb7562fc5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Handle__range__reverse.html">CCC_Handle_range_reverse</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#ac72607889c33e4fe4aee675bb7562fc5">CCC_array_adaptive_map_equal_range_reverse</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *map, void const *reverse_begin_key, void const *reverse_end_key)</td></tr>
 <tr class="memdesc:ac72607889c33e4fe4aee675bb7562fc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return an iterable range_reverse of values from [reverse_begin_key, end_key). Amortized O(lg N).  <br /></td></tr>
 <tr class="separator:ac72607889c33e4fe4aee675bb7562fc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad87a0958591245c4d18082f5ab06b20c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a4043390f03f4ec5162e3782152360be9">CCC_Handle_index</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#ad87a0958591245c4d18082f5ab06b20c">CCC_array_adaptive_map_begin</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> const *map)</td></tr>
@@ -303,22 +290,19 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:a3383e02ece054e21edbc2a638d3567f9"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a3383e02ece054e21edbc2a638d3567f9">CCC_Array_adaptive_map</a></td></tr>
 <tr class="memdesc:a3383e02ece054e21edbc2a638d3567f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">A self-optimizing data structure offering amortized O(lg N) search, insert, and erase.  <br /></td></tr>
 <tr class="separator:a3383e02ece054e21edbc2a638d3567f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67ce76b9053351d5eabb334544cb2530"><td class="memItemLeft" align="right" valign="top">typedef union <a class="el" href="unionCCC__Array__adaptive__map__handle__wrap.html">CCC_Array_adaptive_map_handle_wrap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a67ce76b9053351d5eabb334544cb2530">CCC_Array_adaptive_map_handle</a></td></tr>
-<tr class="memdesc:a67ce76b9053351d5eabb334544cb2530"><td class="mdescLeft">&#160;</td><td class="mdescRight">A container specific handle used to implement the Handle Interface.  <br /></td></tr>
-<tr class="separator:a67ce76b9053351d5eabb334544cb2530"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1cdc3fc275169b6b7dc711e4c6f4951"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#af1cdc3fc275169b6b7dc711e4c6f4951">CCC_Array_adaptive_map_handle</a></td></tr>
+<tr class="memdesc:af1cdc3fc275169b6b7dc711e4c6f4951"><td class="mdescLeft">&#160;</td><td class="mdescRight">A container specific handle used to implement the Handle Interface.  <br /></td></tr>
+<tr class="separator:af1cdc3fc275169b6b7dc711e4c6f4951"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Deallocation Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Deallocate the container. </p>
 </td></tr>
-<tr class="memitem:a7d7640632d28dcb6f4f780ec97abcc2f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a7d7640632d28dcb6f4f780ec97abcc2f">CCC_array_adaptive_map_clear</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *map, <a class="el" href="types_8h.html#a93e9728dd87d940e8f171efea75ee8d2">CCC_Type_destructor</a> *destroy)</td></tr>
-<tr class="memdesc:a7d7640632d28dcb6f4f780ec97abcc2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees all slots in the map for use without affecting capacity.  <br /></td></tr>
-<tr class="separator:a7d7640632d28dcb6f4f780ec97abcc2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe0554a3e3d434b715fa8358370e119a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#afe0554a3e3d434b715fa8358370e119a">CCC_array_adaptive_map_clear_and_free</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *map, <a class="el" href="types_8h.html#a93e9728dd87d940e8f171efea75ee8d2">CCC_Type_destructor</a> *destroy)</td></tr>
-<tr class="memdesc:afe0554a3e3d434b715fa8358370e119a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees all slots in the map and frees the underlying buffer.  <br /></td></tr>
-<tr class="separator:afe0554a3e3d434b715fa8358370e119a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5eeea17f39c030003d233a78c258ea6e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a5eeea17f39c030003d233a78c258ea6e">CCC_array_adaptive_map_clear_and_free_reserve</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *map, <a class="el" href="types_8h.html#a93e9728dd87d940e8f171efea75ee8d2">CCC_Type_destructor</a> *destroy, <a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a> *allocate)</td></tr>
-<tr class="memdesc:a5eeea17f39c030003d233a78c258ea6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees all slots in the array_adaptive_map and frees the underlying Buffer that was previously dynamically reserved with the reserve function.  <br /></td></tr>
-<tr class="separator:a5eeea17f39c030003d233a78c258ea6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3726056d1fe7f8dc960d99b37e45b0f9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a3726056d1fe7f8dc960d99b37e45b0f9">CCC_array_adaptive_map_clear</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *map, <a class="el" href="structCCC__Destructor.html">CCC_Destructor</a> const *destructor)</td></tr>
+<tr class="memdesc:a3726056d1fe7f8dc960d99b37e45b0f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees all slots in the map for use without affecting capacity.  <br /></td></tr>
+<tr class="separator:a3726056d1fe7f8dc960d99b37e45b0f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a938bd80bb9947d004ab7bc8d1b63460b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__adaptive__map_8h.html#a938bd80bb9947d004ab7bc8d1b63460b">CCC_array_adaptive_map_clear_and_free</a> (<a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *map, <a class="el" href="structCCC__Destructor.html">CCC_Destructor</a> const *destructor, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:a938bd80bb9947d004ab7bc8d1b63460b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees all slots in the map and frees the underlying buffer.  <br /></td></tr>
+<tr class="separator:a938bd80bb9947d004ab7bc8d1b63460b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">State Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Obtain the container state. </p>
@@ -337,8 +321,8 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="separator:a02f607d8d9612c0bb2222c8bf5a4377c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a3d9d55c908afc361a54596c0bb3d3be3" name="a3d9d55c908afc361a54596c0bb3d3be3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3d9d55c908afc361a54596c0bb3d3be3">&#9670;&#160;</a></span>CCC_array_adaptive_map_and_modify_with</h2>
+<a id="afd4aed2751f42813731905936c6ccb8d" name="afd4aed2751f42813731905936c6ccb8d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd4aed2751f42813731905936c6ccb8d">&#9670;&#160;</a></span>CCC_array_adaptive_map_and_modify_with</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -368,10 +352,12 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="array__adaptive__map_8h.html#a67ce76b9053351d5eabb334544cb2530">CCC_Array_adaptive_map_handle</a>){                                          \</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a> <span class="keyword">private</span>; }){                      \</div>
 <div class="line">        CCC_private_array_adaptive_map_and_modify_with(                        \</div>
-<div class="line">            array_pointer, type_name, closure_over_T)}</div>
-<div class="ttc" id="aarray__adaptive__map_8h_html_a67ce76b9053351d5eabb334544cb2530"><div class="ttname"><a href="array__adaptive__map_8h.html#a67ce76b9053351d5eabb334544cb2530">CCC_Array_adaptive_map_handle</a></div><div class="ttdeci">union CCC_Array_adaptive_map_handle_wrap CCC_Array_adaptive_map_handle</div><div class="ttdoc">A container specific handle used to implement the Handle Interface.</div><div class="ttdef"><b>Definition:</b> array_adaptive_map.h:83</div></div>
+<div class="line">            array_pointer, type_name, closure_over_T                           \</div>
+<div class="line">        )}                                                                     \</div>
+<div class="line">         .private</div>
+<div class="ttc" id="astructCCC__Array__adaptive__map__handle_html"><div class="ttname"><a href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a></div><div class="ttdef"><b>Definition:</b> private_array_adaptive_map.h:91</div></div>
 </div><!-- fragment -->
 <p>Modify an Occupied handle with a closure over user type T. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -451,113 +437,14 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="afe0c5d6c47ff39ccd18f6c7e870239cb" name="afe0c5d6c47ff39ccd18f6c7e870239cb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afe0c5d6c47ff39ccd18f6c7e870239cb">&#9670;&#160;</a></span>CCC_array_adaptive_map_context_from</h2>
+<a id="afba8bc3a297564dec6e8296845189b49" name="afba8bc3a297564dec6e8296845189b49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afba8bc3a297564dec6e8296845189b49">&#9670;&#160;</a></span>CCC_array_adaptive_map_default</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define CCC_array_adaptive_map_context_from</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_key_field, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">compare, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">context, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">optional_capacity, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_compound_literal_array...&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_adaptive_map_context_from(                               \</div>
-<div class="line">        type_key_field, compare, allocate, context, optional_capacity,         \</div>
-<div class="line">        type_compound_literal_array)</div>
-</div><!-- fragment -->
-<p>Initialize a dynamic map at runtime from an initializer list. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_key_field</td><td>the field of the struct used for key storage. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the CCC_Key_comparator the user intends to use. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the required allocation function. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>context data that is needed for hashing or comparison. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">optional_capacity</td><td>optionally specify the capacity of the map if different from the size of the compound literal array initializer. If the capacity is greater than the size of the compound literal array initializer, it is respected and the capacity is reserved. If the capacity is less than the size of the compound array initializer, the compound literal array initializer size is set as the capacity. Therefore, 0 is valid if one is not concerned with the size of the underlying reservation. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_compound_literal_array</td><td>a list of key value pairs of the type intended to be stored in the map, using array compound literal initialization syntax (e.g <code>(struct my_type[]){{.k = 0, .v 0}, {.k = 1, .v = 1}}</code>). </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the map directly initialized on the right hand side of the equality operator (i.e. <a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> map = <a class="el" href="array__adaptive__map_8h.html#a7efc7e38dcb391edd7920460cca6ca26" title="Initialize a dynamic map at runtime from an initializer list.">CCC_array_adaptive_map_from(...)</a>;) </dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>An allocation function is required. This initializer is only available for dynamic maps. </dd>
-<dd>
-When duplicate keys appear in the initializer list, the last occurrence replaces earlier ones by value (all fields are overwritten). </dd>
-<dd>
-If initialization fails all subsequent queries, insertions, or removals will indicate the error: either memory related or lack of an allocation function provided.</dd></dl>
-<p>Initialize a dynamic map at run time. This example requires no context data for initialization.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define ARRAY_ADAPTIVE_MAP_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keyword">struct </span>Val</div>
-<div class="line">{</div>
-<div class="line">    <span class="keywordtype">int</span> key;</div>
-<div class="line">    <span class="keywordtype">int</span> val;</div>
-<div class="line">};</div>
-<div class="line"><span class="keywordtype">int</span></div>
-<div class="line">main(<span class="keywordtype">void</span>)</div>
-<div class="line">{</div>
-<div class="line">    Array_adaptive_map static_map = array_adaptive_map_context_from(</div>
-<div class="line">        key,</div>
-<div class="line">        array_adaptive_map_key_order,</div>
-<div class="line">        arena_allocate,</div>
-<div class="line">        &amp;arena,</div>
-<div class="line">        0,</div>
-<div class="line">        (<span class="keyword">struct</span> Val[]) {</div>
-<div class="line">            {.key = 1, .val = 1},</div>
-<div class="line">            {.key = 2, .val = 2},</div>
-<div class="line">            {.key = 3, .val = 3},</div>
-<div class="line">        },</div>
-<div class="line">    );</div>
-<div class="line">    <span class="keywordflow">return</span> 0;</div>
-<div class="line">}</div>
-</div><!-- fragment --><p>Only dynamic maps may be initialized this way due the inability of the map map to protect its invariants from user error at compile time. </p>
-
-</div>
-</div>
-<a id="a9533390f89ef978bbcea0bbebd60586e" name="a9533390f89ef978bbcea0bbebd60586e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9533390f89ef978bbcea0bbebd60586e">&#9670;&#160;</a></span>CCC_array_adaptive_map_context_with_allocator</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_array_adaptive_map_context_with_allocator</td>
+          <td class="memname">#define CCC_array_adaptive_map_default</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">type_name, </td>
@@ -572,19 +459,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">compare, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">context&#160;</td>
+          <td class="paramname">comparator...&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -593,204 +468,20 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_adaptive_map_context_with_allocator(                     \</div>
-<div class="line">        type_name, type_key_field, compare, allocate, context)</div>
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_adaptive_map_default(                                    \</div>
+<div class="line">        type_name, type_key_field, comparator                                  \</div>
+<div class="line">    )</div>
 </div><!-- fragment -->
-<p>Initialize an empty dynamic map at compile or runtime with an allocator and supplementary context. </p>
+<p>Initializes the map at runtime or compile time. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the user defined type stored in the map. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_key_field</td><td>the field of the struct used for key storage. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the CCC_Key_comparator the user intends to use. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the CCC_Allocator function used to manage map memory. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>any additional context needed for comparison or allocation. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the name of the user type stored in the map. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_key_field</td><td>the name of the field in user type used as key. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">comparator</td><td>the <a class="el" href="structCCC__Key__comparator.html" title="The type passed by reference to any container function that may need to compare keys....">CCC_Key_comparator</a> for key comparison. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the map directly initialized on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> map = <a class="el" href="array__adaptive__map_8h.html#a9533390f89ef978bbcea0bbebd60586e" title="Initialize an empty dynamic map at compile or runtime with an allocator and supplementary context.">CCC_array_adaptive_map_context_with_allocator(...)</a>;)</dd></dl>
-<p>Initialize a dynamic map at compile time.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define ARRAY_ADAPTIVE_MAP_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keyword">struct </span>Val</div>
-<div class="line">{</div>
-<div class="line">    <span class="keywordtype">int</span> key;</div>
-<div class="line">    <span class="keywordtype">int</span> val;</div>
-<div class="line">};</div>
-<div class="line"><span class="keyword">static</span> Array_adaptive_map map = array_adaptive_map_context_with_allocator(</div>
-<div class="line">    <span class="keyword">struct</span> Val,</div>
-<div class="line">    key,</div>
-<div class="line">    array_adaptive_map_key_order,</div>
-<div class="line">    arena_allocate,</div>
-<div class="line">    &amp;arena_manager,</div>
-<div class="line">);</div>
-</div><!-- fragment --><p>This can help eliminate boilerplate in initializers. </p>
-
-</div>
-</div>
-<a id="ae78e8380227ceeaf13b61c635c8bab60" name="ae78e8380227ceeaf13b61c635c8bab60"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae78e8380227ceeaf13b61c635c8bab60">&#9670;&#160;</a></span>CCC_array_adaptive_map_context_with_capacity</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_array_adaptive_map_context_with_capacity</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_name, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_key_field, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">compare, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">context, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">capacity&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_adaptive_map_context_with_capacity(                      \</div>
-<div class="line">        type_name, type_key_field, compare, allocate, context, capacity)</div>
-</div><!-- fragment -->
-<p>Initialize a dynamic map at runtime with at least the specified capacity. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the name of the type being stored in the map. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_key_field</td><td>the field of the struct used for key storage. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the CCC_Key_comparator the user intends to use. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the required allocation function. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>context data that is needed for comparison. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">capacity</td><td>the desired capacity for the map. A capacity of 0 results in an argument error and is a no-op after the map is initialized empty. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the map directly initialized on the right hand side of the equality operator (i.e. <a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> map = <a class="el" href="array__adaptive__map_8h.html#a0d0738a224ebb688483e35d6ed6fa49f" title="Initialize a dynamic map at runtime with at least the specified capacity.">CCC_array_adaptive_map_with_capacity(...)</a>;) </dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>An allocation function is required. This initializer is only available for dynamic maps. </dd>
-<dd>
-If initialization fails all subsequent queries, insertions, or removals will indicate the error: either memory related or lack of an allocation function provided.</dd></dl>
-<p>Initialize a dynamic map at run time. This example requires no context data for initialization.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define ARRAY_ADAPTIVE_MAP_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keyword">struct </span>Val</div>
-<div class="line">{</div>
-<div class="line">    <span class="keywordtype">int</span> key;</div>
-<div class="line">    <span class="keywordtype">int</span> val;</div>
-<div class="line">};</div>
-<div class="line"><span class="keywordtype">int</span></div>
-<div class="line">main(<span class="keywordtype">void</span>)</div>
-<div class="line">{</div>
-<div class="line">    Array_adaptive_map map = array_adaptive_map_context_with_capacity(</div>
-<div class="line">        <span class="keyword">struct</span> Val,</div>
-<div class="line">        key,</div>
-<div class="line">        array_adaptive_map_key_order,</div>
-<div class="line">        arena_allocate,</div>
-<div class="line">        &amp;arena,</div>
-<div class="line">        4096</div>
-<div class="line">    );</div>
-<div class="line">    <span class="keywordflow">return</span> 0;</div>
-<div class="line">}</div>
-</div><!-- fragment --><p>Only dynamic maps may be initialized this way as it simply combines the steps of initialization and reservation. </p>
-
-</div>
-</div>
-<a id="ab95b4d29331414ecb06e4a975d0e008e" name="ab95b4d29331414ecb06e4a975d0e008e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab95b4d29331414ecb06e4a975d0e008e">&#9670;&#160;</a></span>CCC_array_adaptive_map_context_with_storage</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_array_adaptive_map_context_with_storage</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_key_field, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">compare, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">context, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">compound_literal, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">optional_storage_specifier...&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_adaptive_map_context_with_storage(                       \</div>
-<div class="line">        type_key_field, compare, context, compound_literal,                    \</div>
-<div class="line">        optional_storage_specifier)</div>
-</div><!-- fragment -->
-<p>Initialize a fixed map at compile or runtime from any user chosen type with no allocation permission. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_key_field</td><td>the field of the struct used for key storage. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the CCC_Key_comparator the user intends to use. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>context for the map. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal</td><td>the compound literal array of a type provided by the user around which the struct of array backing storage for the map will be built. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">optional_storage_specifier</td><td>lifetime specifier of the backing struct of array storage, such as static, for the fixed size map in the scope at which it is allocated or declared. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the map directly initialized on the right hand side of the equality operator.</dd></dl>
-<p>Initialize a fixed map.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define ARRAY_ADAPTIVE_MAP_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keyword">struct </span>Val</div>
-<div class="line">{</div>
-<div class="line">    <span class="keywordtype">int</span> key;</div>
-<div class="line">    <span class="keywordtype">int</span> val;</div>
-<div class="line">};</div>
-<div class="line"><span class="keyword">static</span> Array_adaptive_map map = array_adaptive_map_with_storage(</div>
-<div class="line">    key,</div>
-<div class="line">    array_adaptive_map_key_order,</div>
-<div class="line">    &amp;module_context,</div>
-<div class="line">    (<span class="keyword">struct</span> Val[4096]){}</div>
-<div class="line">);</div>
-</div><!-- fragment --><p>This can help eliminate boilerplate in initializers. </p>
+<dl class="section return"><dt>Returns</dt><dd>the struct initialized adaptive map for direct assignment. </dd></dl>
 
 </div>
 </div>
@@ -819,11 +510,12 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="types_8h.html#aa24094a0fb5618980a629b4accdd37d7">CCC_Handle_range_reverse</a>){                                               \</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Handle__range__reverse.html">CCC_Handle_range_reverse</a> <span class="keyword">private</span>; }){                           \</div>
 <div class="line">        CCC_array_adaptive_map_equal_range_reverse(                            \</div>
-<div class="line">            map_pointer, reverse_begin_and_reverse_end_key_pointers)           \</div>
-<div class="line">            .private}</div>
-<div class="ttc" id="atypes_8h_html_aa24094a0fb5618980a629b4accdd37d7"><div class="ttname"><a href="types_8h.html#aa24094a0fb5618980a629b4accdd37d7">CCC_Handle_range_reverse</a></div><div class="ttdeci">union CCC_Handle_range_reverse_wrap CCC_Handle_range_reverse</div><div class="ttdoc">The result of a range_reverse query on iterable containers.</div><div class="ttdef"><b>Definition:</b> types.h:68</div></div>
+<div class="line">            map_pointer, reverse_begin_and_reverse_end_key_pointers            \</div>
+<div class="line">        )}                                                                     \</div>
+<div class="line">         .private</div>
+<div class="ttc" id="astructCCC__Handle__range__reverse_html"><div class="ttname"><a href="structCCC__Handle__range__reverse.html">CCC_Handle_range_reverse</a></div><div class="ttdoc">The result of a range_reverse query on iterable containers.</div><div class="ttdef"><b>Definition:</b> types.h:113</div></div>
 </div><!-- fragment -->
 <p>Returns a compound literal reference to the desired range_reverse. Amortized O(lg N). </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -837,8 +529,8 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 
 </div>
 </div>
-<a id="ac6d689f62b1ae8bffbe5443dc65f3491" name="ac6d689f62b1ae8bffbe5443dc65f3491"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac6d689f62b1ae8bffbe5443dc65f3491">&#9670;&#160;</a></span>CCC_array_adaptive_map_equal_range_wrap</h2>
+<a id="ac6b42c21066c892a2e3515e6a8599c44" name="ac6b42c21066c892a2e3515e6a8599c44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6b42c21066c892a2e3515e6a8599c44">&#9670;&#160;</a></span>CCC_array_adaptive_map_equal_range_wrap</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -862,11 +554,12 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle__range.html">CCC_Handle_range</a>){<a class="code hl_function" href="array__adaptive__map_8h.html#acb4a40014feb193966eeeaf61e8392db">CCC_array_adaptive_map_equal_range</a>(                    \</div>
-<div class="line">                            map_pointer, begin_and_end_key_pointers)           \</div>
-<div class="line">                            .private}</div>
-<div class="ttc" id="aarray__adaptive__map_8h_html_acb4a40014feb193966eeeaf61e8392db"><div class="ttname"><a href="array__adaptive__map_8h.html#acb4a40014feb193966eeeaf61e8392db">CCC_array_adaptive_map_equal_range</a></div><div class="ttdeci">CCC_Handle_range CCC_array_adaptive_map_equal_range(CCC_Array_adaptive_map *map, void const *begin_key, void const *end_key)</div><div class="ttdoc">Return an iterable range of values from [begin_key, end_key). Amortized O(lg N).</div></div>
-<div class="ttc" id="astructCCC__Handle__range_html"><div class="ttname"><a href="structCCC__Handle__range.html">CCC_Handle_range</a></div><div class="ttdef"><b>Definition:</b> private_types.h:162</div></div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Handle__range.html">CCC_Handle_range</a> <span class="keyword">private</span>; }){                                   \</div>
+<div class="line">        CCC_array_adaptive_map_equal_range(                                    \</div>
+<div class="line">            map_pointer, begin_and_end_key_pointers                            \</div>
+<div class="line">        )}                                                                     \</div>
+<div class="line">         .private</div>
+<div class="ttc" id="astructCCC__Handle__range_html"><div class="ttname"><a href="structCCC__Handle__range.html">CCC_Handle_range</a></div><div class="ttdoc">The result of a range query on iterable containers.</div><div class="ttdef"><b>Definition:</b> types.h:100</div></div>
 </div><!-- fragment -->
 <p>Returns a compound literal reference to the desired range. Amortized O(lg N). </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -880,8 +573,8 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 
 </div>
 </div>
-<a id="ab490f2b19c228af1fc5bf0c294323056" name="ab490f2b19c228af1fc5bf0c294323056"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab490f2b19c228af1fc5bf0c294323056">&#9670;&#160;</a></span>CCC_array_adaptive_map_for</h2>
+<a id="aa084ec33c9432b1671f56f7587d2882b" name="aa084ec33c9432b1671f56f7587d2882b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa084ec33c9432b1671f56f7587d2882b">&#9670;&#160;</a></span>CCC_array_adaptive_map_for</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -902,19 +595,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">compare, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">context, </td>
+          <td class="paramname">comparator, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -935,29 +616,27 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_adaptive_map_for(type_name, type_key_field, compare,     \</div>
-<div class="line">                                       allocate, context, capacity,            \</div>
-<div class="line">                                       memory_pointer)</div>
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_adaptive_map_for(                                        \</div>
+<div class="line">        type_name, type_key_field, comparator, capacity, memory_pointer        \</div>
+<div class="line">    )</div>
 </div><!-- fragment -->
 <p>Initializes the map at runtime or compile time. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the name of the user type stored in the map. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_key_field</td><td>the name of the field in user type used as key. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the key comparison function (see <a class="el" href="types_8h.html" title="The C Container Collection Fundamental Types.">types.h</a>). </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the allocation function or NULL if allocation is banned. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>a pointer to any context data for comparison or destruction. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">comparator</td><td>the <a class="el" href="structCCC__Key__comparator.html" title="The type passed by reference to any container function that may need to compare keys....">CCC_Key_comparator</a> for key comparison. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">capacity</td><td>the capacity at data_pointer or 0. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">memory_pointer</td><td>a pointer to the contiguous user types or NULL. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the struct initialized adaptive map for direct assignment (i.e. <a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> m = <a class="el" href="array__adaptive__map_8h.html#ab490f2b19c228af1fc5bf0c294323056" title="Initializes the map at runtime or compile time.">CCC_array_adaptive_map_for(...)</a>;). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the struct initialized adaptive map for direct assignment. </dd></dl>
 
 </div>
 </div>
-<a id="a7efc7e38dcb391edd7920460cca6ca26" name="a7efc7e38dcb391edd7920460cca6ca26"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7efc7e38dcb391edd7920460cca6ca26">&#9670;&#160;</a></span>CCC_array_adaptive_map_from</h2>
+<a id="aafea65cf4a88972c911730476a3cbc09" name="aafea65cf4a88972c911730476a3cbc09"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aafea65cf4a88972c911730476a3cbc09">&#9670;&#160;</a></span>CCC_array_adaptive_map_from</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -972,13 +651,13 @@ If initialization fails all subsequent queries, insertions, or removals will ind
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">compare, </td>
+          <td class="paramname">comparator, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate, </td>
+          <td class="paramname">allocator, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -999,28 +678,32 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_adaptive_map_from(type_key_field, compare, allocate,     \</div>
-<div class="line">                                        optional_capacity,                     \</div>
-<div class="line">                                        type_compound_literal_array)</div>
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_adaptive_map_from(                                       \</div>
+<div class="line">        type_key_field,                                                        \</div>
+<div class="line">        comparator,                                                            \</div>
+<div class="line">        allocator,                                                             \</div>
+<div class="line">        optional_capacity,                                                     \</div>
+<div class="line">        type_compound_literal_array                                            \</div>
+<div class="line">    )</div>
 </div><!-- fragment -->
 <p>Initialize a dynamic map at runtime from an initializer list. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">type_key_field</td><td>the field of the struct used for key storage. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the CCC_Key_comparator the user intends to use. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the required allocation function. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">comparator</td><td>the <a class="el" href="structCCC__Key__comparator.html" title="The type passed by reference to any container function that may need to compare keys....">CCC_Key_comparator</a> for key comparison. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the required <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for resizing. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">optional_capacity</td><td>optionally specify the capacity of the map if different from the size of the compound literal array initializer. If the capacity is greater than the size of the compound literal array initializer, it is respected and the capacity is reserved. If the capacity is less than the size of the compound array initializer, the compound literal array initializer size is set as the capacity. Therefore, 0 is valid if one is not concerned with the size of the underlying reservation. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_compound_literal_array</td><td>a list of key value pairs of the type intended to be stored in the map, using array compound literal initialization syntax (e.g <code>(struct my_type[]){{.k = 0, .v 0}, {.k = 1, .v = 1}}</code>). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the map directly initialized on the right hand side of the equality operator (i.e. <a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> map = <a class="el" href="array__adaptive__map_8h.html#a7efc7e38dcb391edd7920460cca6ca26" title="Initialize a dynamic map at runtime from an initializer list.">CCC_array_adaptive_map_from(...)</a>;) </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the map directly initialized on the right hand side of the equality operator (i.e. <a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> map = <a class="el" href="array__adaptive__map_8h.html#aafea65cf4a88972c911730476a3cbc09" title="Initialize a dynamic map at runtime from an initializer list.">CCC_array_adaptive_map_from(...)</a>;) </dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>An allocation function is required. This initializer is only available for dynamic maps. </dd>
 <dd>
 When duplicate keys appear in the initializer list, the last occurrence replaces earlier ones by value (all fields are overwritten). </dd>
 <dd>
 If initialization fails all subsequent queries, insertions, or removals will indicate the error: either memory related or lack of an allocation function provided.</dd></dl>
-<p>Initialize a dynamic map at run time. This example requires no context data for initialization.</p>
+<p>Initialize a dynamic map at run time.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define ARRAY_ADAPTIVE_MAP_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="keyword">struct </span>Val</div>
 <div class="line">{</div>
@@ -1032,8 +715,8 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <div class="line">{</div>
 <div class="line">    Array_adaptive_map static_map = array_adaptive_map_from(</div>
 <div class="line">        key,</div>
-<div class="line">        array_adaptive_map_key_order,</div>
-<div class="line">        std_allocate,</div>
+<div class="line">        val_key_comparator,</div>
+<div class="line">        std_allocator,</div>
 <div class="line">        0,</div>
 <div class="line">        (<span class="keyword">struct</span> Val[]) {</div>
 <div class="line">            {.key = 1, .val = 1},</div>
@@ -1072,8 +755,9 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="array__adaptive__map_8h.html#a67ce76b9053351d5eabb334544cb2530">CCC_Array_adaptive_map_handle</a>){                                          \</div>
-<div class="line">        CCC_array_adaptive_map_handle((array_pointer), (key_pointer)).private}</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a> <span class="keyword">private</span>; }){                      \</div>
+<div class="line">        CCC_array_adaptive_map_handle((array_pointer), (key_pointer))}         \</div>
+<div class="line">         .private</div>
 </div><!-- fragment -->
 <p>Obtains a handle for the provided key in the map for future use. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1090,17 +774,23 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 
 </div>
 </div>
-<a id="a6f15a63d7c037f810617791c38e9d4d4" name="a6f15a63d7c037f810617791c38e9d4d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6f15a63d7c037f810617791c38e9d4d4">&#9670;&#160;</a></span>CCC_array_adaptive_map_insert_array_with</h2>
+<a id="a03a572ab89008a1be6e36eec3318ecba" name="a03a572ab89008a1be6e36eec3318ecba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03a572ab89008a1be6e36eec3318ecba">&#9670;&#160;</a></span>CCC_array_adaptive_map_insert_handle_with</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define CCC_array_adaptive_map_insert_array_with</td>
+          <td class="memname">#define CCC_array_adaptive_map_insert_handle_with</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">array_pointer, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">allocator_pointer, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1115,13 +805,15 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_adaptive_map_insert_array_with(array_pointer,            \</div>
-<div class="line">                                                     type_compound_literal)</div>
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_adaptive_map_insert_handle_with(                         \</div>
+<div class="line">        array_pointer, allocator_pointer, type_compound_literal                \</div>
+<div class="line">    )</div>
 </div><!-- fragment -->
 <p>Write the contents of the compound literal type_compound_literal to a node. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">array_pointer</td><td>a pointer to the obtained handle. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator_pointer</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for resizing if needed. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_compound_literal</td><td>the compound literal to write to a new slot. </td></tr>
   </table>
   </dd>
@@ -1130,8 +822,8 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 
 </div>
 </div>
-<a id="a778a7ef33e0baa380904d704e3137a1b" name="a778a7ef33e0baa380904d704e3137a1b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a778a7ef33e0baa380904d704e3137a1b">&#9670;&#160;</a></span>CCC_array_adaptive_map_insert_or_assign_with</h2>
+<a id="ad188ba650d0894cd16161ff0386f737e" name="ad188ba650d0894cd16161ff0386f737e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad188ba650d0894cd16161ff0386f737e">&#9670;&#160;</a></span>CCC_array_adaptive_map_insert_or_assign_with</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1152,44 +844,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">type_compound_literal...&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>){CCC_private_array_adaptive_map_insert_or_assign_with(        \</div>
-<div class="line">        map_pointer, key, type_compound_literal)}</div>
-<div class="ttc" id="astructCCC__Handle_html"><div class="ttname"><a href="structCCC__Handle.html">CCC_Handle</a></div><div class="ttdef"><b>Definition:</b> private_types.h:76</div></div>
-</div><!-- fragment -->
-<p>Inserts a new key value pair or overwrites the existing handle. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">map_pointer</td><td>the pointer to the handle hash map. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">key</td><td>the key to be searched in the map. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_compound_literal</td><td>the compound literal to insert or use for overwrite. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>a compound literal reference to the handle of the existing or newly inserted value. Occupied indicates the key existed, Vacant indicates the key was absent. Unwrapping in any case provides the current value unless an error occurs that prevents insertion. An insertion error will flag such a case.</dd></dl>
-<p>Note that for brevity and convenience the user need not write the key to the lazy value compound literal as well. This function ensures the key in the compound literal matches the searched key. </p>
-
-</div>
-</div>
-<a id="a4b1ea6b149b2e49f2cf6484e747e40f6" name="a4b1ea6b149b2e49f2cf6484e747e40f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4b1ea6b149b2e49f2cf6484e747e40f6">&#9670;&#160;</a></span>CCC_array_adaptive_map_or_insert_with</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_array_adaptive_map_or_insert_with</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">array_pointer, </td>
+          <td class="paramname">allocator_pointer, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1204,13 +859,119 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_adaptive_map_or_insert_with(array_pointer,               \</div>
-<div class="line">                                                  type_compound_literal)</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a> <span class="keyword">private</span>; }){                                         \</div>
+<div class="line">        CCC_private_array_adaptive_map_insert_or_assign_with(                  \</div>
+<div class="line">            map_pointer, key, allocator_pointer, type_compound_literal         \</div>
+<div class="line">        )}                                                                     \</div>
+<div class="line">         .private</div>
+<div class="ttc" id="astructCCC__Handle_html"><div class="ttname"><a href="structCCC__Handle.html">CCC_Handle</a></div><div class="ttdoc">An Occupied or Vacant handle to a flat searchable container entry.</div><div class="ttdef"><b>Definition:</b> types.h:166</div></div>
+</div><!-- fragment -->
+<p>Inserts a new key value pair or overwrites the existing handle. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">map_pointer</td><td>the pointer to the handle map. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">key</td><td>the key to be searched in the map. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator_pointer</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for resizing if needed. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_compound_literal</td><td>the compound literal to insert or use for overwrite. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a compound literal reference to the handle of the existing or newly inserted value. Occupied indicates the key existed, Vacant indicates the key was absent. Unwrapping in any case provides the current value unless an error occurs that prevents insertion. An insertion error will flag such a case.</dd></dl>
+<p>Note that for brevity and convenience the user need not write the key to the lazy value compound literal as well. This function ensures the key in the compound literal matches the searched key. </p>
+
+</div>
+</div>
+<a id="a364059796a8cd73c2858a7680f96b7d6" name="a364059796a8cd73c2858a7680f96b7d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a364059796a8cd73c2858a7680f96b7d6">&#9670;&#160;</a></span>CCC_array_adaptive_map_insert_or_assign_wrap</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CCC_array_adaptive_map_insert_or_assign_wrap</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">map_pointer, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">type_pointer, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">allocator_pointer...&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a> <span class="keyword">private</span>; }){                                         \</div>
+<div class="line">        CCC_array_adaptive_map_insert_or_assign(                               \</div>
+<div class="line">            (map_pointer), (type_pointer), allocator_pointer                   \</div>
+<div class="line">        )}                                                                     \</div>
+<div class="line">         .private</div>
+</div><!-- fragment -->
+<p>Invariantly inserts or overwrites a user struct into the map. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">map_pointer</td><td>a pointer to the handle map. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_pointer</td><td>a pointer to the user struct key value type. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator_pointer</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for resizing if needed. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a compound literal reference to a handle. If Occupied a handle was overwritten by the new key value. If Vacant no prior map handle existed.</dd></dl>
+<p>Note that this function can be used when the old user type is not needed but the information regarding its presence is helpful. </p>
+
+</div>
+</div>
+<a id="a3095d4cd63ed20c090ade8e3270a9737" name="a3095d4cd63ed20c090ade8e3270a9737"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3095d4cd63ed20c090ade8e3270a9737">&#9670;&#160;</a></span>CCC_array_adaptive_map_or_insert_with</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CCC_array_adaptive_map_or_insert_with</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">array_pointer, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">allocator_pointer, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">type_compound_literal...&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_adaptive_map_or_insert_with(                             \</div>
+<div class="line">        array_pointer, allocator_pointer, type_compound_literal                \</div>
+<div class="line">    )</div>
 </div><!-- fragment -->
 <p>Lazily insert the desired key value into the handle if it is Vacant. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">array_pointer</td><td>a pointer to the obtained handle. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator_pointer</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for resizing if needed. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_compound_literal</td><td>the compound literal to construct in place if the handle is Vacant. </td></tr>
   </table>
   </dd>
@@ -1231,11 +992,14 @@ If initialization fails all subsequent queries, insertions, or removals will ind
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">array_pointer</td><td>)</td>
-          <td>&#160;&#160;&#160;    &amp;(<a class="el" href="structCCC__Handle.html">CCC_Handle</a>){<a class="el" href="array__adaptive__map_8h.html#a7ead4b3654a7cb197b2236e27c6e06e6">CCC_array_adaptive_map_remove_handle</a>((array_pointer)).private}</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a> <span class="keyword">private</span>; }){                                         \</div>
+<div class="line">        CCC_array_adaptive_map_remove_handle((array_pointer))}                 \</div>
+<div class="line">         .private</div>
+</div><!-- fragment -->
 <p>Remove the handle from the map if Occupied. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -1247,8 +1011,8 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 
 </div>
 </div>
-<a id="abe7e3b59cd02463e1724f493d590d91e" name="abe7e3b59cd02463e1724f493d590d91e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abe7e3b59cd02463e1724f493d590d91e">&#9670;&#160;</a></span>CCC_array_adaptive_map_remove_key_value_wrap</h2>
+<a id="ae03eb8f38ca34d0deed047ba3f24daaf" name="ae03eb8f38ca34d0deed047ba3f24daaf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae03eb8f38ca34d0deed047ba3f24daaf">&#9670;&#160;</a></span>CCC_array_adaptive_map_remove_key_value_wrap</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1272,9 +1036,10 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>){<a class="code hl_function" href="array__adaptive__map_8h.html#aab51d4696e0a25ea272e46c35c200dd8">CCC_array_adaptive_map_remove_key_value</a>(                     \</div>
-<div class="line">                      (map_pointer), (type_output_pointer))                    \</div>
-<div class="line">                      .private}</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a> <span class="keyword">private</span>; }){<a class="code hl_function" href="array__adaptive__map_8h.html#aab51d4696e0a25ea272e46c35c200dd8">CCC_array_adaptive_map_remove_key_value</a>( \</div>
+<div class="line">                                          (map_pointer), (type_output_pointer) \</div>
+<div class="line">                                      )}                                       \</div>
+<div class="line">         .private</div>
 <div class="ttc" id="aarray__adaptive__map_8h_html_aab51d4696e0a25ea272e46c35c200dd8"><div class="ttname"><a href="array__adaptive__map_8h.html#aab51d4696e0a25ea272e46c35c200dd8">CCC_array_adaptive_map_remove_key_value</a></div><div class="ttdeci">CCC_Handle CCC_array_adaptive_map_remove_key_value(CCC_Array_adaptive_map *map, void *type_output)</div><div class="ttdoc">Removes the key value in the map storing the old value, if present, in the struct containing type_out...</div></div>
 </div><!-- fragment -->
 <p>Removes the key value in the map storing the old value, if present, in the struct containing type_output provided by the user. </p>
@@ -1290,8 +1055,8 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 
 </div>
 </div>
-<a id="a601c8adfbe08523b6a147b2071db585b" name="a601c8adfbe08523b6a147b2071db585b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a601c8adfbe08523b6a147b2071db585b">&#9670;&#160;</a></span>CCC_array_adaptive_map_storage_for</h2>
+<a id="abff7c6b484028f65da64384591642561" name="abff7c6b484028f65da64384591642561"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abff7c6b484028f65da64384591642561">&#9670;&#160;</a></span>CCC_array_adaptive_map_storage_for</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1316,7 +1081,8 @@ If initialization fails all subsequent queries, insertions, or removals will ind
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_adaptive_map_storage_for(                                \</div>
-<div class="line">        user_type_compound_literal_array, optional_storage_specifier)</div>
+<div class="line">        user_type_compound_literal_array, optional_storage_specifier           \</div>
+<div class="line">    )</div>
 </div><!-- fragment -->
 <p>Create the underlying fixed size storage for a user declared compound literal array of the type the user intends to store. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1326,7 +1092,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
   </table>
   </dd>
 </dl>
-<dl class="section warning"><dt>Warning</dt><dd>This should rarely be used. If a fixed size map is desired simply use the <a class="el" href="array__adaptive__map_8h.html#a9bd25f93410bb63d318a8639da32bf08" title="Initialize a fixed map at compile or runtime from any user chosen type with no allocation permission ...">CCC_array_adaptive_map_with_storage()</a> initializer. For dynamic maps, there are also many other options.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>This should rarely be used. If a fixed size map is desired simply use the <a class="el" href="array__adaptive__map_8h.html#a21ba76d3a7228d1cc7465ca982f63032" title="Initialize a fixed map at compile or runtime from any user chosen type with no allocation permission ...">CCC_array_adaptive_map_with_storage()</a> initializer. For dynamic maps, there are also many other options.</dd></dl>
 <p>This macro is required to support the edge case for the user allocating a fixed size map dynamically from an allocator at runtime. In this case, the user needs access to the compound literal struct of arrays map to know how many bytes to allocate. See the below example.</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>Val</div>
 <div class="line">{</div>
@@ -1338,29 +1104,26 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <div class="line">main(<span class="keywordtype">void</span>)</div>
 <div class="line">{</div>
 <div class="line">    <span class="keywordtype">void</span> *<span class="keyword">const</span> map = malloc(</div>
-<div class="line">        <span class="keyword">sizeof</span>(<a class="code hl_define" href="array__adaptive__map_8h.html#a601c8adfbe08523b6a147b2071db585b">CCC_array_adaptive_map_storage_for</a>((<span class="keyword">struct</span> Val[4096]){}))</div>
+<div class="line">        <span class="keyword">sizeof</span>(<a class="code hl_define" href="array__adaptive__map_8h.html#abff7c6b484028f65da64384591642561">CCC_array_adaptive_map_storage_for</a>((<span class="keyword">struct</span> Val[4096]){}))</div>
 <div class="line">    );</div>
 <div class="line">    defer free(map);</div>
-<div class="line">    <a class="code hl_struct" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> map = <a class="code hl_define" href="array__adaptive__map_8h.html#ab490f2b19c228af1fc5bf0c294323056">CCC_array_adaptive_map_for</a>(</div>
+<div class="line">    <a class="code hl_struct" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> map = <a class="code hl_define" href="array__adaptive__map_8h.html#aa084ec33c9432b1671f56f7587d2882b">CCC_array_adaptive_map_for</a>(</div>
 <div class="line">        <span class="keyword">struct</span> Val,</div>
 <div class="line">        key,</div>
-<div class="line">        hash_key,</div>
-<div class="line">        order_vals,</div>
-<div class="line">        NULL,</div>
-<div class="line">        NULL,</div>
+<div class="line">        val_key_comparator,</div>
 <div class="line">        4096,</div>
 <div class="line">        map</div>
 <div class="line">    );</div>
 <div class="line">}</div>
-<div class="ttc" id="aarray__adaptive__map_8h_html_a601c8adfbe08523b6a147b2071db585b"><div class="ttname"><a href="array__adaptive__map_8h.html#a601c8adfbe08523b6a147b2071db585b">CCC_array_adaptive_map_storage_for</a></div><div class="ttdeci">#define CCC_array_adaptive_map_storage_for(user_type_compound_literal_array, optional_storage_specifier...)</div><div class="ttdoc">Create the underlying fixed size storage for a user declared compound literal array of the type the u...</div><div class="ttdef"><b>Definition:</b> array_adaptive_map.h:138</div></div>
-<div class="ttc" id="aarray__adaptive__map_8h_html_ab490f2b19c228af1fc5bf0c294323056"><div class="ttname"><a href="array__adaptive__map_8h.html#ab490f2b19c228af1fc5bf0c294323056">CCC_array_adaptive_map_for</a></div><div class="ttdeci">#define CCC_array_adaptive_map_for(type_name, type_key_field, compare, allocate, context, capacity, memory_pointer)</div><div class="ttdoc">Initializes the map at runtime or compile time.</div><div class="ttdef"><b>Definition:</b> array_adaptive_map.h:154</div></div>
-<div class="ttc" id="astructCCC__Array__adaptive__map_html"><div class="ttname"><a href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a></div><div class="ttdef"><b>Definition:</b> private_array_adaptive_map.h:69</div></div>
+<div class="ttc" id="aarray__adaptive__map_8h_html_aa084ec33c9432b1671f56f7587d2882b"><div class="ttname"><a href="array__adaptive__map_8h.html#aa084ec33c9432b1671f56f7587d2882b">CCC_array_adaptive_map_for</a></div><div class="ttdeci">#define CCC_array_adaptive_map_for( type_name, type_key_field, comparator, capacity, memory_pointer)</div><div class="ttdoc">Initializes the map at runtime or compile time.</div><div class="ttdef"><b>Definition:</b> array_adaptive_map.h:161</div></div>
+<div class="ttc" id="aarray__adaptive__map_8h_html_abff7c6b484028f65da64384591642561"><div class="ttname"><a href="array__adaptive__map_8h.html#abff7c6b484028f65da64384591642561">CCC_array_adaptive_map_storage_for</a></div><div class="ttdeci">#define CCC_array_adaptive_map_storage_for( user_type_compound_literal_array, optional_storage_specifier...)</div><div class="ttdoc">Create the underlying fixed size storage for a user declared compound literal array of the type the u...</div><div class="ttdef"><b>Definition:</b> array_adaptive_map.h:135</div></div>
+<div class="ttc" id="astructCCC__Array__adaptive__map_html"><div class="ttname"><a href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a></div><div class="ttdef"><b>Definition:</b> private_array_adaptive_map.h:68</div></div>
 </div><!-- fragment --><p>Usually, using a dynamic map and the reserve interface would be sufficient. However, the reserve interface only guarantees that at least the needed bytes are allocated. When the user must know the exact size of the backing object due to strict memory requirements, this is helpful. Such a use case may be rare, but must be supported by this container. </p>
 
 </div>
 </div>
-<a id="ae38d277c09750eaf0a57250b8122f808" name="ae38d277c09750eaf0a57250b8122f808"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae38d277c09750eaf0a57250b8122f808">&#9670;&#160;</a></span>CCC_array_adaptive_map_swap_handle_wrap</h2>
+<a id="a80c80aa95c4380a4c710c37c01aadc46" name="a80c80aa95c4380a4c710c37c01aadc46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80c80aa95c4380a4c710c37c01aadc46">&#9670;&#160;</a></span>CCC_array_adaptive_map_swap_handle_wrap</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1375,7 +1138,13 @@ If initialization fails all subsequent queries, insertions, or removals will ind
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">type_output_pointer&#160;</td>
+          <td class="paramname">type_output_pointer, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">allocator_pointer...&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1384,16 +1153,18 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>){<a class="code hl_function" href="array__adaptive__map_8h.html#a12e3313f0460ecdb3140ad48de2e3d61">CCC_array_adaptive_map_swap_handle</a>((map_pointer),            \</div>
-<div class="line">                                                     (type_output_pointer))    \</div>
-<div class="line">                      .private}</div>
-<div class="ttc" id="aarray__adaptive__map_8h_html_a12e3313f0460ecdb3140ad48de2e3d61"><div class="ttname"><a href="array__adaptive__map_8h.html#a12e3313f0460ecdb3140ad48de2e3d61">CCC_array_adaptive_map_swap_handle</a></div><div class="ttdeci">CCC_Handle CCC_array_adaptive_map_swap_handle(CCC_Array_adaptive_map *map, void *type_output)</div><div class="ttdoc">Invariantly inserts the key value type.</div></div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a> <span class="keyword">private</span>; }){                                         \</div>
+<div class="line">        CCC_array_adaptive_map_swap_handle(                                    \</div>
+<div class="line">            (map_pointer), (type_output_pointer), allocator_pointer            \</div>
+<div class="line">        )}                                                                     \</div>
+<div class="line">         .private</div>
 </div><!-- fragment -->
 <p>Invariantly inserts the key value type. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map_pointer</td><td>the pointer to the adaptive map. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">type_output_pointer</td><td>the handle to the user type map elem. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator_pointer</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for resizing if needed. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1402,8 +1173,8 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 
 </div>
 </div>
-<a id="abe39139c57071844161f3bfdb9a38b14" name="abe39139c57071844161f3bfdb9a38b14"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abe39139c57071844161f3bfdb9a38b14">&#9670;&#160;</a></span>CCC_array_adaptive_map_try_insert_with</h2>
+<a id="a00e135ccf1dc8f7afa42a37faf73e024" name="a00e135ccf1dc8f7afa42a37faf73e024"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a00e135ccf1dc8f7afa42a37faf73e024">&#9670;&#160;</a></span>CCC_array_adaptive_map_try_insert_with</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1424,6 +1195,12 @@ If initialization fails all subsequent queries, insertions, or removals will ind
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
+          <td class="paramname">allocator_pointer, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
           <td class="paramname">type_compound_literal...&#160;</td>
         </tr>
         <tr>
@@ -1433,14 +1210,18 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>){CCC_private_array_adaptive_map_try_insert_with(              \</div>
-<div class="line">        map_pointer, key, type_compound_literal)}</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a> <span class="keyword">private</span>; }){                                         \</div>
+<div class="line">        CCC_private_array_adaptive_map_try_insert_with(                        \</div>
+<div class="line">            map_pointer, key, allocator_pointer, type_compound_literal         \</div>
+<div class="line">        )}                                                                     \</div>
+<div class="line">         .private</div>
 </div><!-- fragment -->
 <p>lazily insert type_compound_literal into the map at key if key is absent. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map_pointer</td><td>a pointer to the map. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">key</td><td>the direct key r-value. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator_pointer</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for resizing if needed. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_compound_literal</td><td>the compound literal specifying the value. </td></tr>
   </table>
   </dd>
@@ -1450,8 +1231,8 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 
 </div>
 </div>
-<a id="a69c9caa87fd345aeedb51f1a6bbd7051" name="a69c9caa87fd345aeedb51f1a6bbd7051"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a69c9caa87fd345aeedb51f1a6bbd7051">&#9670;&#160;</a></span>CCC_array_adaptive_map_try_insert_wrap</h2>
+<a id="a83e85b77c5c19640c3a710ee4bb30509" name="a83e85b77c5c19640c3a710ee4bb30509"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83e85b77c5c19640c3a710ee4bb30509">&#9670;&#160;</a></span>CCC_array_adaptive_map_try_insert_wrap</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1466,7 +1247,13 @@ If initialization fails all subsequent queries, insertions, or removals will ind
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">type_pointer&#160;</td>
+          <td class="paramname">type_pointer, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">allocator_pointer...&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1475,15 +1262,18 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a>){                                                             \</div>
-<div class="line">        CCC_array_adaptive_map_try_insert((map_pointer), (type_pointer))       \</div>
-<div class="line">            .private}</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Handle.html">CCC_Handle</a> <span class="keyword">private</span>; }){                                         \</div>
+<div class="line">        CCC_array_adaptive_map_try_insert(                                     \</div>
+<div class="line">            (map_pointer), (type_pointer), allocator_pointer                   \</div>
+<div class="line">        )}                                                                     \</div>
+<div class="line">         .private</div>
 </div><!-- fragment -->
 <p>Attempts to insert the key value type. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map_pointer</td><td>the pointer to the map. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_pointer</td><td>the handle to the user type map elem. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator_pointer</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for resizing if needed. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1491,76 +1281,8 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 
 </div>
 </div>
-<a id="aa425985d1ddf181e8bec88492b398b19" name="aa425985d1ddf181e8bec88492b398b19"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa425985d1ddf181e8bec88492b398b19">&#9670;&#160;</a></span>CCC_array_adaptive_map_with_allocator</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_array_adaptive_map_with_allocator</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_name, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_key_field, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">compare, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_adaptive_map_with_allocator(type_name, type_key_field,   \</div>
-<div class="line">                                                  compare, allocate)</div>
-</div><!-- fragment -->
-<p>Initialize an empty dynamic map at compile or runtime with an allocator. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the user defined type stored in the map. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_key_field</td><td>the field of the struct used for key storage. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the CCC_Key_comparator the user intends to use. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the CCC_Allocator function used to manage map memory. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the map directly initialized on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> map = <a class="el" href="array__adaptive__map_8h.html#aa425985d1ddf181e8bec88492b398b19" title="Initialize an empty dynamic map at compile or runtime with an allocator.">CCC_array_adaptive_map_with_allocator(...)</a>;)</dd></dl>
-<p>Initialize a dynamic map at compile time.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define ARRAY_ADAPTIVE_MAP_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keyword">struct </span>Val</div>
-<div class="line">{</div>
-<div class="line">    <span class="keywordtype">int</span> key;</div>
-<div class="line">    <span class="keywordtype">int</span> val;</div>
-<div class="line">};</div>
-<div class="line"><span class="keyword">static</span> Array_adaptive_map map = array_adaptive_map_with_allocator(</div>
-<div class="line">    <span class="keyword">struct</span> Val,</div>
-<div class="line">    key,</div>
-<div class="line">    array_adaptive_map_key_order,</div>
-<div class="line">    stdlib_allocate,</div>
-<div class="line">);</div>
-</div><!-- fragment --><p>This can help eliminate boilerplate in initializers. </p>
-
-</div>
-</div>
-<a id="a0d0738a224ebb688483e35d6ed6fa49f" name="a0d0738a224ebb688483e35d6ed6fa49f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0d0738a224ebb688483e35d6ed6fa49f">&#9670;&#160;</a></span>CCC_array_adaptive_map_with_capacity</h2>
+<a id="a58d5cf3ff6ef2104837671a910061d89" name="a58d5cf3ff6ef2104837671a910061d89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58d5cf3ff6ef2104837671a910061d89">&#9670;&#160;</a></span>CCC_array_adaptive_map_with_capacity</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1581,13 +1303,13 @@ If initialization fails all subsequent queries, insertions, or removals will ind
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">compare, </td>
+          <td class="paramname">comparator, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate, </td>
+          <td class="paramname">allocator, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1602,22 +1324,23 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_adaptive_map_with_capacity(type_name, type_key_field,    \</div>
-<div class="line">                                                 compare, allocate, capacity)</div>
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_adaptive_map_with_capacity(                              \</div>
+<div class="line">        type_name, type_key_field, comparator, allocator, capacity             \</div>
+<div class="line">    )</div>
 </div><!-- fragment -->
 <p>Initialize a dynamic map at runtime with at least the specified capacity. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the name of the type being stored in the map. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_key_field</td><td>the field of the struct used for key storage. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the CCC_Key_comparator the user intends to use. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the required allocation function. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">comparator</td><td>the <a class="el" href="structCCC__Key__comparator.html" title="The type passed by reference to any container function that may need to compare keys....">CCC_Key_comparator</a> for key comparison. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the required <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for resizing. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">capacity</td><td>the desired capacity for the map. A capacity of 0 results in an argument error and is a no-op after the map is initialized empty. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the map directly initialized on the right hand side of the equality operator (i.e. <a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> map = <a class="el" href="array__adaptive__map_8h.html#a0d0738a224ebb688483e35d6ed6fa49f" title="Initialize a dynamic map at runtime with at least the specified capacity.">CCC_array_adaptive_map_with_capacity(...)</a>;) </dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>An allocation function is required. This initializer is only available for dynamic maps. </dd>
+<dl class="section return"><dt>Returns</dt><dd>the map directly initialized on the right hand side of the equality operator. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>An allocator is required. </dd>
 <dd>
 If initialization fails all subsequent queries, insertions, or removals will indicate the error: either memory related or lack of an allocation function provided.</dd></dl>
 <p>Initialize a dynamic map at run time. This example requires no context data for initialization.</p>
@@ -1633,8 +1356,8 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <div class="line">    Array_adaptive_map map = array_adaptive_map_with_capacity(</div>
 <div class="line">        <span class="keyword">struct</span> Val,</div>
 <div class="line">        key,</div>
-<div class="line">        array_adaptive_map_key_order,</div>
-<div class="line">        std_allocate,</div>
+<div class="line">        val_key_comparator,</div>
+<div class="line">        std_allocator,</div>
 <div class="line">        4096</div>
 <div class="line">    );</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
@@ -1643,8 +1366,8 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 
 </div>
 </div>
-<a id="a9bd25f93410bb63d318a8639da32bf08" name="a9bd25f93410bb63d318a8639da32bf08"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9bd25f93410bb63d318a8639da32bf08">&#9670;&#160;</a></span>CCC_array_adaptive_map_with_storage</h2>
+<a id="a21ba76d3a7228d1cc7465ca982f63032" name="a21ba76d3a7228d1cc7465ca982f63032"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21ba76d3a7228d1cc7465ca982f63032">&#9670;&#160;</a></span>CCC_array_adaptive_map_with_storage</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1659,7 +1382,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">compare, </td>
+          <td class="paramname">comparator, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1681,13 +1404,17 @@ If initialization fails all subsequent queries, insertions, or removals will ind
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_adaptive_map_with_storage(                               \</div>
-<div class="line">        type_key_field, compare, compound_literal, optional_storage_specifier)</div>
+<div class="line">        type_key_field,                                                        \</div>
+<div class="line">        comparator,                                                            \</div>
+<div class="line">        compound_literal,                                                      \</div>
+<div class="line">        optional_storage_specifier                                             \</div>
+<div class="line">    )</div>
 </div><!-- fragment -->
 <p>Initialize a fixed map at compile or runtime from any user chosen type with no allocation permission or context. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">type_key_field</td><td>the field of the struct used for key storage. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the CCC_Key_comparator the user intends to use. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">comparator</td><td>the <a class="el" href="structCCC__Key__comparator.html" title="The type passed by reference to any container function that may need to compare keys....">CCC_Key_comparator</a> for key comparison. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal</td><td>the compound literal array of a type provided by the user around which the struct of array backing storage for the map will be built. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">optional_storage_specifier</td><td>lifetime specifier of the backing struct of array storage, such as static, for the fixed size map in the scope at which it is allocated or declared. </td></tr>
   </table>
@@ -1703,7 +1430,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <div class="line">};</div>
 <div class="line"><span class="keyword">static</span> Array_adaptive_map map = array_adaptive_map_with_storage(</div>
 <div class="line">    key,</div>
-<div class="line">    array_adaptive_map_key_order,</div>
+<div class="line">    val_key_comparator,</div>
 <div class="line">    (<span class="keyword">struct</span> Val[4096]){}</div>
 <div class="line">);</div>
 </div><!-- fragment --><p>This can help eliminate boilerplate in initializers. </p>
@@ -1729,14 +1456,14 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 
 </div>
 </div>
-<a id="a67ce76b9053351d5eabb334544cb2530" name="a67ce76b9053351d5eabb334544cb2530"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a67ce76b9053351d5eabb334544cb2530">&#9670;&#160;</a></span>CCC_Array_adaptive_map_handle</h2>
+<a id="af1cdc3fc275169b6b7dc711e4c6f4951" name="af1cdc3fc275169b6b7dc711e4c6f4951"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1cdc3fc275169b6b7dc711e4c6f4951">&#9670;&#160;</a></span>CCC_Array_adaptive_map_handle</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef union <a class="el" href="unionCCC__Array__adaptive__map__handle__wrap.html">CCC_Array_adaptive_map_handle_wrap</a> <a class="el" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a></td>
+          <td class="memname">typedef struct <a class="el" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a> <a class="el" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1747,54 +1474,8 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a548de9bd7a9ce9f9ce561950fb09cd7a" name="a548de9bd7a9ce9f9ce561950fb09cd7a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a548de9bd7a9ce9f9ce561950fb09cd7a">&#9670;&#160;</a></span>CCC_array_adaptive_map_and_context_modify()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a> * CCC_array_adaptive_map_and_context_modify </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a> *&#160;</td>
-          <td class="paramname"><em>handle</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#af3851f6fdc1c8255c6b1713c8ffc1bdd">CCC_Type_modifier</a> *&#160;</td>
-          <td class="paramname"><em>modify</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>context</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Modifies the provided handle if it is Occupied. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">handle</td><td>the handle obtained from a handle function or macro. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">modify</td><td>an update function that requires context data. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>context data required for the update. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the updated handle if it was Occupied or the unmodified vacant handle.</dd></dl>
-<p>This function makes full use of a CCC_Type_modifier capability, meaning a complete CCC_update object will be passed to the update function callback. </p>
-
-</div>
-</div>
-<a id="a058ecd325865647858f89b14e6e6a9e3" name="a058ecd325865647858f89b14e6e6a9e3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a058ecd325865647858f89b14e6e6a9e3">&#9670;&#160;</a></span>CCC_array_adaptive_map_and_modify()</h2>
+<a id="a6187267d7956c2cdd255749e4ee69cc9" name="a6187267d7956c2cdd255749e4ee69cc9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6187267d7956c2cdd255749e4ee69cc9">&#9670;&#160;</a></span>CCC_array_adaptive_map_and_modify()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1808,8 +1489,8 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#af3851f6fdc1c8255c6b1713c8ffc1bdd">CCC_Type_modifier</a> *&#160;</td>
-          <td class="paramname"><em>modify</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="structCCC__Modifier.html">CCC_Modifier</a> const *&#160;</td>
+          <td class="paramname"><em>modifier</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1823,12 +1504,11 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">handle</td><td>the handle obtained from a handle function or macro. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">modify</td><td>an update function in which the context argument is unused. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">modifier</td><td>a <a class="el" href="structCCC__Modifier.html" title="The type passed by reference to any container function that may need to modify elements....">CCC_Modifier</a> to operate on an Occupied entry. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the updated handle if it was Occupied or the unmodified vacant handle.</dd></dl>
-<p>This function is intended to make the function chaining in the Handle Interface more succinct if the handle will be modified in place based on its own value without the need of the context argument a CCC_Type_modifier can provide. </p>
+<dl class="section return"><dt>Returns</dt><dd>the updated handle if it was Occupied or unmodified Vacant handle. </dd></dl>
 
 </div>
 </div>
@@ -1927,8 +1607,8 @@ do not try to access data in the table manually with a handle. Always use this p
 
 </div>
 </div>
-<a id="a7d7640632d28dcb6f4f780ec97abcc2f" name="a7d7640632d28dcb6f4f780ec97abcc2f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7d7640632d28dcb6f4f780ec97abcc2f">&#9670;&#160;</a></span>CCC_array_adaptive_map_clear()</h2>
+<a id="a3726056d1fe7f8dc960d99b37e45b0f9" name="a3726056d1fe7f8dc960d99b37e45b0f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3726056d1fe7f8dc960d99b37e45b0f9">&#9670;&#160;</a></span>CCC_array_adaptive_map_clear()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1942,8 +1622,8 @@ do not try to access data in the table manually with a handle. Always use this p
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#a93e9728dd87d940e8f171efea75ee8d2">CCC_Type_destructor</a> *&#160;</td>
-          <td class="paramname"><em>destroy</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="structCCC__Destructor.html">CCC_Destructor</a> const *&#160;</td>
+          <td class="paramname"><em>destructor</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1957,16 +1637,16 @@ do not try to access data in the table manually with a handle. Always use this p
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map</td><td>the map to be cleared. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">destroy</td><td>the destructor for each element. NULL can be passed if no maintenance is required on the elements in the map before their slots are forfeit.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">destructor</td><td>the <a class="el" href="structCCC__Destructor.html" title="The type passed by reference to any container function that may need to destroy elements....">CCC_Destructor</a> or <code>&amp;(<a class="el" href="structCCC__Destructor.html" title="The type passed by reference to any container function that may need to destroy elements....">CCC_Destructor</a>){}</code> if no maintenance is required on the elements in the map before their slots are forfeit.</td></tr>
   </table>
   </dd>
 </dl>
-<p>If NULL is passed as the destructor function time is O(1), else O(size). </p>
+<p>If the destructor is empty runtime is O(1), else O(size). </p>
 
 </div>
 </div>
-<a id="afe0554a3e3d434b715fa8358370e119a" name="afe0554a3e3d434b715fa8358370e119a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afe0554a3e3d434b715fa8358370e119a">&#9670;&#160;</a></span>CCC_array_adaptive_map_clear_and_free()</h2>
+<a id="a938bd80bb9947d004ab7bc8d1b63460b" name="a938bd80bb9947d004ab7bc8d1b63460b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a938bd80bb9947d004ab7bc8d1b63460b">&#9670;&#160;</a></span>CCC_array_adaptive_map_clear_and_free()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1980,8 +1660,14 @@ do not try to access data in the table manually with a handle. Always use this p
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#a93e9728dd87d940e8f171efea75ee8d2">CCC_Type_destructor</a> *&#160;</td>
-          <td class="paramname"><em>destroy</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="structCCC__Destructor.html">CCC_Destructor</a> const *&#160;</td>
+          <td class="paramname"><em>destructor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1995,61 +1681,13 @@ do not try to access data in the table manually with a handle. Always use this p
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map</td><td>the map to be cleared. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">destroy</td><td>the destructor for each element. NULL can be passed if no maintenance is required on the elements in the map before their slots are forfeit. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">destructor</td><td>the <a class="el" href="structCCC__Destructor.html" title="The type passed by reference to any container function that may need to destroy elements....">CCC_Destructor</a> or <code>&amp;(<a class="el" href="structCCC__Destructor.html" title="The type passed by reference to any container function that may need to destroy elements....">CCC_Destructor</a>){}</code> if no maintenance is required on the elements in the map before their slots are forfeit. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for resizing if needed. maintenance is required on the elements in the map before their slots are forfeit. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the result of free operation. If no allocate function is provided it is an error to attempt to free the Buffer and a memory error is returned. Otherwise, an OK result is returned.</dd></dl>
-<p>If NULL is passed as the destructor function time is O(1), else O(size). </p>
-
-</div>
-</div>
-<a id="a5eeea17f39c030003d233a78c258ea6e" name="a5eeea17f39c030003d233a78c258ea6e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5eeea17f39c030003d233a78c258ea6e">&#9670;&#160;</a></span>CCC_array_adaptive_map_clear_and_free_reserve()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> CCC_array_adaptive_map_clear_and_free_reserve </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *&#160;</td>
-          <td class="paramname"><em>map</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#a93e9728dd87d940e8f171efea75ee8d2">CCC_Type_destructor</a> *&#160;</td>
-          <td class="paramname"><em>destroy</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a> *&#160;</td>
-          <td class="paramname"><em>allocate</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Frees all slots in the array_adaptive_map and frees the underlying Buffer that was previously dynamically reserved with the reserve function. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">map</td><td>the map to be cleared. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">destroy</td><td>the destructor for each element. NULL can be passed if no maintenance is required on the elements in the array_adaptive_map before their slots are dropped. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the required allocation function to provide to a dynamically reserved array_adaptive_map. Any context data provided upon initialization will be passed to the allocation function when called. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the result of free operation. OK if success, or an error status to indicate the error. </dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>It is an error to call this function on a array_adaptive_map that was not reserved with the provided CCC_Allocator. The array_adaptive_map must have existing memory to free.</dd></dl>
-<p>This function covers the edge case of reserving a dynamic capacity for a array_adaptive_map at runtime but denying the array_adaptive_map allocation permission to resize. This can help prevent a array_adaptive_map from growing untree. The user in this case knows the array_adaptive_map does not have allocation permission and therefore no further memory will be dedicated to the array_adaptive_map.</p>
-<p>However, to free the array_adaptive_map in such a case this function must be used because the array_adaptive_map has no ability to free itself. Just as the allocation function is required to reserve memory so to is it required to free memory.</p>
-<p>This function will work normally if called on a array_adaptive_map with allocation permission however the normal CCC_array_adaptive_map_clear_and_free is sufficient for that use case. </p>
+<p>If the destructor is empty runtime is O(1), else O(size). </p>
 
 </div>
 </div>
@@ -2091,8 +1729,8 @@ do not try to access data in the table manually with a handle. Always use this p
 
 </div>
 </div>
-<a id="a0547f59ae3d0b1297228816fa22e39df" name="a0547f59ae3d0b1297228816fa22e39df"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0547f59ae3d0b1297228816fa22e39df">&#9670;&#160;</a></span>CCC_array_adaptive_map_copy()</h2>
+<a id="a6a2cf3a448bd5bae51d37b6e49f0b040" name="a6a2cf3a448bd5bae51d37b6e49f0b040"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a2cf3a448bd5bae51d37b6e49f0b040">&#9670;&#160;</a></span>CCC_array_adaptive_map_copy()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2112,8 +1750,8 @@ do not try to access data in the table manually with a handle. Always use this p
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a> *&#160;</td>
-          <td class="paramname"><em>allocate</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2128,13 +1766,13 @@ do not try to access data in the table manually with a handle. Always use this p
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">destination</td><td>the initialized destination for the copy of the source map. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">source</td><td>the initialized source of the map. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the allocation function to resize destination or NULL. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for resizing if needed. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the result of the copy operation. If the destination capacity is less than the source capacity and no allocation function is provided an input error is returned. If resizing is required and resizing of destination fails a memory error is returned. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>destination must have capacity greater than or equal to source. If destination capacity is less than source, an allocation function must be provided with the fn argument.</dd></dl>
-<p>Note that there are two ways to copy data from source to destination: provide sufficient memory and pass NULL as fn, or allow the copy function to take care of allocation for the copy.</p>
+<dl class="section return"><dt>Returns</dt><dd>the result of the copy operation. If the destination capacity is less than the source capacity and no allocator is provided an input error is returned. If resizing is required and resizing of destination fails a memory error is returned. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>destination must have capacity greater than or equal to source. If destination capacity is less than source, an allocator must be provided.</dd></dl>
+<p>Note that there are two ways to copy data from source to destination: provide sufficient memory and pass <code>&amp;(<a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a>){}</code>, or allow the allocator to perform allocation for the copy.</p>
 <p>Manual memory management with no allocation function provided.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define ARRAY_ADAPTIVE_MAP_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="keyword">struct </span>Val</div>
@@ -2142,28 +1780,23 @@ do not try to access data in the table manually with a handle. Always use this p
 <div class="line">    <span class="keywordtype">int</span> key;</div>
 <div class="line">    <span class="keywordtype">int</span> val;</div>
 <div class="line">};</div>
-<div class="line">CCC_array_adaptive_map_declare_fixed(Small_fixed_map, <span class="keyword">struct</span> Val, 64);</div>
-<div class="line"><span class="keyword">static</span> Array_tree_map source = array_adaptive_map_for(</div>
+<div class="line"><span class="keyword">static</span> Array_tree_map source = array_adaptive_map_with_storage(</div>
 <div class="line">    <span class="keyword">struct</span> Val,</div>
 <div class="line">    key,</div>
-<div class="line">    array_adaptive_map_key_order,</div>
-<div class="line">    NULL,</div>
-<div class="line">    NULL,</div>
-<div class="line">    array_adaptive_map_fixed_capacity(Small_fixed_map),</div>
-<div class="line">    &amp;(<span class="keyword">static</span> Small_fixed_map){}</div>
+<div class="line">    val_key_comparator,</div>
+<div class="line">    &amp;(<span class="keyword">struct</span> Val[64]){}</div>
 <div class="line">);</div>
-<div class="line">insert_rand_vals(&amp;source);</div>
-<div class="line"><span class="keyword">static</span> Array_tree_map destination = array_adaptive_map_for(</div>
+<div class="line">insert_rand_vals(&amp;source, &amp;(<a class="code hl_struct" href="structCCC__Allocator.html">CCC_Allocator</a>){});</div>
+<div class="line"><span class="keyword">static</span> Array_tree_map destination = array_adaptive_map_with_storage(</div>
 <div class="line">    <span class="keyword">struct</span> Val,</div>
 <div class="line">    key,</div>
-<div class="line">    array_adaptive_map_key_order,</div>
-<div class="line">    NULL,</div>
-<div class="line">    NULL,</div>
-<div class="line">    array_adaptive_map_fixed_capacity(Small_fixed_map),</div>
-<div class="line">    &amp;(<span class="keyword">static</span> Small_fixed_map){}</div>
+<div class="line">    val_key_comparator,</div>
+<div class="line">    &amp;(<span class="keyword">struct</span> Val[64]){}</div>
 <div class="line">);</div>
-<div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res = array_adaptive_map_copy(&amp;destination, &amp;source, NULL);</div>
-<div class="ttc" id="atypes_8h_html_aa1ded61d294b114942f11e711b331dcf"><div class="ttname"><a href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a></div><div class="ttdeci">CCC_Result</div><div class="ttdoc">A result of actions on containers.</div><div class="ttdef"><b>Definition:</b> types.h:146</div></div>
+<div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res</div>
+<div class="line">    = array_adaptive_map_copy(&amp;destination, &amp;source, &amp;(<a class="code hl_struct" href="structCCC__Allocator.html">CCC_Allocator</a>){});</div>
+<div class="ttc" id="astructCCC__Allocator_html"><div class="ttname"><a href="structCCC__Allocator.html">CCC_Allocator</a></div><div class="ttdoc">The type passed by reference to any container function that may need to allocate memory....</div><div class="ttdef"><b>Definition:</b> types.h:385</div></div>
+<div class="ttc" id="atypes_8h_html_aa1ded61d294b114942f11e711b331dcf"><div class="ttname"><a href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a></div><div class="ttdeci">CCC_Result</div><div class="ttdoc">A result of actions on containers.</div><div class="ttdef"><b>Definition:</b> types.h:208</div></div>
 </div><!-- fragment --><p>The above requires destination capacity be greater than or equal to source capacity. Here is memory management handed over to the copy function.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define ARRAY_ADAPTIVE_MAP_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="keyword">struct </span>Val</div>
@@ -2171,56 +1804,21 @@ do not try to access data in the table manually with a handle. Always use this p
 <div class="line">    <span class="keywordtype">int</span> key;</div>
 <div class="line">    <span class="keywordtype">int</span> val;</div>
 <div class="line">};</div>
-<div class="line"><span class="keyword">static</span> Array_adaptive_map source = array_adaptive_map_for(</div>
+<div class="line"><span class="keyword">static</span> Array_adaptive_map source = array_adaptive_map_default(</div>
 <div class="line">    <span class="keyword">struct</span> Val,</div>
 <div class="line">    key,</div>
-<div class="line">    key_order,</div>
-<div class="line">    std_allocate,</div>
-<div class="line">    NULL,</div>
-<div class="line">    0,</div>
-<div class="line">    NULL</div>
+<div class="line">    val_key_comparator</div>
 <div class="line">);</div>
-<div class="line">insert_rand_vals(&amp;source);</div>
+<div class="line">insert_rand_vals(&amp;source, &amp;std_allocator);</div>
 <div class="line"><span class="keyword">static</span> Array_adaptive_map destination = array_adaptive_map_for(</div>
 <div class="line">    <span class="keyword">struct</span> Val,</div>
 <div class="line">    key,</div>
 <div class="line">    key_order,</div>
-<div class="line">    std_allocate,</div>
-<div class="line">    NULL,</div>
-<div class="line">    0,</div>
-<div class="line">    NULL</div>
-<div class="line">);</div>
-<div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res = array_adaptive_map_copy(&amp;destination, &amp;source, std_allocate);</div>
-</div><!-- fragment --><p>The above allows destination to have a capacity less than that of the source as long as copy has been provided an allocation function to resize destination. Note that this would still work if copying to a destination that the user wants as a fixed size map.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define ARRAY_ADAPTIVE_MAP_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keyword">struct </span>Val</div>
-<div class="line">{</div>
-<div class="line">    <span class="keywordtype">int</span> key;</div>
-<div class="line">    <span class="keywordtype">int</span> val;</div>
-<div class="line">};</div>
-<div class="line"><span class="keyword">static</span> Array_adaptive_map source = array_adaptive_map_for(</div>
-<div class="line">    <span class="keyword">struct</span> Val,</div>
-<div class="line">    key,</div>
-<div class="line">    key_order,</div>
-<div class="line">    std_allocate,</div>
-<div class="line">    NULL,</div>
-<div class="line">    0,</div>
-<div class="line">    NULL</div>
-<div class="line">);</div>
-<div class="line">insert_rand_vals(&amp;source);</div>
-<div class="line"><span class="keyword">static</span> Array_adaptive_map destination = array_adaptive_map_for(</div>
-<div class="line">    <span class="keyword">struct</span> Val,</div>
-<div class="line">    key,</div>
-<div class="line">    key_order,</div>
-<div class="line">    NULL,</div>
-<div class="line">    NULL,</div>
-<div class="line">    0,</div>
-<div class="line">    NULL</div>
+<div class="line">    val_key_comparator</div>
 <div class="line">);</div>
 <div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res</div>
-<div class="line">    = array_adaptive_map_copy(&amp;destination, &amp;source, std_allocate);</div>
-</div><!-- fragment --><p>The above sets up destination with fixed size while source is a dynamic map. Because an allocation function is provided, the destination is resized once for the copy and retains its fixed size after the copy is complete. This would require the user to manually free the underlying Buffer at destination eventually if this method is used. Usually it is better to allocate the memory explicitly before the copy if copying between maps without allocation permission.</p>
-<p>These options allow users to stay consistent across containers with their memory management strategies. </p>
+<div class="line">    = array_adaptive_map_copy(&amp;destination, &amp;source, &amp;std_allocator);</div>
+</div><!-- fragment --><p>These options allow users to stay consistent across containers with their memory management strategies. </p>
 
 </div>
 </div>
@@ -2325,7 +1923,7 @@ do not try to access data in the table manually with a handle. Always use this p
 <div class="line">     index != range_end(&amp;range);</div>
 <div class="line">     index = next(&amp;map, index))</div>
 <div class="line">{}</div>
-<div class="ttc" id="atypes_8h_html_a4043390f03f4ec5162e3782152360be9"><div class="ttname"><a href="types_8h.html#a4043390f03f4ec5162e3782152360be9">CCC_Handle_index</a></div><div class="ttdeci">size_t CCC_Handle_index</div><div class="ttdoc">A stable index to user data in a container that uses a flat array as the underlying storage method.</div><div class="ttdef"><b>Definition:</b> types.h:109</div></div>
+<div class="ttc" id="atypes_8h_html_a4043390f03f4ec5162e3782152360be9"><div class="ttname"><a href="types_8h.html#a4043390f03f4ec5162e3782152360be9">CCC_Handle_index</a></div><div class="ttdeci">size_t CCC_Handle_index</div><div class="ttdoc">A stable index to user data in a container that uses a flat array as the underlying storage method.</div><div class="ttdef"><b>Definition:</b> types.h:92</div></div>
 </div><!-- fragment --><p>This avoids any possible errors in handling an end range element that is in the map versus the end map sentinel. </p>
 
 </div>
@@ -2337,7 +1935,7 @@ do not try to access data in the table manually with a handle. Always use this p
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="types_8h.html#aa24094a0fb5618980a629b4accdd37d7">CCC_Handle_range_reverse</a> CCC_array_adaptive_map_equal_range_reverse </td>
+          <td class="memname"><a class="el" href="structCCC__Handle__range__reverse.html">CCC_Handle_range_reverse</a> CCC_array_adaptive_map_equal_range_reverse </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> *&#160;</td>
           <td class="paramname"><em>map</em>, </td>
@@ -2467,7 +2065,7 @@ do not try to access data in the table manually with a handle. Always use this p
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="types_8h.html#a282e45f45cb2493ec1709942eb5d958d">CCC_Handle_status</a> CCC_array_adaptive_map_handle_status </td>
+          <td class="memname"><a class="el" href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8">CCC_Handle_status</a> CCC_array_adaptive_map_handle_status </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structCCC__Array__adaptive__map__handle.html">CCC_Array_adaptive_map_handle</a> const *&#160;</td>
           <td class="paramname"><em>handle</em></td><td>)</td>
@@ -2515,8 +2113,8 @@ do not try to access data in the table manually with a handle. Always use this p
 
 </div>
 </div>
-<a id="ad57ee6a897f22ff36add416aeda62363" name="ad57ee6a897f22ff36add416aeda62363"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad57ee6a897f22ff36add416aeda62363">&#9670;&#160;</a></span>CCC_array_adaptive_map_insert_handle()</h2>
+<a id="a9d761189928c67a98592baac7e99d7e3" name="a9d761189928c67a98592baac7e99d7e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d761189928c67a98592baac7e99d7e3">&#9670;&#160;</a></span>CCC_array_adaptive_map_insert_handle()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2531,7 +2129,13 @@ do not try to access data in the table manually with a handle. Always use this p
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">void const *&#160;</td>
-          <td class="paramname"><em>type</em>&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2546,6 +2150,7 @@ do not try to access data in the table manually with a handle. Always use this p
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">handle</td><td>the handle returned from a call obtaining a handle. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type</td><td>a handle to the struct the user intends to insert. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for resizing if needed. </td></tr>
   </table>
   </dd>
 </dl>
@@ -2554,8 +2159,8 @@ do not try to access data in the table manually with a handle. Always use this p
 
 </div>
 </div>
-<a id="aacdf570b3ea9a14f0e6c3e32c30bb29c" name="aacdf570b3ea9a14f0e6c3e32c30bb29c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aacdf570b3ea9a14f0e6c3e32c30bb29c">&#9670;&#160;</a></span>CCC_array_adaptive_map_insert_or_assign()</h2>
+<a id="a06c5696b291d3a907e333996c48aa52b" name="a06c5696b291d3a907e333996c48aa52b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06c5696b291d3a907e333996c48aa52b">&#9670;&#160;</a></span>CCC_array_adaptive_map_insert_or_assign()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2570,7 +2175,13 @@ do not try to access data in the table manually with a handle. Always use this p
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">void const *&#160;</td>
-          <td class="paramname"><em>type</em>&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2583,8 +2194,9 @@ do not try to access data in the table manually with a handle. Always use this p
 <p>Invariantly inserts or overwrites a user struct into the map. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">map</td><td>a pointer to the handle hash map. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">map</td><td>a pointer to the handle map. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type</td><td>the user struct key value type. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for resizing if needed. </td></tr>
   </table>
   </dd>
 </dl>
@@ -2685,8 +2297,8 @@ do not try to access data in the table manually with a handle. Always use this p
 
 </div>
 </div>
-<a id="a44f38daab50a3397e9f8f13f27aa6cef" name="a44f38daab50a3397e9f8f13f27aa6cef"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a44f38daab50a3397e9f8f13f27aa6cef">&#9670;&#160;</a></span>CCC_array_adaptive_map_or_insert()</h2>
+<a id="ace72fba0dc6daa6bab0fb0c07feefc07" name="ace72fba0dc6daa6bab0fb0c07feefc07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace72fba0dc6daa6bab0fb0c07feefc07">&#9670;&#160;</a></span>CCC_array_adaptive_map_or_insert()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2701,7 +2313,13 @@ do not try to access data in the table manually with a handle. Always use this p
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">void const *&#160;</td>
-          <td class="paramname"><em>type</em>&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2716,6 +2334,7 @@ do not try to access data in the table manually with a handle. Always use this p
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">handle</td><td>the handle obtained via function or macro call. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type</td><td>handle to the struct to be inserted to Vacant handle. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for resizing if needed. </td></tr>
   </table>
   </dd>
 </dl>
@@ -2791,8 +2410,8 @@ do not try to access data in the table manually with a handle. Always use this p
 
 </div>
 </div>
-<a id="a052a37b91d2460ef5415c4a21fa92494" name="a052a37b91d2460ef5415c4a21fa92494"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a052a37b91d2460ef5415c4a21fa92494">&#9670;&#160;</a></span>CCC_array_adaptive_map_reserve()</h2>
+<a id="ac894ffcd7c30d50d98c1b15805ac1d1b" name="ac894ffcd7c30d50d98c1b15805ac1d1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac894ffcd7c30d50d98c1b15805ac1d1b">&#9670;&#160;</a></span>CCC_array_adaptive_map_reserve()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2812,8 +2431,8 @@ do not try to access data in the table manually with a handle. Always use this p
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a> *&#160;</td>
-          <td class="paramname"><em>allocate</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2828,14 +2447,11 @@ do not try to access data in the table manually with a handle. Always use this p
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map</td><td>a pointer to the array adaptive map. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">to_add</td><td>the number of elements to add to the current size. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the allocation function to use to reserve memory. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the required <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for resizing. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the result of the reservation. OK if successful, otherwise an error status is returned. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>see the CCC_array_adaptive_map_clear_and_free_reserve function if this function is being used for a one-time dynamic reservation.</dd></dl>
-<p>This function can be used for a dynamic array_adaptive_map with or without allocation permission. If the array_adaptive_map has allocation permission, it will reserve the required space and later resize if more space is needed.</p>
-<p>If the array_adaptive_map has been initialized with no allocation permission and no memory this function can serve as a one-time reservation. This is helpful when a fixed size is needed but that size is only known dynamically at runtime. To free the array_adaptive_map in such a case see the CCC_array_adaptive_map_clear_and_free_reserve function. </p>
 
 </div>
 </div>
@@ -2931,8 +2547,8 @@ do not try to access data in the table manually with a handle. Always use this p
 
 </div>
 </div>
-<a id="a12e3313f0460ecdb3140ad48de2e3d61" name="a12e3313f0460ecdb3140ad48de2e3d61"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a12e3313f0460ecdb3140ad48de2e3d61">&#9670;&#160;</a></span>CCC_array_adaptive_map_swap_handle()</h2>
+<a id="ab235b8b65ad4493ada83a00f676bbc21" name="ab235b8b65ad4493ada83a00f676bbc21"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab235b8b65ad4493ada83a00f676bbc21">&#9670;&#160;</a></span>CCC_array_adaptive_map_swap_handle()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2947,7 +2563,13 @@ do not try to access data in the table manually with a handle. Always use this p
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>type_output</em>&#160;</td>
+          <td class="paramname"><em>type_output</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2962,6 +2584,7 @@ do not try to access data in the table manually with a handle. Always use this p
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map</td><td>the pointer to the adaptive map. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">type_output</td><td>the handle to the user type map elem. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for resizing if needed. </td></tr>
   </table>
   </dd>
 </dl>
@@ -2970,8 +2593,8 @@ do not try to access data in the table manually with a handle. Always use this p
 
 </div>
 </div>
-<a id="a615526c758a02c6c994784d21eb756fe" name="a615526c758a02c6c994784d21eb756fe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a615526c758a02c6c994784d21eb756fe">&#9670;&#160;</a></span>CCC_array_adaptive_map_try_insert()</h2>
+<a id="ac03106ed5da63d190ff2f7ee509177d0" name="ac03106ed5da63d190ff2f7ee509177d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac03106ed5da63d190ff2f7ee509177d0">&#9670;&#160;</a></span>CCC_array_adaptive_map_try_insert()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2986,7 +2609,13 @@ do not try to access data in the table manually with a handle. Always use this p
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">void const *&#160;</td>
-          <td class="paramname"><em>type</em>&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -3001,6 +2630,7 @@ do not try to access data in the table manually with a handle. Always use this p
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map</td><td>the pointer to the map. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type</td><td>the handle to the user type map elem. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for resizing if needed. </td></tr>
   </table>
   </dd>
 </dl>

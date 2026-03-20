@@ -102,8 +102,9 @@ Collaboration diagram for CCC_Adaptive_map:</div>
 <div class="dyncontent">
 <div class="center"><img src="structCCC__Adaptive__map__coll__graph.png" border="0" usemap="#aCCC__Adaptive__map_coll__map" alt="Collaboration graph"/></div>
 <map name="aCCC__Adaptive__map_coll__map" id="aCCC__Adaptive__map_coll__map">
-<area shape="rect" title=" " alt="" coords="25,97,175,123"/>
+<area shape="rect" title=" " alt="" coords="229,97,379,123"/>
 <area shape="rect" href="structCCC__Adaptive__map__node.html" title=" " alt="" coords="5,7,195,33"/>
+<area shape="rect" href="structCCC__Key__comparator.html" title="The type passed by reference to any container function that may need to compare keys...." alt="" coords="292,7,455,33"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -121,56 +122,22 @@ Data Fields</h2></td></tr>
 <tr class="separator:a2bb70bf3db3d5ace5e205ff4bd1b9816"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f3461b9bfee50ab8786d645548d7610"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Adaptive__map.html#a5f3461b9bfee50ab8786d645548d7610">key_offset</a></td></tr>
 <tr class="separator:a5f3461b9bfee50ab8786d645548d7610"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d55ab865be782d2337599976a6d6995"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a70073fb5defeba83308b92f2fff63fac">CCC_Key_comparator</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Adaptive__map.html#a3d55ab865be782d2337599976a6d6995">compare</a></td></tr>
-<tr class="separator:a3d55ab865be782d2337599976a6d6995"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9753b9a1b7b8541cfcb131afaa832add"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Adaptive__map.html#a9753b9a1b7b8541cfcb131afaa832add">allocate</a></td></tr>
-<tr class="separator:a9753b9a1b7b8541cfcb131afaa832add"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f7235ffcabd69b977a967ce92fc954f"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Adaptive__map.html#a0f7235ffcabd69b977a967ce92fc954f">context</a></td></tr>
-<tr class="separator:a0f7235ffcabd69b977a967ce92fc954f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae445cc9aea21f1d8bdbf44f37d6c77ac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Key__comparator.html">CCC_Key_comparator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Adaptive__map.html#ae445cc9aea21f1d8bdbf44f37d6c77ac">comparator</a></td></tr>
+<tr class="separator:ae445cc9aea21f1d8bdbf44f37d6c77ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
-<a id="a9753b9a1b7b8541cfcb131afaa832add" name="a9753b9a1b7b8541cfcb131afaa832add"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9753b9a1b7b8541cfcb131afaa832add">&#9670;&#160;</a></span>allocate</h2>
+<a id="ae445cc9aea21f1d8bdbf44f37d6c77ac" name="ae445cc9aea21f1d8bdbf44f37d6c77ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae445cc9aea21f1d8bdbf44f37d6c77ac">&#9670;&#160;</a></span>comparator</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a>* CCC_Adaptive_map::allocate</td>
+          <td class="memname"><a class="el" href="structCCC__Key__comparator.html">CCC_Key_comparator</a> CCC_Adaptive_map::comparator</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The user defined allocation function, if any. </p>
-
-</div>
-</div>
-<a id="a3d55ab865be782d2337599976a6d6995" name="a3d55ab865be782d2337599976a6d6995"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3d55ab865be782d2337599976a6d6995">&#9670;&#160;</a></span>compare</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="types_8h.html#a70073fb5defeba83308b92f2fff63fac">CCC_Key_comparator</a>* CCC_Adaptive_map::compare</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>The user defined comparison callback function. </p>
-
-</div>
-</div>
-<a id="a0f7235ffcabd69b977a967ce92fc954f" name="a0f7235ffcabd69b977a967ce92fc954f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0f7235ffcabd69b977a967ce92fc954f">&#9670;&#160;</a></span>context</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void* CCC_Adaptive_map::context</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Auxiliary data, if any. </p>
+<p>The user defined comparison callback and context. </p>
 
 </div>
 </div>

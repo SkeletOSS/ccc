@@ -1,5 +1,6 @@
 <map id="CCC_Array_adaptive_map_handle" name="CCC_Array_adaptive_map_handle">
-<area shape="rect" id="node1" title=" " alt="" coords="23,196,178,236"/>
-<area shape="rect" id="node2" href="$structCCC__Array__adaptive__map.html" title=" " alt="" coords="5,108,196,133"/>
-<area shape="rect" id="node3" href="$structCCC__Array__adaptive__map__node.html" title=" " alt="" coords="23,5,178,45"/>
+<area shape="rect" id="node1" title=" " alt="" coords="96,196,251,236"/>
+<area shape="rect" id="node2" href="$structCCC__Array__adaptive__map.html" title=" " alt="" coords="78,108,269,133"/>
+<area shape="rect" id="node3" href="$structCCC__Array__adaptive__map__node.html" title=" " alt="" coords="5,5,160,45"/>
+<area shape="rect" id="node4" href="$structCCC__Key__comparator.html" title="The type passed by reference to any container function that may need to compare keys...." alt="" coords="184,13,347,38"/>
 </map>

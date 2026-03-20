@@ -96,26 +96,30 @@ $(document).ready(function(){initNavTree('structCCC__Entry.html',''); initResiza
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="private__types_8h_source.html">private_types.h</a>&gt;</code></p>
+<p>An Occupied or Vacant position in a searchable container.  
+ <a href="structCCC__Entry.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="types_8h_source.html">types.h</a>&gt;</code></p>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>An entry is inspired by Rust's Entry API. Entries provide elegant and efficient ways to interact with associative containers. Instead of searching for elements and then inserting or removing based on the result of a search, we can obtain either the present element or a vacant slot where the element belongs. This allows us to act how we wish with this reference and no second insert, search, or remove operation is needed. </p>
+<div class="textblock"><p>An Occupied or Vacant position in a searchable container. </p>
+<p>A entry is the basis for more complex container specific Entry Interface for all search-by-key containers. An entry is returned from various operations to provide both a reference to data and any context status that is important for the user. An entry can be Occupied or Vacant. See individual headers for containers that return this type for its meaning in context. </p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
 <tr class="memitem:a4a6fadeba22d89ee3e7f46edf38db2f4"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Entry.html#a4a6fadeba22d89ee3e7f46edf38db2f4">type</a></td></tr>
 <tr class="separator:a4a6fadeba22d89ee3e7f46edf38db2f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5fe022cb31b847080d213f72c0835cd1"><td class="memItemLeft" align="right" valign="top">enum CCC_Entry_status&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Entry.html#a5fe022cb31b847080d213f72c0835cd1">status</a></td></tr>
-<tr class="separator:a5fe022cb31b847080d213f72c0835cd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9e3883d6e8e864022a62fe4c7282815"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8">CCC_Entry_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Entry.html#aa9e3883d6e8e864022a62fe4c7282815">status</a></td></tr>
+<tr class="separator:aa9e3883d6e8e864022a62fe4c7282815"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
-<a id="a5fe022cb31b847080d213f72c0835cd1" name="a5fe022cb31b847080d213f72c0835cd1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5fe022cb31b847080d213f72c0835cd1">&#9670;&#160;</a></span>status</h2>
+<a id="aa9e3883d6e8e864022a62fe4c7282815" name="aa9e3883d6e8e864022a62fe4c7282815"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9e3883d6e8e864022a62fe4c7282815">&#9670;&#160;</a></span>status</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum CCC_Entry_status CCC_Entry::status</td>
+          <td class="memname"><a class="el" href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8">CCC_Entry_status</a> CCC_Entry::status</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -139,7 +143,7 @@ Data Fields</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>ccc/private/<a class="el" href="private__types_8h_source.html">private_types.h</a></li>
+<li>ccc/<a class="el" href="types_8h_source.html">types.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

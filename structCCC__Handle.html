@@ -96,26 +96,30 @@ $(document).ready(function(){initNavTree('structCCC__Handle.html',''); initResiz
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="private__types_8h_source.html">private_types.h</a>&gt;</code></p>
+<p>An Occupied or Vacant handle to a flat searchable container entry.  
+ <a href="structCCC__Handle.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="types_8h_source.html">types.h</a>&gt;</code></p>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A handle is the same as an entry but it uses an index into a contiguous region of storage rather than a pointer. </p>
+<div class="textblock"><p>An Occupied or Vacant handle to a flat searchable container entry. </p>
+<p>A handle uses the same semantics as an entry. However, the wrapped value is a CCC_Handle_index index. When this type is returned the container interface is promising that this element will remain at the returned handle index until the element is removed by the user. This is similar to pointer stability but offers a stronger guarantee that will hold even if the underlying container is resized. </p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:ac987569d51a410be38d45dbc701549c2"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Handle.html#ac987569d51a410be38d45dbc701549c2">index</a></td></tr>
-<tr class="separator:ac987569d51a410be38d45dbc701549c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a726d872faadbfe9a2851ffe77c9e6fc9"><td class="memItemLeft" align="right" valign="top">enum CCC_Entry_status&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Handle.html#a726d872faadbfe9a2851ffe77c9e6fc9">status</a></td></tr>
-<tr class="separator:a726d872faadbfe9a2851ffe77c9e6fc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85398c7567f99c632da10ba0f9f26e89"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a4043390f03f4ec5162e3782152360be9">CCC_Handle_index</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Handle.html#a85398c7567f99c632da10ba0f9f26e89">index</a></td></tr>
+<tr class="separator:a85398c7567f99c632da10ba0f9f26e89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1666c441c9d4deb4ae74b15a864b53f2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8">CCC_Entry_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Handle.html#a1666c441c9d4deb4ae74b15a864b53f2">status</a></td></tr>
+<tr class="separator:a1666c441c9d4deb4ae74b15a864b53f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
-<a id="ac987569d51a410be38d45dbc701549c2" name="ac987569d51a410be38d45dbc701549c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac987569d51a410be38d45dbc701549c2">&#9670;&#160;</a></span>index</h2>
+<a id="a85398c7567f99c632da10ba0f9f26e89" name="a85398c7567f99c632da10ba0f9f26e89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85398c7567f99c632da10ba0f9f26e89">&#9670;&#160;</a></span>index</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">size_t CCC_Handle::index</td>
+          <td class="memname"><a class="el" href="types_8h.html#a4043390f03f4ec5162e3782152360be9">CCC_Handle_index</a> CCC_Handle::index</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -123,14 +127,14 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
-<a id="a726d872faadbfe9a2851ffe77c9e6fc9" name="a726d872faadbfe9a2851ffe77c9e6fc9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a726d872faadbfe9a2851ffe77c9e6fc9">&#9670;&#160;</a></span>status</h2>
+<a id="a1666c441c9d4deb4ae74b15a864b53f2" name="a1666c441c9d4deb4ae74b15a864b53f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1666c441c9d4deb4ae74b15a864b53f2">&#9670;&#160;</a></span>status</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum CCC_Entry_status CCC_Handle::status</td>
+          <td class="memname"><a class="el" href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8">CCC_Entry_status</a> CCC_Handle::status</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -139,7 +143,7 @@ Data Fields</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>ccc/private/<a class="el" href="private__types_8h_source.html">private_types.h</a></li>
+<li>ccc/<a class="el" href="types_8h_source.html">types.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

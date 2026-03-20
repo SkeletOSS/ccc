@@ -12,6 +12,7 @@ var dir_5d984c6d55e750c7f944f580303daf53 =
     [ "flat_priority_queue.h", "flat__priority__queue_8h.html", "flat__priority__queue_8h" ],
     [ "priority_queue.h", "priority__queue_8h.html", "priority__queue_8h" ],
     [ "singly_linked_list.h", "singly__linked__list_8h.html", "singly__linked__list_8h" ],
+    [ "sort.h", "sort_8h_source.html", null ],
     [ "traits.h", "traits_8h.html", "traits_8h" ],
     [ "tree_map.h", "tree__map_8h.html", "tree__map_8h" ],
     [ "types.h", "types_8h.html", "types_8h" ]

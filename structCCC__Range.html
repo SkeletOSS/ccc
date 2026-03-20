@@ -96,29 +96,20 @@ $(document).ready(function(){initNavTree('structCCC__Range.html',''); initResiza
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="private__types_8h_source.html">private_types.h</a>&gt;</code></p>
+<p>The result of a range query on iterable containers.  
+ <a href="structCCC__Range.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="types_8h_source.html">types.h</a>&gt;</code></p>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>The single type used to handle both forward and reverse iteration through containers. The concept is the exact same due to how we always return the full user type during iteration, regardless of the container being intrusive or not. So we use a union for some clarity for the implementer.</p>
-<p>We will also wrap this in two different types so that the user has some help ensuring they pass the correct direction range to the correct function. </p>
+<div class="textblock"><p>The result of a range query on iterable containers. </p>
+<p>A range provides a view all elements that fit the equals range criteria of search-by-key containers. Use the provided range iteration functions in this header to iterate from beginning to end in forward order relative to the containers default ordering. </p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a3ededce6914877204e47cf4fbe761843"><td class="memItemLeft" ><a id="a3ededce6914877204e47cf4fbe761843" name="a3ededce6914877204e47cf4fbe761843"></a>
-union {</td></tr>
-<tr class="memitem:ab0cd5c7c5850a3344203f5fd15b58b96"><td class="memItemLeft" >&#160;&#160;&#160;void *&#160;&#160;&#160;<a class="el" href="structCCC__Range.html#a7c7a801045d2c8c09362d57210e1ae0d">begin</a></td></tr>
-<tr class="separator:ab0cd5c7c5850a3344203f5fd15b58b96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13dec5f03b1a3e953fb5e4b0c24a9a1e"><td class="memItemLeft" >&#160;&#160;&#160;void *&#160;&#160;&#160;<a class="el" href="structCCC__Range.html#a9520cc1fa9cec637c7bc78a4a5eaf58a">reverse_begin</a></td></tr>
-<tr class="separator:a13dec5f03b1a3e953fb5e4b0c24a9a1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ededce6914877204e47cf4fbe761843"><td class="memItemLeft" valign="top">};&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="separator:a3ededce6914877204e47cf4fbe761843"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef0bcacc416ce81d6ec3d9a8237b0f9c"><td class="memItemLeft" ><a id="aef0bcacc416ce81d6ec3d9a8237b0f9c" name="aef0bcacc416ce81d6ec3d9a8237b0f9c"></a>
-union {</td></tr>
-<tr class="memitem:a9f12a8b5868cdac1654db76dc681efdd"><td class="memItemLeft" >&#160;&#160;&#160;void *&#160;&#160;&#160;<a class="el" href="structCCC__Range.html#a1e86c719e3fd0b6906efcacee873a8d3">end</a></td></tr>
-<tr class="separator:a9f12a8b5868cdac1654db76dc681efdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f1b90b6a4e0bac6b797be0f02ad4685"><td class="memItemLeft" >&#160;&#160;&#160;void *&#160;&#160;&#160;<a class="el" href="structCCC__Range.html#ad870d9955799ea390d4d417a603c161e">reverse_end</a></td></tr>
-<tr class="separator:a3f1b90b6a4e0bac6b797be0f02ad4685"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef0bcacc416ce81d6ec3d9a8237b0f9c"><td class="memItemLeft" valign="top">};&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="separator:aef0bcacc416ce81d6ec3d9a8237b0f9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c7a801045d2c8c09362d57210e1ae0d"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Range.html#a7c7a801045d2c8c09362d57210e1ae0d">begin</a></td></tr>
+<tr class="separator:a7c7a801045d2c8c09362d57210e1ae0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e86c719e3fd0b6906efcacee873a8d3"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Range.html#a1e86c719e3fd0b6906efcacee873a8d3">end</a></td></tr>
+<tr class="separator:a1e86c719e3fd0b6906efcacee873a8d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
 <a id="a7c7a801045d2c8c09362d57210e1ae0d" name="a7c7a801045d2c8c09362d57210e1ae0d"></a>
@@ -132,7 +123,7 @@ union {</td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Start of forward iteration for a container. </p>
+<p>The pointer to the begin slot of the range. </p>
 
 </div>
 </div>
@@ -147,42 +138,12 @@ union {</td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>End of forward iteration for a container. </p>
-
-</div>
-</div>
-<a id="a9520cc1fa9cec637c7bc78a4a5eaf58a" name="a9520cc1fa9cec637c7bc78a4a5eaf58a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9520cc1fa9cec637c7bc78a4a5eaf58a">&#9670;&#160;</a></span>reverse_begin</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void* CCC_Range::reverse_begin</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Start of reverse iteration for a container. </p>
-
-</div>
-</div>
-<a id="ad870d9955799ea390d4d417a603c161e" name="ad870d9955799ea390d4d417a603c161e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad870d9955799ea390d4d417a603c161e">&#9670;&#160;</a></span>reverse_end</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void* CCC_Range::reverse_end</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>End of reverse iteration for a container. </p>
+<p>The pointer to the end slot of the range. </p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>ccc/private/<a class="el" href="private__types_8h_source.html">private_types.h</a></li>
+<li>ccc/<a class="el" href="types_8h_source.html">types.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

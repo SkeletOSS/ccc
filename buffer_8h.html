@@ -106,7 +106,6 @@ Include dependency graph for buffer.h:</div>
 <area shape="rect" title="The Buffer Interface." alt="" coords="107,5,203,31"/>
 <area shape="rect" href="private__buffer_8h_source.html" title=" " alt="" coords="5,79,180,104"/>
 <area shape="rect" href="types_8h.html" title="The C Container Collection Fundamental Types." alt="" coords="114,152,197,177"/>
-<area shape="rect" href="private__types_8h_source.html" title=" " alt="" coords="69,225,242,251"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -114,13 +113,14 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="buffer_8h__dep__incl.png" border="0" usemap="#accc_2buffer_8hdep" alt=""/></div>
 <map name="accc_2buffer_8hdep" id="accc_2buffer_8hdep">
-<area shape="rect" title="The Buffer Interface." alt="" coords="116,5,212,31"/>
-<area shape="rect" href="flat__priority__queue_8h.html" title="The Flat Priority Queue Interface." alt="" coords="5,174,187,199"/>
-<area shape="rect" href="private__traits_8h_source.html" title=" " alt="" coords="153,255,295,295"/>
-<area shape="rect" href="private__flat__double__ended__queue_8h_source.html" title=" " alt="" coords="262,79,469,119"/>
-<area shape="rect" href="private__flat__priority__queue_8h_source.html" title=" " alt="" coords="24,79,187,119"/>
-<area shape="rect" href="traits_8h.html" title="The C Container Collection Traits Interface." alt="" coords="177,343,271,368"/>
-<area shape="rect" href="flat__double__ended__queue_8h.html" title="The Flat Double Ended Queue Interface." alt="" coords="271,167,438,207"/>
+<area shape="rect" title="The Buffer Interface." alt="" coords="248,5,344,31"/>
+<area shape="rect" href="flat__double__ended__queue_8h.html" title="The Flat Double Ended Queue Interface." alt="" coords="46,167,213,207"/>
+<area shape="rect" href="private__traits_8h_source.html" title=" " alt="" coords="199,255,342,295"/>
+<area shape="rect" href="flat__priority__queue_8h.html" title="The Flat Priority Queue Interface." alt="" coords="308,174,489,199"/>
+<area shape="rect" href="private__flat__double__ended__queue_8h_source.html" title=" " alt="" coords="26,79,233,119"/>
+<area shape="rect" href="private__flat__priority__queue_8h_source.html" title=" " alt="" coords="359,79,521,119"/>
+<area shape="rect" href="sort_8h_source.html" title=" " alt="" coords="546,86,630,111"/>
+<area shape="rect" href="traits_8h.html" title="The C Container Collection Traits Interface." alt="" coords="224,343,317,368"/>
 </map>
 </div>
 </div>
@@ -130,8 +130,8 @@ This graph shows which files directly or indirectly include this file:</div>
 <p>Buffer usage is similar to a C++ vector, with more flexible functions provided to support higher level containers and abstractions. While useful on its own&ndash;a stack could be implemented with the provided functions&ndash;a buffer is often used as the lower level abstraction for the flat data structures in this library that provide more specialized operations. A Buffer does not require the user accommodate any intrusive elements.</p>
 <p>A Buffer offers a more flexible interface than a standard C++ vector. There are functions that assume elements are stored contiguously from <code>[0, N)</code> where <code>N</code> is the count of elements. However, there are also functions that let the user access any Buffer slot that is within the bounds of Buffer capacity. This requires the user pay closer attention to Buffer usage but ultimately allows a wider variety of abstractions on top of the buffer.</p>
 <p>Interface functions in the slot management section offer data movement and writing operations that do not affect the size of the container. If writing a more complex higher level container that does not need size management these functions offer more custom control over the buffer.</p>
-<p>A Buffer with allocation permission will re-size as required when a new element is inserted in a contiguous fashion. Interface functions in the allocation management section assume elements are stored contiguously and adjust size accordingly.</p>
-<p>If allocation is not permitted, resizing will not occur and the insertion function will fail when capacity is reached, returning some value to indicate failure.</p>
+<p>A Buffer function that accepts an allocator will re-size as required when a new element is inserted in a contiguous fashion if an allocator is provided. Interface functions in the allocation management section assume elements are stored contiguously and adjust size accordingly.</p>
+<p>If an allocator is not provided, resizing will not occur and the insertion function will fail when capacity is reached, returning some value to indicate failure.</p>
 <p>If shorter names are desired, define the following preprocessor directive.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
 </div><!-- fragment --><p>Then, the <code>CCC_</code> prefix can be dropped from all types and functions. </p>
@@ -139,58 +139,46 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Initialization Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Initialize the container with memory, callbacks, and permissions. </p>
 </td></tr>
-<tr class="memitem:a86513108202eb0dd7f87fa0237a9e371"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a86513108202eb0dd7f87fa0237a9e371">CCC_buffer_for</a>(type_name,  allocate,  context,  capacity,  count,  data_pointer...)</td></tr>
-<tr class="memdesc:a86513108202eb0dd7f87fa0237a9e371"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a contiguous Buffer of user a specified type, allocation policy, capacity, and optional starting size.  <br /></td></tr>
-<tr class="separator:a86513108202eb0dd7f87fa0237a9e371"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb6971f97fa83e1a45a955aeec86dd6e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#adb6971f97fa83e1a45a955aeec86dd6e">CCC_buffer_from</a>(allocate,  optional_capacity,  compound_literal_array...)&#160;&#160;&#160;    CCC_private_buffer_from(allocate, optional_capacity, compound_literal_array)</td></tr>
-<tr class="memdesc:adb6971f97fa83e1a45a955aeec86dd6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a Buffer from a compound literal array initializer.  <br /></td></tr>
-<tr class="separator:adb6971f97fa83e1a45a955aeec86dd6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4feae9d8e6344846fda4157cbeccb457"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a4feae9d8e6344846fda4157cbeccb457">CCC_buffer_context_from</a>(allocate,  context,  optional_capacity,  compound_literal_array...)</td></tr>
-<tr class="memdesc:a4feae9d8e6344846fda4157cbeccb457"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a Buffer from a compound literal array initializer.  <br /></td></tr>
-<tr class="separator:a4feae9d8e6344846fda4157cbeccb457"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb20e5d248069330702b80c19c0f9c58"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#adb20e5d248069330702b80c19c0f9c58">CCC_buffer_with_capacity</a>(type_name,  allocate,  capacity)&#160;&#160;&#160;    CCC_private_buffer_with_capacity(type_name, allocate, capacity)</td></tr>
-<tr class="memdesc:adb20e5d248069330702b80c19c0f9c58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a Buffer with a capacity.  <br /></td></tr>
-<tr class="separator:adb20e5d248069330702b80c19c0f9c58"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c321cf5311ef57f693fda5f3ba71a33"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a8c321cf5311ef57f693fda5f3ba71a33">CCC_buffer_context_with_capacity</a>(type_name,  allocate,  context,  capacity)</td></tr>
-<tr class="memdesc:a8c321cf5311ef57f693fda5f3ba71a33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a Buffer with a capacity.  <br /></td></tr>
-<tr class="separator:a8c321cf5311ef57f693fda5f3ba71a33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5003b3b531cf68bdcd51ae5e60d4d814"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a5003b3b531cf68bdcd51ae5e60d4d814">CCC_buffer_default</a>(type_name)&#160;&#160;&#160;CCC_private_buffer_default(type_name)</td></tr>
+<tr class="memdesc:a5003b3b531cf68bdcd51ae5e60d4d814"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a contiguous empty buffer of a type.  <br /></td></tr>
+<tr class="separator:a5003b3b531cf68bdcd51ae5e60d4d814"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32be0a41c4d346f751a04655026d0513"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a32be0a41c4d346f751a04655026d0513">CCC_buffer_for</a>(type_name,  capacity,  count,  data_pointer...)&#160;&#160;&#160;    CCC_private_buffer_for(type_name, capacity, count, data_pointer)</td></tr>
+<tr class="memdesc:a32be0a41c4d346f751a04655026d0513"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a contiguous Buffer of user a specified type, capacity, and optional starting size.  <br /></td></tr>
+<tr class="separator:a32be0a41c4d346f751a04655026d0513"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0c9211d0cd038a89faea9472c50e7ce"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#ae0c9211d0cd038a89faea9472c50e7ce">CCC_buffer_from</a>( allocator,  optional_capacity,  compound_literal_array...)</td></tr>
+<tr class="memdesc:ae0c9211d0cd038a89faea9472c50e7ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a Buffer from a compound literal array initializer.  <br /></td></tr>
+<tr class="separator:ae0c9211d0cd038a89faea9472c50e7ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fae7508f44f5b7fa72b4883a55c65cc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a2fae7508f44f5b7fa72b4883a55c65cc">CCC_buffer_with_capacity</a>(type_name,  allocator,  capacity)&#160;&#160;&#160;    CCC_private_buffer_with_capacity(type_name, allocator, capacity)</td></tr>
+<tr class="memdesc:a2fae7508f44f5b7fa72b4883a55c65cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a Buffer with a capacity.  <br /></td></tr>
+<tr class="separator:a2fae7508f44f5b7fa72b4883a55c65cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6284aa558aec89f87298c459176b595"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#ad6284aa558aec89f87298c459176b595">CCC_buffer_with_storage</a>(count,  compound_literal_array...)&#160;&#160;&#160;    CCC_private_buffer_with_storage(count, compound_literal_array)</td></tr>
 <tr class="memdesc:ad6284aa558aec89f87298c459176b595"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a contiguous Buffer of user a specified type of fixed capacity with no allocation permission or context.  <br /></td></tr>
 <tr class="separator:ad6284aa558aec89f87298c459176b595"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a7925915d15619fc97c71503c1a7af8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a0a7925915d15619fc97c71503c1a7af8">CCC_buffer_context_with_storage</a>(context,  count,  compound_literal_array...)</td></tr>
-<tr class="memdesc:a0a7925915d15619fc97c71503c1a7af8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a contiguous Buffer of user a specified type of fixed capacity with no allocation permission.  <br /></td></tr>
-<tr class="separator:a0a7925915d15619fc97c71503c1a7af8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54f4d46de712323bb67cc72b74e4158b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a54f4d46de712323bb67cc72b74e4158b">CCC_buffer_with_allocator</a>(type_name,  allocator)&#160;&#160;&#160;    CCC_private_buffer_with_allocator(type_name, allocator)</td></tr>
-<tr class="memdesc:a54f4d46de712323bb67cc72b74e4158b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an empty Buffer at compile or runtime with an allocator function.  <br /></td></tr>
-<tr class="separator:a54f4d46de712323bb67cc72b74e4158b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9a4a16be2f8b592222f535bdcb44475"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#ad9a4a16be2f8b592222f535bdcb44475">CCC_buffer_context_with_allocator</a>(type_name,  allocator,  context)&#160;&#160;&#160;    CCC_private_buffer_context_with_allocator(type_name, allocator, context)</td></tr>
-<tr class="memdesc:ad9a4a16be2f8b592222f535bdcb44475"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a contiguous Buffer of user a specified type of fixed capacity with no allocation permission.  <br /></td></tr>
-<tr class="separator:ad9a4a16be2f8b592222f535bdcb44475"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f96119efe2724e34ee6e879e511154c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a7f96119efe2724e34ee6e879e511154c">CCC_buffer_reserve</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, size_t to_add, <a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a> *allocate)</td></tr>
-<tr class="memdesc:a7f96119efe2724e34ee6e879e511154c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reserves space for at least to_add more elements.  <br /></td></tr>
-<tr class="separator:a7f96119efe2724e34ee6e879e511154c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afcfa78ee925af6a65460029469f2719c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#afcfa78ee925af6a65460029469f2719c">CCC_buffer_copy</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *destination, <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> const *source, <a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a> *allocate)</td></tr>
-<tr class="memdesc:afcfa78ee925af6a65460029469f2719c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the buffer from source to newly initialized destination.  <br /></td></tr>
-<tr class="separator:afcfa78ee925af6a65460029469f2719c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4923853fa5fe3a9f25539adf42f41b72"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a4923853fa5fe3a9f25539adf42f41b72">CCC_buffer_reserve</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, size_t to_add, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:a4923853fa5fe3a9f25539adf42f41b72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reserves space for at least to_add more elements.  <br /></td></tr>
+<tr class="separator:a4923853fa5fe3a9f25539adf42f41b72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11919bb95483be1e65de8dbac046b2ba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a11919bb95483be1e65de8dbac046b2ba">CCC_buffer_copy</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *destination, <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> const *source, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:a11919bb95483be1e65de8dbac046b2ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the buffer from source to newly initialized destination.  <br /></td></tr>
+<tr class="separator:a11919bb95483be1e65de8dbac046b2ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Insert and Remove Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>These functions assume contiguity of elements in the Buffer and increase or decrease size accordingly. </p>
 </td></tr>
-<tr class="memitem:a81346fc5d7ca38637c67bb0377188662"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a81346fc5d7ca38637c67bb0377188662">CCC_buffer_emplace_back</a>(buffer_pointer,  type_compound_literal...)&#160;&#160;&#160;    CCC_private_buffer_emplace_back(buffer_pointer, type_compound_literal)</td></tr>
-<tr class="memdesc:a81346fc5d7ca38637c67bb0377188662"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pushes the user provided compound literal directly to back of buffer and increments the size to reflect the newly added element.  <br /></td></tr>
-<tr class="separator:a81346fc5d7ca38637c67bb0377188662"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e46fb13f61b8ac0af8e8bc0de2c2a3d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a1e46fb13f61b8ac0af8e8bc0de2c2a3d">CCC_buffer_allocate</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, size_t capacity, <a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a> *allocate)</td></tr>
-<tr class="memdesc:a1e46fb13f61b8ac0af8e8bc0de2c2a3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">allocates the Buffer to the specified size according to the user defined allocation function.  <br /></td></tr>
-<tr class="separator:a1e46fb13f61b8ac0af8e8bc0de2c2a3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a81ef9e09512c211c549b8eaea2fed360"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a81ef9e09512c211c549b8eaea2fed360">CCC_buffer_allocate_back</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer)</td></tr>
-<tr class="memdesc:a81ef9e09512c211c549b8eaea2fed360"><td class="mdescLeft">&#160;</td><td class="mdescRight">allocates a new slot from the Buffer at the end of the contiguous array. A slot is equivalent to one of the element type specified when the Buffer is initialized.  <br /></td></tr>
-<tr class="separator:a81ef9e09512c211c549b8eaea2fed360"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a692fb97bb1a475d6377ec6abb635819a"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a692fb97bb1a475d6377ec6abb635819a">CCC_buffer_push_back</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, void const *data)</td></tr>
-<tr class="memdesc:a692fb97bb1a475d6377ec6abb635819a"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the newly pushed data into the last slot of the buffer according to size.  <br /></td></tr>
-<tr class="separator:a692fb97bb1a475d6377ec6abb635819a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab508c7c3f2d3c7d969335e786d51cc1"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#aab508c7c3f2d3c7d969335e786d51cc1">CCC_buffer_insert</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, size_t index, void const *data)</td></tr>
-<tr class="memdesc:aab508c7c3f2d3c7d969335e786d51cc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">insert data at slot index according to size of the Buffer maintaining contiguous storage of elements between 0 and size.  <br /></td></tr>
-<tr class="separator:aab508c7c3f2d3c7d969335e786d51cc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03c9427ca7d07b6843327ce63e59a959"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a03c9427ca7d07b6843327ce63e59a959">CCC_buffer_emplace_back</a>( buffer_pointer,  allocator_pointer,  type_compound_literal...)</td></tr>
+<tr class="memdesc:a03c9427ca7d07b6843327ce63e59a959"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pushes the user provided compound literal directly to back of buffer and increments the size to reflect the newly added element.  <br /></td></tr>
+<tr class="separator:a03c9427ca7d07b6843327ce63e59a959"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4eae6861260e43a378d80b59a60d4c4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#af4eae6861260e43a378d80b59a60d4c4">CCC_buffer_allocate</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, size_t capacity, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:af4eae6861260e43a378d80b59a60d4c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">allocates the Buffer to the specified size according to the user defined allocation function.  <br /></td></tr>
+<tr class="separator:af4eae6861260e43a378d80b59a60d4c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1374f7bb2323c24ad3eaa5fe073b896e"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a1374f7bb2323c24ad3eaa5fe073b896e">CCC_buffer_allocate_back</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:a1374f7bb2323c24ad3eaa5fe073b896e"><td class="mdescLeft">&#160;</td><td class="mdescRight">allocates a new slot from the Buffer at the end of the contiguous array. A slot is equivalent to one of the element type specified when the Buffer is initialized.  <br /></td></tr>
+<tr class="separator:a1374f7bb2323c24ad3eaa5fe073b896e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4136eff57e6947dcc1406705b35396a2"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a4136eff57e6947dcc1406705b35396a2">CCC_buffer_push_back</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, void const *data, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:a4136eff57e6947dcc1406705b35396a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the newly pushed data into the last slot of the buffer according to size.  <br /></td></tr>
+<tr class="separator:a4136eff57e6947dcc1406705b35396a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b9f69153ee4bee4f6f38575de1ae5a1"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a7b9f69153ee4bee4f6f38575de1ae5a1">CCC_buffer_insert</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, size_t index, void const *data, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:a7b9f69153ee4bee4f6f38575de1ae5a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">insert data at slot index according to size of the Buffer maintaining contiguous storage of elements between 0 and size.  <br /></td></tr>
+<tr class="separator:a7b9f69153ee4bee4f6f38575de1ae5a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d1cc37e0625a8420ac15f4890e32233"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a3d1cc37e0625a8420ac15f4890e32233">CCC_buffer_pop_back</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer)</td></tr>
 <tr class="memdesc:a3d1cc37e0625a8420ac15f4890e32233"><td class="mdescLeft">&#160;</td><td class="mdescRight">pop the back element from the Buffer according to size.  <br /></td></tr>
 <tr class="separator:a3d1cc37e0625a8420ac15f4890e32233"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -228,15 +216,15 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:a4c9f5187b290d944a14f3d3e922f166c"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a4c9f5187b290d944a14f3d3e922f166c">CCC_buffer_front</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> const *buffer)</td></tr>
 <tr class="memdesc:a4c9f5187b290d944a14f3d3e922f166c"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the first element in the Buffer at index 0.  <br /></td></tr>
 <tr class="separator:a4c9f5187b290d944a14f3d3e922f166c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78297e7bdc97e441d81ab682ec4e3560"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a78297e7bdc97e441d81ab682ec4e3560">CCC_buffer_move</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, size_t destination, size_t source)</td></tr>
-<tr class="memdesc:a78297e7bdc97e441d81ab682ec4e3560"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move data at index source to destination according to capacity.  <br /></td></tr>
-<tr class="separator:a78297e7bdc97e441d81ab682ec4e3560"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abfd334de1ebe17f2e329d501bd59ec99"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#abfd334de1ebe17f2e329d501bd59ec99">CCC_buffer_write</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, size_t index, void const *data)</td></tr>
-<tr class="memdesc:abfd334de1ebe17f2e329d501bd59ec99"><td class="mdescLeft">&#160;</td><td class="mdescRight">write data to Buffer at slot at index index according to capacity.  <br /></td></tr>
-<tr class="separator:abfd334de1ebe17f2e329d501bd59ec99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8e624d6ffa19538935cbd17838b659b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#af8e624d6ffa19538935cbd17838b659b">CCC_buffer_swap</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, void *temp, size_t index, size_t swap_index)</td></tr>
-<tr class="memdesc:af8e624d6ffa19538935cbd17838b659b"><td class="mdescLeft">&#160;</td><td class="mdescRight">swap elements at index and swap_index according to capacity of the bufer.  <br /></td></tr>
-<tr class="separator:af8e624d6ffa19538935cbd17838b659b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4eac41f10b83121effa77a904e2dd551"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a4eac41f10b83121effa77a904e2dd551">CCC_buffer_move</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> const *buffer, size_t destination, size_t source)</td></tr>
+<tr class="memdesc:a4eac41f10b83121effa77a904e2dd551"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move data at index source to destination according to capacity.  <br /></td></tr>
+<tr class="separator:a4eac41f10b83121effa77a904e2dd551"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3937bfbb884d79f62564d427d07bd91"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#ac3937bfbb884d79f62564d427d07bd91">CCC_buffer_write</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> const *buffer, size_t index, void const *data)</td></tr>
+<tr class="memdesc:ac3937bfbb884d79f62564d427d07bd91"><td class="mdescLeft">&#160;</td><td class="mdescRight">write data to Buffer at slot at index index according to capacity.  <br /></td></tr>
+<tr class="separator:ac3937bfbb884d79f62564d427d07bd91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8128da7871c675e2c65ccfaf65271358"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a8128da7871c675e2c65ccfaf65271358">CCC_buffer_swap</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> const *buffer, void *temp, size_t index, size_t swap_index)</td></tr>
+<tr class="memdesc:a8128da7871c675e2c65ccfaf65271358"><td class="mdescLeft">&#160;</td><td class="mdescRight">swap elements at index and swap_index according to capacity of the bufer.  <br /></td></tr>
+<tr class="separator:a8128da7871c675e2c65ccfaf65271358"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Container Types</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Types available in the container interface. </p>
@@ -307,15 +295,12 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Deallocation Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Free the elements of the container and the underlying buffer. </p>
 </td></tr>
-<tr class="memitem:aa35951063c3bbf2883db36be8b6ca744"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#aa35951063c3bbf2883db36be8b6ca744">CCC_buffer_clear_and_free_reserve</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, <a class="el" href="types_8h.html#a93e9728dd87d940e8f171efea75ee8d2">CCC_Type_destructor</a> *destroy, <a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a> *allocate)</td></tr>
-<tr class="memdesc:aa35951063c3bbf2883db36be8b6ca744"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees all slots in the buffer and frees the underlying Buffer that was previously dynamically reserved with the reserve function.  <br /></td></tr>
-<tr class="separator:aa35951063c3bbf2883db36be8b6ca744"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ce332bdd62ac1ad8627c69b8e861275"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a2ce332bdd62ac1ad8627c69b8e861275">CCC_buffer_clear_and_free</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, <a class="el" href="types_8h.html#a93e9728dd87d940e8f171efea75ee8d2">CCC_Type_destructor</a> *destroy)</td></tr>
-<tr class="memdesc:a2ce332bdd62ac1ad8627c69b8e861275"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set size of buffer to 0 and call destroy on each element if needed. Free the underlying Buffer setting the capacity to 0. O(1) if no destructor is provided, else O(N).  <br /></td></tr>
-<tr class="separator:a2ce332bdd62ac1ad8627c69b8e861275"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86e65e04cebec9b2b5baa96ad76858e9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a86e65e04cebec9b2b5baa96ad76858e9">CCC_buffer_clear</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, <a class="el" href="types_8h.html#a93e9728dd87d940e8f171efea75ee8d2">CCC_Type_destructor</a> *destroy)</td></tr>
-<tr class="memdesc:a86e65e04cebec9b2b5baa96ad76858e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set size of buffer to 0 and call destroy on each element if needed. O(1) if no destroy is provided, else O(N).  <br /></td></tr>
-<tr class="separator:a86e65e04cebec9b2b5baa96ad76858e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94f04ab72f2cb6dc6a48684bb7fdbfce"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a94f04ab72f2cb6dc6a48684bb7fdbfce">CCC_buffer_clear_and_free</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, <a class="el" href="structCCC__Destructor.html">CCC_Destructor</a> const *destructor, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:a94f04ab72f2cb6dc6a48684bb7fdbfce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set size of buffer to 0 and call destroy on each element if needed. Free the underlying Buffer setting the capacity to 0. O(1) if no destructor is provided, else O(N).  <br /></td></tr>
+<tr class="separator:a94f04ab72f2cb6dc6a48684bb7fdbfce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ba02ed863f2c90f3767bcd6f389339a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a0ba02ed863f2c90f3767bcd6f389339a">CCC_buffer_clear</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, <a class="el" href="structCCC__Destructor.html">CCC_Destructor</a> const *destructor)</td></tr>
+<tr class="memdesc:a0ba02ed863f2c90f3767bcd6f389339a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set size of buffer to 0 and call destroy on each element if needed. O(1) if no destroy is provided, else O(N).  <br /></td></tr>
+<tr class="separator:a0ba02ed863f2c90f3767bcd6f389339a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="af4afef12114bc504cc8409097b8794f8" name="af4afef12114bc504cc8409097b8794f8"></a>
@@ -402,249 +387,35 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a4feae9d8e6344846fda4157cbeccb457" name="a4feae9d8e6344846fda4157cbeccb457"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4feae9d8e6344846fda4157cbeccb457">&#9670;&#160;</a></span>CCC_buffer_context_from</h2>
+<a id="a5003b3b531cf68bdcd51ae5e60d4d814" name="a5003b3b531cf68bdcd51ae5e60d4d814"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5003b3b531cf68bdcd51ae5e60d4d814">&#9670;&#160;</a></span>CCC_buffer_default</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define CCC_buffer_context_from</td>
+          <td class="memname">#define CCC_buffer_default</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">context, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">optional_capacity, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">compound_literal_array...&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_buffer_context_from(allocate, context, optional_capacity,      \</div>
-<div class="line">                                    compound_literal_array)</div>
-</div><!-- fragment -->
-<p>Initialize a Buffer from a compound literal array initializer. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>CCC_Allocator or NULL if no allocation is permitted. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>any context data needed for managing Buffer memory. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">optional_capacity</td><td>optionally specify the capacity of the Buffer if different from the size of the compound literal array initializer. If the capacity is greater than the size of the compound literal array initializer, it is respected and the capacity is reserved. If the capacity is less than the size of the compound array initializer, the compound literal array initializer size is set as the capacity. Therefore, 0 is valid if one is not concerned with the underlying reservation. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal_array</td><td>the initializer of the type stored in buffer. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> b = <a class="el" href="buffer_8h.html#adb6971f97fa83e1a45a955aeec86dd6e" title="Initialize a Buffer from a compound literal array initializer.">CCC_buffer_from(...)</a>;).</dd></dl>
-<p>Initialize a dynamic Buffer with a compound literal array.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keywordtype">int</span></div>
-<div class="line">main(<span class="keywordtype">void</span>)</div>
-<div class="line">{</div>
-<div class="line">    Buffer b = buffer_context_from(std_allocate, NULL, 0,</div>
-<div class="line">        (<span class="keywordtype">int</span>[]){ 0, 1, 2, 3 }</div>
-<div class="line">    );</div>
-<div class="line">    <span class="keywordflow">return</span> 0;</div>
-<div class="line">}</div>
-</div><!-- fragment --><p>Initialize a dynamic Buffer with a compound literal array with capacity.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keywordtype">int</span></div>
-<div class="line">main(<span class="keywordtype">void</span>)</div>
-<div class="line">{</div>
-<div class="line">    Buffer b = buffer_context_from(std_allocate, NULL, 4096,</div>
-<div class="line">        (<span class="keywordtype">int</span>[]){ 0, 1, 2, 3 }</div>
-<div class="line">    );</div>
-<div class="line">    <span class="keywordflow">return</span> 0;</div>
-<div class="line">}</div>
-</div><!-- fragment --><p>Only dynamic buffers may be initialized this way. For static or stack based initialization of fixed buffers with contents known at compile time, see the <a class="el" href="buffer_8h.html#a86513108202eb0dd7f87fa0237a9e371" title="Initialize a contiguous Buffer of user a specified type, allocation policy, capacity,...">CCC_buffer_for()</a> macro. </p>
-
-</div>
-</div>
-<a id="ad9a4a16be2f8b592222f535bdcb44475" name="ad9a4a16be2f8b592222f535bdcb44475"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad9a4a16be2f8b592222f535bdcb44475">&#9670;&#160;</a></span>CCC_buffer_context_with_allocator</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_buffer_context_with_allocator</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_name, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">allocator, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">context&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;    CCC_private_buffer_context_with_allocator(type_name, allocator, context)</td>
+          <td class="paramname">type_name</td><td>)</td>
+          <td>&#160;&#160;&#160;CCC_private_buffer_default(type_name)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Initialize a contiguous Buffer of user a specified type of fixed capacity with no allocation permission. </p>
+<p>Initialize a contiguous empty buffer of a type. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the name of the type stored in this buffer. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the CCC_Allocator function. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>a pointer to any context needed for each element. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the name of the user type in the buffer. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> b = <a class="el" href="buffer_8h.html#ad9a4a16be2f8b592222f535bdcb44475" title="Initialize a contiguous Buffer of user a specified type of fixed capacity with no allocation permissi...">CCC_buffer_context_with_allocator(...)</a>;).</dd></dl>
-<p>Initialization of a Buffer can occur at compile time or run time but always lacks any allocation permissions. The memory pointer should be of the same type one intends to store in the buffer.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keyword">static</span> Buffer stack = buffer_context_with_allocator(</div>
-<div class="line">    <span class="keywordtype">int</span>,</div>
-<div class="line">    arena_allocate,</div>
-<div class="line">    &amp;arena,</div>
-<div class="line">);</div>
-</div><!-- fragment --><p>Compile time creation of fixed capacity buffers can be a helpful use case when wrapping static or stack based arrays. </p>
-
-</div>
-</div>
-<a id="a8c321cf5311ef57f693fda5f3ba71a33" name="a8c321cf5311ef57f693fda5f3ba71a33"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8c321cf5311ef57f693fda5f3ba71a33">&#9670;&#160;</a></span>CCC_buffer_context_with_capacity</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_buffer_context_with_capacity</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_name, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">context, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">capacity&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_buffer_context_with_capacity(type_name, allocate, context,     \</div>
-<div class="line">                                             capacity)</div>
-</div><!-- fragment -->
-<p>Initialize a Buffer with a capacity. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>any user or language standard type name. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>CCC_Allocator or NULL if no allocation is permitted. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>any context data needed for managing Buffer memory. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">capacity</td><td>the capacity of the Buffer to reserve. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> b = <a class="el" href="buffer_8h.html#a8c321cf5311ef57f693fda5f3ba71a33" title="Initialize a Buffer with a capacity.">CCC_buffer_context_with_capacity(...)</a>;).</dd></dl>
-<p>Initialize a dynamic buffer.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keywordtype">int</span></div>
-<div class="line">main(<span class="keywordtype">void</span>)</div>
-<div class="line">{</div>
-<div class="line">    Buffer b = buffer_context_with_capacity(<span class="keywordtype">int</span>, arena_allocate, &amp;arena, 4096);</div>
-<div class="line">    <span class="keywordflow">return</span> 0;</div>
-<div class="line">}</div>
-</div><!-- fragment --><p>Only dynamic buffers may be initialized this way. For static or stack based initialization of fixed buffers with contents known at compile time, see the <a class="el" href="buffer_8h.html#a86513108202eb0dd7f87fa0237a9e371" title="Initialize a contiguous Buffer of user a specified type, allocation policy, capacity,...">CCC_buffer_for()</a> macro. </p>
-
-</div>
-</div>
-<a id="a0a7925915d15619fc97c71503c1a7af8" name="a0a7925915d15619fc97c71503c1a7af8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0a7925915d15619fc97c71503c1a7af8">&#9670;&#160;</a></span>CCC_buffer_context_with_storage</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_buffer_context_with_storage</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">context, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">count, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">compound_literal_array...&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_buffer_context_with_storage(context, count,                    \</div>
-<div class="line">                                            compound_literal_array)</div>
-</div><!-- fragment -->
-<p>Initialize a contiguous Buffer of user a specified type of fixed capacity with no allocation permission. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>a pointer to any context needed for each element. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>starting count of the Buffer &lt;= capacity of input literal. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal_array</td><td>the compound literal array of types. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> b = <a class="el" href="buffer_8h.html#a0a7925915d15619fc97c71503c1a7af8" title="Initialize a contiguous Buffer of user a specified type of fixed capacity with no allocation permissi...">CCC_buffer_context_with_storage(...)</a>;).</dd></dl>
-<p>Initialization of a Buffer can occur at compile time or run time but always lacks any allocation permissions. The memory pointer should be of the same type one intends to store in the buffer.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keyword">static</span> Buffer stack = buffer_context_with_storage(</div>
-<div class="line">    &amp;module_context,</div>
-<div class="line">    0,</div>
-<div class="line">    (<span class="keyword">static</span> <span class="keywordtype">int</span>[5]){0, 1, 2, 3, 4}</div>
-<div class="line">);</div>
-</div><!-- fragment --><p>Compile time creation of fixed capacity buffers can be a helpful use case when wrapping static or stack based arrays. </p>
+<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator.</dd></dl>
+<p>Initialization of a Buffer can occur at compile time or run time.</p>
+<div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code hl_struct" href="structCCC__Buffer.html">CCC_Buffer</a> stack = <a class="code hl_define" href="buffer_8h.html#a5003b3b531cf68bdcd51ae5e60d4d814">CCC_buffer_default</a>(<span class="keywordtype">int</span>);</div>
+<div class="ttc" id="abuffer_8h_html_a5003b3b531cf68bdcd51ae5e60d4d814"><div class="ttname"><a href="buffer_8h.html#a5003b3b531cf68bdcd51ae5e60d4d814">CCC_buffer_default</a></div><div class="ttdeci">#define CCC_buffer_default(type_name)</div><div class="ttdoc">Initialize a contiguous empty buffer of a type.</div><div class="ttdef"><b>Definition:</b> buffer.h:93</div></div>
+<div class="ttc" id="astructCCC__Buffer_html"><div class="ttname"><a href="structCCC__Buffer.html">CCC_Buffer</a></div><div class="ttdef"><b>Definition:</b> private_buffer.h:33</div></div>
+</div><!-- fragment --><p>The buffer will be empty with a count and capacity of 0. </p>
 
 </div>
 </div>
@@ -695,8 +466,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a81346fc5d7ca38637c67bb0377188662" name="a81346fc5d7ca38637c67bb0377188662"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a81346fc5d7ca38637c67bb0377188662">&#9670;&#160;</a></span>CCC_buffer_emplace_back</h2>
+<a id="a03c9427ca7d07b6843327ce63e59a959" name="a03c9427ca7d07b6843327ce63e59a959"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03c9427ca7d07b6843327ce63e59a959">&#9670;&#160;</a></span>CCC_buffer_emplace_back</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -711,20 +482,30 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
+          <td class="paramname">allocator_pointer, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
           <td class="paramname">type_compound_literal...&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;    CCC_private_buffer_emplace_back(buffer_pointer, type_compound_literal)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_buffer_emplace_back(                                           \</div>
+<div class="line">        buffer_pointer, allocator_pointer, type_compound_literal               \</div>
+<div class="line">    )</div>
+</div><!-- fragment -->
 <p>Pushes the user provided compound literal directly to back of buffer and increments the size to reflect the newly added element. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">buffer_pointer</td><td>a pointer to the buffer. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator_pointer</td><td>a pointer to the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_compound_literal</td><td>the direct compound literal as provided. </td></tr>
   </table>
   </dd>
@@ -734,8 +515,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a86513108202eb0dd7f87fa0237a9e371" name="a86513108202eb0dd7f87fa0237a9e371"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a86513108202eb0dd7f87fa0237a9e371">&#9670;&#160;</a></span>CCC_buffer_for</h2>
+<a id="a32be0a41c4d346f751a04655026d0513" name="a32be0a41c4d346f751a04655026d0513"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32be0a41c4d346f751a04655026d0513">&#9670;&#160;</a></span>CCC_buffer_for</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -745,18 +526,6 @@ This graph shows which files directly or indirectly include this file:</div>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">type_name, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">context, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -779,42 +548,38 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td>&#160;&#160;&#160;    CCC_private_buffer_for(type_name, capacity, count, data_pointer)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_buffer_for(type_name, allocate, context, capacity, count,      \</div>
-<div class="line">                           data_pointer)</div>
-</div><!-- fragment -->
-<p>Initialize a contiguous Buffer of user a specified type, allocation policy, capacity, and optional starting size. </p>
+
+<p>Initialize a contiguous Buffer of user a specified type, capacity, and optional starting size. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the name of the user type in the buffer. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>CCC_Allocator or NULL if no allocation is permitted. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>any context data needed for managing Buffer memory. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">capacity</td><td>the capacity of memory at data_pointer. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>optional starting size of the Buffer &lt;= capacity. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">data_pointer</td><td>the pointer to existing memory or NULL. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> b = <a class="el" href="buffer_8h.html#a86513108202eb0dd7f87fa0237a9e371" title="Initialize a contiguous Buffer of user a specified type, allocation policy, capacity,...">CCC_buffer_for(...)</a>;).</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator.</dd></dl>
 <p>Initialization of a Buffer can occur at compile time or run time depending on the arguments. The memory pointer should be of the same type one intends to store in the buffer.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="keyword">static</span> Buffer stack = buffer_for(</div>
-<div class="line">    <span class="keywordtype">int</span>, NULL, NULL, 4096, 0, &amp;(<span class="keyword">static</span> <span class="keywordtype">int</span>[4096]){}</div>
+<div class="line">    <span class="keywordtype">int</span>, 4096, 0, &amp;(<span class="keyword">static</span> <span class="keywordtype">int</span>[4096]){}</div>
 <div class="line">);</div>
 </div><!-- fragment --><p>Initialize a fixed Buffer with some elements occupied.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="keyword">static</span> Buffer stack = buffer_for(</div>
-<div class="line">    <span class="keywordtype">int</span>, NULL, NULL, 4096, 4, &amp;(<span class="keyword">static</span> <span class="keywordtype">int</span>[4096]){0, 1, 2, 3}</div>
+<div class="line">    <span class="keywordtype">int</span>, 4096, 4, &amp;(<span class="keyword">static</span> <span class="keywordtype">int</span>[4096]){0, 1, 2, 3}</div>
 <div class="line">);</div>
-</div><!-- fragment --><p>This initializer determines memory control for the lifetime of the buffer. If the Buffer points to memory of a predetermined and fixed capacity do not provide an allocation function. If a dynamic Buffer is preferred, provide the allocation function as defined by the signature in <a class="el" href="types_8h.html" title="The C Container Collection Fundamental Types.">types.h</a>. If resizing is desired on memory that has already been allocated, ensure allocation has occurred with the provided allocation function. </p>
+</div><!-- fragment --><p>Ensure the count is less than equal to capacity. </p>
 
 </div>
 </div>
-<a id="adb6971f97fa83e1a45a955aeec86dd6e" name="adb6971f97fa83e1a45a955aeec86dd6e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb6971f97fa83e1a45a955aeec86dd6e">&#9670;&#160;</a></span>CCC_buffer_from</h2>
+<a id="ae0c9211d0cd038a89faea9472c50e7ce" name="ae0c9211d0cd038a89faea9472c50e7ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0c9211d0cd038a89faea9472c50e7ce">&#9670;&#160;</a></span>CCC_buffer_from</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -823,7 +588,7 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="memname">#define CCC_buffer_from</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate, </td>
+          <td class="paramname">allocator, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -840,42 +605,53 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;    CCC_private_buffer_from(allocate, optional_capacity, compound_literal_array)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_buffer_from(                                                   \</div>
+<div class="line">        allocator, optional_capacity, compound_literal_array                   \</div>
+<div class="line">    )</div>
+</div><!-- fragment -->
 <p>Initialize a Buffer from a compound literal array initializer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>CCC_Allocator or NULL if no allocation is permitted. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>a pointer to <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">optional_capacity</td><td>optionally specify the capacity of the Buffer if different from the size of the compound literal array initializer. If the capacity is greater than the size of the compound literal array initializer, it is respected and the capacity is reserved. If the capacity is less than the size of the compound array initializer, the compound literal array initializer size is set as the capacity. Therefore, 0 is valid if one is not concerned with the underlying reservation. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal_array</td><td>the initializer of the type stored in buffer. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> b = <a class="el" href="buffer_8h.html#adb6971f97fa83e1a45a955aeec86dd6e" title="Initialize a Buffer from a compound literal array initializer.">CCC_buffer_from(...)</a>;).</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> b = <a class="el" href="buffer_8h.html#ae0c9211d0cd038a89faea9472c50e7ce" title="Initialize a Buffer from a compound literal array initializer.">CCC_buffer_from(...)</a>;).</dd></dl>
 <p>Initialize a dynamic Buffer with a compound literal array.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="keywordtype">int</span></div>
 <div class="line">main(<span class="keywordtype">void</span>)</div>
 <div class="line">{</div>
-<div class="line">    Buffer b = buffer_from(std_allocate, 0,</div>
+<div class="line">    Buffer b = buffer_from(</div>
+<div class="line">        (<a class="code hl_struct" href="structCCC__Allocator.html">CCC_Allocator</a>){.allocator = std_allocate},</div>
+<div class="line">        0,</div>
 <div class="line">        (<span class="keywordtype">int</span>[]){ 0, 1, 2, 3 }</div>
 <div class="line">    );</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>Initialize a dynamic Buffer with a compound literal array with capacity.</p>
+<div class="ttc" id="astructCCC__Allocator_html"><div class="ttname"><a href="structCCC__Allocator.html">CCC_Allocator</a></div><div class="ttdoc">The type passed by reference to any container function that may need to allocate memory....</div><div class="ttdef"><b>Definition:</b> types.h:385</div></div>
+</div><!-- fragment --><p>Initialize a dynamic Buffer with a compound literal array with capacity and context</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="keywordtype">int</span></div>
 <div class="line">main(<span class="keywordtype">void</span>)</div>
 <div class="line">{</div>
-<div class="line">    Buffer b = buffer_from(std_allocate, 4096,</div>
+<div class="line">    Buffer b = buffer_from(</div>
+<div class="line">        ((<a class="code hl_struct" href="structCCC__Allocator.html">CCC_Allocator</a>){</div>
+<div class="line">            .allocator = arena_allocate,</div>
+<div class="line">            .context = &amp;arena,</div>
+<div class="line">        }),</div>
+<div class="line">        4096,</div>
 <div class="line">        (<span class="keywordtype">int</span>[]){ 0, 1, 2, 3 }</div>
 <div class="line">    );</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>Only dynamic buffers may be initialized this way. For static or stack based initialization of fixed buffers with contents known at compile time, see the <a class="el" href="buffer_8h.html#a86513108202eb0dd7f87fa0237a9e371" title="Initialize a contiguous Buffer of user a specified type, allocation policy, capacity,...">CCC_buffer_for()</a> macro. </p>
+</div><!-- fragment --><p>Only dynamic buffers may be initialized this way. For static or stack based initialization of fixed buffers with contents known at compile time, see the <a class="el" href="buffer_8h.html#a32be0a41c4d346f751a04655026d0513" title="Initialize a contiguous Buffer of user a specified type, capacity, and optional starting size.">CCC_buffer_for()</a> macro. </p>
 
 </div>
 </div>
@@ -917,50 +693,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a54f4d46de712323bb67cc72b74e4158b" name="a54f4d46de712323bb67cc72b74e4158b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a54f4d46de712323bb67cc72b74e4158b">&#9670;&#160;</a></span>CCC_buffer_with_allocator</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_buffer_with_allocator</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_name, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">allocator&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;    CCC_private_buffer_with_allocator(type_name, allocator)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Initialize an empty Buffer at compile or runtime with an allocator function. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the name of the type stored in this buffer. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the CCC_Allocator function. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> b = <a class="el" href="buffer_8h.html#a54f4d46de712323bb67cc72b74e4158b" title="Initialize an empty Buffer at compile or runtime with an allocator function.">CCC_buffer_with_allocator(...)</a>;).</dd></dl>
-<p>Initialization of a Buffer can occur at compile time or run time.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keyword">static</span> Buffer stack = buffer_with_allocator(<span class="keywordtype">int</span>, stdlib_allocate);</div>
-</div><!-- fragment --><p>This helps eliminate boilerplate and makes intent clear. </p>
-
-</div>
-</div>
-<a id="adb20e5d248069330702b80c19c0f9c58" name="adb20e5d248069330702b80c19c0f9c58"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb20e5d248069330702b80c19c0f9c58">&#9670;&#160;</a></span>CCC_buffer_with_capacity</h2>
+<a id="a2fae7508f44f5b7fa72b4883a55c65cc" name="a2fae7508f44f5b7fa72b4883a55c65cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2fae7508f44f5b7fa72b4883a55c65cc">&#9670;&#160;</a></span>CCC_buffer_with_capacity</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -975,7 +709,7 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate, </td>
+          <td class="paramname">allocator, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -986,7 +720,7 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;    CCC_private_buffer_with_capacity(type_name, allocate, capacity)</td>
+          <td></td><td>&#160;&#160;&#160;    CCC_private_buffer_with_capacity(type_name, allocator, capacity)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -995,21 +729,25 @@ This graph shows which files directly or indirectly include this file:</div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>any user or language standard type name. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>CCC_Allocator or NULL if no allocation is permitted. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>a pointer to <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">capacity</td><td>the capacity of the Buffer to reserve. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> b = <a class="el" href="buffer_8h.html#adb20e5d248069330702b80c19c0f9c58" title="Initialize a Buffer with a capacity.">CCC_buffer_with_capacity(...)</a>;).</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the initialized buffer. Directly assign to Buffer on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> b = <a class="el" href="buffer_8h.html#a2fae7508f44f5b7fa72b4883a55c65cc" title="Initialize a Buffer with a capacity.">CCC_buffer_with_capacity(...)</a>;).</dd></dl>
 <p>Initialize a dynamic buffer.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="keywordtype">int</span></div>
 <div class="line">main(<span class="keywordtype">void</span>)</div>
 <div class="line">{</div>
-<div class="line">    Buffer b = buffer_with_capacity(<span class="keywordtype">int</span>, std_allocate, 4096);</div>
+<div class="line">    Buffer b = buffer_with_capacity(</div>
+<div class="line">        <span class="keywordtype">int</span>,</div>
+<div class="line">        (<a class="code hl_struct" href="structCCC__Allocator.html">CCC_Allocator</a>){.allocator = std_allocate},</div>
+<div class="line">        4096</div>
+<div class="line">    );</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>Only dynamic buffers may be initialized this way. For static or stack based initialization of fixed buffers with contents known at compile time, see the <a class="el" href="buffer_8h.html#a86513108202eb0dd7f87fa0237a9e371" title="Initialize a contiguous Buffer of user a specified type, allocation policy, capacity,...">CCC_buffer_for()</a> macro. </p>
+</div><!-- fragment --><p>Only dynamic buffers may be initialized this way. For static or stack based initialization of fixed buffers with contents known at compile time, see the <a class="el" href="buffer_8h.html#a32be0a41c4d346f751a04655026d0513" title="Initialize a contiguous Buffer of user a specified type, capacity, and optional starting size.">CCC_buffer_for()</a> macro. </p>
 
 </div>
 </div>
@@ -1075,8 +813,8 @@ This graph shows which files directly or indirectly include this file:</div>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a1e46fb13f61b8ac0af8e8bc0de2c2a3d" name="a1e46fb13f61b8ac0af8e8bc0de2c2a3d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1e46fb13f61b8ac0af8e8bc0de2c2a3d">&#9670;&#160;</a></span>CCC_buffer_allocate()</h2>
+<a id="af4eae6861260e43a378d80b59a60d4c4" name="af4eae6861260e43a378d80b59a60d4c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4eae6861260e43a378d80b59a60d4c4">&#9670;&#160;</a></span>CCC_buffer_allocate()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1096,8 +834,8 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a> *&#160;</td>
-          <td class="paramname"><em>allocate</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1112,7 +850,7 @@ This graph shows which files directly or indirectly include this file:</div>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>a pointer to the buffer. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">capacity</td><td>the newly desired capacity. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the allocation function defined by the user. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the allocation context defined by the user. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1121,8 +859,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a81ef9e09512c211c549b8eaea2fed360" name="a81ef9e09512c211c549b8eaea2fed360"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a81ef9e09512c211c549b8eaea2fed360">&#9670;&#160;</a></span>CCC_buffer_allocate_back()</h2>
+<a id="a1374f7bb2323c24ad3eaa5fe073b896e" name="a1374f7bb2323c24ad3eaa5fe073b896e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1374f7bb2323c24ad3eaa5fe073b896e">&#9670;&#160;</a></span>CCC_buffer_allocate_back()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1131,8 +869,18 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="memname">void * CCC_buffer_allocate_back </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *&#160;</td>
-          <td class="paramname"><em>buffer</em></td><td>)</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1141,6 +889,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>a pointer to the buffer. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the allocation context defined by the user. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1326,8 +1075,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a86e65e04cebec9b2b5baa96ad76858e9" name="a86e65e04cebec9b2b5baa96ad76858e9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a86e65e04cebec9b2b5baa96ad76858e9">&#9670;&#160;</a></span>CCC_buffer_clear()</h2>
+<a id="a0ba02ed863f2c90f3767bcd6f389339a" name="a0ba02ed863f2c90f3767bcd6f389339a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ba02ed863f2c90f3767bcd6f389339a">&#9670;&#160;</a></span>CCC_buffer_clear()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1341,8 +1090,8 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#a93e9728dd87d940e8f171efea75ee8d2">CCC_Type_destructor</a> *&#160;</td>
-          <td class="paramname"><em>destroy</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="structCCC__Destructor.html">CCC_Destructor</a> const *&#160;</td>
+          <td class="paramname"><em>destructor</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1356,7 +1105,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>a pointer to the buf. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">destroy</td><td>the destroy if needed or NULL.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">destructor</td><td>the destroy function and context if needed, or the empty <code>&amp;(<a class="el" href="structCCC__Destructor.html" title="The type passed by reference to any container function that may need to destroy elements....">CCC_Destructor</a>){}</code> anonymous compound literal if not..</td></tr>
   </table>
   </dd>
 </dl>
@@ -1364,8 +1113,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a2ce332bdd62ac1ad8627c69b8e861275" name="a2ce332bdd62ac1ad8627c69b8e861275"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2ce332bdd62ac1ad8627c69b8e861275">&#9670;&#160;</a></span>CCC_buffer_clear_and_free()</h2>
+<a id="a94f04ab72f2cb6dc6a48684bb7fdbfce" name="a94f04ab72f2cb6dc6a48684bb7fdbfce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a94f04ab72f2cb6dc6a48684bb7fdbfce">&#9670;&#160;</a></span>CCC_buffer_clear_and_free()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1379,8 +1128,14 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#a93e9728dd87d940e8f171efea75ee8d2">CCC_Type_destructor</a> *&#160;</td>
-          <td class="paramname"><em>destroy</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="structCCC__Destructor.html">CCC_Destructor</a> const *&#160;</td>
+          <td class="paramname"><em>destructor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1394,7 +1149,8 @@ This graph shows which files directly or indirectly include this file:</div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>a pointer to the buf. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">destroy</td><td>the destroy if needed or NULL.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">destructor</td><td>the destroy function and context if needed, or the empty <code>&amp;(<a class="el" href="structCCC__Destructor.html" title="The type passed by reference to any container function that may need to destroy elements....">CCC_Destructor</a>){}</code> anonymous compound literal if not.. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the allocator context needed to free memory.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1402,57 +1158,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="aa35951063c3bbf2883db36be8b6ca744" name="aa35951063c3bbf2883db36be8b6ca744"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa35951063c3bbf2883db36be8b6ca744">&#9670;&#160;</a></span>CCC_buffer_clear_and_free_reserve()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> CCC_buffer_clear_and_free_reserve </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *&#160;</td>
-          <td class="paramname"><em>buffer</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#a93e9728dd87d940e8f171efea75ee8d2">CCC_Type_destructor</a> *&#160;</td>
-          <td class="paramname"><em>destroy</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a> *&#160;</td>
-          <td class="paramname"><em>allocate</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Frees all slots in the buffer and frees the underlying Buffer that was previously dynamically reserved with the reserve function. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>the Buffer to be cleared. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">destroy</td><td>the destroy for each element. NULL can be passed if no maintenance is required on the elements in the buffer before their slots are dropped. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the required allocation function to provide to a dynamically reserved buf. Any context data provided upon initialization will be passed to the allocation function when called. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the result of free operation. OK if success, or an error status to indicate the error. </dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>It is an error to call this function on a buffer that was not reserved with the provided CCC_Allocator. The buffer must have existing memory to free.</dd></dl>
-<p>This function covers the edge case of reserving a dynamic capacity for a buf at runtime but denying the buffer allocation permission to resize. This can help prevent a buffer from growing untree. The user in this case knows the buffer does not have allocation permission and therefore no further memory will be dedicated to the buf.</p>
-<p>However, to free the buffer in such a case this function must be used because the buf has no ability to free itself. Just as the allocation function is required to reserve memory so to is it required to free memory.</p>
-<p>This function will work normally if called on a buffer with allocation permission however the normal CCC_buffer_clear_and_free is sufficient for that use case. Elements are assumed to be contiguous from the 0th index to index at size - 1. </p>
-
-</div>
-</div>
-<a id="afcfa78ee925af6a65460029469f2719c" name="afcfa78ee925af6a65460029469f2719c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afcfa78ee925af6a65460029469f2719c">&#9670;&#160;</a></span>CCC_buffer_copy()</h2>
+<a id="a11919bb95483be1e65de8dbac046b2ba" name="a11919bb95483be1e65de8dbac046b2ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a11919bb95483be1e65de8dbac046b2ba">&#9670;&#160;</a></span>CCC_buffer_copy()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1472,8 +1179,8 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a> *&#160;</td>
-          <td class="paramname"><em>allocate</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1488,7 +1195,7 @@ This graph shows which files directly or indirectly include this file:</div>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">destination</td><td>the destination that will copy the source buf. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">source</td><td>the source of the buf. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the allocation function in case resizing of destination is needed. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the allocation function in case resizing of destination is needed. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1497,27 +1204,19 @@ This graph shows which files directly or indirectly include this file:</div>
 <p>Note that there are two ways to copy data from source to destination: provide sufficient memory and pass NULL as allocate, or allow the copy function to take care of allocation for the copy.</p>
 <p>Manual memory management with no allocation function provided.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
-<div class="line">Buffer source = buffer_for((<span class="keywordtype">int</span>[10]){}, int, NULL, NULL, 10);</div>
+<div class="line">Buffer source = buffer_with_storage(0, (<span class="keywordtype">int</span>[10]){});</div>
 <div class="line"><span class="keywordtype">int</span> *new_data = malloc(<span class="keyword">sizeof</span>(<span class="keywordtype">int</span>) * buffer_capacity(&amp;source).count);</div>
 <div class="line">Buffer destination</div>
-<div class="line">    = buffer_for(new_data, <span class="keywordtype">int</span>, NULL, NULL,</div>
-<div class="line">buffer_capacity(&amp;source).count); <a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res = buffer_copy(&amp;destination,</div>
-<div class="line">&amp;source, NULL);</div>
-<div class="ttc" id="atypes_8h_html_aa1ded61d294b114942f11e711b331dcf"><div class="ttname"><a href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a></div><div class="ttdeci">CCC_Result</div><div class="ttdoc">A result of actions on containers.</div><div class="ttdef"><b>Definition:</b> types.h:146</div></div>
+<div class="line">    = buffer_for(<span class="keywordtype">int</span>, buffer_capacity(&amp;source).count, 0, new_data);</div>
+<div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res = buffer_copy(&amp;destination, &amp;source, &amp;(<a class="code hl_struct" href="structCCC__Allocator.html">CCC_Allocator</a>){});</div>
+<div class="ttc" id="atypes_8h_html_aa1ded61d294b114942f11e711b331dcf"><div class="ttname"><a href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a></div><div class="ttdeci">CCC_Result</div><div class="ttdoc">A result of actions on containers.</div><div class="ttdef"><b>Definition:</b> types.h:208</div></div>
 </div><!-- fragment --><p>The above requires destination capacity be greater than or equal to source capacity. Here is memory management handed over to the copy function.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
-<div class="line">Buffer source = buffer_for(NULL, <span class="keywordtype">int</span>, std_allocate, NULL, 0);</div>
-<div class="line">(void)CCC_buffer_push_back_range(&amp;source, 5, (<span class="keywordtype">int</span>[5]){0,1,2,3,4});</div>
-<div class="line">Buffer destination = buffer_for(NULL, <span class="keywordtype">int</span>, std_allocate, NULL, 0);</div>
-<div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res = buffer_copy(&amp;destination, &amp;source, std_allocate);</div>
-</div><!-- fragment --><p>The above allows destination to have a capacity less than that of the source as long as copy has been provided an allocation function to resize destination. Note that this would still work if copying to a destination that the user wants as a fixed size buffer (ring buffer).</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define BUFFER_USING_NAMESPACE_CCC</span></div>
-<div class="line">Buffer source = buffer_for(NULL, <span class="keywordtype">int</span>, std_allocate, NULL, 0);</div>
-<div class="line">(void)CCC_buffer_push_back_range(&amp;source, 5, (<span class="keywordtype">int</span>[5]){0,1,2,3,4});</div>
-<div class="line">Buffer destination = buffer_for(NULL, <span class="keywordtype">int</span>, NULL, NULL, 0);</div>
-<div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res = buffer_copy(&amp;destination, &amp;source, std_allocate);</div>
-</div><!-- fragment --><p>Because an allocation function is provided, the destination is resized once for the copy and retains its fixed size after the copy is complete. This would require the user to manually free the underlying Buffer at destination eventually if this method is used. Usually it is better to allocate the memory explicitly before the copy if copying between ring buffers.</p>
-<p>These options allow users to stay consistent across containers with their memory management strategies. </p>
+<div class="line">Buffer source = buffer_default(<span class="keywordtype">int</span>);</div>
+<div class="line">(void)push_back_range(&amp;source, 5, (<span class="keywordtype">int</span>[5]){0,1,2,3,4}, &amp;std_allocator);</div>
+<div class="line">Buffer destination = buffer_default(<span class="keywordtype">int</span>);</div>
+<div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res = buffer_copy(&amp;destination, &amp;source, &amp;std_allocator);</div>
+</div><!-- fragment --><p>These options allow users to stay consistent across containers with their memory management strategies. </p>
 
 </div>
 </div>
@@ -1710,8 +1409,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="aab508c7c3f2d3c7d969335e786d51cc1" name="aab508c7c3f2d3c7d969335e786d51cc1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aab508c7c3f2d3c7d969335e786d51cc1">&#9670;&#160;</a></span>CCC_buffer_insert()</h2>
+<a id="a7b9f69153ee4bee4f6f38575de1ae5a1" name="a7b9f69153ee4bee4f6f38575de1ae5a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b9f69153ee4bee4f6f38575de1ae5a1">&#9670;&#160;</a></span>CCC_buffer_insert()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1732,7 +1431,13 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">void const *&#160;</td>
-          <td class="paramname"><em>data</em>&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1747,7 +1452,8 @@ This graph shows which files directly or indirectly include this file:</div>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>the pointer to the buffer. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">index</td><td>the index at which to insert data. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>the data copied into the Buffer at index index of the same size as elements stored in the buffer. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>the data copied into the Buffer at index index of the same size </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the allocation context defined by the user. as elements stored in the buffer. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1811,8 +1517,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a78297e7bdc97e441d81ab682ec4e3560" name="a78297e7bdc97e441d81ab682ec4e3560"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a78297e7bdc97e441d81ab682ec4e3560">&#9670;&#160;</a></span>CCC_buffer_move()</h2>
+<a id="a4eac41f10b83121effa77a904e2dd551" name="a4eac41f10b83121effa77a904e2dd551"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4eac41f10b83121effa77a904e2dd551">&#9670;&#160;</a></span>CCC_buffer_move()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1820,7 +1526,7 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td class="memname">void * CCC_buffer_move </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> const *&#160;</td>
           <td class="paramname"><em>buffer</em>, </td>
         </tr>
         <tr>
@@ -1963,8 +1669,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a692fb97bb1a475d6377ec6abb635819a" name="a692fb97bb1a475d6377ec6abb635819a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a692fb97bb1a475d6377ec6abb635819a">&#9670;&#160;</a></span>CCC_buffer_push_back()</h2>
+<a id="a4136eff57e6947dcc1406705b35396a2" name="a4136eff57e6947dcc1406705b35396a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4136eff57e6947dcc1406705b35396a2">&#9670;&#160;</a></span>CCC_buffer_push_back()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1979,7 +1685,13 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">void const *&#160;</td>
-          <td class="paramname"><em>data</em>&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1994,6 +1706,7 @@ This graph shows which files directly or indirectly include this file:</div>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>the pointer to the buffer. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>the pointer to the data of element size. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the allocation context defined by the user. </td></tr>
   </table>
   </dd>
 </dl>
@@ -2003,8 +1716,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a7f96119efe2724e34ee6e879e511154c" name="a7f96119efe2724e34ee6e879e511154c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7f96119efe2724e34ee6e879e511154c">&#9670;&#160;</a></span>CCC_buffer_reserve()</h2>
+<a id="a4923853fa5fe3a9f25539adf42f41b72" name="a4923853fa5fe3a9f25539adf42f41b72"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4923853fa5fe3a9f25539adf42f41b72">&#9670;&#160;</a></span>CCC_buffer_reserve()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2024,8 +1737,8 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a> *&#160;</td>
-          <td class="paramname"><em>allocate</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2040,14 +1753,11 @@ This graph shows which files directly or indirectly include this file:</div>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>a pointer to the buffer. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">to_add</td><td>the number of elements to add to the current size. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the allocation function to use to reserve memory. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the allocation function to use to reserve memory. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the result of the reservation. OK if successful, otherwise an error status is returned. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>see the CCC_buffer_clear_and_free_reserve function if this function is being used for a one-time dynamic reservation.</dd></dl>
-<p>This function can be used for a dynamic buffer with or without allocation permission. If the buffer has allocation permission, it will reserve the required space and later resize if more space is needed.</p>
-<p>If the buffer has been initialized with no allocation permission and no memory this function can serve as a one-time reservation. To free the buffer in such a case see the CCC_buffer_clear_and_free_reserve function. </p>
 
 </div>
 </div>
@@ -2287,8 +1997,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="af8e624d6ffa19538935cbd17838b659b" name="af8e624d6ffa19538935cbd17838b659b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af8e624d6ffa19538935cbd17838b659b">&#9670;&#160;</a></span>CCC_buffer_swap()</h2>
+<a id="a8128da7871c675e2c65ccfaf65271358" name="a8128da7871c675e2c65ccfaf65271358"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8128da7871c675e2c65ccfaf65271358">&#9670;&#160;</a></span>CCC_buffer_swap()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2296,7 +2006,7 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td class="memname"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> CCC_buffer_swap </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> const *&#160;</td>
           <td class="paramname"><em>buffer</em>, </td>
         </tr>
         <tr>
@@ -2341,8 +2051,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="abfd334de1ebe17f2e329d501bd59ec99" name="abfd334de1ebe17f2e329d501bd59ec99"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abfd334de1ebe17f2e329d501bd59ec99">&#9670;&#160;</a></span>CCC_buffer_write()</h2>
+<a id="ac3937bfbb884d79f62564d427d07bd91" name="ac3937bfbb884d79f62564d427d07bd91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3937bfbb884d79f62564d427d07bd91">&#9670;&#160;</a></span>CCC_buffer_write()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2350,7 +2060,7 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td class="memname"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> CCC_buffer_write </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> const *&#160;</td>
           <td class="paramname"><em>buffer</em>, </td>
         </tr>
         <tr>

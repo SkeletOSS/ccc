@@ -102,8 +102,9 @@ Collaboration diagram for CCC_Flat_hash_map:</div>
 <div class="dyncontent">
 <div class="center"><img src="structCCC__Flat__hash__map__coll__graph.png" border="0" usemap="#aCCC__Flat__hash__map_coll__map" alt="Collaboration graph"/></div>
 <map name="aCCC__Flat__hash__map_coll__map" id="aCCC__Flat__hash__map_coll__map">
-<area shape="rect" title=" " alt="" coords="19,93,174,119"/>
+<area shape="rect" title=" " alt="" coords="102,93,257,119"/>
 <area shape="rect" href="structCCC__Flat__hash__map__tag.html" title=" " alt="" coords="5,5,188,31"/>
+<area shape="rect" href="structCCC__Hasher.html" title="The type passed by reference to a hash map that needs a hash function and key comparison function...." alt="" coords="212,5,315,31"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -129,61 +130,10 @@ Data Fields</h2></td></tr>
 <tr class="separator:a7ac5a0651f942b94821ea041257fd4aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87df703d579e68a09558dc1a9c773525"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Flat__hash__map.html#a87df703d579e68a09558dc1a9c773525">key_offset</a></td></tr>
 <tr class="separator:a87df703d579e68a09558dc1a9c773525"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41aef79c27d7c76cfcb4a43ffe0c0dca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a70073fb5defeba83308b92f2fff63fac">CCC_Key_comparator</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Flat__hash__map.html#a41aef79c27d7c76cfcb4a43ffe0c0dca">compare</a></td></tr>
-<tr class="separator:a41aef79c27d7c76cfcb4a43ffe0c0dca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae115aba9dcc8fe51f374ed2cc931feac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#ac8ab9304af176b1e7c135e7464a7488f">CCC_Key_hasher</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Flat__hash__map.html#ae115aba9dcc8fe51f374ed2cc931feac">hash</a></td></tr>
-<tr class="separator:ae115aba9dcc8fe51f374ed2cc931feac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af187da4042352b19620063926a6a7407"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Flat__hash__map.html#af187da4042352b19620063926a6a7407">allocate</a></td></tr>
-<tr class="separator:af187da4042352b19620063926a6a7407"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a614cac31b8d29442073e0dbc8ee86704"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Flat__hash__map.html#a614cac31b8d29442073e0dbc8ee86704">context</a></td></tr>
-<tr class="separator:a614cac31b8d29442073e0dbc8ee86704"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afcb5101dd8c99a767765bc4da1edb66f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Hasher.html">CCC_Hasher</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Flat__hash__map.html#afcb5101dd8c99a767765bc4da1edb66f">hasher</a></td></tr>
+<tr class="separator:afcb5101dd8c99a767765bc4da1edb66f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
-<a id="af187da4042352b19620063926a6a7407" name="af187da4042352b19620063926a6a7407"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af187da4042352b19620063926a6a7407">&#9670;&#160;</a></span>allocate</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a>* CCC_Flat_hash_map::allocate</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>The allocation function, if any. </p>
-
-</div>
-</div>
-<a id="a41aef79c27d7c76cfcb4a43ffe0c0dca" name="a41aef79c27d7c76cfcb4a43ffe0c0dca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a41aef79c27d7c76cfcb4a43ffe0c0dca">&#9670;&#160;</a></span>compare</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="types_8h.html#a70073fb5defeba83308b92f2fff63fac">CCC_Key_comparator</a>* CCC_Flat_hash_map::compare</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>The user callback for equality comparison. </p>
-
-</div>
-</div>
-<a id="a614cac31b8d29442073e0dbc8ee86704" name="a614cac31b8d29442073e0dbc8ee86704"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a614cac31b8d29442073e0dbc8ee86704">&#9670;&#160;</a></span>context</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void* CCC_Flat_hash_map::context</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Auxiliary data, if any. </p>
-
-</div>
-</div>
 <a id="aa1a7e81876c54d1b818b04743b2328ec" name="aa1a7e81876c54d1b818b04743b2328ec"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa1a7e81876c54d1b818b04743b2328ec">&#9670;&#160;</a></span>count</h2>
 
@@ -214,18 +164,18 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
-<a id="ae115aba9dcc8fe51f374ed2cc931feac" name="ae115aba9dcc8fe51f374ed2cc931feac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae115aba9dcc8fe51f374ed2cc931feac">&#9670;&#160;</a></span>hash</h2>
+<a id="afcb5101dd8c99a767765bc4da1edb66f" name="afcb5101dd8c99a767765bc4da1edb66f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afcb5101dd8c99a767765bc4da1edb66f">&#9670;&#160;</a></span>hasher</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="types_8h.html#ac8ab9304af176b1e7c135e7464a7488f">CCC_Key_hasher</a>* CCC_Flat_hash_map::hash</td>
+          <td class="memname"><a class="el" href="structCCC__Hasher.html">CCC_Hasher</a> CCC_Flat_hash_map::hasher</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The hash function provided by user. </p>
+<p>The provided hash function, key comparator, and context. </p>
 
 </div>
 </div>
@@ -270,7 +220,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Track available slots given load factor constraints. When 0, rehash. </p>
+<p>Track available slots given load factor constraints. </p>
 
 </div>
 </div>

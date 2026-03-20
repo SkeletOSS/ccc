@@ -102,284 +102,236 @@ $(document).ready(function(){initNavTree('traits_8h_source.html',''); initResiza
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="traits_8h.html#aa7e463ec85c393e0bc31c026d3746e13">   51</a></span><span class="preprocessor">#define CCC_swap_entry(container_pointer, swap_arguments...)                   \</span></div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="preprocessor">    CCC_private_swap_entry(container_pointer, swap_arguments)</span></div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="traits_8h.html#a3a5241223eb13697a7aae960f7fd5cbb">   60</a></span><span class="preprocessor">#define CCC_swap_entry_wrap(container_pointer, swap_arguments...)              \</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="preprocessor">    CCC_private_swap_entry_wrap(container_pointer, swap_arguments)</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="traits_8h.html#a36fc6824695d97967f69e057494bcb25">   60</a></span><span class="preprocessor">#define CCC_swap_handle(container_pointer, swap_arguments...)                  \</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="preprocessor">    CCC_private_swap_handle(container_pointer, swap_arguments)</span></div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="traits_8h.html#a36fc6824695d97967f69e057494bcb25">   69</a></span><span class="preprocessor">#define CCC_swap_handle(container_pointer, swap_arguments...)                  \</span></div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="preprocessor">    CCC_private_swap_handle(container_pointer, swap_arguments)</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="traits_8h.html#af431d49e5a606da896a5fa211890ce75">   69</a></span><span class="preprocessor">#define CCC_try_insert(container_pointer, try_insert_arguments...)             \</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="preprocessor">    CCC_private_try_insert(container_pointer, try_insert_arguments)</span></div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="traits_8h.html#af3c76ac87bc31b353faf0228b803be24">   78</a></span><span class="preprocessor">#define CCC_swap_handle_wrap(container_pointer, swap_arguments...)             \</span></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="preprocessor">    CCC_private_swap_handle_wrap(container_pointer, swap_arguments)</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="traits_8h.html#ac8d36b4b9edf8321ce4deea33c5308d4">   78</a></span><span class="preprocessor">#define CCC_insert_or_assign(container_pointer, insert_or_assign_arguments...) \</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="preprocessor">    CCC_private_insert_or_assign(container_pointer, insert_or_assign_arguments)</span></div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno"><a class="line" href="traits_8h.html#af431d49e5a606da896a5fa211890ce75">   87</a></span><span class="preprocessor">#define CCC_try_insert(container_pointer, try_insert_arguments...)             \</span></div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="preprocessor">    CCC_private_try_insert(container_pointer, try_insert_arguments)</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno"><a class="line" href="traits_8h.html#adf98612c9c130618b75ae727fb1fe150">   87</a></span><span class="preprocessor">#define CCC_remove_key_value(container_pointer, remove_key_value_arguments...) \</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="preprocessor">    CCC_private_remove_key_value(container_pointer, remove_key_value_arguments)</span></div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno"><a class="line" href="traits_8h.html#ac2f4343b4d1deccfaf32ae3532299155">   96</a></span><span class="preprocessor">#define CCC_try_insert_wrap(container_pointer, try_insert_arguments...)        \</span></div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="preprocessor">    CCC_private_try_insert_wrap(container_pointer, try_insert_arguments)</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno"><a class="line" href="traits_8h.html#abcc6f6f2312a929b7babe27c827ef4a0">   96</a></span><span class="preprocessor">#define CCC_entry(container_pointer, key_allocator_arguments...)               \</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="preprocessor">    CCC_private_entry(container_pointer, key_allocator_arguments)</span></div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="traits_8h.html#ac8d36b4b9edf8321ce4deea33c5308d4">  105</a></span><span class="preprocessor">#define CCC_insert_or_assign(container_pointer, insert_or_assign_arguments...) \</span></div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="preprocessor">    CCC_private_insert_or_assign(container_pointer, insert_or_assign_arguments)</span></div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="traits_8h.html#a257575305c9f14fcf98682c3330d0cc5">  105</a></span><span class="preprocessor">#define CCC_handle(container_pointer, key_allocator_arguments...)              \</span></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="preprocessor">    CCC_private_handle(container_pointer, key_allocator_arguments)</span></div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno"><a class="line" href="traits_8h.html#a16470ce8c7b99a1dc61ddabb2e008e1c">  114</a></span><span class="preprocessor">#define CCC_insert_or_assign_wrap(container_pointer,                           \</span></div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span><span class="preprocessor">                                  insert_or_assign_arguments...)               \</span></div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span><span class="preprocessor">    CCC_private_insert_or_assign_wrap(container_pointer,                       \</span></div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="preprocessor">                                      insert_or_assign_arguments)</span></div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno"><a class="line" href="traits_8h.html#adf98612c9c130618b75ae727fb1fe150">  125</a></span><span class="preprocessor">#define CCC_remove_key_value(container_pointer, remove_key_value_arguments...) \</span></div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="preprocessor">    CCC_private_remove_key_value(container_pointer, remove_key_value_arguments)</span></div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno"><a class="line" href="traits_8h.html#a2c4403f2a89ae5d3ec78b2b0cc5172b9">  134</a></span><span class="preprocessor">#define CCC_remove_key_value_wrap(container_pointer,                           \</span></div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span><span class="preprocessor">                                  remove_key_value_arguments...)               \</span></div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span><span class="preprocessor">    CCC_private_remove_key_value_wrap(container_pointer,                       \</span></div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span><span class="preprocessor">                                      remove_key_value_arguments)</span></div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno"><a class="line" href="traits_8h.html#a2093b0d81c352dc0eb6e85a77a7ee54b">  145</a></span><span class="preprocessor">#define CCC_entry(container_pointer, key_pointer...)                           \</span></div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span><span class="preprocessor">    CCC_private_entry(container_pointer, key_pointer)</span></div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span> </div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno"><a class="line" href="traits_8h.html#ab6eb0d1bbce755e2a7c0358a30ee7890">  154</a></span><span class="preprocessor">#define CCC_handle(container_pointer, key_pointer...)                          \</span></div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span><span class="preprocessor">    CCC_private_handle(container_pointer, key_pointer)</span></div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span> </div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno"><a class="line" href="traits_8h.html#a14cb05888afcab07cf9340d20205d2e5">  164</a></span><span class="preprocessor">#define CCC_entry_wrap(container_pointer, key_pointer...)                      \</span></div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span><span class="preprocessor">    CCC_private_entry_wrap(container_pointer, key_pointer)</span></div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno"><a class="line" href="traits_8h.html#abe611ce746d1d3c4de10eb3151d8e6c2">  174</a></span><span class="preprocessor">#define CCC_handle_wrap(container_pointer, key_pointer...)                     \</span></div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span><span class="preprocessor">    CCC_private_handle_wrap(container_pointer, key_pointer)</span></div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span> </div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno"><a class="line" href="traits_8h.html#a06c69e9a18e4bbafb9d6e5c7327fd0e8">  183</a></span><span class="preprocessor">#define CCC_and_modify(entry_pointer, mod_fn)                                  \</span></div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span><span class="preprocessor">    CCC_private_and_modify(entry_pointer, mod_fn)</span></div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span> </div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno"><a class="line" href="traits_8h.html#a86a879e1ce61a86c14d35aa236279cba">  193</a></span><span class="preprocessor">#define CCC_and_context_modify(entry_pointer, modify, context_arguments...)    \</span></div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span><span class="preprocessor">    CCC_private_and_context_modify(entry_pointer, modify, context_arguments)</span></div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span> </div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno"><a class="line" href="traits_8h.html#ab5cce635dbfc91154cf7002a71d639cc">  202</a></span><span class="preprocessor">#define CCC_insert_entry(entry_pointer, insert_entry_arguments...)             \</span></div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span><span class="preprocessor">    CCC_private_insert_entry(entry_pointer, insert_entry_arguments)</span></div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span> </div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno"><a class="line" href="traits_8h.html#a2e3406c1125540e36828a9418b71b073">  211</a></span><span class="preprocessor">#define CCC_insert_handle(array_pointer, insert_array_arguments...)            \</span></div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span><span class="preprocessor">    CCC_private_insert_handle(array_pointer, insert_array_arguments)</span></div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span> </div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno"><a class="line" href="traits_8h.html#a3cf79b31383d758bc76e5fb20fd82ec1">  220</a></span><span class="preprocessor">#define CCC_or_insert(entry_pointer, or_insert_arguments...)                   \</span></div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span><span class="preprocessor">    CCC_private_or_insert(entry_pointer, or_insert_arguments)</span></div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span> </div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno"><a class="line" href="traits_8h.html#ac207035aea4cbe0c51d16589c2460db4">  228</a></span><span class="preprocessor">#define CCC_remove_entry(entry_pointer) CCC_private_remove_entry(entry_pointer)</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno"><a class="line" href="traits_8h.html#ac11c5f26c333dc65a5b450bba177d694">  114</a></span><span class="preprocessor">#define CCC_and_modify(entry_pointer, modifier_pointer...)                     \</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span><span class="preprocessor">    CCC_private_and_modify(entry_pointer, modifier_pointer)</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno"><a class="line" href="traits_8h.html#ab5cce635dbfc91154cf7002a71d639cc">  123</a></span><span class="preprocessor">#define CCC_insert_entry(entry_pointer, insert_entry_arguments...)             \</span></div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span><span class="preprocessor">    CCC_private_insert_entry(entry_pointer, insert_entry_arguments)</span></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno"><a class="line" href="traits_8h.html#a2e3406c1125540e36828a9418b71b073">  132</a></span><span class="preprocessor">#define CCC_insert_handle(array_pointer, insert_array_arguments...)            \</span></div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span><span class="preprocessor">    CCC_private_insert_handle(array_pointer, insert_array_arguments)</span></div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno"><a class="line" href="traits_8h.html#a3cf79b31383d758bc76e5fb20fd82ec1">  141</a></span><span class="preprocessor">#define CCC_or_insert(entry_pointer, or_insert_arguments...)                   \</span></div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span><span class="preprocessor">    CCC_private_or_insert(entry_pointer, or_insert_arguments)</span></div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span> </div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno"><a class="line" href="traits_8h.html#afcf96fdc6831ab138ae9dfab30fdc471">  150</a></span><span class="preprocessor">#define CCC_remove_entry(entry_pointer, allocator_arguments...)                \</span></div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span><span class="preprocessor">    CCC_private_remove_entry(entry_pointer, allocator_arguments)</span></div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno"><a class="line" href="traits_8h.html#a81a9141ace02d75b61a40e78fb070e08">  158</a></span><span class="preprocessor">#define CCC_remove_handle(array_pointer)                                       \</span></div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span><span class="preprocessor">    CCC_private_remove_handle(array_pointer)</span></div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno"><a class="line" href="traits_8h.html#ab42510f7ed011f774d3549ef3c91d4a2">  166</a></span><span class="preprocessor">#define CCC_unwrap(entry_pointer) CCC_private_unwrap(entry_pointer)</span></div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno"><a class="line" href="traits_8h.html#a98ffeab920e9fb81fb185004e4e22f60">  173</a></span><span class="preprocessor">#define CCC_occupied(entry_pointer) CCC_private_occupied(entry_pointer)</span></div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span> </div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno"><a class="line" href="traits_8h.html#a0478c724a9aa16943c6515b95a4c5c83">  180</a></span><span class="preprocessor">#define CCC_insert_error(entry_pointer) CCC_private_insert_error(entry_pointer)</span></div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span> </div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno"><a class="line" href="traits_8h.html#a4a81daea52cfe16f59ff00d87015b106">  194</a></span><span class="preprocessor">#define CCC_get_key_value(container_pointer, key_pointer...)                   \</span></div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span><span class="preprocessor">    CCC_private_get_key_value(container_pointer, key_pointer)</span></div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno"><a class="line" href="traits_8h.html#ae4a399d979c7e3e284ddb395d6a42487">  203</a></span><span class="preprocessor">#define CCC_contains(container_pointer, key_pointer...)                        \</span></div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span><span class="preprocessor">    CCC_private_contains(container_pointer, key_pointer)</span></div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span> </div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno"><a class="line" href="traits_8h.html#ac5bdeefd70bfdffa2190329deb21ab8b">  218</a></span><span class="preprocessor">#define CCC_push(container_pointer, push_arguments...)                         \</span></div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span><span class="preprocessor">    CCC_private_push(container_pointer, push_arguments)</span></div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span> </div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno"><a class="line" href="traits_8h.html#a2f377a663decd0421b962bbc26da512f">  227</a></span><span class="preprocessor">#define CCC_push_back(container_pointer, push_arguments...)                    \</span></div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span><span class="preprocessor">    CCC_private_push_back(container_pointer, push_arguments)</span></div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span> </div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno"><a class="line" href="traits_8h.html#a4e80401338bc7980d63b75bf9c8cc108">  235</a></span><span class="preprocessor">#define CCC_remove_entry_wrap(entry_pointer)                                   \</span></div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span><span class="preprocessor">    CCC_private_remove_entry_wrap(entry_pointer)</span></div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno"><a class="line" href="traits_8h.html#a81a9141ace02d75b61a40e78fb070e08">  243</a></span><span class="preprocessor">#define CCC_remove_handle(array_pointer)                                       \</span></div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span><span class="preprocessor">    CCC_private_remove_handle(array_pointer)</span></div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span> </div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno"><a class="line" href="traits_8h.html#a8fe3201d00f81e4ef8b5d060086561da">  251</a></span><span class="preprocessor">#define CCC_remove_handle_wrap(array_pointer)                                  \</span></div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span><span class="preprocessor">    CCC_private_remove_handle_wrap(array_pointer)</span></div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span> </div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno"><a class="line" href="traits_8h.html#ab42510f7ed011f774d3549ef3c91d4a2">  259</a></span><span class="preprocessor">#define CCC_unwrap(entry_pointer) CCC_private_unwrap(entry_pointer)</span></div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span> </div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno"><a class="line" href="traits_8h.html#a98ffeab920e9fb81fb185004e4e22f60">  266</a></span><span class="preprocessor">#define CCC_occupied(entry_pointer) CCC_private_occupied(entry_pointer)</span></div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span> </div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno"><a class="line" href="traits_8h.html#a0478c724a9aa16943c6515b95a4c5c83">  273</a></span><span class="preprocessor">#define CCC_insert_error(entry_pointer) CCC_private_insert_error(entry_pointer)</span></div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span> </div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno"><a class="line" href="traits_8h.html#a4a81daea52cfe16f59ff00d87015b106">  287</a></span><span class="preprocessor">#define CCC_get_key_value(container_pointer, key_pointer...)                   \</span></div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span><span class="preprocessor">    CCC_private_get_key_value(container_pointer, key_pointer)</span></div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span> </div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno"><a class="line" href="traits_8h.html#ae4a399d979c7e3e284ddb395d6a42487">  296</a></span><span class="preprocessor">#define CCC_contains(container_pointer, key_pointer...)                        \</span></div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span><span class="preprocessor">    CCC_private_contains(container_pointer, key_pointer)</span></div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span> </div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno"><a class="line" href="traits_8h.html#ac5bdeefd70bfdffa2190329deb21ab8b">  311</a></span><span class="preprocessor">#define CCC_push(container_pointer, push_arguments...)                         \</span></div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span><span class="preprocessor">    CCC_private_push(container_pointer, push_arguments)</span></div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span> </div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno"><a class="line" href="traits_8h.html#a2f377a663decd0421b962bbc26da512f">  320</a></span><span class="preprocessor">#define CCC_push_back(container_pointer, push_arguments...)                    \</span></div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span><span class="preprocessor">    CCC_private_push_back(container_pointer, push_arguments)</span></div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span> </div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno"><a class="line" href="traits_8h.html#af2bacf413e77ba2800653acc7bfe4ede">  329</a></span><span class="preprocessor">#define CCC_push_front(container_pointer, push_arguments...)                   \</span></div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span><span class="preprocessor">    CCC_private_push_front(container_pointer, push_arguments)</span></div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span> </div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno"><a class="line" href="traits_8h.html#a060c9cc6826bb39350be21750233ce71">  339</a></span><span class="preprocessor">#define CCC_pop(container_pointer, pop_arguments...)                           \</span></div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span><span class="preprocessor">    CCC_private_pop(container_pointer, pop_arguments)</span></div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span> </div>
-<div class="line"><a id="l00347" name="l00347"></a><span class="lineno"><a class="line" href="traits_8h.html#adc6ea07e914d9bdd03424c39082299e5">  347</a></span><span class="preprocessor">#define CCC_pop_front(container_pointer)                                       \</span></div>
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span><span class="preprocessor">    CCC_private_pop_front(container_pointer)</span></div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span> </div>
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno"><a class="line" href="traits_8h.html#a9ddf2fb67b4322c8cb48a7ecf09f3115">  355</a></span><span class="preprocessor">#define CCC_pop_back(container_pointer) CCC_private_pop_back(container_pointer)</span></div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno"><a class="line" href="traits_8h.html#af2bacf413e77ba2800653acc7bfe4ede">  236</a></span><span class="preprocessor">#define CCC_push_front(container_pointer, push_arguments...)                   \</span></div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span><span class="preprocessor">    CCC_private_push_front(container_pointer, push_arguments)</span></div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span> </div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno"><a class="line" href="traits_8h.html#a060c9cc6826bb39350be21750233ce71">  246</a></span><span class="preprocessor">#define CCC_pop(container_pointer, pop_arguments...)                           \</span></div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span><span class="preprocessor">    CCC_private_pop(container_pointer, pop_arguments)</span></div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span> </div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno"><a class="line" href="traits_8h.html#ad19f699460adf0deebdeefe6ee741093">  256</a></span><span class="preprocessor">#define CCC_pop_front(container_pointer, pop_arguments...)                     \</span></div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span><span class="preprocessor">    CCC_private_pop_front(container_pointer, pop_arguments)</span></div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno"><a class="line" href="traits_8h.html#ac7474570655ffb89b3a4b47696778a28">  266</a></span><span class="preprocessor">#define CCC_pop_back(container_pointer, pop_arguments...)                      \</span></div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span><span class="preprocessor">    CCC_private_pop_back(container_pointer, pop_arguments)</span></div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span> </div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno"><a class="line" href="traits_8h.html#a5072ddc807149d24311ff1729a5c1c60">  274</a></span><span class="preprocessor">#define CCC_front(container_pointer) CCC_private_front(container_pointer)</span></div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span> </div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno"><a class="line" href="traits_8h.html#a55359b1a71f993ab27c2f267012a62c2">  281</a></span><span class="preprocessor">#define CCC_back(container_pointer) CCC_private_back(container_pointer)</span></div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span> </div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno"><a class="line" href="traits_8h.html#afd8b655cc1c871d1d86de0e2ab403e40">  290</a></span><span class="preprocessor">#define CCC_splice(container_pointer, splice_arguments...)                     \</span></div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span><span class="preprocessor">    CCC_private_splice(container_pointer, splice_arguments)</span></div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span> </div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno"><a class="line" href="traits_8h.html#a7d7480fbdf342099370c59d90a1f386b">  300</a></span><span class="preprocessor">#define CCC_splice_range(container_pointer, splice_arguments...)               \</span></div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span><span class="preprocessor">    CCC_private_splice_range(container_pointer, splice_arguments)</span></div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span> </div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno"><a class="line" href="traits_8h.html#a9d71f5910f431f9336e6568dc3ef80b2">  314</a></span><span class="preprocessor">#define CCC_update(container_pointer, update_arguments...)                     \</span></div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span><span class="preprocessor">    CCC_private_update(container_pointer, update_arguments)</span></div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span> </div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno"><a class="line" href="traits_8h.html#a234d5e7b5daae822c535805b5779c73d">  322</a></span><span class="preprocessor">#define CCC_increase(container_pointer, increase_arguments...)                 \</span></div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span><span class="preprocessor">    CCC_private_increase(container_pointer, increase_arguments)</span></div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span> </div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno"><a class="line" href="traits_8h.html#aa32fc447c5a18da8d7ad0b52ced61ede">  330</a></span><span class="preprocessor">#define CCC_decrease(container_pointer, decrease_arguments...)                 \</span></div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span><span class="preprocessor">    CCC_private_decrease(container_pointer, decrease_arguments)</span></div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span> </div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno"><a class="line" href="traits_8h.html#a7e0986a36c3d0e39e87183081223ccec">  338</a></span><span class="preprocessor">#define CCC_erase(container_pointer, erase_arguments...)                       \</span></div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span><span class="preprocessor">    CCC_private_erase(container_pointer, erase_arguments)</span></div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span> </div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno"><a class="line" href="traits_8h.html#ae7f45716d00ee674db1b94e964f3b24f">  346</a></span><span class="preprocessor">#define CCC_extract(container_pointer, extract_arguments...)                   \</span></div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span><span class="preprocessor">    CCC_private_extract(container_pointer, extract_arguments)</span></div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span> </div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno"><a class="line" href="traits_8h.html#aeef7825d32ca85011aea525d18b8fbd5">  354</a></span><span class="preprocessor">#define CCC_extract_range(container_pointer, extract_arguments...)             \</span></div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span><span class="preprocessor">    CCC_private_extract_range(container_pointer, extract_arguments)</span></div>
 <div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span> </div>
-<div class="line"><a id="l00362" name="l00362"></a><span class="lineno"><a class="line" href="traits_8h.html#a5072ddc807149d24311ff1729a5c1c60">  362</a></span><span class="preprocessor">#define CCC_front(container_pointer) CCC_private_front(container_pointer)</span></div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span> </div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno"><a class="line" href="traits_8h.html#a55359b1a71f993ab27c2f267012a62c2">  369</a></span><span class="preprocessor">#define CCC_back(container_pointer) CCC_private_back(container_pointer)</span></div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span> </div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno"><a class="line" href="traits_8h.html#afd8b655cc1c871d1d86de0e2ab403e40">  378</a></span><span class="preprocessor">#define CCC_splice(container_pointer, splice_arguments...)                     \</span></div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span><span class="preprocessor">    CCC_private_splice(container_pointer, splice_arguments)</span></div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span> </div>
-<div class="line"><a id="l00388" name="l00388"></a><span class="lineno"><a class="line" href="traits_8h.html#a7d7480fbdf342099370c59d90a1f386b">  388</a></span><span class="preprocessor">#define CCC_splice_range(container_pointer, splice_arguments...)               \</span></div>
-<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span><span class="preprocessor">    CCC_private_splice_range(container_pointer, splice_arguments)</span></div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span> </div>
-<div class="line"><a id="l00402" name="l00402"></a><span class="lineno"><a class="line" href="traits_8h.html#a9d71f5910f431f9336e6568dc3ef80b2">  402</a></span><span class="preprocessor">#define CCC_update(container_pointer, update_arguments...)                     \</span></div>
-<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span><span class="preprocessor">    CCC_private_update(container_pointer, update_arguments)</span></div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno"><a class="line" href="traits_8h.html#a7cafec411ee3f60bc10033bb8abf7ac4">  368</a></span><span class="preprocessor">#define CCC_begin(container_pointer) CCC_private_begin(container_pointer)</span></div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span> </div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno"><a class="line" href="traits_8h.html#a6237dcd969f191f580d65d7fd63be4c5">  375</a></span><span class="preprocessor">#define CCC_reverse_begin(container_pointer)                                   \</span></div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span><span class="preprocessor">    CCC_private_reverse_begin(container_pointer)</span></div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span> </div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno"><a class="line" href="traits_8h.html#a1a2e1d8eb494bca89d88a171b4a3ab5d">  385</a></span><span class="preprocessor">#define CCC_next(container_pointer, void_iterator_pointer)                     \</span></div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span><span class="preprocessor">    CCC_private_next(container_pointer, void_iterator_pointer)</span></div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span> </div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno"><a class="line" href="traits_8h.html#a1fab7d4aca5df5547f4474095f18b40a">  395</a></span><span class="preprocessor">#define CCC_reverse_next(container_pointer, void_iterator_pointer)             \</span></div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span><span class="preprocessor">    CCC_private_reverse_next(container_pointer, void_iterator_pointer)</span></div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span> </div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno"><a class="line" href="traits_8h.html#a4f69c818b648fb9d44f3807d72f9653a">  403</a></span><span class="preprocessor">#define CCC_end(container_pointer) CCC_private_end(container_pointer)</span></div>
 <div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span> </div>
-<div class="line"><a id="l00410" name="l00410"></a><span class="lineno"><a class="line" href="traits_8h.html#a234d5e7b5daae822c535805b5779c73d">  410</a></span><span class="preprocessor">#define CCC_increase(container_pointer, increase_arguments...)                 \</span></div>
-<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span><span class="preprocessor">    CCC_private_increase(container_pointer, increase_arguments)</span></div>
+<div class="line"><a id="l00410" name="l00410"></a><span class="lineno"><a class="line" href="traits_8h.html#a4e882e40fee89407d607872f31814381">  410</a></span><span class="preprocessor">#define CCC_reverse_end(container_pointer)                                     \</span></div>
+<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span><span class="preprocessor">    CCC_private_reverse_end(container_pointer)</span></div>
 <div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span> </div>
-<div class="line"><a id="l00418" name="l00418"></a><span class="lineno"><a class="line" href="traits_8h.html#aa32fc447c5a18da8d7ad0b52ced61ede">  418</a></span><span class="preprocessor">#define CCC_decrease(container_pointer, decrease_arguments...)                 \</span></div>
-<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span><span class="preprocessor">    CCC_private_decrease(container_pointer, decrease_arguments)</span></div>
-<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span> </div>
-<div class="line"><a id="l00426" name="l00426"></a><span class="lineno"><a class="line" href="traits_8h.html#a7e0986a36c3d0e39e87183081223ccec">  426</a></span><span class="preprocessor">#define CCC_erase(container_pointer, erase_arguments...)                       \</span></div>
-<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span><span class="preprocessor">    CCC_private_erase(container_pointer, erase_arguments)</span></div>
-<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span> </div>
-<div class="line"><a id="l00434" name="l00434"></a><span class="lineno"><a class="line" href="traits_8h.html#ae7f45716d00ee674db1b94e964f3b24f">  434</a></span><span class="preprocessor">#define CCC_extract(container_pointer, extract_arguments...)                   \</span></div>
-<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span><span class="preprocessor">    CCC_private_extract(container_pointer, extract_arguments)</span></div>
-<div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span> </div>
-<div class="line"><a id="l00442" name="l00442"></a><span class="lineno"><a class="line" href="traits_8h.html#aeef7825d32ca85011aea525d18b8fbd5">  442</a></span><span class="preprocessor">#define CCC_extract_range(container_pointer, extract_arguments...)             \</span></div>
-<div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span><span class="preprocessor">    CCC_private_extract_range(container_pointer, extract_arguments)</span></div>
-<div class="line"><a id="l00444" name="l00444"></a><span class="lineno">  444</span> </div>
-<div class="line"><a id="l00456" name="l00456"></a><span class="lineno"><a class="line" href="traits_8h.html#a7cafec411ee3f60bc10033bb8abf7ac4">  456</a></span><span class="preprocessor">#define CCC_begin(container_pointer) CCC_private_begin(container_pointer)</span></div>
-<div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span> </div>
-<div class="line"><a id="l00463" name="l00463"></a><span class="lineno"><a class="line" href="traits_8h.html#a6237dcd969f191f580d65d7fd63be4c5">  463</a></span><span class="preprocessor">#define CCC_reverse_begin(container_pointer)                                   \</span></div>
-<div class="line"><a id="l00464" name="l00464"></a><span class="lineno">  464</span><span class="preprocessor">    CCC_private_reverse_begin(container_pointer)</span></div>
-<div class="line"><a id="l00465" name="l00465"></a><span class="lineno">  465</span> </div>
-<div class="line"><a id="l00473" name="l00473"></a><span class="lineno"><a class="line" href="traits_8h.html#a1a2e1d8eb494bca89d88a171b4a3ab5d">  473</a></span><span class="preprocessor">#define CCC_next(container_pointer, void_iterator_pointer)                     \</span></div>
-<div class="line"><a id="l00474" name="l00474"></a><span class="lineno">  474</span><span class="preprocessor">    CCC_private_next(container_pointer, void_iterator_pointer)</span></div>
-<div class="line"><a id="l00475" name="l00475"></a><span class="lineno">  475</span> </div>
-<div class="line"><a id="l00483" name="l00483"></a><span class="lineno"><a class="line" href="traits_8h.html#a1fab7d4aca5df5547f4474095f18b40a">  483</a></span><span class="preprocessor">#define CCC_reverse_next(container_pointer, void_iterator_pointer)             \</span></div>
-<div class="line"><a id="l00484" name="l00484"></a><span class="lineno">  484</span><span class="preprocessor">    CCC_private_reverse_next(container_pointer, void_iterator_pointer)</span></div>
-<div class="line"><a id="l00485" name="l00485"></a><span class="lineno">  485</span> </div>
-<div class="line"><a id="l00491" name="l00491"></a><span class="lineno"><a class="line" href="traits_8h.html#a4f69c818b648fb9d44f3807d72f9653a">  491</a></span><span class="preprocessor">#define CCC_end(container_pointer) CCC_private_end(container_pointer)</span></div>
-<div class="line"><a id="l00492" name="l00492"></a><span class="lineno">  492</span> </div>
-<div class="line"><a id="l00498" name="l00498"></a><span class="lineno"><a class="line" href="traits_8h.html#a4e882e40fee89407d607872f31814381">  498</a></span><span class="preprocessor">#define CCC_reverse_end(container_pointer)                                     \</span></div>
-<div class="line"><a id="l00499" name="l00499"></a><span class="lineno">  499</span><span class="preprocessor">    CCC_private_reverse_end(container_pointer)</span></div>
-<div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span> </div>
-<div class="line"><a id="l00507" name="l00507"></a><span class="lineno"><a class="line" href="traits_8h.html#a9deab37d55c0666a5f83dd673a7edfe4">  507</a></span><span class="preprocessor">#define CCC_equal_range(container_pointer, range_arguments...)                 \</span></div>
-<div class="line"><a id="l00508" name="l00508"></a><span class="lineno">  508</span><span class="preprocessor">    CCC_private_equal_range(container_pointer, range_arguments)</span></div>
-<div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span> </div>
-<div class="line"><a id="l00516" name="l00516"></a><span class="lineno"><a class="line" href="traits_8h.html#a64d2d1704c91a403532921fad59c9f94">  516</a></span><span class="preprocessor">#define CCC_equal_range_wrap(container_pointer, range_arguments...)            \</span></div>
-<div class="line"><a id="l00517" name="l00517"></a><span class="lineno">  517</span><span class="preprocessor">    CCC_private_equal_range_wrap(container_pointer, range_arguments)</span></div>
-<div class="line"><a id="l00518" name="l00518"></a><span class="lineno">  518</span> </div>
-<div class="line"><a id="l00525" name="l00525"></a><span class="lineno"><a class="line" href="traits_8h.html#ad349221e6d7e3a9a619ebe7e365a4a71">  525</a></span><span class="preprocessor">#define CCC_equal_range_reverse(container_pointer, range_reverse_arguments...) \</span></div>
-<div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span><span class="preprocessor">    CCC_private_equal_range_reverse(container_pointer, range_reverse_arguments)</span></div>
-<div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span> </div>
-<div class="line"><a id="l00534" name="l00534"></a><span class="lineno"><a class="line" href="traits_8h.html#aa423753fc40870991b2adaea33c34576">  534</a></span><span class="preprocessor">#define CCC_equal_range_reverse_wrap(container_pointer,                        \</span></div>
-<div class="line"><a id="l00535" name="l00535"></a><span class="lineno">  535</span><span class="preprocessor">                                     range_reverse_arguments...)               \</span></div>
-<div class="line"><a id="l00536" name="l00536"></a><span class="lineno">  536</span><span class="preprocessor">    CCC_private_equal_range_reverse_wrap(container_pointer,                    \</span></div>
-<div class="line"><a id="l00537" name="l00537"></a><span class="lineno">  537</span><span class="preprocessor">                                         range_reverse_arguments)</span></div>
-<div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span> </div>
-<div class="line"><a id="l00542" name="l00542"></a><span class="lineno"><a class="line" href="traits_8h.html#af1e153edc4d813aeb8fcba9640c53d1a">  542</a></span><span class="preprocessor">#define CCC_range_begin(range_pointer) CCC_private_range_begin(range_pointer)</span></div>
-<div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span> </div>
-<div class="line"><a id="l00548" name="l00548"></a><span class="lineno"><a class="line" href="traits_8h.html#a645dbec6c02190de14248d44ed642412">  548</a></span><span class="preprocessor">#define CCC_range_end(range_pointer) CCC_private_range_end(range_pointer)</span></div>
-<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span> </div>
-<div class="line"><a id="l00554" name="l00554"></a><span class="lineno"><a class="line" href="traits_8h.html#ad055a9c9c00366a2fb4f4a5941a47adc">  554</a></span><span class="preprocessor">#define CCC_range_reverse_begin(range_reverse_pointer)                         \</span></div>
-<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span><span class="preprocessor">    CCC_private_range_reverse_begin(range_reverse_pointer)</span></div>
-<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span> </div>
-<div class="line"><a id="l00561" name="l00561"></a><span class="lineno"><a class="line" href="traits_8h.html#a9cb020bf9603590a7175222e57871291">  561</a></span><span class="preprocessor">#define CCC_range_reverse_end(range_reverse_pointer)                           \</span></div>
-<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span><span class="preprocessor">    CCC_private_range_reverse_end(range_reverse_pointer)</span></div>
-<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span> </div>
-<div class="line"><a id="l00578" name="l00578"></a><span class="lineno"><a class="line" href="traits_8h.html#aeeb8fd6d1430bdf51d395413fc00f893">  578</a></span><span class="preprocessor">#define CCC_copy(destination_container_pointer, source_container_pointer,      \</span></div>
-<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span><span class="preprocessor">                 allocate_pointer)                                             \</span></div>
-<div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span><span class="preprocessor">    CCC_private_copy(destination_container_pointer, source_container_pointer,  \</span></div>
-<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span><span class="preprocessor">                     allocate_pointer)</span></div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno"><a class="line" href="traits_8h.html#a9deab37d55c0666a5f83dd673a7edfe4">  419</a></span><span class="preprocessor">#define CCC_equal_range(container_pointer, range_arguments...)                 \</span></div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span><span class="preprocessor">    CCC_private_equal_range(container_pointer, range_arguments)</span></div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span> </div>
+<div class="line"><a id="l00428" name="l00428"></a><span class="lineno"><a class="line" href="traits_8h.html#ad349221e6d7e3a9a619ebe7e365a4a71">  428</a></span><span class="preprocessor">#define CCC_equal_range_reverse(container_pointer, range_reverse_arguments...) \</span></div>
+<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span><span class="preprocessor">    CCC_private_equal_range_reverse(container_pointer, range_reverse_arguments)</span></div>
+<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span> </div>
+<div class="line"><a id="l00434" name="l00434"></a><span class="lineno"><a class="line" href="traits_8h.html#af1e153edc4d813aeb8fcba9640c53d1a">  434</a></span><span class="preprocessor">#define CCC_range_begin(range_pointer) CCC_private_range_begin(range_pointer)</span></div>
+<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span> </div>
+<div class="line"><a id="l00440" name="l00440"></a><span class="lineno"><a class="line" href="traits_8h.html#a645dbec6c02190de14248d44ed642412">  440</a></span><span class="preprocessor">#define CCC_range_end(range_pointer) CCC_private_range_end(range_pointer)</span></div>
+<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span> </div>
+<div class="line"><a id="l00446" name="l00446"></a><span class="lineno"><a class="line" href="traits_8h.html#ad055a9c9c00366a2fb4f4a5941a47adc">  446</a></span><span class="preprocessor">#define CCC_range_reverse_begin(range_reverse_pointer)                         \</span></div>
+<div class="line"><a id="l00447" name="l00447"></a><span class="lineno">  447</span><span class="preprocessor">    CCC_private_range_reverse_begin(range_reverse_pointer)</span></div>
+<div class="line"><a id="l00448" name="l00448"></a><span class="lineno">  448</span> </div>
+<div class="line"><a id="l00453" name="l00453"></a><span class="lineno"><a class="line" href="traits_8h.html#a9cb020bf9603590a7175222e57871291">  453</a></span><span class="preprocessor">#define CCC_range_reverse_end(range_reverse_pointer)                           \</span></div>
+<div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span><span class="preprocessor">    CCC_private_range_reverse_end(range_reverse_pointer)</span></div>
+<div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span> </div>
+<div class="line"><a id="l00470" name="l00470"></a><span class="lineno"><a class="line" href="traits_8h.html#afcd2919ddd9d7ab34abf5988090af939">  470</a></span><span class="preprocessor">#define CCC_copy(                                                              \</span></div>
+<div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span><span class="preprocessor">    destination_container_pointer, source_container_pointer, allocate_pointer  \</span></div>
+<div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span><span class="preprocessor">)                                                                              \</span></div>
+<div class="line"><a id="l00473" name="l00473"></a><span class="lineno">  473</span><span class="preprocessor">    CCC_private_copy(                                                          \</span></div>
+<div class="line"><a id="l00474" name="l00474"></a><span class="lineno">  474</span><span class="preprocessor">        destination_container_pointer,                                         \</span></div>
+<div class="line"><a id="l00475" name="l00475"></a><span class="lineno">  475</span><span class="preprocessor">        source_container_pointer,                                              \</span></div>
+<div class="line"><a id="l00476" name="l00476"></a><span class="lineno">  476</span><span class="preprocessor">        allocate_pointer                                                       \</span></div>
+<div class="line"><a id="l00477" name="l00477"></a><span class="lineno">  477</span><span class="preprocessor">    )</span></div>
+<div class="line"><a id="l00478" name="l00478"></a><span class="lineno">  478</span> </div>
+<div class="line"><a id="l00487" name="l00487"></a><span class="lineno"><a class="line" href="traits_8h.html#a716f00ed6954d4ba8ef0e122f7f20e65">  487</a></span><span class="preprocessor">#define CCC_reserve(container_pointer, n_to_add, allocate_pointer)             \</span></div>
+<div class="line"><a id="l00488" name="l00488"></a><span class="lineno">  488</span><span class="preprocessor">    CCC_private_reserve(container_pointer, n_to_add, allocate_pointer)</span></div>
+<div class="line"><a id="l00489" name="l00489"></a><span class="lineno">  489</span> </div>
+<div class="line"><a id="l00496" name="l00496"></a><span class="lineno"><a class="line" href="traits_8h.html#a130256931b2dc99e81678cf638c6a6af">  496</a></span><span class="preprocessor">#define CCC_clear(container_pointer, destructor_arguments...)                  \</span></div>
+<div class="line"><a id="l00497" name="l00497"></a><span class="lineno">  497</span><span class="preprocessor">    CCC_private_clear(container_pointer, destructor_arguments)</span></div>
+<div class="line"><a id="l00498" name="l00498"></a><span class="lineno">  498</span> </div>
+<div class="line"><a id="l00506" name="l00506"></a><span class="lineno"><a class="line" href="traits_8h.html#af88ce87b927157c74dce0970339e201e">  506</a></span><span class="preprocessor">#define CCC_clear_and_free(                                                    \</span></div>
+<div class="line"><a id="l00507" name="l00507"></a><span class="lineno">  507</span><span class="preprocessor">    container_pointer, destructor_and_free_arguments...                        \</span></div>
+<div class="line"><a id="l00508" name="l00508"></a><span class="lineno">  508</span><span class="preprocessor">)                                                                              \</span></div>
+<div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span><span class="preprocessor">    CCC_private_clear_and_free(container_pointer, destructor_and_free_arguments)</span></div>
+<div class="line"><a id="l00510" name="l00510"></a><span class="lineno">  510</span> </div>
+<div class="line"><a id="l00520" name="l00520"></a><span class="lineno"><a class="line" href="traits_8h.html#a522e58700b40aaf7fedf3b951fca9b5f">  520</a></span><span class="preprocessor">#define CCC_clear_and_free_reserve(                                            \</span></div>
+<div class="line"><a id="l00521" name="l00521"></a><span class="lineno">  521</span><span class="preprocessor">    container_pointer, destructor_and_free_arguments...                        \</span></div>
+<div class="line"><a id="l00522" name="l00522"></a><span class="lineno">  522</span><span class="preprocessor">)                                                                              \</span></div>
+<div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span><span class="preprocessor">    CCC_private_clear_and_free_reserve(                                        \</span></div>
+<div class="line"><a id="l00524" name="l00524"></a><span class="lineno">  524</span><span class="preprocessor">        container_pointer, destructor_and_free_arguments                       \</span></div>
+<div class="line"><a id="l00525" name="l00525"></a><span class="lineno">  525</span><span class="preprocessor">    )</span></div>
+<div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span> </div>
+<div class="line"><a id="l00538" name="l00538"></a><span class="lineno"><a class="line" href="traits_8h.html#a677dc640ef165bb424bd911d7fc32aa3">  538</a></span><span class="preprocessor">#define CCC_count(container_pointer) CCC_private_count(container_pointer)</span></div>
+<div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span> </div>
+<div class="line"><a id="l00545" name="l00545"></a><span class="lineno"><a class="line" href="traits_8h.html#ae6b2442930285cb2343ec96593776759">  545</a></span><span class="preprocessor">#define CCC_capacity(container_pointer) CCC_private_capacity(container_pointer)</span></div>
+<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span> </div>
+<div class="line"><a id="l00552" name="l00552"></a><span class="lineno"><a class="line" href="traits_8h.html#a0c3926a950b876a4ab6a2ca3d5e157a2">  552</a></span><span class="preprocessor">#define CCC_is_empty(container_pointer) CCC_private_is_empty(container_pointer)</span></div>
+<div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span> </div>
+<div class="line"><a id="l00559" name="l00559"></a><span class="lineno"><a class="line" href="traits_8h.html#a8e45c5f2d2e0a1221ce6310dfee7bce5">  559</a></span><span class="preprocessor">#define CCC_validate(container_pointer) CCC_private_validate(container_pointer)</span></div>
+<div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span> </div>
+<div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span><span class="preprocessor">#ifdef TRAITS_USING_NAMESPACE_CCC</span></div>
+<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span><span class="comment">/* NOLINTBEGIN(readability-identifier-naming) */</span></div>
+<div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span><span class="preprocessor">#    define swap_entry(arguments...) CCC_swap_entry(arguments)</span></div>
+<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span><span class="preprocessor">#    define swap_handle(arguments...) CCC_swap_handle(arguments)</span></div>
+<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span><span class="preprocessor">#    define try_insert(arguments...) CCC_try_insert(arguments)</span></div>
+<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span><span class="preprocessor">#    define insert_or_assign(arguments...) CCC_insert_or_assign(arguments)</span></div>
+<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span><span class="preprocessor">#    define remove_key_value(arguments...) CCC_remove_key_value(arguments)</span></div>
+<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span><span class="preprocessor">#    define remove_entry(arguments...) CCC_remove_entry(arguments)</span></div>
+<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span><span class="preprocessor">#    define remove_handle(arguments...) CCC_remove_handle(arguments)</span></div>
+<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span><span class="preprocessor">#    define entry(arguments...) CCC_entry(arguments)</span></div>
+<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span><span class="preprocessor">#    define handle(arguments...) CCC_handle(arguments)</span></div>
+<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span><span class="preprocessor">#    define or_insert(arguments...) CCC_or_insert(arguments)</span></div>
+<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span><span class="preprocessor">#    define insert_entry(arguments...) CCC_insert_entry(arguments)</span></div>
+<div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span><span class="preprocessor">#    define insert_handle(arguments...) CCC_insert_handle(arguments)</span></div>
+<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span><span class="preprocessor">#    define and_modify(arguments...) CCC_and_modify(arguments)</span></div>
+<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span><span class="preprocessor">#    define occupied(arguments...) CCC_occupied(arguments)</span></div>
+<div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span><span class="preprocessor">#    define insert_error(arguments...) CCC_insert_error(arguments)</span></div>
+<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span><span class="preprocessor">#    define unwrap(arguments...) CCC_unwrap(arguments)</span></div>
 <div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span> </div>
-<div class="line"><a id="l00591" name="l00591"></a><span class="lineno"><a class="line" href="traits_8h.html#a716f00ed6954d4ba8ef0e122f7f20e65">  591</a></span><span class="preprocessor">#define CCC_reserve(container_pointer, n_to_add, allocate_pointer)             \</span></div>
-<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span><span class="preprocessor">    CCC_private_reserve(container_pointer, n_to_add, allocate_pointer)</span></div>
-<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span> </div>
-<div class="line"><a id="l00600" name="l00600"></a><span class="lineno"><a class="line" href="traits_8h.html#a130256931b2dc99e81678cf638c6a6af">  600</a></span><span class="preprocessor">#define CCC_clear(container_pointer, destructor_arguments...)                  \</span></div>
-<div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span><span class="preprocessor">    CCC_private_clear(container_pointer, destructor_arguments)</span></div>
-<div class="line"><a id="l00602" name="l00602"></a><span class="lineno">  602</span> </div>
-<div class="line"><a id="l00610" name="l00610"></a><span class="lineno"><a class="line" href="traits_8h.html#adb14bff9df8d582487fe08da686eaa7b">  610</a></span><span class="preprocessor">#define CCC_clear_and_free(container_pointer,                                  \</span></div>
-<div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span><span class="preprocessor">                           destructor_and_free_arguments...)                   \</span></div>
-<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span><span class="preprocessor">    CCC_private_clear_and_free(container_pointer, destructor_and_free_arguments)</span></div>
-<div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span> </div>
-<div class="line"><a id="l00623" name="l00623"></a><span class="lineno"><a class="line" href="traits_8h.html#a047e322b64da0a2a6f375ef887c57923">  623</a></span><span class="preprocessor">#define CCC_clear_and_free_reserve(container_pointer,                          \</span></div>
-<div class="line"><a id="l00624" name="l00624"></a><span class="lineno">  624</span><span class="preprocessor">                                   destructor_and_free_arguments...)           \</span></div>
-<div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span><span class="preprocessor">    CCC_private_clear_and_free_reserve(container_pointer,                      \</span></div>
-<div class="line"><a id="l00626" name="l00626"></a><span class="lineno">  626</span><span class="preprocessor">                                       destructor_and_free_arguments)</span></div>
-<div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span> </div>
-<div class="line"><a id="l00639" name="l00639"></a><span class="lineno"><a class="line" href="traits_8h.html#a677dc640ef165bb424bd911d7fc32aa3">  639</a></span><span class="preprocessor">#define CCC_count(container_pointer) CCC_private_count(container_pointer)</span></div>
-<div class="line"><a id="l00640" name="l00640"></a><span class="lineno">  640</span> </div>
-<div class="line"><a id="l00646" name="l00646"></a><span class="lineno"><a class="line" href="traits_8h.html#ae6b2442930285cb2343ec96593776759">  646</a></span><span class="preprocessor">#define CCC_capacity(container_pointer) CCC_private_capacity(container_pointer)</span></div>
-<div class="line"><a id="l00647" name="l00647"></a><span class="lineno">  647</span> </div>
-<div class="line"><a id="l00653" name="l00653"></a><span class="lineno"><a class="line" href="traits_8h.html#a0c3926a950b876a4ab6a2ca3d5e157a2">  653</a></span><span class="preprocessor">#define CCC_is_empty(container_pointer) CCC_private_is_empty(container_pointer)</span></div>
-<div class="line"><a id="l00654" name="l00654"></a><span class="lineno">  654</span> </div>
-<div class="line"><a id="l00660" name="l00660"></a><span class="lineno"><a class="line" href="traits_8h.html#a8e45c5f2d2e0a1221ce6310dfee7bce5">  660</a></span><span class="preprocessor">#define CCC_validate(container_pointer) CCC_private_validate(container_pointer)</span></div>
-<div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span> </div>
-<div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span><span class="preprocessor">#ifdef TRAITS_USING_NAMESPACE_CCC</span></div>
-<div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span><span class="comment">/* NOLINTBEGIN(readability-identifier-naming) */</span></div>
-<div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span><span class="preprocessor">#    define swap_entry(arguments...) CCC_swap_entry(arguments)</span></div>
-<div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span><span class="preprocessor">#    define swap_entry_wrap(arguments...) CCC_swap_entry_wrap(arguments)</span></div>
-<div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span><span class="preprocessor">#    define swap_handle(arguments...) CCC_swap_handle(arguments)</span></div>
-<div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span><span class="preprocessor">#    define swap_handle_wrap(arguments...) CCC_swap_handle_wrap(arguments)</span></div>
-<div class="line"><a id="l00671" name="l00671"></a><span class="lineno">  671</span><span class="preprocessor">#    define try_insert(arguments...) CCC_try_insert(arguments)</span></div>
-<div class="line"><a id="l00672" name="l00672"></a><span class="lineno">  672</span><span class="preprocessor">#    define insert_or_assign(arguments...) CCC_insert_or_assign(arguments)</span></div>
-<div class="line"><a id="l00673" name="l00673"></a><span class="lineno">  673</span><span class="preprocessor">#    define insert_or_assign_wrap(arguments...)                                \</span></div>
-<div class="line"><a id="l00674" name="l00674"></a><span class="lineno">  674</span><span class="preprocessor">        CCC_insert_or_assign_wrap(arguments)</span></div>
-<div class="line"><a id="l00675" name="l00675"></a><span class="lineno">  675</span><span class="preprocessor">#    define try_insert_wrap(arguments...) CCC_try_insert_wrap(arguments)</span></div>
-<div class="line"><a id="l00676" name="l00676"></a><span class="lineno">  676</span><span class="preprocessor">#    define remove_key_value(arguments...) CCC_remove_key_value(arguments)</span></div>
-<div class="line"><a id="l00677" name="l00677"></a><span class="lineno">  677</span><span class="preprocessor">#    define remove_key_value_wrap(arguments...)                                \</span></div>
-<div class="line"><a id="l00678" name="l00678"></a><span class="lineno">  678</span><span class="preprocessor">        CCC_remove_key_value_wrap(arguments)</span></div>
-<div class="line"><a id="l00679" name="l00679"></a><span class="lineno">  679</span><span class="preprocessor">#    define remove_entry(arguments...) CCC_remove_entry(arguments)</span></div>
-<div class="line"><a id="l00680" name="l00680"></a><span class="lineno">  680</span><span class="preprocessor">#    define remove_entry_wrap(arguments...) CCC_remove_entry_wrap(arguments)</span></div>
-<div class="line"><a id="l00681" name="l00681"></a><span class="lineno">  681</span><span class="preprocessor">#    define remove_handle(arguments...) CCC_remove_handle(arguments)</span></div>
-<div class="line"><a id="l00682" name="l00682"></a><span class="lineno">  682</span><span class="preprocessor">#    define remove_handle_wrap(arguments...) CCC_remove_handle_wrap(arguments)</span></div>
-<div class="line"><a id="l00683" name="l00683"></a><span class="lineno">  683</span><span class="preprocessor">#    define entry(arguments...) CCC_entry(arguments)</span></div>
-<div class="line"><a id="l00684" name="l00684"></a><span class="lineno">  684</span><span class="preprocessor">#    define entry_wrap(arguments...) CCC_entry_wrap(arguments)</span></div>
-<div class="line"><a id="l00685" name="l00685"></a><span class="lineno">  685</span><span class="preprocessor">#    define handle(arguments...) CCC_handle(arguments)</span></div>
-<div class="line"><a id="l00686" name="l00686"></a><span class="lineno">  686</span><span class="preprocessor">#    define handle_wrap(arguments...) CCC_handle_wrap(arguments)</span></div>
-<div class="line"><a id="l00687" name="l00687"></a><span class="lineno">  687</span><span class="preprocessor">#    define or_insert(arguments...) CCC_or_insert(arguments)</span></div>
-<div class="line"><a id="l00688" name="l00688"></a><span class="lineno">  688</span><span class="preprocessor">#    define insert_entry(arguments...) CCC_insert_entry(arguments)</span></div>
-<div class="line"><a id="l00689" name="l00689"></a><span class="lineno">  689</span><span class="preprocessor">#    define insert_handle(arguments...) CCC_insert_handle(arguments)</span></div>
-<div class="line"><a id="l00690" name="l00690"></a><span class="lineno">  690</span><span class="preprocessor">#    define and_modify(arguments...) CCC_and_modify(arguments)</span></div>
-<div class="line"><a id="l00691" name="l00691"></a><span class="lineno">  691</span><span class="preprocessor">#    define and_context_modify(arguments...) CCC_and_context_modify(arguments)</span></div>
-<div class="line"><a id="l00692" name="l00692"></a><span class="lineno">  692</span><span class="preprocessor">#    define occupied(arguments...) CCC_occupied(arguments)</span></div>
-<div class="line"><a id="l00693" name="l00693"></a><span class="lineno">  693</span><span class="preprocessor">#    define insert_error(arguments...) CCC_insert_error(arguments)</span></div>
-<div class="line"><a id="l00694" name="l00694"></a><span class="lineno">  694</span><span class="preprocessor">#    define unwrap(arguments...) CCC_unwrap(arguments)</span></div>
-<div class="line"><a id="l00695" name="l00695"></a><span class="lineno">  695</span> </div>
-<div class="line"><a id="l00696" name="l00696"></a><span class="lineno">  696</span><span class="preprocessor">#    define push(arguments...) CCC_push(arguments)</span></div>
-<div class="line"><a id="l00697" name="l00697"></a><span class="lineno">  697</span><span class="preprocessor">#    define push_back(arguments...) CCC_push_back(arguments)</span></div>
-<div class="line"><a id="l00698" name="l00698"></a><span class="lineno">  698</span><span class="preprocessor">#    define push_front(arguments...) CCC_push_front(arguments)</span></div>
-<div class="line"><a id="l00699" name="l00699"></a><span class="lineno">  699</span><span class="preprocessor">#    define pop(arguments...) CCC_pop(arguments)</span></div>
-<div class="line"><a id="l00700" name="l00700"></a><span class="lineno">  700</span><span class="preprocessor">#    define pop_front(arguments...) CCC_pop_front(arguments)</span></div>
-<div class="line"><a id="l00701" name="l00701"></a><span class="lineno">  701</span><span class="preprocessor">#    define pop_back(arguments...) CCC_pop_back(arguments)</span></div>
-<div class="line"><a id="l00702" name="l00702"></a><span class="lineno">  702</span><span class="preprocessor">#    define front(arguments...) CCC_front(arguments)</span></div>
-<div class="line"><a id="l00703" name="l00703"></a><span class="lineno">  703</span><span class="preprocessor">#    define back(arguments...) CCC_back(arguments)</span></div>
-<div class="line"><a id="l00704" name="l00704"></a><span class="lineno">  704</span><span class="preprocessor">#    define update(arguments...) CCC_update(arguments)</span></div>
-<div class="line"><a id="l00705" name="l00705"></a><span class="lineno">  705</span><span class="preprocessor">#    define increase(arguments...) CCC_increase(arguments)</span></div>
-<div class="line"><a id="l00706" name="l00706"></a><span class="lineno">  706</span><span class="preprocessor">#    define decrease(arguments...) CCC_decrease(arguments)</span></div>
-<div class="line"><a id="l00707" name="l00707"></a><span class="lineno">  707</span><span class="preprocessor">#    define erase(arguments...) CCC_erase(arguments)</span></div>
-<div class="line"><a id="l00708" name="l00708"></a><span class="lineno">  708</span><span class="preprocessor">#    define extract(arguments...) CCC_extract(arguments)</span></div>
-<div class="line"><a id="l00709" name="l00709"></a><span class="lineno">  709</span><span class="preprocessor">#    define extract_range(arguments...) CCC_extract_range(arguments)</span></div>
-<div class="line"><a id="l00710" name="l00710"></a><span class="lineno">  710</span> </div>
-<div class="line"><a id="l00711" name="l00711"></a><span class="lineno">  711</span><span class="preprocessor">#    define get_key_value(arguments...) CCC_get_key_value(arguments)</span></div>
-<div class="line"><a id="l00712" name="l00712"></a><span class="lineno">  712</span><span class="preprocessor">#    define get_mut(arguments...) CCC_get_key_value_mut(arguments)</span></div>
-<div class="line"><a id="l00713" name="l00713"></a><span class="lineno">  713</span><span class="preprocessor">#    define contains(arguments...) CCC_contains(arguments)</span></div>
-<div class="line"><a id="l00714" name="l00714"></a><span class="lineno">  714</span> </div>
-<div class="line"><a id="l00715" name="l00715"></a><span class="lineno">  715</span><span class="preprocessor">#    define begin(arguments...) CCC_begin(arguments)</span></div>
-<div class="line"><a id="l00716" name="l00716"></a><span class="lineno">  716</span><span class="preprocessor">#    define reverse_begin(arguments...) CCC_reverse_begin(arguments)</span></div>
-<div class="line"><a id="l00717" name="l00717"></a><span class="lineno">  717</span><span class="preprocessor">#    define next(arguments...) CCC_next(arguments)</span></div>
-<div class="line"><a id="l00718" name="l00718"></a><span class="lineno">  718</span><span class="preprocessor">#    define reverse_next(arguments...) CCC_reverse_next(arguments)</span></div>
-<div class="line"><a id="l00719" name="l00719"></a><span class="lineno">  719</span><span class="preprocessor">#    define end(arguments...) CCC_end(arguments)</span></div>
-<div class="line"><a id="l00720" name="l00720"></a><span class="lineno">  720</span><span class="preprocessor">#    define reverse_end(arguments...) CCC_reverse_end(arguments)</span></div>
-<div class="line"><a id="l00721" name="l00721"></a><span class="lineno">  721</span> </div>
-<div class="line"><a id="l00722" name="l00722"></a><span class="lineno">  722</span><span class="preprocessor">#    define equal_range(arguments...) CCC_equal_range(arguments)</span></div>
-<div class="line"><a id="l00723" name="l00723"></a><span class="lineno">  723</span><span class="preprocessor">#    define equal_range_reverse(arguments...) CCC_equal_range_reverse(arguments)</span></div>
-<div class="line"><a id="l00724" name="l00724"></a><span class="lineno">  724</span><span class="preprocessor">#    define equal_range_wrap(arguments...) CCC_equal_range_wrap(arguments)</span></div>
-<div class="line"><a id="l00725" name="l00725"></a><span class="lineno">  725</span><span class="preprocessor">#    define equal_range_reverse_wrap(arguments...)                             \</span></div>
-<div class="line"><a id="l00726" name="l00726"></a><span class="lineno">  726</span><span class="preprocessor">        CCC_equal_range_reverse_wrap(arguments)</span></div>
-<div class="line"><a id="l00727" name="l00727"></a><span class="lineno">  727</span><span class="preprocessor">#    define range_begin(arguments...) CCC_range_begin(arguments)</span></div>
-<div class="line"><a id="l00728" name="l00728"></a><span class="lineno">  728</span><span class="preprocessor">#    define range_end(arguments...) CCC_range_end(arguments)</span></div>
-<div class="line"><a id="l00729" name="l00729"></a><span class="lineno">  729</span><span class="preprocessor">#    define range_reverse_begin(arguments...) CCC_range_reverse_begin(arguments)</span></div>
-<div class="line"><a id="l00730" name="l00730"></a><span class="lineno">  730</span><span class="preprocessor">#    define range_reverse_end(arguments...) CCC_range_reverse_end(arguments)</span></div>
-<div class="line"><a id="l00731" name="l00731"></a><span class="lineno">  731</span><span class="preprocessor">#    define splice(arguments...) CCC_splice(arguments)</span></div>
-<div class="line"><a id="l00732" name="l00732"></a><span class="lineno">  732</span><span class="preprocessor">#    define splice_range(arguments...) CCC_splice_range(arguments)</span></div>
-<div class="line"><a id="l00733" name="l00733"></a><span class="lineno">  733</span> </div>
-<div class="line"><a id="l00734" name="l00734"></a><span class="lineno">  734</span><span class="preprocessor">#    define copy(arguments...) CCC_copy(arguments)</span></div>
-<div class="line"><a id="l00735" name="l00735"></a><span class="lineno">  735</span><span class="preprocessor">#    define reserve(arguments...) CCC_reserve(arguments)</span></div>
-<div class="line"><a id="l00736" name="l00736"></a><span class="lineno">  736</span><span class="preprocessor">#    define clear(arguments...) CCC_clear(arguments)</span></div>
-<div class="line"><a id="l00737" name="l00737"></a><span class="lineno">  737</span><span class="preprocessor">#    define clear_and_free(arguments...) CCC_clear_and_free(arguments)</span></div>
-<div class="line"><a id="l00738" name="l00738"></a><span class="lineno">  738</span><span class="preprocessor">#    define clear_and_free_reserve(arguments...)                               \</span></div>
-<div class="line"><a id="l00739" name="l00739"></a><span class="lineno">  739</span><span class="preprocessor">        CCC_clear_and_free_reserve(arguments)</span></div>
-<div class="line"><a id="l00740" name="l00740"></a><span class="lineno">  740</span> </div>
-<div class="line"><a id="l00741" name="l00741"></a><span class="lineno">  741</span><span class="preprocessor">#    define count(arguments...) CCC_count(arguments)</span></div>
-<div class="line"><a id="l00742" name="l00742"></a><span class="lineno">  742</span><span class="preprocessor">#    define capacity(arguments...) CCC_capacity(arguments)</span></div>
-<div class="line"><a id="l00743" name="l00743"></a><span class="lineno">  743</span><span class="preprocessor">#    define is_empty(arguments...) CCC_is_empty(arguments)</span></div>
-<div class="line"><a id="l00744" name="l00744"></a><span class="lineno">  744</span><span class="preprocessor">#    define validate(arguments...) CCC_validate(arguments)</span></div>
-<div class="line"><a id="l00745" name="l00745"></a><span class="lineno">  745</span><span class="comment">/* NOLINTEND(readability-identifier-naming) */</span></div>
-<div class="line"><a id="l00746" name="l00746"></a><span class="lineno">  746</span><span class="preprocessor">#endif </span><span class="comment">/* TRAITS_USING_NAMESPACE_CCC */</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00747" name="l00747"></a><span class="lineno">  747</span> </div>
-<div class="line"><a id="l00748" name="l00748"></a><span class="lineno">  748</span><span class="preprocessor">#endif </span><span class="comment">/* CCC_TRAITS_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span><span class="preprocessor">#    define push(arguments...) CCC_push(arguments)</span></div>
+<div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span><span class="preprocessor">#    define push_back(arguments...) CCC_push_back(arguments)</span></div>
+<div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span><span class="preprocessor">#    define push_front(arguments...) CCC_push_front(arguments)</span></div>
+<div class="line"><a id="l00586" name="l00586"></a><span class="lineno">  586</span><span class="preprocessor">#    define pop(arguments...) CCC_pop(arguments)</span></div>
+<div class="line"><a id="l00587" name="l00587"></a><span class="lineno">  587</span><span class="preprocessor">#    define pop_front(arguments...) CCC_pop_front(arguments)</span></div>
+<div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span><span class="preprocessor">#    define pop_back(arguments...) CCC_pop_back(arguments)</span></div>
+<div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span><span class="preprocessor">#    define front(arguments...) CCC_front(arguments)</span></div>
+<div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span><span class="preprocessor">#    define back(arguments...) CCC_back(arguments)</span></div>
+<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span><span class="preprocessor">#    define update(arguments...) CCC_update(arguments)</span></div>
+<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span><span class="preprocessor">#    define increase(arguments...) CCC_increase(arguments)</span></div>
+<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span><span class="preprocessor">#    define decrease(arguments...) CCC_decrease(arguments)</span></div>
+<div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span><span class="preprocessor">#    define erase(arguments...) CCC_erase(arguments)</span></div>
+<div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span><span class="preprocessor">#    define extract(arguments...) CCC_extract(arguments)</span></div>
+<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span><span class="preprocessor">#    define extract_range(arguments...) CCC_extract_range(arguments)</span></div>
+<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span> </div>
+<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span><span class="preprocessor">#    define get_key_value(arguments...) CCC_get_key_value(arguments)</span></div>
+<div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span><span class="preprocessor">#    define get_mut(arguments...) CCC_get_key_value_mut(arguments)</span></div>
+<div class="line"><a id="l00600" name="l00600"></a><span class="lineno">  600</span><span class="preprocessor">#    define contains(arguments...) CCC_contains(arguments)</span></div>
+<div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span> </div>
+<div class="line"><a id="l00602" name="l00602"></a><span class="lineno">  602</span><span class="preprocessor">#    define begin(arguments...) CCC_begin(arguments)</span></div>
+<div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span><span class="preprocessor">#    define reverse_begin(arguments...) CCC_reverse_begin(arguments)</span></div>
+<div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span><span class="preprocessor">#    define next(arguments...) CCC_next(arguments)</span></div>
+<div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span><span class="preprocessor">#    define reverse_next(arguments...) CCC_reverse_next(arguments)</span></div>
+<div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span><span class="preprocessor">#    define end(arguments...) CCC_end(arguments)</span></div>
+<div class="line"><a id="l00607" name="l00607"></a><span class="lineno">  607</span><span class="preprocessor">#    define reverse_end(arguments...) CCC_reverse_end(arguments)</span></div>
+<div class="line"><a id="l00608" name="l00608"></a><span class="lineno">  608</span> </div>
+<div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span><span class="preprocessor">#    define equal_range(arguments...) CCC_equal_range(arguments)</span></div>
+<div class="line"><a id="l00610" name="l00610"></a><span class="lineno">  610</span><span class="preprocessor">#    define equal_range_reverse(arguments...) CCC_equal_range_reverse(arguments)</span></div>
+<div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span><span class="preprocessor">#    define range_begin(arguments...) CCC_range_begin(arguments)</span></div>
+<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span><span class="preprocessor">#    define range_end(arguments...) CCC_range_end(arguments)</span></div>
+<div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span><span class="preprocessor">#    define range_reverse_begin(arguments...) CCC_range_reverse_begin(arguments)</span></div>
+<div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span><span class="preprocessor">#    define range_reverse_end(arguments...) CCC_range_reverse_end(arguments)</span></div>
+<div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span><span class="preprocessor">#    define splice(arguments...) CCC_splice(arguments)</span></div>
+<div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span><span class="preprocessor">#    define splice_range(arguments...) CCC_splice_range(arguments)</span></div>
+<div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span> </div>
+<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span><span class="preprocessor">#    define copy(arguments...) CCC_copy(arguments)</span></div>
+<div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span><span class="preprocessor">#    define reserve(arguments...) CCC_reserve(arguments)</span></div>
+<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span><span class="preprocessor">#    define clear(arguments...) CCC_clear(arguments)</span></div>
+<div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span><span class="preprocessor">#    define clear_and_free(arguments...) CCC_clear_and_free(arguments)</span></div>
+<div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span><span class="preprocessor">#    define clear_and_free_reserve(arguments...)                               \</span></div>
+<div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span><span class="preprocessor">        CCC_clear_and_free_reserve(arguments)</span></div>
+<div class="line"><a id="l00624" name="l00624"></a><span class="lineno">  624</span> </div>
+<div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span><span class="preprocessor">#    define count(arguments...) CCC_count(arguments)</span></div>
+<div class="line"><a id="l00626" name="l00626"></a><span class="lineno">  626</span><span class="preprocessor">#    define capacity(arguments...) CCC_capacity(arguments)</span></div>
+<div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span><span class="preprocessor">#    define is_empty(arguments...) CCC_is_empty(arguments)</span></div>
+<div class="line"><a id="l00628" name="l00628"></a><span class="lineno">  628</span><span class="preprocessor">#    define validate(arguments...) CCC_validate(arguments)</span></div>
+<div class="line"><a id="l00629" name="l00629"></a><span class="lineno">  629</span><span class="comment">/* NOLINTEND(readability-identifier-naming) */</span></div>
+<div class="line"><a id="l00630" name="l00630"></a><span class="lineno">  630</span><span class="preprocessor">#endif </span><span class="comment">/* TRAITS_USING_NAMESPACE_CCC */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00631" name="l00631"></a><span class="lineno">  631</span> </div>
+<div class="line"><a id="l00632" name="l00632"></a><span class="lineno">  632</span><span class="preprocessor">#endif </span><span class="comment">/* CCC_TRAITS_H */</span><span class="preprocessor"></span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

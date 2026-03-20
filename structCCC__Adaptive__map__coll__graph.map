@@ -1,4 +1,5 @@
 <map id="CCC_Adaptive_map" name="CCC_Adaptive_map">
-<area shape="rect" id="node1" title=" " alt="" coords="25,97,175,123"/>
+<area shape="rect" id="node1" title=" " alt="" coords="229,97,379,123"/>
 <area shape="rect" id="node2" href="$structCCC__Adaptive__map__node.html" title=" " alt="" coords="5,7,195,33"/>
+<area shape="rect" id="node3" href="$structCCC__Key__comparator.html" title="The type passed by reference to any container function that may need to compare keys...." alt="" coords="292,7,455,33"/>
 </map>

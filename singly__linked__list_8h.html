@@ -106,7 +106,6 @@ Include dependency graph for singly_linked_list.h:</div>
 <area shape="rect" title="The Singly Linked List Interface." alt="" coords="62,5,233,31"/>
 <area shape="rect" href="private__singly__linked__list_8h_source.html" title=" " alt="" coords="5,79,169,119"/>
 <area shape="rect" href="types_8h.html" title="The C Container Collection Fundamental Types." alt="" coords="106,167,189,192"/>
-<area shape="rect" href="private__types_8h_source.html" title=" " alt="" coords="61,240,234,265"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -114,17 +113,18 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="singly__linked__list_8h__dep__incl.png" border="0" usemap="#accc_2singly__linked__list_8hdep" alt=""/></div>
 <map name="accc_2singly__linked__list_8hdep" id="accc_2singly__linked__list_8hdep">
-<area shape="rect" title="The Singly Linked List Interface." alt="" coords="5,5,176,31"/>
-<area shape="rect" href="private__traits_8h_source.html" title=" " alt="" coords="19,79,162,119"/>
-<area shape="rect" href="traits_8h.html" title="The C Container Collection Traits Interface." alt="" coords="44,167,137,192"/>
+<area shape="rect" title="The Singly Linked List Interface." alt="" coords="59,5,230,31"/>
+<area shape="rect" href="private__traits_8h_source.html" title=" " alt="" coords="5,79,148,119"/>
+<area shape="rect" href="sort_8h_source.html" title=" " alt="" coords="172,86,256,111"/>
+<area shape="rect" href="traits_8h.html" title="The C Container Collection Traits Interface." alt="" coords="30,167,123,192"/>
 </map>
 </div>
 </div>
 <p><a href="singly__linked__list_8h_source.html">Go to the source code of this file.</a></p>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The Singly Linked List Interface. </p>
-<p>A singly linked list is well suited for list or stack structures that only need access to the front or most recently added elements. When compared to a doubly linked list, the memory overhead per node is smaller but some operations will have <code>O(N)</code> runtime implications when compared to a similar operation in a doubly linked list. Review function documentation when unsure of the runtime of an singly linked list operation.</p>
-<p>This container offers pointer stability. Also, if the container is not permitted to allocate all insertion code assumes that the user has allocated memory appropriately for the element to be inserted; it will not allocate or free in this case. If allocation is permitted upon initialization the container will manage the memory as expected on insert or erase operations as defined by the interface. In this case memory is allocated for insertions and freed for removals.</p>
+<p>A singly linked list is well suited for list or stack structures that only need access to the front or most recently added elements. When compared to a singly linked list, the memory overhead per node is smaller but some operations will have <code>O(N)</code> runtime implications when compared to a similar operation in a singly linked list. Review function documentation when unsure of the runtime of an singly linked list operation.</p>
+<p>This container offers pointer stability. Also, if a user forgoes passing an allocator to a function that accepts one, all insertion code assumes that the user has allocated memory appropriately for the element to be inserted; it will not allocate or free in this case. If an allocator is passed to a function that accepts one, the container will manage the memory as expected on insert or erase operations as defined by the interface. In this case memory is allocated for insertions and freed for removals.</p>
 <p>To shorten names in the interface, define the following preprocessor directive at the top of your file.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define SINGLY_LINKED_LIST_USING_NAMESPACE_CCC</span></div>
 </div><!-- fragment --><p>All types and functions can then be written without the <code>CCC_</code> prefix. </p>
@@ -132,46 +132,40 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Initialization Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Initialize the container with memory, callbacks, and permissions. </p>
 </td></tr>
-<tr class="memitem:a131b19993ca1d8c01594ab2fbccd402c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#a131b19993ca1d8c01594ab2fbccd402c">CCC_singly_linked_list_for</a>(type_name,  type_intruder_field,  compare,  allocate,  context)</td></tr>
-<tr class="memdesc:a131b19993ca1d8c01594ab2fbccd402c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a singly linked list at compile or runtime.  <br /></td></tr>
-<tr class="separator:a131b19993ca1d8c01594ab2fbccd402c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a834c4200993a6a7d1ef29d1364ac0746"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#a834c4200993a6a7d1ef29d1364ac0746">CCC_singly_linked_list_with_allocator</a>(type_name,  type_intruder_field,  compare,  allocate)</td></tr>
-<tr class="memdesc:a834c4200993a6a7d1ef29d1364ac0746"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an empty list at compile or runtime with an allocator.  <br /></td></tr>
-<tr class="separator:a834c4200993a6a7d1ef29d1364ac0746"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac56780bf5aa8b1c986908df524803dc3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#ac56780bf5aa8b1c986908df524803dc3">CCC_singly_linked_list_context_with_allocator</a>( type_name,  type_intruder_field,  compare,  allocate,  context)</td></tr>
-<tr class="memdesc:ac56780bf5aa8b1c986908df524803dc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an empty list at compile or runtime with an allocator.  <br /></td></tr>
-<tr class="separator:ac56780bf5aa8b1c986908df524803dc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93138b2e1ed33d926822e32f7fe15ae8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#a93138b2e1ed33d926822e32f7fe15ae8">CCC_singly_linked_list_from</a>(type_intruder_field,  compare,  allocate,  destroy,  compound_literal_array...)</td></tr>
-<tr class="memdesc:a93138b2e1ed33d926822e32f7fe15ae8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a singly linked list at runtime from a compound literal array.  <br /></td></tr>
-<tr class="separator:a93138b2e1ed33d926822e32f7fe15ae8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5432d57bd39056bad758337f85da5f1a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#a5432d57bd39056bad758337f85da5f1a">CCC_singly_linked_list_context_from</a>(type_intruder_field,  compare,  allocate,  destroy,  context,  compound_literal_array...)</td></tr>
-<tr class="memdesc:a5432d57bd39056bad758337f85da5f1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a singly linked list at runtime from a compound literal array.  <br /></td></tr>
-<tr class="separator:a5432d57bd39056bad758337f85da5f1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4dbabbd0976d75889eb3c6a8a86290e4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#a4dbabbd0976d75889eb3c6a8a86290e4">CCC_singly_linked_list_default</a>(type_name,  type_intruder_field)&#160;&#160;&#160;    CCC_private_singly_linked_list_for(type_name, type_intruder_field)</td></tr>
+<tr class="memdesc:a4dbabbd0976d75889eb3c6a8a86290e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a singly linked list at compile or runtime.  <br /></td></tr>
+<tr class="separator:a4dbabbd0976d75889eb3c6a8a86290e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d8049ce78da0a434056e298480c28de"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#a9d8049ce78da0a434056e298480c28de">CCC_singly_linked_list_for</a>(type_name,  type_intruder_field)&#160;&#160;&#160;    CCC_private_singly_linked_list_for(type_name, type_intruder_field)</td></tr>
+<tr class="memdesc:a9d8049ce78da0a434056e298480c28de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a singly linked list at compile or runtime.  <br /></td></tr>
+<tr class="separator:a9d8049ce78da0a434056e298480c28de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37dbe57d4c89000f5b69b176577d1601"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#a37dbe57d4c89000f5b69b176577d1601">CCC_singly_linked_list_from</a>( type_intruder_field,  allocator,  destructor,  compound_literal_array...)</td></tr>
+<tr class="memdesc:a37dbe57d4c89000f5b69b176577d1601"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a singly linked list at runtime from a compound literal array.  <br /></td></tr>
+<tr class="separator:a37dbe57d4c89000f5b69b176577d1601"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Insert and Remove Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Add or remove elements from the container. </p>
 </td></tr>
-<tr class="memitem:a68674be68af170f1678cd58fb41be8c2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#a68674be68af170f1678cd58fb41be8c2">CCC_singly_linked_list_emplace_front</a>(list_pointer,  type_compound_literal...)</td></tr>
-<tr class="memdesc:a68674be68af170f1678cd58fb41be8c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a compound literal directly to allocated memory at the front. O(1).  <br /></td></tr>
-<tr class="separator:a68674be68af170f1678cd58fb41be8c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5ab0dbc3bc6c42c583d8206905c01fe1"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#a5ab0dbc3bc6c42c583d8206905c01fe1">CCC_singly_linked_list_push_front</a> (<a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *list, <a class="el" href="structCCC__Singly__linked__list__node.html">CCC_Singly_linked_list_node</a> *type_intruder)</td></tr>
-<tr class="memdesc:a5ab0dbc3bc6c42c583d8206905c01fe1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Push the type wrapping type_intruder to the front of the list. O(1).  <br /></td></tr>
-<tr class="separator:a5ab0dbc3bc6c42c583d8206905c01fe1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d6d87fbedc689a3bb56c2f34810fc28"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#a8d6d87fbedc689a3bb56c2f34810fc28">CCC_singly_linked_list_pop_front</a> (<a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *list)</td></tr>
-<tr class="memdesc:a8d6d87fbedc689a3bb56c2f34810fc28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pop the front element from the list. O(1).  <br /></td></tr>
-<tr class="separator:a8d6d87fbedc689a3bb56c2f34810fc28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7fd6a2525d72def0d6e83b7589e7a94"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#aa7fd6a2525d72def0d6e83b7589e7a94">CCC_singly_linked_list_emplace_front</a>( list_pointer,  allocator_pointer,  type_compound_literal...)</td></tr>
+<tr class="memdesc:aa7fd6a2525d72def0d6e83b7589e7a94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a compound literal directly to allocated memory at the front. O(1).  <br /></td></tr>
+<tr class="separator:aa7fd6a2525d72def0d6e83b7589e7a94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23f15473a1dc11da8e50cd425040d940"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#a23f15473a1dc11da8e50cd425040d940">CCC_singly_linked_list_push_front</a> (<a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *list, <a class="el" href="structCCC__Singly__linked__list__node.html">CCC_Singly_linked_list_node</a> *type_intruder, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:a23f15473a1dc11da8e50cd425040d940"><td class="mdescLeft">&#160;</td><td class="mdescRight">Push the type wrapping type_intruder to the front of the list. O(1).  <br /></td></tr>
+<tr class="separator:a23f15473a1dc11da8e50cd425040d940"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80c1531cab5311d5aed30fdf47ac819d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#a80c1531cab5311d5aed30fdf47ac819d">CCC_singly_linked_list_pop_front</a> (<a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *list, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:a80c1531cab5311d5aed30fdf47ac819d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pop the front element from the list. O(1).  <br /></td></tr>
+<tr class="separator:a80c1531cab5311d5aed30fdf47ac819d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac46979a01c7b3abbfa2eb92ccbd67f61"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#ac46979a01c7b3abbfa2eb92ccbd67f61">CCC_singly_linked_list_splice</a> (<a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *position_list, <a class="el" href="structCCC__Singly__linked__list__node.html">CCC_Singly_linked_list_node</a> *type_intruder_position, <a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *splice_list, <a class="el" href="structCCC__Singly__linked__list__node.html">CCC_Singly_linked_list_node</a> *type_intruder_splice)</td></tr>
 <tr class="memdesc:ac46979a01c7b3abbfa2eb92ccbd67f61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts splice element after the provided position. O(N).  <br /></td></tr>
 <tr class="separator:ac46979a01c7b3abbfa2eb92ccbd67f61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7856cdc6c6053320395d3bedc7f4eae4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#a7856cdc6c6053320395d3bedc7f4eae4">CCC_singly_linked_list_splice_range</a> (<a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *position_list, <a class="el" href="structCCC__Singly__linked__list__node.html">CCC_Singly_linked_list_node</a> *type_intruder_position, <a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *to_cut_list, <a class="el" href="structCCC__Singly__linked__list__node.html">CCC_Singly_linked_list_node</a> *type_intruder_to_cut_begin, <a class="el" href="structCCC__Singly__linked__list__node.html">CCC_Singly_linked_list_node</a> *type_intruder_to_cut_exclusive_end)</td></tr>
 <tr class="memdesc:a7856cdc6c6053320395d3bedc7f4eae4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts the <code>[begin, end)</code> of spliced elements after the provided position. <code>O(N)</code>.  <br /></td></tr>
 <tr class="separator:a7856cdc6c6053320395d3bedc7f4eae4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a333545329776556bd3b246fb56aee09c"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#a333545329776556bd3b246fb56aee09c">CCC_singly_linked_list_erase</a> (<a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *list, <a class="el" href="structCCC__Singly__linked__list__node.html">CCC_Singly_linked_list_node</a> *type_intruder)</td></tr>
-<tr class="memdesc:a333545329776556bd3b246fb56aee09c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Erases type_intruder from the list returning the following element. O(N).  <br /></td></tr>
-<tr class="separator:a333545329776556bd3b246fb56aee09c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e7b9d1a522cfb9626ffb1f8ae4b9303"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#a8e7b9d1a522cfb9626ffb1f8ae4b9303">CCC_singly_linked_list_erase_range</a> (<a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *list, <a class="el" href="structCCC__Singly__linked__list__node.html">CCC_Singly_linked_list_node</a> *type_intruder_begin, <a class="el" href="structCCC__Singly__linked__list__node.html">CCC_Singly_linked_list_node</a> *type_intruder_end)</td></tr>
-<tr class="memdesc:a8e7b9d1a522cfb9626ffb1f8ae4b9303"><td class="mdescLeft">&#160;</td><td class="mdescRight">Erases a range from the list returning the element after end. O(N).  <br /></td></tr>
-<tr class="separator:a8e7b9d1a522cfb9626ffb1f8ae4b9303"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae07535fe8621a1d6f2a7e14a45617c93"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#ae07535fe8621a1d6f2a7e14a45617c93">CCC_singly_linked_list_erase</a> (<a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *list, <a class="el" href="structCCC__Singly__linked__list__node.html">CCC_Singly_linked_list_node</a> *type_intruder, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:ae07535fe8621a1d6f2a7e14a45617c93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Erases type_intruder from the list returning the following element. O(N).  <br /></td></tr>
+<tr class="separator:ae07535fe8621a1d6f2a7e14a45617c93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaaf33d5a57344b42b2950ff73a441767"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#aaaf33d5a57344b42b2950ff73a441767">CCC_singly_linked_list_erase_range</a> (<a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *list, <a class="el" href="structCCC__Singly__linked__list__node.html">CCC_Singly_linked_list_node</a> *type_intruder_begin, <a class="el" href="structCCC__Singly__linked__list__node.html">CCC_Singly_linked_list_node</a> *type_intruder_end, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:aaaf33d5a57344b42b2950ff73a441767"><td class="mdescLeft">&#160;</td><td class="mdescRight">Erases a range from the list returning the element after end. O(N).  <br /></td></tr>
+<tr class="separator:aaaf33d5a57344b42b2950ff73a441767"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a00d15ad531d1d49297d854794d7445f8"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#a00d15ad531d1d49297d854794d7445f8">CCC_singly_linked_list_extract</a> (<a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *list, <a class="el" href="structCCC__Singly__linked__list__node.html">CCC_Singly_linked_list_node</a> *type_intruder)</td></tr>
 <tr class="memdesc:a00d15ad531d1d49297d854794d7445f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts an element from the list without freeing it. O(N).  <br /></td></tr>
 <tr class="separator:a00d15ad531d1d49297d854794d7445f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -192,25 +186,22 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Sorting Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Sort the container. </p>
 </td></tr>
-<tr class="memitem:a35c7e5c776cd2e227158c8ce91727a04"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#a35c7e5c776cd2e227158c8ce91727a04">CCC_singly_linked_list_sort</a> (<a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *list)</td></tr>
-<tr class="memdesc:a35c7e5c776cd2e227158c8ce91727a04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sorts the singly linked list in non-decreasing order as defined by the provided comparison function. <code>O(N * log(N))</code> time, <code>O(1)</code> space.  <br /></td></tr>
-<tr class="separator:a35c7e5c776cd2e227158c8ce91727a04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb186e3bed443e8e83b03b8c7b172936"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#acb186e3bed443e8e83b03b8c7b172936">CCC_singly_linked_list_insert_sorted</a> (<a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *list, <a class="el" href="structCCC__Singly__linked__list__node.html">CCC_Singly_linked_list_node</a> *type_intruder)</td></tr>
-<tr class="memdesc:acb186e3bed443e8e83b03b8c7b172936"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts e in sorted position according to the non-decreasing order of the list determined by the user provided comparison function.  <br /></td></tr>
-<tr class="separator:acb186e3bed443e8e83b03b8c7b172936"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79a6fbc143292f8c4abaf0b6ca81e231"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a8dbb03cfc2070934832841f50f146bcd">CCC_Tribool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#a79a6fbc143292f8c4abaf0b6ca81e231">CCC_singly_linked_list_is_sorted</a> (<a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> const *list)</td></tr>
-<tr class="memdesc:a79a6fbc143292f8c4abaf0b6ca81e231"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the list is sorted in non-decreasing order according to the user provided comparison function.  <br /></td></tr>
-<tr class="separator:a79a6fbc143292f8c4abaf0b6ca81e231"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4347d8527b6ad3b439e68b2cb4149d7"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#af4347d8527b6ad3b439e68b2cb4149d7">CCC_singly_linked_list_insert_sorted</a> (<a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *singly_linked_list, <a class="el" href="structCCC__Singly__linked__list__node.html">CCC_Singly_linked_list_node</a> *type_intruder, <a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> const *comparator, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:af4347d8527b6ad3b439e68b2cb4149d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts type_intruder in sorted position according to the non-decreasing order of the list determined by the user provided comparison function. <code>O(1)</code>.  <br /></td></tr>
+<tr class="separator:af4347d8527b6ad3b439e68b2cb4149d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae24b51e38bd34f9a25194486667a8e5d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a8dbb03cfc2070934832841f50f146bcd">CCC_Tribool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#ae24b51e38bd34f9a25194486667a8e5d">CCC_singly_linked_list_is_sorted</a> (<a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> const *singly_linked_list, <a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a> order, <a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> const *comparator)</td></tr>
+<tr class="memdesc:ae24b51e38bd34f9a25194486667a8e5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the list is sorted in non-decreasing order according to the user provided comparison function.  <br /></td></tr>
+<tr class="separator:ae24b51e38bd34f9a25194486667a8e5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Deallocation Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Deallocate the container. </p>
 </td></tr>
-<tr class="memitem:a24cfa414af7d57ce0723964eda06a3c6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#a24cfa414af7d57ce0723964eda06a3c6">CCC_singly_linked_list_clear</a> (<a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *list, <a class="el" href="types_8h.html#a93e9728dd87d940e8f171efea75ee8d2">CCC_Type_destructor</a> *destroy)</td></tr>
-<tr class="memdesc:a24cfa414af7d57ce0723964eda06a3c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the list freeing memory if needed. O(N).  <br /></td></tr>
-<tr class="separator:a24cfa414af7d57ce0723964eda06a3c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8bfdc7354ca17f10817585198fbf520f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#a8bfdc7354ca17f10817585198fbf520f">CCC_singly_linked_list_clear</a> (<a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *list, <a class="el" href="structCCC__Destructor.html">CCC_Destructor</a> const *destructor, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:a8bfdc7354ca17f10817585198fbf520f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the list freeing memory if needed. O(N).  <br /></td></tr>
+<tr class="separator:a8bfdc7354ca17f10817585198fbf520f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Iteration Interface</h2></td></tr>
-<tr><td class="ititle" colspan="2"><p>Iterate through the doubly linked list. </p>
+<tr><td class="ititle" colspan="2"><p>Iterate through the singly linked list. </p>
 </td></tr>
 <tr class="memitem:a32ec6ce817a4d1cc0daa3e7506e11d91"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#a32ec6ce817a4d1cc0daa3e7506e11d91">CCC_singly_linked_list_begin</a> (<a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> const *list)</td></tr>
 <tr class="memdesc:a32ec6ce817a4d1cc0daa3e7506e11d91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the user type at the front of the list. O(1).  <br /></td></tr>
@@ -229,7 +220,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="separator:a004dbc88e7b20514092c54fb64532781"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">State Interface</h2></td></tr>
-<tr><td class="ititle" colspan="2"><p>Obtain state from the doubly linked list. </p>
+<tr><td class="ititle" colspan="2"><p>Obtain state from the singly linked list. </p>
 </td></tr>
 <tr class="memitem:a47a46769d70a8916b5b3c58cf6563bf9"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="singly__linked__list_8h.html#a47a46769d70a8916b5b3c58cf6563bf9">CCC_singly_linked_list_front</a> (<a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> const *list)</td></tr>
 <tr class="memdesc:a47a46769d70a8916b5b3c58cf6563bf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a pointer to the element at the front of the list. O(1).  <br /></td></tr>
@@ -245,84 +236,14 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="separator:af31a07ef52aba386bf8d4a9af5caf331"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a5432d57bd39056bad758337f85da5f1a" name="a5432d57bd39056bad758337f85da5f1a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5432d57bd39056bad758337f85da5f1a">&#9670;&#160;</a></span>CCC_singly_linked_list_context_from</h2>
+<a id="a4dbabbd0976d75889eb3c6a8a86290e4" name="a4dbabbd0976d75889eb3c6a8a86290e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4dbabbd0976d75889eb3c6a8a86290e4">&#9670;&#160;</a></span>CCC_singly_linked_list_default</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define CCC_singly_linked_list_context_from</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_intruder_field, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">compare, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">destroy, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">context, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">compound_literal_array...&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_singly_linked_list_context_from(type_intruder_field, compare,  \</div>
-<div class="line">                                                allocate, destroy, context,    \</div>
-<div class="line">                                                compound_literal_array)</div>
-</div><!-- fragment -->
-<p>Initialize a singly linked list at runtime from a compound literal array. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_field</td><td>the name of the field intruding on user's type. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the comparison function for the user type. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the allocation function required for construction. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">destroy</td><td>the optional destructor to run if insertion fails. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>context data needed for comparison or destruction. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal_array</td><td>the array of user types to insert into the map (e.g. (struct My_type[]){ {.val = 1}, {.val = 2}}). </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the initialized singly linked list on the right side of an equality operator (e.g. <a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> list = <a class="el" href="singly__linked__list_8h.html#a5432d57bd39056bad758337f85da5f1a" title="Initialize a singly linked list at runtime from a compound literal array.">CCC_singly_linked_list_context_from(...)</a>;) </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>The list is constructed to mirror the compound literal array provided. The list will be constructed with the element at index 0 of the array as the front of the list and the final index element at the back of the list. </dd></dl>
-
-</div>
-</div>
-<a id="ac56780bf5aa8b1c986908df524803dc3" name="ac56780bf5aa8b1c986908df524803dc3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac56780bf5aa8b1c986908df524803dc3">&#9670;&#160;</a></span>CCC_singly_linked_list_context_with_allocator</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_singly_linked_list_context_with_allocator</td>
+          <td class="memname">#define CCC_singly_linked_list_default</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">type_name, </td>
@@ -331,68 +252,30 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">type_intruder_field, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">compare, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">context&#160;</td>
+          <td class="paramname">type_intruder_field&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td>&#160;&#160;&#160;    CCC_private_singly_linked_list_for(type_name, type_intruder_field)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_singly_linked_list_context_with_allocator(                     \</div>
-<div class="line">        type_name, type_intruder_field, compare, allocate, context)</div>
-</div><!-- fragment -->
-<p>Initialize an empty list at compile or runtime with an allocator. </p>
+
+<p>Initialize a singly linked list at compile or runtime. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the user defined type stored in the list. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_field</td><td>the name of the intrusive element. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the CCC_Key_comparator the user intends to use. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the CCC_Allocator function used to manage list memory. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>a pointer to any context data needed for comparison or destruction. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the user type wrapping the intrusive singly_linked_list elem. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_field</td><td>the name of the field in the user type storing the intrusive list elem. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the list directly initialized on the right hand side of the equality operator.</dd></dl>
-<p>Initialize a dynamic list at compile time.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define SINGLY_LINKED_LIST_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keyword">struct </span>Val</div>
-<div class="line">{</div>
-<div class="line">    singly_linked_list_node node;</div>
-<div class="line">    <span class="keywordtype">int</span> val;</div>
-<div class="line">};</div>
-<div class="line"><span class="keyword">static</span> singly_linked_list list = singly_linked_list_with_allocator(</div>
-<div class="line">    <span class="keyword">struct</span> Val,</div>
-<div class="line">    node,</div>
-<div class="line">    val_order,</div>
-<div class="line">    arena_allocate,</div>
-<div class="line">    &amp;arena</div>
-<div class="line">);</div>
-</div><!-- fragment --><p>This can help eliminate boilerplate in initializers. </p>
+<dl class="section return"><dt>Returns</dt><dd>a list metadata struct on the right hand side of equality operator. </dd></dl>
 
 </div>
 </div>
-<a id="a68674be68af170f1678cd58fb41be8c2" name="a68674be68af170f1678cd58fb41be8c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a68674be68af170f1678cd58fb41be8c2">&#9670;&#160;</a></span>CCC_singly_linked_list_emplace_front</h2>
+<a id="aa7fd6a2525d72def0d6e83b7589e7a94" name="aa7fd6a2525d72def0d6e83b7589e7a94"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7fd6a2525d72def0d6e83b7589e7a94">&#9670;&#160;</a></span>CCC_singly_linked_list_emplace_front</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -407,6 +290,12 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
+          <td class="paramname">allocator_pointer, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
           <td class="paramname">type_compound_literal...&#160;</td>
         </tr>
         <tr>
@@ -416,24 +305,26 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_singly_linked_list_emplace_front(list_pointer,                 \</div>
-<div class="line">                                                 type_compound_literal)</div>
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_singly_linked_list_emplace_front(                              \</div>
+<div class="line">        list_pointer, allocator_pointer, type_compound_literal                 \</div>
+<div class="line">    )</div>
 </div><!-- fragment -->
 <p>Write a compound literal directly to allocated memory at the front. O(1). </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">list_pointer</td><td>a pointer to the singly linked list. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_compound_literal</td><td>a compound literal containing the elements to be written to a newly allocated node. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator_pointer</td><td>a pointer to the required allocator. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a reference to the element pushed to the front or NULL if allocation failed.</dd></dl>
-<p>Note that it only makes sense to use this method when the container is given allocation permission. Otherwise NULL is returned due to an inability for the container to allocate memory. </p>
+<p>Note that it only makes sense to use this method when the container is given an allocator to copy in the provided compound literal. If an empty allocator is provided NULL is returned due to an inability for the container to allocate memory. </p>
 
 </div>
 </div>
-<a id="a131b19993ca1d8c01594ab2fbccd402c" name="a131b19993ca1d8c01594ab2fbccd402c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a131b19993ca1d8c01594ab2fbccd402c">&#9670;&#160;</a></span>CCC_singly_linked_list_for</h2>
+<a id="a9d8049ce78da0a434056e298480c28de" name="a9d8049ce78da0a434056e298480c28de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d8049ce78da0a434056e298480c28de">&#9670;&#160;</a></span>CCC_singly_linked_list_for</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -448,53 +339,30 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">type_intruder_field, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">compare, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">context&#160;</td>
+          <td class="paramname">type_intruder_field&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td>&#160;&#160;&#160;    CCC_private_singly_linked_list_for(type_name, type_intruder_field)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_singly_linked_list_for(type_name, type_intruder_field,         \</div>
-<div class="line">                                       compare, allocate, context)</div>
-</div><!-- fragment -->
+
 <p>Initialize a singly linked list at compile or runtime. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the user type wrapping the intrusive singly_linked_list elem. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_field</td><td>the name of the field in the user type storing the intrusive list elem. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>a comparison function for searching or sorting the list. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>an allocation function if allocation is allowed. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>a pointer to any context data needed for comparison or destruction. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>a stuct initializer for the singly linked list to be assigned (e.g. <a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> l = <a class="el" href="singly__linked__list_8h.html#a131b19993ca1d8c01594ab2fbccd402c" title="Initialize a singly linked list at compile or runtime.">CCC_singly_linked_list_for(...)</a>;). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>a stuct initializer for the singly linked list to be assigned (e.g. <a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> l = <a class="el" href="singly__linked__list_8h.html#a9d8049ce78da0a434056e298480c28de" title="Initialize a singly linked list at compile or runtime.">CCC_singly_linked_list_for(...)</a>;). </dd></dl>
 
 </div>
 </div>
-<a id="a93138b2e1ed33d926822e32f7fe15ae8" name="a93138b2e1ed33d926822e32f7fe15ae8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a93138b2e1ed33d926822e32f7fe15ae8">&#9670;&#160;</a></span>CCC_singly_linked_list_from</h2>
+<a id="a37dbe57d4c89000f5b69b176577d1601" name="a37dbe57d4c89000f5b69b176577d1601"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37dbe57d4c89000f5b69b176577d1601">&#9670;&#160;</a></span>CCC_singly_linked_list_from</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -509,19 +377,13 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">compare, </td>
+          <td class="paramname">allocator, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">destroy, </td>
+          <td class="paramname">destructor, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -536,91 +398,22 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_singly_linked_list_from(type_intruder_field, compare,          \</div>
-<div class="line">                                        allocate, destroy,                     \</div>
-<div class="line">                                        compound_literal_array)</div>
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_singly_linked_list_from(                                       \</div>
+<div class="line">        type_intruder_field, allocator, destructor, compound_literal_array     \</div>
+<div class="line">    )</div>
 </div><!-- fragment -->
 <p>Initialize a singly linked list at runtime from a compound literal array. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_field</td><td>the name of the field intruding on user's type. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the comparison function for the user type. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the allocation function required for construction. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">destroy</td><td>the optional destructor to run if insertion fails. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the allocation function required for construction. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">destructor</td><td>the optional destructor to run if insertion fails. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal_array</td><td>the array of user types to insert into the map (e.g. (struct My_type[]){ {.val = 1}, {.val = 2}}). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the initialized singly linked list on the right side of an equality operator (e.g. <a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> list = <a class="el" href="singly__linked__list_8h.html#a93138b2e1ed33d926822e32f7fe15ae8" title="Initialize a singly linked list at runtime from a compound literal array.">CCC_singly_linked_list_from(...)</a>;) </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>The list is constructed to mirror the compound literal array provided. The list will be constructed with the element at index 0 of the array as the front of the list and the final index element at the back of the list. </dd></dl>
-
-</div>
-</div>
-<a id="a834c4200993a6a7d1ef29d1364ac0746" name="a834c4200993a6a7d1ef29d1364ac0746"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a834c4200993a6a7d1ef29d1364ac0746">&#9670;&#160;</a></span>CCC_singly_linked_list_with_allocator</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_singly_linked_list_with_allocator</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_name, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_intruder_field, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">compare, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_singly_linked_list_with_allocator(                             \</div>
-<div class="line">        type_name, type_intruder_field, compare, allocate)</div>
-</div><!-- fragment -->
-<p>Initialize an empty list at compile or runtime with an allocator. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the user defined type stored in the list. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_field</td><td>the name of the intrusive element. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the CCC_Key_comparator the user intends to use. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the CCC_Allocator function used to manage list memory. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the list directly initialized on the right hand side of the equality operator.</dd></dl>
-<p>Initialize a dynamic list at compile time.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define SINGLY_LINKED_LIST_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keyword">struct </span>Val</div>
-<div class="line">{</div>
-<div class="line">    singly_linked_list_node node;</div>
-<div class="line">    <span class="keywordtype">int</span> val;</div>
-<div class="line">};</div>
-<div class="line"><span class="keyword">static</span> singly_linked_list list = singly_linked_list_with_allocator(</div>
-<div class="line">    <span class="keyword">struct</span> Val,</div>
-<div class="line">    node,</div>
-<div class="line">    val_order,</div>
-<div class="line">    stdlib_allocate</div>
-<div class="line">);</div>
-</div><!-- fragment --><p>This can help eliminate boilerplate in initializers. </p>
+<dl class="section return"><dt>Returns</dt><dd>the initialized singly linked list on the right side of an equality operator. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The list is constructed as specified in the compound literal array provided. The list will be constructed with the element at index 0 of the array as the front of the list and the final index element at the back of the list. </dd></dl>
 
 </div>
 </div>
@@ -687,8 +480,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a24cfa414af7d57ce0723964eda06a3c6" name="a24cfa414af7d57ce0723964eda06a3c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a24cfa414af7d57ce0723964eda06a3c6">&#9670;&#160;</a></span>CCC_singly_linked_list_clear()</h2>
+<a id="a8bfdc7354ca17f10817585198fbf520f" name="a8bfdc7354ca17f10817585198fbf520f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8bfdc7354ca17f10817585198fbf520f">&#9670;&#160;</a></span>CCC_singly_linked_list_clear()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -702,8 +495,14 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#a93e9728dd87d940e8f171efea75ee8d2">CCC_Type_destructor</a> *&#160;</td>
-          <td class="paramname"><em>destroy</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="structCCC__Destructor.html">CCC_Destructor</a> const *&#160;</td>
+          <td class="paramname"><em>destructor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -717,13 +516,14 @@ This graph shows which files directly or indirectly include this file:</div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">list</td><td>a pointer to the singly linked list. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">destroy</td><td>a destructor function or NULL if not needed. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">destructor</td><td>a <a class="el" href="structCCC__Destructor.html" title="The type passed by reference to any container function that may need to destroy elements....">CCC_Destructor</a> to call on every element if needed. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>a <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> to to free memory if needed. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>ok if the clear succeeded or an input error if list or destroy are NULL.</dd></dl>
-<p>Note that if allocation is allowed, the container will free the user types wrapping each intrusive element in the list after calling destroy. Therefore, destroy should not free memory if the container has been given allocation permission. It should only perform other necessary cleanup or state management.</p>
-<p>If allocation is not allowed destroy may free memory or not as the user sees fit. The user is responsible for managing the memory that wraps each intrusive handle as the elements are simply removed from the list. </p>
+<p>Note that if an allocator is allowed, the container will free the user types wrapping each intrusive element in the list after calling the destructor, if provided.</p>
+<p>If an allocator is not provided the user is responsible for the behavior of the destructor and any memory management. </p>
 
 </div>
 </div>
@@ -782,8 +582,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a333545329776556bd3b246fb56aee09c" name="a333545329776556bd3b246fb56aee09c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a333545329776556bd3b246fb56aee09c">&#9670;&#160;</a></span>CCC_singly_linked_list_erase()</h2>
+<a id="ae07535fe8621a1d6f2a7e14a45617c93" name="ae07535fe8621a1d6f2a7e14a45617c93"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae07535fe8621a1d6f2a7e14a45617c93">&#9670;&#160;</a></span>CCC_singly_linked_list_erase()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -798,7 +598,13 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="structCCC__Singly__linked__list__node.html">CCC_Singly_linked_list_node</a> *&#160;</td>
-          <td class="paramname"><em>type_intruder</em>&#160;</td>
+          <td class="paramname"><em>type_intruder</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -813,6 +619,7 @@ This graph shows which files directly or indirectly include this file:</div>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">list</td><td>a pointer to the singly linked list. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder</td><td>a handle to the intrusive element known to be in the list. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> to free memory if needed. </td></tr>
   </table>
   </dd>
 </dl>
@@ -822,8 +629,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a8e7b9d1a522cfb9626ffb1f8ae4b9303" name="a8e7b9d1a522cfb9626ffb1f8ae4b9303"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8e7b9d1a522cfb9626ffb1f8ae4b9303">&#9670;&#160;</a></span>CCC_singly_linked_list_erase_range()</h2>
+<a id="aaaf33d5a57344b42b2950ff73a441767" name="aaaf33d5a57344b42b2950ff73a441767"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaaf33d5a57344b42b2950ff73a441767">&#9670;&#160;</a></span>CCC_singly_linked_list_erase_range()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -844,7 +651,13 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="structCCC__Singly__linked__list__node.html">CCC_Singly_linked_list_node</a> *&#160;</td>
-          <td class="paramname"><em>type_intruder_end</em>&#160;</td>
+          <td class="paramname"><em>type_intruder_end</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -860,6 +673,7 @@ This graph shows which files directly or indirectly include this file:</div>
     <tr><td class="paramdir">[in]</td><td class="paramname">list</td><td>a pointer to the singly linked list. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_begin</td><td>the start of the range in the list. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_end</td><td>the exclusive end of the range in the list. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> to free memory if needed. </td></tr>
   </table>
   </dd>
 </dl>
@@ -981,8 +795,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="acb186e3bed443e8e83b03b8c7b172936" name="acb186e3bed443e8e83b03b8c7b172936"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acb186e3bed443e8e83b03b8c7b172936">&#9670;&#160;</a></span>CCC_singly_linked_list_insert_sorted()</h2>
+<a id="af4347d8527b6ad3b439e68b2cb4149d7" name="af4347d8527b6ad3b439e68b2cb4149d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4347d8527b6ad3b439e68b2cb4149d7">&#9670;&#160;</a></span>CCC_singly_linked_list_insert_sorted()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -991,13 +805,25 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="memname">void * CCC_singly_linked_list_insert_sorted </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *&#160;</td>
-          <td class="paramname"><em>list</em>, </td>
+          <td class="paramname"><em>singly_linked_list</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="structCCC__Singly__linked__list__node.html">CCC_Singly_linked_list_node</a> *&#160;</td>
-          <td class="paramname"><em>type_intruder</em>&#160;</td>
+          <td class="paramname"><em>type_intruder</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> const *&#160;</td>
+          <td class="paramname"><em>comparator</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1007,17 +833,19 @@ This graph shows which files directly or indirectly include this file:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Inserts e in sorted position according to the non-decreasing order of the list determined by the user provided comparison function. </p>
+<p>Inserts type_intruder in sorted position according to the non-decreasing order of the list determined by the user provided comparison function. <code>O(1)</code>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">list</td><td>a pointer to the singly linked list. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">singly_linked_list</td><td>a pointer to the singly linked list. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder</td><td>a pointer to the element to be inserted in order. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">comparator</td><td>a <a class="el" href="structCCC__Comparator.html" title="The type passed by reference to any container function that may need to compare elements....">CCC_Comparator</a> for comparing user elements. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>an optional <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for allocating a new element. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>a pointer to the element that has been inserted or NULL if allocation is required and has failed. </dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>this function assumes the list is sorted.</dd></dl>
-<p>If a non-increasing order is desired, return opposite results from the user comparison function. If an element is CCC_ORDER_LESSER return CCC_ORDER_GREATER and vice versa. If elements are equal, return CCC_ORDER_EQUAL. </p>
+<dl class="section return"><dt>Returns</dt><dd>a pointer to the element that has been inserted or NULL if allocation is required and has failed. NULL is also returned if the list has never been formally sorted from <a class="el" href="sort_8h_source.html">sort.h</a>. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>This function assumes the list is sorted and inserts according to the last sorted ordering. If the list has never been sorted NULL is returned.</dd></dl>
+<p>If a non-increasing order is desired, return opposite results from the user comparison function. If an element is CCC_ORDER_LESSERERS return CCC_ORDER_GREATER and vice versa. If elements are equal, return CCC_ORDER_EQUAL. </p>
 
 </div>
 </div>
@@ -1048,8 +876,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a79a6fbc143292f8c4abaf0b6ca81e231" name="a79a6fbc143292f8c4abaf0b6ca81e231"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a79a6fbc143292f8c4abaf0b6ca81e231">&#9670;&#160;</a></span>CCC_singly_linked_list_is_sorted()</h2>
+<a id="ae24b51e38bd34f9a25194486667a8e5d" name="ae24b51e38bd34f9a25194486667a8e5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae24b51e38bd34f9a25194486667a8e5d">&#9670;&#160;</a></span>CCC_singly_linked_list_is_sorted()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1058,8 +886,24 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="memname"><a class="el" href="types_8h.html#a8dbb03cfc2070934832841f50f146bcd">CCC_Tribool</a> CCC_singly_linked_list_is_sorted </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> const *&#160;</td>
-          <td class="paramname"><em>list</em></td><td>)</td>
+          <td class="paramname"><em>singly_linked_list</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a>&#160;</td>
+          <td class="paramname"><em>order</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> const *&#160;</td>
+          <td class="paramname"><em>comparator</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1067,11 +911,13 @@ This graph shows which files directly or indirectly include this file:</div>
 <p>Returns true if the list is sorted in non-decreasing order according to the user provided comparison function. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">list</td><td>a pointer to the singly linked list. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">singly_linked_list</td><td>a pointer to the singly linked list. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">order</td><td>the assumed order checked against last sorted order of list. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">comparator</td><td>the comparator context for comparing list elements. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>CCC_TRUE if the list is sorted CCC_FALSE if not. Error if singly_linked_list is NULL.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>CCC_TRUE if the list has been previously sorted and all elements remain in the assumed input sorted order. CCC_FALSE is returned if the list is not completely sorted in the assumed input order. CCC_TRIBOOL_ERROR is returned if the input list pointer is NULL.</dd></dl>
 <p>If a non-increasing order is desired, return opposite results from the user comparison function. If an element is CCC_ORDER_LESSER return CCC_ORDER_GREATER and vice versa. If elements are equal, return CCC_ORDER_EQUAL. </p>
 
 </div>
@@ -1168,8 +1014,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a8d6d87fbedc689a3bb56c2f34810fc28" name="a8d6d87fbedc689a3bb56c2f34810fc28"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8d6d87fbedc689a3bb56c2f34810fc28">&#9670;&#160;</a></span>CCC_singly_linked_list_pop_front()</h2>
+<a id="a80c1531cab5311d5aed30fdf47ac819d" name="a80c1531cab5311d5aed30fdf47ac819d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80c1531cab5311d5aed30fdf47ac819d">&#9670;&#160;</a></span>CCC_singly_linked_list_pop_front()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1178,8 +1024,18 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="memname"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> CCC_singly_linked_list_pop_front </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *&#160;</td>
-          <td class="paramname"><em>list</em></td><td>)</td>
+          <td class="paramname"><em>list</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1188,6 +1044,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">list</td><td>a pointer to the singly linked list. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> to free if needed. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1195,8 +1052,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a5ab0dbc3bc6c42c583d8206905c01fe1" name="a5ab0dbc3bc6c42c583d8206905c01fe1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5ab0dbc3bc6c42c583d8206905c01fe1">&#9670;&#160;</a></span>CCC_singly_linked_list_push_front()</h2>
+<a id="a23f15473a1dc11da8e50cd425040d940" name="a23f15473a1dc11da8e50cd425040d940"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23f15473a1dc11da8e50cd425040d940">&#9670;&#160;</a></span>CCC_singly_linked_list_push_front()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1211,7 +1068,13 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="structCCC__Singly__linked__list__node.html">CCC_Singly_linked_list_node</a> *&#160;</td>
-          <td class="paramname"><em>type_intruder</em>&#160;</td>
+          <td class="paramname"><em>type_intruder</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1226,39 +1089,13 @@ This graph shows which files directly or indirectly include this file:</div>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">list</td><td>a pointer to the singly linked list. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder</td><td>a pointer to the intrusive handle in the user type. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for memory allocation if needed. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a pointer to the inserted element or NULL if allocation failed.</dd></dl>
-<p>Note that if allocation is not allowed the container assumes the memory wrapping elem has been allocated appropriately and with the correct lifetime by the user.</p>
+<p>Note that if an allocator is not provided, the container assumes the memory wrapping elem has been allocated appropriately and with the correct lifetime by the user.</p>
 <p>If allocation is allowed the provided element is copied to a new allocation. </p>
-
-</div>
-</div>
-<a id="a35c7e5c776cd2e227158c8ce91727a04" name="a35c7e5c776cd2e227158c8ce91727a04"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a35c7e5c776cd2e227158c8ce91727a04">&#9670;&#160;</a></span>CCC_singly_linked_list_sort()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> CCC_singly_linked_list_sort </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *&#160;</td>
-          <td class="paramname"><em>list</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Sorts the singly linked list in non-decreasing order as defined by the provided comparison function. <code>O(N * log(N))</code> time, <code>O(1)</code> space. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">list</td><td>a pointer to the singly linked list to sort. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the result of the sort, usually OK. An arg error if singly_linked_list is null. </dd></dl>
 
 </div>
 </div>

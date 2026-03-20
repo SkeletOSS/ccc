@@ -102,8 +102,9 @@ Collaboration diagram for CCC_Priority_queue:</div>
 <div class="dyncontent">
 <div class="center"><img src="structCCC__Priority__queue__coll__graph.png" border="0" usemap="#aCCC__Priority__queue_coll__map" alt="Collaboration graph"/></div>
 <map name="aCCC__Priority__queue_coll__map" id="aCCC__Priority__queue_coll__map">
-<area shape="rect" title=" " alt="" coords="25,127,175,152"/>
+<area shape="rect" title=" " alt="" coords="213,127,363,152"/>
 <area shape="rect" href="structCCC__Priority__queue__node.html" title=" " alt="" coords="5,22,195,47"/>
+<area shape="rect" href="structCCC__Comparator.html" title="The type passed by reference to any container function that may need to compare elements...." alt="" coords="285,22,419,47"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -139,56 +140,22 @@ Data Fields</h2></td></tr>
 <tr class="separator:a92577356d2bce4d5dccbae15c7557584"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d89db86e6191103d894a033524ddd5d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Priority__queue.html#a2d89db86e6191103d894a033524ddd5d">order</a></td></tr>
 <tr class="separator:a2d89db86e6191103d894a033524ddd5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9fec8e2519b186fa59c2579d5c81ea6e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa4b6dbfefd7f8ebd16d95dfafde4d9e4">CCC_Type_comparator</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Priority__queue.html#a9fec8e2519b186fa59c2579d5c81ea6e">compare</a></td></tr>
-<tr class="separator:a9fec8e2519b186fa59c2579d5c81ea6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b30700d12729778574c4ef059e8b4df"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Priority__queue.html#a8b30700d12729778574c4ef059e8b4df">allocate</a></td></tr>
-<tr class="separator:a8b30700d12729778574c4ef059e8b4df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8887fcada26b63e56a462869f2b46439"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Priority__queue.html#a8887fcada26b63e56a462869f2b46439">context</a></td></tr>
-<tr class="separator:a8887fcada26b63e56a462869f2b46439"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e0d3cf91c560ee590c6a31c3df88792"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Comparator.html">CCC_Comparator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Priority__queue.html#a2e0d3cf91c560ee590c6a31c3df88792">comparator</a></td></tr>
+<tr class="separator:a2e0d3cf91c560ee590c6a31c3df88792"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
-<a id="a8b30700d12729778574c4ef059e8b4df" name="a8b30700d12729778574c4ef059e8b4df"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8b30700d12729778574c4ef059e8b4df">&#9670;&#160;</a></span>allocate</h2>
+<a id="a2e0d3cf91c560ee590c6a31c3df88792" name="a2e0d3cf91c560ee590c6a31c3df88792"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e0d3cf91c560ee590c6a31c3df88792">&#9670;&#160;</a></span>comparator</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a>* CCC_Priority_queue::allocate</td>
+          <td class="memname"><a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> CCC_Priority_queue::comparator</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The allocation function, if any. </p>
-
-</div>
-</div>
-<a id="a9fec8e2519b186fa59c2579d5c81ea6e" name="a9fec8e2519b186fa59c2579d5c81ea6e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9fec8e2519b186fa59c2579d5c81ea6e">&#9670;&#160;</a></span>compare</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="types_8h.html#aa4b6dbfefd7f8ebd16d95dfafde4d9e4">CCC_Type_comparator</a>* CCC_Priority_queue::compare</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>The comparison function to enforce ordering. </p>
-
-</div>
-</div>
-<a id="a8887fcada26b63e56a462869f2b46439" name="a8887fcada26b63e56a462869f2b46439"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8887fcada26b63e56a462869f2b46439">&#9670;&#160;</a></span>context</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void* CCC_Priority_queue::context</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Auxiliary data, if any. </p>
+<p>The comparator to enforce ordering. </p>
 
 </div>
 </div>

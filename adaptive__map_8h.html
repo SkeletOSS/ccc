@@ -103,10 +103,9 @@ Include dependency graph for adaptive_map.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="adaptive__map_8h__incl.png" border="0" usemap="#accc_2adaptive__map_8h" alt=""/></div>
 <map name="accc_2adaptive__map_8h" id="accc_2adaptive__map_8h">
-<area shape="rect" title="The Adaptive Map Interface." alt="" coords="5,5,157,31"/>
-<area shape="rect" href="private__adaptive__map_8h.html" title="The Adaptive Map Private Interface." alt="" coords="55,79,238,119"/>
-<area shape="rect" href="types_8h.html" title="The C Container Collection Fundamental Types." alt="" coords="27,167,109,192"/>
-<area shape="rect" href="private__types_8h_source.html" title=" " alt="" coords="20,240,193,265"/>
+<area shape="rect" title="The Adaptive Map Interface." alt="" coords="85,5,237,31"/>
+<area shape="rect" href="private__adaptive__map_8h.html" title="The Adaptive Map Private Interface." alt="" coords="5,79,188,119"/>
+<area shape="rect" href="types_8h.html" title="The C Container Collection Fundamental Types." alt="" coords="119,167,202,192"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -131,85 +130,79 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Initialization Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Initialize the container with memory, callbacks, and permissions. </p>
 </td></tr>
-<tr class="memitem:a30c9bdcc00b6d504e624ae9b59ff917a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a30c9bdcc00b6d504e624ae9b59ff917a">CCC_adaptive_map_for</a>(struct_name,  type_intruder_field_name,  type_key_field_name,  key_order,  allocate,  context)</td></tr>
-<tr class="memdesc:a30c9bdcc00b6d504e624ae9b59ff917a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the adaptive map at runtime or compile time.  <br /></td></tr>
-<tr class="separator:a30c9bdcc00b6d504e624ae9b59ff917a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f6b0d06cb0dad028160dc21dcf819e8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a4f6b0d06cb0dad028160dc21dcf819e8">CCC_adaptive_map_from</a>(type_intruder_field_name,  type_key_field_name,  compare,  allocate,  destroy,  compound_literal_array...)</td></tr>
-<tr class="memdesc:a4f6b0d06cb0dad028160dc21dcf819e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a dynamic adaptive map at runtime.  <br /></td></tr>
-<tr class="separator:a4f6b0d06cb0dad028160dc21dcf819e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa83d5a2e4fa3c23f2ed04a480adb66cc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#aa83d5a2e4fa3c23f2ed04a480adb66cc">CCC_adaptive_map_context_from</a>( type_intruder_field_name,  type_key_field_name,  compare,  allocate,  destroy,  context,  compound_literal_array...)</td></tr>
-<tr class="memdesc:aa83d5a2e4fa3c23f2ed04a480adb66cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a dynamic adaptive map at runtime.  <br /></td></tr>
-<tr class="separator:aa83d5a2e4fa3c23f2ed04a480adb66cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7c58e77f98722d1fff4ccc32b8f805bc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a7c58e77f98722d1fff4ccc32b8f805bc">CCC_adaptive_map_with_allocator</a>(type_name,  type_intruder_field,  type_key_field,  compare,  allocate)</td></tr>
-<tr class="memdesc:a7c58e77f98722d1fff4ccc32b8f805bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an empty dynamic map at compile or runtime with an allocator.  <br /></td></tr>
-<tr class="separator:a7c58e77f98722d1fff4ccc32b8f805bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4419fcaa55946185c917fcac58a5193e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a4419fcaa55946185c917fcac58a5193e">CCC_adaptive_map_context_with_allocator</a>( type_name,  type_intruder_field,  type_key_field,  compare,  allocate,  context)</td></tr>
-<tr class="memdesc:a4419fcaa55946185c917fcac58a5193e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an empty dynamic map at compile or runtime with an allocator and supplementary context.  <br /></td></tr>
-<tr class="separator:a4419fcaa55946185c917fcac58a5193e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6f9870003cf52e3216ca8b25df38b38"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#aa6f9870003cf52e3216ca8b25df38b38">CCC_adaptive_map_default</a>( struct_name,  type_intruder_field_name,  type_key_field_name,  comparator)</td></tr>
+<tr class="memdesc:aa6f9870003cf52e3216ca8b25df38b38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the adaptive map at runtime or compile time.  <br /></td></tr>
+<tr class="separator:aa6f9870003cf52e3216ca8b25df38b38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa408fe9d3846640073b09c98f2b2cfdb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#aa408fe9d3846640073b09c98f2b2cfdb">CCC_adaptive_map_for</a>( struct_name,  type_intruder_field_name,  type_key_field_name,  comparator)</td></tr>
+<tr class="memdesc:aa408fe9d3846640073b09c98f2b2cfdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the adaptive map at runtime or compile time.  <br /></td></tr>
+<tr class="separator:aa408fe9d3846640073b09c98f2b2cfdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a78127756bb1c275c5c95dbc339d7f3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a4a78127756bb1c275c5c95dbc339d7f3">CCC_adaptive_map_from</a>( type_intruder_field_name,  type_key_field_name,  comparator,  allocator,  destructor,  compound_literal_array...)</td></tr>
+<tr class="memdesc:a4a78127756bb1c275c5c95dbc339d7f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a dynamic adaptive map at runtime.  <br /></td></tr>
+<tr class="separator:a4a78127756bb1c275c5c95dbc339d7f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Entry Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Obtain and operate on container entries for efficient queries when non-trivial control flow is needed. </p>
 </td></tr>
-<tr class="memitem:a489d1a4248eed36ec884db29afd437ba"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a489d1a4248eed36ec884db29afd437ba">CCC_adaptive_map_swap_entry_wrap</a>(map_pointer,  type_intruder_pointer,  temp_intruder_pointer)</td></tr>
-<tr class="memdesc:a489d1a4248eed36ec884db29afd437ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invariantly inserts the key value wrapping the provided intruder.  <br /></td></tr>
-<tr class="separator:a489d1a4248eed36ec884db29afd437ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6162debb2e5dab39637763145d6a15e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#ad6162debb2e5dab39637763145d6a15e">CCC_adaptive_map_try_insert_wrap</a>(map_pointer,  type_intruder_pointer)</td></tr>
-<tr class="memdesc:ad6162debb2e5dab39637763145d6a15e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts to insert the key value wrapping type_intruder.  <br /></td></tr>
-<tr class="separator:ad6162debb2e5dab39637763145d6a15e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0b3fa6736c783e094b85b335422d017"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#af0b3fa6736c783e094b85b335422d017">CCC_adaptive_map_try_insert_with</a>(map_pointer,  key,  compound_literal_type...)</td></tr>
-<tr class="memdesc:af0b3fa6736c783e094b85b335422d017"><td class="mdescLeft">&#160;</td><td class="mdescRight">lazily insert compound_literal_type into the map at key if key is absent.  <br /></td></tr>
-<tr class="separator:af0b3fa6736c783e094b85b335422d017"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a398f842fb0da7e8ec83ae3a5b585b2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a6a398f842fb0da7e8ec83ae3a5b585b2">CCC_adaptive_map_insert_or_assign_with</a>(map_pointer,  key,  compound_literal_type...)</td></tr>
-<tr class="memdesc:a6a398f842fb0da7e8ec83ae3a5b585b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a new key value pair or overwrites the existing entry.  <br /></td></tr>
-<tr class="separator:a6a398f842fb0da7e8ec83ae3a5b585b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f5fea32f63bcbff3acbeacc23359336"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a3f5fea32f63bcbff3acbeacc23359336">CCC_adaptive_map_remove_key_value_wrap</a>(map_pointer,  type_output_intruder_pointer)</td></tr>
-<tr class="memdesc:a3f5fea32f63bcbff3acbeacc23359336"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the key value in the map storing the old value, if present, in the struct containing type_output_intruder provided by the user.  <br /></td></tr>
-<tr class="separator:a3f5fea32f63bcbff3acbeacc23359336"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2378a144497ffa75fb0ca22d3a5d1bd6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a2378a144497ffa75fb0ca22d3a5d1bd6">CCC_adaptive_map_entry_wrap</a>(map_pointer,  key_pointer)</td></tr>
-<tr class="memdesc:a2378a144497ffa75fb0ca22d3a5d1bd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtains an entry for the provided key in the map for future use.  <br /></td></tr>
-<tr class="separator:a2378a144497ffa75fb0ca22d3a5d1bd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a40387f8d0ec9b20066d812a2bbb6350e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a40387f8d0ec9b20066d812a2bbb6350e">CCC_adaptive_map_and_modify_with</a>(adaptive_map_entry_pointer,  type_name,  closure_over_T...)</td></tr>
-<tr class="memdesc:a40387f8d0ec9b20066d812a2bbb6350e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modify an Occupied entry with a closure over user type T.  <br /></td></tr>
-<tr class="separator:a40387f8d0ec9b20066d812a2bbb6350e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84e4184fc62027a12fb40edeb814dc09"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a84e4184fc62027a12fb40edeb814dc09">CCC_adaptive_map_or_insert_with</a>(adaptive_map_entry_pointer,  type_compound_literal...)</td></tr>
-<tr class="memdesc:a84e4184fc62027a12fb40edeb814dc09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lazily insert the desired key value into the entry if it is Vacant.  <br /></td></tr>
-<tr class="separator:a84e4184fc62027a12fb40edeb814dc09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adfea2110af8c19d8c0354d87ec3d63ce"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#adfea2110af8c19d8c0354d87ec3d63ce">CCC_adaptive_map_insert_entry_with</a>(adaptive_map_entry_pointer,  type_compound_literal...)</td></tr>
-<tr class="memdesc:adfea2110af8c19d8c0354d87ec3d63ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the contents of the compound literal type_compound_literal to a node.  <br /></td></tr>
-<tr class="separator:adfea2110af8c19d8c0354d87ec3d63ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a540350b0b0a0a9efbe0d53a0901add56"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a540350b0b0a0a9efbe0d53a0901add56">CCC_adaptive_map_remove_entry_wrap</a>(adaptive_map_entry_pointer)</td></tr>
-<tr class="memdesc:a540350b0b0a0a9efbe0d53a0901add56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the entry from the map if Occupied.  <br /></td></tr>
-<tr class="separator:a540350b0b0a0a9efbe0d53a0901add56"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac717c45b9887784c844343cbfe16c270"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Entry.html">CCC_Entry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#ac717c45b9887784c844343cbfe16c270">CCC_adaptive_map_swap_entry</a> (<a class="el" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a> *map, <a class="el" href="structCCC__Adaptive__map__node.html">CCC_Adaptive_map_node</a> *type_intruder, <a class="el" href="structCCC__Adaptive__map__node.html">CCC_Adaptive_map_node</a> *temp_intruder)</td></tr>
-<tr class="memdesc:ac717c45b9887784c844343cbfe16c270"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invariantly inserts the key value wrapping type_intruder.  <br /></td></tr>
-<tr class="separator:ac717c45b9887784c844343cbfe16c270"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad72bb878c62d32ffe98f895a86c36c5c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Entry.html">CCC_Entry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#ad72bb878c62d32ffe98f895a86c36c5c">CCC_adaptive_map_try_insert</a> (<a class="el" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a> *map, <a class="el" href="structCCC__Adaptive__map__node.html">CCC_Adaptive_map_node</a> *type_intruder)</td></tr>
-<tr class="memdesc:ad72bb878c62d32ffe98f895a86c36c5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts to insert the key value wrapping type_intruder.  <br /></td></tr>
-<tr class="separator:ad72bb878c62d32ffe98f895a86c36c5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49ae0193f6f6ccbcb059146101722933"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Entry.html">CCC_Entry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a49ae0193f6f6ccbcb059146101722933">CCC_adaptive_map_insert_or_assign</a> (<a class="el" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a> *map, <a class="el" href="structCCC__Adaptive__map__node.html">CCC_Adaptive_map_node</a> *type_intruder)</td></tr>
-<tr class="memdesc:a49ae0193f6f6ccbcb059146101722933"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invariantly inserts or overwrites a user struct into the map.  <br /></td></tr>
-<tr class="separator:a49ae0193f6f6ccbcb059146101722933"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9f4dfce1a62852874be9fd9b7f60afe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Entry.html">CCC_Entry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#ad9f4dfce1a62852874be9fd9b7f60afe">CCC_adaptive_map_remove_key_value</a> (<a class="el" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a> *map, <a class="el" href="structCCC__Adaptive__map__node.html">CCC_Adaptive_map_node</a> *type_output_intruder)</td></tr>
-<tr class="memdesc:ad9f4dfce1a62852874be9fd9b7f60afe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the key value in the map storing the old value, if present, in the struct containing type_output_intruder provided by the user.  <br /></td></tr>
-<tr class="separator:ad9f4dfce1a62852874be9fd9b7f60afe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa344fa9f18686efe51f9f56af00ef7b3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#aa344fa9f18686efe51f9f56af00ef7b3">CCC_adaptive_map_swap_entry_wrap</a>( map_pointer,  type_intruder_pointer,  temp_intruder_pointer,  allocator_pointer...)</td></tr>
+<tr class="memdesc:aa344fa9f18686efe51f9f56af00ef7b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invariantly inserts the key value wrapping the provided intruder.  <br /></td></tr>
+<tr class="separator:aa344fa9f18686efe51f9f56af00ef7b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a110bce0e440d7fbd850211013504a516"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a110bce0e440d7fbd850211013504a516">CCC_adaptive_map_try_insert_wrap</a>( map_pointer,  type_intruder_pointer,  allocator_pointer...)</td></tr>
+<tr class="memdesc:a110bce0e440d7fbd850211013504a516"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts to insert the key value wrapping type_intruder.  <br /></td></tr>
+<tr class="separator:a110bce0e440d7fbd850211013504a516"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6cc5c83d9533d8829bb312e2d212000"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#ac6cc5c83d9533d8829bb312e2d212000">CCC_adaptive_map_try_insert_with</a>( map_pointer,  key,  allocator_pointer,  compound_literal_type...)</td></tr>
+<tr class="memdesc:ac6cc5c83d9533d8829bb312e2d212000"><td class="mdescLeft">&#160;</td><td class="mdescRight">lazily insert compound_literal_type into the map at key if key is absent.  <br /></td></tr>
+<tr class="separator:ac6cc5c83d9533d8829bb312e2d212000"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9227e2d90429dbf896fb5ef7e5040f19"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a9227e2d90429dbf896fb5ef7e5040f19">CCC_adaptive_map_insert_or_assign_wrap</a>( map_pointer,  type_pointer,  allocator_pointer...)</td></tr>
+<tr class="memdesc:a9227e2d90429dbf896fb5ef7e5040f19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invariantly inserts or overwrites a user struct into the map.  <br /></td></tr>
+<tr class="separator:a9227e2d90429dbf896fb5ef7e5040f19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab28cfbc1a0efef8213a51b5186345c62"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#ab28cfbc1a0efef8213a51b5186345c62">CCC_adaptive_map_insert_or_assign_with</a>( map_pointer,  key,  allocator_pointer,  compound_literal_type...)</td></tr>
+<tr class="memdesc:ab28cfbc1a0efef8213a51b5186345c62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a new key value pair or overwrites the existing entry.  <br /></td></tr>
+<tr class="separator:ab28cfbc1a0efef8213a51b5186345c62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af79ee7c55591a590ccc7a5f1499a1355"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#af79ee7c55591a590ccc7a5f1499a1355">CCC_adaptive_map_remove_key_value_wrap</a>( map_pointer,  type_output_intruder_pointer,  allocator_pointer...)</td></tr>
+<tr class="memdesc:af79ee7c55591a590ccc7a5f1499a1355"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the key value in the map storing the old value, if present, in the struct containing type_output_intruder provided by the user.  <br /></td></tr>
+<tr class="separator:af79ee7c55591a590ccc7a5f1499a1355"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab02c74b17a6bbbcc7ad669f3cc3ba0b3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#ab02c74b17a6bbbcc7ad669f3cc3ba0b3">CCC_adaptive_map_entry_wrap</a>(map_pointer,  key_pointer...)</td></tr>
+<tr class="memdesc:ab02c74b17a6bbbcc7ad669f3cc3ba0b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtains an entry for the provided key in the map for future use.  <br /></td></tr>
+<tr class="separator:ab02c74b17a6bbbcc7ad669f3cc3ba0b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3aec5323e9cd93742f148d34b2c4278c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a3aec5323e9cd93742f148d34b2c4278c">CCC_adaptive_map_and_modify_with</a>( adaptive_map_entry_pointer,  type_name,  closure_over_T...)</td></tr>
+<tr class="memdesc:a3aec5323e9cd93742f148d34b2c4278c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modify an Occupied entry with a closure over user type T.  <br /></td></tr>
+<tr class="separator:a3aec5323e9cd93742f148d34b2c4278c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb7c5fc86b3b6797f4e13ff9de7652e2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#aeb7c5fc86b3b6797f4e13ff9de7652e2">CCC_adaptive_map_or_insert_with</a>( adaptive_map_entry_pointer,  allocator_pointer,  type_compound_literal...)</td></tr>
+<tr class="memdesc:aeb7c5fc86b3b6797f4e13ff9de7652e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lazily insert the desired key value into the entry if it is Vacant.  <br /></td></tr>
+<tr class="separator:aeb7c5fc86b3b6797f4e13ff9de7652e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b7fbb5acee963f8c335f1409a32f363"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a4b7fbb5acee963f8c335f1409a32f363">CCC_adaptive_map_insert_entry_with</a>( adaptive_map_entry_pointer,  allocator_pointer,  type_compound_literal...)</td></tr>
+<tr class="memdesc:a4b7fbb5acee963f8c335f1409a32f363"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the contents of the compound literal type_compound_literal to a node.  <br /></td></tr>
+<tr class="separator:a4b7fbb5acee963f8c335f1409a32f363"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4de85690f519c8f308d2329ab35dee59"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a4de85690f519c8f308d2329ab35dee59">CCC_adaptive_map_remove_entry_wrap</a>( adaptive_map_entry_pointer,  allocator_pointer...)</td></tr>
+<tr class="memdesc:a4de85690f519c8f308d2329ab35dee59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the entry from the map if Occupied.  <br /></td></tr>
+<tr class="separator:a4de85690f519c8f308d2329ab35dee59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64070695daaed7528ea4b804c8ffa0ea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Entry.html">CCC_Entry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a64070695daaed7528ea4b804c8ffa0ea">CCC_adaptive_map_swap_entry</a> (<a class="el" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a> *map, <a class="el" href="structCCC__Adaptive__map__node.html">CCC_Adaptive_map_node</a> *type_intruder, <a class="el" href="structCCC__Adaptive__map__node.html">CCC_Adaptive_map_node</a> *temp_intruder, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:a64070695daaed7528ea4b804c8ffa0ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invariantly inserts the key value wrapping type_intruder.  <br /></td></tr>
+<tr class="separator:a64070695daaed7528ea4b804c8ffa0ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b35be880fe6fb6fb51fcd864bc6ce43"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Entry.html">CCC_Entry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a9b35be880fe6fb6fb51fcd864bc6ce43">CCC_adaptive_map_try_insert</a> (<a class="el" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a> *map, <a class="el" href="structCCC__Adaptive__map__node.html">CCC_Adaptive_map_node</a> *type_intruder, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:a9b35be880fe6fb6fb51fcd864bc6ce43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts to insert the key value wrapping type_intruder.  <br /></td></tr>
+<tr class="separator:a9b35be880fe6fb6fb51fcd864bc6ce43"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa52b09164a4259a4d1cb5aab99f4e052"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Entry.html">CCC_Entry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#aa52b09164a4259a4d1cb5aab99f4e052">CCC_adaptive_map_insert_or_assign</a> (<a class="el" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a> *map, <a class="el" href="structCCC__Adaptive__map__node.html">CCC_Adaptive_map_node</a> *type_intruder, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:aa52b09164a4259a4d1cb5aab99f4e052"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invariantly inserts or overwrites a user struct into the map.  <br /></td></tr>
+<tr class="separator:aa52b09164a4259a4d1cb5aab99f4e052"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a462c1f9613535f7063d269bb761c43e0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Entry.html">CCC_Entry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a462c1f9613535f7063d269bb761c43e0">CCC_adaptive_map_remove_key_value</a> (<a class="el" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a> *map, <a class="el" href="structCCC__Adaptive__map__node.html">CCC_Adaptive_map_node</a> *type_output_intruder, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:a462c1f9613535f7063d269bb761c43e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the key value in the map storing the old value, if present, in the struct containing type_output_intruder provided by the user.  <br /></td></tr>
+<tr class="separator:a462c1f9613535f7063d269bb761c43e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8064edb0e5584f888d4e43c1fa06a49a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a8064edb0e5584f888d4e43c1fa06a49a">CCC_adaptive_map_entry</a> (<a class="el" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a> *map, void const *key)</td></tr>
 <tr class="memdesc:a8064edb0e5584f888d4e43c1fa06a49a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtains an entry for the provided key in the map for future use.  <br /></td></tr>
 <tr class="separator:a8064edb0e5584f888d4e43c1fa06a49a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb3ce74c4d9858a1f1fceda5d5cd6173"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#aeb3ce74c4d9858a1f1fceda5d5cd6173">CCC_adaptive_map_and_modify</a> (<a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> *entry, <a class="el" href="types_8h.html#af3851f6fdc1c8255c6b1713c8ffc1bdd">CCC_Type_modifier</a> *modify)</td></tr>
-<tr class="memdesc:aeb3ce74c4d9858a1f1fceda5d5cd6173"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modifies the provided entry if it is Occupied.  <br /></td></tr>
-<tr class="separator:aeb3ce74c4d9858a1f1fceda5d5cd6173"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a821952943677fc1baaa336516f45db33"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a821952943677fc1baaa336516f45db33">CCC_adaptive_map_and_context_modify</a> (<a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> *entry, <a class="el" href="types_8h.html#af3851f6fdc1c8255c6b1713c8ffc1bdd">CCC_Type_modifier</a> *modify, void *context)</td></tr>
-<tr class="memdesc:a821952943677fc1baaa336516f45db33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modifies the provided entry if it is Occupied.  <br /></td></tr>
-<tr class="separator:a821952943677fc1baaa336516f45db33"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1a1afeb764311ed566533db8b28312c7"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a1a1afeb764311ed566533db8b28312c7">CCC_adaptive_map_or_insert</a> (<a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> const *entry, <a class="el" href="structCCC__Adaptive__map__node.html">CCC_Adaptive_map_node</a> *type_intruder)</td></tr>
-<tr class="memdesc:a1a1afeb764311ed566533db8b28312c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts the struct with handle type_intruder if the entry is Vacant.  <br /></td></tr>
-<tr class="separator:a1a1afeb764311ed566533db8b28312c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae807800b0d1d9559377a3480491803f6"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#ae807800b0d1d9559377a3480491803f6">CCC_adaptive_map_insert_entry</a> (<a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> const *entry, <a class="el" href="structCCC__Adaptive__map__node.html">CCC_Adaptive_map_node</a> *type_intruder)</td></tr>
-<tr class="memdesc:ae807800b0d1d9559377a3480491803f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts the provided entry invariantly.  <br /></td></tr>
-<tr class="separator:ae807800b0d1d9559377a3480491803f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba1e5c1c6fea49b448e2dbaed75c6629"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Entry.html">CCC_Entry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#aba1e5c1c6fea49b448e2dbaed75c6629">CCC_adaptive_map_remove_entry</a> (<a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> *entry)</td></tr>
-<tr class="memdesc:aba1e5c1c6fea49b448e2dbaed75c6629"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the entry from the map if Occupied.  <br /></td></tr>
-<tr class="separator:aba1e5c1c6fea49b448e2dbaed75c6629"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46252d7d530896284b5663b1d34edb27"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a46252d7d530896284b5663b1d34edb27">CCC_adaptive_map_and_modify</a> (<a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> *entry, <a class="el" href="structCCC__Modifier.html">CCC_Modifier</a> const *modifier)</td></tr>
+<tr class="memdesc:a46252d7d530896284b5663b1d34edb27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modifies the provided entry if it is Occupied.  <br /></td></tr>
+<tr class="separator:a46252d7d530896284b5663b1d34edb27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf7aac5768d276f338ae7026d4694eab"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#adf7aac5768d276f338ae7026d4694eab">CCC_adaptive_map_or_insert</a> (<a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> const *entry, <a class="el" href="structCCC__Adaptive__map__node.html">CCC_Adaptive_map_node</a> *type_intruder, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:adf7aac5768d276f338ae7026d4694eab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts the struct with handle type_intruder if the entry is Vacant.  <br /></td></tr>
+<tr class="separator:adf7aac5768d276f338ae7026d4694eab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ee212a661abc40df47e59079d1fe29b"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a6ee212a661abc40df47e59079d1fe29b">CCC_adaptive_map_insert_entry</a> (<a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> const *entry, <a class="el" href="structCCC__Adaptive__map__node.html">CCC_Adaptive_map_node</a> *type_intruder, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:a6ee212a661abc40df47e59079d1fe29b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts the provided entry invariantly.  <br /></td></tr>
+<tr class="separator:a6ee212a661abc40df47e59079d1fe29b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6009b0bede3cb138c08aeec770fe7f10"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Entry.html">CCC_Entry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a6009b0bede3cb138c08aeec770fe7f10">CCC_adaptive_map_remove_entry</a> (<a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> *entry, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:a6009b0bede3cb138c08aeec770fe7f10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the entry from the map if Occupied.  <br /></td></tr>
+<tr class="separator:a6009b0bede3cb138c08aeec770fe7f10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae2c78546439edc27f4ad51e9a561adff"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#ae2c78546439edc27f4ad51e9a561adff">CCC_adaptive_map_unwrap</a> (<a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> const *entry)</td></tr>
 <tr class="memdesc:ae2c78546439edc27f4ad51e9a561adff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unwraps the provided entry to obtain a view into the map element.  <br /></td></tr>
 <tr class="separator:ae2c78546439edc27f4ad51e9a561adff"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -219,23 +212,23 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:a700a9f403a9d9fdaa4503dadd5d1a55c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a8dbb03cfc2070934832841f50f146bcd">CCC_Tribool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a700a9f403a9d9fdaa4503dadd5d1a55c">CCC_adaptive_map_insert_error</a> (<a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> const *entry)</td></tr>
 <tr class="memdesc:a700a9f403a9d9fdaa4503dadd5d1a55c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides the status of the entry should an insertion follow.  <br /></td></tr>
 <tr class="separator:a700a9f403a9d9fdaa4503dadd5d1a55c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1bc5756cf4dd57c8a6070bd837e67db1"><td class="memItemLeft" align="right" valign="top">CCC_Entry_status&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a1bc5756cf4dd57c8a6070bd837e67db1">CCC_adaptive_map_entry_status</a> (<a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> const *entry)</td></tr>
+<tr class="memitem:a1bc5756cf4dd57c8a6070bd837e67db1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8">CCC_Entry_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a1bc5756cf4dd57c8a6070bd837e67db1">CCC_adaptive_map_entry_status</a> (<a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> const *entry)</td></tr>
 <tr class="memdesc:a1bc5756cf4dd57c8a6070bd837e67db1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtain the entry status from a container entry.  <br /></td></tr>
 <tr class="separator:a1bc5756cf4dd57c8a6070bd837e67db1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Iterator Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Obtain and manage iterators over the container. </p>
 </td></tr>
-<tr class="memitem:af78fb101ce25cc81860102ea54ed472a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#af78fb101ce25cc81860102ea54ed472a">CCC_adaptive_map_equal_range_wrap</a>(map_pointer,  begin_and_end_key_pointers...)</td></tr>
-<tr class="memdesc:af78fb101ce25cc81860102ea54ed472a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a compound literal reference to the desired range. Amortized O(lg N).  <br /></td></tr>
-<tr class="separator:af78fb101ce25cc81860102ea54ed472a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b34e674e9be3ba37544a6197692cbae"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a3b34e674e9be3ba37544a6197692cbae">CCC_adaptive_map_equal_range_wrap</a>( map_pointer,  begin_and_end_key_pointers...)</td></tr>
+<tr class="memdesc:a3b34e674e9be3ba37544a6197692cbae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a compound literal reference to the desired range. Amortized O(lg N).  <br /></td></tr>
+<tr class="separator:a3b34e674e9be3ba37544a6197692cbae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3eace6ad54d8c23331df4776e4b6c53"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#ab3eace6ad54d8c23331df4776e4b6c53">CCC_adaptive_map_equal_range_reverse_wrap</a>( map_pointer,  reverse_begin_and_reverse_end_key_pointers...)</td></tr>
 <tr class="memdesc:ab3eace6ad54d8c23331df4776e4b6c53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a compound literal reference to the desired range_reverse. Amortized O(lg N).  <br /></td></tr>
 <tr class="separator:ab3eace6ad54d8c23331df4776e4b6c53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15221b12d38837d3b5f7020c8edb4821"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Range.html">CCC_Range</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a15221b12d38837d3b5f7020c8edb4821">CCC_adaptive_map_equal_range</a> (<a class="el" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a> *map, void const *begin_key, void const *end_key)</td></tr>
 <tr class="memdesc:a15221b12d38837d3b5f7020c8edb4821"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return an iterable range of values from [begin_key, end_key). Amortized O(lg N).  <br /></td></tr>
 <tr class="separator:a15221b12d38837d3b5f7020c8edb4821"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aedabb96a996b904e61bb57bce6251227"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a87bdc16619e9a0f9585a8102846c20a8">CCC_Range_reverse</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#aedabb96a996b904e61bb57bce6251227">CCC_adaptive_map_equal_range_reverse</a> (<a class="el" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a> *map, void const *reverse_begin_key, void const *reverse_end_key)</td></tr>
+<tr class="memitem:aedabb96a996b904e61bb57bce6251227"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Range__reverse.html">CCC_Range_reverse</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#aedabb96a996b904e61bb57bce6251227">CCC_adaptive_map_equal_range_reverse</a> (<a class="el" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a> *map, void const *reverse_begin_key, void const *reverse_end_key)</td></tr>
 <tr class="memdesc:aedabb96a996b904e61bb57bce6251227"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return an iterable range_reverse of values from [begin_key, end_key). Amortized O(lg N).  <br /></td></tr>
 <tr class="separator:aedabb96a996b904e61bb57bce6251227"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4c0ecaa062f31300cdda1b57b67b4a6"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#ac4c0ecaa062f31300cdda1b57b67b4a6">CCC_adaptive_map_begin</a> (<a class="el" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a> const *map)</td></tr>
@@ -266,9 +259,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:ab69a547af78f7449e34ef8bafbe635b7"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structCCC__Adaptive__map__node.html">CCC_Adaptive_map_node</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#ab69a547af78f7449e34ef8bafbe635b7">CCC_Adaptive_map_node</a></td></tr>
 <tr class="memdesc:ab69a547af78f7449e34ef8bafbe635b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">The intrusive element for the user defined struct being stored in the map.  <br /></td></tr>
 <tr class="separator:ab69a547af78f7449e34ef8bafbe635b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6634e04a00bfa7e2b4b274dd7e6aec61"><td class="memItemLeft" align="right" valign="top">typedef union <a class="el" href="unionCCC__Adaptive__map__entry__wrap.html">CCC_Adaptive_map_entry_wrap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a6634e04a00bfa7e2b4b274dd7e6aec61">CCC_Adaptive_map_entry</a></td></tr>
-<tr class="memdesc:a6634e04a00bfa7e2b4b274dd7e6aec61"><td class="mdescLeft">&#160;</td><td class="mdescRight">A container specific entry used to implement the Entry Interface.  <br /></td></tr>
-<tr class="separator:a6634e04a00bfa7e2b4b274dd7e6aec61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9991fa1dffac8df31176b80721fcfc8d"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a9991fa1dffac8df31176b80721fcfc8d">CCC_Adaptive_map_entry</a></td></tr>
+<tr class="memdesc:a9991fa1dffac8df31176b80721fcfc8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A container specific entry used to implement the Entry Interface.  <br /></td></tr>
+<tr class="separator:a9991fa1dffac8df31176b80721fcfc8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Membership Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Test membership or obtain references to stored user types directly. </p>
@@ -283,9 +276,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Deallocation Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Destroy the container. </p>
 </td></tr>
-<tr class="memitem:a6dde8f2788ecd0346acb885f20d068c1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a6dde8f2788ecd0346acb885f20d068c1">CCC_adaptive_map_clear</a> (<a class="el" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a> *map, <a class="el" href="types_8h.html#a93e9728dd87d940e8f171efea75ee8d2">CCC_Type_destructor</a> *destroy)</td></tr>
-<tr class="memdesc:a6dde8f2788ecd0346acb885f20d068c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pops every element from the map calling destructor if destructor is non-NULL. O(N).  <br /></td></tr>
-<tr class="separator:a6dde8f2788ecd0346acb885f20d068c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b4148ff682f5d04347ac625a41fc632"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="adaptive__map_8h.html#a7b4148ff682f5d04347ac625a41fc632">CCC_adaptive_map_clear</a> (<a class="el" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a> *map, <a class="el" href="structCCC__Destructor.html">CCC_Destructor</a> const *destructor, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:a7b4148ff682f5d04347ac625a41fc632"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pops every element from the map calling destructor if destructor is non-NULL. O(N).  <br /></td></tr>
+<tr class="separator:a7b4148ff682f5d04347ac625a41fc632"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">State Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Obtain the container state. </p>
@@ -301,8 +294,8 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="separator:a1af103d79e696342b118f0beab1d3fb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a40387f8d0ec9b20066d812a2bbb6350e" name="a40387f8d0ec9b20066d812a2bbb6350e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a40387f8d0ec9b20066d812a2bbb6350e">&#9670;&#160;</a></span>CCC_adaptive_map_and_modify_with</h2>
+<a id="a3aec5323e9cd93742f148d34b2c4278c" name="a3aec5323e9cd93742f148d34b2c4278c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3aec5323e9cd93742f148d34b2c4278c">&#9670;&#160;</a></span>CCC_adaptive_map_and_modify_with</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -332,10 +325,12 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="adaptive__map_8h.html#a6634e04a00bfa7e2b4b274dd7e6aec61">CCC_Adaptive_map_entry</a>){<a class="code hl_define" href="private__adaptive__map_8h.html#aa626124eb2df5b15798f46199db91547">CCC_private_adaptive_map_and_modify_with</a>(        \</div>
-<div class="line">        adaptive_map_entry_pointer, type_name, closure_over_T)}</div>
-<div class="ttc" id="aadaptive__map_8h_html_a6634e04a00bfa7e2b4b274dd7e6aec61"><div class="ttname"><a href="adaptive__map_8h.html#a6634e04a00bfa7e2b4b274dd7e6aec61">CCC_Adaptive_map_entry</a></div><div class="ttdeci">union CCC_Adaptive_map_entry_wrap CCC_Adaptive_map_entry</div><div class="ttdoc">A container specific entry used to implement the Entry Interface.</div><div class="ttdef"><b>Definition:</b> adaptive_map.h:74</div></div>
-<div class="ttc" id="aprivate__adaptive__map_8h_html_aa626124eb2df5b15798f46199db91547"><div class="ttname"><a href="private__adaptive__map_8h.html#aa626124eb2df5b15798f46199db91547">CCC_private_adaptive_map_and_modify_with</a></div><div class="ttdeci">#define CCC_private_adaptive_map_and_modify_with(adaptive_map_entry_pointer, type_name, closure_over_T...)</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:279</div></div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> <span class="keyword">private</span>; }){                             \</div>
+<div class="line">        CCC_private_adaptive_map_and_modify_with(                              \</div>
+<div class="line">            adaptive_map_entry_pointer, type_name, closure_over_T              \</div>
+<div class="line">        )}                                                                     \</div>
+<div class="line">         .private</div>
+<div class="ttc" id="astructCCC__Adaptive__map__entry_html"><div class="ttname"><a href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a></div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:85</div></div>
 </div><!-- fragment -->
 <p>Modify an Occupied entry with a closure over user type T. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -370,15 +365,21 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="aa83d5a2e4fa3c23f2ed04a480adb66cc" name="aa83d5a2e4fa3c23f2ed04a480adb66cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa83d5a2e4fa3c23f2ed04a480adb66cc">&#9670;&#160;</a></span>CCC_adaptive_map_context_from</h2>
+<a id="aa6f9870003cf52e3216ca8b25df38b38" name="aa6f9870003cf52e3216ca8b25df38b38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6f9870003cf52e3216ca8b25df38b38">&#9670;&#160;</a></span>CCC_adaptive_map_default</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define CCC_adaptive_map_context_from</td>
+          <td class="memname">#define CCC_adaptive_map_default</td>
           <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">struct_name, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">type_intruder_field_name, </td>
         </tr>
@@ -392,31 +393,7 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">compare, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">destroy, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">context, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">compound_literal_array...&#160;</td>
+          <td class="paramname">comparator&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -425,118 +402,27 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__adaptive__map_8h.html#a720115f5638639aa5b727b7a1585b784">CCC_private_adaptive_map_context_from</a>(                                     \</div>
-<div class="line">        type_intruder_field_name, type_key_field_name, compare, allocate,      \</div>
-<div class="line">        destroy, context, compound_literal_array)</div>
-<div class="ttc" id="aprivate__adaptive__map_8h_html_a720115f5638639aa5b727b7a1585b784"><div class="ttname"><a href="private__adaptive__map_8h.html#a720115f5638639aa5b727b7a1585b784">CCC_private_adaptive_map_context_from</a></div><div class="ttdeci">#define CCC_private_adaptive_map_context_from( private_type_intruder_field_name, private_key_field_name, private_compare, private_allocate, private_destroy, private_context, private_compound_literal_array...)</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:141</div></div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__adaptive__map_8h.html#a62e2cf9184e5baf65f0ab9fc19ef16dd">CCC_private_adaptive_map_default</a>(                                          \</div>
+<div class="line">        struct_name, type_intruder_field_name, type_key_field_name, comparator \</div>
+<div class="line">    )</div>
+<div class="ttc" id="aprivate__adaptive__map_8h_html_a62e2cf9184e5baf65f0ab9fc19ef16dd"><div class="ttname"><a href="private__adaptive__map_8h.html#a62e2cf9184e5baf65f0ab9fc19ef16dd">CCC_private_adaptive_map_default</a></div><div class="ttdeci">#define CCC_private_adaptive_map_default( private_struct_name, private_node_node_field, private_key_node_field, private_comparator...)</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:113</div></div>
 </div><!-- fragment -->
-<p>Initializes a dynamic adaptive map at runtime. </p>
+<p>Initializes the adaptive map at runtime or compile time. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_field_name</td><td>the name of the intrusive map elem field. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">struct_name</td><td>the user type wrapping the intrusive element. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_field_name</td><td>the name of the intrusive map element field. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_key_field_name</td><td>the name of the field in user type used as key. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the key comparison function (see <a class="el" href="types_8h.html" title="The C Container Collection Fundamental Types.">types.h</a>). </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the allocation function or NULL if allocation is banned. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">destroy</td><td>the destructor function used to act on every node in case initialization of new nodes fails and map is emptied in a failure state. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>a pointer to any context data for comparison or destruction. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal_array</td><td>the array of user types to insert into the map (e.g. (struct My_type[]){ {.key = 1, .val = 1}, {.key = 2, .val = 2}}). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">comparator</td><td>the <a class="el" href="structCCC__Key__comparator.html" title="The type passed by reference to any container function that may need to compare keys....">CCC_Key_comparator</a> for key comparison. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the struct initialized adaptive map for direct assignment (e.g. <a class="el" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a> m = <a class="el" href="adaptive__map_8h.html#aa83d5a2e4fa3c23f2ed04a480adb66cc" title="Initializes a dynamic adaptive map at runtime.">CCC_adaptive_map_context_from(...)</a>;) or an empty map if allocation fails.</dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>If any node allocation fails while copying in the values in the compound literal array of user types, the map is cleared; if a destructor is provided, it is called on each node and they are freed using the provided allocate function. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the struct initialized adaptive map for direct assignment. </dd></dl>
 
 </div>
 </div>
-<a id="a4419fcaa55946185c917fcac58a5193e" name="a4419fcaa55946185c917fcac58a5193e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4419fcaa55946185c917fcac58a5193e">&#9670;&#160;</a></span>CCC_adaptive_map_context_with_allocator</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_adaptive_map_context_with_allocator</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_name, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_intruder_field, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_key_field, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">compare, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">context&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__adaptive__map_8h.html#a8534f542ec92e4711e438607406ec399">CCC_private_adaptive_map_context_with_allocator</a>(                           \</div>
-<div class="line">        type_name, type_intruder_field, type_key_field, compare, allocate,     \</div>
-<div class="line">        context)</div>
-<div class="ttc" id="aprivate__adaptive__map_8h_html_a8534f542ec92e4711e438607406ec399"><div class="ttname"><a href="private__adaptive__map_8h.html#a8534f542ec92e4711e438607406ec399">CCC_private_adaptive_map_context_with_allocator</a></div><div class="ttdeci">#define CCC_private_adaptive_map_context_with_allocator( private_struct_name, private_node_node_field, private_key_node_field, private_key_comparator, private_allocate, private_context)</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:209</div></div>
-</div><!-- fragment -->
-<p>Initialize an empty dynamic map at compile or runtime with an allocator and supplementary context. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the user defined type stored in the map. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_field</td><td>the name of the intrusive map node element. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_key_field</td><td>the field of the struct used for key storage. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the CCC_Key_comparator the user intends to use. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the CCC_Allocator function used to manage map memory. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>any additional context needed for comparison or allocation. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the map directly initialized on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a> map = <a class="el" href="adaptive__map_8h.html#a4419fcaa55946185c917fcac58a5193e" title="Initialize an empty dynamic map at compile or runtime with an allocator and supplementary context.">CCC_adaptive_map_context_with_allocator(...)</a>;)</dd></dl>
-<p>Initialize a dynamic map at compile time.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define ADAPTIVE_MAP_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keyword">struct </span>Val</div>
-<div class="line">{</div>
-<div class="line">    Adaptive_map_node node;</div>
-<div class="line">    <span class="keywordtype">int</span> key;</div>
-<div class="line">    <span class="keywordtype">int</span> val;</div>
-<div class="line">};</div>
-<div class="line"><span class="keyword">static</span> Adaptive_map map = adaptive_map_context_with_allocator(</div>
-<div class="line">    <span class="keyword">struct</span> Val,</div>
-<div class="line">    node,</div>
-<div class="line">    key,</div>
-<div class="line">    adaptive_map_key_order,</div>
-<div class="line">    arena_allocate,</div>
-<div class="line">    &amp;arena_manager</div>
-<div class="line">);</div>
-</div><!-- fragment --><p>This can help eliminate boilerplate in initializers. </p>
-
-</div>
-</div>
-<a id="a2378a144497ffa75fb0ca22d3a5d1bd6" name="a2378a144497ffa75fb0ca22d3a5d1bd6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2378a144497ffa75fb0ca22d3a5d1bd6">&#9670;&#160;</a></span>CCC_adaptive_map_entry_wrap</h2>
+<a id="ab02c74b17a6bbbcc7ad669f3cc3ba0b3" name="ab02c74b17a6bbbcc7ad669f3cc3ba0b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab02c74b17a6bbbcc7ad669f3cc3ba0b3">&#9670;&#160;</a></span>CCC_adaptive_map_entry_wrap</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -551,7 +437,7 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">key_pointer&#160;</td>
+          <td class="paramname">key_pointer...&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -560,8 +446,9 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="adaptive__map_8h.html#a6634e04a00bfa7e2b4b274dd7e6aec61">CCC_Adaptive_map_entry</a>){                                                 \</div>
-<div class="line">        CCC_adaptive_map_entry((map_pointer), (key_pointer)).private}</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> <span class="keyword">private</span>; }){                             \</div>
+<div class="line">        CCC_adaptive_map_entry((map_pointer), key_pointer)}                    \</div>
+<div class="line">         .private</div>
 </div><!-- fragment -->
 <p>Obtains an entry for the provided key in the map for future use. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -603,11 +490,12 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_typedef" href="types_8h.html#a87bdc16619e9a0f9585a8102846c20a8">CCC_Range_reverse</a>){                                                      \</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Range__reverse.html">CCC_Range_reverse</a> <span class="keyword">private</span>; }){                                  \</div>
 <div class="line">        CCC_adaptive_map_equal_range_reverse(                                  \</div>
-<div class="line">            map_pointer, reverse_begin_and_reverse_end_key_pointers)           \</div>
-<div class="line">            .private}</div>
-<div class="ttc" id="atypes_8h_html_a87bdc16619e9a0f9585a8102846c20a8"><div class="ttname"><a href="types_8h.html#a87bdc16619e9a0f9585a8102846c20a8">CCC_Range_reverse</a></div><div class="ttdeci">union CCC_Range_reverse_wrap CCC_Range_reverse</div><div class="ttdoc">The result of a range_reverse query on iterable containers.</div><div class="ttdef"><b>Definition:</b> types.h:52</div></div>
+<div class="line">            map_pointer, reverse_begin_and_reverse_end_key_pointers            \</div>
+<div class="line">        )}                                                                     \</div>
+<div class="line">         .private</div>
+<div class="ttc" id="astructCCC__Range__reverse_html"><div class="ttname"><a href="structCCC__Range__reverse.html">CCC_Range_reverse</a></div><div class="ttdoc">The result of a range_reverse query on iterable containers.</div><div class="ttdef"><b>Definition:</b> types.h:75</div></div>
 </div><!-- fragment -->
 <p>Returns a compound literal reference to the desired range_reverse. Amortized O(lg N). </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -621,8 +509,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="af78fb101ce25cc81860102ea54ed472a" name="af78fb101ce25cc81860102ea54ed472a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af78fb101ce25cc81860102ea54ed472a">&#9670;&#160;</a></span>CCC_adaptive_map_equal_range_wrap</h2>
+<a id="a3b34e674e9be3ba37544a6197692cbae" name="a3b34e674e9be3ba37544a6197692cbae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b34e674e9be3ba37544a6197692cbae">&#9670;&#160;</a></span>CCC_adaptive_map_equal_range_wrap</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -646,10 +534,10 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Range.html">CCC_Range</a>){                                                              \</div>
-<div class="line">        CCC_adaptive_map_equal_range(map_pointer, begin_and_end_key_pointers)  \</div>
-<div class="line">            .private}</div>
-<div class="ttc" id="astructCCC__Range_html"><div class="ttname"><a href="structCCC__Range.html">CCC_Range</a></div><div class="ttdef"><b>Definition:</b> private_types.h:106</div></div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Range.html">CCC_Range</a> <span class="keyword">private</span>; }){                                          \</div>
+<div class="line">        CCC_adaptive_map_equal_range(map_pointer, begin_and_end_key_pointers)} \</div>
+<div class="line">         .private</div>
+<div class="ttc" id="astructCCC__Range_html"><div class="ttname"><a href="structCCC__Range.html">CCC_Range</a></div><div class="ttdoc">The result of a range query on iterable containers.</div><div class="ttdef"><b>Definition:</b> types.h:62</div></div>
 </div><!-- fragment -->
 <p>Returns a compound literal reference to the desired range. Amortized O(lg N). </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -663,8 +551,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a30c9bdcc00b6d504e624ae9b59ff917a" name="a30c9bdcc00b6d504e624ae9b59ff917a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a30c9bdcc00b6d504e624ae9b59ff917a">&#9670;&#160;</a></span>CCC_adaptive_map_for</h2>
+<a id="aa408fe9d3846640073b09c98f2b2cfdb" name="aa408fe9d3846640073b09c98f2b2cfdb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa408fe9d3846640073b09c98f2b2cfdb">&#9670;&#160;</a></span>CCC_adaptive_map_for</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -691,19 +579,7 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">key_order, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">context&#160;</td>
+          <td class="paramname">comparator&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -712,10 +588,10 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__adaptive__map_8h.html#a19d826722542ce833d9fe42ee35b9deb">CCC_private_adaptive_map_for</a>(struct_name, type_intruder_field_name,        \</div>
-<div class="line">                                 type_key_field_name, key_order, allocate,     \</div>
-<div class="line">                                 context)</div>
-<div class="ttc" id="aprivate__adaptive__map_8h_html_a19d826722542ce833d9fe42ee35b9deb"><div class="ttname"><a href="private__adaptive__map_8h.html#a19d826722542ce833d9fe42ee35b9deb">CCC_private_adaptive_map_for</a></div><div class="ttdeci">#define CCC_private_adaptive_map_for( private_struct_name, private_node_node_field, private_key_node_field, private_key_comparator, private_allocate, private_context)</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:125</div></div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__adaptive__map_8h.html#a646be0b0183c10fa633cf0e646446023">CCC_private_adaptive_map_for</a>(                                              \</div>
+<div class="line">        struct_name, type_intruder_field_name, type_key_field_name, comparator \</div>
+<div class="line">    )</div>
+<div class="ttc" id="aprivate__adaptive__map_8h_html_a646be0b0183c10fa633cf0e646446023"><div class="ttname"><a href="private__adaptive__map_8h.html#a646be0b0183c10fa633cf0e646446023">CCC_private_adaptive_map_for</a></div><div class="ttdeci">#define CCC_private_adaptive_map_for( private_struct_name, private_node_node_field, private_key_node_field, private_comparator...)</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:128</div></div>
 </div><!-- fragment -->
 <p>Initializes the adaptive map at runtime or compile time. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -723,18 +599,16 @@ This graph shows which files directly or indirectly include this file:</div>
     <tr><td class="paramdir">[in]</td><td class="paramname">struct_name</td><td>the user type wrapping the intrusive element. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_field_name</td><td>the name of the intrusive map element field. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_key_field_name</td><td>the name of the field in user type used as key. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">key_order</td><td>the key comparison function (see <a class="el" href="types_8h.html" title="The C Container Collection Fundamental Types.">types.h</a>). </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the allocation function or NULL if allocation is banned. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>a pointer to any context data for comparison or destruction. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">comparator</td><td>the <a class="el" href="structCCC__Key__comparator.html" title="The type passed by reference to any container function that may need to compare keys....">CCC_Key_comparator</a> for key comparison. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the struct initialized adaptive map for direct assignment (i.e. <a class="el" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a> m = <a class="el" href="adaptive__map_8h.html#a30c9bdcc00b6d504e624ae9b59ff917a" title="Initializes the adaptive map at runtime or compile time.">CCC_adaptive_map_for(...)</a>;). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the struct initialized adaptive map for direct assignment. </dd></dl>
 
 </div>
 </div>
-<a id="a4f6b0d06cb0dad028160dc21dcf819e8" name="a4f6b0d06cb0dad028160dc21dcf819e8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4f6b0d06cb0dad028160dc21dcf819e8">&#9670;&#160;</a></span>CCC_adaptive_map_from</h2>
+<a id="a4a78127756bb1c275c5c95dbc339d7f3" name="a4a78127756bb1c275c5c95dbc339d7f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a78127756bb1c275c5c95dbc339d7f3">&#9670;&#160;</a></span>CCC_adaptive_map_from</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -755,19 +629,19 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">compare, </td>
+          <td class="paramname">comparator, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate, </td>
+          <td class="paramname">allocator, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">destroy, </td>
+          <td class="paramname">destructor, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -782,30 +656,35 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__adaptive__map_8h.html#a6f6838fb96097c835fb4e9c6ff304a02">CCC_private_adaptive_map_from</a>(type_intruder_field_name,                    \</div>
-<div class="line">                                  type_key_field_name, compare, allocate,      \</div>
-<div class="line">                                  destroy, compound_literal_array)</div>
-<div class="ttc" id="aprivate__adaptive__map_8h_html_a6f6838fb96097c835fb4e9c6ff304a02"><div class="ttname"><a href="private__adaptive__map_8h.html#a6f6838fb96097c835fb4e9c6ff304a02">CCC_private_adaptive_map_from</a></div><div class="ttdeci">#define CCC_private_adaptive_map_from( private_type_intruder_field_name, private_key_field_name, private_compare, private_allocate, private_destroy, private_compound_literal_array...)</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:200</div></div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__adaptive__map_8h.html#a1300411230e73686e46e3d75ddb6e9bf">CCC_private_adaptive_map_from</a>(                                             \</div>
+<div class="line">        type_intruder_field_name,                                              \</div>
+<div class="line">        type_key_field_name,                                                   \</div>
+<div class="line">        comparator,                                                            \</div>
+<div class="line">        allocator,                                                             \</div>
+<div class="line">        destructor,                                                            \</div>
+<div class="line">        compound_literal_array                                                 \</div>
+<div class="line">    )</div>
+<div class="ttc" id="aprivate__adaptive__map_8h_html_a1300411230e73686e46e3d75ddb6e9bf"><div class="ttname"><a href="private__adaptive__map_8h.html#a1300411230e73686e46e3d75ddb6e9bf">CCC_private_adaptive_map_from</a></div><div class="ttdeci">#define CCC_private_adaptive_map_from( private_type_intruder_field_name, private_key_field_name, private_comparator, private_allocator, private_destructor, private_compound_literal_array...)</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:145</div></div>
 </div><!-- fragment -->
 <p>Initializes a dynamic adaptive map at runtime. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_field_name</td><td>the name of the intrusive map elem field. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_key_field_name</td><td>the name of the field in user type used as key. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the key comparison function (see <a class="el" href="types_8h.html" title="The C Container Collection Fundamental Types.">types.h</a>). </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the allocation function or NULL if allocation is banned. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">destroy</td><td>the destructor function used to act on every node in case initialization of new nodes fails and map is emptied in a failure state. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">comparator</td><td>the <a class="el" href="structCCC__Key__comparator.html" title="The type passed by reference to any container function that may need to compare keys....">CCC_Key_comparator</a> for key comparison. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the required <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for node allocation. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">destructor</td><td>the optional <a class="el" href="structCCC__Destructor.html" title="The type passed by reference to any container function that may need to destroy elements....">CCC_Destructor</a> for cleanup in the case of a failed allocation, or <code>&amp;(<a class="el" href="structCCC__Destructor.html" title="The type passed by reference to any container function that may need to destroy elements....">CCC_Destructor</a>){}</code> </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal_array</td><td>the array of user types to insert into the map (e.g. (struct My_type[]){ {.key = 1, .val = 1}, {.key = 2, .val = 2}}). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the struct initialized adaptive map for direct assignment (e.g. <a class="el" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a> m = <a class="el" href="adaptive__map_8h.html#a4f6b0d06cb0dad028160dc21dcf819e8" title="Initializes a dynamic adaptive map at runtime.">CCC_adaptive_map_from(...)</a>;) or an empty map if allocation fails.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the struct initialized adaptive map for direct assignment or an empty map if allocation fails. </dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>If any node allocation fails while copying in the values in the compound literal array of user types, the map is cleared; if a destructor is provided, it is called on each node and they are freed using the provided allocate function. </dd></dl>
 
 </div>
 </div>
-<a id="adfea2110af8c19d8c0354d87ec3d63ce" name="adfea2110af8c19d8c0354d87ec3d63ce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adfea2110af8c19d8c0354d87ec3d63ce">&#9670;&#160;</a></span>CCC_adaptive_map_insert_entry_with</h2>
+<a id="a4b7fbb5acee963f8c335f1409a32f363" name="a4b7fbb5acee963f8c335f1409a32f363"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b7fbb5acee963f8c335f1409a32f363">&#9670;&#160;</a></span>CCC_adaptive_map_insert_entry_with</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -820,6 +699,12 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
+          <td class="paramname">allocator_pointer, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
           <td class="paramname">type_compound_literal...&#160;</td>
         </tr>
         <tr>
@@ -829,14 +714,16 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__adaptive__map_8h.html#a64f30de6e328019fee42e5fe11f935c5">CCC_private_adaptive_map_insert_entry_with</a>(adaptive_map_entry_pointer,     \</div>
-<div class="line">                                               type_compound_literal)</div>
-<div class="ttc" id="aprivate__adaptive__map_8h_html_a64f30de6e328019fee42e5fe11f935c5"><div class="ttname"><a href="private__adaptive__map_8h.html#a64f30de6e328019fee42e5fe11f935c5">CCC_private_adaptive_map_insert_entry_with</a></div><div class="ttdeci">#define CCC_private_adaptive_map_insert_entry_with(adaptive_map_entry_pointer, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:324</div></div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__adaptive__map_8h.html#adb43a25ca72f188836e81d11eea4721e">CCC_private_adaptive_map_insert_entry_with</a>(                                \</div>
+<div class="line">        adaptive_map_entry_pointer, allocator_pointer, type_compound_literal   \</div>
+<div class="line">    )</div>
+<div class="ttc" id="aprivate__adaptive__map_8h_html_adb43a25ca72f188836e81d11eea4721e"><div class="ttname"><a href="private__adaptive__map_8h.html#adb43a25ca72f188836e81d11eea4721e">CCC_private_adaptive_map_insert_entry_with</a></div><div class="ttdeci">#define CCC_private_adaptive_map_insert_entry_with( adaptive_map_entry_pointer, private_allocator_pointer, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:342</div></div>
 </div><!-- fragment -->
 <p>Write the contents of the compound literal type_compound_literal to a node. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">adaptive_map_entry_pointer</td><td>a pointer to the obtained entry. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator_pointer</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for node allocation if needed. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_compound_literal</td><td>the compound literal to write to a new slot. </td></tr>
   </table>
   </dd>
@@ -845,8 +732,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a6a398f842fb0da7e8ec83ae3a5b585b2" name="a6a398f842fb0da7e8ec83ae3a5b585b2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6a398f842fb0da7e8ec83ae3a5b585b2">&#9670;&#160;</a></span>CCC_adaptive_map_insert_or_assign_with</h2>
+<a id="ab28cfbc1a0efef8213a51b5186345c62" name="ab28cfbc1a0efef8213a51b5186345c62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab28cfbc1a0efef8213a51b5186345c62">&#9670;&#160;</a></span>CCC_adaptive_map_insert_or_assign_with</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -867,6 +754,12 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
+          <td class="paramname">allocator_pointer, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
           <td class="paramname">compound_literal_type...&#160;</td>
         </tr>
         <tr>
@@ -876,16 +769,19 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>){<a class="code hl_define" href="private__adaptive__map_8h.html#ac35df274d1e8b2462e90b202a3da5d6e">CCC_private_adaptive_map_insert_or_assign_with</a>(               \</div>
-<div class="line">        map_pointer, key, compound_literal_type)}</div>
-<div class="ttc" id="aprivate__adaptive__map_8h_html_ac35df274d1e8b2462e90b202a3da5d6e"><div class="ttname"><a href="private__adaptive__map_8h.html#ac35df274d1e8b2462e90b202a3da5d6e">CCC_private_adaptive_map_insert_or_assign_with</a></div><div class="ttdeci">#define CCC_private_adaptive_map_insert_or_assign_with( adaptive_map_pointer, key, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:388</div></div>
-<div class="ttc" id="astructCCC__Entry_html"><div class="ttname"><a href="structCCC__Entry.html">CCC_Entry</a></div><div class="ttdef"><b>Definition:</b> private_types.h:51</div></div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a> <span class="keyword">private</span>; }){                                          \</div>
+<div class="line">        CCC_private_adaptive_map_insert_or_assign_with(                        \</div>
+<div class="line">            map_pointer, key, allocator_pointer, compound_literal_type         \</div>
+<div class="line">        )}                                                                     \</div>
+<div class="line">         .private</div>
+<div class="ttc" id="astructCCC__Entry_html"><div class="ttname"><a href="structCCC__Entry.html">CCC_Entry</a></div><div class="ttdoc">An Occupied or Vacant position in a searchable container.</div><div class="ttdef"><b>Definition:</b> types.h:151</div></div>
 </div><!-- fragment -->
 <p>Inserts a new key value pair or overwrites the existing entry. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">map_pointer</td><td>the pointer to the flat hash map. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">map_pointer</td><td>the pointer to the flat map. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">key</td><td>the key to be searched in the map. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator_pointer</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for node allocation if needed. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal_type</td><td>the compound literal to insert or use for overwrite. </td></tr>
   </table>
   </dd>
@@ -895,8 +791,59 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a84e4184fc62027a12fb40edeb814dc09" name="a84e4184fc62027a12fb40edeb814dc09"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a84e4184fc62027a12fb40edeb814dc09">&#9670;&#160;</a></span>CCC_adaptive_map_or_insert_with</h2>
+<a id="a9227e2d90429dbf896fb5ef7e5040f19" name="a9227e2d90429dbf896fb5ef7e5040f19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9227e2d90429dbf896fb5ef7e5040f19">&#9670;&#160;</a></span>CCC_adaptive_map_insert_or_assign_wrap</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CCC_adaptive_map_insert_or_assign_wrap</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">map_pointer, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">type_pointer, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">allocator_pointer...&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a> <span class="keyword">private</span>; }){                                          \</div>
+<div class="line">        CCC_adaptive_map_insert_or_assign(                                     \</div>
+<div class="line">            map_pointer, type_pointer, allocator_pointer                       \</div>
+<div class="line">        )}                                                                     \</div>
+<div class="line">         .private</div>
+</div><!-- fragment -->
+<p>Invariantly inserts or overwrites a user struct into the map. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">map_pointer</td><td>a pointer to the handle map. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_pointer</td><td>a pointer to the user struct key value type. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator_pointer</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for node allocation if needed. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a compound literal reference to a handle. If Occupied a handle was overwritten by the new key value. If Vacant no prior map handle existed.</dd></dl>
+<p>Note that this function can be used when the old user type is not needed but the information regarding its presence is helpful. </p>
+
+</div>
+</div>
+<a id="aeb7c5fc86b3b6797f4e13ff9de7652e2" name="aeb7c5fc86b3b6797f4e13ff9de7652e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb7c5fc86b3b6797f4e13ff9de7652e2">&#9670;&#160;</a></span>CCC_adaptive_map_or_insert_with</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -911,6 +858,12 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
+          <td class="paramname">allocator_pointer, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
           <td class="paramname">type_compound_literal...&#160;</td>
         </tr>
         <tr>
@@ -920,14 +873,16 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__adaptive__map_8h.html#ac29b717071ba30a39df6a6471a08705f">CCC_private_adaptive_map_or_insert_with</a>(adaptive_map_entry_pointer,        \</div>
-<div class="line">                                            type_compound_literal)</div>
-<div class="ttc" id="aprivate__adaptive__map_8h_html_ac29b717071ba30a39df6a6471a08705f"><div class="ttname"><a href="private__adaptive__map_8h.html#ac29b717071ba30a39df6a6471a08705f">CCC_private_adaptive_map_or_insert_with</a></div><div class="ttdeci">#define CCC_private_adaptive_map_or_insert_with(adaptive_map_entry_pointer, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:301</div></div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__adaptive__map_8h.html#a34ff713f4984afe6c1549e0720344b7b">CCC_private_adaptive_map_or_insert_with</a>(                                   \</div>
+<div class="line">        adaptive_map_entry_pointer, allocator_pointer, type_compound_literal   \</div>
+<div class="line">    )</div>
+<div class="ttc" id="aprivate__adaptive__map_8h_html_a34ff713f4984afe6c1549e0720344b7b"><div class="ttname"><a href="private__adaptive__map_8h.html#a34ff713f4984afe6c1549e0720344b7b">CCC_private_adaptive_map_or_insert_with</a></div><div class="ttdeci">#define CCC_private_adaptive_map_or_insert_with( adaptive_map_entry_pointer, private_allocator_pointer, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:311</div></div>
 </div><!-- fragment -->
 <p>Lazily insert the desired key value into the entry if it is Vacant. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">adaptive_map_entry_pointer</td><td>a pointer to the obtained entry. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator_pointer</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for node allocation if needed. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_compound_literal</td><td>the compound literal to construct in place if the entry is Vacant. </td></tr>
   </table>
   </dd>
@@ -937,8 +892,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a540350b0b0a0a9efbe0d53a0901add56" name="a540350b0b0a0a9efbe0d53a0901add56"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a540350b0b0a0a9efbe0d53a0901add56">&#9670;&#160;</a></span>CCC_adaptive_map_remove_entry_wrap</h2>
+<a id="a4de85690f519c8f308d2329ab35dee59" name="a4de85690f519c8f308d2329ab35dee59"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4de85690f519c8f308d2329ab35dee59">&#9670;&#160;</a></span>CCC_adaptive_map_remove_entry_wrap</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -947,18 +902,32 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="memname">#define CCC_adaptive_map_remove_entry_wrap</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">adaptive_map_entry_pointer</td><td>)</td>
+          <td class="paramname">adaptive_map_entry_pointer, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">allocator_pointer...&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>){                                                              \</div>
-<div class="line">        CCC_adaptive_map_remove_entry((adaptive_map_entry_pointer)).private}</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a> <span class="keyword">private</span>; }){                                          \</div>
+<div class="line">        CCC_adaptive_map_remove_entry(                                         \</div>
+<div class="line">            (adaptive_map_entry_pointer), allocator_pointer                    \</div>
+<div class="line">        )}                                                                     \</div>
+<div class="line">         .private</div>
 </div><!-- fragment -->
 <p>Remove the entry from the map if Occupied. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">adaptive_map_entry_pointer</td><td>a pointer to the map entry. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator_pointer</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for node allocation if needed. </td></tr>
   </table>
   </dd>
 </dl>
@@ -967,8 +936,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a3f5fea32f63bcbff3acbeacc23359336" name="a3f5fea32f63bcbff3acbeacc23359336"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3f5fea32f63bcbff3acbeacc23359336">&#9670;&#160;</a></span>CCC_adaptive_map_remove_key_value_wrap</h2>
+<a id="af79ee7c55591a590ccc7a5f1499a1355" name="af79ee7c55591a590ccc7a5f1499a1355"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af79ee7c55591a590ccc7a5f1499a1355">&#9670;&#160;</a></span>CCC_adaptive_map_remove_key_value_wrap</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -983,7 +952,13 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">type_output_intruder_pointer&#160;</td>
+          <td class="paramname">type_output_intruder_pointer, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">allocator_pointer...&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -992,16 +967,18 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>){<a class="code hl_function" href="adaptive__map_8h.html#ad9f4dfce1a62852874be9fd9b7f60afe">CCC_adaptive_map_remove_key_value</a>(                            \</div>
-<div class="line">                     (map_pointer), (type_output_intruder_pointer))            \</div>
-<div class="line">                     .private}</div>
-<div class="ttc" id="aadaptive__map_8h_html_ad9f4dfce1a62852874be9fd9b7f60afe"><div class="ttname"><a href="adaptive__map_8h.html#ad9f4dfce1a62852874be9fd9b7f60afe">CCC_adaptive_map_remove_key_value</a></div><div class="ttdeci">CCC_Entry CCC_adaptive_map_remove_key_value(CCC_Adaptive_map *map, CCC_Adaptive_map_node *type_output_intruder)</div><div class="ttdoc">Removes the key value in the map storing the old value, if present, in the struct containing type_out...</div></div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a> <span class="keyword">private</span>; }){                                          \</div>
+<div class="line">        CCC_adaptive_map_remove_key_value(                                     \</div>
+<div class="line">            (map_pointer), (type_output_intruder_pointer), allocator_pointer   \</div>
+<div class="line">        )}                                                                     \</div>
+<div class="line">         .private</div>
 </div><!-- fragment -->
 <p>Removes the key value in the map storing the old value, if present, in the struct containing type_output_intruder provided by the user. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map_pointer</td><td>the pointer to the adaptive map. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">type_output_intruder_pointer</td><td>the handle to the user type wrapping map node. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator_pointer</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for node allocation if needed. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1011,8 +988,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a489d1a4248eed36ec884db29afd437ba" name="a489d1a4248eed36ec884db29afd437ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a489d1a4248eed36ec884db29afd437ba">&#9670;&#160;</a></span>CCC_adaptive_map_swap_entry_wrap</h2>
+<a id="aa344fa9f18686efe51f9f56af00ef7b3" name="aa344fa9f18686efe51f9f56af00ef7b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa344fa9f18686efe51f9f56af00ef7b3">&#9670;&#160;</a></span>CCC_adaptive_map_swap_entry_wrap</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1033,7 +1010,13 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">temp_intruder_pointer&#160;</td>
+          <td class="paramname">temp_intruder_pointer, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">allocator_pointer...&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1042,11 +1025,14 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>){<a class="code hl_function" href="adaptive__map_8h.html#ac717c45b9887784c844343cbfe16c270">CCC_adaptive_map_swap_entry</a>((map_pointer),                    \</div>
-<div class="line">                                             (type_intruder_pointer),          \</div>
-<div class="line">                                             (temp_intruder_pointer))          \</div>
-<div class="line">                     .private}</div>
-<div class="ttc" id="aadaptive__map_8h_html_ac717c45b9887784c844343cbfe16c270"><div class="ttname"><a href="adaptive__map_8h.html#ac717c45b9887784c844343cbfe16c270">CCC_adaptive_map_swap_entry</a></div><div class="ttdeci">CCC_Entry CCC_adaptive_map_swap_entry(CCC_Adaptive_map *map, CCC_Adaptive_map_node *type_intruder, CCC_Adaptive_map_node *temp_intruder)</div><div class="ttdoc">Invariantly inserts the key value wrapping type_intruder.</div></div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a> <span class="keyword">private</span>; }){<a class="code hl_function" href="adaptive__map_8h.html#a64070695daaed7528ea4b804c8ffa0ea">CCC_adaptive_map_swap_entry</a>(              \</div>
+<div class="line">                                         (map_pointer),                        \</div>
+<div class="line">                                         (type_intruder_pointer),              \</div>
+<div class="line">                                         (temp_intruder_pointer),              \</div>
+<div class="line">                                         allocator_pointer                     \</div>
+<div class="line">                                     )}                                        \</div>
+<div class="line">         .private</div>
+<div class="ttc" id="aadaptive__map_8h_html_a64070695daaed7528ea4b804c8ffa0ea"><div class="ttname"><a href="adaptive__map_8h.html#a64070695daaed7528ea4b804c8ffa0ea">CCC_adaptive_map_swap_entry</a></div><div class="ttdeci">CCC_Entry CCC_adaptive_map_swap_entry(CCC_Adaptive_map *map, CCC_Adaptive_map_node *type_intruder, CCC_Adaptive_map_node *temp_intruder, CCC_Allocator const *allocator)</div><div class="ttdoc">Invariantly inserts the key value wrapping type_intruder.</div></div>
 </div><!-- fragment -->
 <p>Invariantly inserts the key value wrapping the provided intruder. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1054,6 +1040,7 @@ This graph shows which files directly or indirectly include this file:</div>
     <tr><td class="paramdir">[in]</td><td class="paramname">map_pointer</td><td>the pointer to the adaptive map. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_pointer</td><td>the handle to the user type wrapping this handle. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">temp_intruder_pointer</td><td>handle to space for swapping in the old value, if present. The same user type stored in the map should wrap temp_intruder. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator_pointer</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for node allocation. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1062,8 +1049,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="af0b3fa6736c783e094b85b335422d017" name="af0b3fa6736c783e094b85b335422d017"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af0b3fa6736c783e094b85b335422d017">&#9670;&#160;</a></span>CCC_adaptive_map_try_insert_with</h2>
+<a id="ac6cc5c83d9533d8829bb312e2d212000" name="ac6cc5c83d9533d8829bb312e2d212000"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6cc5c83d9533d8829bb312e2d212000">&#9670;&#160;</a></span>CCC_adaptive_map_try_insert_with</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1084,6 +1071,12 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
+          <td class="paramname">allocator_pointer, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
           <td class="paramname">compound_literal_type...&#160;</td>
         </tr>
         <tr>
@@ -1093,15 +1086,18 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>){<a class="code hl_define" href="private__adaptive__map_8h.html#aee36ad29ae7cc5c6e5c7d6eb1a4d6782">CCC_private_adaptive_map_try_insert_with</a>(                     \</div>
-<div class="line">        map_pointer, key, compound_literal_type)}</div>
-<div class="ttc" id="aprivate__adaptive__map_8h_html_aee36ad29ae7cc5c6e5c7d6eb1a4d6782"><div class="ttname"><a href="private__adaptive__map_8h.html#aee36ad29ae7cc5c6e5c7d6eb1a4d6782">CCC_private_adaptive_map_try_insert_with</a></div><div class="ttdeci">#define CCC_private_adaptive_map_try_insert_with(adaptive_map_pointer, key, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:360</div></div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a> <span class="keyword">private</span>; }){                                          \</div>
+<div class="line">        CCC_private_adaptive_map_try_insert_with(                              \</div>
+<div class="line">            map_pointer, key, allocator_pointer, compound_literal_type         \</div>
+<div class="line">        )}                                                                     \</div>
+<div class="line">         .private</div>
 </div><!-- fragment -->
 <p>lazily insert compound_literal_type into the map at key if key is absent. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map_pointer</td><td>a pointer to the map. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">key</td><td>the direct key r-value. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator_pointer</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for node allocation if needed. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal_type</td><td>the compound literal specifying the value. </td></tr>
   </table>
   </dd>
@@ -1111,8 +1107,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="ad6162debb2e5dab39637763145d6a15e" name="ad6162debb2e5dab39637763145d6a15e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad6162debb2e5dab39637763145d6a15e">&#9670;&#160;</a></span>CCC_adaptive_map_try_insert_wrap</h2>
+<a id="a110bce0e440d7fbd850211013504a516" name="a110bce0e440d7fbd850211013504a516"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a110bce0e440d7fbd850211013504a516">&#9670;&#160;</a></span>CCC_adaptive_map_try_insert_wrap</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1127,7 +1123,13 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">type_intruder_pointer&#160;</td>
+          <td class="paramname">type_intruder_pointer, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">allocator_pointer...&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1136,97 +1138,22 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a>){                                                              \</div>
-<div class="line">        CCC_adaptive_map_try_insert((map_pointer), (type_intruder_pointer))    \</div>
-<div class="line">            .private}</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a> <span class="keyword">private</span>; }){                                          \</div>
+<div class="line">        CCC_adaptive_map_try_insert(                                           \</div>
+<div class="line">            (map_pointer), (type_intruder_pointer), allocator_pointer          \</div>
+<div class="line">        )}                                                                     \</div>
+<div class="line">         .private</div>
 </div><!-- fragment -->
 <p>Attempts to insert the key value wrapping type_intruder. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map_pointer</td><td>the pointer to the map. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_pointer</td><td>the handle to the user type wrapping map node. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator_pointer</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for node allocation if needed. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a compound literal reference to an entry. If Occupied, the entry contains a reference to the key value user type in the map and may be unwrapped. If Vacant the entry contains a reference to the newly inserted entry in the map. If more space is needed but allocation fails or has been forbidden, an insert error is set. </dd></dl>
-
-</div>
-</div>
-<a id="a7c58e77f98722d1fff4ccc32b8f805bc" name="a7c58e77f98722d1fff4ccc32b8f805bc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7c58e77f98722d1fff4ccc32b8f805bc">&#9670;&#160;</a></span>CCC_adaptive_map_with_allocator</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_adaptive_map_with_allocator</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_name, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_intruder_field, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">type_key_field, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">compare, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">allocate&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__adaptive__map_8h.html#aad3036ea1c1fc7b3c2728da8b77ed6bc">CCC_private_adaptive_map_with_allocator</a>(type_name, type_intruder_field,    \</div>
-<div class="line">                                            type_key_field, compare, allocate)</div>
-<div class="ttc" id="aprivate__adaptive__map_8h_html_aad3036ea1c1fc7b3c2728da8b77ed6bc"><div class="ttname"><a href="private__adaptive__map_8h.html#aad3036ea1c1fc7b3c2728da8b77ed6bc">CCC_private_adaptive_map_with_allocator</a></div><div class="ttdeci">#define CCC_private_adaptive_map_with_allocator( private_struct_name, private_node_node_field, private_key_node_field, private_key_comparator, private_allocate)</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:217</div></div>
-</div><!-- fragment -->
-<p>Initialize an empty dynamic map at compile or runtime with an allocator. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the user defined type stored in the map. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder_field</td><td>the name of the intrusive map node element. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_key_field</td><td>the field of the struct used for key storage. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compare</td><td>the CCC_Key_comparator the user intends to use. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">allocate</td><td>the CCC_Allocator function used to manage map memory. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the map directly initialized on the right hand side of the equality operator (e.g. <a class="el" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a> map = <a class="el" href="adaptive__map_8h.html#a7c58e77f98722d1fff4ccc32b8f805bc" title="Initialize an empty dynamic map at compile or runtime with an allocator.">CCC_adaptive_map_with_allocator(...)</a>;)</dd></dl>
-<p>Initialize a dynamic map at compile time.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define ADAPTIVE_MAP_USING_NAMESPACE_CCC</span></div>
-<div class="line"><span class="keyword">struct </span>Val</div>
-<div class="line">{</div>
-<div class="line">    Adaptive_map_node node;</div>
-<div class="line">    <span class="keywordtype">int</span> key;</div>
-<div class="line">    <span class="keywordtype">int</span> val;</div>
-<div class="line">};</div>
-<div class="line"><span class="keyword">static</span> Adaptive_map map = adaptive_map_with_allocator(</div>
-<div class="line">    <span class="keyword">struct</span> Val,</div>
-<div class="line">    node,</div>
-<div class="line">    key,</div>
-<div class="line">    adaptive_map_key_order,</div>
-<div class="line">    stdlib_allocate</div>
-<div class="line">);</div>
-</div><!-- fragment --><p>This can help eliminate boilerplate in initializers. </p>
 
 </div>
 </div>
@@ -1249,14 +1176,14 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a6634e04a00bfa7e2b4b274dd7e6aec61" name="a6634e04a00bfa7e2b4b274dd7e6aec61"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6634e04a00bfa7e2b4b274dd7e6aec61">&#9670;&#160;</a></span>CCC_Adaptive_map_entry</h2>
+<a id="a9991fa1dffac8df31176b80721fcfc8d" name="a9991fa1dffac8df31176b80721fcfc8d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9991fa1dffac8df31176b80721fcfc8d">&#9670;&#160;</a></span>CCC_Adaptive_map_entry</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef union <a class="el" href="unionCCC__Adaptive__map__entry__wrap.html">CCC_Adaptive_map_entry_wrap</a> <a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a></td>
+          <td class="memname">typedef struct <a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> <a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1284,54 +1211,8 @@ This graph shows which files directly or indirectly include this file:</div>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a821952943677fc1baaa336516f45db33" name="a821952943677fc1baaa336516f45db33"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a821952943677fc1baaa336516f45db33">&#9670;&#160;</a></span>CCC_adaptive_map_and_context_modify()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> * CCC_adaptive_map_and_context_modify </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> *&#160;</td>
-          <td class="paramname"><em>entry</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#af3851f6fdc1c8255c6b1713c8ffc1bdd">CCC_Type_modifier</a> *&#160;</td>
-          <td class="paramname"><em>modify</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>context</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Modifies the provided entry if it is Occupied. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">entry</td><td>the entry obtained from an entry function or macro. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">modify</td><td>an update function that requires context data. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>context data required for the update. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the updated entry if it was Occupied or the unmodified vacant entry.</dd></dl>
-<p>This function makes full use of a CCC_Type_modifier capability, meaning a complete CCC_update object will be passed to the update function callback. </p>
-
-</div>
-</div>
-<a id="aeb3ce74c4d9858a1f1fceda5d5cd6173" name="aeb3ce74c4d9858a1f1fceda5d5cd6173"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeb3ce74c4d9858a1f1fceda5d5cd6173">&#9670;&#160;</a></span>CCC_adaptive_map_and_modify()</h2>
+<a id="a46252d7d530896284b5663b1d34edb27" name="a46252d7d530896284b5663b1d34edb27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46252d7d530896284b5663b1d34edb27">&#9670;&#160;</a></span>CCC_adaptive_map_and_modify()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1345,8 +1226,8 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#af3851f6fdc1c8255c6b1713c8ffc1bdd">CCC_Type_modifier</a> *&#160;</td>
-          <td class="paramname"><em>modify</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="structCCC__Modifier.html">CCC_Modifier</a> const *&#160;</td>
+          <td class="paramname"><em>modifier</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1360,12 +1241,11 @@ This graph shows which files directly or indirectly include this file:</div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">entry</td><td>the entry obtained from an entry function or macro. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">modify</td><td>an update function in which the context argument is unused. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">modifier</td><td>a <a class="el" href="structCCC__Modifier.html" title="The type passed by reference to any container function that may need to modify elements....">CCC_Modifier</a> to operate on an Occupied entry. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the updated entry if it was Occupied or the unmodified vacant entry.</dd></dl>
-<p>This function is intended to make the function chaining in the Entry Interface more succinct if the entry will be modified in place based on its own value without the need of the context argument a CCC_Type_modifier can provide. </p>
+<dl class="section return"><dt>Returns</dt><dd>the updated entry if it was Occupied or the unmodified vacant entry. </dd></dl>
 
 </div>
 </div>
@@ -1396,8 +1276,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a6dde8f2788ecd0346acb885f20d068c1" name="a6dde8f2788ecd0346acb885f20d068c1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6dde8f2788ecd0346acb885f20d068c1">&#9670;&#160;</a></span>CCC_adaptive_map_clear()</h2>
+<a id="a7b4148ff682f5d04347ac625a41fc632" name="a7b4148ff682f5d04347ac625a41fc632"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b4148ff682f5d04347ac625a41fc632">&#9670;&#160;</a></span>CCC_adaptive_map_clear()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1411,8 +1291,14 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#a93e9728dd87d940e8f171efea75ee8d2">CCC_Type_destructor</a> *&#160;</td>
-          <td class="paramname"><em>destroy</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="structCCC__Destructor.html">CCC_Destructor</a> const *&#160;</td>
+          <td class="paramname"><em>destructor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1426,13 +1312,13 @@ This graph shows which files directly or indirectly include this file:</div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map</td><td>a pointer to the map. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">destroy</td><td>a destructor function if required. NULL if unneeded. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">destructor</td><td>an optional <a class="el" href="structCCC__Destructor.html" title="The type passed by reference to any container function that may need to destroy elements....">CCC_Destructor</a> for elements before free. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>an optional <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> to free elements. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>an input error if map points to NULL otherwise OK.</dd></dl>
-<p>Note that if the map has been given permission to allocate, the destructor will be called on each element before it uses the provided allocator to free the element. Therefore, the destructor should not free the element or a double free will occur.</p>
-<p>If the container has not been given allocation permission, then the destructor may free elements or not depending on how and when the user wishes to free elements of the map according to their own memory management schemes. </p>
+<p>Note that if the map has been given an allocator, the destructor will be called on each element before it uses the provided allocator to free the element. Therefore, the destructor should not free the element or a double free will occur. </p>
 
 </div>
 </div>
@@ -1576,7 +1462,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">CCC_Entry_status CCC_adaptive_map_entry_status </td>
+          <td class="memname"><a class="el" href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8">CCC_Entry_status</a> CCC_adaptive_map_entry_status </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> const *&#160;</td>
           <td class="paramname"><em>entry</em></td><td>)</td>
@@ -1655,7 +1541,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="types_8h.html#a87bdc16619e9a0f9585a8102846c20a8">CCC_Range_reverse</a> CCC_adaptive_map_equal_range_reverse </td>
+          <td class="memname"><a class="el" href="structCCC__Range__reverse.html">CCC_Range_reverse</a> CCC_adaptive_map_equal_range_reverse </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a> *&#160;</td>
           <td class="paramname"><em>map</em>, </td>
@@ -1737,8 +1623,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="ae807800b0d1d9559377a3480491803f6" name="ae807800b0d1d9559377a3480491803f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae807800b0d1d9559377a3480491803f6">&#9670;&#160;</a></span>CCC_adaptive_map_insert_entry()</h2>
+<a id="a6ee212a661abc40df47e59079d1fe29b" name="a6ee212a661abc40df47e59079d1fe29b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ee212a661abc40df47e59079d1fe29b">&#9670;&#160;</a></span>CCC_adaptive_map_insert_entry()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1753,7 +1639,13 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="structCCC__Adaptive__map__node.html">CCC_Adaptive_map_node</a> *&#160;</td>
-          <td class="paramname"><em>type_intruder</em>&#160;</td>
+          <td class="paramname"><em>type_intruder</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1768,6 +1660,7 @@ This graph shows which files directly or indirectly include this file:</div>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">entry</td><td>the entry returned from a call obtaining an entry. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder</td><td>a handle to the struct the user intends to insert. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for node allocation if needed. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1803,8 +1696,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a49ae0193f6f6ccbcb059146101722933" name="a49ae0193f6f6ccbcb059146101722933"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a49ae0193f6f6ccbcb059146101722933">&#9670;&#160;</a></span>CCC_adaptive_map_insert_or_assign()</h2>
+<a id="aa52b09164a4259a4d1cb5aab99f4e052" name="aa52b09164a4259a4d1cb5aab99f4e052"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa52b09164a4259a4d1cb5aab99f4e052">&#9670;&#160;</a></span>CCC_adaptive_map_insert_or_assign()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1819,7 +1712,13 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="structCCC__Adaptive__map__node.html">CCC_Adaptive_map_node</a> *&#160;</td>
-          <td class="paramname"><em>type_intruder</em>&#160;</td>
+          <td class="paramname"><em>type_intruder</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1832,8 +1731,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <p>Invariantly inserts or overwrites a user struct into the map. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">map</td><td>a pointer to the flat hash map. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">map</td><td>a pointer to the flat map. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder</td><td>the handle to the wrapping user struct key value. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for node allocation if needed. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1934,8 +1834,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a1a1afeb764311ed566533db8b28312c7" name="a1a1afeb764311ed566533db8b28312c7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1a1afeb764311ed566533db8b28312c7">&#9670;&#160;</a></span>CCC_adaptive_map_or_insert()</h2>
+<a id="adf7aac5768d276f338ae7026d4694eab" name="adf7aac5768d276f338ae7026d4694eab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf7aac5768d276f338ae7026d4694eab">&#9670;&#160;</a></span>CCC_adaptive_map_or_insert()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1950,7 +1850,13 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="structCCC__Adaptive__map__node.html">CCC_Adaptive_map_node</a> *&#160;</td>
-          <td class="paramname"><em>type_intruder</em>&#160;</td>
+          <td class="paramname"><em>type_intruder</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1965,6 +1871,7 @@ This graph shows which files directly or indirectly include this file:</div>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">entry</td><td>the entry obtained via function or macro call. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder</td><td>the handle to the struct to be inserted to a Vacant entry. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for node allocation if needed. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1974,8 +1881,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="aba1e5c1c6fea49b448e2dbaed75c6629" name="aba1e5c1c6fea49b448e2dbaed75c6629"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba1e5c1c6fea49b448e2dbaed75c6629">&#9670;&#160;</a></span>CCC_adaptive_map_remove_entry()</h2>
+<a id="a6009b0bede3cb138c08aeec770fe7f10" name="a6009b0bede3cb138c08aeec770fe7f10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6009b0bede3cb138c08aeec770fe7f10">&#9670;&#160;</a></span>CCC_adaptive_map_remove_entry()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1984,8 +1891,18 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="memname"><a class="el" href="structCCC__Entry.html">CCC_Entry</a> CCC_adaptive_map_remove_entry </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a> *&#160;</td>
-          <td class="paramname"><em>entry</em></td><td>)</td>
+          <td class="paramname"><em>entry</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1994,6 +1911,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">entry</td><td>a pointer to the map entry. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for node allocation if needed. </td></tr>
   </table>
   </dd>
 </dl>
@@ -2002,8 +1920,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="ad9f4dfce1a62852874be9fd9b7f60afe" name="ad9f4dfce1a62852874be9fd9b7f60afe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad9f4dfce1a62852874be9fd9b7f60afe">&#9670;&#160;</a></span>CCC_adaptive_map_remove_key_value()</h2>
+<a id="a462c1f9613535f7063d269bb761c43e0" name="a462c1f9613535f7063d269bb761c43e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a462c1f9613535f7063d269bb761c43e0">&#9670;&#160;</a></span>CCC_adaptive_map_remove_key_value()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2018,7 +1936,13 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="structCCC__Adaptive__map__node.html">CCC_Adaptive_map_node</a> *&#160;</td>
-          <td class="paramname"><em>type_output_intruder</em>&#160;</td>
+          <td class="paramname"><em>type_output_intruder</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2033,6 +1957,7 @@ This graph shows which files directly or indirectly include this file:</div>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map</td><td>the pointer to the adaptive map. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">type_output_intruder</td><td>the handle to the user type wrapping map node. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for node allocation if needed. </td></tr>
   </table>
   </dd>
 </dl>
@@ -2134,8 +2059,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="ac717c45b9887784c844343cbfe16c270" name="ac717c45b9887784c844343cbfe16c270"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac717c45b9887784c844343cbfe16c270">&#9670;&#160;</a></span>CCC_adaptive_map_swap_entry()</h2>
+<a id="a64070695daaed7528ea4b804c8ffa0ea" name="a64070695daaed7528ea4b804c8ffa0ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a64070695daaed7528ea4b804c8ffa0ea">&#9670;&#160;</a></span>CCC_adaptive_map_swap_entry()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2156,7 +2081,13 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="structCCC__Adaptive__map__node.html">CCC_Adaptive_map_node</a> *&#160;</td>
-          <td class="paramname"><em>temp_intruder</em>&#160;</td>
+          <td class="paramname"><em>temp_intruder</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2171,7 +2102,8 @@ This graph shows which files directly or indirectly include this file:</div>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map</td><td>the pointer to the adaptive map. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder</td><td>the handle to the user type wrapping map node. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">temp_intruder</td><td>handle to space for swapping in the old value, if present. The user must provide this additional type (e.g. <code>&amp;(my_type){}</code>). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">temp_intruder</td><td>handle to space for swapping in the old value, if Occupied. The user must provide this additional type (e.g. <code>&amp;(my_type){}</code>). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for node allocation if needed. </td></tr>
   </table>
   </dd>
 </dl>
@@ -2180,8 +2112,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="ad72bb878c62d32ffe98f895a86c36c5c" name="ad72bb878c62d32ffe98f895a86c36c5c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad72bb878c62d32ffe98f895a86c36c5c">&#9670;&#160;</a></span>CCC_adaptive_map_try_insert()</h2>
+<a id="a9b35be880fe6fb6fb51fcd864bc6ce43" name="a9b35be880fe6fb6fb51fcd864bc6ce43"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b35be880fe6fb6fb51fcd864bc6ce43">&#9670;&#160;</a></span>CCC_adaptive_map_try_insert()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2196,7 +2128,13 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="structCCC__Adaptive__map__node.html">CCC_Adaptive_map_node</a> *&#160;</td>
-          <td class="paramname"><em>type_intruder</em>&#160;</td>
+          <td class="paramname"><em>type_intruder</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *&#160;</td>
+          <td class="paramname"><em>allocator</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2211,6 +2149,7 @@ This graph shows which files directly or indirectly include this file:</div>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map</td><td>the pointer to the map. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder</td><td>the handle to the user type wrapping map node. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for node allocation if needed. </td></tr>
   </table>
   </dd>
 </dl>

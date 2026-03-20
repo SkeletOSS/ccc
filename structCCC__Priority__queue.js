@@ -1,8 +1,6 @@
 var structCCC__Priority__queue =
 [
-    [ "allocate", "structCCC__Priority__queue.html#a8b30700d12729778574c4ef059e8b4df", null ],
-    [ "compare", "structCCC__Priority__queue.html#a9fec8e2519b186fa59c2579d5c81ea6e", null ],
-    [ "context", "structCCC__Priority__queue.html#a8887fcada26b63e56a462869f2b46439", null ],
+    [ "comparator", "structCCC__Priority__queue.html#a2e0d3cf91c560ee590c6a31c3df88792", null ],
     [ "count", "structCCC__Priority__queue.html#a3a727e2b81480d63d5151d79e2463867", null ],
     [ "order", "structCCC__Priority__queue.html#a2d89db86e6191103d894a033524ddd5d", null ],
     [ "root", "structCCC__Priority__queue.html#a30dfbbad1f466313677c0d8e2619cab8", null ],

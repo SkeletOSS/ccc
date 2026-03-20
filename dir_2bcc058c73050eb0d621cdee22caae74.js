@@ -12,6 +12,5 @@ var dir_2bcc058c73050eb0d621cdee22caae74 =
     [ "private_priority_queue.h", "private__priority__queue_8h_source.html", null ],
     [ "private_singly_linked_list.h", "private__singly__linked__list_8h_source.html", null ],
     [ "private_traits.h", "private__traits_8h_source.html", null ],
-    [ "private_tree_map.h", "private__tree__map_8h_source.html", null ],
-    [ "private_types.h", "private__types_8h_source.html", null ]
+    [ "private_tree_map.h", "private__tree__map_8h_source.html", null ]
 ];

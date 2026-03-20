@@ -1,4 +1,5 @@
 <map id="CCC_Flat_hash_map" name="CCC_Flat_hash_map">
-<area shape="rect" id="node1" title=" " alt="" coords="19,93,174,119"/>
+<area shape="rect" id="node1" title=" " alt="" coords="102,93,257,119"/>
 <area shape="rect" id="node2" href="$structCCC__Flat__hash__map__tag.html" title=" " alt="" coords="5,5,188,31"/>
+<area shape="rect" id="node3" href="$structCCC__Hasher.html" title="The type passed by reference to a hash map that needs a hash function and key comparison function...." alt="" coords="212,5,315,31"/>
 </map>

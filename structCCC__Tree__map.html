@@ -102,8 +102,9 @@ Collaboration diagram for CCC_Tree_map:</div>
 <div class="dyncontent">
 <div class="center"><img src="structCCC__Tree__map__coll__graph.png" border="0" usemap="#aCCC__Tree__map_coll__map" alt="Collaboration graph"/></div>
 <map name="aCCC__Tree__map_coll__map" id="aCCC__Tree__map_coll__map">
-<area shape="rect" title=" " alt="" coords="25,97,144,123"/>
+<area shape="rect" title=" " alt="" coords="155,97,273,123"/>
 <area shape="rect" href="structCCC__Tree__map__node.html" title=" " alt="" coords="5,7,164,33"/>
+<area shape="rect" href="structCCC__Key__comparator.html" title="The type passed by reference to any container function that may need to compare keys...." alt="" coords="262,7,425,33"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -122,56 +123,22 @@ Data Fields</h2></td></tr>
 <tr class="separator:af644ed13778be3a144e58d4867a0533c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae2bf6d8f5085ebb3f852a3cce2d1678b"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Tree__map.html#ae2bf6d8f5085ebb3f852a3cce2d1678b">sizeof_type</a></td></tr>
 <tr class="separator:ae2bf6d8f5085ebb3f852a3cce2d1678b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af9b983333b76aaa85a9501b989302580"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a70073fb5defeba83308b92f2fff63fac">CCC_Key_comparator</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Tree__map.html#af9b983333b76aaa85a9501b989302580">compare</a></td></tr>
-<tr class="separator:af9b983333b76aaa85a9501b989302580"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abeb8811a9e87632d8824e70c30be129e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Tree__map.html#abeb8811a9e87632d8824e70c30be129e">allocate</a></td></tr>
-<tr class="separator:abeb8811a9e87632d8824e70c30be129e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a189094b711d5bcc81bf36e9957848071"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Tree__map.html#a189094b711d5bcc81bf36e9957848071">context</a></td></tr>
-<tr class="separator:a189094b711d5bcc81bf36e9957848071"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c48b78d0a1a3af24c908b8db7d7424a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Key__comparator.html">CCC_Key_comparator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Tree__map.html#a3c48b78d0a1a3af24c908b8db7d7424a">comparator</a></td></tr>
+<tr class="separator:a3c48b78d0a1a3af24c908b8db7d7424a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
-<a id="abeb8811a9e87632d8824e70c30be129e" name="abeb8811a9e87632d8824e70c30be129e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abeb8811a9e87632d8824e70c30be129e">&#9670;&#160;</a></span>allocate</h2>
+<a id="a3c48b78d0a1a3af24c908b8db7d7424a" name="a3c48b78d0a1a3af24c908b8db7d7424a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c48b78d0a1a3af24c908b8db7d7424a">&#9670;&#160;</a></span>comparator</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="types_8h.html#aac6280c471e14b9c0d50b1c5577394d3">CCC_Allocator</a>* CCC_Tree_map::allocate</td>
+          <td class="memname"><a class="el" href="structCCC__Key__comparator.html">CCC_Key_comparator</a> CCC_Tree_map::comparator</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>An allocation function, if any. </p>
-
-</div>
-</div>
-<a id="af9b983333b76aaa85a9501b989302580" name="af9b983333b76aaa85a9501b989302580"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af9b983333b76aaa85a9501b989302580">&#9670;&#160;</a></span>compare</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="types_8h.html#a70073fb5defeba83308b92f2fff63fac">CCC_Key_comparator</a>* CCC_Tree_map::compare</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>The comparison function for three way comparison. </p>
-
-</div>
-</div>
-<a id="a189094b711d5bcc81bf36e9957848071" name="a189094b711d5bcc81bf36e9957848071"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a189094b711d5bcc81bf36e9957848071">&#9670;&#160;</a></span>context</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void* CCC_Tree_map::context</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Auxiliary data, if any. </p>
+<p>The comparator and context pointer. </p>
 
 </div>
 </div>
