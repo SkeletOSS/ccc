@@ -23,9 +23,9 @@ check_static_begin(flat_priority_queue_test_insert_iterate_pop) {
             (struct Val[1000 + 1]){}
         );
     for (size_t i = 0; i < num_nodes; ++i) {
-        /* Force duplicates. */
         struct Val val = {
-            .val = rand() % (num_nodes + 1), /* NOLINT */
+            /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+            .val = (int)((size_t)rand() % (num_nodes + 1)),
             .id = (int)i,
         };
         check(
@@ -49,7 +49,7 @@ check_static_begin(flat_priority_queue_test_insert_iterate_pop) {
 check_static_begin(flat_priority_queue_test_priority_removal) {
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
-    srand(time(NULL));
+    srand((unsigned)time(NULL));
     size_t const num_nodes = 1000;
     struct Val vals[1000 + 1];
     CCC_Flat_priority_queue flat_priority_queue = CCC_flat_priority_queue_for(
@@ -65,7 +65,8 @@ check_static_begin(flat_priority_queue_test_priority_removal) {
             &flat_priority_queue,
             &(CCC_Allocator){},
             (struct Val){
-                .val = rand() % (num_nodes + 1), /*NOLINT*/
+                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                .val = (int)((size_t)rand() % (num_nodes + 1)),
                 .id = (int)i,
             }
         );
@@ -87,7 +88,7 @@ check_static_begin(flat_priority_queue_test_priority_removal) {
 check_static_begin(flat_priority_queue_test_priority_update) {
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
-    srand(time(NULL));
+    srand((unsigned)time(NULL));
     size_t const num_nodes = 1000;
     struct Val vals[1000 + 1];
     CCC_Flat_priority_queue flat_priority_queue = CCC_flat_priority_queue_for(
@@ -103,7 +104,8 @@ check_static_begin(flat_priority_queue_test_priority_update) {
             &flat_priority_queue,
             &(CCC_Allocator){},
             (struct Val){
-                .val = rand() % (num_nodes + 1), /*NOLINT*/
+                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                .val = (int)((size_t)rand() % (num_nodes + 1)),
                 .id = (int)i,
             }
         );
@@ -136,7 +138,7 @@ check_static_begin(flat_priority_queue_test_priority_update) {
 check_static_begin(flat_priority_queue_test_priority_update_with) {
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
-    srand(time(NULL));
+    srand((unsigned)time(NULL));
     size_t const num_nodes = 1000;
     struct Val vals[1000 + 1];
     CCC_Flat_priority_queue flat_priority_queue = CCC_flat_priority_queue_for(
@@ -152,7 +154,8 @@ check_static_begin(flat_priority_queue_test_priority_update_with) {
             &flat_priority_queue,
             &(CCC_Allocator){},
             (struct Val){
-                .val = rand() % (num_nodes + 1), /*NOLINT*/
+                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                .val = (int)((size_t)rand() % (num_nodes + 1)),
                 .id = (int)i,
             }
         );

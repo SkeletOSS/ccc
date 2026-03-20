@@ -130,13 +130,13 @@ check_static_begin(flat_priority_queue_test_raw_type) {
 }
 
 check_static_begin(flat_priority_queue_test_heapify) {
-    srand(time(NULL)); /* NOLINT */
+    srand((unsigned)time(NULL)); /* NOLINT */
     enum : size_t {
         HEAPIFY_CAP = 100,
     };
     int heap[HEAPIFY_CAP] = {};
     for (size_t i = 0; i < HEAPIFY_CAP; ++i) {
-        heap[i] = rand_range(-99, (int)HEAPIFY_CAP); /* NOLINT */
+        heap[i] = (int)rand_range(0, HEAPIFY_CAP * 4);
     }
     Flat_priority_queue priority_queue = flat_priority_queue_heapify(
         int,
@@ -158,7 +158,7 @@ check_static_begin(flat_priority_queue_test_heapify) {
 }
 
 check_static_begin(flat_priority_queue_test_heapify_copy) {
-    srand(time(NULL)); /* NOLINT */
+    srand((unsigned)time(NULL)); /* NOLINT */
     enum : size_t {
         HEAPIFY_COPY_CAP = 100,
     };
@@ -171,7 +171,7 @@ check_static_begin(flat_priority_queue_test_heapify_copy) {
         = buffer_with_storage(HEAPIFY_COPY_CAP, (int[HEAPIFY_COPY_CAP]){});
     for (int *i = buffer_begin(&input); i != buffer_end(&input);
          i = buffer_next(&input, i)) {
-        *i = rand_range(-99, 99); /* NOLINT */
+        *i = (int)rand_range(0, 99);
     }
     check(
         flat_priority_queue_copy_heapify(
@@ -195,11 +195,11 @@ check_static_begin(flat_priority_queue_test_heapsort) {
     enum : int {
         HPSORTCAP = 100,
     };
-    srand(time(NULL)); /* NOLINT */
+    srand((unsigned)time(NULL)); /* NOLINT */
     Buffer storage = buffer_with_storage(HPSORTCAP, (int[HPSORTCAP]){});
     for (int *i = buffer_begin(&storage); i != buffer_end(&storage);
          i = buffer_next(&storage, i)) {
-        *i = rand_range(-99, HPSORTCAP); /* NOLINT */
+        *i = (int)rand_range(0, HPSORTCAP);
     }
     CCC_Result const result = CCC_sort_heapsort(
         &storage,

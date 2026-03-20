@@ -135,7 +135,7 @@ check_static_begin(tree_map_test_insert) {
     check(v->key, -1);
     int i = 0;
 
-    check(fill_n(&rom, size / 2, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size / 2, i, &allocator), CHECK_PASS);
 
     i += (size / 2);
     ent = swap_entry(
@@ -163,7 +163,7 @@ check_static_begin(tree_map_test_insert) {
     check(v->key, i);
     ++i;
 
-    check(fill_n(&rom, size - i, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size - (size_t)i, i, &allocator), CHECK_PASS);
 
     i = size;
     ent = swap_entry(
@@ -230,7 +230,7 @@ check_static_begin(tree_map_test_remove_key_value) {
     check(v->key, -1);
     int i = 0;
 
-    check(fill_n(&rom, size / 2, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size / 2, i, &allocator), CHECK_PASS);
 
     i += (size / 2);
     ent = CCC_remove_key_value(
@@ -260,7 +260,7 @@ check_static_begin(tree_map_test_remove_key_value) {
     check(v->val, i);
     check(v->key, i);
 
-    check(fill_n(&rom, size - i, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size - (size_t)i, i, &allocator), CHECK_PASS);
 
     i = size;
     ent = CCC_remove_key_value(
@@ -320,7 +320,7 @@ check_static_begin(tree_map_test_try_insert) {
     check(v->key, -1);
     int i = 0;
 
-    check(fill_n(&rom, size / 2, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size / 2, i, &allocator), CHECK_PASS);
 
     i += (size / 2);
     ent = try_insert(&rom, &(struct Val){.key = i, .val = i}.elem, &allocator);
@@ -338,7 +338,7 @@ check_static_begin(tree_map_test_try_insert) {
     check(v->key, i);
     ++i;
 
-    check(fill_n(&rom, size - i, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size - (size_t)i, i, &allocator), CHECK_PASS);
 
     i = size;
     ent = try_insert(&rom, &(struct Val){.key = i, .val = i}.elem, &allocator);
@@ -380,7 +380,7 @@ check_static_begin(tree_map_test_try_insert_with) {
     check(v->key, -1);
     int i = 0;
 
-    check(fill_n(&rom, size / 2, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size / 2, i, &allocator), CHECK_PASS);
 
     i += (size / 2);
     ent = tree_map_try_insert_with(&rom, i, &allocator, val(i));
@@ -398,7 +398,7 @@ check_static_begin(tree_map_test_try_insert_with) {
     check(v->key, i);
     ++i;
 
-    check(fill_n(&rom, size - i, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size - (size_t)i, i, &allocator), CHECK_PASS);
 
     i = size;
     ent = tree_map_try_insert_with(&rom, i, &allocator, val(i));
@@ -445,7 +445,7 @@ check_static_begin(tree_map_test_insert_or_assign) {
     check(v->key, -1);
     int i = 0;
 
-    check(fill_n(&rom, size / 2, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size / 2, i, &allocator), CHECK_PASS);
 
     i += (size / 2);
     ent = insert_or_assign(
@@ -466,7 +466,7 @@ check_static_begin(tree_map_test_insert_or_assign) {
     check(v->key, i);
     ++i;
 
-    check(fill_n(&rom, size - i, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size - (size_t)i, i, &allocator), CHECK_PASS);
 
     i = size;
     ent = insert_or_assign(
@@ -514,7 +514,7 @@ check_static_begin(tree_map_test_insert_or_assign_with) {
     check(v->key, -1);
     int i = 0;
 
-    check(fill_n(&rom, size / 2, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size / 2, i, &allocator), CHECK_PASS);
 
     i += (size / 2);
     ent = tree_map_insert_or_assign_with(&rom, i, &allocator, val(i));
@@ -531,7 +531,7 @@ check_static_begin(tree_map_test_insert_or_assign_with) {
     check(v->key, i);
     ++i;
 
-    check(fill_n(&rom, size - i, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size - (size_t)i, i, &allocator), CHECK_PASS);
 
     i = size;
     ent = tree_map_insert_or_assign_with(&rom, i, &allocator, val(i));
@@ -584,7 +584,7 @@ check_static_begin(tree_map_test_entry_and_modify) {
     check(v->val, 0);
     int i = 0;
 
-    check(fill_n(&rom, size / 2, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size / 2, i, &allocator), CHECK_PASS);
 
     i += (size / 2);
     ent = tree_map_entry_wrap(&rom, &i);
@@ -603,7 +603,7 @@ check_static_begin(tree_map_test_entry_and_modify) {
     check(v->key, i);
     ++i;
 
-    check(fill_n(&rom, size - i, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size - (size_t)i, i, &allocator), CHECK_PASS);
 
     i = size;
     ent = tree_map_entry_wrap(&rom, &i);
@@ -658,7 +658,7 @@ check_static_begin(tree_map_test_entry_and_context_modify) {
     check(v->val, 0);
     int i = 0;
 
-    check(fill_n(&rom, size / 2, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size / 2, i, &allocator), CHECK_PASS);
 
     i += (size / 2);
     ent = tree_map_entry_wrap(&rom, &i);
@@ -681,7 +681,7 @@ check_static_begin(tree_map_test_entry_and_context_modify) {
     check(count(&rom).count, i + 2);
     ++i;
 
-    check(fill_n(&rom, size - i, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size - (size_t)i, i, &allocator), CHECK_PASS);
 
     i = size;
     ent = tree_map_entry_wrap(&rom, &i);
@@ -735,7 +735,7 @@ check_static_begin(tree_map_test_entry_and_modify_with) {
     check(count(&rom).count, 1);
     int i = 0;
 
-    check(fill_n(&rom, size / 2, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size / 2, i, &allocator), CHECK_PASS);
 
     i += (size / 2);
     ent = tree_map_entry_wrap(&rom, &i);
@@ -754,7 +754,7 @@ check_static_begin(tree_map_test_entry_and_modify_with) {
     check(count(&rom).count, i + 2);
     ++i;
 
-    check(fill_n(&rom, size - i, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size - (size_t)i, i, &allocator), CHECK_PASS);
 
     i = size;
     ent = tree_map_entry_wrap(&rom, &i);
@@ -804,7 +804,7 @@ check_static_begin(tree_map_test_or_insert) {
     check(count(&rom).count, 1);
     int i = 0;
 
-    check(fill_n(&rom, size / 2, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size / 2, i, &allocator), CHECK_PASS);
 
     i += (size / 2);
     v = or_insert(
@@ -828,7 +828,7 @@ check_static_begin(tree_map_test_or_insert) {
     check(count(&rom).count, i + 2);
     ++i;
 
-    check(fill_n(&rom, size - i, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size - (size_t)i, i, &allocator), CHECK_PASS);
 
     i = size;
     v = or_insert(
@@ -879,7 +879,7 @@ check_static_begin(tree_map_test_or_insert_with) {
     check(count(&rom).count, 1);
     int i = 0;
 
-    check(fill_n(&rom, size / 2, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size / 2, i, &allocator), CHECK_PASS);
 
     i += (size / 2);
     v = tree_map_or_insert_with(
@@ -899,7 +899,7 @@ check_static_begin(tree_map_test_or_insert_with) {
     check(count(&rom).count, i + 2);
     ++i;
 
-    check(fill_n(&rom, size - i, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size - (size_t)i, i, &allocator), CHECK_PASS);
 
     i = size;
     v = tree_map_or_insert_with(
@@ -950,7 +950,7 @@ check_static_begin(tree_map_test_insert_entry) {
     check(count(&rom).count, 1);
     int i = 0;
 
-    check(fill_n(&rom, size / 2, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size / 2, i, &allocator), CHECK_PASS);
 
     i += (size / 2);
     v = insert_entry(
@@ -974,7 +974,7 @@ check_static_begin(tree_map_test_insert_entry) {
     check(count(&rom).count, i + 2);
     ++i;
 
-    check(fill_n(&rom, size - i, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size - (size_t)i, i, &allocator), CHECK_PASS);
 
     i = size;
     v = insert_entry(
@@ -1025,7 +1025,7 @@ check_static_begin(tree_map_test_insert_entry_with) {
     check(count(&rom).count, 1);
     int i = 0;
 
-    check(fill_n(&rom, size / 2, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size / 2, i, &allocator), CHECK_PASS);
 
     i += (size / 2);
     v = tree_map_insert_entry_with(
@@ -1045,7 +1045,7 @@ check_static_begin(tree_map_test_insert_entry_with) {
     check(count(&rom).count, i + 2);
     ++i;
 
-    check(fill_n(&rom, size - i, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size - (size_t)i, i, &allocator), CHECK_PASS);
 
     i = size;
     v = tree_map_insert_entry_with(
@@ -1093,7 +1093,7 @@ check_static_begin(tree_map_test_remove_entry) {
     check(count(&rom).count, 0);
     int i = 0;
 
-    check(fill_n(&rom, size / 2, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size / 2, i, &allocator), CHECK_PASS);
 
     i += (size / 2);
     v = or_insert(
@@ -1111,7 +1111,7 @@ check_static_begin(tree_map_test_remove_entry) {
     check(occupied(e), true);
     check(count(&rom).count, i);
 
-    check(fill_n(&rom, size - i, i, &allocator), CHECK_PASS);
+    check(fill_n(&rom, (size_t)size - (size_t)i, i, &allocator), CHECK_PASS);
 
     i = size;
     v = or_insert(

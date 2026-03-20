@@ -85,12 +85,12 @@ check_static_begin(array_adaptive_map_test_weak_srand) {
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[STANDARD_FIXED_CAP]){}
     );
-    srand(time(NULL)); /* NOLINT */
+    srand((unsigned)time(NULL)); /* NOLINT */
     int const num_nodes = 100;
     int id_keys[100];
     bool repeats[100] = {};
     for (int i = 0; i < num_nodes; ++i) {
-        int const rand_i = rand(); /* NOLINT */
+        int const rand_i = (int)rand(); /* NOLINT */
         if (occupied(array_adaptive_map_try_insert_wrap(
                 &s,
                 (&(struct Val){
@@ -123,12 +123,12 @@ check_static_begin(array_adaptive_map_test_insert_erase_cycles_no_allocate) {
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[STANDARD_FIXED_CAP]){}
     );
-    srand(time(NULL)); /* NOLINT */
+    srand((unsigned)time(NULL)); /* NOLINT */
     int const num_nodes = 100;
     int id_keys[100];
     bool repeats[100] = {};
     for (int i = 0; i < num_nodes; ++i) {
-        int const rand_i = rand(); /* NOLINT */
+        int const rand_i = (int)rand(); /* NOLINT */
         if (occupied(array_adaptive_map_insert_or_assign_wrap(
                 &s,
                 (&(struct Val){
@@ -174,12 +174,12 @@ check_static_begin(array_adaptive_map_test_insert_erase_cycles_allocate) {
     CCC_Array_adaptive_map s = array_adaptive_map_default(
         struct Val, id, (CCC_Key_comparator){.compare = id_order}
     );
-    srand(time(NULL)); /* NOLINT */
+    srand((unsigned)time(NULL)); /* NOLINT */
     int const num_nodes = 100;
     int id_keys[100];
     bool repeats[100] = {};
     for (int i = 0; i < num_nodes; ++i) {
-        int const rand_i = rand(); /* NOLINT */
+        int const rand_i = (int)rand(); /* NOLINT */
         if (occupied(array_adaptive_map_insert_or_assign_wrap(
                 &s,
                 (&(struct Val){

@@ -11,7 +11,7 @@ flat_hash_map_int_zero(CCC_Key_arguments const) {
 
 uint64_t
 flat_hash_map_int_last_digit(CCC_Key_arguments const n) {
-    return *((int *)n.key) % 10;
+    return (uint64_t)*((int *)n.key) % 10;
 }
 
 CCC_Order
@@ -24,7 +24,7 @@ flat_hash_map_id_order(CCC_Key_comparator_arguments const order) {
 uint64_t
 flat_hash_map_int_to_u64(CCC_Key_arguments const k) {
     int const id_int = *((int *)k.key);
-    uint64_t x = id_int;
+    uint64_t x = (uint64_t)id_int;
     x = (x ^ (x >> 30)) * UINT64_C(0xbf58476d1ce4e5b9);
     x = (x ^ (x >> 27)) * UINT64_C(0x94d049bb133111eb);
     x = x ^ (x >> 31);

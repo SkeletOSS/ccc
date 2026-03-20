@@ -38,7 +38,7 @@ check_static_begin(priority_queue_test_insert_remove_key_value_four_dups) {
             true
         );
         check(validate(&priority_queue), true);
-        size_t const size = i + 1;
+        size_t const size = (size_t)i + 1;
         check(CCC_priority_queue_count(&priority_queue).count, size);
     }
     check(CCC_priority_queue_count(&priority_queue).count, (size_t)4);
@@ -166,7 +166,7 @@ check_static_begin(priority_queue_test_delete_prime_shuffle_duplicates) {
         );
         check(pushed != NULL, true);
         check(validate(&queue), true);
-        size_t const s = i + 1;
+        size_t const s = (size_t)i + 1;
         check(CCC_priority_queue_count(&queue).count, s);
         /* Shuffle like this only on insertions to create more dups. */
         shuffled_index = (shuffled_index + prime) % (LARGE_CAP - less);
@@ -242,12 +242,12 @@ check_static_begin(priority_queue_test_weak_srand) {
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
-    srand(time(NULL));
+    srand((unsigned)time(NULL));
     for (int i = 0; i < WEAK_SRAND_HEAP_CAP; ++i) {
         struct Val const *const pushed = push(
             &queue,
             &(struct Val){
-                .val = rand(), /* NOLINT */
+                .val = (int)rand(), /* NOLINT */
                 .id = i,
             }
                  .elem,
@@ -275,7 +275,7 @@ check_static_begin(priority_queue_test_weak_srand_allocate) {
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
-    srand(time(NULL));
+    srand((unsigned)time(NULL));
     int const num_heap_nodes = 100;
     for (int i = 0; i < num_heap_nodes; ++i) {
         check(
@@ -283,7 +283,7 @@ check_static_begin(priority_queue_test_weak_srand_allocate) {
                 &queue,
                 &(struct Val){
                     .id = i,
-                    .val = rand() /*NOLINT*/,
+                    .val = (int)rand() /*NOLINT*/,
                 }
                      .elem,
                 &std_allocator

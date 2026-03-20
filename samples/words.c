@@ -55,11 +55,11 @@ struct Action_pack {
     SV_Str_view file;
     enum Action_type type;
     union {
-        int n;
+        size_t n;
         SV_Str_view w;
     };
     union {
-        void (*freq_fn)(FILE *file, int n, CCC_Allocator const *);
+        void (*freq_fn)(FILE *file, size_t n, CCC_Allocator const *);
         void (*find_fn)(FILE *file, SV_Str_view w, CCC_Allocator const *);
     };
 };
@@ -68,9 +68,6 @@ struct Action_pack {
 
 enum : size_t {
     ARENA_START_CAP = 4096,
-};
-
-enum : int {
     ALL_FREQUENCIES = 0,
 };
 
@@ -116,16 +113,16 @@ static SV_Str_view const directions = SV_from(
     } while (0)
 
 static void print_found(FILE *, SV_Str_view, CCC_Allocator const *);
-static void print_top_n(FILE *, int, CCC_Allocator const *);
-static void print_last_n(FILE *, int, CCC_Allocator const *);
-static void print_alpha_n(FILE *, int, CCC_Allocator const *);
-static void print_ralpha_n(FILE *, int, CCC_Allocator const *);
+static void print_top_n(FILE *, size_t, CCC_Allocator const *);
+static void print_last_n(FILE *, size_t, CCC_Allocator const *);
+static void print_alpha_n(FILE *, size_t, CCC_Allocator const *);
+static void print_ralpha_n(FILE *, size_t, CCC_Allocator const *);
 static Buffer map_to_buffer(Array_adaptive_map const *, CCC_Allocator const *);
 static void print_n(
     Array_adaptive_map *,
     CCC_Order,
     struct String_arena *,
-    int,
+    size_t,
     CCC_Allocator const *
 );
 static struct Int_conversion parse_n_ranks(SV_Str_view);
@@ -167,28 +164,28 @@ main(int argc, char *argv[]) {
             struct Int_conversion c = parse_n_ranks(sv_arg);
             check(c.status != CONV_ER,
                   logerr("cannot convert -top= flag to int"););
-            exe.n = c.conversion;
+            exe.n = (size_t)c.conversion;
         } else if (SV_starts_with(sv_arg, SV_from("-last="))) {
             exe.type = COUNT;
             exe.freq_fn = print_last_n;
             struct Int_conversion c = parse_n_ranks(sv_arg);
             check(c.status != CONV_ER,
                   logerr("cannot convert -last= flat to int"););
-            exe.n = c.conversion;
+            exe.n = (size_t)c.conversion;
         } else if (SV_starts_with(sv_arg, SV_from("-alph="))) {
             exe.type = COUNT;
             exe.freq_fn = print_alpha_n;
             struct Int_conversion c = parse_n_ranks(sv_arg);
             check(c.status != CONV_ER,
                   logerr("cannot convert -alph= flag to int"););
-            exe.n = c.conversion;
+            exe.n = (size_t)c.conversion;
         } else if (SV_starts_with(sv_arg, SV_from("-ralph="))) {
             exe.type = COUNT;
             exe.freq_fn = print_ralpha_n;
             struct Int_conversion c = parse_n_ranks(sv_arg);
             check(c.status != CONV_ER,
                   logerr("cannot convert -ralph= flat to int"););
-            exe.n = c.conversion;
+            exe.n = (size_t)c.conversion;
         } else if (SV_starts_with(sv_arg, SV_from("-find="))) {
             SV_Str_view const raw_word = SV_substr(
                 sv_arg, SV_find(sv_arg, 0, SV_from("=")) + 1, SV_len(sv_arg)
@@ -264,7 +261,7 @@ print_found(
 }
 
 static void
-print_top_n(FILE *const f, int n, CCC_Allocator const *const allocator) {
+print_top_n(FILE *const f, size_t n, CCC_Allocator const *const allocator) {
     struct String_arena a = string_arena_create(ARENA_START_CAP, allocator);
     Array_adaptive_map map = create_frequency_map(&a, f, allocator);
     defer {
@@ -277,7 +274,7 @@ print_top_n(FILE *const f, int n, CCC_Allocator const *const allocator) {
 }
 
 static void
-print_last_n(FILE *const f, int n, CCC_Allocator const *const allocator) {
+print_last_n(FILE *const f, size_t n, CCC_Allocator const *const allocator) {
     struct String_arena a = string_arena_create(ARENA_START_CAP, allocator);
     Array_adaptive_map map = create_frequency_map(&a, f, allocator);
     defer {
@@ -290,7 +287,7 @@ print_last_n(FILE *const f, int n, CCC_Allocator const *const allocator) {
 }
 
 static void
-print_alpha_n(FILE *const f, int n, CCC_Allocator const *const allocator) {
+print_alpha_n(FILE *const f, size_t n, CCC_Allocator const *const allocator) {
     struct String_arena a = string_arena_create(ARENA_START_CAP, allocator);
     Array_adaptive_map map = create_frequency_map(&a, f, allocator);
     defer {
@@ -302,7 +299,7 @@ print_alpha_n(FILE *const f, int n, CCC_Allocator const *const allocator) {
     if (!n) {
         n = count(&map).count;
     }
-    int i = 0;
+    size_t i = 0;
     /* The ordered nature of the map comes in handy for alpha printing. */
     for (CCC_Handle_index iter = begin(&map); iter != end(&map) && i < n;
          iter = next(&map, iter), ++i) {
@@ -312,7 +309,7 @@ print_alpha_n(FILE *const f, int n, CCC_Allocator const *const allocator) {
 }
 
 static void
-print_ralpha_n(FILE *const f, int n, CCC_Allocator const *const allocator) {
+print_ralpha_n(FILE *const f, size_t n, CCC_Allocator const *const allocator) {
     struct String_arena a = string_arena_create(ARENA_START_CAP, allocator);
     Array_adaptive_map map = create_frequency_map(&a, f, allocator);
     defer {
@@ -324,7 +321,7 @@ print_ralpha_n(FILE *const f, int n, CCC_Allocator const *const allocator) {
     if (!n) {
         n = count(&map).count;
     }
-    int i = 0;
+    size_t i = 0;
     /* The ordered nature of the map comes in handy for reverse iteration. */
     for (CCC_Handle_index iter = reverse_begin(&map);
          iter != reverse_end(&map) && i < n;
@@ -357,7 +354,7 @@ print_n(
     CCC_Array_adaptive_map *const map,
     CCC_Order const order,
     struct String_arena *const arena,
-    int n,
+    size_t n,
     CCC_Allocator const *const allocator
 ) {
     Buffer freqs = map_to_buffer(map, allocator);
@@ -378,12 +375,12 @@ print_n(
         }
     );
     check(result == CCC_RESULT_OK);
-    int w = 0;
+    size_t w = 0;
     for (Word const *i = begin(&freqs); i != end(&freqs) && w < n;
          i = next(&freqs, i), ++w) {
         char const *const arena_str = string_arena_at(arena, &i->ofs);
         if (arena_str) {
-            printf("%d. %s %d\n", w + 1, arena_str, i->freq);
+            printf("%zu. %s %d\n", w + 1, arena_str, i->freq);
         }
     }
 }
@@ -408,7 +405,7 @@ create_frequency_map(
         }
     );
     while ((read = getline(&linepointer, &len, f)) > 0) {
-        SV_Str_view const line = {.str = linepointer, .len = read - 1};
+        SV_Str_view const line = {.str = linepointer, .len = (size_t)read - 1};
         for (SV_Str_view word_view = SV_token_begin(line, space);
              !SV_token_end(line, word_view);
              word_view = SV_token_next(line, word_view, space)) {

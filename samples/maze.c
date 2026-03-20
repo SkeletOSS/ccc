@@ -176,7 +176,7 @@ main(int argc, char **argv) {
     /* Randomness will be used throughout the program but it need not be
        perfect. It only helps build the maze.
        NOLINTNEXTLINE(cert-msc32-c, cert-msc51-cpp) */
-    srand(time(NULL));
+    srand((unsigned)time(NULL));
     struct Maze maze = {
         .rows = DEFAULT_ROWS,
         .cols = DEFAULT_COLS,
@@ -206,7 +206,7 @@ main(int argc, char **argv) {
                 quit("speed outside of valid range.\n", 1);
                 return 1;
             }
-            maze.speed = speed_arg.conversion;
+            maze.speed = (enum Animation_speed)speed_arg.conversion;
         } else if (SV_starts_with(arg, help_flag)) {
             help();
             return 0;
@@ -221,7 +221,7 @@ main(int argc, char **argv) {
     /* This type of maze generation requires odd rows and cols. */
     maze.rows = maze.rows + (maze.rows % 2 == 0);
     maze.cols = maze.cols + (maze.cols % 2 == 0);
-    maze.maze = calloc((size_t)maze.rows * maze.cols, sizeof(uint16_t));
+    maze.maze = calloc((size_t)maze.rows * (size_t)maze.cols, sizeof(uint16_t));
     defer {
         free(maze.maze);
     }
@@ -252,7 +252,7 @@ animate_maze(struct Maze *maze, CCC_Allocator const *const allocator) {
     int const speed = speeds[maze->speed];
     fill_maze_with_walls(maze);
     clear_and_flush_maze(maze);
-    size_t const capacity = ((maze->rows * maze->cols) / 2) + 1;
+    size_t const capacity = (size_t)((maze->rows * maze->cols) / 2) + 1;
     struct Prim_cell const start = (struct Prim_cell){
         .cell = rand_point(maze),
         .cost = rand_range(0, 100),
@@ -338,13 +338,13 @@ prim_cell_key_order(Key_comparator_arguments const c) {
 static uint64_t
 prim_cell_hash_fn(Key_arguments const k) {
     struct Prim_cell const *const p = k.key;
-    uint64_t const wr = p->cell.r;
+    uint64_t const wr = (uint64_t)p->cell.r;
     static_assert(
         sizeof((struct Point){}.r) * CHAR_BIT == 32,
         "hashing a row and column requires shifting half the size of "
         "the hash code"
     );
-    return hash_64_bits((wr << 31) | p->cell.c);
+    return hash_64_bits((wr << 31) | (uint64_t)p->cell.c);
 }
 
 static inline uint64_t

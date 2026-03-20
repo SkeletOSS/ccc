@@ -776,9 +776,10 @@ index_of(
 ) {
     assert(position >= CCC_buffer_begin(&queue->buffer));
     assert(position < CCC_buffer_capacity_end(&queue->buffer));
-    return (size_t)(((char *)position
-                     - (char *)CCC_buffer_begin(&queue->buffer))
-                    / queue->buffer.sizeof_type);
+    return (
+        (size_t)((char *)position - (char *)CCC_buffer_begin(&queue->buffer))
+        / queue->buffer.sizeof_type
+    );
 }
 
 static inline void *

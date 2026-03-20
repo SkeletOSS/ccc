@@ -296,7 +296,7 @@ check_static_begin(flat_hash_map_test_insert_via_entry_macros) {
     for (size_t i = 0; i < size / 2; i += 2) {
         struct Val const *const d = insert_entry(
             flat_hash_map_entry_wrap(&fh, &i, &(CCC_Allocator){}),
-            &(struct Val){i, i}
+            &(struct Val){(int)i, (int)i}
         );
         check((d != NULL), true);
         check(d->key, i);
@@ -307,7 +307,7 @@ check_static_begin(flat_hash_map_test_insert_via_entry_macros) {
     for (size_t i = 0; i < size / 2; ++i) {
         struct Val const *const d = insert_entry(
             flat_hash_map_entry_wrap(&fh, &i, &(CCC_Allocator){}),
-            &(struct Val){i, i + 1}
+            &(struct Val){(int)i, (int)i + 1}
         );
         /* All values in the array should be odd now */
         check((d != NULL), true);
@@ -407,7 +407,9 @@ check_static_begin(flat_hash_map_test_two_sum) {
             break;
         }
         CCC_Entry const e = insert_or_assign(
-            &fh, &(struct Val){.key = addends[i], .val = i}, &(CCC_Allocator){}
+            &fh,
+            &(struct Val){.key = addends[i], .val = (int)i},
+            &(CCC_Allocator){}
         );
         check(insert_error(&e), false);
     }

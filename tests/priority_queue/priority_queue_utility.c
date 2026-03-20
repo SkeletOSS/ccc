@@ -36,12 +36,14 @@ check_begin(
        random but a repeatable sequence that makes it
        easier to debug if something goes wrong. Think
        of the prime number as a random seed, kind of. */
-    size_t shuffled_index = larger_prime % size;
+    size_t shuffled_index = (size_t)larger_prime % size;
     for (size_t i = 0; i < size; ++i) {
-        (void)push(queue, &(struct Val){.val = shuffled_index}.elem, allocator);
+        (void)push(
+            queue, &(struct Val){.val = (int)shuffled_index}.elem, allocator
+        );
         check(count(queue).count, i + 1);
         check(validate(queue), true);
-        shuffled_index = (shuffled_index + larger_prime) % size;
+        shuffled_index = (shuffled_index + (size_t)larger_prime) % size;
     }
     check(count(queue).count, size);
     check_end();

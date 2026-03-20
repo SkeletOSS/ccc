@@ -114,7 +114,10 @@ check_static_begin(array_tree_map_test_insert) {
     check(v->id, -1);
     int i = 0;
 
-    check(fill_n(&array_tree_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(&array_tree_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
+    );
 
     i += (size / 2);
     hndl = swap_handle(
@@ -135,7 +138,12 @@ check_static_begin(array_tree_map_test_insert) {
     check(v->id, i);
     ++i;
 
-    check(fill_n(&array_tree_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(
+            &array_tree_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
+    );
 
     i = size;
     hndl = swap_handle(
@@ -184,7 +192,10 @@ check_static_begin(array_tree_map_test_remove_key_value) {
     check(old.val, -1);
     int i = 0;
 
-    check(fill_n(&array_tree_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(&array_tree_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
+    );
 
     i += (size / 2);
     hndl = CCC_remove_key_value(
@@ -207,7 +218,12 @@ check_static_begin(array_tree_map_test_remove_key_value) {
     check(old.val, i);
     check(old.id, i);
 
-    check(fill_n(&array_tree_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(
+            &array_tree_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
+    );
 
     i = size;
     hndl = CCC_remove_key_value(
@@ -257,7 +273,10 @@ check_static_begin(array_tree_map_test_try_insert) {
     check(v->id, -1);
     int i = 0;
 
-    check(fill_n(&array_tree_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(&array_tree_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
+    );
 
     i += (size / 2);
     hndl = try_insert(
@@ -278,7 +297,12 @@ check_static_begin(array_tree_map_test_try_insert) {
     check(v->id, i);
     ++i;
 
-    check(fill_n(&array_tree_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(
+            &array_tree_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
+    );
 
     i = size;
     hndl = try_insert(
@@ -324,7 +348,10 @@ check_static_begin(array_tree_map_test_try_insert_with) {
     check(v->id, -1);
     int i = 0;
 
-    check(fill_n(&array_tree_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(&array_tree_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
+    );
 
     i += (size / 2);
     hndl = array_tree_map_try_insert_with(
@@ -345,7 +372,12 @@ check_static_begin(array_tree_map_test_try_insert_with) {
     check(v->id, i);
     ++i;
 
-    check(fill_n(&array_tree_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(
+            &array_tree_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
+    );
 
     i = size;
     hndl = array_tree_map_try_insert_with(
@@ -392,7 +424,10 @@ check_static_begin(array_tree_map_test_insert_or_assign) {
     check(v->id, -1);
     int i = 0;
 
-    check(fill_n(&array_tree_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(&array_tree_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
+    );
 
     i += (size / 2);
     hndl = insert_or_assign(
@@ -414,7 +449,12 @@ check_static_begin(array_tree_map_test_insert_or_assign) {
     check(v->id, i);
     ++i;
 
-    check(fill_n(&array_tree_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(
+            &array_tree_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
+    );
 
     i = size;
     hndl = insert_or_assign(
@@ -463,7 +503,10 @@ check_static_begin(array_tree_map_test_insert_or_assign_with) {
     check(v->id, -1);
     int i = 0;
 
-    check(fill_n(&array_tree_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(&array_tree_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
+    );
 
     i += (size / 2);
     hndl = array_tree_map_insert_or_assign_with(
@@ -483,7 +526,12 @@ check_static_begin(array_tree_map_test_insert_or_assign_with) {
     check(v->id, i);
     ++i;
 
-    check(fill_n(&array_tree_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(
+            &array_tree_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
+    );
 
     i = size;
     hndl = array_tree_map_insert_or_assign_with(
@@ -538,7 +586,10 @@ check_static_begin(array_tree_map_test_array_and_modify) {
     check(v->val, 0);
     int i = 0;
 
-    check(fill_n(&array_tree_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(&array_tree_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
+    );
 
     i += (size / 2);
     hndl = array_tree_map_handle_wrap(&array_tree_map, &i);
@@ -558,7 +609,12 @@ check_static_begin(array_tree_map_test_array_and_modify) {
     check(v->id, i);
     ++i;
 
-    check(fill_n(&array_tree_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(
+            &array_tree_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
+    );
 
     i = size;
     hndl = array_tree_map_handle_wrap(&array_tree_map, &i);
@@ -614,7 +670,10 @@ check_static_begin(array_tree_map_test_array_and_context_modify) {
     check(v->val, 0);
     int i = 0;
 
-    check(fill_n(&array_tree_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(&array_tree_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
+    );
 
     i += (size / 2);
     hndl = array_tree_map_handle_wrap(&array_tree_map, &i);
@@ -638,7 +697,12 @@ check_static_begin(array_tree_map_test_array_and_context_modify) {
     check(count(&array_tree_map).count, i + 2);
     ++i;
 
-    check(fill_n(&array_tree_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(
+            &array_tree_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
+    );
 
     i = size;
     hndl = array_tree_map_handle_wrap(&array_tree_map, &i);
@@ -693,7 +757,10 @@ check_static_begin(array_tree_map_test_array_and_modify_with) {
     check(count(&array_tree_map).count, 1);
     int i = 0;
 
-    check(fill_n(&array_tree_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(&array_tree_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
+    );
 
     i += (size / 2);
     hndl = array_tree_map_handle_wrap(&array_tree_map, &i);
@@ -713,7 +780,12 @@ check_static_begin(array_tree_map_test_array_and_modify_with) {
     check(count(&array_tree_map).count, i + 2);
     ++i;
 
-    check(fill_n(&array_tree_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(
+            &array_tree_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
+    );
 
     i = size;
     hndl = array_tree_map_handle_wrap(&array_tree_map, &i);
@@ -768,7 +840,10 @@ check_static_begin(array_tree_map_test_or_insert) {
     check(count(&array_tree_map).count, 1);
     int i = 0;
 
-    check(fill_n(&array_tree_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(&array_tree_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
+    );
 
     i += (size / 2);
     v = array_tree_map_at(
@@ -798,7 +873,12 @@ check_static_begin(array_tree_map_test_or_insert) {
     check(count(&array_tree_map).count, i + 2);
     ++i;
 
-    check(fill_n(&array_tree_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(
+            &array_tree_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
+    );
 
     i = size;
     v = array_tree_map_at(
@@ -863,7 +943,10 @@ check_static_begin(array_tree_map_test_or_insert_with) {
     check(count(&array_tree_map).count, 1);
     int i = 0;
 
-    check(fill_n(&array_tree_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(&array_tree_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
+    );
 
     i += (size / 2);
     v = array_tree_map_at(
@@ -893,7 +976,12 @@ check_static_begin(array_tree_map_test_or_insert_with) {
     check(count(&array_tree_map).count, i + 2);
     ++i;
 
-    check(fill_n(&array_tree_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(
+            &array_tree_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
+    );
 
     i = size;
     v = array_tree_map_at(
@@ -958,7 +1046,10 @@ check_static_begin(array_tree_map_test_insert_handle) {
     check(count(&array_tree_map).count, 1);
     int i = 0;
 
-    check(fill_n(&array_tree_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(&array_tree_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
+    );
 
     i += (size / 2);
     v = array_tree_map_at(
@@ -988,7 +1079,12 @@ check_static_begin(array_tree_map_test_insert_handle) {
     check(count(&array_tree_map).count, i + 2);
     ++i;
 
-    check(fill_n(&array_tree_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(
+            &array_tree_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
+    );
 
     i = size;
     v = array_tree_map_at(
@@ -1053,7 +1149,10 @@ check_static_begin(array_tree_map_test_insert_handle_with) {
     check(count(&array_tree_map).count, 1);
     int i = 0;
 
-    check(fill_n(&array_tree_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(&array_tree_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
+    );
 
     i += (size / 2);
     v = array_tree_map_at(
@@ -1083,7 +1182,12 @@ check_static_begin(array_tree_map_test_insert_handle_with) {
     check(count(&array_tree_map).count, i + 2);
     ++i;
 
-    check(fill_n(&array_tree_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(
+            &array_tree_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
+    );
 
     i = size;
     v = array_tree_map_at(
@@ -1146,7 +1250,10 @@ check_static_begin(array_tree_map_test_remove_handle) {
     check(count(&array_tree_map).count, 0);
     int i = 0;
 
-    check(fill_n(&array_tree_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(&array_tree_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
+    );
 
     i += (size / 2);
     v = array_tree_map_at(
@@ -1173,7 +1280,12 @@ check_static_begin(array_tree_map_test_remove_handle) {
     check(v->val, i);
     check(count(&array_tree_map).count, i);
 
-    check(fill_n(&array_tree_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS);
+    check(
+        fill_n(
+            &array_tree_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
+    );
 
     i = size;
     v = array_tree_map_at(

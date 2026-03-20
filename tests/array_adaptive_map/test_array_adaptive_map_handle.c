@@ -126,7 +126,8 @@ check_static_begin(array_adaptive_map_test_insert) {
     int i = 0;
 
     check(
-        fill_n(&array_adaptive_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(&array_adaptive_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
     );
 
     i += (size / 2);
@@ -153,7 +154,10 @@ check_static_begin(array_adaptive_map_test_insert) {
     ++i;
 
     check(
-        fill_n(&array_adaptive_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(
+            &array_adaptive_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
     );
 
     i = size;
@@ -210,7 +214,8 @@ check_static_begin(array_adaptive_map_test_remove_key_value) {
     int i = 0;
 
     check(
-        fill_n(&array_adaptive_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(&array_adaptive_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
     );
 
     i += (size / 2);
@@ -237,7 +242,10 @@ check_static_begin(array_adaptive_map_test_remove_key_value) {
     check(old.id, i);
 
     check(
-        fill_n(&array_adaptive_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(
+            &array_adaptive_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
     );
 
     i = size;
@@ -295,7 +303,8 @@ check_static_begin(array_adaptive_map_test_try_insert) {
     int i = 0;
 
     check(
-        fill_n(&array_adaptive_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(&array_adaptive_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
     );
 
     i += (size / 2);
@@ -322,7 +331,10 @@ check_static_begin(array_adaptive_map_test_try_insert) {
     ++i;
 
     check(
-        fill_n(&array_adaptive_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(
+            &array_adaptive_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
     );
 
     i = size;
@@ -374,7 +386,8 @@ check_static_begin(array_adaptive_map_test_try_insert_with) {
     int i = 0;
 
     check(
-        fill_n(&array_adaptive_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(&array_adaptive_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
     );
 
     i += (size / 2);
@@ -397,7 +410,10 @@ check_static_begin(array_adaptive_map_test_try_insert_with) {
     ++i;
 
     check(
-        fill_n(&array_adaptive_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(
+            &array_adaptive_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
     );
 
     i = size;
@@ -450,7 +466,8 @@ check_static_begin(array_adaptive_map_test_insert_or_assign) {
     int i = 0;
 
     check(
-        fill_n(&array_adaptive_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(&array_adaptive_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
     );
 
     i += (size / 2);
@@ -476,7 +493,10 @@ check_static_begin(array_adaptive_map_test_insert_or_assign) {
     ++i;
 
     check(
-        fill_n(&array_adaptive_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(
+            &array_adaptive_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
     );
 
     i = size;
@@ -529,7 +549,8 @@ check_static_begin(array_adaptive_map_test_insert_or_assign_with) {
     int i = 0;
 
     check(
-        fill_n(&array_adaptive_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(&array_adaptive_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
     );
 
     i += (size / 2);
@@ -551,7 +572,10 @@ check_static_begin(array_adaptive_map_test_insert_or_assign_with) {
     ++i;
 
     check(
-        fill_n(&array_adaptive_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(
+            &array_adaptive_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
     );
 
     i = size;
@@ -608,7 +632,8 @@ check_static_begin(array_adaptive_map_test_array_and_modify) {
     int i = 0;
 
     check(
-        fill_n(&array_adaptive_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(&array_adaptive_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
     );
 
     i += (size / 2);
@@ -630,7 +655,10 @@ check_static_begin(array_adaptive_map_test_array_and_modify) {
     ++i;
 
     check(
-        fill_n(&array_adaptive_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(
+            &array_adaptive_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
     );
 
     i = size;
@@ -696,7 +724,8 @@ check_static_begin(array_adaptive_map_test_array_and_context_modify) {
     int i = 0;
 
     check(
-        fill_n(&array_adaptive_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(&array_adaptive_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
     );
 
     i += (size / 2);
@@ -730,7 +759,10 @@ check_static_begin(array_adaptive_map_test_array_and_context_modify) {
     ++i;
 
     check(
-        fill_n(&array_adaptive_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(
+            &array_adaptive_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
     );
 
     i = size;
@@ -795,7 +827,8 @@ check_static_begin(array_adaptive_map_test_array_and_modify_with) {
     int i = 0;
 
     check(
-        fill_n(&array_adaptive_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(&array_adaptive_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
     );
 
     i += (size / 2);
@@ -817,7 +850,10 @@ check_static_begin(array_adaptive_map_test_array_and_modify_with) {
     ++i;
 
     check(
-        fill_n(&array_adaptive_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(
+            &array_adaptive_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
     );
 
     i = size;
@@ -874,7 +910,8 @@ check_static_begin(array_adaptive_map_test_or_insert) {
     int i = 0;
 
     check(
-        fill_n(&array_adaptive_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(&array_adaptive_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
     );
 
     i += (size / 2);
@@ -906,7 +943,10 @@ check_static_begin(array_adaptive_map_test_or_insert) {
     ++i;
 
     check(
-        fill_n(&array_adaptive_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(
+            &array_adaptive_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
     );
 
     i = size;
@@ -973,7 +1013,8 @@ check_static_begin(array_adaptive_map_test_or_insert_with) {
     int i = 0;
 
     check(
-        fill_n(&array_adaptive_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(&array_adaptive_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
     );
 
     i += (size / 2);
@@ -1005,7 +1046,10 @@ check_static_begin(array_adaptive_map_test_or_insert_with) {
     ++i;
 
     check(
-        fill_n(&array_adaptive_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(
+            &array_adaptive_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
     );
 
     i = size;
@@ -1072,7 +1116,8 @@ check_static_begin(array_adaptive_map_test_insert_handle) {
     int i = 0;
 
     check(
-        fill_n(&array_adaptive_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(&array_adaptive_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
     );
 
     i += (size / 2);
@@ -1104,7 +1149,10 @@ check_static_begin(array_adaptive_map_test_insert_handle) {
     ++i;
 
     check(
-        fill_n(&array_adaptive_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(
+            &array_adaptive_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
     );
 
     i = size;
@@ -1171,7 +1219,8 @@ check_static_begin(array_adaptive_map_test_insert_handle_with) {
     int i = 0;
 
     check(
-        fill_n(&array_adaptive_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(&array_adaptive_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
     );
 
     i += (size / 2);
@@ -1203,7 +1252,10 @@ check_static_begin(array_adaptive_map_test_insert_handle_with) {
     ++i;
 
     check(
-        fill_n(&array_adaptive_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(
+            &array_adaptive_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
     );
 
     i = size;
@@ -1268,7 +1320,8 @@ check_static_begin(array_adaptive_map_test_remove_handle) {
     int i = 0;
 
     check(
-        fill_n(&array_adaptive_map, size / 2, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(&array_adaptive_map, (size_t)size / 2, i, &(CCC_Allocator){}),
+        CHECK_PASS
     );
 
     i += (size / 2);
@@ -1297,7 +1350,10 @@ check_static_begin(array_adaptive_map_test_remove_handle) {
     check(count(&array_adaptive_map).count, i);
 
     check(
-        fill_n(&array_adaptive_map, size - i, i, &(CCC_Allocator){}), CHECK_PASS
+        fill_n(
+            &array_adaptive_map, (size_t)size - (size_t)i, i, &(CCC_Allocator){}
+        ),
+        CHECK_PASS
     );
 
     i = size;

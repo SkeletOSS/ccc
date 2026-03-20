@@ -343,7 +343,7 @@ check_static_begin(array_tree_map_test_insert_via_array_macros) {
             &map,
             insert_handle(
                 array_tree_map_handle_wrap(&map, &i),
-                &(struct Val){i, i},
+                &(struct Val){(int)i, (int)i},
                 &(CCC_Allocator){}
             )
         );
@@ -358,7 +358,7 @@ check_static_begin(array_tree_map_test_insert_via_array_macros) {
             &map,
             insert_handle(
                 array_tree_map_handle_wrap(&map, &i),
-                &(struct Val){i, i + 1},
+                &(struct Val){(int)i, (int)i + 1},
                 &(CCC_Allocator){}
             )
         );
@@ -467,7 +467,9 @@ check_static_begin(array_tree_map_test_two_sum) {
             break;
         }
         CCC_Handle const e = insert_or_assign(
-            &map, &(struct Val){.id = addends[i], .val = i}, &(CCC_Allocator){}
+            &map,
+            &(struct Val){.id = addends[i], .val = (int)i},
+            &(CCC_Allocator){}
         );
         check(insert_error(&e), false);
     }
@@ -870,12 +872,12 @@ check_static_begin(array_tree_map_test_insert_weak_srand) {
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[STANDARD_FIXED_CAP]){}
     );
-    srand(time(NULL)); /* NOLINT */
+    srand((unsigned)time(NULL)); /* NOLINT */
     for (int i = 0; i < num_nodes; ++i) {
         CCC_Handle const e = swap_handle(
             &map,
             &(struct Val){
-                .id = rand() /* NOLINT */,
+                .id = (int)rand() /* NOLINT */,
                 .val = i,
             },
             &(CCC_Allocator){}

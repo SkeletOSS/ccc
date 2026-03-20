@@ -302,8 +302,8 @@ check_static_begin(adaptive_map_test_insert_via_entry_macros) {
         struct Val const *const d = insert_entry(
             adaptive_map_entry_wrap(&om, &i),
             &(struct Val){
-                .key = i,
-                .val = i,
+                .key = (int)i,
+                .val = (int)i,
             }
                  .elem,
             &allocator
@@ -318,8 +318,8 @@ check_static_begin(adaptive_map_test_insert_via_entry_macros) {
         struct Val const *const d = insert_entry(
             adaptive_map_entry_wrap(&om, &i),
             &(struct Val){
-                .key = i,
-                .val = i + 1,
+                .key = (int)i,
+                .val = (int)i + 1,
             }
                  .elem,
             &allocator
@@ -423,7 +423,9 @@ check_static_begin(adaptive_map_test_two_sum) {
             break;
         }
         CCC_Entry const e = insert_or_assign(
-            &om, &(struct Val){.key = addends[i], .val = i}.elem, &allocator
+            &om,
+            &(struct Val){.key = addends[i], .val = (int)i}.elem,
+            &allocator
         );
         check(insert_error(&e), false);
     }
@@ -498,12 +500,12 @@ check_static_begin(adaptive_map_test_insert_weak_srand) {
     Adaptive_map om = adaptive_map_default(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
-    srand(time(NULL)); /* NOLINT */
+    srand((unsigned)time(NULL)); /* NOLINT */
     for (int i = 0; i < num_nodes; ++i) {
         CCC_Entry const e = swap_entry(
             &om,
             &(struct Val){
-                .key = rand() /* NOLINT */,
+                .key = (int)rand() /* NOLINT */,
                 .val = i,
             }
                  .elem,

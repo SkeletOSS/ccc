@@ -97,14 +97,14 @@ check_static_begin(adaptive_map_test_weak_srand) {
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
-    srand(time(NULL));
+    srand((unsigned)time(NULL));
     int const num_nodes = 100;
     bool repeats[100] = {};
     for (int i = 0; i < num_nodes; ++i) {
         if (occupied(adaptive_map_insert_or_assign_wrap(
                 &s,
                 (&(struct Val){
-                    .key = rand(), /* NOLINT */
+                    .key = (int)rand(), /* NOLINT */
                     .val = i,
                 }
                       .elem),
@@ -134,12 +134,12 @@ check_static_begin(adaptive_map_test_insert_erase_cycles) {
     Adaptive_map s = adaptive_map_default(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
-    srand(time(NULL)); /* NOLINT */
+    srand((unsigned)time(NULL)); /* NOLINT */
     int const num_nodes = 100;
     int keys[100] = {};
     bool repeats[100] = {};
     for (int i = 0; i < num_nodes; ++i) {
-        keys[i] = rand(); /* NOLINT */
+        keys[i] = (int)rand(); /* NOLINT */
         if (occupied(adaptive_map_insert_or_assign_wrap(
                 &s,
                 &(struct Val){

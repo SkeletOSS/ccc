@@ -426,9 +426,13 @@ CCC_buffer_index(CCC_Buffer const *const buffer, void const *const slot) {
                    + (buffer->capacity * buffer->sizeof_type))) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
+    assert(
+        slot >= buffer->data && "positive pointer difference is caught at entry"
+    );
     return (CCC_Count){
         .count
-        = (((char *)slot - ((char *)buffer->data)) / buffer->sizeof_type),
+        = ((size_t)((char *)slot - ((char *)buffer->data))
+           / buffer->sizeof_type),
     };
 }
 

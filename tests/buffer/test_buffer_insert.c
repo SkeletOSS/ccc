@@ -210,7 +210,7 @@ check_static_begin(buffer_test_insert_allocate) {
 int
 main(void) {
     /* NOLINTNEXTLINE Random only needs to be seeded once. */
-    srand(time(NULL));
+    srand((unsigned)time(NULL));
     return check_run(
         buffer_test_push_fixed(),
         buffer_test_push_resize(),

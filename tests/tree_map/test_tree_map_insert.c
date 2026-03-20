@@ -296,7 +296,7 @@ check_static_begin(tree_map_test_insert_via_entry_macros) {
     for (size_t i = 0; i < size / 2; i += 2) {
         struct Val const *const d = insert_entry(
             tree_map_entry_wrap(&rom, &i),
-            &(struct Val){i, i, {}}.elem,
+            &(struct Val){(int)i, (int)i, {}}.elem,
             &allocator
         );
         check((d != NULL), true);
@@ -308,7 +308,7 @@ check_static_begin(tree_map_test_insert_via_entry_macros) {
     for (size_t i = 0; i < size / 2; ++i) {
         struct Val const *const d = insert_entry(
             tree_map_entry_wrap(&rom, &i),
-            &(struct Val){i, i + 1, {}}.elem,
+            &(struct Val){(int)i, (int)i + 1, {}}.elem,
             &allocator
         );
         /* All values in the array should be odd now */
@@ -406,7 +406,9 @@ check_static_begin(tree_map_test_two_sum) {
             break;
         }
         CCC_Entry const e = insert_or_assign(
-            &rom, &(struct Val){.key = addends[i], .val = i}.elem, &allocator
+            &rom,
+            &(struct Val){.key = addends[i], .val = (int)i}.elem,
+            &allocator
         );
         check(insert_error(&e), false);
     }
@@ -483,12 +485,12 @@ check_static_begin(tree_map_test_insert_weak_srand) {
     CCC_Tree_map rom = tree_map_for(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
-    srand(time(NULL)); /* NOLINT */
+    srand((unsigned)time(NULL)); /* NOLINT */
     for (int i = 0; i < num_nodes; ++i) {
         CCC_Entry const e = swap_entry(
             &rom,
             &(struct Val){
-                .key = rand() /* NOLINT */,
+                .key = (int)rand() /* NOLINT */,
                 .val = i,
             }
                  .elem,

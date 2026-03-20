@@ -29,8 +29,8 @@ val_update(CCC_Arguments const u) {
 
 size_t
 rand_range(size_t const min, size_t const max) {
-    /* NOLINTNEXTLINE */
-    return min + (rand() / (RAND_MAX / (max - min + 1) + 1));
+    /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+    return min + ((size_t)rand() / (RAND_MAX / (max - min + 1) + 1));
 }
 
 check_begin(
@@ -45,7 +45,7 @@ check_begin(
        random but a repeatable sequence that makes it
        easier to debug if something goes wrong. Think
        of the prime number as a random seed, kind of. */
-    size_t shuffled_index = larger_prime % size;
+    size_t shuffled_index = (size_t)larger_prime % size;
     for (size_t i = 0; i < size; ++i) {
         check(
             push(
@@ -61,7 +61,7 @@ check_begin(
         );
         check(CCC_flat_priority_queue_count(priority_queue).count, i + 1);
         check(validate(priority_queue), true);
-        shuffled_index = (shuffled_index + larger_prime) % size;
+        shuffled_index = (shuffled_index + (size_t)larger_prime) % size;
     }
     check(CCC_flat_priority_queue_count(priority_queue).count, size);
     check_end();

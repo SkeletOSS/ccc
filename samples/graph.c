@@ -323,7 +323,7 @@ int
 main(int argc, char **argv) {
     /* Randomness will be used throughout the program but it need not be
        perfect. It only helps build graphs. */
-    srand(time(NULL)); /* NOLINT */
+    srand((unsigned)time(NULL)); /* NOLINT */
     struct Graph graph = {
         .rows = DEFAULT_ROWS,
         .cols = DEFAULT_COLS,
@@ -380,7 +380,7 @@ main(int argc, char **argv) {
         quit("graph rows or cols is 0.\n", 1);
         return 1;
     }
-    graph.grid = calloc((size_t)graph.rows * graph.cols, sizeof(Cell));
+    graph.grid = calloc((size_t)graph.rows * (size_t)graph.cols, sizeof(Cell));
     defer {
         free(graph.grid);
     }
@@ -548,7 +548,7 @@ add_edge_cost_label(
     /* Add a two space Buffer to either side of the label so direction of lines
        is not lost to writing of digits. Otherwise it would be unclear which
        edge a cost is associated with if close to other costs. */
-    size_t const spaces_needed_for_cost = count_digits(e->n.cost) + 2;
+    size_t const spaces_needed_for_cost = count_digits((size_t)e->n.cost) + 2;
     size_t consecutive_spaces_found = 0;
     enum Label_orientation direction = NORTH;
     while (cur.r != e->pos.r || cur.c != e->pos.c) {
@@ -598,7 +598,8 @@ encode_digits(struct Graph const *const g, struct Digit_encoding *const e) {
         e->start.r = e->orientation == NORTH
                        ? e->start.r + (int)e->spaces_needed - 2
                        : e->start.r - 1;
-        for (uintmax_t digits = e->cost; digits; digits /= 10, --e->start.r) {
+        for (uintmax_t digits = (uintmax_t)e->cost; digits;
+             digits /= 10, --e->start.r) {
             *grid_at_mut(g, e->start.r, e->start.c) |= DIGIT_BIT;
             *grid_at_mut(g, e->start.r, e->start.c)
                 |= ((digits % 10) << DIGIT_SHIFT);
@@ -607,7 +608,8 @@ encode_digits(struct Graph const *const g, struct Digit_encoding *const e) {
         e->start.c = e->orientation == WEST
                        ? e->start.c + (int)e->spaces_needed - 2
                        : e->start.c - 1;
-        for (uintmax_t digits = e->cost; digits; digits /= 10, --e->start.c) {
+        for (uintmax_t digits = (uintmax_t)e->cost; digits;
+             digits /= 10, --e->start.c) {
             *grid_at_mut(g, e->start.r, e->start.c) |= DIGIT_BIT;
             *grid_at_mut(g, e->start.r, e->start.c)
                 |= ((digits % 10) << DIGIT_SHIFT);
@@ -702,7 +704,7 @@ find_shortest_paths(struct Graph *const graph) {
                 graph,
                 (SV_Str_view){
                     .str = linepointer,
-                    .len = read - 1,
+                    .len = (size_t)read - 1,
                 }
             );
             if (pr.source == 'q') {
@@ -904,7 +906,7 @@ vertex_degree(struct Vertex const *const v) {
 
 static inline Cell
 make_edge(char const source, char const destination) {
-    return sort_vertices(source, destination) << EDGE_ID_SHIFT;
+    return (Cell)sort_vertices(source, destination) << EDGE_ID_SHIFT;
 }
 
 static inline Cell *
@@ -919,7 +921,8 @@ grid_at(struct Graph const *const graph, int const r, int const c) {
 
 static inline uint16_t
 sort_vertices(char const a, char const b) {
-    return a < b ? (a << 8) | b : (b << 8) | a;
+    return a < b ? (uint16_t)(a << 8) | (uint16_t)b
+                 : (uint16_t)(b << 8) | (uint16_t)a;
 }
 
 static char
@@ -1088,8 +1091,8 @@ order_parent_cells(Key_comparator_arguments const c) {
 static uint64_t
 hash_parent_cells(Key_arguments const point_struct) {
     struct Point const *const p = point_struct.key;
-    uint64_t const wr = p->r;
-    return hash_64_bits((wr << 31) | p->c);
+    uint64_t const wr = (uint64_t)p->r;
+    return hash_64_bits((wr << 31) | (uint64_t)p->c);
 }
 
 static Order

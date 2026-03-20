@@ -154,7 +154,7 @@ though the braces are not required. */
     do {                                                                       \
         const __auto_type check_private_result = (test_result);                \
         const typeof(check_private_result) check_private_expected              \
-            = (test_expected);                                                 \
+            = (typeof(check_private_result))(test_expected);                   \
         if (check_private_result != check_private_expected) {                  \
             check_fail_print(                                                  \
                 check_private_result,                                          \

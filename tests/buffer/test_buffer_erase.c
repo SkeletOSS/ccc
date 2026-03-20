@@ -80,12 +80,12 @@ check_static_begin(buffer_test_daily_temperatures) {
     Buffer idx_stack = buffer_with_storage(0, (int[TMPCAP]){});
     for (int i = 0, end = (int)buffer_count(&temps).count; i < end; ++i) {
         while (!buffer_is_empty(&idx_stack)
-               && *buffer_as(&temps, int, i) > *buffer_as(
-                      &temps, int, *buffer_back_as(&idx_stack, int)
+               && *buffer_as(&temps, int, (size_t)i) > *buffer_as(
+                      &temps, int, (size_t)*buffer_back_as(&idx_stack, int)
                   )) {
             int const *const pointer = buffer_emplace(
                 &res,
-                *buffer_back_as(&idx_stack, int),
+                ((size_t)*buffer_back_as(&idx_stack, int)),
                 i - *buffer_back_as(&idx_stack, int)
             );
             check(pointer != NULL, CCC_TRUE);
@@ -111,9 +111,9 @@ static CCC_Order
 order_car_idx(CCC_Comparator_arguments const order) {
     Buffer const *const int_positions = order.context;
     int const *const left_pos
-        = buffer_at(int_positions, *(int *)order.type_left);
+        = buffer_at(int_positions, (size_t)*(int *)order.type_left);
     int const *const right_pos
-        = buffer_at(int_positions, *(int *)order.type_right);
+        = buffer_at(int_positions, (size_t)*(int *)order.type_right);
     /* Reversed sort. We want descending not ascending order. We ask how many
        car fleets there will be by starting at the cars furthest away that may
        catch up to those ahead. */
@@ -149,8 +149,9 @@ check_static_begin(buffer_test_car_fleet) {
          iterator != buffer_end(&car_idx);
          iterator = buffer_next(&car_idx, iterator)) {
         double const time_of_closer_car
-            = ((double)(target - *buffer_as(&positions, int, *iterator)))
-            / *buffer_as(&speeds, int, *iterator);
+            = ((double)(target
+                        - *buffer_as(&positions, int, (size_t)*iterator)))
+            / *buffer_as(&speeds, int, (size_t)*iterator);
         if (time_of_closer_car > slowest_time_to_target) {
             ++fleets;
             slowest_time_to_target = time_of_closer_car;
@@ -169,14 +170,16 @@ check_static_begin(buffer_test_largest_rectangle_in_histogram) {
     int const correct_max_rectangle = 10;
     int max_rectangle = 0;
     Buffer bar_indices = buffer_with_storage(0, (int[HCAP]){});
-    for (int i = 0, end = buffer_count(&heights).count; i <= end; ++i) {
-        while (!buffer_is_empty(&bar_indices)
-               && (i == end
-                   || *buffer_as(&heights, int, i) < *buffer_as(
-                          &heights, int, *buffer_back_as(&bar_indices, int)
-                      ))) {
+    for (int i = 0, end = (int)buffer_count(&heights).count; i <= end; ++i) {
+        while (
+            !buffer_is_empty(&bar_indices)
+            && (i == end
+                || *buffer_as(&heights, int, (size_t)i) < *buffer_as(
+                       &heights, int, (size_t)*buffer_back_as(&bar_indices, int)
+                   ))) {
             int const stack_top_i = *buffer_back_as(&bar_indices, int);
-            int const stack_top_height = *buffer_as(&heights, int, stack_top_i);
+            int const stack_top_height
+                = *buffer_as(&heights, int, (size_t)stack_top_i);
             CCC_Result const r = buffer_pop_back(&bar_indices);
             check(r, CCC_RESULT_OK);
             int const w = buffer_is_empty(&bar_indices)

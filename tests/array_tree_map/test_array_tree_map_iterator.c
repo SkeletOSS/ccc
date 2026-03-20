@@ -190,11 +190,11 @@ check_static_begin(array_tree_map_test_iterate_removal) {
     srand(1);
     size_t const num_nodes = 1000;
     for (size_t i = 0; i < num_nodes; ++i) {
-        /* Force duplicates. NOLINTNEXTLINE */
+        /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
         (void)swap_handle(
             &s,
             &(struct Val){
-                .id = rand() % (num_nodes + 1),
+                .id = (int)((size_t)rand() % (num_nodes + 1)),
                 .val = (int)i,
             },
             &(CCC_Allocator){}
@@ -225,14 +225,14 @@ check_static_begin(array_tree_map_test_iterate_remove_key_value_reinsert) {
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
-    srand(time(NULL));
+    srand((unsigned)time(NULL));
     size_t const num_nodes = 1000;
     for (size_t i = 0; i < num_nodes; ++i) {
-        /* Force duplicates. NOLINTNEXTLINE */
+        /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
         (void)swap_handle(
             &s,
             &(struct Val){
-                .id = rand() % (num_nodes + 1),
+                .id = (int)((size_t)rand() % (num_nodes + 1)),
                 .val = (int)i,
             },
             &(CCC_Allocator){}

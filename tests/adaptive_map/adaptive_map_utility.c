@@ -24,7 +24,7 @@ check_begin(
     int const larger_prime,
     CCC_Allocator const *const allocator
 ) {
-    size_t shuffled_index = larger_prime % size;
+    size_t shuffled_index = (size_t)larger_prime % size;
     for (size_t i = 0; i < size; ++i) {
         (void)CCC_adaptive_map_swap_entry(
             m,
@@ -37,7 +37,7 @@ check_begin(
             allocator
         );
         check(validate(m), true);
-        shuffled_index = (shuffled_index + larger_prime) % size;
+        shuffled_index = (shuffled_index + (size_t)larger_prime) % size;
     }
     check(CCC_adaptive_map_count(m).count, size);
     check_end();

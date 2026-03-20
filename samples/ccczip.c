@@ -256,7 +256,8 @@ Do not return early or use goto out of this macro or memory will be leaked. */
         size_t len = 0;                                                        \
         ptrdiff_t read = 0;                                                    \
         while ((read = getline(&linepointer, &len, f)) > 0) {                  \
-            SV_Str_view const line = {.str = linepointer, .len = read};        \
+            SV_Str_view const line                                             \
+                = {.str = linepointer, .len = (size_t)read};                   \
             for (char const *char_iterator_name = SV_begin(line);              \
                  char_iterator_name != SV_end(line);                           \
                  char_iterator_name = SV_next(char_iterator_name)) {           \
@@ -337,7 +338,7 @@ zip_file(SV_Str_view const to_compress, CCC_Allocator const *const allocator) {
         bitq_clear_and_free(&encoding.blueprint.tree_paths, allocator);
         string_arena_free(&encoding.blueprint.arena, allocator);
     }
-    encoding.leaves_minus_one = encoding.blueprint.leaf_string.len - 1,
+    encoding.leaves_minus_one = (uint8_t)encoding.blueprint.leaf_string.len - 1,
     encoding.file_bits_count = bitq_count(&encoding.file_bits),
     write_to_file(to_compress, fsize, &encoding);
 }
@@ -571,7 +572,7 @@ memoize_path(
         }
         /* Depth progression of depth first search. */
         check(node->child_index <= CCC_TRUE);
-        bitq_push_back(bq, node->child_index, allocator);
+        bitq_push_back(bq, (CCC_Tribool)node->child_index, allocator);
         /* During backtracking this helps us know which child subtree needs to
            be explored or if we are done and can continue backtracking. */
         cur = node->link[node->child_index++];
@@ -935,7 +936,7 @@ reconstruct_text(
            first so popping is OK here. Root 1 node never was pushed to q. */
         CCC_Tribool const bit = bitq_pop_front(bq);
         check(bit != CCC_TRIBOOL_ERROR);
-        cur = branch_index(tree, cur, bit);
+        cur = branch_index(tree, cur, (uint8_t)bit);
         if (!branch_index(tree, cur, 1)) {
             char const c = char_index(tree, cur);
             size_t const byte = writebytes(f, &c, sizeof(c));
@@ -1027,7 +1028,7 @@ free_encode_tree(
 static size_t
 file_size(FILE *f) {
     check(fseek(f, 0L, SEEK_END) >= 0);
-    size_t const ret = ftell(f);
+    size_t const ret = (size_t)ftell(f);
     check(fseek(f, 0L, SEEK_SET) >= 0);
     return ret;
 }
@@ -1060,7 +1061,7 @@ print_inner_tree(
     print_node(tree, node);
 
     char *str = NULL;
-    int const string_length = snprintf(
+    size_t const string_length = (size_t)snprintf(
         NULL, 0, "%s%s", prefix, branch_type == LEAF ? "     " : " │   "
     );
     if (string_length > 0) {
@@ -1219,7 +1220,7 @@ hashed value will just be the character repeated at the high and low byte. */
 static uint64_t
 hash_char(CCC_Key_arguments const to_hash) {
     char const key = *(char const *)to_hash.key;
-    return ((uint64_t)key << 55) | key;
+    return ((uint64_t)key << 55) | (uint64_t)key;
 }
 
 static CCC_Order

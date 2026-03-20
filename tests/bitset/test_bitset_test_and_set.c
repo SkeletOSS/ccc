@@ -1286,7 +1286,7 @@ validate_sudoku_box(
                 continue;
             }
             /* Need the zero based digit. */
-            size_t const digit = board[r][c] - 1;
+            size_t const digit = (size_t)board[r][c] - 1;
             was_on = bitset_set(&box_check, digit, CCC_TRUE);
             if (was_on != CCC_FALSE) {
                 goto done;

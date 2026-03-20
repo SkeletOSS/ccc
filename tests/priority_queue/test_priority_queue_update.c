@@ -29,13 +29,14 @@ check_static_begin(priority_queue_test_insert_iterate_pop) {
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
-    srand(time(NULL));
+    srand((unsigned)time(NULL));
     for (size_t i = 0; i < HEAP_CAP; ++i) {
         /* Force duplicates. */
         struct Val const *const pushed = push(
             &priority_queue,
             &(struct Val){
-                .val = rand() % (HEAP_CAP + 1), /* NOLINT */
+                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                .val = (int)((size_t)rand() % (HEAP_CAP + 1)),
                 .id = (int)i,
             }
                  .elem,
@@ -67,13 +68,14 @@ check_static_begin(priority_queue_test_priority_removal) {
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
-    srand(time(NULL));
+    srand((unsigned)time(NULL));
     for (size_t i = 0; i < HEAP_CAP; ++i) {
         /* Force duplicates. */
         struct Val const *const pushed = push(
             &priority_queue,
             &(struct Val){
-                .val = rand() % (HEAP_CAP + 1), /* NOLINT */
+                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                .val = (int)((size_t)rand() % (HEAP_CAP + 1)),
                 .id = (int)i,
             }
                  .elem,
@@ -108,13 +110,14 @@ check_static_begin(priority_queue_test_priority_update) {
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
-    srand(time(NULL));
+    srand((unsigned)time(NULL));
     for (size_t i = 0; i < HEAP_CAP; ++i) {
         /* Force duplicates. */
         struct Val const *const pushed = push(
             &priority_queue,
             &(struct Val){
-                .val = rand() % (HEAP_CAP + 1), /* NOLINT */
+                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                .val = (int)((size_t)rand() % (HEAP_CAP + 1)),
                 .id = (int)i,
             }
                  .elem,
@@ -161,13 +164,14 @@ check_static_begin(priority_queue_test_priority_update_with) {
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
-    srand(time(NULL));
+    srand((unsigned)time(NULL));
     for (size_t i = 0; i < HEAP_CAP; ++i) {
         /* Force duplicates. */
         struct Val const *const pushed = push(
             &priority_queue,
             &(struct Val){
-                .val = rand() % (HEAP_CAP + 1), /* NOLINT */
+                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                .val = (int)((size_t)rand() % (HEAP_CAP + 1)),
                 .id = (int)i,
             }
                  .elem,
@@ -208,13 +212,14 @@ check_static_begin(priority_queue_test_priority_increase) {
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
-    srand(time(NULL));
+    srand((unsigned)time(NULL));
     for (size_t i = 0; i < HEAP_CAP; ++i) {
         /* Force duplicates. */
         struct Val const *const pushed = push(
             &priority_queue,
             &(struct Val){
-                .val = rand() % (HEAP_CAP + 1), /* NOLINT */
+                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                .val = (int)((size_t)rand() % (HEAP_CAP + 1)),
                 .id = (int)i,
             }
                  .elem,
@@ -275,13 +280,14 @@ check_static_begin(priority_queue_test_priority_increase_with) {
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
-    srand(time(NULL));
+    srand((unsigned)time(NULL));
     for (size_t i = 0; i < HEAP_CAP; ++i) {
         /* Force duplicates. */
         struct Val const *const pushed = push(
             &priority_queue,
             &(struct Val){
-                .val = rand() % (HEAP_CAP + 1), /* NOLINT */
+                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                .val = (int)((size_t)rand() % (HEAP_CAP + 1)),
                 .id = (int)i,
             }
                  .elem,
@@ -331,13 +337,14 @@ check_static_begin(priority_queue_test_priority_decrease) {
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
-    srand(time(NULL));
+    srand((unsigned)time(NULL));
     for (size_t i = 0; i < HEAP_CAP; ++i) {
         /* Force duplicates. */
         struct Val const *const pushed = push(
             &priority_queue,
             &(struct Val){
-                .val = rand() % (HEAP_CAP + 1), /* NOLINT */
+                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                .val = (int)((size_t)rand() % (HEAP_CAP + 1)),
                 .id = (int)i,
             }
                  .elem,
@@ -398,13 +405,14 @@ check_static_begin(priority_queue_test_priority_decrease_with) {
     );
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
-    srand(time(NULL));
+    srand((unsigned)time(NULL));
     for (size_t i = 0; i < HEAP_CAP; ++i) {
         /* Force duplicates. */
         struct Val const *const pushed = push(
             &priority_queue,
             &(struct Val){
-                .val = rand() % (HEAP_CAP + 1), /* NOLINT */
+                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                .val = (int)((size_t)rand() % (HEAP_CAP + 1)),
                 .id = (int)i,
             }
                  .elem,

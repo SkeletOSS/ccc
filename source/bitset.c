@@ -1413,7 +1413,11 @@ first_leading_bits_range(
     ptrdiff_t cur_end = (ptrdiff_t)((cur_block * BIT_BLOCK_BITS) - 1);
     Bit_signed_count bit_index = bit_count_index((size_t)bits_start);
     for (;;) {
-        assert(cur_block >= 0 && "current block is safe as index");
+        assert(
+            cur_block >= 0
+            && "current block is safe as index protected by bits_start "
+               "iterating toward the end of the range"
+        );
         /* After the first iteration the bit index is always the Most
            Significant bit of the block, so the supplemental AND with
            the shifted expression returns the original block. Makes code

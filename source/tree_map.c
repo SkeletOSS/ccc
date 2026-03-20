@@ -1063,7 +1063,8 @@ transplant(
     }
     replacement->branch[R] = remove->branch[R];
     replacement->branch[L] = remove->branch[L];
-    replacement->parity = parity(remove);
+    replacement->parity
+        = (typeof((struct CCC_Tree_map_node){}.parity))parity(remove);
 }
 
 /** A single rotation is symmetric. Here is the right case. Lowercase are nodes
@@ -1147,10 +1148,11 @@ double_rotate(
     z->parent = y;
 }
 
-/* Returns the parity of a node. A NULL node has a parity of 1 aka CCC_TRUE. */
+/* Returns the parity of a node either 0 or 1. A NULL node has a parity of 1 aka
+   CCC_TRUE. */
 static inline CCC_Tribool
 parity(struct CCC_Tree_map_node const *const x) {
-    return x ? x->parity : CCC_TRUE;
+    return x ? (CCC_Tribool)x->parity : CCC_TRUE;
 }
 
 /* Returns true for rank difference 0 (rule break) between the parent and node.

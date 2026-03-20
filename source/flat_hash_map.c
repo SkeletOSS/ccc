@@ -171,7 +171,7 @@ enum : typeof((struct CCC_Flat_hash_map_tag){}.v) {
 for calculating bytes. This way we can use in static asserts. We also need to
 ensure our runtime alignment calculations match compiler's `alignas` macro. */
 #define comptime_roundup(bytes_to_round)                                       \
-    (((bytes_to_round) + GROUP_COUNT - 1) & ~(GROUP_COUNT - 1))
+    (((bytes_to_round) + GROUP_COUNT - 1) & (size_t)~(GROUP_COUNT - 1))
 
 /** @internal The following test should ensure some safety in assumptions we
 make when the user defines a fixed size map type. This is just a small type that
@@ -1537,7 +1537,8 @@ data_index(
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
     return (CCC_Count){
-        .count = ((char *)data_slot - (char *)map->data) / map->sizeof_type,
+        .count
+        = (size_t)((char *)data_slot - (char *)map->data) / map->sizeof_type,
     };
 }
 
@@ -1676,7 +1677,7 @@ is_uninitialized(struct CCC_Flat_hash_map const *const map) {
 /** Rounds up the provided bytes to a valid alignment for group size. */
 static inline size_t
 roundup(size_t const bytes) {
-    return (bytes + GROUP_COUNT - 1) & ~(GROUP_COUNT - 1);
+    return (bytes + GROUP_COUNT - 1) & (size_t)~(GROUP_COUNT - 1);
 }
 
 /*=====================   Intrinsics and Generics   =========================*/
@@ -1813,7 +1814,8 @@ match so an efficient comparison is beneficial. */
 static inline struct Match_mask
 match_tag(struct Group const g, struct CCC_Flat_hash_map_tag const m) {
     return (struct Match_mask){
-        _mm_movemask_epi8(_mm_cmpeq_epi8(g.v, _mm_set1_epi8((int8_t)m.v))),
+        (typeof((struct Match_mask){}.v))
+            _mm_movemask_epi8(_mm_cmpeq_epi8(g.v, _mm_set1_epi8((int8_t)m.v))),
     };
 }
 
@@ -1840,7 +1842,8 @@ bit on. */
 static inline struct Match_mask
 match_empty_deleted(struct Group const g) {
     static_assert(sizeof(int) >= sizeof(uint16_t));
-    return (struct Match_mask){_mm_movemask_epi8(g.v)};
+    return (struct Match_mask){
+        (typeof((struct Match_mask){}.v))_mm_movemask_epi8(g.v)};
 }
 
 /** Returns a 0 based match with every bit on representing those tags in the
@@ -1848,7 +1851,8 @@ group that are occupied by a hashed value. These are those tags that have the
 most significant bit off and the lower 7 bits occupied by user hash. */
 static inline struct Match_mask
 match_full(struct Group const g) {
-    return (struct Match_mask){~match_empty_deleted(g).v};
+    return (struct Match_mask){
+        (typeof((struct Match_mask){}.v))~match_empty_deleted(g).v};
 }
 
 /** Matches all full tag slots into a mask excluding the starting position and
@@ -1862,7 +1866,8 @@ static inline struct Match_mask
 match_leading_full(struct Group const g, size_t const start_tag) {
     assert(start_tag < GROUP_COUNT);
     return (struct Match_mask){
-        (~match_empty_deleted(g).v) & (MATCH_MASK_0TH_TAG_OFF << start_tag),
+        (typeof((struct Match_mask){}.v))(~match_empty_deleted(g).v)
+            & (MATCH_MASK_0TH_TAG_OFF << start_tag),
     };
 }
 
@@ -2311,7 +2316,7 @@ count_trailing_zeros(struct Match_mask const m) {
         "based on struct Match_mask width if the mask is not 0, even though "
         "m is implicitly widened to an int."
     );
-    return m.v ? __builtin_ctz(m.v) : GROUP_COUNT;
+    return m.v ? (unsigned)__builtin_ctz(m.v) : GROUP_COUNT;
 }
 
 static inline unsigned
@@ -2321,7 +2326,8 @@ count_leading_zeros(struct Match_mask const m) {
         "a struct Match_mask will be implicitly widened to exactly twice "
         "its width if non-zero due to builtin functions available."
     );
-    return m.v ? __builtin_clz(((unsigned)m.v) << GROUP_COUNT) : GROUP_COUNT;
+    return m.v ? (unsigned)__builtin_clz(((unsigned)m.v) << GROUP_COUNT)
+               : GROUP_COUNT;
 }
 
 static inline unsigned
@@ -2331,7 +2337,7 @@ count_leading_zeros_size_t(size_t const n) {
         "Ensure the available builtin works for the platform defined "
         "size of a size_t."
     );
-    return n ? __builtin_clzl(n) : sizeof(size_t) * CHAR_BIT;
+    return n ? (unsigned)__builtin_clzl(n) : sizeof(size_t) * CHAR_BIT;
 }
 
 #    else /* !defined(__has_builtin) || !__has_builtin(__builtin_ctz)          \

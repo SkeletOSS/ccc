@@ -643,8 +643,9 @@ index_of(
     void const *const slot
 ) {
     assert(slot >= priority_queue->buffer.data);
-    size_t const i = ((char *)slot - (char *)priority_queue->buffer.data)
-                   / priority_queue->buffer.sizeof_type;
+    size_t const i
+        = (size_t)((char *)slot - (char *)priority_queue->buffer.data)
+        / priority_queue->buffer.sizeof_type;
     assert(i < priority_queue->buffer.count);
     return i;
 }
