@@ -1209,6 +1209,7 @@ If initialization fails, the map will be returned empty. All subsequent queries,
     <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the name of the type being stored in the map. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">key_field</td><td>the field of the struct used for key storage. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">hasher</td><td>a <a class="el" href="structCCC__Hasher.html" title="The type passed by reference to a hash map that needs a hash function and key comparison function....">CCC_Hasher</a> that configures the hash function, key comparator function, and context for both hashing and comparison. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>a required <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for resizing. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">capacity</td><td>the desired capacity for the map. A capacity of 0 results in an argument error and is a no-op after the map is initialized empty. </td></tr>
   </table>
   </dd>
@@ -1231,7 +1232,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <div class="line">        <span class="keyword">struct</span> Val,</div>
 <div class="line">        key,</div>
 <div class="line">        ((<a class="code hl_struct" href="structCCC__Hasher.html">CCC_Hasher</a>){.hash = hash_int, .compare = key_order}),</div>
-<div class="line">        &amp;std_allocator,</div>
+<div class="line">        std_allocator,</div>
 <div class="line">        4096</div>
 <div class="line">    );</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
