@@ -1233,25 +1233,28 @@ bitq_maybe_resize(
     }
     if (bq->count) {
         size_t const first_chunk = min(bq->count, old_capacity - bq->front);
-        for (size_t compacting_bit = 0, bq_bit = bq->front;
-             compacting_bit < first_chunk;
-             ++compacting_bit, ++bq_bit) {
+        size_t compacting_bit = 0;
+        size_t bq_bit = bq->front;
+        while (compacting_bit < first_chunk) {
             CCC_Tribool const set = bitset_set(
                 &compact_bits, compacting_bit, bitset_test(&bq->bs, bq_bit)
             );
             if (set == CCC_TRIBOOL_ERROR) {
                 return CCC_RESULT_FAIL;
             }
+            ++compacting_bit;
+            ++bq_bit;
         }
-        for (size_t compacting_bit = first_chunk, bq_bit = 0;
-             bq_bit < bq->count - first_chunk;
-             ++compacting_bit, ++bq_bit) {
+        bq_bit = 0;
+        while (bq_bit < bq->count - first_chunk) {
             CCC_Tribool const set = bitset_set(
                 &compact_bits, compacting_bit, bitset_test(&bq->bs, bq_bit)
             );
             if (set == CCC_TRIBOOL_ERROR) {
                 return CCC_RESULT_FAIL;
             }
+            ++compacting_bit;
+            ++bq_bit;
         }
     }
     CCC_Result const result = CCC_bitset_clear_and_free(&bq->bs, allocator);
