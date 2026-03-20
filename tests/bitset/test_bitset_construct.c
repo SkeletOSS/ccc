@@ -129,7 +129,7 @@ check_static_begin(bitset_test_init_from) {
     CCC_Bitset b
         = CCC_bitset_from(allocator, 0, SV_len(input), '1', SV_begin(input));
     check(CCC_bitset_count(&b).count, SV_len(input));
-    check(CCC_bitset_capacity(&b).count, SV_len(input));
+    check(CCC_bitset_capacity(&b).count >= SV_len(input), CCC_TRUE);
     check(CCC_bitset_popcount(&b).count, 4);
     check(CCC_bitset_test(&b, 0), CCC_TRUE);
     check(CCC_bitset_test(&b, SV_len(input) - 1), CCC_FALSE);
@@ -147,14 +147,14 @@ check_static_begin(bitset_test_init_from_cap) {
         allocator, 0, SV_len(input), '1', SV_begin(input), SV_len(input) * 2
     );
     check(CCC_bitset_count(&b).count, SV_len(input));
-    check(CCC_bitset_capacity(&b).count, (SV_len(input)) * 2);
+    check(CCC_bitset_capacity(&b).count >= (SV_len(input)) * 2, CCC_TRUE);
     check(CCC_bitset_popcount(&b).count, 4);
     check(CCC_bitset_test(&b, 0), CCC_TRUE);
     check(CCC_bitset_test(&b, SV_len(input) - 1), CCC_FALSE);
     check(CCC_TRIBOOL_ERROR, CCC_bitset_test(&b, SV_len(input)));
     check(CCC_bitset_push_back(&b, CCC_TRUE, &allocator), CCC_RESULT_OK);
     check(CCC_TRUE, CCC_bitset_test(&b, SV_len(input)));
-    check(CCC_bitset_capacity(&b).count, (SV_len(input)) * 2);
+    check(CCC_bitset_capacity(&b).count >= (SV_len(input)) * 2, CCC_TRUE);
     check_end();
 }
 

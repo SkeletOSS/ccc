@@ -444,8 +444,6 @@ CCC_bitset_set_range(
         return CCC_RESULT_OK;
     }
     if (++start_block != end_block) {
-        /* Bulk setting blocks to 1 or 0 is OK. Only full blocks are
-         * set. */
         int const v = b ? ~0 : 0;
         (void)memset(
             &bitset->blocks[start_block],
@@ -1083,34 +1081,38 @@ maybe_resize(
     CCC_Allocator const *const allocator
 ) {
     size_t bits_needed = bitset->count + to_add;
-    if (bits_needed < bitset->count) {
-        return CCC_RESULT_ARGUMENT_ERROR;
-    }
     if (bits_needed <= bitset->capacity) {
         return CCC_RESULT_OK;
     }
     if (!allocator->allocate) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
-    if (!bitset->count && to_add == 1) {
-        bits_needed = BIT_BLOCK_BITS;
-    } else if (to_add == 1) {
-        bits_needed = bitset->capacity * 2;
+    if (to_add == 1) {
+        bits_needed <<= 1;
+    }
+    static_assert(
+        (BIT_BLOCK_BITS & (BIT_BLOCK_BITS - 1)) == 0,
+        "rounding trick only works for powers of 2"
+    );
+    size_t const new_capacity
+        = (bits_needed + (BIT_BLOCK_BITS - 1)) & ~((size_t)BIT_BLOCK_BITS - 1);
+    if (new_capacity < bitset->capacity) {
+        return CCC_RESULT_FAIL;
     }
     size_t const new_bytes
-        = block_count(bits_needed - bitset->count) * SIZEOF_BLOCK;
+        = block_count(new_capacity - bitset->count) * SIZEOF_BLOCK;
     size_t const old_bytes
         = bitset->count ? block_count(bitset->count) * SIZEOF_BLOCK : 0;
     Bit_block *const new_data = allocator->allocate((CCC_Allocator_arguments){
         .input = bitset->blocks,
-        .bytes = block_count(bits_needed) * SIZEOF_BLOCK,
+        .bytes = block_count(new_capacity) * SIZEOF_BLOCK,
         .context = allocator->context,
     });
     if (!new_data) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
     (void)memset((char *)new_data + old_bytes, 0, new_bytes);
-    bitset->capacity = bits_needed;
+    bitset->capacity = new_capacity;
     bitset->blocks = new_data;
     return CCC_RESULT_OK;
 }
@@ -1440,8 +1442,11 @@ first_leading_bits_range(
         struct Group_signed_count const ones
             = max_leading_ones(bits, bit_index, num_bits - num_found);
         if (ones.count >= num_bits) {
-            /* The index cannot be negative if ones were found and num bits is
-               positive non-zero. Cast index to size_t is safe. */
+            assert(
+                ones.index >= 0
+                && "The index cannot be negative if ones were found and num "
+                   "bits is positive non-zero."
+            );
             return (CCC_Count){
                 .count
                 = ((size_t)cur_block * BIT_BLOCK_BITS) + (size_t)ones.index,
@@ -1451,15 +1456,17 @@ first_leading_bits_range(
             num_found += ones.count;
             /* Continuation from prefix blocks has resulted in success. */
             if (num_found >= num_bits) {
-                /* Bits starting point cannot be less than end of range or end
-                   of range plus number of bits. Either guarantees positive. */
+                assert(
+                    bits_start >= 0
+                    && "Bits starting point cannot be less than end of range "
+                       "or end of range plus number of bits. Either guarantees "
+                       "positive."
+                );
                 return (CCC_Count){.count = (size_t)bits_start};
             }
         } else {
-            /* If the new block start index is -1, then this
-               addition bumps us to the next block's Most
-               Significant Bit and is a simple subtraction by one to
-               start search on next block.*/
+            /* If the new block start index is -1, then this addition bumps us
+               to the next block's Most Significant Bit .*/
             bits_start
                 = (cur_block * (Bit_signed_count)BIT_BLOCK_BITS) + ones.index;
             num_found = ones.count;
