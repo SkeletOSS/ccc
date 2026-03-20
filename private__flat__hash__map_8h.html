@@ -741,29 +741,32 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    {                                                                          \</div>
+<b>Value:</b><div class="fragment"><div class="line">    (<span class="keyword">struct </span><a class="code hl_struct" href="structCCC__Flat__hash__map.html">CCC_Flat_hash_map</a>) {                                               \</div>
 <div class="line">        .data = &amp;<a class="code hl_define" href="private__flat__hash__map_8h.html#a5d30075708daa8114ecdbc19b3e4ba12">CCC_private_flat_hash_map_storage_for</a>(                        \</div>
 <div class="line">            private_compound_literal, private_optional_storage_specifier       \</div>
 <div class="line">        ),                                                                     \</div>
-<div class="line">        .tag = NULL,                                                           \</div>
-<div class="line">        .count = 0,                                                            \</div>
+<div class="line">        .tag = NULL, .count = 0,                                               \</div>
 <div class="line">        .remain                                                                \</div>
-<div class="line">        = ((<a class="code hl_define" href="private__flat__hash__map_8h.html#af42f0706f253aca27fba7d8c00f05f53">CCC_private_flat_hash_map_compound_literal_array_capacity</a>(         \</div>
-<div class="line">                private_compound_literal                                       \</div>
-<div class="line">            )                                                                  \</div>
-<div class="line">            / (size_t)8)                                                       \</div>
-<div class="line">           * (size_t)7),                                                       \</div>
+<div class="line">            = ((<a class="code hl_define" href="private__flat__hash__map_8h.html#af42f0706f253aca27fba7d8c00f05f53">CCC_private_flat_hash_map_compound_literal_array_capacity</a>(     \</div>
+<div class="line">                    private_compound_literal                                   \</div>
+<div class="line">                )                                                              \</div>
+<div class="line">                / (size_t)8)                                                   \</div>
+<div class="line">               * (size_t)7),                                                   \</div>
 <div class="line">        .mask = <a class="code hl_define" href="private__flat__hash__map_8h.html#af42f0706f253aca27fba7d8c00f05f53">CCC_private_flat_hash_map_compound_literal_array_capacity</a>(     \</div>
 <div class="line">                    private_compound_literal                                   \</div>
 <div class="line">                )                                                              \</div>
 <div class="line">              - (size_t)1,                                                     \</div>
-<div class="line">        .sizeof_type = <span class="keyword">sizeof</span>(*(private_compound_literal)),                    \</div>
-<div class="line">        .key_offset                                                            \</div>
-<div class="line">        = offsetof(typeof(*(private_compound_literal)), private_key_field),    \</div>
-<div class="line">        .hasher = (private_hasher),                                            \</div>
+<div class="line">        .<a class="code hl_variable" href="structCCC__Flat__hash__map.html#a7ac5a0651f942b94821ea041257fd4aa">sizeof_type</a> = <span class="keyword">sizeof</span>(*(private_compound_literal)),                    \</div>
+<div class="line">        .<a class="code hl_variable" href="structCCC__Flat__hash__map.html#a87df703d579e68a09558dc1a9c773525">key_offset</a> = offsetof(                                                \</div>
+<div class="line">            typeof(*(private_compound_literal)), private_key_field             \</div>
+<div class="line">        ),                                                                     \</div>
+<div class="line">        .<a class="code hl_variable" href="structCCC__Flat__hash__map.html#afcb5101dd8c99a767765bc4da1edb66f">hasher</a> = (private_hasher),                                            \</div>
 <div class="line">    }</div>
 <div class="ttc" id="aprivate__flat__hash__map_8h_html_a5d30075708daa8114ecdbc19b3e4ba12"><div class="ttname"><a href="private__flat__hash__map_8h.html#a5d30075708daa8114ecdbc19b3e4ba12">CCC_private_flat_hash_map_storage_for</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_storage_for( private_type_compound_literal_array, optional_storage_specifier...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:209</div></div>
 <div class="ttc" id="aprivate__flat__hash__map_8h_html_af42f0706f253aca27fba7d8c00f05f53"><div class="ttname"><a href="private__flat__hash__map_8h.html#af42f0706f253aca27fba7d8c00f05f53">CCC_private_flat_hash_map_compound_literal_array_capacity</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_compound_literal_array_capacity( private_type_compound_literal_array)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:198</div></div>
+<div class="ttc" id="astructCCC__Flat__hash__map_html_a7ac5a0651f942b94821ea041257fd4aa"><div class="ttname"><a href="structCCC__Flat__hash__map.html#a7ac5a0651f942b94821ea041257fd4aa">CCC_Flat_hash_map::sizeof_type</a></div><div class="ttdeci">size_t sizeof_type</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:150</div></div>
+<div class="ttc" id="astructCCC__Flat__hash__map_html_a87df703d579e68a09558dc1a9c773525"><div class="ttname"><a href="structCCC__Flat__hash__map.html#a87df703d579e68a09558dc1a9c773525">CCC_Flat_hash_map::key_offset</a></div><div class="ttdeci">size_t key_offset</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:152</div></div>
+<div class="ttc" id="astructCCC__Flat__hash__map_html_afcb5101dd8c99a767765bc4da1edb66f"><div class="ttname"><a href="structCCC__Flat__hash__map.html#afcb5101dd8c99a767765bc4da1edb66f">CCC_Flat_hash_map::hasher</a></div><div class="ttdeci">CCC_Hasher hasher</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:154</div></div>
 </div><!-- fragment --><p>We can cut out boilerplate by assuming fixed size map. </p>
 
 </div>
