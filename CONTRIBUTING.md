@@ -331,14 +331,13 @@ We can still try to offer the user some performance benefits on key code paths v
 #define map_insert_or_assign_macro(container_pointer, key, allocator,          \
                                    compound_literal...)                        \
     (__extension__({                                                           \
-        CCC_Allocator const *const map_allocator = &(allocator);               \
         struct Entry entry = container_find_slot(container_pointer, key);      \
         if (entry.status & OCCUPIED) {                                         \
             *((typeof(compound_literal) *)container_slot_at(&entry))           \
                 = compound_literal;                                            \
         } else {                                                               \
             *((typeof(compound_literal) *)container_new_slot(                  \
-                &entry, map_allocator                                          \
+                &entry, &(allocator)                                           \
             )) = compound_literal;                                             \
         }                                                                      \
         entry;                                                                 \
