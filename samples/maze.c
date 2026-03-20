@@ -426,22 +426,22 @@ carve_path_walls_animated(
     struct timespec ts = {.tv_sec = 0, .tv_nsec = time};
     nanosleep(&ts, NULL);
     if (p.r - 1 >= 0 && !(maze_at(maze, p.r - 1, p.c) & PATH_BIT)) {
-        *maze_at_wrap(maze, p.r - 1, p.c) &= ~SOUTH_WALL;
+        *maze_at_wrap(maze, p.r - 1, p.c) &= (uint16_t)~SOUTH_WALL;
         flush_cursor_maze_coordinate(maze, p.r - 1, p.c);
         nanosleep(&ts, NULL);
     }
     if (p.r + 1 < maze->rows && !(maze_at(maze, p.r + 1, p.c) & PATH_BIT)) {
-        *maze_at_wrap(maze, p.r + 1, p.c) &= ~NORTH_WALL;
+        *maze_at_wrap(maze, p.r + 1, p.c) &= (uint16_t)~NORTH_WALL;
         flush_cursor_maze_coordinate(maze, p.r + 1, p.c);
         nanosleep(&ts, NULL);
     }
     if (p.c - 1 >= 0 && !(maze_at(maze, p.r, p.c - 1) & PATH_BIT)) {
-        *maze_at_wrap(maze, p.r, p.c - 1) &= ~EAST_WALL;
+        *maze_at_wrap(maze, p.r, p.c - 1) &= (uint16_t)~EAST_WALL;
         flush_cursor_maze_coordinate(maze, p.r, p.c - 1);
         nanosleep(&ts, NULL);
     }
     if (p.c + 1 < maze->cols && !(maze_at(maze, p.r, p.c + 1) & PATH_BIT)) {
-        *maze_at_wrap(maze, p.r, p.c + 1) &= ~WEST_WALL;
+        *maze_at_wrap(maze, p.r, p.c + 1) &= (uint16_t)~WEST_WALL;
         flush_cursor_maze_coordinate(maze, p.r, p.c + 1);
         nanosleep(&ts, NULL);
     }
@@ -464,7 +464,7 @@ build_wall(struct Maze *m, int const r, int const c) {
         wall |= EAST_WALL;
     }
     *maze_at_wrap(m, r, c) |= wall;
-    *maze_at_wrap(m, r, c) &= ~PATH_BIT;
+    *maze_at_wrap(m, r, c) &= (uint16_t)~PATH_BIT;
 }
 
 static void

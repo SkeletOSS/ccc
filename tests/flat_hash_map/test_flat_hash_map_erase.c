@@ -198,7 +198,7 @@ check_static_begin(flat_hash_map_test_shuffle_erase_reserved) {
     );
     int const test_amount = 896;
     CCC_Result const res_check
-        = CCC_flat_hash_map_reserve(&h, test_amount, &std_allocator);
+        = CCC_flat_hash_map_reserve(&h, (size_t)test_amount, &std_allocator);
     check(res_check, CCC_RESULT_OK);
 
     /* Give ourselves plenty more to insert so we don't run out before cap. */

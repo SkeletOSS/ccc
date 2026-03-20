@@ -1347,7 +1347,7 @@ first_leading_bit_range(
     if (leading_zeros != BIT_BLOCK_BITS) {
         return (CCC_Count){
             .count = (start_block * BIT_BLOCK_BITS)
-                   + (BIT_BLOCK_BITS - leading_zeros - 1),
+                   + (Block_count)(BIT_BLOCK_BITS - leading_zeros - 1),
         };
     }
     Block_count const end_block = block_count_index(end_i);
@@ -1361,7 +1361,7 @@ first_leading_bit_range(
         if (leading_zeros != BIT_BLOCK_BITS) {
             return (CCC_Count){
                 .count = (start_block * BIT_BLOCK_BITS)
-                       + (BIT_BLOCK_BITS - leading_zeros - 1),
+                       + (Block_count)(BIT_BLOCK_BITS - leading_zeros - 1),
             };
         }
     }
@@ -1374,7 +1374,7 @@ first_leading_bit_range(
     if (leading_zeros != BIT_BLOCK_BITS) {
         return (CCC_Count){
             .count = (end_block * BIT_BLOCK_BITS)
-                   + (BIT_BLOCK_BITS - leading_zeros - 1),
+                   + (Block_count)(BIT_BLOCK_BITS - leading_zeros - 1),
         };
     }
     return (CCC_Count){.error = CCC_RESULT_FAIL};

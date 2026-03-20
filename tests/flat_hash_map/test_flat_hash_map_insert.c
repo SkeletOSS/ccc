@@ -796,7 +796,7 @@ check_static_begin(flat_hash_map_test_reserve_without_permissions) {
     int const to_insert = 1000;
     int const larger_prime = 1009;
     CCC_Result const res
-        = flat_hash_map_reserve(&fh, to_insert, &std_allocator);
+        = flat_hash_map_reserve(&fh, (size_t)to_insert, &std_allocator);
     check(res, CCC_RESULT_OK);
     for (int i = 0, shuffled_index = larger_prime % to_insert; i < to_insert;
          ++i, shuffled_index = (shuffled_index + larger_prime) % to_insert) {

@@ -717,7 +717,7 @@ write_bitq(FILE *const cccz, struct Bit_queue *const bq) {
     uint8_t buf = 0;
     uint8_t i = 0;
     while (bitq_count(bq)) {
-        buf |= (bitq_pop_front(bq) << i);
+        buf |= (uint8_t)(bitq_pop_front(bq) << i);
         ++i;
         if (i >= CHAR_BIT) {
             size_t const byte = writebytes(cccz, &buf, sizeof(buf));

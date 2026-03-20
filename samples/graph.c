@@ -598,21 +598,19 @@ encode_digits(struct Graph const *const g, struct Digit_encoding *const e) {
         e->start.r = e->orientation == NORTH
                        ? e->start.r + (int)e->spaces_needed - 2
                        : e->start.r - 1;
-        for (uintmax_t digits = (uintmax_t)e->cost; digits;
-             digits /= 10, --e->start.r) {
+        for (Cell digits = (Cell)e->cost; digits; digits /= 10, --e->start.r) {
             *grid_at_mut(g, e->start.r, e->start.c) |= DIGIT_BIT;
             *grid_at_mut(g, e->start.r, e->start.c)
-                |= ((digits % 10) << DIGIT_SHIFT);
+                |= (Cell)((digits % 10) << DIGIT_SHIFT);
         }
     } else {
         e->start.c = e->orientation == WEST
                        ? e->start.c + (int)e->spaces_needed - 2
                        : e->start.c - 1;
-        for (uintmax_t digits = (uintmax_t)e->cost; digits;
-             digits /= 10, --e->start.c) {
+        for (Cell digits = (Cell)e->cost; digits; digits /= 10, --e->start.c) {
             *grid_at_mut(g, e->start.r, e->start.c) |= DIGIT_BIT;
             *grid_at_mut(g, e->start.r, e->start.c)
-                |= ((digits % 10) << DIGIT_SHIFT);
+                |= (Cell)((digits % 10) << DIGIT_SHIFT);
         }
     }
 }

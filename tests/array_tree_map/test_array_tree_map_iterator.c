@@ -155,7 +155,7 @@ check_static_begin(array_tree_map_test_forward_iterator) {
     check(j, 0);
     int const num_nodes = 33;
     int const prime = 37;
-    size_t shuffled_index = prime % num_nodes;
+    size_t shuffled_index = (size_t)prime % (size_t)num_nodes;
     for (int i = 0; i < num_nodes; ++i) {
         (void)swap_handle(
             &s,
@@ -166,10 +166,10 @@ check_static_begin(array_tree_map_test_forward_iterator) {
             &(CCC_Allocator){}
         );
         check(validate(&s), true);
-        shuffled_index = (shuffled_index + prime) % num_nodes;
+        shuffled_index = (shuffled_index + (size_t)prime) % (size_t)num_nodes;
     }
     int keys_inorder[33];
-    check(inorder_fill(keys_inorder, num_nodes, &s), count(&s).count);
+    check(inorder_fill(keys_inorder, (size_t)num_nodes, &s), count(&s).count);
     j = 0;
     for (CCC_Handle_index e = begin(&s); e != end(&s) && j < num_nodes;
          e = next(&s, e), ++j) {

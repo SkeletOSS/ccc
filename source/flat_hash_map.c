@@ -1726,7 +1726,9 @@ upper bits are desirable. */
 static inline struct CCC_Flat_hash_map_tag
 tag_from(uint64_t const hash) {
     return (struct CCC_Flat_hash_map_tag){
-        (hash >> ((sizeof(hash) * CHAR_BIT) - 7)) & TAG_LOWER_7_MASK,
+        (typeof((struct CCC_Flat_hash_map_tag){}
+                    .v))(hash >> ((sizeof(hash) * CHAR_BIT) - 7))
+            & TAG_LOWER_7_MASK,
     };
 }
 

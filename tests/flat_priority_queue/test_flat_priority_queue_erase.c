@@ -199,7 +199,7 @@ check_static_begin(flat_priority_queue_test_delete_prime_shuffle_duplicates) {
         /* Shuffle like this only on insertions to create more dups. */
         shuffled_index = (shuffled_index + prime) % (size - less);
     }
-    size_t cur_size = size;
+    size_t cur_size = (size_t)size;
     struct Val *const vals
         = ((struct Stack_allocator *)allocator.context)->blocks;
     while (!CCC_flat_priority_queue_is_empty(&flat_priority_queue)) {
@@ -255,7 +255,7 @@ check_static_begin(flat_priority_queue_test_prime_shuffle) {
     }
     /* Now we go through and free all the elements in order but
        their positions in the tree will be somewhat random */
-    size_t cur_size = size;
+    size_t cur_size = (size_t)size;
     struct Val *const vals
         = ((struct Stack_allocator *)allocator.context)->blocks;
     while (!CCC_flat_priority_queue_is_empty(&flat_priority_queue)) {
