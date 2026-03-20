@@ -206,10 +206,14 @@ CCC_singly_linked_list_splice_range(
         to_cut_inclusive_end
     );
     if (type_intruder_position) {
-        to_cut_inclusive_end->next = type_intruder_position->next;
+        if (to_cut_inclusive_end) {
+            to_cut_inclusive_end->next = type_intruder_position->next;
+        }
         type_intruder_position->next = type_intruder_to_cut_begin;
     } else {
-        to_cut_inclusive_end->next = position_list->head;
+        if (to_cut_inclusive_end) {
+            to_cut_inclusive_end->next = position_list->head;
+        }
         position_list->head = type_intruder_to_cut_begin;
     }
     if (position_list != to_cut_list) {
@@ -650,12 +654,15 @@ insert_node(
     struct CCC_Singly_linked_list_node *const before,
     struct CCC_Singly_linked_list_node *const node
 ) {
-    assert(node);
     if (before) {
-        node->next = before->next;
+        if (node) {
+            node->next = before->next;
+        }
         before->next = node;
     } else {
-        node->next = list->head;
+        if (node) {
+            node->next = list->head;
+        }
         list->head = node;
     }
 }
@@ -666,13 +673,21 @@ remove_node(
     struct CCC_Singly_linked_list_node *const before,
     struct CCC_Singly_linked_list_node *const node
 ) {
-    assert(node);
     if (before) {
-        before->next = node->next;
+        if (node) {
+            before->next = node->next;
+            node->next = NULL;
+        } else {
+            before->next = NULL;
+        }
     } else {
-        list->head = node->next;
+        if (node) {
+            list->head = node->next;
+            node->next = NULL;
+        } else {
+            list->head = NULL;
+        }
     }
-    node->next = NULL;
 }
 
 static inline struct CCC_Singly_linked_list_node *
