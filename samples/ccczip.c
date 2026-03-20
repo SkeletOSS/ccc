@@ -1246,7 +1246,7 @@ bitq_maybe_resize(
             ++bq_bit;
         }
         bq_bit = 0;
-        while (bq_bit < bq->count - first_chunk) {
+        while (compacting_bit < bq->count) {
             CCC_Tribool const set = bitset_set(
                 &compact_bits, compacting_bit, bitset_test(&bq->bs, bq_bit)
             );
