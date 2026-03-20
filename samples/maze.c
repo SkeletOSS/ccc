@@ -79,12 +79,33 @@ there are two for every cell and the terminal cannot help us with that. Notably
 when printing to a position on the screen you need to halve the position because
 there are two of these mini squares per cell of the terminal. */
 static char const *const walls[16] = {
-    "▀", "▀", "▀", "▀", "█", "█", "█", "█",
-    "▀", "▀", "▀", "▀", "█", "█", "█", "█",
+    "▀",
+    "▀",
+    "▀",
+    "▀",
+    "█",
+    "█",
+    "█",
+    "█",
+    "▀",
+    "▀",
+    "▀",
+    "▀",
+    "█",
+    "█",
+    "█",
+    "█",
 };
 
 static int const speeds[] = {
-    0, 5000000, 2500000, 1000000, 500000, 250000, 100000, 1000,
+    0,
+    5000000,
+    2500000,
+    1000000,
+    500000,
+    250000,
+    100000,
+    1000,
 };
 
 static struct Point const dir_offsets[] = {{-2, 0}, {0, 2}, {2, 0}, {0, -2}};
@@ -121,13 +142,14 @@ static SV_Str_view const help_flag = SV_from("-h");
     do {                                                                       \
         if (!(cond)) {                                                         \
             __VA_OPT__(__VA_ARGS__)                                            \
-            printf("%s, %d, condition is false: %s\n", __FILE__, __LINE__,     \
-                   #cond);                                                     \
+            printf(                                                            \
+                "%s, %d, condition is false: %s\n", __FILE__, __LINE__, #cond  \
+            );                                                                 \
             exit(1);                                                           \
         }                                                                      \
     } while (0)
 
-static void animate_maze(struct Maze *);
+static void animate_maze(struct Maze *, CCC_Allocator const *);
 static void fill_maze_with_walls(struct Maze *);
 static void build_wall(struct Maze *, int, int);
 static void print_square(struct Maze const *, int, int);
@@ -135,16 +157,16 @@ static uint16_t *maze_at_wrap(struct Maze const *, int, int);
 static uint16_t maze_at(struct Maze const *, int, int);
 static void clear_and_flush_maze(struct Maze const *);
 static void carve_path_walls_animated(struct Maze *, struct Point, int);
-static void join_squares_animated(struct Maze *, struct Point, struct Point,
-                                  int);
+static void
+join_squares_animated(struct Maze *, struct Point, struct Point, int);
 static void flush_cursor_maze_coordinate(struct Maze const *, int, int);
 static bool can_build_new_square(struct Maze const *, int, int);
 static void help(void);
 static struct Point rand_point(struct Maze const *);
-static Order order_prim_cells(Type_comparator_context);
+static Order prim_cell_element_order(Comparator_arguments);
 static struct Int_conversion parse_digits(SV_Str_view);
-static CCC_Order prim_cell_order(Key_comparator_context);
-static uint64_t prim_cell_hash_fn(Key_context);
+static CCC_Order prim_cell_key_order(Key_comparator_arguments);
+static uint64_t prim_cell_hash_fn(Key_arguments);
 static uint64_t hash_64_bits(uint64_t);
 
 /*======================  Main Arg Handling  ===============================*/
@@ -154,7 +176,7 @@ main(int argc, char **argv) {
     /* Randomness will be used throughout the program but it need not be
        perfect. It only helps build the maze.
        NOLINTNEXTLINE(cert-msc32-c, cert-msc51-cpp) */
-    srand(time(NULL));
+    srand((unsigned)time(NULL));
     struct Maze maze = {
         .rows = DEFAULT_ROWS,
         .cols = DEFAULT_COLS,
@@ -184,20 +206,22 @@ main(int argc, char **argv) {
                 quit("speed outside of valid range.\n", 1);
                 return 1;
             }
-            maze.speed = speed_arg.conversion;
+            maze.speed = (enum Animation_speed)speed_arg.conversion;
         } else if (SV_starts_with(arg, help_flag)) {
             help();
             return 0;
         } else {
-            quit("can only specify rows, columns, or speed "
-                 "for now (-r=N, -c=N, -s=N)\n",
-                 1);
+            quit(
+                "can only specify rows, columns, or speed "
+                "for now (-r=N, -c=N, -s=N)\n",
+                1
+            );
         }
     }
     /* This type of maze generation requires odd rows and cols. */
     maze.rows = maze.rows + (maze.rows % 2 == 0);
     maze.cols = maze.cols + (maze.cols % 2 == 0);
-    maze.maze = calloc((size_t)maze.rows * maze.cols, sizeof(uint16_t));
+    maze.maze = calloc((size_t)maze.rows * (size_t)maze.cols, sizeof(uint16_t));
     defer {
         free(maze.maze);
     }
@@ -205,7 +229,7 @@ main(int argc, char **argv) {
         (void)fprintf(stderr, "allocation failure for specified maze size.\n");
         return 1;
     }
-    animate_maze(&maze);
+    animate_maze(&maze, &std_allocator);
     /* The squares are mini so there are 2 per row. Halve the position. */
     set_cursor_position((maze.rows / 2) + 1, maze.cols + 1);
     printf("\n");
@@ -215,36 +239,46 @@ main(int argc, char **argv) {
 
 /* This function presents a very traditional implementation of an algorithm
 that requires multiple containers. This is implemented in a manner that one
-would normally see in Rust or C++, where each container manages its own memory.
-For examples of non-owning container use and composition see other samples.
-This style of data structure use can be comfortable and convenient in some
-cases.
+would normally see in Rust or C++. However, the allocator they use to obtain
+memory is passed every time it is needed to clearly signal if an operation may
+allocate.
 
-However, we can still be "C" about it by thinking about reserving exactly
-the memory we need dynamically in the from initializer. */
+Note that initializers always accept configuration directly by name or compound
+literal. This is why you see the allocator dereferenced. Allocators should be
+thought of as cheap, copyable bundles holding a pointer to an allocator
+interface and a pointer to context. */
 static void
-animate_maze(struct Maze *maze) {
+animate_maze(struct Maze *maze, CCC_Allocator const *const allocator) {
     int const speed = speeds[maze->speed];
     fill_maze_with_walls(maze);
     clear_and_flush_maze(maze);
-    size_t const capacity = ((maze->rows * maze->cols) / 2) + 1;
+    size_t const capacity = (size_t)((maze->rows * maze->cols) / 2) + 1;
     struct Prim_cell const start = (struct Prim_cell){
         .cell = rand_point(maze),
         .cost = rand_range(0, 100),
     };
     Flat_hash_map cost_map = flat_hash_map_from(
-        cell, prim_cell_hash_fn, prim_cell_order, std_allocate, capacity,
-        (struct Prim_cell[]){
-            start,
-        });
+        cell,
+        ((CCC_Hasher){
+            .hash = prim_cell_hash_fn,
+            .compare = prim_cell_key_order,
+        }),
+        *allocator,
+        capacity,
+        (struct Prim_cell[]){start}
+    );
     Flat_priority_queue cell_priority_queue = flat_priority_queue_from(
-        CCC_ORDER_LESSER, order_prim_cells, std_allocate, capacity,
-        (struct Prim_cell[]){
-            start,
-        });
+        CCC_ORDER_LESSER,
+        (CCC_Comparator){.compare = prim_cell_element_order},
+        *allocator,
+        capacity,
+        (struct Prim_cell[]){start}
+    );
     defer {
-        (void)clear_and_free(&cost_map, NULL);
-        (void)clear_and_free(&cell_priority_queue, NULL);
+        (void)clear_and_free(&cost_map, &(CCC_Destructor){}, allocator);
+        (void)clear_and_free(
+            &cell_priority_queue, &(CCC_Destructor){}, allocator
+        );
     }
     while (!is_empty(&cell_priority_queue)) {
         struct Prim_cell const *const c = front(&cell_priority_queue);
@@ -260,11 +294,12 @@ animate_maze(struct Maze *maze) {
             if (can_build_new_square(maze, n.r, n.c)) {
                 struct Prim_cell const *const cell
                     = flat_hash_map_or_insert_with(
-                        entry_wrap(&cost_map, &n),
+                        flat_hash_map_entry_wrap(&cost_map, &n, allocator),
                         (struct Prim_cell){
                             .cell = n,
                             .cost = rand_range(0, 100),
-                        });
+                        }
+                    );
                 check(cell);
                 if (cell->cost < min) {
                     min = cell->cost;
@@ -274,7 +309,12 @@ animate_maze(struct Maze *maze) {
         }
         if (min != INT_MAX) {
             join_squares_animated(maze, c->cell, min_cell.cell, speed);
-            (void)push(&cell_priority_queue, &min_cell, &(struct Prim_cell){});
+            (void)push(
+                &cell_priority_queue,
+                &min_cell,
+                &(struct Prim_cell){},
+                allocator
+            );
         } else {
             (void)pop(&cell_priority_queue, &(struct Prim_cell){});
         }
@@ -284,7 +324,7 @@ animate_maze(struct Maze *maze) {
 /*===================     Container Support Code     ========================*/
 
 static CCC_Order
-prim_cell_order(Key_comparator_context const c) {
+prim_cell_key_order(Key_comparator_arguments const c) {
     struct Point const *const left = c.key_left;
     struct Prim_cell const *const right = c.type_right;
     CCC_Order const order
@@ -296,13 +336,15 @@ prim_cell_order(Key_comparator_context const c) {
 }
 
 static uint64_t
-prim_cell_hash_fn(Key_context const k) {
+prim_cell_hash_fn(Key_arguments const k) {
     struct Prim_cell const *const p = k.key;
-    uint64_t const wr = p->cell.r;
-    static_assert(sizeof((struct Point){}.r) * CHAR_BIT == 32,
-                  "hashing a row and column requires shifting half the size of "
-                  "the hash code");
-    return hash_64_bits((wr << 31) | p->cell.c);
+    uint64_t const wr = (uint64_t)p->cell.r;
+    static_assert(
+        sizeof((struct Point){}.r) * CHAR_BIT == 32,
+        "hashing a row and column requires shifting half the size of "
+        "the hash code"
+    );
+    return hash_64_bits((wr << 31) | (uint64_t)p->cell.c);
 }
 
 static inline uint64_t
@@ -314,7 +356,7 @@ hash_64_bits(uint64_t x) {
 }
 
 static Order
-order_prim_cells(Type_comparator_context const order_cells) {
+prim_cell_element_order(Comparator_arguments const order_cells) {
     struct Prim_cell const *const left = order_cells.type_left;
     struct Prim_cell const *const right = order_cells.type_right;
     return (left->cost > right->cost) - (left->cost < right->cost);
@@ -352,8 +394,12 @@ clear_and_flush_maze(struct Maze const *const maze) {
 }
 
 static void
-join_squares_animated(struct Maze *maze, struct Point const cur,
-                      struct Point const next, int const time) {
+join_squares_animated(
+    struct Maze *maze,
+    struct Point const cur,
+    struct Point const next,
+    int const time
+) {
     struct Point wall = cur;
     if (next.r < cur.r) {
         wall.r--;
@@ -372,29 +418,30 @@ join_squares_animated(struct Maze *maze, struct Point const cur,
 }
 
 static void
-carve_path_walls_animated(struct Maze *maze, struct Point const p,
-                          int const time) {
+carve_path_walls_animated(
+    struct Maze *maze, struct Point const p, int const time
+) {
     *maze_at_wrap(maze, p.r, p.c) |= PATH_BIT;
     flush_cursor_maze_coordinate(maze, p.r, p.c);
     struct timespec ts = {.tv_sec = 0, .tv_nsec = time};
     nanosleep(&ts, NULL);
     if (p.r - 1 >= 0 && !(maze_at(maze, p.r - 1, p.c) & PATH_BIT)) {
-        *maze_at_wrap(maze, p.r - 1, p.c) &= ~SOUTH_WALL;
+        *maze_at_wrap(maze, p.r - 1, p.c) &= (uint16_t)~SOUTH_WALL;
         flush_cursor_maze_coordinate(maze, p.r - 1, p.c);
         nanosleep(&ts, NULL);
     }
     if (p.r + 1 < maze->rows && !(maze_at(maze, p.r + 1, p.c) & PATH_BIT)) {
-        *maze_at_wrap(maze, p.r + 1, p.c) &= ~NORTH_WALL;
+        *maze_at_wrap(maze, p.r + 1, p.c) &= (uint16_t)~NORTH_WALL;
         flush_cursor_maze_coordinate(maze, p.r + 1, p.c);
         nanosleep(&ts, NULL);
     }
     if (p.c - 1 >= 0 && !(maze_at(maze, p.r, p.c - 1) & PATH_BIT)) {
-        *maze_at_wrap(maze, p.r, p.c - 1) &= ~EAST_WALL;
+        *maze_at_wrap(maze, p.r, p.c - 1) &= (uint16_t)~EAST_WALL;
         flush_cursor_maze_coordinate(maze, p.r, p.c - 1);
         nanosleep(&ts, NULL);
     }
     if (p.c + 1 < maze->cols && !(maze_at(maze, p.r, p.c + 1) & PATH_BIT)) {
-        *maze_at_wrap(maze, p.r, p.c + 1) &= ~WEST_WALL;
+        *maze_at_wrap(maze, p.r, p.c + 1) &= (uint16_t)~WEST_WALL;
         flush_cursor_maze_coordinate(maze, p.r, p.c + 1);
         nanosleep(&ts, NULL);
     }
@@ -417,12 +464,13 @@ build_wall(struct Maze *m, int const r, int const c) {
         wall |= EAST_WALL;
     }
     *maze_at_wrap(m, r, c) |= wall;
-    *maze_at_wrap(m, r, c) &= ~PATH_BIT;
+    *maze_at_wrap(m, r, c) &= (uint16_t)~PATH_BIT;
 }
 
 static void
-flush_cursor_maze_coordinate(struct Maze const *maze, int const r,
-                             int const c) {
+flush_cursor_maze_coordinate(
+    struct Maze const *maze, int const r, int const c
+) {
     set_cursor_position(r / 2, c);
     print_square(maze, r, c);
     (void)fflush(stdout);
@@ -502,5 +550,6 @@ help(void) {
         "row flag lets you specify maze rows > 7.\n-c=N The col flag "
         "lets you specify maze cols > 7.\n-s=N The speed flag lets "
         "you specify the speed of the animation "
-        "0-7.\nExample:\n./build/[debug/]bin/maze -c=111 -r=33 -s=4\n");
+        "0-7.\nExample:\n./build/[debug/]bin/maze -c=111 -r=33 -s=4\n"
+    );
 }

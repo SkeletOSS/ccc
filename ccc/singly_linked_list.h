@@ -17,19 +17,19 @@ limitations under the License.
 @brief The Singly Linked List Interface
 
 A singly linked list is well suited for list or stack structures that only need
-access to the front or most recently added elements. When compared to a doubly
+access to the front or most recently added elements. When compared to a singly
 linked list, the memory overhead per node is smaller but some operations will
 have `O(N)` runtime implications when compared to a similar operation in a
-doubly linked list. Review function documentation when unsure of the runtime of
+singly linked list. Review function documentation when unsure of the runtime of
 an singly linked list operation.
 
-This container offers pointer stability. Also, if the container is not permitted
-to allocate all insertion code assumes that the user has allocated memory
-appropriately for the element to be inserted; it will not allocate or free in
-this case. If allocation is permitted upon initialization the container will
-manage the memory as expected on insert or erase operations as defined by the
-interface. In this case memory is allocated for insertions and freed for
-removals.
+This container offers pointer stability. Also, if a user forgoes passing an
+allocator to a function that accepts one, all insertion code assumes that the
+user has allocated memory appropriately for the element to be inserted; it will
+not allocate or free in this case. If an allocator is passed to a function that
+accepts one, the container will manage the memory as expected on insert or erase
+operations as defined by the interface. In this case memory is allocated for
+insertions and freed for removals.
 
 To shorten names in the interface, define the following preprocessor directive
 at the top of your file.
@@ -81,122 +81,38 @@ Initialize the container with memory, callbacks, and permissions. */
 elem.
 @param[in] type_intruder_field the name of the field in the user type storing
 the intrusive list elem.
-@param[in] compare a comparison function for searching or sorting the list.
-@param[in] allocate an allocation function if allocation is allowed.
-@param[in] context a pointer to any context data needed for comparison or
-destruction.
+@return a list metadata struct on the right hand side of equality operator. */
+#define CCC_singly_linked_list_default(type_name, type_intruder_field)         \
+    CCC_private_singly_linked_list_for(type_name, type_intruder_field)
+
+/** @brief Initialize a singly linked list at compile or runtime.
+@param[in] type_name the user type wrapping the intrusive singly_linked_list
+elem.
+@param[in] type_intruder_field the name of the field in the user type storing
+the intrusive list elem.
 @return a stuct initializer for the singly linked list to be assigned
 (e.g. CCC_Singly_linked_list l = CCC_singly_linked_list_for(...);). */
-#define CCC_singly_linked_list_for(type_name, type_intruder_field, compare,    \
-                                   allocate, context)                          \
-    CCC_private_singly_linked_list_for(type_name, type_intruder_field,         \
-                                       compare, allocate, context)
-
-/** @brief Initialize an empty list at compile or runtime with an allocator.
-@param[in] type_name the user defined type stored in the list.
-@param[in] type_intruder_field the name of the intrusive element.
-@param[in] compare the CCC_Key_comparator the user intends to use.
-@param[in] allocate the CCC_Allocator function used to manage list memory.
-@return the list directly initialized on the right hand side of the equality
-operator.
-
-Initialize a dynamic list at compile time.
-
-```
-#define SINGLY_LINKED_LIST_USING_NAMESPACE_CCC
-struct Val
-{
-    singly_linked_list_node node;
-    int val;
-};
-static singly_linked_list list = singly_linked_list_with_allocator(
-    struct Val,
-    node,
-    val_order,
-    stdlib_allocate
-);
-```
-
-This can help eliminate boilerplate in initializers. */
-#define CCC_singly_linked_list_with_allocator(type_name, type_intruder_field,  \
-                                              compare, allocate)               \
-    CCC_private_singly_linked_list_with_allocator(                             \
-        type_name, type_intruder_field, compare, allocate)
-
-/** @brief Initialize an empty list at compile or runtime with an allocator.
-@param[in] type_name the user defined type stored in the list.
-@param[in] type_intruder_field the name of the intrusive element.
-@param[in] compare the CCC_Key_comparator the user intends to use.
-@param[in] allocate the CCC_Allocator function used to manage list memory.
-@param[in] context a pointer to any context data needed for comparison or
-destruction.
-@return the list directly initialized on the right hand side of the equality
-operator.
-
-Initialize a dynamic list at compile time.
-
-```
-#define SINGLY_LINKED_LIST_USING_NAMESPACE_CCC
-struct Val
-{
-    singly_linked_list_node node;
-    int val;
-};
-static singly_linked_list list = singly_linked_list_with_allocator(
-    struct Val,
-    node,
-    val_order,
-    arena_allocate,
-    &arena
-);
-```
-
-This can help eliminate boilerplate in initializers. */
-#define CCC_singly_linked_list_context_with_allocator(                         \
-    type_name, type_intruder_field, compare, allocate, context)                \
-    CCC_private_singly_linked_list_context_with_allocator(                     \
-        type_name, type_intruder_field, compare, allocate, context)
+#define CCC_singly_linked_list_for(type_name, type_intruder_field)             \
+    CCC_private_singly_linked_list_for(type_name, type_intruder_field)
 
 /** @brief Initialize a singly linked list at runtime from a compound literal
 array.
 @param[in] type_intruder_field the name of the field intruding on user's type.
-@param[in] compare the comparison function for the user type.
-@param[in] allocate the allocation function required for construction.
-@param[in] destroy the optional destructor to run if insertion fails.
+@param[in] allocator the allocation function required for construction.
+@param[in] destructor the optional destructor to run if insertion fails.
 @param[in] compound_literal_array the array of user types to insert into the
 map (e.g. (struct My_type[]){ {.val = 1}, {.val = 2}}).
 @return the initialized singly linked list on the right side of an equality
-operator (e.g. CCC_Singly_linked_list list = CCC_singly_linked_list_from(...);)
-@note The list is constructed to mirror the compound literal array provided.
-The list will be constructed with the element at index 0 of the array as the
-front of the list and the final index element at the back of the list. */
-#define CCC_singly_linked_list_from(type_intruder_field, compare, allocate,    \
-                                    destroy, compound_literal_array...)        \
-    CCC_private_singly_linked_list_from(type_intruder_field, compare,          \
-                                        allocate, destroy,                     \
-                                        compound_literal_array)
-
-/** @brief Initialize a singly linked list at runtime from a compound literal
-array.
-@param[in] type_intruder_field the name of the field intruding on user's type.
-@param[in] compare the comparison function for the user type.
-@param[in] allocate the allocation function required for construction.
-@param[in] destroy the optional destructor to run if insertion fails.
-@param[in] context context data needed for comparison or destruction.
-@param[in] compound_literal_array the array of user types to insert into the
-map (e.g. (struct My_type[]){ {.val = 1}, {.val = 2}}).
-@return the initialized singly linked list on the right side of an equality
-operator (e.g. CCC_Singly_linked_list list
-= CCC_singly_linked_list_context_from(...);)
-@note The list is constructed to mirror the compound literal array provided.
-The list will be constructed with the element at index 0 of the array as the
-front of the list and the final index element at the back of the list. */
-#define CCC_singly_linked_list_context_from(type_intruder_field, compare,      \
-                                            allocate, destroy, context,        \
-                                            compound_literal_array...)         \
-    CCC_private_singly_linked_list_context_from(type_intruder_field, compare,  \
-                                                allocate, destroy, context,    \
-                                                compound_literal_array)
+operator.
+@note The list is constructed as specified in the compound literal array
+provided. The list will be constructed with the element at index 0 of the array
+as the front of the list and the final index element at the back of the list. */
+#define CCC_singly_linked_list_from(                                           \
+    type_intruder_field, allocator, destructor, compound_literal_array...      \
+)                                                                              \
+    CCC_private_singly_linked_list_from(                                       \
+        type_intruder_field, allocator, destructor, compound_literal_array     \
+    )
 
 /**@}*/
 
@@ -207,37 +123,48 @@ Add or remove elements from the container. */
 /** @brief Push the type wrapping type_intruder to the front of the list. O(1).
 @param[in] list a pointer to the singly linked list.
 @param[in] type_intruder a pointer to the intrusive handle in the user type.
+@param[in] allocator the CCC_Allocator for memory allocation if needed.
 @return a pointer to the inserted element or NULL if allocation failed.
 
-Note that if allocation is not allowed the container assumes the memory wrapping
-elem has been allocated appropriately and with the correct lifetime by the user.
+Note that if an allocator is not provided, the container assumes the memory
+wrapping elem has been allocated appropriately and with the correct lifetime by
+the user.
 
 If allocation is allowed the provided element is copied to a new allocation. */
-[[nodiscard]] void *
-CCC_singly_linked_list_push_front(CCC_Singly_linked_list *list,
-                                  CCC_Singly_linked_list_node *type_intruder);
+[[nodiscard]] void *CCC_singly_linked_list_push_front(
+    CCC_Singly_linked_list *list,
+    CCC_Singly_linked_list_node *type_intruder,
+    CCC_Allocator const *allocator
+);
 
 /** @brief Write a compound literal directly to allocated memory at the front.
 O(1).
 @param[in] list_pointer a pointer to the singly linked list.
 @param[in] type_compound_literal a compound literal containing the elements to
 be written to a newly allocated node.
+@param[in] allocator_pointer a pointer to the required allocator.
 @return a reference to the element pushed to the front or NULL if allocation
 failed.
 
 Note that it only makes sense to use this method when the container is given
-allocation permission. Otherwise NULL is returned due to an inability for the
-container to allocate memory. */
-#define CCC_singly_linked_list_emplace_front(list_pointer,                     \
-                                             type_compound_literal...)         \
-    CCC_private_singly_linked_list_emplace_front(list_pointer,                 \
-                                                 type_compound_literal)
+an allocator to copy in the provided compound literal. If an empty allocator is
+provided NULL is returned due to an inability for the container to allocate
+memory. */
+#define CCC_singly_linked_list_emplace_front(                                  \
+    list_pointer, allocator_pointer, type_compound_literal...                  \
+)                                                                              \
+    CCC_private_singly_linked_list_emplace_front(                              \
+        list_pointer, allocator_pointer, type_compound_literal                 \
+    )
 
 /** @brief Pop the front element from the list. O(1).
 @param[in] list a pointer to the singly linked list.
+@param[in] allocator the CCC_Allocator to free if needed.
 @return ok if the list is non-empty and the pop is successful. An input error
 is returned if list is NULL or the list is empty. */
-CCC_Result CCC_singly_linked_list_pop_front(CCC_Singly_linked_list *list);
+CCC_Result CCC_singly_linked_list_pop_front(
+    CCC_Singly_linked_list *list, CCC_Allocator const *allocator
+);
 
 /** @brief Inserts splice element after the provided position. O(N).
 @param[in] position_list the list to which position belongs.
@@ -255,7 +182,8 @@ CCC_Result CCC_singly_linked_list_splice(
     CCC_Singly_linked_list *position_list,
     CCC_Singly_linked_list_node *type_intruder_position,
     CCC_Singly_linked_list *splice_list,
-    CCC_Singly_linked_list_node *type_intruder_splice);
+    CCC_Singly_linked_list_node *type_intruder_splice
+);
 
 /** @brief Inserts the `[begin, end)` of spliced elements after the provided
 position. `O(N)`.
@@ -278,13 +206,15 @@ CCC_Result CCC_singly_linked_list_splice_range(
     CCC_Singly_linked_list_node *type_intruder_position,
     CCC_Singly_linked_list *to_cut_list,
     CCC_Singly_linked_list_node *type_intruder_to_cut_begin,
-    CCC_Singly_linked_list_node *type_intruder_to_cut_exclusive_end);
+    CCC_Singly_linked_list_node *type_intruder_to_cut_exclusive_end
+);
 
 /** @brief Erases type_intruder from the list returning the following element.
 O(N).
 @param[in] list a pointer to the singly linked list.
 @param[in] type_intruder a handle to the intrusive element known to be in the
 list.
+@param[in] allocator the CCC_Allocator to free memory if needed.
 @return a pointer to the element following type_intruder in the list or NULL if
 the list is empty or any bad input is provided to the function.
 @warning type_intruder must be in the list.
@@ -292,13 +222,17 @@ the list is empty or any bad input is provided to the function.
 Note that if allocation permission is given to the container it will free the
 element. Otherwise, it is the user's responsibility to free the type wrapping
 elem. */
-void *CCC_singly_linked_list_erase(CCC_Singly_linked_list *list,
-                                   CCC_Singly_linked_list_node *type_intruder);
+void *CCC_singly_linked_list_erase(
+    CCC_Singly_linked_list *list,
+    CCC_Singly_linked_list_node *type_intruder,
+    CCC_Allocator const *allocator
+);
 
 /** @brief Erases a range from the list returning the element after end. O(N).
 @param[in] list a pointer to the singly linked list.
 @param[in] type_intruder_begin the start of the range in the list.
 @param[in] type_intruder_end the exclusive end of the range in the list.
+@param[in] allocator the CCC_Allocator to free memory if needed.
 @return a pointer to the element following the range in the list or NULL if the
 list is empty or any bad input is provided to the function.
 @warning the provided range must be in the list.
@@ -309,7 +243,9 @@ types wrapping the range of elements. */
 void *CCC_singly_linked_list_erase_range(
     CCC_Singly_linked_list *list,
     CCC_Singly_linked_list_node *type_intruder_begin,
-    CCC_Singly_linked_list_node *type_intruder_end);
+    CCC_Singly_linked_list_node *type_intruder_end,
+    CCC_Allocator const *allocator
+);
 
 /** @brief Extracts an element from the list without freeing it. O(N).
 @param[in] list a pointer to the singly linked list.
@@ -319,9 +255,9 @@ list.
 
 Note that regardless of allocation permission this method will not free the
 type wrapping elem. It only removes it from the list. */
-void *
-CCC_singly_linked_list_extract(CCC_Singly_linked_list *list,
-                               CCC_Singly_linked_list_node *type_intruder);
+void *CCC_singly_linked_list_extract(
+    CCC_Singly_linked_list *list, CCC_Singly_linked_list_node *type_intruder
+);
 
 /** @brief Extracts a range of elements from the list without freeing them.
 O(N).
@@ -336,7 +272,8 @@ as they no longer belong to any list. */
 void *CCC_singly_linked_list_extract_range(
     CCC_Singly_linked_list *list,
     CCC_Singly_linked_list_node *type_intruder_begin,
-    CCC_Singly_linked_list_node *type_intruder_end);
+    CCC_Singly_linked_list_node *type_intruder_end
+);
 
 /**@}*/
 
@@ -344,38 +281,48 @@ void *CCC_singly_linked_list_extract_range(
 Sort the container. */
 /**@{*/
 
-/** @brief Sorts the singly linked list in non-decreasing order as defined by
-the provided comparison function. `O(N * log(N))` time, `O(1)` space.
-@param[in] list a pointer to the singly linked list to sort.
-@return the result of the sort, usually OK. An arg error if singly_linked_list
-is null. */
-CCC_Result CCC_singly_linked_list_sort(CCC_Singly_linked_list *list);
-
-/** @brief Inserts e in sorted position according to the non-decreasing order
-of the list determined by the user provided comparison function.
-@param[in] list a pointer to the singly linked list.
+/** @brief Inserts type_intruder in sorted position according to the
+non-decreasing order of the list determined by the user provided comparison
+function. `O(1)`.
+@param[in] singly_linked_list a pointer to the singly linked list.
 @param[in] type_intruder a pointer to the element to be inserted in order.
+@param[in] comparator a CCC_Comparator for comparing user elements.
+@param[in] allocator an optional CCC_Allocator for allocating a new element.
 @return a pointer to the element that has been inserted or NULL if allocation
-is required and has failed.
-@warning this function assumes the list is sorted.
+is required and has failed. NULL is also returned if the list has never been
+formally sorted from sort.h.
+@warning This function assumes the list is sorted and inserts according to the
+last sorted ordering. If the list has never been sorted NULL is returned.
 
 If a non-increasing order is desired, return opposite results from the user
-comparison function. If an element is CCC_ORDER_LESSER return CCC_ORDER_GREATER
-and vice versa. If elements are equal, return CCC_ORDER_EQUAL. */
+comparison function. If an element is CCC_ORDER_LESSERERS return
+CCC_ORDER_GREATER and vice versa. If elements are equal, return CCC_ORDER_EQUAL.
+*/
 void *CCC_singly_linked_list_insert_sorted(
-    CCC_Singly_linked_list *list, CCC_Singly_linked_list_node *type_intruder);
+    CCC_Singly_linked_list *singly_linked_list,
+    CCC_Singly_linked_list_node *type_intruder,
+    CCC_Comparator const *comparator,
+    CCC_Allocator const *allocator
+);
 
 /** @brief Returns true if the list is sorted in non-decreasing order according
 to the user provided comparison function.
-@param[in] list a pointer to the singly linked list.
-@return CCC_TRUE if the list is sorted CCC_FALSE if not. Error if
-singly_linked_list is NULL.
+@param[in] singly_linked_list a pointer to the singly linked list.
+@param[in] order the assumed order checked against last sorted order of list.
+@param[in] comparator the comparator context for comparing list elements.
+@return CCC_TRUE if the list has been previously sorted and all elements remain
+in the assumed input sorted order. CCC_FALSE is returned if the list is not
+completely sorted in the assumed input order. CCC_TRIBOOL_ERROR is returned if
+the input list pointer is NULL.
 
 If a non-increasing order is desired, return opposite results from the user
 comparison function. If an element is CCC_ORDER_LESSER return CCC_ORDER_GREATER
 and vice versa. If elements are equal, return CCC_ORDER_EQUAL. */
-CCC_Tribool
-CCC_singly_linked_list_is_sorted(CCC_Singly_linked_list const *list);
+CCC_Tribool CCC_singly_linked_list_is_sorted(
+    CCC_Singly_linked_list const *singly_linked_list,
+    CCC_Order order,
+    CCC_Comparator const *comparator
+);
 
 /**@}*/
 
@@ -385,24 +332,26 @@ Deallocate the container. */
 
 /** @brief Clears the list freeing memory if needed. O(N).
 @param[in] list a pointer to the singly linked list.
-@param[in] destroy a destructor function or NULL if not needed.
+@param[in] destructor a CCC_Destructor to call on every element if needed.
+@param[in] allocator a CCC_Allocator to to free memory if needed.
 @return ok if the clear succeeded or an input error if list or destroy are NULL.
 
-Note that if allocation is allowed, the container will free the user types
-wrapping each intrusive element in the list after calling destroy. Therefore,
-destroy should not free memory if the container has been given allocation
-permission. It should only perform other necessary cleanup or state management.
+Note that if an allocator is allowed, the container will free the user types
+wrapping each intrusive element in the list after calling the destructor, if
+provided.
 
-If allocation is not allowed destroy may free memory or not as the user sees
-fit. The user is responsible for managing the memory that wraps each intrusive
-handle as the elements are simply removed from the list. */
-CCC_Result CCC_singly_linked_list_clear(CCC_Singly_linked_list *list,
-                                        CCC_Type_destructor *destroy);
+If an allocator is not provided the user is responsible for the behavior of
+the destructor and any memory management. */
+CCC_Result CCC_singly_linked_list_clear(
+    CCC_Singly_linked_list *list,
+    CCC_Destructor const *destructor,
+    CCC_Allocator const *allocator
+);
 
 /**@}*/
 
 /** @name Iteration Interface
-Iterate through the doubly linked list. */
+Iterate through the singly linked list. */
 /**@{*/
 
 /** @brief Return the user type at the front of the list. O(1).
@@ -440,14 +389,15 @@ CCC_singly_linked_list_end(CCC_Singly_linked_list const *list);
 list.
 @return the user type following type_intruder or the end sentinel if none
 follow. NULL is returned if list or type_intruder are NULL. */
-[[nodiscard]] void *
-CCC_singly_linked_list_next(CCC_Singly_linked_list const *list,
-                            CCC_Singly_linked_list_node const *type_intruder);
+[[nodiscard]] void *CCC_singly_linked_list_next(
+    CCC_Singly_linked_list const *list,
+    CCC_Singly_linked_list_node const *type_intruder
+);
 
 /**@}*/
 
 /** @name State Interface
-Obtain state from the doubly linked list. */
+Obtain state from the singly linked list. */
 /**@{*/
 
 /** @brief Return a pointer to the element at the front of the list. O(1).
@@ -489,12 +439,6 @@ typedef CCC_Singly_linked_list Singly_linked_list;
         CCC_singly_linked_list_for(arguments)
 #    define singly_linked_list_from(arguments...)                              \
         CCC_singly_linked_list_from(arguments)
-#    define singly_linked_list_context_from(arguments...)                      \
-        CCC_singly_linked_list_context_from(arguments)
-#    define singly_linked_list_with_allocator(arguments...)                    \
-        CCC_singly_linked_list_with_allocator(arguments)
-#    define singly_linked_list_context_with_allocator(arguments...)            \
-        CCC_singly_linked_list_context_with_allocator(arguments)
 #    define singly_linked_list_emplace_front(arguments...)                     \
         CCC_singly_linked_list_emplace_front(arguments)
 #    define singly_linked_list_push_front(arguments...)                        \

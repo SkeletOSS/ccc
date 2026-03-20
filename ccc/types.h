@@ -19,7 +19,7 @@ limitations under the License.
 All containers make use of the fundamental types defined here. The purpose of
 these types is to aid the user in writing correct callback functions, allow
 clear error handling, and present a consistent interface to users across
-containers. If allocation permission is given to containers be sure to review
+containers. If an allocator is passed to container functions be sure to review
 the allocator function interface. */
 #ifndef CCC_TYPES_H
 #define CCC_TYPES_H
@@ -29,19 +29,42 @@ the allocator function interface. */
 #include <stdint.h>
 /** @endcond */
 
-#include "private/private_types.h"
-
 /** @name Container Types
 Types used across many containers. */
 /**@{*/
 
+/** @brief The default argument when no user data is available for an
+initializer that accepts a pointer to user data. NULL is never an acceptable
+argument to any function or macro in the C Container Collection. If NULL is
+used at any call site, a programmer error has occurred. To help enforce this
+habit, use this macro in the rare case of the `_for(` initializer macros
+requiring a pointer to empty user data.
+
+```
+CCC_Buffer buffer = CCC_buffer_for(int, 0, 0, CCC_DEFAULT);
+```
+
+However, even then, a more specific initializer is appropriate.
+
+```
+CCC_Buffer buffer = CCC_buffer_default(int);
+```
+
+In most cases, an expressive initializer exists for any use. */
+#define CCC_DEFAULT NULL
+
 /** @brief The result of a range query on iterable containers.
 
 A range provides a view all elements that fit the equals range criteria
 of search-by-key containers. Use the provided range iteration functions in
 this header to iterate from beginning to end in forward order relative to
 the containers default ordering. */
-typedef union CCC_Range_wrap CCC_Range;
+typedef struct {
+    /** The pointer to the begin slot of the range. */
+    void *begin;
+    /** The pointer to the end slot of the range. */
+    void *end;
+} CCC_Range;
 
 /** @brief The result of a range_reverse query on iterable containers.
 
@@ -49,52 +72,12 @@ A range_reverse provides a view all elements that fit the equals range_reverse
 criteria of search-by-key containers. Use the provided range iteration functions
 in this header to iterate from beginning to end in reverse order relative to the
 containers default ordering. */
-typedef union CCC_Range_reverse_wrap CCC_Range_reverse;
-
-/** @brief The result of a range query on iterable containers.
-
-A range provides a view all elements that fit the equals range criteria
-of search-by-key containers. Use the provided range iteration functions in
-this header to iterate from beginning to end in forward order relative to
-the containers default ordering. */
-typedef union CCC_Handle_range_wrap CCC_Handle_range;
-
-/** @brief The result of a range_reverse query on iterable containers.
-
-A range_reverse provides a view all elements that fit the equals range_reverse
-criteria of search-by-key containers. Use the provided range iteration functions
-in this header to iterate from beginning to end in reverse order relative to the
-containers default ordering. */
-typedef union CCC_Handle_range_reverse_wrap CCC_Handle_range_reverse;
-
-/** @brief An Occupied or Vacant position in a searchable container.
-
-A entry is the basis for more complex container specific Entry Interface for
-all search-by-key containers. An entry is returned from various operations
-to provide both a reference to data and any context status that is
-important for the user. An entry can be Occupied or Vacant. See individual
-headers for containers that return this type for its meaning in context. */
-typedef union CCC_Entry_wrap CCC_Entry;
-
-/** @brief The status monitoring and entry state once it is obtained.
-
-To manage safe and efficient views into associative containers entries use
-status flags internally. The provided functions in the Entry Interface for
-each container are sufficient to obtain the needed status. However if more
-information is needed, the status can be passed to the
-CCC_entry_status_message() function for detailed string messages regarding the
-entry status. This may be helpful for debugging or logging. */
-typedef enum CCC_Entry_status CCC_Entry_status;
-
-/** @brief An Occupied or Vacant handle to a flat searchable container entry.
-
-A handle uses the same semantics as an entry. However, the wrapped value is
-a CCC_Handle_index index. When this type is returned the container interface is
-promising that this element will remain at the returned handle index until the
-element is removed by the user. This is similar to pointer stability but offers
-a stronger guarantee that will hold even if the underlying container is
-resized. */
-typedef union CCC_Handle_wrap CCC_Handle;
+typedef struct {
+    /** The pointer to the reverse begin slot of the range. */
+    void *reverse_begin;
+    /** The pointer to the reverse end slot of the range. */
+    void *reverse_end;
+} CCC_Range_reverse;
 
 /** @brief A stable index to user data in a container that uses a flat array as
 the underlying storage method.
@@ -108,6 +91,85 @@ when the underlying array is resized; a handle remains valid because it is an
 index not a pointer. */
 typedef size_t CCC_Handle_index;
 
+/** @brief The result of a range query on iterable containers.
+
+A range provides a view all elements that fit the equals range criteria
+of search-by-key containers. Use the provided range iteration functions in
+this header to iterate from beginning to end in forward order relative to
+the containers default ordering. */
+typedef struct {
+    /** The stable index to the begin slot of the range. */
+    CCC_Handle_index begin;
+    /** The stable index to the end slot of the range. */
+    CCC_Handle_index end;
+} CCC_Handle_range;
+
+/** @brief The result of a range_reverse query on iterable containers.
+
+A range_reverse provides a view all elements that fit the equals range_reverse
+criteria of search-by-key containers. Use the provided range iteration functions
+in this header to iterate from beginning to end in reverse order relative to the
+containers default ordering. */
+typedef struct {
+    /** The stable index to the reverse begin slot of the range. */
+    CCC_Handle_index reverse_begin;
+    /** The stable index to the reverse end slot of the range. */
+    CCC_Handle_index reverse_end;
+} CCC_Handle_range_reverse;
+
+/** @brief The status monitoring and entry state once it is obtained.
+
+To manage safe and efficient views into associative containers entries use
+status flags internally. The provided functions in the Entry Interface for
+each container are sufficient to obtain the needed status. However if more
+information is needed, the status can be passed to the
+CCC_entry_status_message() function for detailed string messages regarding the
+entry status. This may be helpful for debugging or logging. */
+typedef enum : uint8_t {
+    /** The entry has no value and is ready for new insert. */
+    CCC_ENTRY_VACANT = 0,
+    /** The entry has a value. */
+    CCC_ENTRY_OCCUPIED = 0x1,
+    /** Insert errors only occur for vacant entries. This means we
+        cannot insert a new value. No slot is available. */
+    CCC_ENTRY_INSERT_ERROR = 0x2,
+    /** Some input to the function returning an entry is bad. */
+    CCC_ENTRY_ARGUMENT_ERROR = 0x4,
+    /** Lesser used annotation on a vacant entry. Important not to look at the
+       vacant entry for some associative containers to preserve data structure
+       invariants. */
+    CCC_ENTRY_NO_UNWRAP = 0x8,
+} CCC_Entry_status;
+
+/** @brief An Occupied or Vacant position in a searchable container.
+
+A entry is the basis for more complex container specific Entry Interface for
+all search-by-key containers. An entry is returned from various operations
+to provide both a reference to data and any context status that is
+important for the user. An entry can be Occupied or Vacant. See individual
+headers for containers that return this type for its meaning in context. */
+typedef struct {
+    /** The user type that belongs at this container location. */
+    void *type;
+    /** A status to help us decide how to act with the entry. */
+    CCC_Entry_status status;
+} CCC_Entry;
+
+/** @brief An Occupied or Vacant handle to a flat searchable container entry.
+
+A handle uses the same semantics as an entry. However, the wrapped value is
+a CCC_Handle_index index. When this type is returned the container interface is
+promising that this element will remain at the returned handle index until the
+element is removed by the user. This is similar to pointer stability but offers
+a stronger guarantee that will hold even if the underlying container is
+resized. */
+typedef struct {
+    /** The index into the contiguous region of memory. */
+    CCC_Handle_index index;
+    /** A status to help us decide how to act with the entry. */
+    CCC_Entry_status status;
+} CCC_Handle;
+
 /** @brief The status monitoring and handle state once it is obtained.
 
 To manage safe and efficient views into associative containers entries use
@@ -116,7 +178,7 @@ each container are sufficient to obtain the needed status. However if more
 information is needed, the status can be passed to the
 CCC_entry_status_message() function for detailed string messages regarding the
 handle status. This may be helpful for debugging or logging. */
-typedef enum CCC_Entry_status CCC_Handle_status;
+typedef CCC_Entry_status CCC_Handle_status;
 
 /** @brief A three state boolean to allow for an error state. Error is -1, False
 is 0, and True is 1.
@@ -202,49 +264,6 @@ typedef struct {
     size_t count;
 } CCC_Count;
 
-/** @brief An element comparison helper.
-
-This type helps the user define the comparison callback function, if the
-container takes a standard element comparison function, and helps avoid
-swappable argument errors. Any type LHS is considered the left hand side and
-any type RHS is the right hand side when considering three-way comparison
-return values. Context data is a reference to any context data provided upon
-container initialization. */
-typedef struct {
-    /** The left hand side for a three-way comparison operation. */
-    void const *const type_left;
-    /** The right hand side for a three-way comparison operation. */
-    void const *const type_right;
-    /** A reference to context data provided to container on initialization. */
-    void *context;
-} CCC_Type_comparator_context;
-
-/** @brief A key comparison helper to avoid argument swapping.
-
-The key is considered the left hand side of the operation if three-way
-comparison is needed. Note a comparison is taking place between the key on the
-left hand side and the complete user type on the right hand side. This means the
-right hand side will need to manually access its key field.
-
-```
-int const *const key_left = order.key_left;
-struct Key_val const *const type_right  = order.type_right;
-return (*key_left > type_right->key) - (*key_left < type_right->key);
-```
-
-Notice that the user type must access its key field of its struct. Comparison
-must happen this way to support searching by key in associative containers
-rather than by entire user struct. Only needing to provide a key can save
-significant memory for a search depending on the size of the user type. */
-typedef struct {
-    /** Key matching the key field of the provided type to the container. */
-    void const *const key_left;
-    /** The complete user type stored in the container. */
-    void const *const type_right;
-    /** A reference to context provided to the container on initialization. */
-    void *context;
-} CCC_Key_comparator_context;
-
 /** @brief A reference to a user type within the container.
 
 This is to help users define callback functions that act on each node in a
@@ -252,26 +271,15 @@ container. For example, a destruct function will use this type. */
 typedef struct {
     /** The user type being stored in the container. */
     void *type;
-    /** A reference to context provided to the container on initialization. */
+    /** A reference to context for this action on a type.. */
     void *context;
-} CCC_Type_context;
+} CCC_Arguments;
 
-/** @brief A read only reference to a key type matching the key field type used
-for hash containers.
-
-A reference to any context data is also provided. This the struct one can use
-to hash their values with their hash function. */
-typedef struct {
-    /** A reference to the same type used for keys in the container. */
-    void const *const key;
-    /** A reference to context provided to the container on initialization. */
-    void *context;
-} CCC_Key_context;
-
-/** @brief A bundle of arguments to pass to the user-implemented Allocator
-function interface. This ensures clarity in inputs and expected outputs to
-an allocator function the user wishes to use for managing containers.
-Additional context can be provided for more complex allocation schemes. */
+/** @brief A bundle of arguments to pass to the user-implemented
+Allocator_interface function interface. This ensures clarity in inputs and
+expected outputs to an allocator function the user wishes to use for managing
+containers. Additional context can be provided for more complex allocation
+schemes. */
 typedef struct {
     /** The input to the allocation function. NULL or previously allocated. */
     void *input;
@@ -279,7 +287,7 @@ typedef struct {
     size_t bytes;
     /** Additional state to pass to the allocator to help manage memory. */
     void *context;
-} CCC_Allocator_context;
+} CCC_Allocator_arguments;
 
 /** @brief An allocation function at the core of all containers.
 
@@ -290,7 +298,8 @@ initialization and the programmer may choose how to best utilize this reference
 
 - If input is NULL and bytes 0, NULL is returned.
 - If input is NULL with non-zero bytes, new memory is allocated/returned.
-- If input is non-NULL it has been previously allocated by the Allocator.
+- If input is non-NULL it has been previously allocated by the
+Allocator_interface.
 - If input is non-NULL with non-zero size, input is resized to at least bytes
   size. The pointer returned is NULL if resizing fails. Upon success, the
   pointer returned might not be equal to the pointer provided.
@@ -304,7 +313,7 @@ needed):
 
 ```
 void *
-std_allocate(CCC_Allocator_context const context)
+std_allocate(CCC_Allocator_arguments const context)
 {
     if (!context.input && !context.bytes)
     {
@@ -328,7 +337,74 @@ is used. Any allocator that implements the required behavior is sufficient.
 For example programs that utilize the context parameter, see the sample
 programs. Using custom arena allocators or container compositions are cases when
 context is needed. */
-typedef void *CCC_Allocator(CCC_Allocator_context);
+typedef void *CCC_Allocator_interface(CCC_Allocator_arguments);
+
+/** @brief The type passed by reference to any container function that may need
+to allocate memory. The allocation function controls allocation, resizing, and
+freeing of memory. The context pointer references any auxiliary information
+needed to support the allocation function. The context pointer is passed as
+the context argument of the `CCC_Allocator_arguments` type, when
+provided.
+
+There are a few ways to pass this type when a container function requests a
+reference to it. First initialize it statically in a module.
+
+```
+static CCC_Allocator std_allocator = { .allocate = std_allocate };
+int
+main(void) {
+    container_insert(&container, &(int){1}, &std_allocator);
+    return 0;
+}
+```
+
+Or, construct the context inline.
+
+```
+int
+main(void) {
+    struct Arena_allocator arena = arena_initialize();
+    container_insert(&container, &(int){1},
+                     &(CCC_Allocator){.allocate = std_allocate});
+    return 0;
+}
+```
+
+Or, pass an empty context when allocation is prohibited.
+
+```
+int
+main(void) {
+    struct Arena_allocator arena = arena_initialize();
+    container_insert(&container, &(int){1}, &(CCC_Allocator){});
+}
+```
+
+The context provided with this allocator is separate from the context provided
+to containers that accept context for comparison or hashing functions. */
+typedef struct {
+    /** The allocator function to be passed to an allocating operation. */
+    CCC_Allocator_interface *allocate;
+    /** Additional state to pass to the allocator to help manage memory. */
+    void *context;
+} CCC_Allocator;
+
+/** @brief An element comparison helper.
+
+This type helps the user define the comparison callback function, if the
+container takes a standard element comparison function, and helps avoid
+swappable argument errors. Any type LHS is considered the left hand side and
+any type RHS is the right hand side when considering three-way comparison
+return values. Context data is a reference to any context data provided upon
+container initialization. */
+typedef struct {
+    /** The left hand side for a three-way comparison operation. */
+    void const *const type_left;
+    /** The right hand side for a three-way comparison operation. */
+    void const *const type_right;
+    /** A reference to context data provided to container on initialization. */
+    void *context;
+} CCC_Comparator_arguments;
 
 /** @brief A callback function for comparing two elements in a container.
 
@@ -336,7 +412,17 @@ A three-way comparison return value is expected and the two containers being
 compared are guaranteed to be non-NULL and pointing to the base of the user type
 stored in the container. Context may be NULL if no context is provided on
 initialization. */
-typedef CCC_Order CCC_Type_comparator(CCC_Type_comparator_context);
+typedef CCC_Order CCC_Comparator_interface(CCC_Comparator_arguments);
+
+/** @brief The type passed by reference to any container function that may need
+to compare elements.  The context pointer is passed as the context argument of
+the `CCC_Arguments` type, when provided. */
+typedef struct {
+    /** The comparison function to be passed to comparing operation. */
+    CCC_Comparator_interface *compare;
+    /** Additional state to pass to the comparison. */
+    void *context;
+} CCC_Comparator;
 
 /** @brief A callback function for modifying an element in the container.
 
@@ -346,7 +432,17 @@ user type and is not NULL. Context may be NULL if no context is provided on
 initialization. An update function is used when a container Interface exposes
 functions to modify the key or value used to determine sorted order of elements
 in the container. */
-typedef void CCC_Type_modifier(CCC_Type_context);
+typedef void CCC_Modifier_interface(CCC_Arguments);
+
+/** @brief The type passed by reference to any container function that may need
+to modify elements.  The context pointer is passed as the context argument of
+the `CCC_Arguments` type, when provided. */
+typedef struct {
+    /** The comparison function to be passed to comparing operation. */
+    CCC_Modifier_interface *modify;
+    /** Additional state to pass to the comparison. */
+    void *context;
+} CCC_Modifier;
 
 /** @brief A callback function for destroying an element in the container.
 
@@ -364,20 +460,94 @@ before the container frees. If the user has not given permission to the
 container to allocate memory, this a good function in which to free each
 element, if desired; any program state can be maintained then the element can be
 freed by the user in this function as the final step. */
-typedef void CCC_Type_destructor(CCC_Type_context);
+typedef void CCC_Destructor_interface(CCC_Arguments);
+
+/** @brief The type passed by reference to any container function that may need
+to destroy elements.  The context pointer is passed as the context argument of
+the `CCC_Arguments` type, when provided. */
+typedef struct {
+    /** The comparison function to be passed to comparing operation. */
+    CCC_Destructor_interface *destroy;
+    /** Additional state to pass to the comparison. */
+    void *context;
+} CCC_Destructor;
+
+/** @brief A key comparison helper to avoid argument swapping.
+
+The key is considered the left hand side of the operation if three-way
+comparison is needed. Note a comparison is taking place between the key on the
+left hand side and the complete user type on the right hand side. This means the
+right hand side will need to manually access its key field.
+
+```
+int const *const key_left = order.key_left;
+struct Key_val const *const type_right  = order.type_right;
+return (*key_left > type_right->key) - (*key_left < type_right->key);
+```
+
+Notice that the user type must access its key field of its struct. Comparison
+must happen this way to support searching by key in associative containers
+rather than by entire user struct. Only needing to provide a key can save
+significant memory for a search depending on the size of the user type. */
+typedef struct {
+    /** Key matching the key field of the provided type to the container. */
+    void const *const key_left;
+    /** The complete user type stored in the container. */
+    void const *const type_right;
+    /** A reference to context for this key comparison. */
+    void *context;
+} CCC_Key_comparator_arguments;
 
 /** @brief A callback function for three-way comparing two stored keys.
 
 The key is considered the left hand side of the comparison. The function should
 return CCC_ORDER_LESSER if the key is less than the key in key field of user
 type, CCC_ORDER_EQUAL if equal, and CCC_ORDER_GREATER if greater. */
-typedef CCC_Order CCC_Key_comparator(CCC_Key_comparator_context);
+typedef CCC_Order CCC_Key_comparator_interface(CCC_Key_comparator_arguments);
+
+/** @brief The type passed by reference to any container function that may need
+to compare keys.  The context pointer is passed as the context argument of
+the `CCC_Key_comparator_arguments` type, when provided. */
+typedef struct {
+    /** The comparison function to be passed to comparing operation. */
+    CCC_Key_comparator_interface *compare;
+    /** Additional state to pass to the comparison. */
+    void *context;
+} CCC_Key_comparator;
+
+/** @brief A read only reference to a key type matching the key field type used
+for hash containers.
+
+A reference to any context data is also provided. This the struct one can use
+to hash their values with their hash function. */
+typedef struct {
+    /** A reference to the same type used for keys in the container. */
+    void const *const key;
+    /** A reference to context for this action on a key. */
+    void *context;
+} CCC_Key_arguments;
 
 /** @brief A callback function to hash the key type used in a container.
 
 A reference to any context data provided on initialization is also available.
 Return the complete hash value as determined by the user hashing algorithm. */
-typedef uint64_t CCC_Key_hasher(CCC_Key_context);
+typedef uint64_t CCC_Key_hasher_interface(CCC_Key_arguments);
+
+/** @brief The type passed by reference to a hash map that needs a hash function
+and key comparison function. These fields are owned and stored within the hash
+map metadata struct because they provide the invariants of the container
+hashing and comparison algorithm. The fields are provided as arguments to the
+`CCC_Key_arguments` type for hashing and the `CCC_Key_comparator_arguments`
+type for key comparison when needed for the user defined functions that accept
+those types. */
+typedef struct {
+    /** The function for hashing the key field of the user type. */
+    CCC_Key_hasher_interface *hash;
+    /** The function for comparing a key to user elements in the container. */
+    CCC_Key_comparator_interface *compare;
+    /** A reference to context needed for hashing and comparison. */
+    void *context;
+} CCC_Hasher;
 
 /**@}*/
 
@@ -610,16 +780,16 @@ typedef CCC_Handle Handle;
 typedef CCC_Handle_index Handle_index;
 typedef CCC_Result Result;
 typedef CCC_Order Order;
-typedef CCC_Type_context Type_context;
-typedef CCC_Type_comparator_context Type_comparator_context;
-typedef CCC_Key_context Key_context;
-typedef CCC_Key_comparator_context Key_comparator_context;
-typedef CCC_Allocator Allocator;
-typedef CCC_Type_comparator Type_comparator;
-typedef CCC_Type_modifier Type_modifier;
-typedef CCC_Type_destructor Type_destructor;
-typedef CCC_Key_comparator Key_comparator;
-typedef CCC_Key_hasher Key_hasher;
+typedef CCC_Arguments Arguments;
+typedef CCC_Comparator_arguments Comparator_arguments;
+typedef CCC_Key_arguments Key_arguments;
+typedef CCC_Key_comparator_arguments Key_comparator_arguments;
+typedef CCC_Allocator_interface Allocator_interface;
+typedef CCC_Comparator_interface Comparator_interface;
+typedef CCC_Modifier_interface Modifier_interface;
+typedef CCC_Destructor_interface Destructor_interface;
+typedef CCC_Key_comparator_interface Key_comparator_interface;
+typedef CCC_Key_hasher_interface Key_hasher_interface;
 #    define entry_occupied(entry_pointer) CCC_entry_occupied(entry_pointer)
 #    define entry_insert_error(entry_pointer)                                  \
         CCC_entry_insert_error(entry_pointer)

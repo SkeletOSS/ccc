@@ -18,11 +18,16 @@ enum Push_direction {
     UTIL_PUSH_BACK,
 };
 
-CCC_Order val_order(CCC_Type_comparator_context);
+CCC_Order val_order(CCC_Comparator_arguments);
 
-enum Check_result check_order(CCC_Doubly_linked_list const *, size_t n,
-                              int const order[]);
-enum Check_result push_list(CCC_Doubly_linked_list *, enum Push_direction,
-                            size_t n, struct Val vals[]);
+enum Check_result
+check_order(CCC_Doubly_linked_list const *, size_t n, int const order[]);
+enum Check_result push_list(
+    CCC_Doubly_linked_list *,
+    enum Push_direction,
+    size_t n,
+    struct Val vals[],
+    CCC_Allocator const *
+);
 
 #endif /* DLL_UTIL_H */

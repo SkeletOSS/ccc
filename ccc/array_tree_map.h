@@ -87,7 +87,7 @@ or value update based on the needs of the user. Handles obtained via the Handle
 Interface are stable until the user removes the element at the provided handle.
 Insertions and deletions of other elements do not affect handle stability.
 Resizing of the table does not affect handle stability. */
-typedef union CCC_Array_tree_map_handle_wrap CCC_Array_tree_map_handle;
+typedef struct CCC_Array_tree_map_handle CCC_Array_tree_map_handle;
 
 /**@}*/
 
@@ -127,7 +127,6 @@ main(void)
     CCC_Array_tree_map map = CCC_array_tree_map_for(
         struct Val,
         key,
-        hash_key,
         order_vals,
         NULL,
         NULL,
@@ -142,32 +141,40 @@ However, the reserve interface only guarantees that at least the needed bytes
 are allocated. When the user must know the exact size of the backing object due
 to strict memory requirements, this is helpful. Such a use case may be rare, but
 must be supported by this container. */
-#define CCC_array_tree_map_storage_for(user_type_compound_literal_array,       \
-                                       optional_storage_specifier...)          \
-    CCC_private_array_tree_map_storage_for(user_type_compound_literal_array,   \
-                                           optional_storage_specifier)
+#define CCC_array_tree_map_storage_for(                                        \
+    user_type_compound_literal_array, optional_storage_specifier...            \
+)                                                                              \
+    CCC_private_array_tree_map_storage_for(                                    \
+        user_type_compound_literal_array, optional_storage_specifier           \
+    )
+
+/** @brief Initializes a default empty map at runtime or compile time.
+@param[in] type_name the name of the user type stored in the map.
+@param[in] type_key_field the name of the field in user type used as key.
+@param[in] comparator the CCC_Key_comparator for key comparison.
+@return the map for assignment on the right hand side of equality operator. */
+#define CCC_array_tree_map_default(type_name, type_key_field, comparator...)   \
+    CCC_private_array_tree_map_default(type_name, type_key_field, comparator)
 
 /** @brief Initializes the map at runtime or compile time.
 @param[in] type_name the name of the user type stored in the map.
 @param[in] type_key_field the name of the field in user type used as key.
-@param[in] compare the key comparison function (see types.h).
-@param[in] allocate the allocation function or NULL if allocation is banned.
-@param[in] context a pointer to any context data for comparison, allocation, or
-destruction.
-@param[in] capacity the capacity at data_pointer or 0.
+@param[in] comparator the CCC_Key_comparator for key comparison.
+@param[in] capacity the capacity at data or 0.
 @param[in] memory_pointer a pointer to the contiguous user types or NULL.
 @return the struct initialized tree map for direct assignment
 (i.e. CCC_Array_tree_map m = CCC_array_tree_map_for(...);). */
-#define CCC_array_tree_map_for(type_name, type_key_field, compare, allocate,   \
-                               context, capacity, memory_pointer)              \
-    CCC_private_array_tree_map_for(type_name, type_key_field, compare,         \
-                                   allocate, context, capacity,                \
-                                   memory_pointer)
+#define CCC_array_tree_map_for(                                                \
+    type_name, type_key_field, comparator, capacity, memory_pointer            \
+)                                                                              \
+    CCC_private_array_tree_map_for(                                            \
+        type_name, type_key_field, comparator, capacity, memory_pointer        \
+    )
 
 /** @brief Initialize a dynamic map at runtime from an initializer list.
 @param[in] type_key_field the field of the struct used for key storage.
-@param[in] compare the CCC_Key_comparator the user intends to use.
-@param[in] allocate the required allocation function.
+@param[in] comparator the CCC_Key_comparator for key comparison.
+@param[in] allocator the required CCC_Allocator for reservation.
 @param[in] optional_capacity optionally specify the capacity of the map if
 different from the size of the compound literal array initializer. If the
 capacity is greater than the size of the compound literal array initializer, it
@@ -180,17 +187,14 @@ intended to be stored in the map, using array compound literal initialization
 syntax (e.g `(struct my_type[]){{.k = 0, .v 0}, {.k = 1, .v = 1}}`).
 @return the  map directly initialized on the right hand side of the equality
 operator (i.e. CCC_Array_tree_map map = CCC_array_tree_map_from(...);)
-@warning An allocation function is required. This initializer is only available
-for dynamic maps.
+@warning An allocator is required to use this initializer.
 @warning When duplicate keys appear in the initializer list, the last occurrence
 replaces earlier ones by value (all fields are overwritten).
 @warning If initialization fails all subsequent queries, insertions, or
 removals will indicate the error: either memory related or lack of an
 allocation function provided.
 
-Initialize a dynamic map at run time. This example requires no context data for
-initialization.
-
+Initialize a dynamic map at run time.
 ```
 #define ARRAY_TREE_MAP_USING_NAMESPACE_CCC
 struct Val
@@ -203,8 +207,8 @@ main(void)
 {
     Array_tree_map static_map = array_tree_map_from(
         key,
-        array_tree_map_key_order,
-        std_allocate,
+        val_key_comparator,
+        std_allocator,
         0,
         (struct Val[]) {
             {.key = 1, .val = 1},
@@ -218,82 +222,27 @@ main(void)
 
 Only dynamic maps may be initialized this way due the inability of the map
 map to protect its invariants from user error at compile time. */
-#define CCC_array_tree_map_from(type_key_field, compare, allocate,             \
-                                optional_capacity,                             \
-                                type_compound_literal_array...)                \
-    CCC_private_array_tree_map_from(type_key_field, compare, allocate,         \
-                                    optional_capacity,                         \
-                                    type_compound_literal_array)
-
-/** @brief Initialize a dynamic map at runtime from an initializer list.
-@param[in] type_key_field the field of the struct used for key storage.
-@param[in] compare the CCC_Key_comparator the user intends to use.
-@param[in] allocate the required allocation function.
-@param[in] context context data that is needed for hashing or comparison.
-@param[in] optional_capacity optionally specify the capacity of the map if
-different from the size of the compound literal array initializer. If the
-capacity is greater than the size of the compound literal array initializer, it
-is respected and the capacity is reserved. If the capacity is less than the size
-of the compound array initializer, the compound literal array initializer size
-is set as the capacity. Therefore, 0 is valid if one is not concerned with the
-size of the underlying reservation.
-@param[in] type_compound_literal_array a list of key value pairs of the type
-intended to be stored in the map, using array compound literal initialization
-syntax (e.g `(struct my_type[]){{.k = 0, .v 0}, {.k = 1, .v = 1}}`).
-@return the  map directly initialized on the right hand side of the equality
-operator (i.e. CCC_Array_tree_map map = CCC_array_tree_map_from(...);)
-@warning An allocation function is required. This initializer is only available
-for dynamic maps.
-@warning When duplicate keys appear in the initializer list, the last occurrence
-replaces earlier ones by value (all fields are overwritten).
-@warning If initialization fails all subsequent queries, insertions, or
-removals will indicate the error: either memory related or lack of an
-allocation function provided.
-
-Initialize a dynamic map at run time. This example requires no context data for
-initialization.
-
-```
-#define ARRAY_TREE_MAP_USING_NAMESPACE_CCC
-struct Val
-{
-    int key;
-    int val;
-};
-int
-main(void)
-{
-    Array_tree_map static_map = array_tree_map_context_from(
-        key,
-        array_tree_map_key_order,
-        arena_allocate,
-        &arena,
-        0,
-        (struct Val[]) {
-            {.key = 1, .val = 1},
-            {.key = 2, .val = 2},
-            {.key = 3, .val = 3},
-        },
-    );
-    return 0;
-}
-```
-
-Only dynamic maps may be initialized this way due the inability of the map
-map to protect its invariants from user error at compile time. */
-#define CCC_array_tree_map_context_from(type_key_field, compare, allocate,     \
-                                        context, optional_capacity,            \
-                                        type_compound_literal_array...)        \
-    CCC_private_array_tree_map_context_from(type_key_field, compare, allocate, \
-                                            context, optional_capacity,        \
-                                            type_compound_literal_array)
+#define CCC_array_tree_map_from(                                               \
+    type_key_field,                                                            \
+    comparator,                                                                \
+    allocator,                                                                 \
+    optional_capacity,                                                         \
+    type_compound_literal_array...                                             \
+)                                                                              \
+    CCC_private_array_tree_map_from(                                           \
+        type_key_field,                                                        \
+        comparator,                                                            \
+        allocator,                                                             \
+        optional_capacity,                                                     \
+        type_compound_literal_array                                            \
+    )
 
 /** @brief Initialize a dynamic map at runtime with at least the specified
 capacity.
 @param[in] type_name the name of the type being stored in the map.
 @param[in] type_key_field the field of the struct used for key storage.
-@param[in] compare the CCC_Key_comparator the user intends to use.
-@param[in] allocate the required allocation function.
+@param[in] comparator the CCC_Key_comparator for key comparison.
+@param[in] allocator the required CCC_Allocator for reservation.
 @param[in] capacity the desired capacity for the map. A capacity of 0 results
 in an argument error and is a no-op after the map is initialized empty.
 @return the map directly initialized on the right hand side of the equality
@@ -321,8 +270,8 @@ main(void)
     Array_tree_map map = array_tree_map_with_capacity(
         struct Val,
         key,
-        array_tree_map_key_order,
-        std_allocate,
+        val_key_comparator,
+        std_allocator,
         4096
     );
     return 0;
@@ -331,65 +280,17 @@ main(void)
 
 Only dynamic maps may be initialized this way as it simply combines the steps
 of initialization and reservation. */
-#define CCC_array_tree_map_with_capacity(type_name, type_key_field, compare,   \
-                                         allocate, capacity)                   \
-    CCC_private_array_tree_map_with_capacity(type_name, type_key_field,        \
-                                             compare, allocate, capacity)
-
-/** @brief Initialize a dynamic map at runtime with at least the specified
-capacity.
-@param[in] type_name the name of the type being stored in the map.
-@param[in] type_key_field the field of the struct used for key storage.
-@param[in] compare the CCC_Key_comparator the user intends to use.
-@param[in] allocate the required allocation function.
-@param[in] context context data that is needed for comparison.
-@param[in] capacity the desired capacity for the map. A capacity of 0 results
-in an argument error and is a no-op after the map is initialized empty.
-@return the map directly initialized on the right hand side of the equality
-operator (i.e. CCC_Array_tree_map map =
-CCC_array_tree_map_with_capacity(...);)
-@warning An allocation function is required. This initializer is only available
-for dynamic maps.
-@warning If initialization fails all subsequent queries, insertions, or
-removals will indicate the error: either memory related or lack of an
-allocation function provided.
-
-Initialize a dynamic map at run time. This example requires no context
-data for initialization.
-
-```
-#define ARRAY_TREE_MAP_USING_NAMESPACE_CCC
-struct Val
-{
-    int key;
-    int val;
-};
-int
-main(void)
-{
-    Array_tree_map map = array_tree_map_context_with_capacity(
-        struct Val,
-        key,
-        array_tree_map_key_order,
-        arena_allocate,
-        &arena,
-        4096
-    );
-    return 0;
-}
-```
-
-Only dynamic maps may be initialized this way as it simply combines the steps
-of initialization and reservation. */
-#define CCC_array_tree_map_context_with_capacity(                              \
-    type_name, type_key_field, compare, allocate, context, capacity)           \
-    CCC_private_array_tree_map_context_with_capacity(                          \
-        type_name, type_key_field, compare, allocate, context, capacity)
+#define CCC_array_tree_map_with_capacity(                                      \
+    type_name, type_key_field, comparator, allocator, capacity                 \
+)                                                                              \
+    CCC_private_array_tree_map_with_capacity(                                  \
+        type_name, type_key_field, comparator, allocator, capacity             \
+    )
 
 /** @brief Initialize a fixed map at compile or runtime from any user chosen
 type with no allocation permission or context.
 @param[in] type_key_field the field of the struct used for key storage.
-@param[in] compare the CCC_Key_comparator the user intends to use.
+@param[in] comparator the CCC_Key_comparator for key comparison.
 @param[in] compound_literal the compound literal array of a type provided by the
 user around which the struct of array backing storage for the map will be built.
 @param[in] optional_storage_specifier lifetime specifier of the backing struct
@@ -409,141 +310,43 @@ struct Val
 };
 static Array_tree_map map = array_tree_map_with_storage(
     key,
-    array_tree_map_key_order,
+    val_key_comparator,
     (struct Val[4096]){}
 );
 ```
 
 This can help eliminate boilerplate in initializers. */
 #define CCC_array_tree_map_with_storage(                                       \
-    type_key_field, compare, compound_literal, optional_storage_specifier...)  \
+    type_key_field,                                                            \
+    comparator,                                                                \
+    compound_literal,                                                          \
+    optional_storage_specifier...                                              \
+)                                                                              \
     CCC_private_array_tree_map_with_storage(                                   \
-        type_key_field, compare, compound_literal, optional_storage_specifier)
-
-/** @brief Initialize a fixed map at compile or runtime from any user chosen
-type with no allocation permission.
-@param[in] type_key_field the field of the struct used for key storage.
-@param[in] compare the CCC_Key_comparator the user intends to use.
-@param[in] context context for the map.
-@param[in] compound_literal the compound literal array of a type provided by the
-user around which the struct of array backing storage for the map will be built.
-@param[in] optional_storage_specifier lifetime specifier of the backing struct
-of array storage, such as static, for the fixed size map in the scope at which
-it is allocated or declared.
-@return the map directly initialized on the right hand side of the equality
-operator.
-
-Initialize a fixed map.
-
-```
-#define ARRAY_TREE_MAP_USING_NAMESPACE_CCC
-struct Val
-{
-    int key;
-    int val;
-};
-static Array_tree_map map = array_tree_map_with_storage(
-    key,
-    array_tree_map_key_order,
-    &module_context,
-    (struct Val[4096]){}
-);
-```
-
-This can help eliminate boilerplate in initializers. */
-#define CCC_array_tree_map_context_with_storage(type_key_field, compare,       \
-                                                context, compound_literal,     \
-                                                optional_storage_specifier...) \
-    CCC_private_array_tree_map_context_with_storage(                           \
-        type_key_field, compare, context, compound_literal,                    \
-        optional_storage_specifier)
-
-/** @brief Initialize an empty dynamic map at compile or runtime with an
-allocator.
-@param[in] type_name the user defined type stored in the map.
-@param[in] type_key_field the field of the struct used for key storage.
-@param[in] compare the CCC_Key_comparator the user intends to use.
-@param[in] allocate the CCC_Allocator function used to manage map memory.
-@return the map directly initialized on the right hand side of the equality
-operator (e.g. CCC_Array_tree_map map =
-CCC_array_tree_map_with_allocator(...);)
-
-Initialize a dynamic map at compile time.
-
-```
-#define ARRAY_TREE_MAP_USING_NAMESPACE_CCC
-struct Val
-{
-    int key;
-    int val;
-};
-static Array_tree_map map = array_tree_map_with_allocator(
-    struct Val,
-    key,
-    array_tree_map_key_order,
-    stdlib_allocate,
-);
-```
-
-This can help eliminate boilerplate in initializers. */
-#define CCC_array_tree_map_with_allocator(type_name, type_key_field, compare,  \
-                                          allocate)                            \
-    CCC_private_array_tree_map_with_allocator(type_name, type_key_field,       \
-                                              compare, allocate)
-
-/** @brief Initialize an empty dynamic map at compile or runtime with an
-allocator and supplementary context.
-@param[in] type_name the user defined type stored in the map.
-@param[in] type_key_field the field of the struct used for key storage.
-@param[in] compare the CCC_Key_comparator the user intends to use.
-@param[in] allocate the CCC_Allocator function used to manage map memory.
-@param[in] context any additional context needed for comparison or allocation.
-@return the map directly initialized on the right hand side of the equality
-operator (e.g. CCC_Array_tree_map map =
-CCC_array_tree_map_context_with_allocator(...);)
-
-Initialize a dynamic map at compile time.
-
-```
-#define ARRAY_TREE_MAP_USING_NAMESPACE_CCC
-struct Val
-{
-    int key;
-    int val;
-};
-static Array_tree_map map = array_tree_map_context_with_allocator(
-    struct Val,
-    key,
-    array_tree_map_key_order,
-    arena_allocate,
-    &arena_manager,
-);
-```
-
-This can help eliminate boilerplate in initializers. */
-#define CCC_array_tree_map_context_with_allocator(type_name, type_key_field,   \
-                                                  compare, allocate, context)  \
-    CCC_private_array_tree_map_context_with_allocator(                         \
-        type_name, type_key_field, compare, allocate, context)
+        type_key_field,                                                        \
+        comparator,                                                            \
+        compound_literal,                                                      \
+        optional_storage_specifier                                             \
+    )
 
 /** @brief Copy the map at source to destination.
 @param[in] destination the initialized destination for the copy of the source
 map.
 @param[in] source the initialized source of the map.
-@param[in] allocate the allocation function to resize destination or NULL.
+@param[in] allocator CCC_Allocator for resizing or `&(CCC_Allocator){}`.
 @return the result of the copy operation. If the destination capacity is less
 than the source capacity and no allocation function is provided an input error
 is returned. If resizing is required and resizing of destination fails a memory
 error is returned.
 @note destination must have capacity greater than or equal to source. If
-destination capacity is less than source, an allocation function must be
-provided with the allocate argument.
+destination capacity is less than source, an allocator must be provided with the
+allocate argument.
 
 Note that there are two ways to copy data from source to destination: provide
-sufficient memory and pass NULL as allocate, or allow the copy function to take
-care of allocation for the copy.
+sufficient memory and pass `&(CCC_Allocator){}` as allocator, or pass an
+allocator.
 
-Manual memory management with no allocation function provided.
+Manual memory management with no allocator provided.
 
 ```
 #define ARRAY_TREE_MAP_USING_NAMESPACE_CCC
@@ -552,28 +355,21 @@ struct Val
     int key;
     int val;
 };
-CCC_array_tree_map_declare_fixed(Small_fixed_map, struct Val,
-64); static map source =
-array_tree_map_for(
+static map source = array_tree_map_with_storage(
     struct Val,
     key,
-    array_tree_map_key_order,
-    NULL,
-    NULL,
-    array_tree_map_fixed_capacity(Small_fixed_map),
-    &(static Small_fixed_map){}
+    val_key_comparator,
+    &(struct Val[64]){}
 );
-insert_rand_vals(&source);
-static map destination = array_tree_map_for(
+insert_rand_vals(&source, &(CCC_Allocator){});
+static map destination = array_tree_map_with_storage(
     struct Val,
     key,
-    array_tree_map_key_order,
-    NULL,
-    NULL,
-    array_tree_map_fixed_capacity(Small_fixed_map),
-    &(static Small_fixed_map){}
+    val_key_comparator,
+    &(struct Val[64]){}
 );
-CCC_Result res = array_tree_map_copy(&destination, &source, NULL);
+CCC_Result res
+    = array_tree_map_copy(&destination, &source, &(CCC_Allocator){});
 ```
 
 The above requires destination capacity be greater than or equal to source
@@ -586,97 +382,37 @@ struct Val
     int key;
     int val;
 };
-static Array_adaptive_map source = array_tree_map_for(
+static Array_adaptive_map source = array_tree_map_default(
     struct Val,
     key,
-    key_order,
-    std_allocate,
-    NULL,
-    0,
-    NULL
+    val_key_comparator
 );
-insert_rand_vals(&source);
-static Array_adaptive_map destination = array_tree_map_for(
+insert_rand_vals(&source, &std_allocator);
+static Array_adaptive_map destination = array_tree_map_default(
     struct Val,
     key,
-    key_order,
-    std_allocate,
-    NULL,
-    0,
-    NULL
+    val_key_comparator
 );
-CCC_Result res = array_tree_map_copy(&destination, &source, std_allocate);
+CCC_Result res = array_tree_map_copy(&destination, &source, &std_allocator);
 ```
-
-The above allows destination to have a capacity less than that of the source as
-long as copy has been provided an allocation function to resize destination.
-Note that this would still work if copying to a destination that the user wants
-as a fixed size map.
-
-```
-#define ARRAY_TREE_MAP_USING_NAMESPACE_CCC
-struct Val
-{
-    int key;
-    int val;
-};
-static Array_adaptive_map source = array_tree_map_for(
-    struct Val,
-    key,
-    key_order,
-    std_allocate,
-    NULL,
-    0,
-    NULL
-);
-insert_rand_vals(&source);
-static Array_adaptive_map destination = array_tree_map_for(
-    struct Val,
-    key,
-    key_order,
-    NULL,
-    NULL,
-    0,
-    NULL
-);
-CCC_Result res = array_tree_map_copy(&destination, &source, std_allocate);
-```
-
-The above sets up destination with fixed size while source is a dynamic map.
-Because an allocation function is provided, the destination is resized once for
-the copy and retains its fixed size after the copy is complete. This would
-require the user to manually free the underlying Buffer at destination
-eventually if this method is used. Usually it is better to allocate the memory
-explicitly before the copy if copying between maps without allocation
-permission.
 
 These options allow users to stay consistent across containers with their
 memory management strategies. */
-CCC_Result CCC_array_tree_map_copy(CCC_Array_tree_map *destination,
-                                   CCC_Array_tree_map const *source,
-                                   CCC_Allocator *allocate);
+CCC_Result CCC_array_tree_map_copy(
+    CCC_Array_tree_map *destination,
+    CCC_Array_tree_map const *source,
+    CCC_Allocator const *allocator
+);
 
 /** @brief Reserves space for at least to_add more elements.
 @param[in] map a pointer to the array tree map.
 @param[in] to_add the number of elements to add to the current size.
-@param[in] allocate the allocation function to use to reserve memory.
+@param[in] allocator CCC_Allocator for reserving memory.
 @return the result of the reservation. OK if successful, otherwise an error
-status is returned.
-@note see the CCC_array_tree_map_clear_and_free_reserve function if
-this function is being used for a one-time dynamic reservation.
-
-This function can be used for a dynamic map with or
-without allocation permission. If the map has allocation
-permission, it will reserve the required space and later resize if more space is
-needed.
-
-If the map has been initialized with no allocation
-permission and no memory this function can serve as a one-time reservation. This
-is helpful when a fixed size is needed but that size is only known dynamically
-at runtime. To free the map in such a case see the
-CCC_array_tree_map_clear_and_free_reserve function. */
-CCC_Result CCC_array_tree_map_reserve(CCC_Array_tree_map *map, size_t to_add,
-                                      CCC_Allocator *allocate);
+status is returned. */
+CCC_Result CCC_array_tree_map_reserve(
+    CCC_Array_tree_map *map, size_t to_add, CCC_Allocator const *allocator
+);
 
 /**@}*/
 
@@ -694,8 +430,8 @@ handle represents a slot that has been taken by a new element because the old
 one has been removed that new element data will be returned.
 @warning do not try to access data in the table manually with a handle. Always
 use this provided interface function when a reference to data is needed. */
-[[nodiscard]] void *CCC_array_tree_map_at(CCC_Array_tree_map const *handle,
-                                          CCC_Handle_index index);
+[[nodiscard]] void *
+CCC_array_tree_map_at(CCC_Array_tree_map const *handle, CCC_Handle_index index);
 
 /** @brief Returns a reference to the user type in the table at the handle.
 @param[in] array_tree_map_pointer a pointer to the map.
@@ -703,10 +439,12 @@ use this provided interface function when a reference to data is needed. */
 @param[in] array_index the index handle obtained from previous map operations.
 @return a reference to the handle at handle in the map as the type the user has
 stored in the map. */
-#define CCC_array_tree_map_as(array_tree_map_pointer, type_name,               \
-                              array_index...)                                  \
-    CCC_private_array_tree_map_as(array_tree_map_pointer, type_name,           \
-                                  array_index)
+#define CCC_array_tree_map_as(                                                 \
+    array_tree_map_pointer, type_name, array_index...                          \
+)                                                                              \
+    CCC_private_array_tree_map_as(                                             \
+        array_tree_map_pointer, type_name, array_index                         \
+    )
 
 /** @brief Searches the map for the presence of key.
 @param[in] map the map to be searched.
@@ -720,9 +458,9 @@ CCC_array_tree_map_contains(CCC_Array_tree_map const *map, void const *key);
 @param[in] map the tree map to search.
 @param[in] key the key to search matching stored key type.
 @return a view of the map handle if it is present, else NULL. */
-[[nodiscard]] CCC_Handle_index
-CCC_array_tree_map_get_key_value(CCC_Array_tree_map const *map,
-                                 void const *key);
+[[nodiscard]] CCC_Handle_index CCC_array_tree_map_get_key_value(
+    CCC_Array_tree_map const *map, void const *key
+);
 
 /**@}*/
 
@@ -734,18 +472,21 @@ control flow is needed. */
 /** @brief Invariantly inserts the key value in type_output.
 @param[in] map the pointer to the tree map.
 @param[out] type_output the type user type map elem.
+@param[in] allocator CCC_Allocator for reserving memory if needed.
 @return a type element in the table. If Vacant, no prior element with
 key existed and the type key value type remains unchanged. If Occupied the
 old value is written to the type key value type. If more space is needed
 but allocation fails or has been forbidden, an insert error is set.
 
 Note that this function may write to the provided user type struct. */
-[[nodiscard]] CCC_Handle CCC_array_tree_map_swap_handle(CCC_Array_tree_map *map,
-                                                        void *type_output);
+[[nodiscard]] CCC_Handle CCC_array_tree_map_swap_handle(
+    CCC_Array_tree_map *map, void *type_output, CCC_Allocator const *allocator
+);
 
 /** @brief Invariantly inserts the key value in type_output_pointer.
 @param[in] array_tree_map_pointer the pointer to the tree map.
 @param[out] type_output_pointer type user type map elem.
+@param[in] allocator_pointer CCC_Allocator for reserving memory if needed.
 @return a compound literal reference to a type element in the table. If
 Vacant, no prior element with key existed and the type key value type
 remains unchanged. If Occupied the old value is written to the type wrapping
@@ -753,39 +494,49 @@ key value type. If more space is needed but allocation fails or has been
 forbidden, an insert error is set.
 
 Note that this function may write to the provided user type struct. */
-#define CCC_array_tree_map_swap_handle_wrap(array_tree_map_pointer,            \
-                                            type_output_pointer)               \
-    &(CCC_Handle){CCC_array_tree_map_swap_handle((array_tree_map_pointer),     \
-                                                 (type_output_pointer))        \
-                      .private}
+#define CCC_array_tree_map_swap_handle_wrap(                                   \
+    array_tree_map_pointer, type_output_pointer, allocator_pointer...          \
+)                                                                              \
+    &(struct { CCC_Handle private; }){                                         \
+        CCC_array_tree_map_swap_handle(                                        \
+            (array_tree_map_pointer), (type_output_pointer), allocator_pointer \
+        )}                                                                     \
+         .private
 
 /** @brief Attempts to insert the key value in type.
 @param[in] map the pointer to the map.
 @param[in] type the type user type map elem.
+@param[in] allocator CCC_Allocator for reserving memory if needed.
 @return a handle. If Occupied, the handle contains a reference to the key value
 user type in the map and may be unwrapped. If Vacant the handle contains a
 reference to the newly inserted handle in the map. If more space is needed but
 allocation fails, an insert error is set. */
-[[nodiscard]] CCC_Handle CCC_array_tree_map_try_insert(CCC_Array_tree_map *map,
-                                                       void const *type);
+[[nodiscard]] CCC_Handle CCC_array_tree_map_try_insert(
+    CCC_Array_tree_map *map, void const *type, CCC_Allocator const *allocator
+);
 
 /** @brief Attempts to insert the key value type_pointer.
 @param[in] array_tree_map_pointer the pointer to the map.
 @param[in] type_pointer the type user type map elem.
+@param[in] allocator_pointer CCC_Allocator for reserving memory if needed.
 @return a compound literal reference to a handle. If Occupied, the handle
 contains a reference to the key value user type in the map and may be unwrapped.
 If Vacant the handle contains a reference to the newly inserted handle in the
 map. If more space is needed but allocation fails an insert error is set. */
-#define CCC_array_tree_map_try_insert_wrap(array_tree_map_pointer,             \
-                                           type_pointer)                       \
-    &(CCC_Handle){CCC_array_tree_map_try_insert((array_tree_map_pointer),      \
-                                                (type_pointer))                \
-                      .private}
+#define CCC_array_tree_map_try_insert_wrap(                                    \
+    array_tree_map_pointer, type_pointer, allocator_pointer...                 \
+)                                                                              \
+    &(struct { CCC_Handle private; }){                                         \
+        CCC_array_tree_map_try_insert(                                         \
+            (array_tree_map_pointer), (type_pointer), allocator_pointer        \
+        )}                                                                     \
+         .private
 
 /** @brief lazily insert type_compound_literal into the map at key if key is
 absent.
 @param[in] array_tree_map_pointer a pointer to the map.
 @param[in] key the direct key r-value.
+@param[in] allocator_pointer CCC_Allocator for reserving memory if needed.
 @param[in] type_compound_literal the compound literal specifying the value.
 @return a compound literal reference to the handle of the existing or newly
 inserted value. Occupied indicates the key existed, Vacant indicates the key
@@ -795,39 +546,73 @@ occurs that prevents insertion. An insertion error will flag such a case.
 Note that for brevity and convenience the user need not write the key to the
 lazy value compound literal as well. This function ensures the key in the
 compound literal matches the searched key. */
-#define CCC_array_tree_map_try_insert_with(array_tree_map_pointer, key,        \
-                                           type_compound_literal...)           \
-    &(CCC_Handle){CCC_private_array_tree_map_try_insert_with(                  \
-        array_tree_map_pointer, key, type_compound_literal)}
+#define CCC_array_tree_map_try_insert_with(                                    \
+    array_tree_map_pointer, key, allocator_pointer, type_compound_literal...   \
+)                                                                              \
+    &(struct { CCC_Handle private; }){                                         \
+        CCC_private_array_tree_map_try_insert_with(                            \
+            array_tree_map_pointer,                                            \
+            key,                                                               \
+            allocator_pointer,                                                 \
+            type_compound_literal                                              \
+        )}                                                                     \
+         .private
 
 /** @brief Invariantly inserts or overwrites a user struct into the map.
-@param[in] map a pointer to the handle hash map.
+@param[in] map a pointer to the handle map.
 @param[in] type the type user struct key value.
+@param[in] allocator CCC_Allocator for reserving memory if needed.
 @return a handle. If Occupied a handle was overwritten by the new key value.
 If Vacant no prior map handle existed.
 
 Note that this function can be used when the old user type is not needed but
 the information regarding its presence is helpful. */
-[[nodiscard]] CCC_Handle
-CCC_array_tree_map_insert_or_assign(CCC_Array_tree_map *map, void const *type);
+[[nodiscard]] CCC_Handle CCC_array_tree_map_insert_or_assign(
+    CCC_Array_tree_map *map, void const *type, CCC_Allocator const *allocator
+);
+
+/** @brief Invariantly inserts or overwrites a user struct into the map.
+@param[in] map_pointer a pointer to the handle map.
+@param[in] type_pointer a pointer to the user struct key value type.
+@param[in] allocator_pointer CCC_Allocator for reserving memory if needed.
+@return a compound literal reference to a handle. If Occupied a handle was
+overwritten by the new key value. If Vacant no prior map handle existed.
+
+Note that this function can be used when the old user type is not needed but
+the information regarding its presence is helpful. */
+#define CCC_array_tree_map_insert_or_assign_wrap(                              \
+    map_pointer, type_pointer, allocator_pointer...                            \
+)                                                                              \
+    &(struct { CCC_Handle private; }){                                         \
+        CCC_array_tree_map_insert_or_assign(                                   \
+            map_pointer, type_pointer, allocator_pointer                       \
+        )}                                                                     \
+         .private
 
 /** @brief Inserts a new key value pair or overwrites the existing handle.
-@param[in] array_tree_map_pointer the pointer to the handle hash map.
+@param[in] array_tree_map_pointer the pointer to the handle map.
 @param[in] key the key to be searched in the map.
+@param[in] allocator_pointer CCC_Allocator for reserving memory if needed.
 @param[in] type_compound_literal the compound literal to insert or use for
 overwrite.
 @return a compound literal reference to the handle of the existing or newly
 inserted value. Occupied indicates the key existed, Vacant indicates the key
-was absent. Unin any case provides the current value unless an error
-occurs that prevents insertion. An insertion error will flag such a case.
-
-Note that for brevity and convenience the user need not write the key to the
+was absent. Any case provides the current value unless an error occurs that
+prevents insertion. An insertion error will flag such a case.
+@note For brevity and convenience the user need not write the key to the
 lazy value compound literal as well. This function ensures the key in the
 compound literal matches the searched key. */
-#define CCC_array_tree_map_insert_or_assign_with(array_tree_map_pointer, key,  \
-                                                 type_compound_literal...)     \
-    &(CCC_Handle){CCC_private_array_tree_map_insert_or_assign_with(            \
-        array_tree_map_pointer, key, type_compound_literal)}
+#define CCC_array_tree_map_insert_or_assign_with(                              \
+    array_tree_map_pointer, key, allocator_pointer, type_compound_literal...   \
+)                                                                              \
+    &(struct { CCC_Handle private; }){                                         \
+        CCC_private_array_tree_map_insert_or_assign_with(                      \
+            array_tree_map_pointer,                                            \
+            key,                                                               \
+            allocator_pointer,                                                 \
+            type_compound_literal                                              \
+        )}                                                                     \
+         .private
 
 /** @brief Removes the key value in the map storing the old value, if present,
 in the type_output provided by the user.
@@ -851,11 +636,14 @@ value pair was not stored in the map. If bad input is provided an input error is
 set.
 
 Note that this function may write to the user type struct. */
-#define CCC_array_tree_map_remove_key_value_wrap(array_tree_map_pointer,       \
-                                                 type_output_pointer)          \
-    &(CCC_Handle){CCC_array_tree_map_remove_key_value(                         \
-                      (array_tree_map_pointer), (type_output_pointer))         \
-                      .private}
+#define CCC_array_tree_map_remove_key_value_wrap(                              \
+    array_tree_map_pointer, type_output_pointer                                \
+)                                                                              \
+    &(struct { CCC_Handle private; }){                                         \
+        CCC_array_tree_map_remove_key_value(                                   \
+            (array_tree_map_pointer), (type_output_pointer)                    \
+        )}                                                                     \
+         .private
 
 /** @brief Obtains a handle for the provided key in the map for future use.
 @param[in] map the map to be searched.
@@ -892,38 +680,20 @@ where in the map such an element should be inserted.
 A handle is rarely useful on its own. It should be passed in a functional style
 to subsequent calls in the Handle Interface. */
 #define CCC_array_tree_map_handle_wrap(array_tree_map_pointer, key_pointer)    \
-    &(CCC_Array_tree_map_handle){                                              \
-        CCC_array_tree_map_handle((array_tree_map_pointer), (key_pointer))     \
-            .private}
+    &(struct { CCC_Array_tree_map_handle private; }){                          \
+        CCC_array_tree_map_handle((array_tree_map_pointer), (key_pointer))}    \
+         .private
 
 /** @brief Modifies the provided handle if it is Occupied.
 @param[in] handle the handle obtained from a handle function or macro.
-@param[in] modify an update function in which the context argument is unused.
-@return the updated handle if it was Occupied or the unmodified vacant handle.
-
-This function is intended to make the function chaining in the Handle Interface
-more succinct if the handle will be modified in place based on its own value
-without the need of the context argument a CCC_Type_modifier can provide.
-*/
-[[nodiscard]] CCC_Array_tree_map_handle *
-CCC_array_tree_map_and_modify(CCC_Array_tree_map_handle *handle,
-                              CCC_Type_modifier *modify);
-
-/** @brief Modifies the provided handle if it is Occupied.
-@param[in] handle the handle obtained from a handle function or macro.
-@param[in] modify an update function that requires context data.
-@param[in] context context data required for the update.
-@return the updated handle if it was Occupied or the unmodified vacant handle.
-
-This function makes full use of a CCC_Type_modifier capability, meaning a
-complete CCC_update object will be passed to the update function callback. */
-[[nodiscard]] CCC_Array_tree_map_handle *
-CCC_array_tree_map_and_context_modify(CCC_Array_tree_map_handle *handle,
-                                      CCC_Type_modifier *modify, void *context);
+@param[in] modifier a CCC_Modifer that operates on an occupied element.
+@return the updated handle if Occupied or the unmodified vacant handle. */
+[[nodiscard]] CCC_Array_tree_map_handle *CCC_array_tree_map_and_modify(
+    CCC_Array_tree_map_handle *handle, CCC_Modifier const *modifier
+);
 
 /** @brief Modify an Occupied handle with a closure over user type T.
-@param[in] map_array_pointer a pointer to the obtained
-handle.
+@param[in] map_array_pointer a pointer to the obtained handle.
 @param[in] type_name the name of the user type stored in the container.
 @param[in] closure_over_T the code to be run on the reference to user type T,
 if Occupied. This may be a semicolon separated list of statements to execute on
@@ -958,14 +728,19 @@ Handle_index w =
 Note that any code written is only evaluated if the handle is Occupied and the
 container can deliver the user type T. This means any function calls are lazily
 evaluated in the closure scope. */
-#define CCC_array_tree_map_and_modify_with(map_array_pointer, type_name,       \
-                                           closure_over_T...)                  \
-    &(CCC_Array_tree_map_handle){CCC_private_array_tree_map_and_modify_with(   \
-        map_array_pointer, type_name, closure_over_T)}
+#define CCC_array_tree_map_and_modify_with(                                    \
+    map_array_pointer, type_name, closure_over_T...                            \
+)                                                                              \
+    &(struct { CCC_Array_tree_map_handle private; }){                          \
+        CCC_private_array_tree_map_and_modify_with(                            \
+            map_array_pointer, type_name, closure_over_T                       \
+        )}                                                                     \
+         .private
 
 /** @brief Inserts the provided user type if the handle is Vacant.
 @param[in] handle the handle obtained via function or macro call.
 @param[in] type the type struct to be inserted to a Vacant handle.
+@param[in] allocator CCC_Allocator for reserving memory if needed.
 @return a pointer to handle in the map invariantly. NULL on error.
 
 Because this functions takes a handle and inserts if it is Vacant, the only
@@ -974,13 +749,15 @@ a user struct allocation failure.
 
 If no allocation is permitted, this function assumes the user struct wrapping
 elem has been allocated with the appropriate lifetime and scope by the user. */
-[[nodiscard]] CCC_Handle_index
-CCC_array_tree_map_or_insert(CCC_Array_tree_map_handle const *handle,
-                             void const *type);
+[[nodiscard]] CCC_Handle_index CCC_array_tree_map_or_insert(
+    CCC_Array_tree_map_handle const *handle,
+    void const *type,
+    CCC_Allocator const *allocator
+);
 
 /** @brief Lazily insert the desired key value into the handle if it is Vacant.
-@param[in] map_array_pointer a pointer to the obtained
-handle.
+@param[in] map_array_pointer a pointer to the obtained handle.
+@param[in] allocator_pointer CCC_Allocator for reserving memory if needed.
 @param[in] type_compound_literal the compound literal to construct in place if
 the handle is Vacant.
 @return a reference to the unwrapped user type in the handle, either the
@@ -990,33 +767,40 @@ is not allowed.
 
 Note that if the compound literal uses any function calls to generate values
 or other data, such functions will not be called if the handle is Occupied. */
-#define CCC_array_tree_map_or_insert_with(map_array_pointer,                   \
-                                          type_compound_literal...)            \
-    CCC_private_array_tree_map_or_insert_with(map_array_pointer,               \
-                                              type_compound_literal)
+#define CCC_array_tree_map_or_insert_with(                                     \
+    map_array_pointer, allocator_pointer, type_compound_literal...             \
+)                                                                              \
+    CCC_private_array_tree_map_or_insert_with(                                 \
+        map_array_pointer, allocator_pointer, type_compound_literal            \
+    )
 
 /** @brief Inserts the provided user type invariantly.
 @param[in] handle the handle returned from a call obtaining a handle.
 @param[in] type a type struct the user intends to insert.
+@param[in] allocator CCC_Allocator for reserving memory if needed.
 @return a pointer to the inserted element or NULL upon allocation failure.
 
 This method can be used when the old value in the map does not need to
 be preserved. See the regular insert method if the old value is of interest. */
-[[nodiscard]] CCC_Handle_index
-CCC_array_tree_map_insert_handle(CCC_Array_tree_map_handle const *handle,
-                                 void const *type);
+[[nodiscard]] CCC_Handle_index CCC_array_tree_map_insert_handle(
+    CCC_Array_tree_map_handle const *handle,
+    void const *type,
+    CCC_Allocator const *allocator
+);
 
 /** @brief Write the contents of the compound literal type_compound_literal to a
 node.
-@param[in] map_array_pointer a pointer to the obtained
-handle.
+@param[in] map_array_pointer a pointer to the obtained handle.
+@param[in] allocator_pointer CCC_Allocator for reserving memory if needed.
 @param[in] type_compound_literal the compound literal to write to a new slot.
 @return a reference to the newly inserted or overwritten user type. NULL is
 returned if allocation failed or is not allowed when required. */
-#define CCC_array_tree_map_insert_array_with(map_array_pointer,                \
-                                             type_compound_literal...)         \
-    CCC_private_array_tree_map_insert_array_with(map_array_pointer,            \
-                                                 type_compound_literal)
+#define CCC_array_tree_map_insert_handle_with(                                 \
+    map_array_pointer, allocator_pointer, type_compound_literal...             \
+)                                                                              \
+    CCC_private_array_tree_map_insert_handle_with(                             \
+        map_array_pointer, allocator_pointer, type_compound_literal            \
+    )
 
 /** @brief Remove the handle from the map if Occupied.
 @param[in] handle a pointer to the map handle.
@@ -1037,7 +821,9 @@ Vacant, no prior handle existed to be removed.
 Note that the reference to the removed handle is invalidated upon any further
 insertions. */
 #define CCC_array_tree_map_remove_handle_wrap(map_array_pointer)               \
-    &(CCC_Handle){CCC_array_tree_map_remove_handle((map_array_pointer)).private}
+    &(struct { CCC_Handle private; }){                                         \
+        CCC_array_tree_map_remove_handle((map_array_pointer))}                 \
+         .private
 
 /** @brief Unwraps the provided handle to obtain a view into the map element.
 @param[in] handle the handle from a query to the map via function or macro.
@@ -1080,64 +866,33 @@ Deallocate the container. */
 
 /** @brief Frees all slots in the map for use without affecting capacity.
 @param[in] map the map to be cleared.
-@param[in] destroy the destructor for each element. NULL can be passed if no
-maintenance is required on the elements in the map before their slots are
+@param[in] destructor the optional CCC_Destructor or `&(CCC_Destructor){}` if
+no maintenance is required on the elements in the map before their slots are
 forfeit.
 
-If NULL is passed as the destructor function time is O(1), else O(size). */
-CCC_Result CCC_array_tree_map_clear(CCC_Array_tree_map *map,
-                                    CCC_Type_destructor *destroy);
+If the empty destructor is passed as the destructor function time is O(1), else
+O(size). */
+CCC_Result CCC_array_tree_map_clear(
+    CCC_Array_tree_map *map, CCC_Destructor const *destructor
+);
 
 /** @brief Frees all slots in the map and frees the underlying buffer.
 @param[in] map the map to be cleared.
-@param[in] destroy the destructor for each element. NULL can be passed if no
-maintenance is required on the elements in the map before their slots are
+@param[in] destructor the optional CCC_Destructor or `&(CCC_Destructor){}` if
+no maintenance is required on the elements in the map before their slots are
 forfeit.
-@return the result of free operation. If no allocate function is provided it is
-an error to attempt to free the Buffer and a memory error is returned.
-Otherwise, an OK result is returned.
+@param[in] allocator CCC_Allocator for reserving memory if needed.
+@return the result of free operation. If no allocator is provided it is
+an error to attempt to free storage and a memory error is returned. Otherwise,
+an OK result is returned.
 
-If NULL is passed as the destructor function time is O(1), else O(size). */
-CCC_Result CCC_array_tree_map_clear_and_free(CCC_Array_tree_map *map,
-                                             CCC_Type_destructor *destroy);
-
-/** @brief Frees all slots in the map and frees the
-underlying Buffer that was previously dynamically reserved with the reserve
-function.
-@param[in] map the map to be cleared.
-@param[in] destroy the destructor for each element. NULL can be passed if no
-maintenance is required on the elements in the array_tree_map
-before their slots are dropped.
-@param[in] allocate the required allocation function to provide to a
-dynamically reserved array_tree_map. Any context data provided upon
-initialization will be passed to the allocation function when called.
-@return the result of free operation. OK if success, or an error status to
-indicate the error.
-@warning It is an error to call this function on a array_tree_map
-that was not reserved with the provided CCC_Allocator. The
-array_tree_map must have existing memory to free.
-
-This function covers the edge case of reserving a dynamic capacity for a
-array_tree_map at runtime but denying the
-array_tree_map allocation permission to resize. This can help
-prevent a map from growing untree. The user in this
-case knows the map does not have allocation permission
-and therefore no further memory will be dedicated to the
-array_tree_map.
-
-However, to free the map in such a case this function
-must be used because the map has no ability to free
-itself. Just as the allocation function is required to reserve memory so to is
-it required to free memory.
-
-This function will work normally if called on a map with
-allocation permission however the normal
-CCC_array_tree_map_clear_and_free is sufficient for that use case.
-*/
-CCC_Result
-CCC_array_tree_map_clear_and_free_reserve(CCC_Array_tree_map *map,
-                                          CCC_Type_destructor *destroy,
-                                          CCC_Allocator *allocate);
+If an empty destructor is passed as the destructor function time is O(1), else
+O(size). */
+CCC_Result CCC_array_tree_map_clear_and_free(
+    CCC_Array_tree_map *map,
+    CCC_Destructor const *destructor,
+    CCC_Allocator const *allocator
+);
 
 /**@}*/
 
@@ -1164,9 +919,9 @@ for (CCC_Handle_index index = range_begin(&range);
 
 This avoids any possible errors in handling an end range element that is in the
 map versus the end map sentinel. */
-[[nodiscard]] CCC_Handle_range
-CCC_array_tree_map_equal_range(CCC_Array_tree_map const *map,
-                               void const *begin_key, void const *end_key);
+[[nodiscard]] CCC_Handle_range CCC_array_tree_map_equal_range(
+    CCC_Array_tree_map const *map, void const *begin_key, void const *end_key
+);
 
 /** @brief Returns a compound literal reference to the desired range. O(lg N).
 @param[in] array_tree_map_pointer a pointer to the map.
@@ -1174,12 +929,14 @@ CCC_array_tree_map_equal_range(CCC_Array_tree_map const *map,
 the range the second to the end of the range.
 @return a compound literal reference to the produced range associated with the
 enclosing scope. This reference is always non-NULL. */
-#define CCC_array_tree_map_equal_range_wrap(array_tree_map_pointer,            \
-                                            begin_and_end_key_pointers...)     \
-    &(CCC_Handle_range){                                                       \
-        CCC_array_tree_map_equal_range((array_tree_map_pointer),               \
-                                       (begin_and_end_key_pointers))           \
-            .private}
+#define CCC_array_tree_map_equal_range_wrap(                                   \
+    array_tree_map_pointer, begin_and_end_key_pointers...                      \
+)                                                                              \
+    &(struct { CCC_Handle_range private; }){                                   \
+        CCC_array_tree_map_equal_range(                                        \
+            (array_tree_map_pointer), begin_and_end_key_pointers               \
+        )}                                                                     \
+         .private
 
 /** @brief Return an iterable range_reverse of values from [begin_key, end_key).
 O(lg N).
@@ -1204,10 +961,11 @@ for (CCC_Handle_index index = range_reverse_begin(&range);
 
 This avoids any possible errors in handling an reverse_end range_reverse element
 that is in the map versus the end map sentinel. */
-[[nodiscard]] CCC_Handle_range_reverse
-CCC_array_tree_map_equal_range_reverse(CCC_Array_tree_map const *map,
-                                       void const *reverse_begin_key,
-                                       void const *reverse_end_key);
+[[nodiscard]] CCC_Handle_range_reverse CCC_array_tree_map_equal_range_reverse(
+    CCC_Array_tree_map const *map,
+    void const *reverse_begin_key,
+    void const *reverse_end_key
+);
 
 /** @brief Returns a compound literal reference to the desired range_reverse.
 O(lg N).
@@ -1217,12 +975,14 @@ to the start of the range_reverse the second to the end of the range_reverse.
 @return a compound literal reference to the produced range_reverse associated
 with the enclosing scope. This reference is always non-NULL. */
 #define CCC_array_tree_map_equal_range_reverse_wrap(                           \
-    array_tree_map_pointer, reverse_begin_and_reverse_end_key_pointers...)     \
-    &(CCC_Handle_range_reverse){                                               \
-        CCC_array_tree_map_equal_range_reverse(                                \
-            (array_tree_map_pointer),                                          \
-            (reverse_begin_and_reverse_end_key_pointers))                      \
-            .private}
+    array_tree_map_pointer, reverse_begin_and_reverse_end_key_pointers...      \
+)                                                                              \
+    &(                                                                         \
+         struct { CCC_Handle_range_reverse private; }                          \
+    ){CCC_array_tree_map_equal_range_reverse(                                  \
+          (array_tree_map_pointer), reverse_begin_and_reverse_end_key_pointers \
+      )}                                                                       \
+         .private
 
 /** @brief Return the start of an inorder traversal of the map. O(lg N).
 @param[in] map a pointer to the map.
@@ -1242,9 +1002,9 @@ CCC_array_tree_map_reverse_begin(CCC_Array_tree_map const *map);
 iterator.
 @return a handle for the next user type stored in the map in an inorder
 traversal. */
-[[nodiscard]] CCC_Handle_index
-CCC_array_tree_map_next(CCC_Array_tree_map const *map,
-                        CCC_Handle_index iterator);
+[[nodiscard]] CCC_Handle_index CCC_array_tree_map_next(
+    CCC_Array_tree_map const *map, CCC_Handle_index iterator
+);
 
 /** @brief Return the reverse_next element in a reverse inorder traversal of the
 map. O(1).
@@ -1253,9 +1013,9 @@ map. O(1).
 current iterator.
 @return a handle for the reverse_next user type stored in the map in a reverse
 inorder traversal. */
-[[nodiscard]] CCC_Handle_index
-CCC_array_tree_map_reverse_next(CCC_Array_tree_map const *map,
-                                CCC_Handle_index iterator);
+[[nodiscard]] CCC_Handle_index CCC_array_tree_map_reverse_next(
+    CCC_Array_tree_map const *map, CCC_Handle_index iterator
+);
 
 /** @brief Return the end of an inorder traversal of the map. O(1).
 @param[in] map a pointer to the map.
@@ -1313,22 +1073,14 @@ typedef CCC_Array_tree_map Array_tree_map;
 typedef CCC_Array_tree_map_handle Array_tree_map_handle;
 #    define array_tree_map_storage_for(arguments...)                           \
         CCC_array_tree_map_storage_for(arguments)
+#    define array_tree_map_default(arguments...)                               \
+        CCC_array_tree_map_default(arguments)
 #    define array_tree_map_for(arguments...) CCC_array_tree_map_for(arguments)
 #    define array_tree_map_from(arguments...) CCC_array_tree_map_from(arguments)
-#    define array_tree_map_context_from(arguments...)                          \
-        CCC_array_tree_map_context_from(arguments)
 #    define array_tree_map_with_capacity(arguments...)                         \
         CCC_array_tree_map_with_capacity(arguments)
-#    define array_tree_map_context_with_capacity(arguments...)                 \
-        CCC_array_tree_map_context_with_capacity(arguments)
 #    define array_tree_map_with_storage(arguments...)                          \
         CCC_array_tree_map_with_storage(arguments)
-#    define array_tree_map_context_with_storage(arguments...)                  \
-        CCC_array_tree_map_context_with_storage(arguments)
-#    define array_tree_map_with_allocator(arguments...)                        \
-        CCC_array_tree_map_with_allocator(arguments)
-#    define array_tree_map_context_with_allocator(arguments...)                \
-        CCC_array_tree_map_context_with_allocator(arguments)
 #    define array_tree_map_copy(arguments...) CCC_array_tree_map_copy(arguments)
 #    define array_tree_map_reserve(arguments...)                               \
         CCC_array_tree_map_reserve(arguments)
@@ -1338,16 +1090,36 @@ typedef CCC_Array_tree_map_handle Array_tree_map_handle;
         CCC_array_tree_map_and_modify_with(arguments)
 #    define array_tree_map_or_insert_with(arguments...)                        \
         CCC_array_tree_map_or_insert_with(arguments)
-#    define array_tree_map_insert_array_with(arguments...)                     \
-        CCC_array_tree_map_insert_array_with(arguments)
+#    define array_tree_map_insert_handle_with(arguments...)                    \
+        CCC_array_tree_map_insert_handle_with(arguments)
+#    define array_tree_map_try_insert(arguments...)                            \
+        CCC_array_tree_map_try_insert(arguments)
+#    define array_tree_map_try_insert_wrap(arguments...)                       \
+        CCC_array_tree_map_try_insert_wrap(arguments)
 #    define array_tree_map_try_insert_with(arguments...)                       \
         CCC_array_tree_map_try_insert_with(arguments)
+#    define array_tree_map_insert_or_assign(arguments...)                      \
+        CCC_array_tree_map_insert_or_assign(arguments)
+#    define array_tree_map_insert_or_assign_wrap(arguments...)                 \
+        CCC_array_tree_map_insert_or_assign_wrap(arguments)
 #    define array_tree_map_insert_or_assign_with(arguments...)                 \
         CCC_array_tree_map_insert_or_assign_with(arguments)
 #    define array_tree_map_contains(arguments...)                              \
         CCC_array_tree_map_contains(arguments)
 #    define array_tree_map_get_key_value(arguments...)                         \
         CCC_array_tree_map_get_key_value(arguments)
+#    define array_tree_map_handle(arguments...)                                \
+        CCC_array_tree_map_handle(arguments)
+#    define array_tree_map_handle_wrap(arguments...)                           \
+        CCC_array_tree_map_handle_wrap(arguments)
+#    define array_tree_map_remove_handle(arguments...)                         \
+        CCC_array_tree_map_remove_handle(arguments)
+#    define array_tree_map_remove_handle_wrap(arguments...)                    \
+        CCC_array_tree_map_remove_handle_wrap(arguments)
+#    define array_tree_map_remove_key_value(arguments...)                      \
+        CCC_array_tree_map_remove_key_value(arguments)
+#    define array_tree_map_remove_key_value_wrap(arguments...)                 \
+        CCC_array_tree_map_remove_key_value_wrap(arguments)
 #    define array_tree_map_swap_handle(arguments...)                           \
         CCC_array_tree_map_swap_handle(arguments)
 #    define array_tree_map_swap_handle_wrap(arguments...)                      \
@@ -1362,6 +1134,14 @@ typedef CCC_Array_tree_map_handle Array_tree_map_handle;
 #    define array_tree_map_end(arguments...) CCC_array_tree_map_end(arguments)
 #    define array_tree_map_reverse_end(arguments...)                           \
         CCC_array_tree_map_reverse_end(arguments)
+#    define array_tree_map_equal_range(arguments...)                           \
+        CCC_array_tree_map_equal_range(arguments)
+#    define array_tree_map_equal_range_wrap(arguments...)                      \
+        CCC_array_tree_map_equal_range_wrap(arguments)
+#    define array_tree_map_equal_range_reverse(arguments...)                   \
+        CCC_array_tree_map_equal_range_reverse(arguments)
+#    define array_tree_map_equal_range_reverse_wrap(arguments...)              \
+        CCC_array_tree_map_equal_range_reverse_wrap(arguments)
 #    define array_tree_map_is_empty(arguments...)                              \
         CCC_array_tree_map_is_empty(arguments)
 #    define array_tree_map_count(arguments...)                                 \
@@ -1372,8 +1152,6 @@ typedef CCC_Array_tree_map_handle Array_tree_map_handle;
         CCC_array_tree_map_clear(arguments)
 #    define array_tree_map_clear_and_free(arguments...)                        \
         CCC_array_tree_map_clear_and_free(arguments)
-#    define array_tree_map_clear_and_free_reserve(arguments...)                \
-        CCC_array_tree_map_clear_and_free_reserve(arguments)
 #    define array_tree_map_validate(arguments...)                              \
         CCC_array_tree_map_validate(arguments)
 /* NOLINTEND(readability-identifier-naming) */

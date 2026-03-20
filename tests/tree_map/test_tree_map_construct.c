@@ -9,14 +9,16 @@
 
 static CCC_Tree_map
 construct_empty(void) {
-    CCC_Tree_map map
-        = CCC_tree_map_for(struct Val, elem, key, id_order, NULL, NULL);
+    CCC_Tree_map map = CCC_tree_map_default(
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
+    );
     return map;
 }
 
 check_static_begin(tree_map_test_empty) {
-    CCC_Tree_map s
-        = CCC_tree_map_for(struct Val, elem, key, id_order, NULL, NULL);
+    CCC_Tree_map s = CCC_tree_map_for(
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
+    );
     check(CCC_tree_map_is_empty(&s), true);
     check_end();
 }
@@ -31,7 +33,8 @@ itself. */
 check_static_begin(tree_map_test_construct) {
     struct Val push = {};
     CCC_Tree_map map = construct_empty();
-    CCC_Entry entry = CCC_tree_map_insert_or_assign(&map, &push.elem);
+    CCC_Entry entry
+        = CCC_tree_map_insert_or_assign(&map, &push.elem, &(CCC_Allocator){});
     check(CCC_tree_map_validate(&map), true);
     check(CCC_entry_insert_error(&entry), false);
     check(CCC_entry_occupied(&entry), false);
@@ -40,53 +43,84 @@ check_static_begin(tree_map_test_construct) {
 }
 
 check_static_begin(tree_map_test_construct_from) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
-    CCC_Tree_map map = CCC_tree_map_context_from(
-        elem, key, id_order, stack_allocator_allocate, NULL, &allocator,
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[3]){}),
+    };
+    CCC_Tree_map map = CCC_tree_map_from(
+        elem,
+        key,
+        (CCC_Key_comparator){.compare = id_order},
+        allocator,
+        (CCC_Destructor){},
         (struct Val[]){
             {.key = 0, .val = 0},
             {.key = 1, .val = 1},
             {.key = 2, .val = 2},
-        });
+        }
+    );
     check(CCC_tree_map_validate(&map), true);
     check(CCC_tree_map_count(&map).count, 3);
-    check_end((void)CCC_tree_map_clear(&map, NULL););
+    check_end({
+        (void)CCC_tree_map_clear(&map, &(CCC_Destructor){}, &allocator);
+    });
 }
 
 check_static_begin(tree_map_test_construct_from_overwrite) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
-    CCC_Tree_map map = CCC_tree_map_context_from(
-        elem, key, id_order, stack_allocator_allocate, NULL, &allocator,
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[3]){}),
+    };
+    CCC_Tree_map map = CCC_tree_map_from(
+        elem,
+        key,
+        (CCC_Key_comparator){.compare = id_order},
+        allocator,
+        (CCC_Destructor){},
         (struct Val[]){
             {.key = 0, .val = 0},
             {.key = 1, .val = 1},
             {.key = 1, .val = 2},
-        });
+        }
+    );
     check(CCC_tree_map_validate(&map), true);
     check(CCC_tree_map_count(&map).count, 2);
     struct Val const *const v = CCC_tree_map_reverse_begin(&map);
     check(v != NULL, true);
     check(v->key, 1);
     check(v->val, 2);
-    check_end((void)CCC_tree_map_clear(&map, NULL););
+    check_end({
+        (void)CCC_tree_map_clear(&map, &(CCC_Destructor){}, &allocator);
+    });
 }
 
 check_static_begin(tree_map_test_construct_from_fail) {
-    CCC_Tree_map map = CCC_tree_map_from(elem, key, id_order, NULL, NULL,
-                                         (struct Val[]){
-                                             {.key = 0, .val = 0},
-                                             {.key = 1, .val = 1},
-                                             {.key = 2, .val = 2},
-                                         });
+    CCC_Tree_map map = CCC_tree_map_from(
+        elem,
+        key,
+        (CCC_Key_comparator){.compare = id_order},
+        (CCC_Allocator){},
+        (CCC_Destructor){},
+        (struct Val[]){
+            {.key = 0, .val = 0},
+            {.key = 1, .val = 1},
+            {.key = 2, .val = 2},
+        }
+    );
     check(CCC_tree_map_validate(&map), true);
     check(CCC_tree_map_is_empty(&map), true);
-    check_end((void)CCC_tree_map_clear(&map, NULL););
+    check_end({
+        (void)CCC_tree_map_clear(&map, &(CCC_Destructor){}, &(CCC_Allocator){});
+    });
 }
 
 int
 main(void) {
-    return check_run(tree_map_test_empty(), tree_map_test_construct(),
-                     tree_map_test_construct_from(),
-                     tree_map_test_construct_from_overwrite(),
-                     tree_map_test_construct_from_fail());
+    return check_run(
+        tree_map_test_empty(),
+        tree_map_test_construct(),
+        tree_map_test_construct_from(),
+        tree_map_test_construct_from_overwrite(),
+        tree_map_test_construct_from_fail()
+    );
 }

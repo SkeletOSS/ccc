@@ -9,20 +9,28 @@
 #include "types.h"
 
 CCC_Order
-id_order(CCC_Key_comparator_context const order) {
+id_order(CCC_Key_comparator_arguments const order) {
     struct Val const *const c = order.type_right;
     int const key = *((int *)order.key_left);
     return (key > c->id) - (key < c->id);
 }
 
-check_begin(insert_shuffled, CCC_Array_tree_map *m, size_t const size,
-            int const larger_prime) {
-    size_t shuffled_index = larger_prime % size;
+check_begin(
+    insert_shuffled,
+    CCC_Array_tree_map *m,
+    size_t const size,
+    int const larger_prime,
+    CCC_Allocator const *const allocator
+) {
+    size_t shuffled_index = (size_t)larger_prime % size;
     for (size_t i = 0; i < size; ++i) {
         (void)insert_or_assign(
-            m, &(struct Val){.id = (int)shuffled_index, .val = (int)i});
+            m,
+            &(struct Val){.id = (int)shuffled_index, .val = (int)i},
+            allocator
+        );
         check(validate(m), true);
-        shuffled_index = (shuffled_index + larger_prime) % size;
+        shuffled_index = (shuffled_index + (size_t)larger_prime) % size;
     }
     check(count(m).count, size);
     check_end();

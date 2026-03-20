@@ -96,7 +96,8 @@ enum {
 
 static_assert(
     MAX_VERTICES == 26,
-    "maximum number of graph vertices should equal letters of the alphabet");
+    "maximum number of graph vertices should equal letters of the alphabet"
+);
 
 struct Point {
     int r;
@@ -180,13 +181,34 @@ static struct Vertex network[MAX_VERTICES];
 
 /* Go to the box drawing Unicode character Wikipedia page to change styles. */
 static char const *paths[] = {
-    "●", "╵", "╶", "╰", "╷", "│", "╭", "├",
-    "╴", "╯", "─", "┴", "╮", "┤", "┬", "┼",
+    "●",
+    "╵",
+    "╶",
+    "╰",
+    "╷",
+    "│",
+    "╭",
+    "├",
+    "╴",
+    "╯",
+    "─",
+    "┴",
+    "╮",
+    "┤",
+    "┬",
+    "┼",
 };
 
 /* Animation speed for edge coloring during solving phase. */
 static int const speeds[8] = {
-    0, 500000000, 250000000, 100000000, 50000000, 25000000, 10000000, 1000000,
+    0,
+    500000000,
+    250000000,
+    100000000,
+    50000000,
+    25000000,
+    10000000,
+    1000000,
 };
 
 /* North, East, South, West */
@@ -228,9 +250,10 @@ enum : Cell {
     DIGIT_MASK = 0xF00,
 };
 
-static SV_Str_view const prompt_message
-    = SV_from("Enter two vertices to find the shortest path between them (i.e. "
-              "A-Z). Enter q to quit:");
+static SV_Str_view const prompt_message = SV_from(
+    "Enter two vertices to find the shortest path between them (i.e. "
+    "A-Z). Enter q to quit:"
+);
 static SV_Str_view const quit_cmd = SV_from("q");
 
 /*==========================   Prototypes  ================================= */
@@ -239,28 +262,31 @@ static SV_Str_view const quit_cmd = SV_from("q");
     do {                                                                       \
         if (!(cond)) {                                                         \
             __VA_OPT__(__VA_ARGS__)                                            \
-            printf("%s, %d, condition is false: %s\n", __FILE__, __LINE__,     \
-                   #cond);                                                     \
+            printf(                                                            \
+                "%s, %d, condition is false: %s\n", __FILE__, __LINE__, #cond  \
+            );                                                                 \
             exit(1);                                                           \
         }                                                                      \
     } while (0)
 
-static void build_graph(struct Graph *);
+static void build_graph(struct Graph *, CCC_Allocator const *);
 static void find_shortest_paths(struct Graph *);
-static bool found_destination(struct Graph *, struct Vertex *);
-static void edge_construct(struct Graph *, Flat_hash_map *, struct Vertex *,
-                           struct Vertex *);
+static bool
+found_destination(struct Graph *, struct Vertex *, CCC_Allocator const *);
+static void edge_construct(
+    struct Graph *, Flat_hash_map *, struct Vertex *, struct Vertex *
+);
 static int dijkstra_shortest_path(struct Graph *, char, char);
 static void paint_edge(struct Graph *, char, char, char const *);
-static void add_edge_cost_label(struct Graph *, struct Vertex *,
-                                struct Edge const *);
+static void
+add_edge_cost_label(struct Graph *, struct Vertex *, struct Edge const *);
 static Cell make_edge(char, char);
 static void flush_at(struct Graph const *, int, int, char const *);
 static struct Point random_vertex_placement(struct Graph const *);
 static bool is_valid_vertex_pos(struct Graph const *, int, int);
 static Cell *grid_at_mut(struct Graph const *, int, int);
 static Cell grid_at(struct Graph const *, int, int);
-static uint16_t sort_vertices(char, char);
+static Cell sort_vertices(char, char);
 static int vertex_degree(struct Vertex const *);
 static void build_path_outline(struct Graph *);
 static void build_path_cell(struct Graph *, int, int, Cell);
@@ -276,17 +302,17 @@ static bool is_vertex(Cell);
 static bool is_path_cell(Cell);
 static struct Vertex *vertex_at(struct Graph const *, char);
 static struct Cost *map_priority_queue_at(struct Cost const *, char);
-static int paint_shortest_path(struct Graph *, struct Cost const *,
-                               struct Cost const *);
+static int
+paint_shortest_path(struct Graph *, struct Cost const *, struct Cost const *);
 static void encode_digits(struct Graph const *, struct Digit_encoding *);
-static enum Label_orientation get_direction(struct Point const *,
-                                            struct Point const *);
+static enum Label_orientation
+get_direction(struct Point const *, struct Point const *);
 static struct Int_conversion parse_digits(SV_Str_view, int, int, char const *);
 static struct Path_request parse_path_request(struct Graph *, SV_Str_view);
 static void help(void);
-static Order order_priority_queue_costs(Type_comparator_context);
-static CCC_Order order_parent_cells(Key_comparator_context);
-static uint64_t hash_parent_cells(Key_context);
+static Order order_priority_queue_costs(Comparator_arguments);
+static CCC_Order order_parent_cells(Key_comparator_arguments);
+static uint64_t hash_parent_cells(Key_arguments);
 static uint64_t hash_64_bits(uint64_t);
 static unsigned count_digits(uintmax_t);
 static void print_str_view(FILE *, SV_Str_view);
@@ -297,7 +323,7 @@ int
 main(int argc, char **argv) {
     /* Randomness will be used throughout the program but it need not be
        perfect. It only helps build graphs. */
-    srand(time(NULL)); /* NOLINT */
+    srand((unsigned)time(NULL)); /* NOLINT */
     struct Graph graph = {
         .rows = DEFAULT_ROWS,
         .cols = DEFAULT_COLS,
@@ -309,38 +335,52 @@ main(int argc, char **argv) {
     for (int i = 1; i < argc; ++i) {
         SV_Str_view const arg = SV_from_terminated(argv[i]);
         if (SV_starts_with(arg, SV_from("-r="))) {
-            struct Int_conversion const row_arg
-                = parse_digits(arg, ROW_COL_MIN, INT_MAX,
-                               "rows_below required minimum or negative\n");
+            struct Int_conversion const row_arg = parse_digits(
+                arg,
+                ROW_COL_MIN,
+                INT_MAX,
+                "rows_below required minimum or negative\n"
+            );
             graph.rows = row_arg.conversion;
         } else if (SV_starts_with(arg, SV_from("-c="))) {
-            struct Int_conversion const col_arg
-                = parse_digits(arg, ROW_COL_MIN, INT_MAX,
-                               "cols below required minimum or negative.\n");
+            struct Int_conversion const col_arg = parse_digits(
+                arg,
+                ROW_COL_MIN,
+                INT_MAX,
+                "cols below required minimum or negative.\n"
+            );
             graph.cols = col_arg.conversion;
         } else if (SV_starts_with(arg, SV_from("-v="))) {
-            struct Int_conversion const vert_arg
-                = parse_digits(arg, 1, MAX_VERTICES,
-                               "vertices outside of valid range (1-26).\n");
+            struct Int_conversion const vert_arg = parse_digits(
+                arg,
+                1,
+                MAX_VERTICES,
+                "vertices outside of valid range (1-26).\n"
+            );
             graph.vertices = vert_arg.conversion;
         } else if (SV_starts_with(arg, SV_from("-s="))) {
             struct Int_conversion const vert_arg = parse_digits(
-                arg, 0, MAX_SPEED,
-                "animation speed outside of valid range (1-7).\n");
+                arg,
+                0,
+                MAX_SPEED,
+                "animation speed outside of valid range (1-7).\n"
+            );
             graph.speed.tv_nsec = speeds[vert_arg.conversion];
         } else if (SV_starts_with(arg, SV_from("-h"))) {
             help();
         } else {
-            quit("can only specify rows, columns, or speed "
-                 "for now (-r=N, -c=N, -s=N)\n",
-                 1);
+            quit(
+                "can only specify rows, columns, or speed "
+                "for now (-r=N, -c=N, -s=N)\n",
+                1
+            );
         }
     }
     if (!graph.rows || !graph.cols) {
         quit("graph rows or cols is 0.\n", 1);
         return 1;
     }
-    graph.grid = calloc((size_t)graph.rows * graph.cols, sizeof(Cell));
+    graph.grid = calloc((size_t)graph.rows * (size_t)graph.cols, sizeof(Cell));
     defer {
         free(graph.grid);
     }
@@ -348,7 +388,7 @@ main(int argc, char **argv) {
         quit("allocation failure for specified graph size.\n", 1);
         return 1;
     }
-    build_graph(&graph);
+    build_graph(&graph, &std_allocator);
     find_shortest_paths(&graph);
     printf("\n");
 }
@@ -361,14 +401,15 @@ main(int argc, char **argv) {
    The number of cells taken to connect the edge to another other vertex is the
    cost/weight of that edge. */
 static void
-build_graph(struct Graph *const graph) {
+build_graph(struct Graph *const graph, CCC_Allocator const *const allocator) {
     build_path_outline(graph);
     clear_and_flush_graph(graph, MAG);
     defer {
         clear_and_flush_graph(graph, MAG);
     }
     for (int vertex = 0, vertex_title = BEGIN_VERTICES;
-         vertex < graph->vertices; ++vertex, ++vertex_title) {
+         vertex < graph->vertices;
+         ++vertex, ++vertex_title) {
         struct Point rand_point = random_vertex_placement(graph);
         *grid_at_mut(graph, rand_point.r, rand_point.c)
             = VERTEXT_BIT | PATH_BIT
@@ -379,11 +420,12 @@ build_graph(struct Graph *const graph) {
         };
     }
     for (int vertex = 0, vertex_title = BEGIN_VERTICES;
-         vertex < graph->vertices; ++vertex, ++vertex_title) {
+         vertex < graph->vertices;
+         ++vertex, ++vertex_title) {
         char key = (char)vertex_title;
         struct Vertex *const source = vertex_at(graph, key);
         while (vertex_degree(source) < MAX_DEGREE
-               && found_destination(graph, source)) {}
+               && found_destination(graph, source, allocator)) {}
     }
 }
 
@@ -395,23 +437,29 @@ build_graph(struct Graph *const graph) {
    The graphs also are more visually pleasing and make some sense because routes
    are formed efficiently due to the bfs. */
 static bool
-found_destination(struct Graph *const graph, struct Vertex *const source) {
-
+found_destination(
+    struct Graph *const graph,
+    struct Vertex *const source,
+    CCC_Allocator const *const allocator
+) {
     Flat_hash_map parent_map = flat_hash_map_from(
-        current, hash_parent_cells, order_parent_cells, std_allocate, 0,
+        current,
+        ((CCC_Hasher){
+            .hash = hash_parent_cells,
+            .compare = order_parent_cells,
+        }),
+        *allocator,
+        0,
         (struct Path_backtrack_cell[]){
-            {
-                .current = source->pos,
-                .parent = (struct Point){-1, -1},
-            },
-        });
-    Flat_double_ended_queue bfs = flat_double_ended_queue_from(std_allocate, 0,
-                                                               (struct Point[]){
-                                                                   source->pos,
-                                                               });
+            {.current = source->pos, .parent = (struct Point){-1, -1}},
+        }
+    );
+    Flat_double_ended_queue bfs = flat_double_ended_queue_from(
+        *allocator, 0, (struct Point[]){source->pos}
+    );
     defer {
-        (void)clear_and_free(&bfs, NULL);
-        (void)clear_and_free(&parent_map, NULL);
+        (void)clear_and_free(&bfs, &(CCC_Destructor){}, allocator);
+        (void)clear_and_free(&parent_map, &(CCC_Destructor){}, allocator);
     }
     while (!is_empty(&bfs)) {
         struct Point const cur = *((struct Point *)front(&bfs));
@@ -431,15 +479,18 @@ found_destination(struct Graph *const graph, struct Vertex *const source) {
                     = vertex_at(graph, get_cell_vertex_title(next_cell));
                 if (source->name != nv->name && vertex_degree(nv) < MAX_DEGREE
                     && !has_edge_with(source, nv->name)) {
-                    Entry const in = insert_or_assign(&parent_map, &push);
+                    Entry const in
+                        = insert_or_assign(&parent_map, &push, allocator);
                     check(!insert_error(&in));
                     edge_construct(graph, &parent_map, source, nv);
                     return true;
                 }
             }
             if (!is_path_cell(next_cell)
-                && !occupied(try_insert_wrap(&parent_map, &push))) {
-                struct Point const *const n = push_back(&bfs, &next);
+                && !occupied(
+                    flat_hash_map_try_insert_wrap(&parent_map, &push, allocator)
+                )) {
+                struct Point const *const n = push_back(&bfs, &next, allocator);
                 check(n);
             }
         }
@@ -451,8 +502,12 @@ found_destination(struct Graph *const graph, struct Vertex *const source) {
    graph or in the terminal cells via edge ids. Creates the appropriate edge and
    updates the edge lists of source and destination. */
 static void
-edge_construct(struct Graph *const g, Flat_hash_map *const parent_map,
-               struct Vertex *const source, struct Vertex *const destination) {
+edge_construct(
+    struct Graph *const g,
+    Flat_hash_map *const parent_map,
+    struct Vertex *const source,
+    struct Vertex *const destination
+) {
     Cell const edge_id = make_edge(source->name, destination->name);
     struct Point cur = destination->pos;
     struct Path_backtrack_cell const *c = get_key_value(parent_map, &cur);
@@ -482,24 +537,30 @@ edge_construct(struct Graph *const g, Flat_hash_map *const parent_map,
    edges that are too small to fit a digit or two the line length can be
    easily counted with the mouse or by eye. */
 static void
-add_edge_cost_label(struct Graph *const g, struct Vertex *const source,
-                    struct Edge const *const e) {
+add_edge_cost_label(
+    struct Graph *const g,
+    struct Vertex *const source,
+    struct Edge const *const e
+) {
     struct Point cur = source->pos;
     Cell const edge_id = make_edge(source->name, e->n.name);
     struct Point prev = cur;
     /* Add a two space Buffer to either side of the label so direction of lines
        is not lost to writing of digits. Otherwise it would be unclear which
        edge a cost is associated with if close to other costs. */
-    size_t const spaces_needed_for_cost = count_digits(e->n.cost) + 2;
+    size_t const spaces_needed_for_cost = count_digits((size_t)e->n.cost) + 2;
     size_t consecutive_spaces_found = 0;
     enum Label_orientation direction = NORTH;
     while (cur.r != e->pos.r || cur.c != e->pos.c) {
         if (consecutive_spaces_found == spaces_needed_for_cost) {
-            encode_digits(g, &(struct Digit_encoding){
-                                 .start = cur,
-                                 .cost = e->n.cost,
-                                 .spaces_needed = spaces_needed_for_cost,
-                                 .orientation = direction});
+            encode_digits(
+                g,
+                &(struct Digit_encoding){.start = cur,
+                                         .cost = e->n.cost,
+                                         .spaces_needed
+                                         = spaces_needed_for_cost,
+                                         .orientation = direction}
+            );
             return;
         }
         for (size_t i = 0; i < DIRS_SIZE; ++i) {
@@ -537,19 +598,19 @@ encode_digits(struct Graph const *const g, struct Digit_encoding *const e) {
         e->start.r = e->orientation == NORTH
                        ? e->start.r + (int)e->spaces_needed - 2
                        : e->start.r - 1;
-        for (uintmax_t digits = e->cost; digits; digits /= 10, --e->start.r) {
+        for (Cell digits = (Cell)e->cost; digits; digits /= 10, --e->start.r) {
             *grid_at_mut(g, e->start.r, e->start.c) |= DIGIT_BIT;
             *grid_at_mut(g, e->start.r, e->start.c)
-                |= ((digits % 10) << DIGIT_SHIFT);
+                |= (Cell)((digits % 10) << DIGIT_SHIFT);
         }
     } else {
         e->start.c = e->orientation == WEST
                        ? e->start.c + (int)e->spaces_needed - 2
                        : e->start.c - 1;
-        for (uintmax_t digits = e->cost; digits; digits /= 10, --e->start.c) {
+        for (Cell digits = (Cell)e->cost; digits; digits /= 10, --e->start.c) {
             *grid_at_mut(g, e->start.r, e->start.c) |= DIGIT_BIT;
             *grid_at_mut(g, e->start.r, e->start.c)
-                |= ((digits % 10) << DIGIT_SHIFT);
+                |= (Cell)((digits % 10) << DIGIT_SHIFT);
         }
     }
 }
@@ -581,10 +642,12 @@ random_vertex_placement(struct Graph const *const graph) {
         exit(1);
     }
     /* No vertices should be close to the edge of the map. */
-    int const row_start = rand_range(VERTEX_PLACEMENT_PADDING,
-                                     graph->rows - VERTEX_PLACEMENT_PADDING);
-    int const col_start = rand_range(VERTEX_PLACEMENT_PADDING,
-                                     graph->cols - VERTEX_PLACEMENT_PADDING);
+    int const row_start = rand_range(
+        VERTEX_PLACEMENT_PADDING, graph->rows - VERTEX_PLACEMENT_PADDING
+    );
+    int const col_start = rand_range(
+        VERTEX_PLACEMENT_PADDING, graph->cols - VERTEX_PLACEMENT_PADDING
+    );
     bool exhausted = false;
     for (int row = row_start; !exhausted && row < row_end;
          row = (row + 1) % row_end) {
@@ -607,8 +670,10 @@ random_vertex_placement(struct Graph const *const graph) {
                      && ((col + 1) % graph->cols) == col_start;
         }
     }
-    quit("cannot find a place for another vertex on this grid, quitting now.\n",
-         1);
+    quit(
+        "cannot find a place for another vertex on this grid, quitting now.\n",
+        1
+    );
     exit(1);
 }
 
@@ -633,11 +698,13 @@ find_shortest_paths(struct Graph *const graph) {
         print_str_view(stdout, prompt_message);
         ssize_t read = 0;
         while ((read = getline(&linepointer, &len, stdin)) > 0) {
-            struct Path_request pr
-                = parse_path_request(graph, (SV_Str_view){
-                                                .str = linepointer,
-                                                .len = read - 1,
-                                            });
+            struct Path_request pr = parse_path_request(
+                graph,
+                (SV_Str_view){
+                    .str = linepointer,
+                    .len = (size_t)read - 1,
+                }
+            );
             if (pr.source == 'q') {
                 return;
             }
@@ -647,7 +714,8 @@ find_shortest_paths(struct Graph *const graph) {
                     "Error. Provide any source and destination vertex "
                     "represented in the grid\nExamples: AB, A B, B-C, X->Y, "
                     "DtoF\nMost formats work but two upper case vertices are "
-                    "required.\n");
+                    "required.\n"
+                );
                 return;
             }
             total_cost
@@ -673,8 +741,9 @@ graph. If no route exists INT_MAX is returned which can be interpreted as
 INFINITY in this context. Assumes the graph is well formed without negative
 distances. */
 static int
-dijkstra_shortest_path(struct Graph *const graph, char const source,
-                       char const destination) {
+dijkstra_shortest_path(
+    struct Graph *const graph, char const source, char const destination
+) {
     clear_paint(graph);
     clear_and_flush_graph(graph, NIL);
     /* One struct cost will represent the path rebuilding map and the
@@ -686,9 +755,12 @@ dijkstra_shortest_path(struct Graph *const graph, char const source,
        of all, maximum priority_queue/map size is known to be small [A-Z] so
        provide memory on the stack for speed and safety. */
     struct Cost map_priority_queue[MAX_VERTICES] = {};
-    Priority_queue costs = priority_queue_with_allocator(
-        struct Cost, priority_queue_node, CCC_ORDER_LESSER,
-        order_priority_queue_costs, NULL);
+    Priority_queue costs = priority_queue_default(
+        struct Cost,
+        priority_queue_node,
+        CCC_ORDER_LESSER,
+        (CCC_Comparator){.compare = order_priority_queue_costs}
+    );
     for (int i = 0, vx = BEGIN_VERTICES; i < graph->vertices; ++i, ++vx) {
         struct Cost *const v
             = map_priority_queue_at(map_priority_queue, (char)vx);
@@ -697,15 +769,13 @@ dijkstra_shortest_path(struct Graph *const graph, char const source,
             .from = '\0',
             .cost = (char)vx == source ? 0 : INT_MAX,
         };
-        struct Cost const *const c = push(&costs, &v->priority_queue_node);
+        struct Cost const *const c
+            = push(&costs, &v->priority_queue_node, &(CCC_Allocator){});
         check(c);
     }
     while (!is_empty(&costs)) {
-        /* The reference to u is valid after the pop because the pop does not
-           deallocate any memory. The priority_queue has no allocation
-           permissions. */
         struct Cost const *const u = front(&costs);
-        (void)pop(&costs);
+        (void)pop(&costs, &(CCC_Allocator){});
         if (u->cost == INT_MAX) {
             return INT_MAX;
         }
@@ -735,9 +805,11 @@ dijkstra_shortest_path(struct Graph *const graph, char const source,
 effect of this process. The edges will be painted a color different than the
 color used while considering paths to clearly indicate it is the shortest. */
 static int
-paint_shortest_path(struct Graph *const graph,
-                    struct Cost const *const map_priority_queue,
-                    struct Cost const *u) {
+paint_shortest_path(
+    struct Graph *const graph,
+    struct Cost const *const map_priority_queue,
+    struct Cost const *u
+) {
     int total = 0;
     for (; u->from; u = map_priority_queue_at(map_priority_queue, u->from)) {
         struct Node const *const edges = vertex_at(graph, u->name)->edges;
@@ -761,8 +833,12 @@ map_priority_queue_at(struct Cost const *const dj_arr, char const vertex) {
    is passed as the edge color then the paint bit is removed and default path
    color will be flushed at the patch square location. */
 static void
-paint_edge(struct Graph *const g, char const source_name,
-           char const destination_name, char const *const edge_color) {
+paint_edge(
+    struct Graph *const g,
+    char const source_name,
+    char const destination_name,
+    char const *const edge_color
+) {
     struct Vertex const *const source = vertex_at(g, source_name);
     struct Vertex const *const destination = vertex_at(g, destination_name);
     struct Point cur = source->pos;
@@ -841,9 +917,9 @@ grid_at(struct Graph const *const graph, int const r, int const c) {
     return graph->grid[(r * graph->cols) + c];
 }
 
-static inline uint16_t
+static inline Cell
 sort_vertices(char const a, char const b) {
-    return a < b ? (a << 8) | b : (b << 8) | a;
+    return a < b ? (Cell)((a << 8) | b) : (Cell)((b << 8) | a);
 }
 
 static char
@@ -886,8 +962,9 @@ is_path_cell(Cell c) {
 }
 
 static void
-clear_and_flush_graph(struct Graph const *const g,
-                      char const *const edge_color) {
+clear_and_flush_graph(
+    struct Graph const *const g, char const *const edge_color
+) {
     clear_screen();
     for (int row = 0; row < g->rows; ++row) {
         for (int col = 0; col < g->cols; ++col) {
@@ -909,8 +986,12 @@ clear_paint(struct Graph *const graph) {
 }
 
 static inline void
-flush_at(struct Graph const *const g, int const r, int const c,
-         char const *const edge_color) {
+flush_at(
+    struct Graph const *const g,
+    int const r,
+    int const c,
+    char const *const edge_color
+) {
     set_cursor_position(r, c);
     print_cell(grid_at(g, r, c), edge_color);
     (void)fflush(stdout);
@@ -924,8 +1005,12 @@ print_cell(Cell const c, char const *const edge_color) {
     } else if (c & DIGIT_BIT) {
         printf("%d", (c & DIGIT_MASK) >> DIGIT_SHIFT);
     } else if (c & PATH_BIT) {
-        (c & PAINT_BIT) ? printf("%s%s%s", edge_color ? edge_color : NIL,
-                                 paths[c & PATH_MASK], NIL)
+        (c & PAINT_BIT) ? printf(
+                              "%s%s%s",
+                              edge_color ? edge_color : NIL,
+                              paths[c & PATH_MASK],
+                              NIL
+                          )
                         : printf("%s", paths[c & PATH_MASK]);
     } else if (!(c & PATH_BIT)) {
         printf(" ");
@@ -951,8 +1036,9 @@ is_valid_edge_cell(Cell const square, Cell const edge_id) {
 }
 
 static void
-build_path_cell(struct Graph *const g, int const r, int const c,
-                Cell const edge_id) {
+build_path_cell(
+    struct Graph *const g, int const r, int const c, Cell const edge_id
+) {
     Cell path = PATH_BIT;
     if (r - 1 >= 0 && is_valid_edge_cell(grid_at(g, r - 1, c), edge_id)) {
         path |= NORTH_PATH;
@@ -988,7 +1074,7 @@ build_path_outline(struct Graph *const graph) {
 /*====================    Data Structure Helpers    =========================*/
 
 static CCC_Order
-order_parent_cells(Key_comparator_context const c) {
+order_parent_cells(Key_comparator_arguments const c) {
     struct Point const *const left = c.key_left;
     struct Path_backtrack_cell const *const right = c.type_right;
     CCC_Order const order
@@ -1000,14 +1086,14 @@ order_parent_cells(Key_comparator_context const c) {
 }
 
 static uint64_t
-hash_parent_cells(Key_context const point_struct) {
+hash_parent_cells(Key_arguments const point_struct) {
     struct Point const *const p = point_struct.key;
-    uint64_t const wr = p->r;
-    return hash_64_bits((wr << 31) | p->c);
+    uint64_t const wr = (uint64_t)p->r;
+    return hash_64_bits((wr << 31) | (uint64_t)p->c);
 }
 
 static Order
-order_priority_queue_costs(Type_comparator_context const cost_order) {
+order_priority_queue_costs(Comparator_arguments const cost_order) {
     struct Cost const *const a = cost_order.type_left;
     struct Cost const *const b = cost_order.type_right;
     return (a->cost > b->cost) - (a->cost < b->cost);
@@ -1045,8 +1131,12 @@ parse_path_request(struct Graph *const g, SV_Str_view const r) {
 }
 
 static struct Int_conversion
-parse_digits(SV_Str_view arg, int const lower_bound, int const upper_bound,
-             char const *const err_message) {
+parse_digits(
+    SV_Str_view arg,
+    int const lower_bound,
+    int const upper_bound,
+    char const *const err_message
+) {
     size_t const eql = SV_reverse_find(arg, SV_npos(arg), SV_from("="));
     if (eql == SV_npos(arg)) {
         return (struct Int_conversion){.status = CONV_ER};
@@ -1059,8 +1149,11 @@ parse_digits(SV_Str_view arg, int const lower_bound, int const upper_bound,
     struct Int_conversion res = convert_to_int(SV_begin(arg));
     if (res.status == CONV_ER || res.conversion > upper_bound
         || res.conversion < lower_bound) {
-        printf("flag argument outside of valid range (%d-%d).\n", lower_bound,
-               upper_bound);
+        printf(
+            "flag argument outside of valid range (%d-%d).\n",
+            lower_bound,
+            upper_bound
+        );
         quit(err_message, 1);
     }
     return res;
@@ -1096,6 +1189,7 @@ help(void) {
         "algorithm.\nExample:\n./build/[debug/]bin/graph -c=111 -r=33 "
         "-v=19 -s=3\nOnce the graph is built seek the shortest path between "
         "two "
-        "uppercase vertices. Examples:\nAB\nA->B\nCtoD\nEnter 'q' to quit.\n");
+        "uppercase vertices. Examples:\nAB\nA->B\nCtoD\nEnter 'q' to quit.\n"
+    );
     exit(0);
 }

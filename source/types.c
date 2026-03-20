@@ -13,7 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License. */
 #include <stddef.h>
 
-#include "private/private_types.h"
 #include "types.h"
 
 /** @internal */
@@ -41,7 +40,7 @@ CCC_entry_occupied(CCC_Entry const *const entry) {
     if (!entry) {
         return CCC_TRIBOOL_ERROR;
     }
-    return (entry->private.status & CCC_ENTRY_OCCUPIED) != 0;
+    return (entry->status & CCC_ENTRY_OCCUPIED) != 0;
 }
 
 CCC_Tribool
@@ -49,7 +48,7 @@ CCC_entry_insert_error(CCC_Entry const *const entry) {
     if (!entry) {
         return CCC_TRIBOOL_ERROR;
     }
-    return (entry->private.status & CCC_ENTRY_INSERT_ERROR) != 0;
+    return (entry->status & CCC_ENTRY_INSERT_ERROR) != 0;
 }
 
 CCC_Tribool
@@ -57,7 +56,7 @@ CCC_entry_input_error(CCC_Entry const *const entry) {
     if (!entry) {
         return CCC_TRIBOOL_ERROR;
     }
-    return (entry->private.status & CCC_ENTRY_ARGUMENT_ERROR) != 0;
+    return (entry->status & CCC_ENTRY_ARGUMENT_ERROR) != 0;
 }
 
 void *
@@ -65,8 +64,7 @@ CCC_entry_unwrap(CCC_Entry const *const entry) {
     if (!entry) {
         return NULL;
     }
-    return entry->private.status & CCC_ENTRY_NO_UNWRAP ? NULL
-                                                       : entry->private.type;
+    return entry->status & CCC_ENTRY_NO_UNWRAP ? NULL : entry->type;
 }
 
 CCC_Tribool
@@ -74,7 +72,7 @@ CCC_handle_occupied(CCC_Handle const *const handle) {
     if (!handle) {
         return CCC_TRIBOOL_ERROR;
     }
-    return (handle->private.status & CCC_ENTRY_OCCUPIED) != 0;
+    return (handle->status & CCC_ENTRY_OCCUPIED) != 0;
 }
 
 CCC_Tribool
@@ -82,7 +80,7 @@ CCC_handle_insert_error(CCC_Handle const *const handle) {
     if (!handle) {
         return CCC_TRIBOOL_ERROR;
     }
-    return (handle->private.status & CCC_ENTRY_INSERT_ERROR) != 0;
+    return (handle->status & CCC_ENTRY_INSERT_ERROR) != 0;
 }
 
 CCC_Tribool
@@ -90,7 +88,7 @@ CCC_handle_input_error(CCC_Handle const *const handle) {
     if (!handle) {
         return CCC_TRIBOOL_ERROR;
     }
-    return (handle->private.status & CCC_ENTRY_ARGUMENT_ERROR) != 0;
+    return (handle->status & CCC_ENTRY_ARGUMENT_ERROR) != 0;
 }
 
 CCC_Handle_index
@@ -98,48 +96,47 @@ CCC_handle_unwrap(CCC_Handle const *const handle) {
     if (!handle) {
         return 0;
     }
-    return handle->private.status & CCC_ENTRY_NO_UNWRAP ? 0
-                                                        : handle->private.index;
+    return handle->status & CCC_ENTRY_NO_UNWRAP ? 0 : handle->index;
 }
 
 void *
 CCC_range_begin(CCC_Range const *const range) {
-    return range ? range->private.begin : NULL;
+    return range ? range->begin : NULL;
 }
 
 void *
 CCC_range_end(CCC_Range const *const range) {
-    return range ? range->private.end : NULL;
+    return range ? range->end : NULL;
 }
 
 void *
 CCC_range_reverse_begin(CCC_Range_reverse const *const range) {
-    return range ? range->private.reverse_begin : NULL;
+    return range ? range->reverse_begin : NULL;
 }
 
 void *
 CCC_range_reverse_end(CCC_Range_reverse const *const range) {
-    return range ? range->private.reverse_end : NULL;
+    return range ? range->reverse_end : NULL;
 }
 
 CCC_Handle_index
 CCC_array_range_begin(CCC_Handle_range const *const range) {
-    return range ? range->private.begin : 0;
+    return range ? range->begin : 0;
 }
 
 CCC_Handle_index
 CCC_array_range_end(CCC_Handle_range const *const range) {
-    return range ? range->private.end : 0;
+    return range ? range->end : 0;
 }
 
 CCC_Handle_index
 CCC_array_range_reverse_begin(CCC_Handle_range_reverse const *const range) {
-    return range ? range->private.reverse_begin : 0;
+    return range ? range->reverse_begin : 0;
 }
 
 CCC_Handle_index
 CCC_array_range_reverse_end(CCC_Handle_range_reverse const *const range) {
-    return range ? range->private.reverse_end : 0;
+    return range ? range->reverse_end : 0;
 }
 
 char const *
@@ -155,7 +152,7 @@ CCC_get_entry_status(CCC_Entry const *entry) {
     if (!entry) {
         return CCC_ENTRY_ARGUMENT_ERROR;
     }
-    return entry->private.status;
+    return entry->status;
 }
 
 CCC_Handle_status
@@ -163,7 +160,7 @@ CCC_get_handle_status(CCC_Handle const *handle) {
     if (!handle) {
         return CCC_ENTRY_ARGUMENT_ERROR;
     }
-    return handle->private.status;
+    return handle->status;
 }
 
 char const *

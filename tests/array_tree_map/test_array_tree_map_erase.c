@@ -16,10 +16,13 @@
 
 check_static_begin(array_tree_map_test_insert_erase_shuffled) {
     CCC_Array_tree_map s = array_tree_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
+        id,
+        (CCC_Key_comparator){.compare = id_order},
+        (struct Val[SMALL_FIXED_CAP]){}
+    );
     size_t const size = 50;
     int const prime = 53;
-    check(insert_shuffled(&s, size, prime), CHECK_PASS);
+    check(insert_shuffled(&s, size, prime, &(CCC_Allocator){}), CHECK_PASS);
     int sorted_check[50];
     check(inorder_fill(sorted_check, size, &s), size);
     for (size_t i = 0; i + 1 < size; ++i) {
@@ -27,8 +30,9 @@ check_static_begin(array_tree_map_test_insert_erase_shuffled) {
     }
     /* Now let's delete everything with no errors. */
     for (size_t i = 0; i < size; ++i) {
-        CCC_Handle const *const h
-            = remove_key_value_wrap(&s, &(struct Val){.id = (int)i});
+        CCC_Handle const *const h = array_tree_map_remove_key_value_wrap(
+            &s, &(struct Val){.id = (int)i}
+        );
         check(occupied(h), true);
         check(validate(&s), true);
     }
@@ -38,7 +42,10 @@ check_static_begin(array_tree_map_test_insert_erase_shuffled) {
 
 check_static_begin(array_tree_map_test_prime_shuffle) {
     CCC_Array_tree_map s = array_tree_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
+        id,
+        (CCC_Key_comparator){.compare = id_order},
+        (struct Val[SMALL_FIXED_CAP]){}
+    );
     size_t const size = 50;
     size_t const prime = 53;
     size_t const less = 10;
@@ -47,9 +54,14 @@ check_static_begin(array_tree_map_test_prime_shuffle) {
     size_t shuffled_index = prime % (size - less);
     bool repeats[50] = {};
     for (size_t i = 0; i < size; ++i) {
-        if (occupied(try_insert_wrap(
-                &s, &(struct Val){.id = (int)shuffled_index,
-                                  .val = (int)shuffled_index}))) {
+        if (occupied(array_tree_map_try_insert_wrap(
+                &s,
+                (&(struct Val){
+                    .id = (int)shuffled_index,
+                    .val = (int)shuffled_index,
+                }),
+                &(CCC_Allocator){}
+            ))) {
             repeats[i] = true;
         }
         check(validate(&s), true);
@@ -57,7 +69,9 @@ check_static_begin(array_tree_map_test_prime_shuffle) {
     }
     check(array_tree_map_count(&s).count < size, true);
     for (size_t i = 0; i < size; ++i) {
-        CCC_Handle const *const e = remove_handle_wrap(handle_wrap(&s, &i));
+        CCC_Handle const *const e = array_tree_map_remove_handle_wrap(
+            array_tree_map_handle_wrap(&s, &i)
+        );
         check(occupied(e) || repeats[i], true);
         check(validate(&s), true);
     }
@@ -66,20 +80,29 @@ check_static_begin(array_tree_map_test_prime_shuffle) {
 
 check_static_begin(array_tree_map_test_weak_srand) {
     CCC_Array_tree_map s = array_tree_map_with_storage(
-        id, id_order, (struct Val[STANDARD_FIXED_CAP]){});
-    srand(time(NULL)); /* NOLINT */
+        id,
+        (CCC_Key_comparator){.compare = id_order},
+        (struct Val[STANDARD_FIXED_CAP]){}
+    );
+    srand((unsigned)time(NULL)); /* NOLINT */
     int const num_nodes = 1000;
     int id_keys[1000];
     bool repeats[1000] = {};
     for (int i = 0; i < num_nodes; ++i) {
-        int const rand_i = rand(); /* NOLINT */
-        if (occupied(try_insert_wrap(&s, &(struct Val){
-                                             .id = rand_i,
-                                             .val = i,
-                                         }))) {
+        int const rand_i = (int)rand(); /* NOLINT */
+        if (occupied(array_tree_map_try_insert_wrap(
+                &s,
+                (&(struct Val){
+                    .id = rand_i,
+                    .val = i,
+                }),
+                &(CCC_Allocator){}
+            ))) {
             repeats[i] = true;
         }
-        (void)swap_handle(&s, &(struct Val){.id = rand_i, .val = i});
+        (void)swap_handle(
+            &s, &(struct Val){.id = rand_i, .val = i}, &(CCC_Allocator){}
+        );
         id_keys[i] = rand_i;
         check(validate(&s), true);
     }
@@ -95,17 +118,24 @@ check_static_begin(array_tree_map_test_weak_srand) {
 
 check_static_begin(array_tree_map_test_insert_erase_cycles_no_allocate) {
     CCC_Array_tree_map s = array_tree_map_with_storage(
-        id, id_order, (struct Val[STANDARD_FIXED_CAP]){});
-    srand(time(NULL)); /* NOLINT */
+        id,
+        (CCC_Key_comparator){.compare = id_order},
+        (struct Val[STANDARD_FIXED_CAP]){}
+    );
+    srand((unsigned)time(NULL)); /* NOLINT */
     int const num_nodes = 1000;
     int id_keys[1000];
     bool repeats[1000] = {};
     for (int i = 0; i < num_nodes; ++i) {
-        int const rand_i = rand(); /* NOLINT */
-        if (occupied(insert_or_assign_wrap(&s, &(struct Val){
-                                                   .id = rand_i,
-                                                   .val = i,
-                                               }))) {
+        int const rand_i = (int)rand(); /* NOLINT */
+        if (occupied(array_tree_map_insert_or_assign_wrap(
+                &s,
+                (&(struct Val){
+                    .id = rand_i,
+                    .val = i,
+                }),
+                &(CCC_Allocator){}
+            ))) {
             repeats[i] = true;
         }
         id_keys[i] = rand_i;
@@ -118,7 +148,9 @@ check_static_begin(array_tree_map_test_insert_erase_cycles_no_allocate) {
         check(validate(&s), true);
     }
     for (int i = 0; i < num_nodes / 2; ++i) {
-        CCC_Handle h = insert_or_assign(&s, &(struct Val){.id = id_keys[i]});
+        CCC_Handle h = insert_or_assign(
+            &s, &(struct Val){.id = id_keys[i]}, &(CCC_Allocator){}
+        );
         check(occupied(&h), false);
         check(validate(&s), true);
     }
@@ -135,18 +167,23 @@ check_static_begin(array_tree_map_test_insert_erase_cycles_no_allocate) {
 /** Make sure this test uses standard library allocator. Resizing is important
 to test for handle maps. Stack allocator does not allow resizing. */
 check_static_begin(array_tree_map_test_insert_erase_cycles_allocate) {
-    CCC_Array_tree_map s = array_tree_map_for(struct Val, id, id_order,
-                                              std_allocate, NULL, 0, NULL);
-    srand(time(NULL)); /* NOLINT */
+    CCC_Array_tree_map s = array_tree_map_default(
+        struct Val, id, (CCC_Key_comparator){.compare = id_order}
+    );
+    srand((unsigned)time(NULL));
     int const num_nodes = 1000;
     int id_keys[1000];
     bool repeats[1000] = {};
     for (int i = 0; i < num_nodes; ++i) {
-        int const rand_i = rand(); /* NOLINT */
-        if (occupied(insert_or_assign_wrap(&s, &(struct Val){
-                                                   .id = rand_i,
-                                                   .val = i,
-                                               }))) {
+        int const rand_i = (int)rand(); /* NOLINT */
+        if (occupied(array_tree_map_insert_or_assign_wrap(
+                &s,
+                (&(struct Val){
+                    .id = rand_i,
+                    .val = i,
+                }),
+                &std_allocator
+            ))) {
             repeats[i] = true;
         }
         id_keys[i] = rand_i;
@@ -159,7 +196,9 @@ check_static_begin(array_tree_map_test_insert_erase_cycles_allocate) {
         check(validate(&s), true);
     }
     for (int i = 0; i < num_nodes / 2; ++i) {
-        CCC_Handle h = insert_or_assign(&s, &(struct Val){.id = id_keys[i]});
+        CCC_Handle h = insert_or_assign(
+            &s, &(struct Val){.id = id_keys[i]}, &std_allocator
+        );
         check(occupied(&h), false);
         check(validate(&s), true);
     }
@@ -170,14 +209,18 @@ check_static_begin(array_tree_map_test_insert_erase_cycles_allocate) {
         check(validate(&s), true);
     }
     check(is_empty(&s), true);
-    check_end(array_tree_map_clear_and_free(&s, NULL););
+    check_end({
+        array_tree_map_clear_and_free(&s, &(CCC_Destructor){}, &std_allocator);
+    });
 }
 
 int
 main(void) {
-    return check_run(array_tree_map_test_insert_erase_shuffled(),
-                     array_tree_map_test_prime_shuffle(),
-                     array_tree_map_test_weak_srand(),
-                     array_tree_map_test_insert_erase_cycles_no_allocate(),
-                     array_tree_map_test_insert_erase_cycles_allocate());
+    return check_run(
+        array_tree_map_test_insert_erase_shuffled(),
+        array_tree_map_test_prime_shuffle(),
+        array_tree_map_test_weak_srand(),
+        array_tree_map_test_insert_erase_cycles_no_allocate(),
+        array_tree_map_test_insert_erase_cycles_allocate()
+    );
 }

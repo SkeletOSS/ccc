@@ -11,14 +11,18 @@
 #include "types.h"
 
 CCC_Order
-val_order(CCC_Type_comparator_context const c) {
+val_order(CCC_Comparator_arguments const c) {
     struct Val const *const a = c.type_left;
     struct Val const *const b = c.type_right;
     return (a->val > b->val) - (a->val < b->val);
 }
 
-check_begin(check_order, Doubly_linked_list const *const doubly_linked_list,
-            size_t const n, int const order[]) {
+check_begin(
+    check_order,
+    Doubly_linked_list const *const doubly_linked_list,
+    size_t const n,
+    int const order[]
+) {
     if (!n) {
         return CHECK_PASS;
     }
@@ -42,8 +46,9 @@ check_begin(check_order, Doubly_linked_list const *const doubly_linked_list,
             (void)fprintf(stderr, "%d, ", order[j]);
         }
         (void)fprintf(stderr, "}\n%s", CHECK_NONE);
-        (void)fprintf(stderr, "%sCHECK_ERROR:%s (int[%zu]){", CHECK_RED,
-                      CHECK_GREEN, n);
+        (void)fprintf(
+            stderr, "%sCHECK_ERROR:%s (int[%zu]){", CHECK_RED, CHECK_GREEN, n
+        );
         v = begin(doubly_linked_list);
         for (size_t j = 0; j < n && v != end(doubly_linked_list);
              ++j, v = next(doubly_linked_list, &v->e)) {
@@ -51,11 +56,13 @@ check_begin(check_order, Doubly_linked_list const *const doubly_linked_list,
                 return CHECK_STATUS;
             }
             if (order[j] == v->val) {
-                (void)fprintf(stderr, "%s%d, %s", CHECK_GREEN, order[j],
-                              CHECK_NONE);
+                (void)fprintf(
+                    stderr, "%s%d, %s", CHECK_GREEN, order[j], CHECK_NONE
+                );
             } else {
-                (void)fprintf(stderr, "%s%d, %s", CHECK_RED, v->val,
-                              CHECK_NONE);
+                (void)fprintf(
+                    stderr, "%s%d, %s", CHECK_RED, v->val, CHECK_NONE
+                );
             }
         }
         for (; v != end(doubly_linked_list);
@@ -66,13 +73,25 @@ check_begin(check_order, Doubly_linked_list const *const doubly_linked_list,
     });
 }
 
-check_begin(push_list, CCC_Doubly_linked_list *const doubly_linked_list,
-            enum Push_direction const dir, size_t const n, struct Val vals[]) {
+check_begin(
+    push_list,
+    CCC_Doubly_linked_list *const doubly_linked_list,
+    enum Push_direction const dir,
+    size_t const n,
+    struct Val vals[],
+    CCC_Allocator const *const allocator
+) {
     for (size_t i = 0; i < n; ++i) {
         if (dir == UTIL_PUSH_FRONT) {
-            check(push_front(doubly_linked_list, &vals[i].e) == NULL, false);
+            check(
+                push_front(doubly_linked_list, &vals[i].e, allocator) == NULL,
+                false
+            );
         } else {
-            check(push_back(doubly_linked_list, &vals[i].e) == NULL, false);
+            check(
+                push_back(doubly_linked_list, &vals[i].e, allocator) == NULL,
+                false
+            );
         }
     }
     check(validate(doubly_linked_list), true);

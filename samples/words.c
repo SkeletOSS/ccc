@@ -29,7 +29,7 @@ Please specify a command as follows:
 
 #include "ccc/array_adaptive_map.h"
 #include "ccc/buffer.h"
-#include "ccc/flat_priority_queue.h"
+#include "ccc/sort.h"
 #include "ccc/traits.h"
 #include "ccc/types.h"
 #include "str_view/str_view.h"
@@ -55,12 +55,12 @@ struct Action_pack {
     SV_Str_view file;
     enum Action_type type;
     union {
-        int n;
+        size_t n;
         SV_Str_view w;
     };
     union {
-        void (*freq_fn)(FILE *file, int n);
-        void (*find_fn)(FILE *file, SV_Str_view w);
+        void (*freq_fn)(FILE *file, size_t n, CCC_Allocator const *);
+        void (*find_fn)(FILE *file, SV_Str_view w, CCC_Allocator const *);
     };
 };
 
@@ -68,32 +68,30 @@ struct Action_pack {
 
 enum : size_t {
     ARENA_START_CAP = 4096,
-};
-
-enum : int {
     ALL_FREQUENCIES = 0,
 };
 
 static SV_Str_view const space = SV_from(" ");
-static SV_Str_view const directions
-    = SV_from("\nPlease specify a command as follows:\n"
-              "./build/[debug/]bin/words [flag] -f=[path/to/file]\n"
-              "[flag]:\n"
-              "-f=[/path/to/file]\n"
-              "-c\n"
-              "\treports the words by count in descending order.\n"
-              "-rc\n"
-              "\treports words by count in ascending order.\n"
-              "-top=N\n"
-              "\treports the top N words by frequency.\n"
-              "-last=N\n"
-              "\treports the last N words by frequency\n"
-              "-alph=N\n"
-              "\treports the first N words alphabetically with counts.\n"
-              "-ralph=N\n"
-              "\treports the last N words alphabetically with counts.\n"
-              "-find=[WORD]\n"
-              "\treports the count of the specified word.\n");
+static SV_Str_view const directions = SV_from(
+    "\nPlease specify a command as follows:\n"
+    "./build/[debug/]bin/words [flag] -f=[path/to/file]\n"
+    "[flag]:\n"
+    "-f=[/path/to/file]\n"
+    "-c\n"
+    "\treports the words by count in descending order.\n"
+    "-rc\n"
+    "\treports words by count in ascending order.\n"
+    "-top=N\n"
+    "\treports the top N words by frequency.\n"
+    "-last=N\n"
+    "\treports the last N words by frequency\n"
+    "-alph=N\n"
+    "\treports the first N words alphabetically with counts.\n"
+    "-ralph=N\n"
+    "\treports the last N words alphabetically with counts.\n"
+    "-find=[WORD]\n"
+    "\treports the count of the specified word.\n"
+);
 
 /*=======================   Prototypes     ==================================*/
 
@@ -103,25 +101,37 @@ static SV_Str_view const directions
     do {                                                                       \
         if (!(cond)) {                                                         \
             __VA_OPT__(__VA_ARGS__)                                            \
-            (void)fprintf(stderr, "%s, %d, condition is false: %s\n",          \
-                          __FILE__, __LINE__, #cond);                          \
+            (void)fprintf(                                                     \
+                stderr,                                                        \
+                "%s, %d, condition is false: %s\n",                            \
+                __FILE__,                                                      \
+                __LINE__,                                                      \
+                #cond                                                          \
+            );                                                                 \
             exit(1);                                                           \
         }                                                                      \
     } while (0)
 
-static void print_found(FILE *, SV_Str_view);
-static void print_top_n(FILE *, int);
-static void print_last_n(FILE *, int);
-static void print_alpha_n(FILE *, int);
-static void print_ralpha_n(FILE *, int);
-static Buffer copy_frequencies(Array_adaptive_map const *);
-static void print_n(Array_adaptive_map *, CCC_Order, struct String_arena *,
-                    int);
+static void print_found(FILE *, SV_Str_view, CCC_Allocator const *);
+static void print_top_n(FILE *, size_t, CCC_Allocator const *);
+static void print_last_n(FILE *, size_t, CCC_Allocator const *);
+static void print_alpha_n(FILE *, size_t, CCC_Allocator const *);
+static void print_ralpha_n(FILE *, size_t, CCC_Allocator const *);
+static Buffer map_to_buffer(Array_adaptive_map const *, CCC_Allocator const *);
+static void print_n(
+    Array_adaptive_map *,
+    CCC_Order,
+    struct String_arena *,
+    size_t,
+    CCC_Allocator const *
+);
 static struct Int_conversion parse_n_ranks(SV_Str_view);
-static struct String_offset clean_word(struct String_arena *, SV_Str_view);
-static Array_adaptive_map create_frequency_map(struct String_arena *, FILE *);
-static Order order_string_keys(Key_comparator_context);
-static Order order_words(Type_comparator_context);
+static struct String_offset
+clean_word(struct String_arena *, SV_Str_view, CCC_Allocator const *);
+static Array_adaptive_map
+create_frequency_map(struct String_arena *, FILE *, CCC_Allocator const *);
+static Order order_string_keys(Key_comparator_arguments);
+static Order order_words(Comparator_arguments);
 static FILE *open_file(SV_Str_view);
 static void print_str_view(FILE *, SV_Str_view);
 
@@ -154,31 +164,32 @@ main(int argc, char *argv[]) {
             struct Int_conversion c = parse_n_ranks(sv_arg);
             check(c.status != CONV_ER,
                   logerr("cannot convert -top= flag to int"););
-            exe.n = c.conversion;
+            exe.n = (size_t)c.conversion;
         } else if (SV_starts_with(sv_arg, SV_from("-last="))) {
             exe.type = COUNT;
             exe.freq_fn = print_last_n;
             struct Int_conversion c = parse_n_ranks(sv_arg);
             check(c.status != CONV_ER,
                   logerr("cannot convert -last= flat to int"););
-            exe.n = c.conversion;
+            exe.n = (size_t)c.conversion;
         } else if (SV_starts_with(sv_arg, SV_from("-alph="))) {
             exe.type = COUNT;
             exe.freq_fn = print_alpha_n;
             struct Int_conversion c = parse_n_ranks(sv_arg);
             check(c.status != CONV_ER,
                   logerr("cannot convert -alph= flag to int"););
-            exe.n = c.conversion;
+            exe.n = (size_t)c.conversion;
         } else if (SV_starts_with(sv_arg, SV_from("-ralph="))) {
             exe.type = COUNT;
             exe.freq_fn = print_ralpha_n;
             struct Int_conversion c = parse_n_ranks(sv_arg);
             check(c.status != CONV_ER,
                   logerr("cannot convert -ralph= flat to int"););
-            exe.n = c.conversion;
+            exe.n = (size_t)c.conversion;
         } else if (SV_starts_with(sv_arg, SV_from("-find="))) {
             SV_Str_view const raw_word = SV_substr(
-                sv_arg, SV_find(sv_arg, 0, SV_from("=")) + 1, SV_len(sv_arg));
+                sv_arg, SV_find(sv_arg, 0, SV_from("=")) + 1, SV_len(sv_arg)
+            );
             check(!SV_is_empty(raw_word),
                   logerr("-find= flag has invalid entry"););
             exe.type = FIND;
@@ -186,7 +197,8 @@ main(int argc, char *argv[]) {
             exe.w = raw_word;
         } else if (SV_starts_with(sv_arg, SV_from("-f="))) {
             SV_Str_view const raw_file = SV_substr(
-                sv_arg, SV_find(sv_arg, 0, SV_from("=")) + 1, SV_len(sv_arg));
+                sv_arg, SV_find(sv_arg, 0, SV_from("=")) + 1, SV_len(sv_arg)
+            );
             check(!SV_is_empty(raw_file), logerr("file string is empty"););
             exe.file = raw_file;
         } else if (SV_starts_with(sv_arg, SV_from("-h"))) {
@@ -210,9 +222,9 @@ main(int argc, char *argv[]) {
         return 1;
     }
     if (exe.type == COUNT) {
-        exe.freq_fn(f, exe.n);
+        exe.freq_fn(f, exe.n, &std_allocator);
     } else if (exe.type == FIND && SV_begin(exe.w)) {
-        exe.find_fn(f, exe.w);
+        exe.find_fn(f, exe.w, &std_allocator);
     } else {
         logerr("invalid count or empty word searched\n");
         return 1;
@@ -223,66 +235,71 @@ main(int argc, char *argv[]) {
 /*=======================   Static Impl    ==================================*/
 
 static void
-print_found(FILE *const f, SV_Str_view w) {
-    struct String_arena a = string_arena_create(ARENA_START_CAP);
-    Array_adaptive_map map = create_frequency_map(&a, f);
+print_found(
+    FILE *const f, SV_Str_view w, CCC_Allocator const *const allocator
+) {
+    struct String_arena a = string_arena_create(ARENA_START_CAP, allocator);
+    Array_adaptive_map map = create_frequency_map(&a, f, allocator);
     defer {
-        string_arena_free(&a);
-        (void)array_adaptive_map_clear_and_free(&map, NULL);
+        string_arena_free(&a, allocator);
+        (void)array_adaptive_map_clear_and_free(
+            &map, &(CCC_Destructor){}, allocator
+        );
     }
     check(a.arena);
     check(!is_empty(&map));
-    struct String_offset wc = clean_word(&a, w);
+    struct String_offset wc = clean_word(&a, w, allocator);
     if (!wc.error) {
         Word const *const found_w
             = array_adaptive_map_at(&map, get_key_value(&map, &wc));
         if (found_w) {
-            printf("%s %d\n", string_arena_at(&a, &found_w->ofs),
-                   found_w->freq);
+            printf(
+                "%s %d\n", string_arena_at(&a, &found_w->ofs), found_w->freq
+            );
         }
     }
 }
 
 static void
-print_top_n(FILE *const f, int n) {
-    struct String_arena a = string_arena_create(ARENA_START_CAP);
-    Array_adaptive_map map = create_frequency_map(&a, f);
+print_top_n(FILE *const f, size_t n, CCC_Allocator const *const allocator) {
+    struct String_arena a = string_arena_create(ARENA_START_CAP, allocator);
+    Array_adaptive_map map = create_frequency_map(&a, f, allocator);
     defer {
-        (void)clear_and_free(&map, NULL);
-        string_arena_free(&a);
+        (void)clear_and_free(&map, &(CCC_Destructor){}, allocator);
+        string_arena_free(&a, allocator);
     }
     check(a.arena);
     check(!is_empty(&map));
-    print_n(&map, CCC_ORDER_GREATER, &a, n);
+    print_n(&map, CCC_ORDER_GREATER, &a, n, allocator);
 }
 
 static void
-print_last_n(FILE *const f, int n) {
-    struct String_arena a = string_arena_create(ARENA_START_CAP);
-    Array_adaptive_map map = create_frequency_map(&a, f);
+print_last_n(FILE *const f, size_t n, CCC_Allocator const *const allocator) {
+    struct String_arena a = string_arena_create(ARENA_START_CAP, allocator);
+    Array_adaptive_map map = create_frequency_map(&a, f, allocator);
     defer {
-        (void)clear_and_free(&map, NULL);
-        string_arena_free(&a);
+        (void)clear_and_free(&map, &(CCC_Destructor){}, allocator);
+        string_arena_free(&a, allocator);
     }
     check(a.arena);
     check(!is_empty(&map));
-    print_n(&map, CCC_ORDER_LESSER, &a, n);
+    print_n(&map, CCC_ORDER_LESSER, &a, n, allocator);
 }
 
 static void
-print_alpha_n(FILE *const f, int n) {
-    struct String_arena a = string_arena_create(ARENA_START_CAP);
-    Array_adaptive_map map = create_frequency_map(&a, f);
+print_alpha_n(FILE *const f, size_t n, CCC_Allocator const *const allocator) {
+    struct String_arena a = string_arena_create(ARENA_START_CAP, allocator);
+    Array_adaptive_map map = create_frequency_map(&a, f, allocator);
     defer {
-        (void)clear_and_free(&map, NULL);
-        string_arena_free(&a);
+        (void)clear_and_free(&map, &(CCC_Destructor){}, allocator);
+        string_arena_free(&a, allocator);
     }
     check(a.arena);
     check(!is_empty(&map));
     if (!n) {
         n = count(&map).count;
     }
-    int i = 0;
+    size_t i = 0;
     /* The ordered nature of the map comes in handy for alpha printing. */
     for (CCC_Handle_index iter = begin(&map); iter != end(&map) && i < n;
          iter = next(&map, iter), ++i) {
@@ -292,19 +309,19 @@ print_alpha_n(FILE *const f, int n) {
 }
 
 static void
-print_ralpha_n(FILE *const f, int n) {
-    struct String_arena a = string_arena_create(ARENA_START_CAP);
-    Array_adaptive_map map = create_frequency_map(&a, f);
+print_ralpha_n(FILE *const f, size_t n, CCC_Allocator const *const allocator) {
+    struct String_arena a = string_arena_create(ARENA_START_CAP, allocator);
+    Array_adaptive_map map = create_frequency_map(&a, f, allocator);
     defer {
-        (void)clear_and_free(&map, NULL);
-        string_arena_free(&a);
+        (void)clear_and_free(&map, &(CCC_Destructor){}, allocator);
+        string_arena_free(&a, allocator);
     }
     check(a.arena);
     check(!is_empty(&map));
     if (!n) {
         n = count(&map).count;
     }
-    int i = 0;
+    size_t i = 0;
     /* The ordered nature of the map comes in handy for reverse iteration. */
     for (CCC_Handle_index iter = reverse_begin(&map);
          iter != reverse_end(&map) && i < n;
@@ -315,48 +332,55 @@ print_ralpha_n(FILE *const f, int n) {
 }
 
 static Buffer
-copy_frequencies(Array_adaptive_map const *const map) {
+map_to_buffer(
+    Array_adaptive_map const *const map, CCC_Allocator const *const allocator
+) {
     check(!is_empty(map));
-    Buffer freqs
-        = CCC_buffer_with_capacity(Word, std_allocate, count(map).count);
+    Buffer freqs = CCC_buffer_with_capacity(Word, *allocator, count(map).count);
     size_t const cap = capacity(&freqs).count;
     size_t i = 0;
     for (CCC_Handle_index iter = begin(map); iter != end(map) && i < cap;
          iter = next(map, iter), ++i) {
         Word const *const w = array_adaptive_map_at(map, iter);
-        Word const *const pushed = buffer_push_back(&freqs, w);
+        Word const *const pushed
+            = buffer_push_back(&freqs, w, &(CCC_Allocator){});
         check(pushed);
     }
     return freqs;
 }
 
 static void
-print_n(CCC_Array_adaptive_map *const map, CCC_Order const ord,
-        struct String_arena *const arena, int n) {
-    Buffer freqs = copy_frequencies(map);
+print_n(
+    CCC_Array_adaptive_map *const map,
+    CCC_Order const order,
+    struct String_arena *const arena,
+    size_t n,
+    CCC_Allocator const *const allocator
+) {
+    Buffer freqs = map_to_buffer(map, allocator);
     defer {
-        (void)clear_and_free(&freqs, NULL);
+        (void)clear_and_free(&freqs, &(CCC_Destructor){}, allocator);
     }
     check(!buffer_is_empty(&freqs));
-    Flat_priority_queue flat_priority_queue = flat_priority_queue_heapify(
-        Word, ord, order_words, NULL, arena, capacity(&freqs).count,
-        count(&freqs).count, begin(&freqs));
-    check(count(&flat_priority_queue).count == count(&freqs).count);
     if (!n) {
-        n = count(&flat_priority_queue).count;
+        n = count(&freqs).count;
     }
-    /* Because all CCC containers are complete they can be treated as copyable
-       types like this. There is no opaque container in CCC. */
-    Buffer const sorted_freqs
-        = flat_priority_queue_heapsort(&flat_priority_queue, &(Word){});
-    int w = 0;
-    /* Heap sort puts the root most nodes at the back of the buffer. */
-    for (Word const *i = reverse_begin(&sorted_freqs);
-         i != reverse_end(&sorted_freqs) && w < n;
-         i = reverse_next(&sorted_freqs, i), ++w) {
+    CCC_Result const result = CCC_sort_heapsort(
+        &freqs,
+        &(Word){},
+        order,
+        &(CCC_Comparator){
+            .compare = order_words,
+            .context = arena,
+        }
+    );
+    check(result == CCC_RESULT_OK);
+    size_t w = 0;
+    for (Word const *i = begin(&freqs); i != end(&freqs) && w < n;
+         i = next(&freqs, i), ++w) {
         char const *const arena_str = string_arena_at(arena, &i->ofs);
         if (arena_str) {
-            printf("%d. %s %d\n", w + 1, arena_str, i->freq);
+            printf("%zu. %s %d\n", w + 1, arena_str, i->freq);
         }
     }
 }
@@ -364,26 +388,39 @@ print_n(CCC_Array_adaptive_map *const map, CCC_Order const ord,
 /*=====================    Container Construction     =======================*/
 
 static Array_adaptive_map
-create_frequency_map(struct String_arena *const a, FILE *const f) {
+create_frequency_map(
+    struct String_arena *const arena,
+    FILE *const f,
+    CCC_Allocator const *const allocator
+) {
     char *linepointer = NULL;
     size_t len = 0;
     ptrdiff_t read = 0;
-    Array_adaptive_map array_adaptive_map
-        = array_adaptive_map_context_with_allocator(
-            Word, ofs, order_string_keys, std_allocate, a);
+    Array_adaptive_map array_adaptive_map = array_adaptive_map_default(
+        Word,
+        ofs,
+        (CCC_Key_comparator){
+            .compare = order_string_keys,
+            .context = arena,
+        }
+    );
     while ((read = getline(&linepointer, &len, f)) > 0) {
-        SV_Str_view const line = {.str = linepointer, .len = read - 1};
+        SV_Str_view const line = {.str = linepointer, .len = (size_t)read - 1};
         for (SV_Str_view word_view = SV_token_begin(line, space);
              !SV_token_end(line, word_view);
              word_view = SV_token_next(line, word_view, space)) {
-            struct String_offset const cw = clean_word(a, word_view);
+            struct String_offset const cw
+                = clean_word(arena, word_view, allocator);
             if (!cw.error) {
                 Array_adaptive_map_handle const *e
-                    = handle_wrap(&array_adaptive_map, &cw);
+                    = array_adaptive_map_handle_wrap(&array_adaptive_map, &cw);
                 e = array_adaptive_map_and_modify_with(e, Word, { T->freq++; });
                 Word const *const w = array_adaptive_map_at(
-                    &array_adaptive_map, array_adaptive_map_or_insert_with(
-                                             e, (Word){.ofs = cw, .freq = 1}));
+                    &array_adaptive_map,
+                    array_adaptive_map_or_insert_with(
+                        e, allocator, (Word){.ofs = cw, .freq = 1}
+                    )
+                );
                 check(w);
             }
         }
@@ -393,10 +430,14 @@ create_frequency_map(struct String_arena *const a, FILE *const f) {
 }
 
 static struct String_offset
-clean_word(struct String_arena *const a, SV_Str_view wv) {
+clean_word(
+    struct String_arena *const a,
+    SV_Str_view wv,
+    CCC_Allocator const *const allocator
+) {
     /* It is hard to know how many characters will make it to a cleaned word
        and one pass is ideal so arena api allows push back on last alloc. */
-    struct String_offset str = string_arena_allocate(a, 0);
+    struct String_offset str = string_arena_allocate(a, 0, allocator);
     if (str.error) {
         return str;
     }
@@ -406,7 +447,7 @@ clean_word(struct String_arena *const a, SV_Str_view wv) {
             return (struct String_offset){.error = STRING_ARENA_INVALID};
         }
         enum String_arena_result const pushed_char
-            = string_arena_push_back(a, &str, (char)tolower(*c));
+            = string_arena_push_back(a, &str, (char)tolower(*c), allocator);
         check(pushed_char == STRING_ARENA_OK);
     }
     if (!str.len) {
@@ -425,7 +466,7 @@ clean_word(struct String_arena *const a, SV_Str_view wv) {
 /*=======================   Container Helpers    ============================*/
 
 static Order
-order_string_keys(Key_comparator_context const c) {
+order_string_keys(Key_comparator_arguments const c) {
     Word const *const w = c.type_right;
     struct String_arena const *const a = c.context;
     struct String_offset const *const id = c.key_left;
@@ -438,7 +479,7 @@ order_string_keys(Key_comparator_context const c) {
 
 /* Sorts by frequency then alphabetic order if frequencies are tied. */
 static Order
-order_words(Type_comparator_context const c) {
+order_words(Comparator_arguments const c) {
     Word const *const left = c.type_left;
     Word const *const right = c.type_right;
     Order freq_order = (left->freq > right->freq) - (left->freq < right->freq);
@@ -486,9 +527,12 @@ open_file(SV_Str_view file) {
     }
     FILE *const f = fopen(SV_begin(file), "r");
     if (!f) {
-        (void)fprintf(stderr,
-                      "Opening file [%s] failed with errno set to: %d\n",
-                      SV_begin(file), errno);
+        (void)fprintf(
+            stderr,
+            "Opening file [%s] failed with errno set to: %d\n",
+            SV_begin(file),
+            errno
+        );
     }
     return f;
 }

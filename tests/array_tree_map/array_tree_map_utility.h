@@ -17,10 +17,14 @@ enum : size_t {
     STANDARD_FIXED_CAP = 1024,
 };
 
-CCC_Order id_order(CCC_Key_comparator_context);
+CCC_Order id_order(CCC_Key_comparator_arguments);
 
-enum Check_result insert_shuffled(CCC_Array_tree_map *m, size_t size,
-                                  int larger_prime);
+enum Check_result insert_shuffled(
+    CCC_Array_tree_map *m,
+    size_t size,
+    int larger_prime,
+    CCC_Allocator const *allocator
+);
 size_t inorder_fill(int vals[], size_t size, CCC_Array_tree_map const *m);
 
 #endif /* CCC_HROMAP_UTIL_H */

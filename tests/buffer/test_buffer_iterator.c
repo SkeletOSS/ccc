@@ -47,9 +47,9 @@ check_static_begin(buffer_test_reverse_buf) {
     }
     for (int *l = buffer_begin(&b), *r = buffer_reverse_begin(&b); l < r;
          l = buffer_next(&b, l), r = buffer_reverse_next(&b, r)) {
-        CCC_Result const res
-            = buffer_swap(&b, &(int){0}, buffer_index(&b, l).count,
-                          buffer_index(&b, r).count);
+        CCC_Result const res = buffer_swap(
+            &b, &(int){}, buffer_index(&b, l).count, buffer_index(&b, r).count
+        );
         check(res, CCC_RESULT_OK);
     }
     prev = 7;
@@ -69,7 +69,8 @@ check_static_begin(buffer_test_trap_rainwater_two_pointers) {
         HCAP = 12,
     };
     Buffer const heights = buffer_with_storage(
-        HCAP, (int[HCAP]){0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1});
+        HCAP, (int[HCAP]){0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1}
+    );
     int const correct_trapped = 6;
     int trapped = 0;
     check(buffer_is_empty(&heights), CCC_FALSE);
@@ -97,7 +98,10 @@ check_static_begin(buffer_test_trap_rainwater_two_pointers) {
 
 int
 main(void) {
-    return check_run(buffer_test_iterator_forward(),
-                     buffer_test_iterator_reverse(), buffer_test_reverse_buf(),
-                     buffer_test_trap_rainwater_two_pointers());
+    return check_run(
+        buffer_test_iterator_forward(),
+        buffer_test_iterator_reverse(),
+        buffer_test_reverse_buf(),
+        buffer_test_trap_rainwater_two_pointers()
+    );
 }

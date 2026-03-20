@@ -9,19 +9,24 @@
 #include "checkers.h"
 #include "traits.h"
 #include "types.h"
-#include "utility/allocate.h"
 #include "utility/stack_allocator.h"
 
 check_static_begin(array_adaptive_map_test_empty) {
     Array_adaptive_map s = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
+        id,
+        (CCC_Key_comparator){.compare = id_order},
+        (struct Val[SMALL_FIXED_CAP]){}
+    );
     check(is_empty(&s), true);
     check_end();
 }
 
 check_static_begin(array_adaptive_map_test_with_literal) {
     Array_adaptive_map s = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
+        id,
+        (CCC_Key_comparator){.compare = id_order},
+        (struct Val[SMALL_FIXED_CAP]){}
+    );
     check(is_empty(&s), true);
     check(capacity(&s).count, SMALL_FIXED_CAP);
     check_end();
@@ -29,15 +34,26 @@ check_static_begin(array_adaptive_map_test_with_literal) {
 
 check_static_begin(array_adaptive_map_test_copy_no_allocate) {
     Array_adaptive_map source = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
+        id,
+        (CCC_Key_comparator){.compare = id_order},
+        (struct Val[SMALL_FIXED_CAP]){}
+    );
     Array_adaptive_map destination = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
-    (void)swap_handle(&source, &(struct Val){.id = 0});
-    (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1});
-    (void)swap_handle(&source, &(struct Val){.id = 2, .val = 2});
+        id,
+        (CCC_Key_comparator){.compare = id_order},
+        (struct Val[SMALL_FIXED_CAP]){}
+    );
+    (void)swap_handle(&source, &(struct Val){.id = 0}, &(CCC_Allocator){});
+    (void)swap_handle(
+        &source, &(struct Val){.id = 1, .val = 1}, &(CCC_Allocator){}
+    );
+    (void)swap_handle(
+        &source, &(struct Val){.id = 2, .val = 2}, &(CCC_Allocator){}
+    );
     check(count(&source).count, 3);
     check(is_empty(&destination), true);
-    CCC_Result res = array_adaptive_map_copy(&destination, &source, NULL);
+    CCC_Result res
+        = array_adaptive_map_copy(&destination, &source, &(CCC_Allocator){});
     check(res, CCC_RESULT_OK);
     check(count(&destination).count, count(&source).count);
     for (int i = 0; i < 3; ++i) {
@@ -57,36 +73,53 @@ check_static_begin(array_adaptive_map_test_copy_no_allocate) {
 
 check_static_begin(array_adaptive_map_test_copy_no_allocate_fail) {
     Array_adaptive_map source = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[STANDARD_FIXED_CAP]){});
+        id,
+        (CCC_Key_comparator){.compare = id_order},
+        (struct Val[STANDARD_FIXED_CAP]){}
+    );
     Array_adaptive_map destination = array_adaptive_map_with_storage(
-        id, id_order, (struct Val[SMALL_FIXED_CAP]){});
-    (void)swap_handle(&source, &(struct Val){.id = 0});
-    (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1});
-    (void)swap_handle(&source, &(struct Val){.id = 2, .val = 2});
+        id,
+        (CCC_Key_comparator){.compare = id_order},
+        (struct Val[SMALL_FIXED_CAP]){}
+    );
+    (void)swap_handle(&source, &(struct Val){.id = 0}, &(CCC_Allocator){});
+    (void)swap_handle(
+        &source, &(struct Val){.id = 1, .val = 1}, &(CCC_Allocator){}
+    );
+    (void)swap_handle(
+        &source, &(struct Val){.id = 2, .val = 2}, &(CCC_Allocator){}
+    );
     check(count(&source).count, 3);
     check(is_empty(&destination), true);
-    CCC_Result res = array_adaptive_map_copy(&destination, &source, NULL);
+    CCC_Result res
+        = array_adaptive_map_copy(&destination, &source, &(CCC_Allocator){});
     check(res != CCC_RESULT_OK, true);
     check_end();
 }
 
 check_static_begin(array_adaptive_map_test_copy_allocate) {
-    struct Stack_allocator allocator = stack_allocator_for(
-        typeof(array_adaptive_map_storage_for((struct Val[SMALL_FIXED_CAP]){})),
-        2);
-    Array_adaptive_map source = array_adaptive_map_context_with_capacity(
-        struct Val, id, id_order, stack_allocator_allocate, &allocator,
-        SMALL_FIXED_CAP - 1);
-    Array_adaptive_map destination
-        = array_adaptive_map_for(struct Val, id, id_order,
-                                 stack_allocator_allocate, &allocator, 0, NULL);
-    (void)swap_handle(&source, &(struct Val){.id = 0});
-    (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1});
-    (void)swap_handle(&source, &(struct Val){.id = 2, .val = 2});
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((typeof(array_adaptive_map_storage_for(
+            (struct Val[SMALL_FIXED_CAP]){}
+        ))[2]){}),
+    };
+    Array_adaptive_map source = array_adaptive_map_with_capacity(
+        struct Val,
+        id,
+        (CCC_Key_comparator){.compare = id_order},
+        allocator,
+        SMALL_FIXED_CAP - 1
+    );
+    Array_adaptive_map destination = array_adaptive_map_default(
+        struct Val, id, (CCC_Key_comparator){.compare = id_order}
+    );
+    (void)swap_handle(&source, &(struct Val){.id = 0}, &allocator);
+    (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1}, &allocator);
+    (void)swap_handle(&source, &(struct Val){.id = 2, .val = 2}, &allocator);
     check(count(&source).count, 3);
     check(is_empty(&destination), true);
-    CCC_Result res = array_adaptive_map_copy(&destination, &source,
-                                             stack_allocator_allocate);
+    CCC_Result res = array_adaptive_map_copy(&destination, &source, &allocator);
     check(res, CCC_RESULT_OK);
     check(count(&destination).count, count(&source).count);
     for (int i = 0; i < 3; ++i) {
@@ -102,67 +135,104 @@ check_static_begin(array_adaptive_map_test_copy_allocate) {
     check(is_empty(&source), is_empty(&destination));
     check(is_empty(&destination), true);
     check_end({
-        (void)array_adaptive_map_clear_and_free(&source, NULL);
-        (void)array_adaptive_map_clear_and_free(&destination, NULL);
+        (void)array_adaptive_map_clear_and_free(
+            &source, &(CCC_Destructor){}, &allocator
+        );
+        (void)array_adaptive_map_clear_and_free(
+            &destination, &(CCC_Destructor){}, &allocator
+        );
     });
 }
 
 check_static_begin(array_adaptive_map_test_copy_allocate_fail) {
-    struct Stack_allocator allocator = stack_allocator_for(
-        typeof(array_adaptive_map_storage_for((struct Val[SMALL_FIXED_CAP]){})),
-        2);
-    Array_adaptive_map source = array_adaptive_map_context_with_capacity(
-        struct Val, id, id_order, stack_allocator_allocate, &allocator,
-        SMALL_FIXED_CAP - 1);
-    Array_adaptive_map destination
-        = array_adaptive_map_for(struct Val, id, id_order, NULL, NULL, 0, NULL);
-    (void)swap_handle(&source, &(struct Val){.id = 0});
-    (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1});
-    (void)swap_handle(&source, &(struct Val){.id = 2, .val = 2});
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((typeof(array_adaptive_map_storage_for(
+            (struct Val[SMALL_FIXED_CAP]){}
+        ))[2]){}),
+    };
+    Array_adaptive_map source = array_adaptive_map_with_capacity(
+        struct Val,
+        id,
+        (CCC_Key_comparator){.compare = id_order},
+        allocator,
+        SMALL_FIXED_CAP - 1
+    );
+    Array_adaptive_map destination = array_adaptive_map_default(
+        struct Val, id, (CCC_Key_comparator){.compare = id_order}
+    );
+    (void)swap_handle(&source, &(struct Val){.id = 0}, &allocator);
+    (void)swap_handle(&source, &(struct Val){.id = 1, .val = 1}, &allocator);
+    (void)swap_handle(&source, &(struct Val){.id = 2, .val = 2}, &allocator);
     check(count(&source).count, 3);
     check(is_empty(&destination), true);
-    CCC_Result res = array_adaptive_map_copy(&destination, &source, NULL);
+    CCC_Result res
+        = array_adaptive_map_copy(&destination, &source, &(CCC_Allocator){});
     check(res != CCC_RESULT_OK, true);
-    check_end({ (void)array_adaptive_map_clear_and_free(&source, NULL); });
+    check_end({
+        (void)array_adaptive_map_clear_and_free(
+            &source, &(CCC_Destructor){}, &(CCC_Allocator){}
+        );
+    });
 }
 
 check_static_begin(array_adaptive_map_test_init_from) {
-    struct Stack_allocator allocator = stack_allocator_for(
-        typeof(array_adaptive_map_storage_for((struct Val[SMALL_FIXED_CAP]){})),
-        1);
-    Array_adaptive_map map_from_list = array_adaptive_map_context_from(
-        id, id_order, stack_allocator_allocate, &allocator, SMALL_FIXED_CAP - 1,
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((typeof(array_adaptive_map_storage_for(
+            (struct Val[SMALL_FIXED_CAP]){}
+        ))[1]){}),
+    };
+    Array_adaptive_map map_from_list = array_adaptive_map_from(
+        id,
+        (CCC_Key_comparator){.compare = id_order},
+        allocator,
+        SMALL_FIXED_CAP - 1,
         (struct Val[]){
             {.id = 0, .val = 0},
             {.id = 1, .val = 1},
             {.id = 2, .val = 2},
-        });
+        }
+    );
     check(validate(&map_from_list), true);
     check(count(&map_from_list).count, 3);
     size_t seen = 0;
     for (CCC_Handle_index i = begin(&map_from_list); i != end(&map_from_list);
          i = next(&map_from_list, i)) {
         struct Val const *const v = array_adaptive_map_at(&map_from_list, i);
-        check((v->id == 0 && v->val == 0) || (v->id == 1 && v->val == 1)
-                  || (v->id == 2 && v->val == 2),
-              true);
+        check(
+            (v->id == 0 && v->val == 0) || (v->id == 1 && v->val == 1)
+                || (v->id == 2 && v->val == 2),
+            true
+        );
         ++seen;
     }
     check(seen, 3);
-    check_end(array_adaptive_map_clear_and_free(&map_from_list, NULL););
+    check_end({
+        (void)array_adaptive_map_clear_and_free(
+            &map_from_list, &(CCC_Destructor){}, &allocator
+        );
+    });
 }
 
 check_static_begin(array_adaptive_map_test_init_from_overwrite) {
-    struct Stack_allocator allocator = stack_allocator_for(
-        typeof(array_adaptive_map_storage_for((struct Val[SMALL_FIXED_CAP]){})),
-        1);
-    Array_adaptive_map map_from_list = array_adaptive_map_context_from(
-        id, id_order, stack_allocator_allocate, &allocator, SMALL_FIXED_CAP - 1,
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((typeof(array_adaptive_map_storage_for(
+            (struct Val[SMALL_FIXED_CAP]){}
+        ))[1]){}),
+    };
+    Array_adaptive_map map_from_list = array_adaptive_map_from(
+        id,
+        (CCC_Key_comparator){.compare = id_order},
+        allocator,
+        SMALL_FIXED_CAP - 1,
         (struct Val[]){
             {.id = 0, .val = 0},
             {.id = 0, .val = 1},
             {.id = 0, .val = 2},
-        });
+        }
+    );
     check(validate(&map_from_list), true);
     check(count(&map_from_list).count, 1);
     size_t seen = 0;
@@ -174,18 +244,26 @@ check_static_begin(array_adaptive_map_test_init_from_overwrite) {
         ++seen;
     }
     check(seen, 1);
-    check_end(array_adaptive_map_clear_and_free(&map_from_list, NULL););
+    check_end({
+        (void)array_adaptive_map_clear_and_free(
+            &map_from_list, &(CCC_Destructor){}, &allocator
+        );
+    });
 }
 
 check_static_begin(array_adaptive_map_test_init_from_fail) {
     /* Whoops forgot an allocation function. */
-    Array_adaptive_map map_from_list
-        = array_adaptive_map_from(id, id_order, NULL, 0,
-                                  (struct Val[]){
-                                      {.id = 0, .val = 0},
-                                      {.id = 0, .val = 1},
-                                      {.id = 0, .val = 2},
-                                  });
+    Array_adaptive_map map_from_list = array_adaptive_map_from(
+        id,
+        (CCC_Key_comparator){.compare = id_order},
+        (CCC_Allocator){},
+        0,
+        (struct Val[]){
+            {.id = 0, .val = 0},
+            {.id = 0, .val = 1},
+            {.id = 0, .val = 2},
+        }
+    );
     check(validate(&map_from_list), true);
     check(count(&map_from_list).count, 0);
     size_t seen = 0;
@@ -198,23 +276,36 @@ check_static_begin(array_adaptive_map_test_init_from_fail) {
     }
     check(seen, 0);
     CCC_Handle h = CCC_array_adaptive_map_insert_or_assign(
-        &map_from_list, &(struct Val){.id = 1, .val = 1});
+        &map_from_list, &(struct Val){.id = 1, .val = 1}, &(CCC_Allocator){}
+    );
     check(CCC_handle_insert_error(&h), CCC_TRUE);
-    check_end(array_adaptive_map_clear_and_free(&map_from_list, NULL););
+    check_end({
+        array_adaptive_map_clear_and_free(
+            &map_from_list, &(CCC_Destructor){}, &(CCC_Allocator){}
+        );
+    });
 }
 
 check_static_begin(array_adaptive_map_test_init_with_capacity) {
-    struct Stack_allocator allocator = stack_allocator_for(
-        typeof(array_adaptive_map_storage_for((struct Val[SMALL_FIXED_CAP]){})),
-        1);
-    Array_adaptive_map map = array_adaptive_map_context_with_capacity(
-        struct Val, id, id_order, stack_allocator_allocate, &allocator,
-        SMALL_FIXED_CAP - 1);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((typeof(array_adaptive_map_storage_for(
+            (struct Val[SMALL_FIXED_CAP]){}
+        ))[1]){}),
+    };
+    Array_adaptive_map map = array_adaptive_map_with_capacity(
+        struct Val,
+        id,
+        (CCC_Key_comparator){.compare = id_order},
+        allocator,
+        SMALL_FIXED_CAP - 1
+    );
     check(validate(&map), true);
     check(array_adaptive_map_capacity(&map).count >= SMALL_FIXED_CAP - 1, true);
     for (int i = 0; i < 10; ++i) {
         CCC_Handle const h = CCC_array_adaptive_map_insert_or_assign(
-            &map, &(struct Val){.id = i, .val = i});
+            &map, &(struct Val){.id = i, .val = i}, &allocator
+        );
         check(CCC_handle_insert_error(&h), CCC_FALSE);
         check(array_adaptive_map_validate(&map), CCC_TRUE);
     }
@@ -228,62 +319,34 @@ check_static_begin(array_adaptive_map_test_init_with_capacity) {
         ++seen;
     }
     check(seen, 10);
-    check_end(array_adaptive_map_clear_and_free(&map, NULL););
-}
-
-check_static_begin(array_adaptive_map_test_with_allocator) {
-    Array_adaptive_map map = CCC_array_adaptive_map_with_allocator(
-        struct Val, id, id_order, std_allocate);
-    check(validate(&map), true);
-    check(CCC_array_adaptive_map_is_empty(&map), true);
-    check_end();
-}
-
-check_static_begin(array_adaptive_map_test_context_with_allocator) {
-    struct Stack_allocator allocator = stack_allocator_for(
-        typeof(array_adaptive_map_storage_for((struct Val[SMALL_FIXED_CAP]){})),
-        1);
-    Array_adaptive_map map = CCC_array_adaptive_map_context_with_allocator(
-        struct Val, id, id_order, stack_allocator_allocate, &allocator);
-    check(validate(&map), true);
-    check(array_adaptive_map_reserve(&map, SMALL_FIXED_CAP - 1,
-                                     stack_allocator_allocate),
-          CCC_RESULT_OK);
-    check(array_adaptive_map_capacity(&map).count >= SMALL_FIXED_CAP - 1, true);
-    for (int i = 0; i < 10; ++i) {
-        CCC_Handle const h = CCC_array_adaptive_map_insert_or_assign(
-            &map, &(struct Val){.id = i, .val = i});
-        check(CCC_handle_insert_error(&h), CCC_FALSE);
-        check(array_adaptive_map_validate(&map), CCC_TRUE);
-    }
-    check(array_adaptive_map_count(&map).count, 10);
-    size_t seen = 0;
-    for (CCC_Handle_index i = begin(&map); i != end(&map); i = next(&map, i)) {
-        struct Val const *const v = array_adaptive_map_at(&map, i);
-        check(v->id >= 0 && v->id < 10, true);
-        check(v->val >= 0 && v->val < 10, true);
-        check(v->val, v->id);
-        ++seen;
-    }
-    check(seen, 10);
-    check_end(array_adaptive_map_clear_and_free(&map, NULL););
+    check_end({
+        (void)array_adaptive_map_clear_and_free(
+            &map, &(CCC_Destructor){}, &allocator
+        );
+    });
 }
 
 check_static_begin(array_adaptive_map_test_init_with_capacity_no_op) {
     /* Initialize with 0 cap is OK just does nothing. */
-    struct Stack_allocator allocator = stack_allocator_for(
-        typeof(array_adaptive_map_storage_for((struct Val[SMALL_FIXED_CAP]){})),
-        1);
-    Array_adaptive_map map = array_adaptive_map_context_with_capacity(
-        struct Val, id, id_order, stack_allocator_allocate, &allocator, 0);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((typeof(array_adaptive_map_storage_for(
+            (struct Val[SMALL_FIXED_CAP]){}
+        ))[1]){}),
+    };
+    Array_adaptive_map map = array_adaptive_map_with_capacity(
+        struct Val, id, (CCC_Key_comparator){.compare = id_order}, allocator, 0
+    );
     check(validate(&map), true);
     check(array_adaptive_map_capacity(&map).count, 0);
     check(array_adaptive_map_count(&map).count, 0);
-    check(array_adaptive_map_reserve(&map, SMALL_FIXED_CAP - 1,
-                                     stack_allocator_allocate),
-          CCC_RESULT_OK);
+    check(
+        array_adaptive_map_reserve(&map, SMALL_FIXED_CAP - 1, &allocator),
+        CCC_RESULT_OK
+    );
     CCC_Handle const h = CCC_array_adaptive_map_insert_or_assign(
-        &map, &(struct Val){.id = 1, .val = 1});
+        &map, &(struct Val){.id = 1, .val = 1}, &allocator
+    );
     check(CCC_handle_insert_error(&h), CCC_FALSE);
     check(array_adaptive_map_validate(&map), CCC_TRUE);
     check(array_adaptive_map_count(&map).count, 1);
@@ -296,17 +359,27 @@ check_static_begin(array_adaptive_map_test_init_with_capacity_no_op) {
     check(array_adaptive_map_count(&map).count, 1);
     check(array_adaptive_map_capacity(&map).count > 0, true);
     check(seen, 1);
-    check_end(array_adaptive_map_clear_and_free(&map, NULL););
+    check_end({
+        (void)array_adaptive_map_clear_and_free(
+            &map, &(CCC_Destructor){}, &allocator
+        );
+    });
 }
 
 check_static_begin(array_adaptive_map_test_init_with_capacity_fail) {
     /* Forgot allocation function. */
-    Array_adaptive_map map
-        = array_adaptive_map_with_capacity(struct Val, id, id_order, NULL, 32);
+    Array_adaptive_map map = array_adaptive_map_with_capacity(
+        struct Val,
+        id,
+        (CCC_Key_comparator){.compare = id_order},
+        (CCC_Allocator){},
+        32
+    );
     check(validate(&map), true);
     check(array_adaptive_map_capacity(&map).count, 0);
     CCC_Handle const e = CCC_array_adaptive_map_insert_or_assign(
-        &map, &(struct Val){.id = 1, .val = 1});
+        &map, &(struct Val){.id = 1, .val = 1}, &(CCC_Allocator){}
+    );
     check(CCC_handle_insert_error(&e), CCC_TRUE);
     check(array_adaptive_map_validate(&map), CCC_TRUE);
     check(array_adaptive_map_count(&map).count, 0);
@@ -318,23 +391,27 @@ check_static_begin(array_adaptive_map_test_init_with_capacity_fail) {
     }
     check(array_adaptive_map_count(&map).count, 0);
     check(seen, 0);
-    check_end(array_adaptive_map_clear_and_free(&map, NULL););
+    check_end({
+        (void)array_adaptive_map_clear_and_free(
+            &map, &(CCC_Destructor){}, &(CCC_Allocator){}
+        );
+    });
 }
 
 int
 main(void) {
-    return check_run(array_adaptive_map_test_empty(),
-                     array_adaptive_map_test_with_literal(),
-                     array_adaptive_map_test_with_allocator(),
-                     array_adaptive_map_test_context_with_allocator(),
-                     array_adaptive_map_test_copy_no_allocate(),
-                     array_adaptive_map_test_copy_no_allocate_fail(),
-                     array_adaptive_map_test_copy_allocate(),
-                     array_adaptive_map_test_copy_allocate_fail(),
-                     array_adaptive_map_test_init_from(),
-                     array_adaptive_map_test_init_from_overwrite(),
-                     array_adaptive_map_test_init_from_fail(),
-                     array_adaptive_map_test_init_with_capacity(),
-                     array_adaptive_map_test_init_with_capacity_no_op(),
-                     array_adaptive_map_test_init_with_capacity_fail());
+    return check_run(
+        array_adaptive_map_test_empty(),
+        array_adaptive_map_test_with_literal(),
+        array_adaptive_map_test_copy_no_allocate(),
+        array_adaptive_map_test_copy_no_allocate_fail(),
+        array_adaptive_map_test_copy_allocate(),
+        array_adaptive_map_test_copy_allocate_fail(),
+        array_adaptive_map_test_init_from(),
+        array_adaptive_map_test_init_from_overwrite(),
+        array_adaptive_map_test_init_from_fail(),
+        array_adaptive_map_test_init_with_capacity(),
+        array_adaptive_map_test_init_with_capacity_no_op(),
+        array_adaptive_map_test_init_with_capacity_fail()
+    );
 }

@@ -12,13 +12,17 @@
 
 check_static_begin(doubly_linked_list_test_pop_empty) {
     Doubly_linked_list doubly_linked_list
-        = doubly_linked_list_for(struct Val, e, val_order, NULL, NULL);
+        = doubly_linked_list_for(struct Val, e);
     check(is_empty(&doubly_linked_list), true);
-    check(doubly_linked_list_pop_front(&doubly_linked_list),
-          CCC_RESULT_ARGUMENT_ERROR);
+    check(
+        doubly_linked_list_pop_front(&doubly_linked_list, &(CCC_Allocator){}),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
     check(doubly_linked_list_validate(&doubly_linked_list), true);
-    check(doubly_linked_list_pop_back(&doubly_linked_list),
-          CCC_RESULT_ARGUMENT_ERROR);
+    check(
+        doubly_linked_list_pop_back(&doubly_linked_list, &(CCC_Allocator){}),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
     check(doubly_linked_list_validate(&doubly_linked_list), true);
     check(doubly_linked_list_front(&doubly_linked_list), NULL);
     check(doubly_linked_list_back(&doubly_linked_list), NULL);
@@ -27,67 +31,80 @@ check_static_begin(doubly_linked_list_test_pop_empty) {
 }
 
 check_static_begin(doubly_linked_list_test_push_pop_front) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 12);
-    Doubly_linked_list doubly_linked_list = doubly_linked_list_context_from(
-        e, val_order, stack_allocator_allocate, NULL, &allocator,
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[12]){}),
+    };
+    Doubly_linked_list doubly_linked_list = doubly_linked_list_from(
+        e,
+        allocator,
+        (CCC_Destructor){},
         (struct Val[3]){
             {.val = 0},
             {.val = 1},
             {.val = 2},
-        });
+        }
+    );
     check(count(&doubly_linked_list).count, 3);
     struct Val *v = doubly_linked_list_front(&doubly_linked_list);
     check(v == NULL, false);
     check(v->val, 0);
-    check(pop_front(&doubly_linked_list), CCC_RESULT_OK);
+    check(pop_front(&doubly_linked_list, &allocator), CCC_RESULT_OK);
     check(validate(&doubly_linked_list), true);
     v = doubly_linked_list_front(&doubly_linked_list);
     check(v == NULL, false);
     check(v->val, 1);
-    check(pop_front(&doubly_linked_list), CCC_RESULT_OK);
+    check(pop_front(&doubly_linked_list, &allocator), CCC_RESULT_OK);
     v = doubly_linked_list_front(&doubly_linked_list);
     check(validate(&doubly_linked_list), true);
     check(v == NULL, false);
     check(v->val, 2);
-    check(pop_front(&doubly_linked_list), CCC_RESULT_OK);
+    check(pop_front(&doubly_linked_list, &allocator), CCC_RESULT_OK);
     check(is_empty(&doubly_linked_list), true);
     check_end();
 }
 
 check_static_begin(doubly_linked_list_test_push_pop_back) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 12);
-    Doubly_linked_list doubly_linked_list = doubly_linked_list_context_from(
-        e, val_order, stack_allocator_allocate, NULL, &allocator,
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[12]){}),
+    };
+    Doubly_linked_list doubly_linked_list = doubly_linked_list_from(
+        e,
+        allocator,
+        (CCC_Destructor){},
         (struct Val[3]){
             {.val = 0},
             {.val = 1},
             {.val = 2},
-        });
+        }
+    );
     check(count(&doubly_linked_list).count, 3);
     struct Val *v = doubly_linked_list_back(&doubly_linked_list);
     check(v == NULL, false);
     check(v->val, 2);
-    check(pop_back(&doubly_linked_list), CCC_RESULT_OK);
+    check(pop_back(&doubly_linked_list, &allocator), CCC_RESULT_OK);
     check(validate(&doubly_linked_list), true);
     v = doubly_linked_list_back(&doubly_linked_list);
     check(v == NULL, false);
     check(v->val, 1);
-    check(pop_back(&doubly_linked_list), CCC_RESULT_OK);
+    check(pop_back(&doubly_linked_list, &allocator), CCC_RESULT_OK);
     check(validate(&doubly_linked_list), true);
     v = doubly_linked_list_back(&doubly_linked_list);
     check(v == NULL, false);
     check(v->val, 0);
-    check(pop_back(&doubly_linked_list), CCC_RESULT_OK);
+    check(pop_back(&doubly_linked_list, &allocator), CCC_RESULT_OK);
     check(is_empty(&doubly_linked_list), true);
     check_end();
 }
 
 check_static_begin(doubly_linked_list_test_push_pop_middle) {
     Doubly_linked_list doubly_linked_list
-        = doubly_linked_list_for(struct Val, e, val_order, NULL, NULL);
+        = doubly_linked_list_for(struct Val, e);
     struct Val vals[4] = {{.val = 0}, {.val = 1}, {.val = 2}, {.val = 3}};
-    enum Check_result const t
-        = push_list(&doubly_linked_list, UTIL_PUSH_BACK, 4, vals);
+    enum Check_result const t = push_list(
+        &doubly_linked_list, UTIL_PUSH_BACK, 4, vals, &(CCC_Allocator){}
+    );
     check(t, CHECK_PASS);
     check(extract(&doubly_linked_list, &vals[2].e) != NULL, true);
     check(validate(&doubly_linked_list), true);
@@ -97,7 +114,7 @@ check_static_begin(doubly_linked_list_test_push_pop_middle) {
     check(check_order(&doubly_linked_list, 2, (int[2]){0, 3}), CHECK_PASS);
     (void)extract(&doubly_linked_list, &vals[3].e);
     check(validate(&doubly_linked_list), true);
-    check(check_order(&doubly_linked_list, 1, (int[1]){0}), CHECK_PASS);
+    check(check_order(&doubly_linked_list, 1, (int[1]){}), CHECK_PASS);
     (void)extract(&doubly_linked_list, &vals[0].e);
     check(validate(&doubly_linked_list), true);
     check(is_empty(&doubly_linked_list), true);
@@ -106,52 +123,69 @@ check_static_begin(doubly_linked_list_test_push_pop_middle) {
 
 check_static_begin(doubly_linked_list_test_push_pop_middle_range) {
     Doubly_linked_list doubly_linked_list
-        = doubly_linked_list_for(struct Val, e, val_order, NULL, NULL);
+        = doubly_linked_list_for(struct Val, e);
     struct Val vals[5]
         = {{.val = 0}, {.val = 1}, {.val = 2}, {.val = 3}, {.val = 4}};
-    enum Check_result const t
-        = push_list(&doubly_linked_list, UTIL_PUSH_BACK, 5, vals);
+    enum Check_result const t = push_list(
+        &doubly_linked_list, UTIL_PUSH_BACK, 5, vals, &(CCC_Allocator){}
+    );
     check(t, CHECK_PASS);
-    (void)doubly_linked_list_extract_range(&doubly_linked_list, &vals[1].e,
-                                           &vals[4].e);
+    (void)doubly_linked_list_extract_range(
+        &doubly_linked_list, &vals[1].e, &vals[4].e
+    );
     check(validate(&doubly_linked_list), true);
     check(count(&doubly_linked_list).count, 2);
     check(check_order(&doubly_linked_list, 2, (int[2]){0, 4}), CHECK_PASS);
     (void)doubly_linked_list_extract_range(
-        &doubly_linked_list, &vals[0].e,
-        doubly_linked_list_end(&doubly_linked_list));
+        &doubly_linked_list,
+        &vals[0].e,
+        doubly_linked_list_end(&doubly_linked_list)
+    );
     check(validate(&doubly_linked_list), true);
     check(count(&doubly_linked_list).count, 0);
     check_end();
 }
 
 check_static_begin(doubly_linked_list_test_splice_two_lists) {
-    Doubly_linked_list to_lose
-        = doubly_linked_list_for(struct Val, e, val_order, NULL, NULL);
+    Doubly_linked_list to_lose = doubly_linked_list_for(struct Val, e);
     struct Val to_lose_vals[5]
         = {{.val = 0}, {.val = 1}, {.val = 2}, {.val = 3}, {.val = 4}};
-    enum Check_result t = push_list(&to_lose, UTIL_PUSH_BACK, 5, to_lose_vals);
+    enum Check_result t = push_list(
+        &to_lose, UTIL_PUSH_BACK, 5, to_lose_vals, &(CCC_Allocator){}
+    );
     check(t, CHECK_PASS);
-    Doubly_linked_list to_gain
-        = doubly_linked_list_for(struct Val, e, val_order, NULL, NULL);
+    Doubly_linked_list to_gain = doubly_linked_list_for(struct Val, e);
     struct Val to_gain_vals[2] = {{.val = 0}, {.val = 1}};
-    t = push_list(&to_gain, UTIL_PUSH_BACK, 2, to_gain_vals);
+    t = push_list(
+        &to_gain, UTIL_PUSH_BACK, 2, to_gain_vals, &(CCC_Allocator){}
+    );
     check(t, CHECK_PASS);
     check(check_order(&to_lose, 5, (int[5]){0, 1, 2, 3, 4}), CHECK_PASS);
-    check(doubly_linked_list_splice(&to_gain, doubly_linked_list_end(&to_gain),
-                                    &to_lose, &to_lose_vals[0].e),
-          CCC_RESULT_OK);
+    check(
+        doubly_linked_list_splice(
+            &to_gain,
+            doubly_linked_list_end(&to_gain),
+            &to_lose,
+            &to_lose_vals[0].e
+        ),
+        CCC_RESULT_OK
+    );
     check(validate(&to_gain), true);
     check(validate(&to_lose), true);
     check(count(&to_gain).count, 3);
     check(count(&to_lose).count, 4);
     check(check_order(&to_gain, 3, (int[3]){0, 1, 0}), CHECK_PASS);
     check(check_order(&to_lose, 4, (int[4]){1, 2, 3, 4}), CHECK_PASS);
-    check(doubly_linked_list_splice_range(
-              &to_gain, doubly_linked_list_end(&to_gain), &to_lose,
-              doubly_linked_list_node_begin(&to_lose),
-              doubly_linked_list_end(&to_lose)),
-          CCC_RESULT_OK);
+    check(
+        doubly_linked_list_splice_range(
+            &to_gain,
+            doubly_linked_list_end(&to_gain),
+            &to_lose,
+            doubly_linked_list_node_begin(&to_lose),
+            doubly_linked_list_end(&to_lose)
+        ),
+        CCC_RESULT_OK
+    );
     check(validate(&to_gain), true);
     check(validate(&to_lose), true);
     check(count(&to_gain).count, 7);
@@ -162,10 +196,12 @@ check_static_begin(doubly_linked_list_test_splice_two_lists) {
 
 int
 main(void) {
-    return check_run(doubly_linked_list_test_pop_empty(),
-                     doubly_linked_list_test_push_pop_front(),
-                     doubly_linked_list_test_push_pop_back(),
-                     doubly_linked_list_test_push_pop_middle(),
-                     doubly_linked_list_test_push_pop_middle_range(),
-                     doubly_linked_list_test_splice_two_lists());
+    return check_run(
+        doubly_linked_list_test_pop_empty(),
+        doubly_linked_list_test_push_pop_front(),
+        doubly_linked_list_test_push_pop_back(),
+        doubly_linked_list_test_push_pop_middle(),
+        doubly_linked_list_test_push_pop_middle_range(),
+        doubly_linked_list_test_splice_two_lists()
+    );
 }

@@ -94,21 +94,39 @@ check_static_begin(run, SV_Str_view const tests_dir) {
         check(fill_path(absolute_path, tests_dir, entry), true);
         printf("%s(%s%s", CHECK_CYAN, SV_begin(entry), CHECK_NONE);
         (void)fflush(stdout);
-        enum Check_result const res = run_test_process(
-            (struct Path_bin){SV_from_terminated(absolute_path), entry});
+        enum Check_result const res = run_test_process((struct Path_bin){
+            SV_from_terminated(absolute_path), entry});
         switch (res) {
             case CHECK_ERROR:
-                logerr("\n%s%s%s\n%s %s%s%s)%s\n", CHECK_RED, err_message,
-                       CHECK_CYAN, SV_begin(entry), CHECK_RED, fail_mark,
-                       CHECK_CYAN, CHECK_NONE);
+                logerr(
+                    "\n%s%s%s\n%s %s%s%s)%s\n",
+                    CHECK_RED,
+                    err_message,
+                    CHECK_CYAN,
+                    SV_begin(entry),
+                    CHECK_RED,
+                    fail_mark,
+                    CHECK_CYAN,
+                    CHECK_NONE
+                );
                 break;
             case CHECK_PASS:
-                logout(" %s%s%s)%s\n", CHECK_GREEN, pass_mark, CHECK_CYAN,
-                       CHECK_NONE);
+                logout(
+                    " %s%s%s)%s\n",
+                    CHECK_GREEN,
+                    pass_mark,
+                    CHECK_CYAN,
+                    CHECK_NONE
+                );
                 break;
             case CHECK_FAIL:
-                logout("\n%s%s%s)%s\n", CHECK_RED, fail_mark, CHECK_CYAN,
-                       CHECK_NONE);
+                logout(
+                    "\n%s%s%s)%s\n",
+                    CHECK_RED,
+                    fail_mark,
+                    CHECK_CYAN,
+                    CHECK_NONE
+                );
                 break;
         }
         if (res == CHECK_PASS) {
@@ -121,25 +139,36 @@ check_static_begin(run, SV_Str_view const tests_dir) {
 }
 
 check_static_begin(run_test_process, struct Path_bin pb) {
-    check_error(SV_is_empty(pb.path), false,
-                { logerr("No test provided.\n"); });
+    check_error(SV_is_empty(pb.path), false, {
+        logerr("No test provided.\n");
+    });
     pid_t const test_proc = fork();
     if (test_proc == 0) {
         (void)execl(SV_begin(pb.path), SV_begin(pb.bin), NULL);
         check_error(0, 1, { logerr("Child test process could not start.\n"); });
     }
     int status = 0;
-    check_error(waitpid(test_proc, &status, 0) >= 0, true,
-                { logerr("Error running test: %s\n", SV_begin(pb.bin)); });
+    check_error(waitpid(test_proc, &status, 0) >= 0, true, {
+        logerr("Error running test: %s\n", SV_begin(pb.bin));
+    });
     check_error(WIFSIGNALED(status), false, {
         int const sig = WTERMSIG(status);
         char const *const message = strsignal(sig);
         if (message) {
-            logerr("%sProcess killed with signal %d: %s%s\n", CHECK_RED, sig,
-                   message, CHECK_NONE);
+            logerr(
+                "%sProcess killed with signal %d: %s%s\n",
+                CHECK_RED,
+                sig,
+                message,
+                CHECK_NONE
+            );
         } else {
-            logerr("%sProcess killed with signal %d: unknown signal code%s\n",
-                   CHECK_RED, sig, CHECK_NONE);
+            logerr(
+                "%sProcess killed with signal %d: unknown signal code%s\n",
+                CHECK_RED,
+                sig,
+                CHECK_NONE
+            );
         }
     });
     check(WIFEXITED(status), true);
@@ -150,8 +179,10 @@ check_static_begin(run_test_process, struct Path_bin pb) {
 static DIR *
 open_test_dir(SV_Str_view tests_folder) {
     if (SV_is_empty(tests_folder) || SV_len(tests_folder) > FILESYS_MAX_PATH) {
-        logerr("Invalid input to path to test executables %s\n",
-               SV_begin(tests_folder));
+        logerr(
+            "Invalid input to path to test executables %s\n",
+            SV_begin(tests_folder)
+        );
         return NULL;
     }
     DIR *dir_pointer = opendir(SV_begin(tests_folder));
@@ -169,7 +200,8 @@ fill_path(char *path_buf, SV_Str_view tests_dir, SV_Str_view entry) {
         logerr("Relative path exceeds FILESYS_MAX_PATH?\n%s", path_buf);
         return false;
     }
-    (void)SV_fill(FILESYS_MAX_PATH - dir_bytes, path_buf + SV_len(tests_dir),
-                  entry);
+    (void)SV_fill(
+        FILESYS_MAX_PATH - dir_bytes, path_buf + SV_len(tests_dir), entry
+    );
     return true;
 }

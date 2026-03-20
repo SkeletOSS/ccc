@@ -16,22 +16,37 @@ enum : int {
 
 check_static_begin(priority_queue_test_insert_one) {
     CCC_Priority_queue priority_queue = CCC_priority_queue_for(
-        struct Val, elem, CCC_ORDER_LESSER, val_order, NULL, NULL);
+        struct Val,
+        elem,
+        CCC_ORDER_LESSER,
+        (CCC_Comparator){.compare = val_order}
+    );
     struct Val single;
     single.val = 0;
-    check(push(&priority_queue, &single.elem) != NULL, true);
+    check(
+        push(&priority_queue, &single.elem, &(CCC_Allocator){}) != NULL, true
+    );
     check(CCC_priority_queue_is_empty(&priority_queue), false);
     check_end();
 }
 
 check_static_begin(priority_queue_test_insert_three) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
-    CCC_Priority_queue priority_queue
-        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER, val_order,
-                                 stack_allocator_allocate, &allocator);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[3]){}),
+    };
+    CCC_Priority_queue priority_queue = CCC_priority_queue_for(
+        struct Val,
+        elem,
+        CCC_ORDER_LESSER,
+        (CCC_Comparator){.compare = val_order}
+    );
     for (int i = 0; i < 3; ++i) {
-        check(push(&priority_queue, &(struct Val){.val = i}.elem) != NULL,
-              true);
+        check(
+            push(&priority_queue, &(struct Val){.val = i}.elem, &allocator)
+                != NULL,
+            true
+        );
         check(validate(&priority_queue), true);
         check(CCC_priority_queue_count(&priority_queue).count, (size_t)i + 1);
     }
@@ -43,13 +58,22 @@ check_static_begin(priority_queue_test_insert_three) {
 }
 
 check_static_begin(priority_queue_test_insert_three_dups) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 3);
-    CCC_Priority_queue priority_queue
-        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER, val_order,
-                                 stack_allocator_allocate, &allocator);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[3]){}),
+    };
+    CCC_Priority_queue priority_queue = CCC_priority_queue_for(
+        struct Val,
+        elem,
+        CCC_ORDER_LESSER,
+        (CCC_Comparator){.compare = val_order}
+    );
     for (int i = 0; i < 3; ++i) {
-        check(push(&priority_queue, &(struct Val){.val = 0}.elem) != NULL,
-              true);
+        check(
+            push(&priority_queue, &(struct Val){.val = 0}.elem, &allocator)
+                != NULL,
+            true
+        );
         check(validate(&priority_queue), true);
         check(CCC_priority_queue_count(&priority_queue).count, (size_t)i + 1);
     }
@@ -61,26 +85,46 @@ check_static_begin(priority_queue_test_insert_three_dups) {
 }
 
 check_static_begin(priority_queue_test_insert_shuffle) {
-    struct Stack_allocator allocator
-        = stack_allocator_for(struct Val, STANDARD_CAP);
-    CCC_Priority_queue priority_queue
-        = CCC_priority_queue_for(struct Val, elem, CCC_ORDER_LESSER, val_order,
-                                 stack_allocator_allocate, &allocator);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[STANDARD_CAP]){}),
+    };
+    CCC_Priority_queue priority_queue = CCC_priority_queue_for(
+        struct Val,
+        elem,
+        CCC_ORDER_LESSER,
+        (CCC_Comparator){.compare = val_order}
+    );
     int const prime = 53;
-    check(insert_shuffled(&priority_queue, STANDARD_CAP, prime), CHECK_PASS);
+    check(
+        insert_shuffled(&priority_queue, STANDARD_CAP, prime, &allocator),
+        CHECK_PASS
+    );
     struct Val const *min = front(&priority_queue);
     check(min->val, 0);
-    check(check_inorder_fill(&priority_queue, STANDARD_CAP), CHECK_PASS);
+    check(
+        check_inorder_fill(
+            &priority_queue, &allocator, (struct Val[STANDARD_CAP]){}
+        ),
+        CHECK_PASS
+    );
     check_end();
 }
 
 check_static_begin(priority_queue_test_read_max_min) {
     CCC_Priority_queue priority_queue = CCC_priority_queue_for(
-        struct Val, elem, CCC_ORDER_LESSER, val_order, NULL, NULL);
+        struct Val,
+        elem,
+        CCC_ORDER_LESSER,
+        (CCC_Comparator){.compare = val_order}
+    );
     struct Val vals[10];
     for (int i = 0; i < 10; ++i) {
         vals[i].val = i;
-        check(push(&priority_queue, &vals[i].elem) != NULL, true);
+        check(
+            push(&priority_queue, &vals[i].elem, &(CCC_Allocator){}) != NULL,
+            true
+        );
         check(validate(&priority_queue), true);
         check(CCC_priority_queue_count(&priority_queue).count, (size_t)i + 1);
     }
@@ -92,9 +136,11 @@ check_static_begin(priority_queue_test_read_max_min) {
 
 int
 main(void) {
-    return check_run(priority_queue_test_insert_one(),
-                     priority_queue_test_insert_three(),
-                     priority_queue_test_insert_three_dups(),
-                     priority_queue_test_insert_shuffle(),
-                     priority_queue_test_read_max_min());
+    return check_run(
+        priority_queue_test_insert_one(),
+        priority_queue_test_insert_three(),
+        priority_queue_test_insert_three_dups(),
+        priority_queue_test_insert_shuffle(),
+        priority_queue_test_read_max_min()
+    );
 }

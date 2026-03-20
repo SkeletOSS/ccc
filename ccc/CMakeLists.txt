@@ -22,7 +22,6 @@ target_sources(${PROJECT_NAME}
             TYPE HEADERS
             BASE_DIRS ${PROJECT_SOURCE_DIR}
             FILES 
-              private/private_types.h
               private/private_flat_priority_queue.h
               private/private_priority_queue.h
               private/private_adaptive_map.h
@@ -50,6 +49,7 @@ target_sources(${PROJECT_NAME}
               singly_linked_list.h
               doubly_linked_list.h
               traits.h
+              sort.h
 )
 
 option(CCC_FLAT_HASH_MAP_PORTABLE "Fallback to portable implementation of flat hash map to improve cross platform compatibility while decreasing optimizations" OFF)

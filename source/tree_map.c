@@ -50,7 +50,6 @@ is fine. */
 #include <string.h>
 
 #include "private/private_tree_map.h"
-#include "private/private_types.h"
 #include "tree_map.h"
 #include "types.h"
 
@@ -78,43 +77,65 @@ struct Query {
 /*==============================  Prototypes   ==============================*/
 
 static void init_node(struct CCC_Tree_map *, struct CCC_Tree_map_node *);
-static CCC_Order order(struct CCC_Tree_map const *, void const *,
-                       struct CCC_Tree_map_node const *, CCC_Key_comparator *);
-static void *struct_base(struct CCC_Tree_map const *,
-                         struct CCC_Tree_map_node const *);
+static CCC_Order order(
+    struct CCC_Tree_map const *, void const *, struct CCC_Tree_map_node const *
+);
+static void *
+struct_base(struct CCC_Tree_map const *, struct CCC_Tree_map_node const *);
 static struct Query find(struct CCC_Tree_map const *, void const *);
 static void swap(void *, void *, void *, size_t);
-static void *maybe_allocate_insert(struct CCC_Tree_map *,
-                                   struct CCC_Tree_map_node *, CCC_Order,
-                                   struct CCC_Tree_map_node *);
+static void *maybe_allocate_insert(
+    struct CCC_Tree_map *,
+    struct CCC_Tree_map_node *,
+    CCC_Order,
+    struct CCC_Tree_map_node *,
+    CCC_Allocator const *
+);
 static void *remove_fixup(struct CCC_Tree_map *, struct CCC_Tree_map_node *);
-static void insert_fixup(struct CCC_Tree_map *, struct CCC_Tree_map_node *,
-                         struct CCC_Tree_map_node *);
-static void transplant(struct CCC_Tree_map *, struct CCC_Tree_map_node *,
-                       struct CCC_Tree_map_node *);
+static void insert_fixup(
+    struct CCC_Tree_map *,
+    struct CCC_Tree_map_node *,
+    struct CCC_Tree_map_node *
+);
+static void transplant(
+    struct CCC_Tree_map *,
+    struct CCC_Tree_map_node *,
+    struct CCC_Tree_map_node *
+);
 static CCC_Tribool parity(struct CCC_Tree_map_node const *);
-static void rebalance_3_child(struct CCC_Tree_map *, struct CCC_Tree_map_node *,
-                              struct CCC_Tree_map_node *);
-static CCC_Tribool is_0_child(struct CCC_Tree_map_node const *,
-                              struct CCC_Tree_map_node const *);
-static CCC_Tribool is_1_child(struct CCC_Tree_map_node const *,
-                              struct CCC_Tree_map_node const *);
-static CCC_Tribool is_2_child(struct CCC_Tree_map_node const *,
-                              struct CCC_Tree_map_node const *);
-static CCC_Tribool is_3_child(struct CCC_Tree_map_node const *,
-                              struct CCC_Tree_map_node const *);
-static CCC_Tribool is_01_parent(struct CCC_Tree_map_node const *,
-                                struct CCC_Tree_map_node const *,
-                                struct CCC_Tree_map_node const *);
-static CCC_Tribool is_11_parent(struct CCC_Tree_map_node const *,
-                                struct CCC_Tree_map_node const *,
-                                struct CCC_Tree_map_node const *);
-static CCC_Tribool is_02_parent(struct CCC_Tree_map_node const *,
-                                struct CCC_Tree_map_node const *,
-                                struct CCC_Tree_map_node const *);
-static CCC_Tribool is_22_parent(struct CCC_Tree_map_node const *,
-                                struct CCC_Tree_map_node const *,
-                                struct CCC_Tree_map_node const *);
+static void rebalance_3_child(
+    struct CCC_Tree_map *,
+    struct CCC_Tree_map_node *,
+    struct CCC_Tree_map_node *
+);
+static CCC_Tribool
+is_0_child(struct CCC_Tree_map_node const *, struct CCC_Tree_map_node const *);
+static CCC_Tribool
+is_1_child(struct CCC_Tree_map_node const *, struct CCC_Tree_map_node const *);
+static CCC_Tribool
+is_2_child(struct CCC_Tree_map_node const *, struct CCC_Tree_map_node const *);
+static CCC_Tribool
+is_3_child(struct CCC_Tree_map_node const *, struct CCC_Tree_map_node const *);
+static CCC_Tribool is_01_parent(
+    struct CCC_Tree_map_node const *,
+    struct CCC_Tree_map_node const *,
+    struct CCC_Tree_map_node const *
+);
+static CCC_Tribool is_11_parent(
+    struct CCC_Tree_map_node const *,
+    struct CCC_Tree_map_node const *,
+    struct CCC_Tree_map_node const *
+);
+static CCC_Tribool is_02_parent(
+    struct CCC_Tree_map_node const *,
+    struct CCC_Tree_map_node const *,
+    struct CCC_Tree_map_node const *
+);
+static CCC_Tribool is_22_parent(
+    struct CCC_Tree_map_node const *,
+    struct CCC_Tree_map_node const *,
+    struct CCC_Tree_map_node const *
+);
 static CCC_Tribool is_leaf(struct CCC_Tree_map_node const *);
 static struct CCC_Tree_map_node *sibling_of(struct CCC_Tree_map_node const *);
 static void promote(struct CCC_Tree_map_node *);
@@ -122,28 +143,40 @@ static void demote(struct CCC_Tree_map_node *);
 static void double_promote(struct CCC_Tree_map_node *);
 static void double_demote(struct CCC_Tree_map_node *);
 
-static void rotate(struct CCC_Tree_map *, struct CCC_Tree_map_node *,
-                   struct CCC_Tree_map_node *, struct CCC_Tree_map_node *,
-                   enum Link);
-static void double_rotate(struct CCC_Tree_map *, struct CCC_Tree_map_node *,
-                          struct CCC_Tree_map_node *,
-                          struct CCC_Tree_map_node *, enum Link);
+static void rotate(
+    struct CCC_Tree_map *,
+    struct CCC_Tree_map_node *,
+    struct CCC_Tree_map_node *,
+    struct CCC_Tree_map_node *,
+    enum Link
+);
+static void double_rotate(
+    struct CCC_Tree_map *,
+    struct CCC_Tree_map_node *,
+    struct CCC_Tree_map_node *,
+    struct CCC_Tree_map_node *,
+    enum Link
+);
 static CCC_Tribool validate(struct CCC_Tree_map const *);
 static struct CCC_Tree_map_node *
 next(struct CCC_Tree_map const *, struct CCC_Tree_map_node const *, enum Link);
-static struct CCC_Tree_map_node *min_max_from(struct CCC_Tree_map_node *,
-                                              enum Link);
-static struct CCC_Range equal_range(struct CCC_Tree_map const *, void const *,
-                                    void const *, enum Link);
-static struct CCC_Tree_map_entry entry(struct CCC_Tree_map const *,
-                                       void const *);
-static void *insert(struct CCC_Tree_map *, struct CCC_Tree_map_node *,
-                    CCC_Order, struct CCC_Tree_map_node *);
-static void *key_from_node(struct CCC_Tree_map const *,
-                           struct CCC_Tree_map_node const *);
+static struct CCC_Tree_map_node *
+min_max_from(struct CCC_Tree_map_node *, enum Link);
+static CCC_Range
+equal_range(struct CCC_Tree_map const *, void const *, void const *, enum Link);
+static struct CCC_Tree_map_entry
+entry(struct CCC_Tree_map const *, void const *);
+static void *insert(
+    struct CCC_Tree_map *,
+    struct CCC_Tree_map_node *,
+    CCC_Order,
+    struct CCC_Tree_map_node *
+);
+static void *
+key_from_node(struct CCC_Tree_map const *, struct CCC_Tree_map_node const *);
 static void *key_in_slot(struct CCC_Tree_map const *, void const *);
-static struct CCC_Tree_map_node *elem_in_slot(struct CCC_Tree_map const *,
-                                              void const *);
+static struct CCC_Tree_map_node *
+elem_in_slot(struct CCC_Tree_map const *, void const *);
 
 /*==============================  Interface    ==============================*/
 
@@ -156,8 +189,9 @@ CCC_tree_map_contains(CCC_Tree_map const *const map, void const *const key) {
 }
 
 void *
-CCC_tree_map_get_key_value(CCC_Tree_map const *const map,
-                           void const *const key) {
+CCC_tree_map_get_key_value(
+    CCC_Tree_map const *const map, void const *const key
+) {
     if (!map || !key) {
         return NULL;
     }
@@ -166,11 +200,14 @@ CCC_tree_map_get_key_value(CCC_Tree_map const *const map,
 }
 
 CCC_Entry
-CCC_tree_map_swap_entry(CCC_Tree_map *const map,
-                        CCC_Tree_map_node *const type_intruder,
-                        CCC_Tree_map_node *const temp_intruder) {
-    if (!map || !type_intruder || !temp_intruder) {
-        return (CCC_Entry){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
+CCC_tree_map_swap_entry(
+    CCC_Tree_map *const map,
+    CCC_Tree_map_node *const type_intruder,
+    CCC_Tree_map_node *const temp_intruder,
+    CCC_Allocator const *const allocator
+) {
+    if (!map || !type_intruder || !allocator || !temp_intruder) {
+        return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     struct Query const q = find(map, key_from_node(map, type_intruder));
     if (CCC_ORDER_EQUAL == q.last_order) {
@@ -183,215 +220,230 @@ CCC_tree_map_swap_entry(CCC_Tree_map *const map,
             = type_intruder->parent = NULL;
         temp_intruder->branch[L] = temp_intruder->branch[R]
             = temp_intruder->parent = NULL;
-        return (CCC_Entry){{
+        return (CCC_Entry){
             .type = old_val,
             .status = CCC_ENTRY_OCCUPIED,
-        }};
+        };
     }
-    if (!maybe_allocate_insert(map, q.parent, q.last_order, type_intruder)) {
-        return (CCC_Entry){{
+    if (!maybe_allocate_insert(
+            map, q.parent, q.last_order, type_intruder, allocator
+        )) {
+        return (CCC_Entry){
             .type = NULL,
             .status = CCC_ENTRY_INSERT_ERROR,
-        }};
+        };
     }
-    return (CCC_Entry){{
+    return (CCC_Entry){
         .type = NULL,
         .status = CCC_ENTRY_VACANT,
-    }};
+    };
 }
 
 CCC_Entry
-CCC_tree_map_try_insert(CCC_Tree_map *const map,
-                        CCC_Tree_map_node *const type_intruder) {
-    if (!map || !type_intruder) {
-        return (CCC_Entry){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
+CCC_tree_map_try_insert(
+    CCC_Tree_map *const map,
+    CCC_Tree_map_node *const type_intruder,
+    CCC_Allocator const *const allocator
+) {
+    if (!map || !type_intruder || !allocator) {
+        return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     struct Query const q = find(map, key_from_node(map, type_intruder));
     if (CCC_ORDER_EQUAL == q.last_order) {
-        return (CCC_Entry){{
+        return (CCC_Entry){
             .type = struct_base(map, q.found),
             .status = CCC_ENTRY_OCCUPIED,
-        }};
+        };
     }
-    void *const inserted
-        = maybe_allocate_insert(map, q.parent, q.last_order, type_intruder);
+    void *const inserted = maybe_allocate_insert(
+        map, q.parent, q.last_order, type_intruder, allocator
+    );
     if (!inserted) {
-        return (CCC_Entry){{
+        return (CCC_Entry){
             .type = NULL,
             .status = CCC_ENTRY_INSERT_ERROR,
-        }};
+        };
     }
-    return (CCC_Entry){{
+    return (CCC_Entry){
         .type = inserted,
         .status = CCC_ENTRY_VACANT,
-    }};
+    };
 }
 
 CCC_Entry
-CCC_tree_map_insert_or_assign(CCC_Tree_map *const map,
-                              CCC_Tree_map_node *const type_intruder) {
-    if (!map || !type_intruder) {
-        return (CCC_Entry){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
+CCC_tree_map_insert_or_assign(
+    CCC_Tree_map *const map,
+    CCC_Tree_map_node *const type_intruder,
+    CCC_Allocator const *const allocator
+) {
+    if (!map || !type_intruder || !allocator) {
+        return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     struct Query const q = find(map, key_from_node(map, type_intruder));
     if (CCC_ORDER_EQUAL == q.last_order) {
         void *const found = struct_base(map, q.found);
         *type_intruder = *elem_in_slot(map, found);
         memcpy(found, struct_base(map, type_intruder), map->sizeof_type);
-        return (CCC_Entry){{
+        return (CCC_Entry){
             .type = found,
             .status = CCC_ENTRY_OCCUPIED,
-        }};
+        };
     }
-    void *const inserted
-        = maybe_allocate_insert(map, q.parent, q.last_order, type_intruder);
+    void *const inserted = maybe_allocate_insert(
+        map, q.parent, q.last_order, type_intruder, allocator
+    );
     if (!inserted) {
-        return (CCC_Entry){{
+        return (CCC_Entry){
             .type = NULL,
             .status = CCC_ENTRY_INSERT_ERROR,
-        }};
+        };
     }
-    return (CCC_Entry){{
+    return (CCC_Entry){
         .type = inserted,
         .status = CCC_ENTRY_VACANT,
-    }};
+    };
 }
 
 CCC_Tree_map_entry
 CCC_tree_map_entry(CCC_Tree_map const *const map, void const *const key) {
     if (!map || !key) {
         return (CCC_Tree_map_entry){
-            {.entry = {.status = CCC_ENTRY_ARGUMENT_ERROR}}};
+            .entry = {.status = CCC_ENTRY_ARGUMENT_ERROR},
+        };
     }
-    return (CCC_Tree_map_entry){entry(map, key)};
+    return entry(map, key);
 }
 
 void *
-CCC_tree_map_or_insert(CCC_Tree_map_entry const *const entry,
-                       CCC_Tree_map_node *const type_intruder) {
-    if (!entry || !type_intruder) {
+CCC_tree_map_or_insert(
+    CCC_Tree_map_entry const *const entry,
+    CCC_Tree_map_node *const type_intruder,
+    CCC_Allocator const *const allocator
+) {
+    if (!entry || !type_intruder || !allocator) {
         return NULL;
     }
-    if (entry->private.entry.status == CCC_ENTRY_OCCUPIED) {
-        return entry->private.entry.type;
+    if (entry->entry.status == CCC_ENTRY_OCCUPIED) {
+        return entry->entry.type;
     }
     return maybe_allocate_insert(
-        entry->private.map,
-        elem_in_slot(entry->private.map, entry->private.entry.type),
-        entry->private.last_order, type_intruder);
+        entry->map,
+        elem_in_slot(entry->map, entry->entry.type),
+        entry->last_order,
+        type_intruder,
+        allocator
+    );
 }
 
 void *
-CCC_tree_map_insert_entry(CCC_Tree_map_entry const *const entry,
-                          CCC_Tree_map_node *const type_intruder) {
-    if (!entry || !type_intruder) {
+CCC_tree_map_insert_entry(
+    CCC_Tree_map_entry const *const entry,
+    CCC_Tree_map_node *const type_intruder,
+    CCC_Allocator const *const allocator
+) {
+    if (!entry || !type_intruder || !allocator) {
         return NULL;
     }
-    if (entry->private.entry.status == CCC_ENTRY_OCCUPIED) {
-        *type_intruder
-            = *elem_in_slot(entry->private.map, entry->private.entry.type);
-        memcpy(entry->private.entry.type,
-               struct_base(entry->private.map, type_intruder),
-               entry->private.map->sizeof_type);
-        return entry->private.entry.type;
+    if (entry->entry.status == CCC_ENTRY_OCCUPIED) {
+        *type_intruder = *elem_in_slot(entry->map, entry->entry.type);
+        memcpy(
+            entry->entry.type,
+            struct_base(entry->map, type_intruder),
+            entry->map->sizeof_type
+        );
+        return entry->entry.type;
     }
     return maybe_allocate_insert(
-        entry->private.map,
-        elem_in_slot(entry->private.map, entry->private.entry.type),
-        entry->private.last_order, type_intruder);
+        entry->map,
+        elem_in_slot(entry->map, entry->entry.type),
+        entry->last_order,
+        type_intruder,
+        allocator
+    );
 }
 
 CCC_Entry
-CCC_tree_map_remove_entry(CCC_Tree_map_entry const *const entry) {
-    if (!entry) {
-        return (CCC_Entry){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
+CCC_tree_map_remove_entry(
+    CCC_Tree_map_entry const *const entry, CCC_Allocator const *const allocator
+) {
+    if (!entry || !allocator) {
+        return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
-    if (entry->private.entry.status == CCC_ENTRY_OCCUPIED) {
+    if (entry->entry.status == CCC_ENTRY_OCCUPIED) {
         void *const erased = remove_fixup(
-            entry->private.map,
-            elem_in_slot(entry->private.map, entry->private.entry.type));
+            entry->map, elem_in_slot(entry->map, entry->entry.type)
+        );
         assert(erased);
-        if (entry->private.map->allocate) {
-            entry->private.map->allocate((CCC_Allocator_context){
+        if (allocator->allocate) {
+            allocator->allocate((CCC_Allocator_arguments){
                 .input = erased,
                 .bytes = 0,
-                .context = entry->private.map->context,
+                .context = allocator->context,
             });
-            return (CCC_Entry){{
+            return (CCC_Entry){
                 .type = NULL,
                 .status = CCC_ENTRY_OCCUPIED,
-            }};
+            };
         }
-        return (CCC_Entry){{
+        return (CCC_Entry){
             .type = erased,
             .status = CCC_ENTRY_OCCUPIED,
-        }};
+        };
     }
-    return (CCC_Entry){{
+    return (CCC_Entry){
         .type = NULL,
         .status = CCC_ENTRY_VACANT,
-    }};
+    };
 }
 
 CCC_Entry
-CCC_tree_map_remove_key_value(CCC_Tree_map *const map,
-                              CCC_Tree_map_node *const type_output_intruder) {
-    if (!map || !type_output_intruder) {
-        return (CCC_Entry){{.status = CCC_ENTRY_ARGUMENT_ERROR}};
+CCC_tree_map_remove_key_value(
+    CCC_Tree_map *const map,
+    CCC_Tree_map_node *const type_output_intruder,
+    CCC_Allocator const *const allocator
+) {
+    if (!map || !type_output_intruder || !allocator) {
+        return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     struct Query const q = find(map, key_from_node(map, type_output_intruder));
     if (q.last_order != CCC_ORDER_EQUAL) {
-        return (CCC_Entry){{
+        return (CCC_Entry){
             .type = NULL,
             .status = CCC_ENTRY_VACANT,
-        }};
+        };
     }
     void *const removed = remove_fixup(map, q.found);
-    if (map->allocate) {
+    if (allocator->allocate) {
         void *const any_struct = struct_base(map, type_output_intruder);
         memcpy(any_struct, removed, map->sizeof_type);
-        map->allocate((CCC_Allocator_context){
+        allocator->allocate((CCC_Allocator_arguments){
             .input = removed,
             .bytes = 0,
-            .context = map->context,
+            .context = allocator->context,
         });
-        return (CCC_Entry){{
+        return (CCC_Entry){
             .type = any_struct,
             .status = CCC_ENTRY_OCCUPIED,
-        }};
+        };
     }
-    return (CCC_Entry){{
+    return (CCC_Entry){
         .type = removed,
         .status = CCC_ENTRY_OCCUPIED,
-    }};
+    };
 }
 
 CCC_Tree_map_entry *
-CCC_tree_map_and_modify(CCC_Tree_map_entry *e, CCC_Type_modifier *modify) {
-    if (!e) {
+CCC_tree_map_and_modify(
+    CCC_Tree_map_entry *e, CCC_Modifier const *const modifier
+) {
+    if (!e || !modifier) {
         return NULL;
     }
-    if (modify && e->private.entry.status & CCC_ENTRY_OCCUPIED
-        && e->private.entry.type) {
-        modify((CCC_Type_context){
-            .type = e->private.entry.type,
-            NULL,
-        });
-    }
-    return e;
-}
-
-CCC_Tree_map_entry *
-CCC_tree_map_and_context_modify(CCC_Tree_map_entry *e,
-                                CCC_Type_modifier *modify, void *context) {
-    if (!e) {
-        return NULL;
-    }
-    if (modify && e->private.entry.status & CCC_ENTRY_OCCUPIED
-        && e->private.entry.type) {
-        modify((CCC_Type_context){
-            .type = e->private.entry.type,
-            context,
+    if (modifier->modify && e->entry.status & CCC_ENTRY_OCCUPIED
+        && e->entry.type) {
+        modifier->modify((CCC_Arguments){
+            .type = e->entry.type,
+            .context = modifier->context,
         });
     }
     return e;
@@ -399,8 +451,8 @@ CCC_tree_map_and_context_modify(CCC_Tree_map_entry *e,
 
 void *
 CCC_tree_map_unwrap(CCC_Tree_map_entry const *const e) {
-    if (e && e->private.entry.status & CCC_ENTRY_OCCUPIED) {
-        return e->private.entry.type;
+    if (e && e->entry.status & CCC_ENTRY_OCCUPIED) {
+        return e->entry.type;
     }
     return NULL;
 }
@@ -410,7 +462,7 @@ CCC_tree_map_occupied(CCC_Tree_map_entry const *const e) {
     if (!e) {
         return CCC_TRIBOOL_ERROR;
     }
-    return (e->private.entry.status & CCC_ENTRY_OCCUPIED) != 0;
+    return (e->entry.status & CCC_ENTRY_OCCUPIED) != 0;
 }
 
 CCC_Tribool
@@ -418,12 +470,12 @@ CCC_tree_map_insert_error(CCC_Tree_map_entry const *const e) {
     if (!e) {
         return CCC_TRIBOOL_ERROR;
     }
-    return (e->private.entry.status & CCC_ENTRY_INSERT_ERROR) != 0;
+    return (e->entry.status & CCC_ENTRY_INSERT_ERROR) != 0;
 }
 
 CCC_Entry_status
 CCC_tree_map_entry_status(CCC_Tree_map_entry const *const e) {
-    return e ? e->private.entry.status : CCC_ENTRY_ARGUMENT_ERROR;
+    return e ? e->entry.status : CCC_ENTRY_ARGUMENT_ERROR;
 }
 
 void *
@@ -436,8 +488,10 @@ CCC_tree_map_begin(CCC_Tree_map const *map) {
 }
 
 void *
-CCC_tree_map_next(CCC_Tree_map const *const map,
-                  CCC_Tree_map_node const *const iterator_intruder) {
+CCC_tree_map_next(
+    CCC_Tree_map const *const map,
+    CCC_Tree_map_node const *const iterator_intruder
+) {
     if (!map || !iterator_intruder) {
         return NULL;
     }
@@ -469,8 +523,10 @@ CCC_tree_map_reverse_end(CCC_Tree_map const *const) {
 }
 
 void *
-CCC_tree_map_reverse_next(CCC_Tree_map const *const map,
-                          CCC_Tree_map_node const *const iterator_intruder) {
+CCC_tree_map_reverse_next(
+    CCC_Tree_map const *const map,
+    CCC_Tree_map_node const *const iterator_intruder
+) {
     if (!map || !iterator_intruder) {
         return NULL;
     }
@@ -480,24 +536,32 @@ CCC_tree_map_reverse_next(CCC_Tree_map const *const map,
 }
 
 CCC_Range
-CCC_tree_map_equal_range(CCC_Tree_map const *const map,
-                         void const *const begin_key,
-                         void const *const end_key) {
+CCC_tree_map_equal_range(
+    CCC_Tree_map const *const map,
+    void const *const begin_key,
+    void const *const end_key
+) {
     if (!map || !begin_key || !end_key) {
         return (CCC_Range){};
     }
-    return (CCC_Range){equal_range(map, begin_key, end_key, INORDER)};
+    return equal_range(map, begin_key, end_key, INORDER);
 }
 
 CCC_Range_reverse
-CCC_tree_map_equal_range_reverse(CCC_Tree_map const *const map,
-                                 void const *const reverse_begin_key,
-                                 void const *const reverse_end_key) {
+CCC_tree_map_equal_range_reverse(
+    CCC_Tree_map const *const map,
+    void const *const reverse_begin_key,
+    void const *const reverse_end_key
+) {
     if (!map || !reverse_begin_key || !reverse_end_key) {
         return (CCC_Range_reverse){};
     }
+    CCC_Range const range
+        = equal_range(map, reverse_begin_key, reverse_end_key, INORDER_REVERSE);
     return (CCC_Range_reverse){
-        equal_range(map, reverse_begin_key, reverse_end_key, INORDER_REVERSE)};
+        .reverse_begin = range.begin,
+        .reverse_end = range.end,
+    };
 }
 
 CCC_Count
@@ -527,9 +591,12 @@ CCC_tree_map_validate(CCC_Tree_map const *map) {
 /** This is a linear time constant space deletion of tree nodes via left
 rotations so element fields are modified during progression of deletes. */
 CCC_Result
-CCC_tree_map_clear(CCC_Tree_map *const map,
-                   CCC_Type_destructor *const destroy) {
-    if (!map) {
+CCC_tree_map_clear(
+    CCC_Tree_map *const map,
+    CCC_Destructor const *const destructor,
+    CCC_Allocator const *const allocator
+) {
+    if (!map || !destructor) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     struct CCC_Tree_map_node *node = map->root;
@@ -545,17 +612,17 @@ CCC_tree_map_clear(CCC_Tree_map *const map,
         node->branch[L] = node->branch[R] = NULL;
         node->parent = NULL;
         void *const type = struct_base(map, node);
-        if (destroy) {
-            destroy((CCC_Type_context){
+        if (destructor->destroy) {
+            destructor->destroy((CCC_Arguments){
                 .type = type,
-                .context = map->context,
+                .context = destructor->context,
             });
         }
-        if (map->allocate) {
-            (void)map->allocate((CCC_Allocator_context){
+        if (allocator->allocate) {
+            (void)allocator->allocate((CCC_Allocator_arguments){
                 .input = type,
                 .bytes = 0,
-                .context = map->context,
+                .context = allocator->context,
             });
         }
         node = next;
@@ -566,28 +633,33 @@ CCC_tree_map_clear(CCC_Tree_map *const map,
 /*=========================   Private Interface  ============================*/
 
 struct CCC_Tree_map_entry
-CCC_private_tree_map_entry(struct CCC_Tree_map const *const map,
-                           void const *const key) {
+CCC_private_tree_map_entry(
+    struct CCC_Tree_map const *const map, void const *const key
+) {
     return entry(map, key);
 }
 
 void *
 CCC_private_tree_map_insert(
-    struct CCC_Tree_map *const map, struct CCC_Tree_map_node *const parent,
+    struct CCC_Tree_map *const map,
+    struct CCC_Tree_map_node *const parent,
     CCC_Order const last_order,
-    struct CCC_Tree_map_node *const type_output_intruder) {
+    struct CCC_Tree_map_node *const type_output_intruder
+) {
     return insert(map, parent, last_order, type_output_intruder);
 }
 
 void *
-CCC_private_tree_map_key_in_slot(struct CCC_Tree_map const *const map,
-                                 void const *const slot) {
+CCC_private_tree_map_key_in_slot(
+    struct CCC_Tree_map const *const map, void const *const slot
+) {
     return key_in_slot(map, slot);
 }
 
 struct CCC_Tree_map_node *
-CCC_private_tree_map_node_in_slot(struct CCC_Tree_map const *const map,
-                                  void const *const slot) {
+CCC_private_tree_map_node_in_slot(
+    struct CCC_Tree_map const *const map, void const *const slot
+) {
     return elem_in_slot(map, slot);
 }
 
@@ -626,15 +698,18 @@ entry(struct CCC_Tree_map const *const map, void const *const key) {
 }
 
 static void *
-maybe_allocate_insert(struct CCC_Tree_map *const map,
-                      struct CCC_Tree_map_node *const parent,
-                      CCC_Order const last_order,
-                      struct CCC_Tree_map_node *type_output_intruder) {
-    if (map->allocate) {
-        void *const new = map->allocate((CCC_Allocator_context){
+maybe_allocate_insert(
+    struct CCC_Tree_map *const map,
+    struct CCC_Tree_map_node *const parent,
+    CCC_Order const last_order,
+    struct CCC_Tree_map_node *type_output_intruder,
+    CCC_Allocator const *const allocator
+) {
+    if (allocator->allocate) {
+        void *const new = allocator->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = map->sizeof_type,
-            .context = map->context,
+            .context = allocator->context,
         });
         if (!new) {
             return NULL;
@@ -646,9 +721,12 @@ maybe_allocate_insert(struct CCC_Tree_map *const map,
 }
 
 static void *
-insert(struct CCC_Tree_map *const map, struct CCC_Tree_map_node *const parent,
-       CCC_Order const last_order,
-       struct CCC_Tree_map_node *const type_output_intruder) {
+insert(
+    struct CCC_Tree_map *const map,
+    struct CCC_Tree_map_node *const parent,
+    CCC_Order const last_order,
+    struct CCC_Tree_map_node *const type_output_intruder
+) {
     init_node(map, type_output_intruder);
     if (!map->count) {
         map->root = type_output_intruder;
@@ -678,7 +756,7 @@ find(struct CCC_Tree_map const *const map, void const *const key) {
         .found = map->root,
     };
     while (q.found != NULL) {
-        q.last_order = order(map, key, q.found, map->compare);
+        q.last_order = order(map, key, q.found);
         if (CCC_ORDER_EQUAL == q.last_order) {
             return q;
         }
@@ -691,8 +769,11 @@ find(struct CCC_Tree_map const *const map, void const *const key) {
 }
 
 static struct CCC_Tree_map_node *
-next(struct CCC_Tree_map const *const map [[maybe_unused]],
-     struct CCC_Tree_map_node const *n, enum Link const traversal) {
+next(
+    struct CCC_Tree_map const *const map [[maybe_unused]],
+    struct CCC_Tree_map_node const *n,
+    enum Link const traversal
+) {
     if (!n) {
         return NULL;
     }
@@ -707,11 +788,15 @@ next(struct CCC_Tree_map const *const map [[maybe_unused]],
     return n->parent;
 }
 
-static struct CCC_Range
-equal_range(struct CCC_Tree_map const *const map, void const *const begin_key,
-            void const *const end_key, enum Link const traversal) {
+static CCC_Range
+equal_range(
+    struct CCC_Tree_map const *const map,
+    void const *const begin_key,
+    void const *const end_key,
+    enum Link const traversal
+) {
     if (!map->count) {
-        return (struct CCC_Range){};
+        return (CCC_Range){};
     }
     CCC_Order const les_or_grt[2] = {CCC_ORDER_LESSER, CCC_ORDER_GREATER};
     struct Query b = find(map, begin_key);
@@ -722,15 +807,17 @@ equal_range(struct CCC_Tree_map const *const map, void const *const begin_key,
     if (e.last_order != les_or_grt[!traversal]) {
         e.found = next(map, e.found, traversal);
     }
-    return (struct CCC_Range){
+    return (CCC_Range){
         .begin = b.found == NULL ? NULL : struct_base(map, b.found),
         .end = e.found == NULL ? NULL : struct_base(map, e.found),
     };
 }
 
 static inline void
-init_node(struct CCC_Tree_map *const map [[maybe_unused]],
-          struct CCC_Tree_map_node *const e) {
+init_node(
+    struct CCC_Tree_map *const map [[maybe_unused]],
+    struct CCC_Tree_map_node *const e
+) {
     assert(e != NULL);
     assert(map != NULL);
     e->branch[L] = e->branch[R] = e->parent = NULL;
@@ -748,25 +835,31 @@ swap(void *const temp, void *const a, void *const b, size_t const sizeof_type) {
 }
 
 static inline CCC_Order
-order(struct CCC_Tree_map const *const map, void const *const key,
-      struct CCC_Tree_map_node const *const node,
-      CCC_Key_comparator *const compare) {
-    return compare((CCC_Key_comparator_context){
+order(
+    struct CCC_Tree_map const *const map,
+    void const *const key,
+    struct CCC_Tree_map_node const *const node
+) {
+    return map->comparator.compare((CCC_Key_comparator_arguments){
         .key_left = key,
         .type_right = struct_base(map, node),
-        .context = map->context,
+        .context = map->comparator.context,
     });
 }
 
 static inline void *
-struct_base(struct CCC_Tree_map const *const map,
-            struct CCC_Tree_map_node const *const e) {
+struct_base(
+    struct CCC_Tree_map const *const map,
+    struct CCC_Tree_map_node const *const e
+) {
     return e ? ((char *)e->branch) - map->type_intruder_offset : NULL;
 }
 
 static inline void *
-key_from_node(struct CCC_Tree_map const *const map,
-              struct CCC_Tree_map_node const *const node) {
+key_from_node(
+    struct CCC_Tree_map const *const map,
+    struct CCC_Tree_map_node const *const node
+) {
     return node ? (char *)struct_base(map, node) + map->key_offset : NULL;
 }
 
@@ -787,8 +880,11 @@ elem_in_slot(struct CCC_Tree_map const *const map, void const *const slot) {
 /** Follows the specification in the "Rank-Balanced Trees" paper by Haeupler,
 Sen, and Tarjan (Fig. 2. pg 7). Assumes x's parent z is not null. */
 static void
-insert_fixup(struct CCC_Tree_map *const map, struct CCC_Tree_map_node *z,
-             struct CCC_Tree_map_node *x) {
+insert_fixup(
+    struct CCC_Tree_map *const map,
+    struct CCC_Tree_map_node *z,
+    struct CCC_Tree_map_node *x
+) {
     assert(z);
     do {
         promote(z);
@@ -819,8 +915,9 @@ insert_fixup(struct CCC_Tree_map *const map, struct CCC_Tree_map_node *z,
 }
 
 static void *
-remove_fixup(struct CCC_Tree_map *const map,
-             struct CCC_Tree_map_node *const remove) {
+remove_fixup(
+    struct CCC_Tree_map *const map, struct CCC_Tree_map_node *const remove
+) {
     struct CCC_Tree_map_node *y = NULL;
     struct CCC_Tree_map_node *x = NULL;
     struct CCC_Tree_map_node *p_of_xy = NULL;
@@ -881,8 +978,11 @@ remove_fixup(struct CCC_Tree_map *const map,
 /** Follows the specification in the "Rank-Balanced Trees" paper by Haeupler,
 Sen, and Tarjan (Fig. 3. pg 8). */
 static void
-rebalance_3_child(struct CCC_Tree_map *const map, struct CCC_Tree_map_node *z,
-                  struct CCC_Tree_map_node *x) {
+rebalance_3_child(
+    struct CCC_Tree_map *const map,
+    struct CCC_Tree_map_node *z,
+    struct CCC_Tree_map_node *x
+) {
     CCC_Tribool made_3_child = CCC_TRUE;
     while (z && made_3_child) {
         assert(z->branch[L] == x || z->branch[R] == x);
@@ -941,9 +1041,11 @@ rebalance_3_child(struct CCC_Tree_map *const map, struct CCC_Tree_map_node *z,
 }
 
 static void
-transplant(struct CCC_Tree_map *const map,
-           struct CCC_Tree_map_node *const remove,
-           struct CCC_Tree_map_node *const replacement) {
+transplant(
+    struct CCC_Tree_map *const map,
+    struct CCC_Tree_map_node *const remove,
+    struct CCC_Tree_map_node *const replacement
+) {
     assert(remove != NULL);
     assert(replacement != NULL);
     replacement->parent = remove->parent;
@@ -961,7 +1063,8 @@ transplant(struct CCC_Tree_map *const map,
     }
     replacement->branch[R] = remove->branch[R];
     replacement->branch[L] = remove->branch[L];
-    replacement->parity = parity(remove);
+    replacement->parity
+        = (typeof((struct CCC_Tree_map_node){}.parity))parity(remove);
 }
 
 /** A single rotation is symmetric. Here is the right case. Lowercase are nodes
@@ -976,9 +1079,13 @@ and uppercase are arbitrary subtrees.
 
 Taking a link as input allows us to code both symmetrical cases at once. */
 static void
-rotate(struct CCC_Tree_map *const map, struct CCC_Tree_map_node *const z,
-       struct CCC_Tree_map_node *const x, struct CCC_Tree_map_node *const y,
-       enum Link const dir) {
+rotate(
+    struct CCC_Tree_map *const map,
+    struct CCC_Tree_map_node *const z,
+    struct CCC_Tree_map_node *const x,
+    struct CCC_Tree_map_node *const y,
+    enum Link const dir
+) {
     assert(z != NULL);
     struct CCC_Tree_map_node *const g = z->parent;
     x->parent = g;
@@ -1009,9 +1116,13 @@ Lowercase are nodes and uppercase are arbitrary subtrees.
 
 Taking a link as input allows us to code both symmetrical cases at once. */
 static void
-double_rotate(struct CCC_Tree_map *const map, struct CCC_Tree_map_node *const z,
-              struct CCC_Tree_map_node *const x,
-              struct CCC_Tree_map_node *const y, enum Link const dir) {
+double_rotate(
+    struct CCC_Tree_map *const map,
+    struct CCC_Tree_map_node *const z,
+    struct CCC_Tree_map_node *const x,
+    struct CCC_Tree_map_node *const y,
+    enum Link const dir
+) {
     assert(z != NULL);
     assert(x != NULL);
     assert(y != NULL);
@@ -1037,10 +1148,11 @@ double_rotate(struct CCC_Tree_map *const map, struct CCC_Tree_map_node *const z,
     z->parent = y;
 }
 
-/* Returns the parity of a node. A NULL node has a parity of 1 aka CCC_TRUE. */
+/* Returns the parity of a node either 0 or 1. A NULL node has a parity of 1 aka
+   CCC_TRUE. */
 static inline CCC_Tribool
 parity(struct CCC_Tree_map_node const *const x) {
-    return x ? x->parity : CCC_TRUE;
+    return x ? (CCC_Tribool)x->parity : CCC_TRUE;
 }
 
 /* Returns true for rank difference 0 (rule break) between the parent and node.
@@ -1048,8 +1160,10 @@ parity(struct CCC_Tree_map_node const *const x) {
       1╭─╯
        x */
 [[maybe_unused]] static inline CCC_Tribool
-is_0_child(struct CCC_Tree_map_node const *const p,
-           struct CCC_Tree_map_node const *const x) {
+is_0_child(
+    struct CCC_Tree_map_node const *const p,
+    struct CCC_Tree_map_node const *const x
+) {
     return parity(p) == parity(x);
 }
 
@@ -1058,8 +1172,10 @@ is_0_child(struct CCC_Tree_map_node const *const p,
        1/
        x*/
 static inline CCC_Tribool
-is_1_child(struct CCC_Tree_map_node const *const p,
-           struct CCC_Tree_map_node const *const x) {
+is_1_child(
+    struct CCC_Tree_map_node const *const p,
+    struct CCC_Tree_map_node const *const x
+) {
     return parity(p) != parity(x);
 }
 
@@ -1068,8 +1184,10 @@ is_1_child(struct CCC_Tree_map_node const *const p,
       2╭─╯
        x */
 static inline CCC_Tribool
-is_2_child(struct CCC_Tree_map_node const *const p,
-           struct CCC_Tree_map_node const *const x) {
+is_2_child(
+    struct CCC_Tree_map_node const *const p,
+    struct CCC_Tree_map_node const *const x
+) {
     return parity(p) == parity(x);
 }
 
@@ -1078,8 +1196,10 @@ is_2_child(struct CCC_Tree_map_node const *const p,
       3╭─╯
        x */
 [[maybe_unused]] static inline CCC_Tribool
-is_3_child(struct CCC_Tree_map_node const *const p,
-           struct CCC_Tree_map_node const *const x) {
+is_3_child(
+    struct CCC_Tree_map_node const *const p,
+    struct CCC_Tree_map_node const *const x
+) {
     return parity(p) != parity(x);
 }
 
@@ -1089,9 +1209,11 @@ is_3_child(struct CCC_Tree_map_node const *const p,
       0╭─┴─╮1
        x   y */
 static inline CCC_Tribool
-is_01_parent(struct CCC_Tree_map_node const *const x,
-             struct CCC_Tree_map_node const *const p,
-             struct CCC_Tree_map_node const *const y) {
+is_01_parent(
+    struct CCC_Tree_map_node const *const x,
+    struct CCC_Tree_map_node const *const p,
+    struct CCC_Tree_map_node const *const y
+) {
     return (!parity(x) && !parity(p) && parity(y))
         || (parity(x) && parity(p) && !parity(y));
 }
@@ -1102,9 +1224,11 @@ is_01_parent(struct CCC_Tree_map_node const *const x,
       1╭─┴─╮1
        x   y */
 static inline CCC_Tribool
-is_11_parent(struct CCC_Tree_map_node const *const x,
-             struct CCC_Tree_map_node const *const p,
-             struct CCC_Tree_map_node const *const y) {
+is_11_parent(
+    struct CCC_Tree_map_node const *const x,
+    struct CCC_Tree_map_node const *const p,
+    struct CCC_Tree_map_node const *const y
+) {
     return (!parity(x) && parity(p) && !parity(y))
         || (parity(x) && !parity(p) && parity(y));
 }
@@ -1115,9 +1239,11 @@ is_11_parent(struct CCC_Tree_map_node const *const x,
       0╭─┴─╮2
        x   y */
 static inline CCC_Tribool
-is_02_parent(struct CCC_Tree_map_node const *const x,
-             struct CCC_Tree_map_node const *const p,
-             struct CCC_Tree_map_node const *const y) {
+is_02_parent(
+    struct CCC_Tree_map_node const *const x,
+    struct CCC_Tree_map_node const *const p,
+    struct CCC_Tree_map_node const *const y
+) {
     return (parity(x) == parity(p)) && (parity(p) == parity(y));
 }
 
@@ -1130,9 +1256,11 @@ is_02_parent(struct CCC_Tree_map_node const *const x,
       2╭─┴─╮2
        x   y */
 static inline CCC_Tribool
-is_22_parent(struct CCC_Tree_map_node const *const x,
-             struct CCC_Tree_map_node const *const p,
-             struct CCC_Tree_map_node const *const y) {
+is_22_parent(
+    struct CCC_Tree_map_node const *const x,
+    struct CCC_Tree_map_node const *const p,
+    struct CCC_Tree_map_node const *const y
+) {
     return (parity(x) == parity(p)) && (parity(p) == parity(y));
 }
 
@@ -1188,8 +1316,10 @@ struct Tree_range {
 };
 
 static size_t
-recursive_count(struct CCC_Tree_map const *const map,
-                struct CCC_Tree_map_node const *const r) {
+recursive_count(
+    struct CCC_Tree_map const *const map,
+    struct CCC_Tree_map_node const *const r
+) {
     if (r == NULL) {
         return 0;
     }
@@ -1203,32 +1333,37 @@ are_subtrees_valid(struct CCC_Tree_map const *t, struct Tree_range const r) {
         return CCC_TRUE;
     }
     if (r.low
-        && order(t, key_from_node(t, r.low), r.root, t->compare)
-               != CCC_ORDER_LESSER) {
+        && order(t, key_from_node(t, r.low), r.root) != CCC_ORDER_LESSER) {
         return CCC_FALSE;
     }
     if (r.high
-        && order(t, key_from_node(t, r.high), r.root, t->compare)
-               != CCC_ORDER_GREATER) {
+        && order(t, key_from_node(t, r.high), r.root) != CCC_ORDER_GREATER) {
         return CCC_FALSE;
     }
-    return are_subtrees_valid(t,
-                              (struct Tree_range){
-                                  .low = r.low,
-                                  .root = r.root->branch[L],
-                                  .high = r.root,
-                              })
-        && are_subtrees_valid(t, (struct Tree_range){
-                                     .low = r.root,
-                                     .root = r.root->branch[R],
-                                     .high = r.high,
-                                 });
+    return are_subtrees_valid(
+               t,
+               (struct Tree_range){
+                   .low = r.low,
+                   .root = r.root->branch[L],
+                   .high = r.root,
+               }
+           )
+        && are_subtrees_valid(
+               t,
+               (struct Tree_range){
+                   .low = r.root,
+                   .root = r.root->branch[R],
+                   .high = r.high,
+               }
+        );
 }
 
 static CCC_Tribool
-is_storing_parent(struct CCC_Tree_map const *const t,
-                  struct CCC_Tree_map_node const *const parent,
-                  struct CCC_Tree_map_node const *const root) {
+is_storing_parent(
+    struct CCC_Tree_map const *const t,
+    struct CCC_Tree_map_node const *const parent,
+    struct CCC_Tree_map_node const *const root
+) {
     if (root == NULL) {
         return CCC_TRUE;
     }
@@ -1241,11 +1376,14 @@ is_storing_parent(struct CCC_Tree_map const *const t,
 
 static CCC_Tribool
 validate(struct CCC_Tree_map const *const map) {
-    if (!are_subtrees_valid(map, (struct Tree_range){
-                                     .low = NULL,
-                                     .root = map->root,
-                                     .high = NULL,
-                                 })) {
+    if (!are_subtrees_valid(
+            map,
+            (struct Tree_range){
+                .low = NULL,
+                .root = map->root,
+                .high = NULL,
+            }
+        )) {
         return CCC_FALSE;
     }
     if (recursive_count(map, map->root) != map->count) {

@@ -19,17 +19,22 @@ adaptive_map_create(int const id, int const val) {
 }
 
 static inline void
-adaptive_map_modplus(CCC_Type_context const t) {
+adaptive_map_modplus(CCC_Arguments const t) {
     ((struct Val *)t.type)->val++;
 }
 
 check_static_begin(adaptive_map_test_insert) {
-    CCC_Adaptive_map om
-        = adaptive_map_for(struct Val, elem, key, id_order, NULL, NULL);
+    Adaptive_map om = adaptive_map_for(
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
+    );
 
     /* Nothing was there before so nothing is in the entry. */
-    CCC_Entry ent = swap_entry(&om, &(struct Val){.key = 137, .val = 99}.elem,
-                               &(struct Val){}.elem);
+    CCC_Entry ent = swap_entry(
+        &om,
+        &(struct Val){.key = 137, .val = 99}.elem,
+        &(struct Val){}.elem,
+        &(CCC_Allocator){}
+    );
     check(occupied(&ent), false);
     check(unwrap(&ent), NULL);
     check(count(&om).count, 1);
@@ -37,61 +42,80 @@ check_static_begin(adaptive_map_test_insert) {
 }
 
 check_static_begin(adaptive_map_test_insert_macros) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 10);
-    CCC_Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[10]){}),
+    };
+    Adaptive_map om = adaptive_map_default(
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
+    );
 
-    struct Val const *ins = CCC_adaptive_map_or_insert_with(
-        entry_wrap(&om, &(int){2}), (struct Val){.key = 2, .val = 0});
+    struct Val const *ins = adaptive_map_or_insert_with(
+        adaptive_map_entry_wrap(&om, &(int){2}),
+        &allocator,
+        (struct Val){.key = 2, .val = 0}
+    );
     check(ins != NULL, true);
     check(validate(&om), true);
     check(count(&om).count, 1);
-    ins = adaptive_map_insert_entry_with(entry_wrap(&om, &(int){2}),
-                                         (struct Val){.key = 2, .val = 0});
+    ins = adaptive_map_insert_entry_with(
+        adaptive_map_entry_wrap(&om, &(int){2}),
+        &allocator,
+        (struct Val){.key = 2, .val = 0}
+    );
     check(validate(&om), true);
     check(ins != NULL, true);
-    ins = adaptive_map_insert_entry_with(entry_wrap(&om, &(int){9}),
-                                         (struct Val){.key = 9, .val = 1});
+    ins = adaptive_map_insert_entry_with(
+        adaptive_map_entry_wrap(&om, &(int){9}),
+        &allocator,
+        (struct Val){.key = 9, .val = 1}
+    );
     check(validate(&om), true);
     check(ins != NULL, true);
-    ins = CCC_entry_unwrap(
-        adaptive_map_insert_or_assign_with(&om, 3, (struct Val){.val = 99}));
+    ins = CCC_entry_unwrap(adaptive_map_insert_or_assign_with(
+        &om, 3, &allocator, (struct Val){.val = 99}
+    ));
     check(validate(&om), true);
     check(ins == NULL, false);
     check(validate(&om), true);
     check(ins->val, 99);
     check(count(&om).count, 3);
-    ins = CCC_entry_unwrap(
-        adaptive_map_insert_or_assign_with(&om, 3, (struct Val){.val = 98}));
+    ins = CCC_entry_unwrap(adaptive_map_insert_or_assign_with(
+        &om, 3, &allocator, (struct Val){.val = 98}
+    ));
     check(validate(&om), true);
     check(ins == NULL, false);
     check(ins->val, 98);
     check(count(&om).count, 3);
-    ins = CCC_entry_unwrap(
-        adaptive_map_try_insert_with(&om, 3, (struct Val){.val = 100}));
+    ins = CCC_entry_unwrap(adaptive_map_try_insert_with(
+        &om, 3, &allocator, (struct Val){.val = 100}
+    ));
     check(ins == NULL, false);
     check(validate(&om), true);
     check(ins->val, 98);
     check(count(&om).count, 3);
-    ins = CCC_entry_unwrap(
-        adaptive_map_try_insert_with(&om, 4, (struct Val){.val = 100}));
+    ins = CCC_entry_unwrap(adaptive_map_try_insert_with(
+        &om, 4, &allocator, (struct Val){.val = 100}
+    ));
     check(ins == NULL, false);
     check(validate(&om), true);
     check(ins->val, 100);
     check(count(&om).count, 4);
-    check_end(CCC_adaptive_map_clear(&om, NULL););
+    check_end({ adaptive_map_clear(&om, &(CCC_Destructor){}, &allocator); });
 }
 
 check_static_begin(adaptive_map_test_insert_overwrite) {
-    CCC_Adaptive_map om
-        = adaptive_map_for(struct Val, elem, key, id_order, NULL, NULL);
+    Adaptive_map om = adaptive_map_default(
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
+    );
 
     struct Val q = {.key = 137, .val = 99};
-    CCC_Entry ent = swap_entry(&om, &q.elem, &(struct Val){}.elem);
+    CCC_Entry ent
+        = swap_entry(&om, &q.elem, &(struct Val){}.elem, &(CCC_Allocator){});
     check(occupied(&ent), false);
     check(unwrap(&ent), NULL);
 
-    struct Val const *v = unwrap(entry_wrap(&om, &q.key));
+    struct Val const *v = unwrap(adaptive_map_entry_wrap(&om, &q.key));
     check(v != NULL, true);
     check(v->val, 99);
 
@@ -100,7 +124,8 @@ check_static_begin(adaptive_map_test_insert_overwrite) {
     struct Val r = (struct Val){.key = 137, .val = 100};
 
     /* The contents of q are now in the table. */
-    CCC_Entry old_ent = swap_entry(&om, &r.elem, &(struct Val){}.elem);
+    CCC_Entry old_ent
+        = swap_entry(&om, &r.elem, &(struct Val){}.elem, &(CCC_Allocator){});
     check(occupied(&old_ent), true);
 
     /* The old contents are now in q and the entry is in the table. */
@@ -108,27 +133,31 @@ check_static_begin(adaptive_map_test_insert_overwrite) {
     check(v != NULL, true);
     check(v->val, 99);
     check(r.val, 99);
-    v = unwrap(entry_wrap(&om, &r.key));
+    v = unwrap(adaptive_map_entry_wrap(&om, &r.key));
     check(v != NULL, true);
     check(v->val, 100);
     check_end();
 }
 
 check_static_begin(adaptive_map_test_insert_then_bad_ideas) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 5);
-    CCC_Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[5]){}),
+    };
+    Adaptive_map om = adaptive_map_default(
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
+    );
     struct Val q = {.key = 137, .val = 99};
-    CCC_Entry ent = swap_entry(&om, &q.elem, &(struct Val){}.elem);
+    CCC_Entry ent = swap_entry(&om, &q.elem, &(struct Val){}.elem, &allocator);
     check(occupied(&ent), false);
     check(unwrap(&ent), NULL);
-    struct Val const *v = unwrap(entry_wrap(&om, &q.key));
+    struct Val const *v = unwrap(adaptive_map_entry_wrap(&om, &q.key));
     check(v != NULL, true);
     check(v->val, 99);
 
     struct Val r = (struct Val){.key = 137, .val = 100};
 
-    ent = swap_entry(&om, &r.elem, &(struct Val){}.elem);
+    ent = swap_entry(&om, &r.elem, &(struct Val){}.elem, &allocator);
     check(occupied(&ent), true);
     v = unwrap(&ent);
     check(v != NULL, true);
@@ -145,20 +174,25 @@ check_static_begin(adaptive_map_test_insert_then_bad_ideas) {
 
 check_static_begin(adaptive_map_test_entry_api_functional) {
     /* Over allocate size now because we don't want to worry about resizing. */
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 200);
-    CCC_Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[200]){}),
+    };
+    Adaptive_map om = adaptive_map_default(
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
+    );
     size_t const size = 200;
 
     /* Test entry or insert with for all even values. Default should be
        inserted. All entries are hashed to last digit so many spread out
        collisions. */
-    struct Val def = {0};
+    struct Val def = {};
     for (size_t i = 0; i < size / 2; i += 2) {
         def.key = (int)i;
         def.val = (int)i;
-        struct Val const *const d
-            = or_insert(entry_wrap(&om, &def.key), &def.elem);
+        struct Val const *const d = or_insert(
+            adaptive_map_entry_wrap(&om, &def.key), &def.elem, &allocator
+        );
         check((d != NULL), true);
         check(d->key, i);
         check(d->val, i);
@@ -168,10 +202,15 @@ check_static_begin(adaptive_map_test_entry_api_functional) {
     for (size_t i = 0; i < size / 2; ++i) {
         def.key = (int)i;
         def.val = (int)i;
-        struct Val const *const d
-            = or_insert(adaptive_map_and_modify_with(entry_wrap(&om, &def.key),
-                                                     struct Val, { T->val++; }),
-                        &def.elem);
+        struct Val const *const d = or_insert(
+            adaptive_map_and_modify_with(
+                adaptive_map_entry_wrap(&om, &def.key),
+                struct Val,
+                { T->val++; }
+            ),
+            &def.elem,
+            &allocator
+        );
         /* All values in the array should be odd now */
         check((d != NULL), true);
         check(d->key, i);
@@ -188,21 +227,27 @@ check_static_begin(adaptive_map_test_entry_api_functional) {
     for (size_t i = 0; i < size / 2; ++i) {
         def.key = (int)i;
         def.val = (int)i;
-        struct Val *const in = or_insert(entry_wrap(&om, &def.key), &def.elem);
+        struct Val *const in = or_insert(
+            adaptive_map_entry_wrap(&om, &def.key), &def.elem, &allocator
+        );
         in->val++;
         /* All values in the array should be odd now */
         check((in->val % 2 == 0), true);
     }
     check(count(&om).count, (size / 2));
-    check_end(adaptive_map_clear(&om, NULL););
+    check_end(adaptive_map_clear(&om, &(CCC_Destructor){}, &allocator););
 }
 
 check_static_begin(adaptive_map_test_insert_via_entry) {
     /* Over allocate size now because we don't want to worry about resizing. */
     size_t const size = 200;
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 200);
-    CCC_Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[200]){}),
+    };
+    Adaptive_map om = adaptive_map_default(
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
+    );
 
     /* Test entry or insert with for all even values. Default should be
        inserted. All entries are hashed to last digit so many spread out
@@ -211,8 +256,9 @@ check_static_begin(adaptive_map_test_insert_via_entry) {
     for (size_t i = 0; i < size / 2; i += 2) {
         def.key = (int)i;
         def.val = (int)i;
-        struct Val const *const d
-            = insert_entry(entry_wrap(&om, &def.key), &def.elem);
+        struct Val const *const d = insert_entry(
+            adaptive_map_entry_wrap(&om, &def.key), &def.elem, &allocator
+        );
         check((d != NULL), true);
         check(d->key, i);
         check(d->val, i);
@@ -222,8 +268,9 @@ check_static_begin(adaptive_map_test_insert_via_entry) {
     for (size_t i = 0; i < size / 2; ++i) {
         def.key = (int)i;
         def.val = (int)i + 1;
-        struct Val const *const d
-            = insert_entry(entry_wrap(&om, &def.key), &def.elem);
+        struct Val const *const d = insert_entry(
+            adaptive_map_entry_wrap(&om, &def.key), &def.elem, &allocator
+        );
         /* All values in the array should be odd now */
         check((d != NULL), true);
         check(d->val, i + 1);
@@ -234,22 +281,33 @@ check_static_begin(adaptive_map_test_insert_via_entry) {
         }
     }
     check(count(&om).count, (size / 2));
-    check_end(adaptive_map_clear(&om, NULL););
+    check_end(adaptive_map_clear(&om, &(CCC_Destructor){}, &allocator););
 }
 
 check_static_begin(adaptive_map_test_insert_via_entry_macros) {
     /* Over allocate size now because we don't want to worry about resizing. */
     size_t const size = 200;
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 200);
-    CCC_Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[200]){}),
+    };
+    Adaptive_map om = adaptive_map_default(
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
+    );
 
     /* Test entry or insert with for all even values. Default should be
        inserted. All entries are hashed to last digit so many spread out
        collisions. */
     for (size_t i = 0; i < size / 2; i += 2) {
-        struct Val const *const d
-            = insert_entry(entry_wrap(&om, &i), &(struct Val){i, i, {}}.elem);
+        struct Val const *const d = insert_entry(
+            adaptive_map_entry_wrap(&om, &i),
+            &(struct Val){
+                .key = (int)i,
+                .val = (int)i,
+            }
+                 .elem,
+            &allocator
+        );
         check((d != NULL), true);
         check(d->key, i);
         check(d->val, i);
@@ -258,7 +316,14 @@ check_static_begin(adaptive_map_test_insert_via_entry_macros) {
     /* The default insertion should not occur every other element. */
     for (size_t i = 0; i < size / 2; ++i) {
         struct Val const *const d = insert_entry(
-            entry_wrap(&om, &i), &(struct Val){i, i + 1, {}}.elem);
+            adaptive_map_entry_wrap(&om, &i),
+            &(struct Val){
+                .key = (int)i,
+                .val = (int)i + 1,
+            }
+                 .elem,
+            &allocator
+        );
         /* All values in the array should be odd now */
         check((d != NULL), true);
         check(d->val, i + 1);
@@ -269,15 +334,19 @@ check_static_begin(adaptive_map_test_insert_via_entry_macros) {
         }
     }
     check(count(&om).count, (size / 2));
-    check_end(adaptive_map_clear(&om, NULL););
+    check_end(adaptive_map_clear(&om, &(CCC_Destructor){}, &allocator););
 }
 
 check_static_begin(adaptive_map_test_entry_api_macros) {
     /* Over allocate size now because we don't want to worry about resizing. */
     int const size = 200;
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 200);
-    CCC_Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[200]){}),
+    };
+    Adaptive_map om = adaptive_map_default(
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
+    );
 
     /* Test entry or insert with for all even values. Default should be
        inserted. All entries are hashed to last digit so many spread out
@@ -286,7 +355,10 @@ check_static_begin(adaptive_map_test_entry_api_macros) {
         /* The macros support functions that will only execute if the or
            insert branch executes. */
         struct Val const *const d = adaptive_map_or_insert_with(
-            entry_wrap(&om, &i), adaptive_map_create(i, i));
+            adaptive_map_entry_wrap(&om, &i),
+            &allocator,
+            adaptive_map_create(i, i)
+        );
         check((d != NULL), true);
         check(d->key, i);
         check(d->val, i);
@@ -295,8 +367,15 @@ check_static_begin(adaptive_map_test_entry_api_macros) {
     /* The default insertion should not occur every other element. */
     for (int i = 0; i < size / 2; ++i) {
         struct Val const *const d = adaptive_map_or_insert_with(
-            and_modify(entry_wrap(&om, &i), adaptive_map_modplus),
-            adaptive_map_create(i, i));
+            and_modify(
+                adaptive_map_entry_wrap(&om, &i),
+                &(CCC_Modifier){
+                    .modify = adaptive_map_modplus,
+                }
+            ),
+            &allocator,
+            adaptive_map_create(i, i)
+        );
         /* All values in the array should be odd now */
         check((d != NULL), true);
         check(d->key, i);
@@ -311,21 +390,26 @@ check_static_begin(adaptive_map_test_entry_api_macros) {
     /* More simply modifications don't require the and modify function. All
        should be switched back to even now. */
     for (int i = 0; i < size / 2; ++i) {
-        struct Val *v
-            = adaptive_map_or_insert_with(entry_wrap(&om, &i), (struct Val){});
+        struct Val *v = adaptive_map_or_insert_with(
+            adaptive_map_entry_wrap(&om, &i), &allocator, (struct Val){}
+        );
         check(v != NULL, true);
         v->val++;
         /* All values in the array should be odd now */
         check(v->val % 2 == 0, true);
     }
     check(count(&om).count, (size / 2));
-    check_end(adaptive_map_clear(&om, NULL););
+    check_end(adaptive_map_clear(&om, &(CCC_Destructor){}, &allocator););
 }
 
 check_static_begin(adaptive_map_test_two_sum) {
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 10);
-    CCC_Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[10]){}),
+    };
+    Adaptive_map om = adaptive_map_default(
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
+    );
     int const addends[10] = {1, 3, -980, 6, 7, 13, 44, 32, 995, -1};
     int const target = 15;
     int solution_indices[2] = {-1, -1};
@@ -339,25 +423,34 @@ check_static_begin(adaptive_map_test_two_sum) {
             break;
         }
         CCC_Entry const e = insert_or_assign(
-            &om, &(struct Val){.key = addends[i], .val = i}.elem);
+            &om,
+            &(struct Val){.key = addends[i], .val = (int)i}.elem,
+            &allocator
+        );
         check(insert_error(&e), false);
     }
     check(solution_indices[0], 8);
     check(solution_indices[1], 2);
-    check_end(adaptive_map_clear(&om, NULL););
+    check_end(adaptive_map_clear(&om, &(CCC_Destructor){}, &allocator););
 }
 
 check_static_begin(adaptive_map_test_insert_and_find) {
     int const size = 10;
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 100);
-    CCC_Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[100]){}),
+    };
+    Adaptive_map om = adaptive_map_default(
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
+    );
 
     for (int i = 0; i < size; i += 2) {
-        CCC_Entry e = try_insert(&om, &(struct Val){.key = i, .val = i}.elem);
+        CCC_Entry e = try_insert(
+            &om, &(struct Val){.key = i, .val = i}.elem, &allocator
+        );
         check(occupied(&e), false);
         check(validate(&om), true);
-        e = try_insert(&om, &(struct Val){.key = i, .val = i}.elem);
+        e = try_insert(&om, &(struct Val){.key = i, .val = i}.elem, &allocator);
         check(occupied(&e), true);
         check(validate(&om), true);
         struct Val const *const v = unwrap(&e);
@@ -367,25 +460,29 @@ check_static_begin(adaptive_map_test_insert_and_find) {
     }
     for (int i = 0; i < size; i += 2) {
         check(contains(&om, &i), true);
-        check(occupied(entry_wrap(&om, &i)), true);
+        check(occupied(adaptive_map_entry_wrap(&om, &i)), true);
         check(validate(&om), true);
     }
     for (int i = 1; i < size; i += 2) {
         check(contains(&om, &i), false);
-        check(occupied(entry_wrap(&om, &i)), false);
+        check(occupied(adaptive_map_entry_wrap(&om, &i)), false);
         check(validate(&om), true);
     }
-    check_end(adaptive_map_clear(&om, NULL););
+    check_end(adaptive_map_clear(&om, &(CCC_Destructor){}, &allocator););
 }
 
 check_static_begin(adaptive_map_test_insert_shuffle) {
     size_t const size = 50;
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 50);
-    CCC_Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[50]){}),
+    };
+    Adaptive_map om = adaptive_map_default(
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
+    );
     check(size > 1, true);
     int const prime = 53;
-    check(insert_shuffled(&om, size, prime), CHECK_PASS);
+    check(insert_shuffled(&om, size, prime, &allocator), CHECK_PASS);
     int sorted_check[50];
     check(inorder_fill(sorted_check, size, &om), CHECK_PASS);
     for (size_t i = 1; i < size; ++i) {
@@ -396,32 +493,46 @@ check_static_begin(adaptive_map_test_insert_shuffle) {
 
 check_static_begin(adaptive_map_test_insert_weak_srand) {
     int const num_nodes = 100;
-    struct Stack_allocator allocator = stack_allocator_for(struct Val, 100);
-    CCC_Adaptive_map om = adaptive_map_for(
-        struct Val, elem, key, id_order, stack_allocator_allocate, &allocator);
-    srand(time(NULL)); /* NOLINT */
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[100]){}),
+    };
+    Adaptive_map om = adaptive_map_default(
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
+    );
+    srand((unsigned)time(NULL)); /* NOLINT */
     for (int i = 0; i < num_nodes; ++i) {
         CCC_Entry const e = swap_entry(
-            &om, &(struct Val){.key = rand() /* NOLINT */, .val = i}.elem,
-            &(struct Val){}.elem);
+            &om,
+            &(struct Val){
+                .key = (int)rand() /* NOLINT */,
+                .val = i,
+            }
+                 .elem,
+            &(struct Val){}.elem,
+            &allocator
+        );
         check(insert_error(&e), false);
         check(validate(&om), true);
     }
     check(count(&om).count, (size_t)num_nodes);
-    check_end(adaptive_map_clear(&om, NULL););
+    check_end(adaptive_map_clear(&om, &(CCC_Destructor){}, &allocator););
 }
 
 int
 main(void) {
     return check_run(
-        adaptive_map_test_insert(), adaptive_map_test_insert_macros(),
+        adaptive_map_test_insert(),
+        adaptive_map_test_insert_macros(),
         adaptive_map_test_insert_and_find(),
         adaptive_map_test_insert_overwrite(),
         adaptive_map_test_insert_then_bad_ideas(),
         adaptive_map_test_insert_via_entry(),
         adaptive_map_test_insert_via_entry_macros(),
         adaptive_map_test_entry_api_functional(),
-        adaptive_map_test_entry_api_macros(), adaptive_map_test_two_sum(),
+        adaptive_map_test_entry_api_macros(),
+        adaptive_map_test_two_sum(),
         adaptive_map_test_insert_weak_srand(),
-        adaptive_map_test_insert_shuffle());
+        adaptive_map_test_insert_shuffle()
+    );
 }
