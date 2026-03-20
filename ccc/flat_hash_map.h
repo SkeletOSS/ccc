@@ -122,9 +122,10 @@ typedef struct CCC_Flat_hash_map_entry CCC_Flat_hash_map_entry;
 /**@}*/
 
 /** @name Initialization Interface
-Initialize the container with memory, callbacks, and permissions. When a fixed
-size map is required that will not have allocation permission, the user must
-declare the type name and size of the map they will use. */
+Initialize the container with memory and callbacks. When a fixed size map is
+required, the user must declare the type name and size of the map they will use.
+Subsequent functions that request an allocator can then be passed the empty
+allocator argument, `&(CCC_Allocator){}`. */
 /**@{*/
 
 /** @brief Create the underlying fixed size storage for a user declared compound

@@ -66,7 +66,7 @@ typedef struct CCC_Priority_queue_node CCC_Priority_queue_node;
 /**@}*/
 
 /** @name Initialization Interface
-Initialize the container with memory, callbacks, and permissions. */
+Initialize the container with memory and callbacks. */
 /**@{*/
 
 /** @brief Initialize a default priority queue at runtime or compile time.

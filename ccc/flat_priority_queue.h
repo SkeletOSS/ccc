@@ -29,11 +29,11 @@ use recursion.
 
 Many functions in the interface request a temporary argument be passed as a swap
 slot. This is because a flat priority queue is backed by a binary heap and
-swaps elements to maintain its properties. Because the user may decide the
-flat priority queue has no allocation permission, the user must provide this
-swap slot. An easy way to do this in C99 and later is with anonymous compound
-literal references. For example, if we have a `int` flat priority queue we can
-provide a temporary slot inline to a function as follows.
+swaps elements to maintain its properties. Because the user may forgo passing an
+allocator, the user must provide this swap slot. An easy way to do this in C99
+and later is with anonymous compound literal references. For example, if we have
+a `int` flat priority queue we can provide a temporary slot inline to a function
+as follows.
 
 ```
 CCC_flat_priority_queue_pop(&priority_queue, &(int){});

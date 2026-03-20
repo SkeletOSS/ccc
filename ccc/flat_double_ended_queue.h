@@ -24,11 +24,12 @@ If the container is initialized with allocation permission it will resize when
 needed but support constant time push and pop to the front and back when
 resizing is not required, resulting in amortized `O(1)` operations.
 
-If the double ended queue is initialized without allocation permission its
-behavior is equivalent to a Ring Buffer. This is somewhat unique in that it does
-not fail to insert elements when size is equal to capacity. This means that push
-front, push back, pop front, and pop back are `O(1)` operations. However, if any
-push exceeds capacity an element where the push should occur is overwritten.
+If a double ended queue function requesting an allocator is not provided with
+one, the behavior is equivalent to a Ring Buffer. This ring buffer behavior is
+somewhat unique in that it does not fail to insert elements when size is equal
+to capacity. This means that push front, push back, pop front, and pop back are
+`O(1)` operations. However, if any push exceeds capacity an element where the
+push should occur is overwritten.
 
 To shorten names in the interface, define the following preprocessor directive
 at the top of your file.

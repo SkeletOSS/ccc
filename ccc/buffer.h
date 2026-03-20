@@ -35,12 +35,12 @@ writing operations that do not affect the size of the container. If writing a
 more complex higher level container that does not need size management these
 functions offer more custom control over the buffer.
 
-A Buffer with allocation permission will re-size as required when a new element
-is inserted in a contiguous fashion. Interface functions in the allocation
-management section assume elements are stored contiguously and adjust size
-accordingly.
+A Buffer function that accepts an allocator will re-size as required when a new
+element is inserted in a contiguous fashion if an allocator is provided.
+Interface functions in the allocation management section assume elements are
+stored contiguously and adjust size accordingly.
 
-If allocation is not permitted, resizing will not occur and the insertion
+If an allocator is not provided, resizing will not occur and the insertion
 function will fail when capacity is reached, returning some value to indicate
 failure.
 

@@ -71,7 +71,7 @@ typedef struct CCC_Tree_map_entry CCC_Tree_map_entry;
 /**@}*/
 
 /** @name Initialization Interface
-Initialize the container with memory, callbacks, and permissions. */
+Initialize the container with memory and callbacks. */
 /**@{*/
 
 /** @brief Initializes the tree map at runtime or compile time.

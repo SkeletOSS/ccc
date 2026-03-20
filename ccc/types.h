@@ -19,7 +19,7 @@ limitations under the License.
 All containers make use of the fundamental types defined here. The purpose of
 these types is to aid the user in writing correct callback functions, allow
 clear error handling, and present a consistent interface to users across
-containers. If allocation permission is given to containers be sure to review
+containers. If an allocator is passed to container functions be sure to review
 the allocator function interface. */
 #ifndef CCC_TYPES_H
 #define CCC_TYPES_H
@@ -376,8 +376,7 @@ Or, pass an empty context when allocation is prohibited.
 int
 main(void) {
     struct Arena_allocator arena = arena_initialize();
-    container_insert(&container, &(int){1},
-&(CCC_Allocator){});
+    container_insert(&container, &(int){1}, &(CCC_Allocator){});
 }
 ```
 

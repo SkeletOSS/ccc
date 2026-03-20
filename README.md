@@ -997,8 +997,7 @@ For all containers, the metadata structure that is passed to interface functions
 ```c
 static CCC_Doubly_linked_list
 construct_empty(void) {
-    CCC_Doubly_linked_list this = CCC_doubly_linked_list_for(
-        struct Val, e, val_order, NULL, NULL);
+    CCC_Doubly_linked_list this = CCC_doubly_linked_list_default(struct Val, e);
     return this;
 }
 
