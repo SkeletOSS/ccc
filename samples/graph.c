@@ -286,7 +286,7 @@ static struct Point random_vertex_placement(struct Graph const *);
 static bool is_valid_vertex_pos(struct Graph const *, int, int);
 static Cell *grid_at_mut(struct Graph const *, int, int);
 static Cell grid_at(struct Graph const *, int, int);
-static uint16_t sort_vertices(char, char);
+static Cell sort_vertices(char, char);
 static int vertex_degree(struct Vertex const *);
 static void build_path_outline(struct Graph *);
 static void build_path_cell(struct Graph *, int, int, Cell);
@@ -904,7 +904,7 @@ vertex_degree(struct Vertex const *const v) {
 
 static inline Cell
 make_edge(char const source, char const destination) {
-    return (Cell)sort_vertices(source, destination) << EDGE_ID_SHIFT;
+    return sort_vertices(source, destination) << EDGE_ID_SHIFT;
 }
 
 static inline Cell *
@@ -917,10 +917,9 @@ grid_at(struct Graph const *const graph, int const r, int const c) {
     return graph->grid[(r * graph->cols) + c];
 }
 
-static inline uint16_t
+static inline Cell
 sort_vertices(char const a, char const b) {
-    return a < b ? (uint16_t)(a << 8) | (uint16_t)b
-                 : (uint16_t)(b << 8) | (uint16_t)a;
+    return a < b ? (Cell)((a << 8) | b) : (Cell)((b << 8) | a);
 }
 
 static char
