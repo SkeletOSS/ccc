@@ -54,7 +54,7 @@ set container. Instead we manage our own front and size fields. */
 struct Bit_queue {
     Bitset bs;
     size_t front;
-    size_t size;
+    size_t count;
 };
 
 /** Simple entry in the flat hash map while counting character occurrences. */
@@ -174,11 +174,14 @@ static void zip_file(SV_Str_view, CCC_Allocator const *);
 static Flat_priority_queue build_encoding_priority_queue(
     FILE *, struct Huffman_tree *, CCC_Allocator const *
 );
-static void
+static CCC_Result
 bitq_push_back(struct Bit_queue *, CCC_Tribool, CCC_Allocator const *);
 static CCC_Tribool bitq_pop_back(struct Bit_queue *);
 static CCC_Tribool bitq_pop_front(struct Bit_queue *);
 static CCC_Tribool bitq_test(struct Bit_queue const *, size_t);
+static CCC_Result bitq_maybe_resize(
+    struct Bit_queue *bq, size_t bits_to_add, CCC_Allocator const *allocator
+);
 static size_t bitq_count(struct Bit_queue const *);
 static void bitq_clear_and_free(struct Bit_queue *, CCC_Allocator const *);
 static CCC_Result
@@ -226,6 +229,7 @@ static size_t writebytes(FILE *, void const *, size_t);
 static void
 fill_bitq(FILE *, struct Bit_queue *, size_t, CCC_Allocator const *);
 static size_t file_size(FILE *);
+static size_t min(size_t, size_t);
 
 /** Asserts even in release mode. Run code in the second argument if needed. */
 #define check(cond, ...)                                                       \
@@ -1138,59 +1142,130 @@ print_bitq(struct Bit_queue const *const bq) {
 
 /*=====================       Bit Queue Helper Code     =====================*/
 
-static void
+static CCC_Result
 bitq_push_back(
     struct Bit_queue *const bq,
     CCC_Tribool const bit,
     CCC_Allocator const *const allocator
 ) {
-    if (bq->size == bitset_count(&bq->bs).count) {
-        CCC_Result const r = push_back(&bq->bs, bit, allocator);
-        check(r == CCC_RESULT_OK);
+    CCC_Result result = bitq_maybe_resize(bq, 1, allocator);
+    if (result != CCC_RESULT_OK) {
+        return result;
+    }
+    if (bq->count == bitset_count(&bq->bs).count) {
+        result = push_back(&bq->bs, bit, &(CCC_Allocator){});
+        if (result != CCC_RESULT_OK) {
+            return result;
+        }
     } else {
         CCC_Tribool const was = bitset_set(
-            &bq->bs, (bq->front + bq->size) % capacity(&bq->bs).count, bit
+            &bq->bs, (bq->front + bq->count) % capacity(&bq->bs).count, bit
         );
-        check(was != CCC_TRIBOOL_ERROR);
+        if (was == CCC_TRIBOOL_ERROR) {
+            return CCC_RESULT_FAIL;
+        }
     }
-    ++bq->size;
+    ++bq->count;
+    return CCC_RESULT_OK;
 }
 
 static CCC_Tribool
 bitq_pop_back(struct Bit_queue *const bq) {
-    if (!bq->size) {
+    if (!bq->count) {
         return CCC_TRIBOOL_ERROR;
     }
-    size_t const i = (bq->front + bq->size - 1) % capacity(&bq->bs).count;
+    size_t const i = (bq->front + bq->count - 1) % capacity(&bq->bs).count;
     CCC_Tribool const bit = bitset_test(&bq->bs, i);
     check(bit != CCC_TRIBOOL_ERROR);
-    --bq->size;
+    --bq->count;
     return bit;
 }
 
 static CCC_Tribool
 bitq_pop_front(struct Bit_queue *const bq) {
-    if (!bq->size) {
+    if (!bq->count) {
         return CCC_TRIBOOL_ERROR;
     }
     CCC_Tribool const bit = bitset_test(&bq->bs, bq->front);
     check(bit != CCC_TRIBOOL_ERROR);
     bq->front = (bq->front + 1) % count(&bq->bs).count;
-    --bq->size;
+    --bq->count;
     return bit;
 }
 
 static CCC_Tribool
 bitq_test(struct Bit_queue const *const bq, size_t const i) {
-    if (!bq->size) {
+    if (!bq->count) {
         return CCC_TRIBOOL_ERROR;
     }
     return bitset_test(&bq->bs, (bq->front + i) % capacity(&bq->bs).count);
 }
 
+/** We don't support push front so we technically don't need this logic yet
+but I felt the code was just waiting for a bug without it so I'm adding it
+here. As soon as you add push front, pop front, push back, pop back you need
+to compact elements from [0, count) whenever you resize, otherwise modulo
+by capacity will break. Elements would wrap before the end of the bit set
+capacity otherwise, and the double ended queue invariants don't hold. */
+static CCC_Result
+bitq_maybe_resize(
+    struct Bit_queue *const bq,
+    size_t bits_to_add,
+    CCC_Allocator const *const allocator
+) {
+    size_t const old_capacity = bitset_capacity(&bq->bs).count;
+    size_t const requirement = bq->count + bits_to_add;
+    if (requirement < old_capacity) {
+        return CCC_RESULT_OK;
+    }
+    static_assert(
+        (CCC_BITSET_BLOCK_BITS & (CCC_BITSET_BLOCK_BITS - 1)) == 0,
+        "rounding up to next block bits capacity with powers of 2 only"
+    );
+    assert(requirement);
+    size_t const new_capacity
+        = ((requirement * 2) + (CCC_BITSET_BLOCK_BITS - 1))
+        & ~(CCC_BITSET_BLOCK_BITS - 1);
+    Bitset compact_bits
+        = bitset_with_capacity(*allocator, new_capacity, bq->count);
+    if (!bitset_capacity(&compact_bits).count) {
+        return CCC_RESULT_ALLOCATOR_ERROR;
+    }
+    if (bq->count) {
+        size_t const first_chunk = min(bq->count, old_capacity - bq->front);
+        for (size_t compacting_bit = 0, bq_bit = bq->front;
+             compacting_bit < first_chunk;
+             ++compacting_bit, ++bq_bit) {
+            CCC_Tribool const set = bitset_set(
+                &compact_bits, compacting_bit, bitset_test(&bq->bs, bq_bit)
+            );
+            if (set == CCC_TRIBOOL_ERROR) {
+                return CCC_RESULT_FAIL;
+            }
+        }
+        for (size_t compacting_bit = first_chunk, bq_bit = 0;
+             bq_bit < bq->count - first_chunk;
+             ++compacting_bit, ++bq_bit) {
+            CCC_Tribool const set = bitset_set(
+                &compact_bits, compacting_bit, bitset_test(&bq->bs, bq_bit)
+            );
+            if (set == CCC_TRIBOOL_ERROR) {
+                return CCC_RESULT_FAIL;
+            }
+        }
+    }
+    CCC_Result const result = CCC_bitset_clear_and_free(&bq->bs, allocator);
+    if (result != CCC_RESULT_OK) {
+        return result;
+    }
+    bq->bs = compact_bits;
+    bq->front = 0;
+    return CCC_RESULT_OK;
+}
+
 static size_t
 bitq_count(struct Bit_queue const *const bq) {
-    return bq->size;
+    return bq->count;
 }
 
 static void
@@ -1209,6 +1284,11 @@ bitq_reserve(
     CCC_Allocator const *const allocator
 ) {
     return reserve(&bq->bs, to_add, allocator);
+}
+
+static inline size_t
+min(size_t const a, size_t const b) {
+    return a < b ? a : b;
 }
 
 /*=====================       Container Helper Code     =====================*/
