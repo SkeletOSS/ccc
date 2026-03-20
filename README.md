@@ -1108,8 +1108,8 @@ This is possible because of the details discussed in the previous section. Conta
 
 Some C++ associative container interfaces have also been adapted to the Entry Interface.
 
-- `CCC_try_insert(container_pointer, try_insert_arguments)` - Inserts a new element if none was present and reports if a previous entry existed.
-- `CCC_insert_or_assign(container_pointer, insert_or_assign_arguments)` - Inserts a new element invariantly and reports if a previous entry existed.
+- `CCC_try_insert(container_pointer, try_insert_arguments...)` - Inserts a new element if none was present and reports if a previous entry existed.
+- `CCC_insert_or_assign(container_pointer, insert_or_assign_arguments...)` - Inserts a new element invariantly and reports if a previous entry existed.
 
 Many other containers fall back to C++ style interfaces when it makes sense to do so.
 
@@ -1131,7 +1131,7 @@ struct Prim_cell new = (struct Prim_cell){
     .cost = rand_range(0, 100),
 };
 struct Prim_cell *const cell = or_insert(
-    entry_wrap(&cost_map, &next, &std_allocator), &new
+    flat_hash_map_entry_wrap(&cost_map, &next, &std_allocator), &new
 );
 ```
 
@@ -1143,7 +1143,7 @@ struct Point const next = {
     .c = c->cell.c + dir_offsets[i].c,
 };
 struct Prim_cell const *const cell = flat_hash_map_or_insert_with(
-    entry_wrap(&cost_map, &next, &std_allocator),
+    flat_hash_map_entry_wrap(&cost_map, &next, &std_allocator),
     (struct Prim_cell){ .cell = next, .cost = rand_range(0, 100)}
 );
 ```
@@ -1167,7 +1167,7 @@ typedef struct {
 /* ... Elsewhere generate offset ofs as key. */
 Word default = {.ofs = ofs, .cnt = 1};
 CCC_Handle_index const h = or_insert(
-    and_modify(array_tree_map_wrap(&map, &ofs), increment),
+    and_modify(array_tree_map_handle_wrap(&map, &ofs), increment),
     &default,
     &std_allocator
 );
@@ -1183,7 +1183,7 @@ typedef struct {
 } Word;
 /* ... Elsewhere generate offset ofs as key. */
 Word default = {.ofs = ofs, .cnt = 1};
-Array_adaptive_map_handle *h = array_tree_map_wrap(&map, &ofs);
+Array_adaptive_map_handle *h = array_tree_map_handle_wrap(&map, &ofs);
 h = and_modify(h, increment);
 Word *w = array_adaptive_map_at(&map, or_insert(h, &default, &std_allocator));
 ```
@@ -1261,6 +1261,10 @@ GCC.
 make all-gcc-rel
 make test
 ```
+
+## Quality Control
+
+The C Container Collection is extensively tested and analyzed both statically and at runtime. See the `tests/` repository which is always seeking valuable additions. Also, visit `CONTRIBUTING.md` to see the extensive tooling that is constantly run locally and over CI via actions in the `.github/workflows` folder. Tools include `clang-format`, `clang-tidy`, `pre-commit`, `GCC's -fanalyzer`, and GCC's extensive address and undefined behavior sanitizers. Builds for both Linux `x86` and MacOS `ARM` run on every commit in pull requests, with additional portable implementation variants built. I aim to deliver a high quality library and welcome any suggestions for tools to further improve code quality.
 
 ## Miscellaneous Why?
 - Why explicit allocator passing? The C Container Collection does not  call `malloc`, `realloc`, or `free` directly. Passing allocators at call sites makes allocation visible and auditable rather than hidden inside container operations. It also decouples the container from any specific memory strategy. This is particularly valuable in kernel and embedded contexts where allocation in certain code paths is forbidden. The overall idea is taken from Zig, which I think got this approach right in terms of useful patterns. See the [Allocator Passing](#allocator-passing) section for more.
