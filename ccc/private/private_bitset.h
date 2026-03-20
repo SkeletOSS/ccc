@@ -67,31 +67,6 @@ of bits. Assumes the given capacity is greater than 0. Classic div round up. */
 #define CCC_private_bitset_default()                                           \
     {}
 
-/** @internal Allocates a compound literal bit block array in the scope at which
-the macro is used. However, the optional parameter supports storage duration
-specifiers which is a feature of C23. Not all compilers support this yet. */
-#define CCC_private_bitset_storage_for(                                        \
-    private_bit_compound_literal, private_optional_storage_specifier...        \
-)                                                                              \
-    (private_optional_storage_specifier struct {                               \
-        static_assert(                                                         \
-            sizeof(private_bit_compound_literal) > 0,                          \
-            "Specify non-zero capacity of bits."                               \
-        );                                                                     \
-        static_assert(                                                         \
-            sizeof(*(private_bit_compound_literal)) == sizeof(CCC_Bit),        \
-            "CCC_bitset_storage_for and CCC_bitset_with_storage only accept "  \
-            "a (CCC_Bit[N]){} compound literal array as an argument. Do not "  \
-            "use CCC_bitset_storage_for as an argument to "                    \
-            "CCC_bitset_with_storage."                                         \
-        );                                                                     \
-        typeof(*(struct CCC_Bitset){}.blocks) private                          \
-            [CCC_private_bitset_block_count(                                   \
-                sizeof(private_bit_compound_literal)                           \
-            )];                                                                \
-    }){}                                                                       \
-        .private
-
 /** @internal NOLINTNEXTLINE */
 #define CCC_private_bitset_non_CCC_private_bitset_default_size(                \
     private_cap, ...                                                           \
@@ -169,13 +144,57 @@ to inline function for bit set construction. */
         private_bitset;                                                        \
     }))
 
+/** @internal Clang is more forgiving with what qualifies as a constant
+expression for both constructing compound literals and using static asserts.
+The static asserts are so helpful that it is worth every effort to give them
+to the user. GCC is not so forgiving. */
+#if defined(__clang__) || defined(__llvm__)
+/** @internal Allocates a compound literal bit block array in the scope at which
+the macro is used. However, the optional parameter supports storage duration
+specifiers which is a feature of C23. Not all compilers support this yet. */
+#    define CCC_private_bitset_storage_for(                                    \
+        private_bit_compound_literal, private_optional_storage_specifier...    \
+    )                                                                          \
+        (private_optional_storage_specifier struct {                           \
+            static_assert(                                                     \
+                sizeof(private_bit_compound_literal) > 0,                      \
+                "Specify non-zero capacity of bits."                           \
+            );                                                                 \
+            static_assert(                                                     \
+                sizeof(*(private_bit_compound_literal)) == sizeof(CCC_Bit),    \
+                "CCC_bitset_storage_for and CCC_bitset_with_storage only "     \
+                "accept "                                                      \
+                "a (CCC_Bit[N]){} compound literal array as an argument. Do "  \
+                "not "                                                         \
+                "use CCC_bitset_storage_for as an argument to "                \
+                "CCC_bitset_with_storage."                                     \
+            );                                                                 \
+            typeof(*(struct CCC_Bitset){}.blocks) private                      \
+                [CCC_private_bitset_block_count(                               \
+                    sizeof(private_bit_compound_literal)                       \
+                )];                                                            \
+        }){}                                                                   \
+            .private
+#else
+/** @internal */
+#    define CCC_private_bitset_storage_for(                                    \
+        private_bit_compound_literal, private_optional_storage_specifier...    \
+    )                                                                          \
+        (typeof (                                                              \
+            *(struct CCC_Bitset){}.blocks                                      \
+        )[CCC_private_bitset_block_count(                                      \
+            sizeof(private_bit_compound_literal)                               \
+        )]) {                                                                  \
+        }
+#endif
+
 /** @internal */
 #define CCC_private_bitset_with_storage(                                       \
     private_count,                                                             \
     private_compound_literal_array,                                            \
     private_optional_storage_specifier...                                      \
 )                                                                              \
-    {                                                                          \
+    (struct CCC_Bitset) {                                                      \
         .blocks = CCC_private_bitset_storage_for(                              \
             private_compound_literal_array, private_optional_storage_specifier \
         ),                                                                     \

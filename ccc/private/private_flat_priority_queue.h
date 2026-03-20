@@ -159,23 +159,37 @@ void *CCC_private_flat_priority_queue_update_fixup(
         private_flat_priority_queue;                                           \
     }))
 
+/** @internal Clang is more forgiving with what qualifies as a constant
+expression for both constructing compound literals and using static asserts.
+The static asserts are so helpful that it is worth every effort to give them
+to the user. GCC is not so forgiving. */
+#if defined(__clang__) || defined(__llvm__)
+#    define CCC_private_flat_priority_queue_with_storage(                      \
+        private_order, private_comparator, private_compound_literal            \
+    )                                                                          \
+        (struct {                                                              \
+            static_assert(                                                     \
+                (private_order) == CCC_ORDER_LESSER                            \
+                    || (private_order) == CCC_ORDER_GREATER,                   \
+                "flat priority queue must be a min or max priority queue"      \
+            );                                                                 \
+            struct CCC_Flat_priority_queue private;                            \
+        }){{                                                                   \
+               .buffer = CCC_buffer_with_storage(0, private_compound_literal), \
+               .order = (private_order),                                       \
+               .comparator = (private_comparator),                             \
+           }}                                                                  \
+            .private
+#else
 /** @internal */
-#define CCC_private_flat_priority_queue_with_storage(                          \
-    private_order, private_comparator, private_compound_literal                \
-)                                                                              \
-    (struct {                                                                  \
-        static_assert(                                                         \
-            (private_order) == CCC_ORDER_LESSER                                \
-                || (private_order) == CCC_ORDER_GREATER,                       \
-            "flat priority queue must be a min or max priority queue"          \
-        );                                                                     \
-        struct CCC_Flat_priority_queue private;                                \
-    }){{                                                                       \
-           .buffer = CCC_buffer_with_storage(0, private_compound_literal),     \
-           .order = (private_order),                                           \
-           .comparator = (private_comparator),                                 \
-       }}                                                                      \
-        .private
+#    define CCC_private_flat_priority_queue_with_storage(                      \
+        private_order, private_comparator, private_compound_literal            \
+    )                                                                          \
+        (struct CCC_Flat_priority_queue) {                                     \
+            .buffer = CCC_buffer_with_storage(0, private_compound_literal),    \
+            .order = (private_order), .comparator = (private_comparator),      \
+        }
+#endif
 
 /** @internal This macro "returns" a value thanks to clang and gcc statement
    expressions. See documentation in the flat priority_queueueue header for

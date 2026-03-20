@@ -11,6 +11,28 @@
 #include "types.h"
 #include "utility/stack_allocator.h"
 
+static Array_tree_map static_map = array_tree_map_with_storage(
+    id,
+    (CCC_Key_comparator){.compare = id_order},
+    (struct Val[SMALL_FIXED_CAP]){}
+);
+
+check_static_begin(array_tree_map_test_static) {
+    check(array_tree_map_capacity(&static_map).count, SMALL_FIXED_CAP);
+    check(array_tree_map_count(&static_map).count, 0);
+    check(validate(&static_map), CCC_TRUE);
+    check(is_empty(&static_map), CCC_TRUE);
+    CCC_Handle const inserted = array_tree_map_insert_or_assign(
+        &static_map, &(struct Val){.id = 1, .val = 1}, &(CCC_Allocator){}
+    );
+    check(insert_error(&inserted), CCC_FALSE);
+    struct Val const *const v
+        = array_tree_map_at(&static_map, unwrap(&inserted));
+    check(v->val, 1);
+    check(v->val, v->id);
+    check_end();
+}
+
 check_static_begin(array_tree_map_test_empty) {
     Array_tree_map s = array_tree_map_with_storage(
         id,
@@ -440,6 +462,7 @@ check_static_begin(array_tree_map_test_context_with_allocator) {
 int
 main(void) {
     return check_run(
+        array_tree_map_test_static(),
         array_tree_map_test_empty(),
         array_tree_map_test_with_literal(),
         array_tree_map_test_copy_no_allocate(),

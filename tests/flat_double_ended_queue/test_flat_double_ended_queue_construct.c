@@ -1,4 +1,5 @@
 #include <stddef.h>
+#include <stdint.h>
 
 #define BUFFER_USING_NAMESPACE_CCC
 #define TRAITS_USING_NAMESPACE_CCC
@@ -9,6 +10,20 @@
 #include "traits.h"
 #include "types.h"
 #include "utility/stack_allocator.h"
+
+static Flat_double_ended_queue const byte_ring
+    = flat_double_ended_queue_with_storage(3, (uint8_t[3]){0xFF, 0x00, 0xF});
+
+check_static_begin(flat_double_ended_queue_test_static_const) {
+    check(is_empty(&byte_ring), false);
+    uint8_t const *const front_byte = front(&byte_ring);
+    check(front_byte != NULL, true);
+    check(*front_byte, 0xFF);
+    uint8_t const *const back_byte = back(&byte_ring);
+    check(back_byte != NULL, true);
+    check(*back_byte, 0xF);
+    check_end();
+}
 
 check_static_begin(flat_double_ended_queue_test_construct) {
     int vals[2];
@@ -215,6 +230,7 @@ check_static_begin(flat_double_ended_queue_test_init_with_capacity_fail) {
 int
 main(void) {
     return check_run(
+        flat_double_ended_queue_test_static_const(),
         flat_double_ended_queue_test_construct(),
         flat_double_ended_queue_test_construct_with_storage(),
         flat_double_ended_queue_test_copy_no_allocate(),

@@ -107,31 +107,49 @@ of memory in one step. */
         private_buf;                                                           \
     }))
 
+/** @internal Clang is more forgiving with what qualifies as a constant
+expression for both constructing compound literals and using static asserts.
+The static asserts are so helpful that it is worth every effort to give them
+to the user. GCC is not so forgiving. */
+#if defined(__clang__) || defined(__llvm__)
 /** @internal Initializes a fixed size buffer with no allocation or context. */
-#define CCC_private_buffer_with_storage(                                       \
-    private_count, private_compound_literal_array...                           \
-)                                                                              \
-    (struct {                                                                  \
-        static_assert(                                                         \
-            sizeof(private_compound_literal_array) > 0,                        \
-            "provide non-zero capacity compound literal array"                 \
-        );                                                                     \
-        static_assert(                                                         \
-            private_count                                                      \
-                <= (sizeof(private_compound_literal_array)                     \
-                    / sizeof(*private_compound_literal_array)),                \
-            "provide count less than or equal to capacity of "                 \
-            "compound literal array"                                           \
-        );                                                                     \
-        CCC_Buffer private;                                                    \
-    }){{                                                                       \
-           .data = (private_compound_literal_array),                           \
-           .sizeof_type = sizeof(*private_compound_literal_array),             \
-           .count = private_count,                                             \
-           .capacity = sizeof(private_compound_literal_array)                  \
-                     / sizeof(*private_compound_literal_array),                \
-       }}                                                                      \
-        .private
+#    define CCC_private_buffer_with_storage(                                   \
+        private_count, private_compound_literal_array...                       \
+    )                                                                          \
+        (struct {                                                              \
+            static_assert(                                                     \
+                sizeof(private_compound_literal_array) > 0,                    \
+                "provide non-zero capacity compound literal array"             \
+            );                                                                 \
+            static_assert(                                                     \
+                private_count                                                  \
+                    <= (sizeof(private_compound_literal_array)                 \
+                        / sizeof(*private_compound_literal_array)),            \
+                "provide count less than or equal to capacity of "             \
+                "compound literal array"                                       \
+            );                                                                 \
+            CCC_Buffer private;                                                \
+        }){{                                                                   \
+               .data = (private_compound_literal_array),                       \
+               .sizeof_type = sizeof(*private_compound_literal_array),         \
+               .count = private_count,                                         \
+               .capacity = sizeof(private_compound_literal_array)              \
+                         / sizeof(*private_compound_literal_array),            \
+           }}                                                                  \
+            .private
+#else
+/** @internal Initializes a fixed size buffer with no allocation or context. */
+#    define CCC_private_buffer_with_storage(                                   \
+        private_count, private_compound_literal_array...                       \
+    )                                                                          \
+        (struct CCC_Buffer) {                                                  \
+            .data = (private_compound_literal_array),                          \
+            .sizeof_type = sizeof(*private_compound_literal_array),            \
+            .count = private_count,                                            \
+            .capacity = sizeof(private_compound_literal_array)                 \
+                      / sizeof(*private_compound_literal_array),               \
+        }
+#endif
 
 /** @internal */
 #define CCC_private_buffer_emplace(                                            \
