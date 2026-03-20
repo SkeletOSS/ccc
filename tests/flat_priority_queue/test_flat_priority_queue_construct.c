@@ -25,6 +25,18 @@ int_order(CCC_Comparator_arguments const order) {
     return (a > b) - (a < b);
 }
 
+static Flat_priority_queue const static_priority_queue
+    = flat_priority_queue_with_storage(
+        CCC_ORDER_LESSER, (CCC_Comparator){.compare = val_order}, (int[16]){}
+    );
+
+check_static_begin(flat_priority_queue_test_static_const) {
+    check(is_empty(&static_priority_queue), true);
+    check(count(&static_priority_queue).count, 0);
+    check(capacity(&static_priority_queue).count, 16);
+    check_end();
+}
+
 check_static_begin(flat_priority_queue_test_empty) {
     struct Val vals[2] = {};
     Flat_priority_queue priority_queue = flat_priority_queue_for(
@@ -458,6 +470,7 @@ check_static_begin(flat_priority_queue_test_init_with_capacity_fail) {
 int
 main(void) {
     return check_run(
+        flat_priority_queue_test_static_const(),
         flat_priority_queue_test_empty(),
         flat_priority_queue_test_with_storage(),
         flat_priority_queue_test_macro(),

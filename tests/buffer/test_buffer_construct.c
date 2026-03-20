@@ -1,4 +1,5 @@
 #include <stddef.h>
+#include <stdint.h>
 
 #define BUFFER_USING_NAMESPACE_CCC
 
@@ -7,6 +8,18 @@
 #include "checkers.h"
 #include "utility/allocate.h"
 #include "utility/stack_allocator.h"
+
+static Buffer const rgb
+    = buffer_with_storage(3, (uint8_t[3]){0xFF, 0x00, 0xFF});
+
+check_static_begin(buffer_test_static_global_const) {
+    check(buffer_count(&rgb).count, 3);
+    check(buffer_capacity(&rgb).count, 3);
+    uint8_t const *const i = buffer_at(&rgb, 0);
+    check(i != NULL, CCC_TRUE);
+    check(*i, 0xFF);
+    check_end();
+}
 
 check_static_begin(buffer_test_fixed) {
     Buffer b = buffer_with_storage(0, (int[5]){});
@@ -204,6 +217,7 @@ check_static_begin(buffer_test_init_with_capacity_fail) {
 int
 main(void) {
     return check_run(
+        buffer_test_static_global_const(),
         buffer_test_fixed(),
         buffer_test_full(),
         buffer_test_reserve(),

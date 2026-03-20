@@ -110,9 +110,10 @@ void *CCC_private_flat_double_ended_queue_allocate_back(
 #define CCC_private_flat_double_ended_queue_with_storage(                      \
     private_count, private_compound_literal...                                 \
 )                                                                              \
-    {                                                                          \
-        .buffer                                                                \
-        = CCC_buffer_with_storage(private_count, private_compound_literal),    \
+    (struct CCC_Flat_double_ended_queue) {                                     \
+        .buffer = CCC_buffer_with_storage(                                     \
+            private_count, private_compound_literal                            \
+        ),                                                                     \
         .front = 0,                                                            \
     }
 

@@ -360,19 +360,16 @@ runtime. */
     private_compound_literal,                                                  \
     private_optional_storage_specifier...                                      \
 )                                                                              \
-    {                                                                          \
+    (struct CCC_Array_tree_map) {                                              \
         .data = &CCC_private_array_tree_map_storage_for(                       \
             private_compound_literal, private_optional_storage_specifier       \
         ),                                                                     \
-        .nodes = NULL,                                                         \
-        .parity = NULL,                                                        \
+        .nodes = NULL, .parity = NULL,                                         \
         .capacity                                                              \
-        = CCC_private_array_tree_map_compound_literal_array_capacity(          \
-            private_compound_literal                                           \
-        ),                                                                     \
-        .count = 0,                                                            \
-        .root = 0,                                                             \
-        .free_list = 0,                                                        \
+            = CCC_private_array_tree_map_compound_literal_array_capacity(      \
+                private_compound_literal                                       \
+            ),                                                                 \
+        .count = 0, .root = 0, .free_list = 0,                                 \
         .sizeof_type = sizeof(*(private_compound_literal)),                    \
         .key_offset = offsetof(                                                \
             typeof(*(private_compound_literal)), private_key_node_field        \

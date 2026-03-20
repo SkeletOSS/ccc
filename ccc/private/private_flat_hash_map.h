@@ -367,25 +367,25 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
     private_compound_literal,                                                  \
     private_optional_storage_specifier...                                      \
 )                                                                              \
-    {                                                                          \
+    (struct CCC_Flat_hash_map) {                                               \
         .data = &CCC_private_flat_hash_map_storage_for(                        \
             private_compound_literal, private_optional_storage_specifier       \
         ),                                                                     \
-        .tag = NULL,                                                           \
-        .count = 0,                                                            \
+        .tag = NULL, .count = 0,                                               \
         .remain                                                                \
-        = ((CCC_private_flat_hash_map_compound_literal_array_capacity(         \
-                private_compound_literal                                       \
-            )                                                                  \
-            / (size_t)8)                                                       \
-           * (size_t)7),                                                       \
+            = ((CCC_private_flat_hash_map_compound_literal_array_capacity(     \
+                    private_compound_literal                                   \
+                )                                                              \
+                / (size_t)8)                                                   \
+               * (size_t)7),                                                   \
         .mask = CCC_private_flat_hash_map_compound_literal_array_capacity(     \
                     private_compound_literal                                   \
                 )                                                              \
               - (size_t)1,                                                     \
         .sizeof_type = sizeof(*(private_compound_literal)),                    \
-        .key_offset                                                            \
-        = offsetof(typeof(*(private_compound_literal)), private_key_field),    \
+        .key_offset = offsetof(                                                \
+            typeof(*(private_compound_literal)), private_key_field             \
+        ),                                                                     \
         .hasher = (private_hasher),                                            \
     }
 
