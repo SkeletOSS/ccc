@@ -302,6 +302,7 @@ capacity.
 @param[in] key_field the field of the struct used for key storage.
 @param[in] hasher a CCC_Hasher that configures the hash function, key comparator
 function, and context for both hashing and comparison.
+@param[in] allocator a required CCC_Allocator for resizing.
 @param[in] capacity the desired capacity for the map. A capacity of 0 results
 in an argument error and is a no-op after the map is initialized empty.
 @return the flat hash map directly initialized on the right hand side of the
@@ -329,7 +330,7 @@ main(void)
         struct Val,
         key,
         ((CCC_Hasher){.hash = hash_int, .compare = key_order}),
-        &std_allocator,
+        std_allocator,
         4096
     );
     return 0;
