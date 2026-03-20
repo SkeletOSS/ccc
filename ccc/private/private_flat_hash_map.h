@@ -43,6 +43,7 @@ most complexity in the implementation. */
 #include "../types.h"
 
 /* NOLINTBEGIN(readability-identifier-naming) */
+#define CCC_FLAT_HASH_MAP_PORTABLE
 
 /** @internal If we only make these complex checks once, it is easier to read
 and used the source code during all the platform based implementations. */

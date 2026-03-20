@@ -2402,7 +2402,7 @@ count_trailing_zeros(struct Match_mask const m) {
         "builtin trailing zeros must produce number of bits we "
         "expect for mask"
     );
-    return m.v ? __builtin_ctzl(m.v) / GROUP_COUNT : GROUP_COUNT;
+    return m.v ? ((unsigned)__builtin_ctzl(m.v)) / GROUP_COUNT : GROUP_COUNT;
 }
 
 static inline unsigned
@@ -2413,13 +2413,13 @@ count_leading_zeros(struct Match_mask const m) {
         "builtin trailing zeros must produce number of bits we "
         "expect for mask"
     );
-    return m.v ? __builtin_clzl(m.v) / GROUP_COUNT : GROUP_COUNT;
+    return m.v ? ((unsigned)__builtin_clzl(m.v)) / GROUP_COUNT : GROUP_COUNT;
 }
 
 static inline unsigned
 count_leading_zeros_size_t(size_t const n) {
     static_assert(sizeof(size_t) == sizeof(unsigned long));
-    return n ? __builtin_clzl(n) : sizeof(size_t) * CHAR_BIT;
+    return n ? ((unsigned)__builtin_clzl(n)) : sizeof(size_t) * CHAR_BIT;
 }
 
 #    else /* defined(__has_builtin) && __has_builtin(__builtin_ctzl) &&        \
