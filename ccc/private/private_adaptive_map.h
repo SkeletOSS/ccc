@@ -116,10 +116,10 @@ void *CCC_private_adaptive_map_insert(
     private_key_node_field,                                                    \
     private_comparator...                                                      \
 )                                                                              \
-    {                                                                          \
+    (struct CCC_Adaptive_map) {                                                \
         .sizeof_type = sizeof(private_struct_name),                            \
         .type_intruder_offset                                                  \
-        = offsetof(private_struct_name, private_node_node_field),              \
+            = offsetof(private_struct_name, private_node_node_field),          \
         .key_offset = offsetof(private_struct_name, private_key_node_field),   \
         .comparator = private_comparator,                                      \
     }
@@ -131,12 +131,10 @@ void *CCC_private_adaptive_map_insert(
     private_key_node_field,                                                    \
     private_comparator...                                                      \
 )                                                                              \
-    {                                                                          \
-        .root = NULL,                                                          \
-        .size = 0,                                                             \
-        .sizeof_type = sizeof(private_struct_name),                            \
+    (struct CCC_Adaptive_map) {                                                \
+        .root = NULL, .size = 0, .sizeof_type = sizeof(private_struct_name),   \
         .type_intruder_offset                                                  \
-        = offsetof(private_struct_name, private_node_node_field),              \
+            = offsetof(private_struct_name, private_node_node_field),          \
         .key_offset = offsetof(private_struct_name, private_key_node_field),   \
         .comparator = private_comparator,                                      \
     }
@@ -150,7 +148,7 @@ void *CCC_private_adaptive_map_insert(
     private_destructor,                                                        \
     private_compound_literal_array...                                          \
 )                                                                              \
-    (__extension__({                                                           \
+    (struct { struct CCC_Adaptive_map private; }){(__extension__({             \
         typeof(*private_compound_literal_array)                                \
             *private_adaptive_map_type_array = private_compound_literal_array; \
         struct CCC_Adaptive_map private_map                                    \
@@ -217,7 +215,7 @@ void *CCC_private_adaptive_map_insert(
             }                                                                  \
         }                                                                      \
         private_map;                                                           \
-    }))
+    }))}.private
 
 /** @internal */
 #define CCC_private_adaptive_map_new(adaptive_map_entry, private_allocator)    \

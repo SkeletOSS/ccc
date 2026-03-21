@@ -101,14 +101,12 @@ name of the list being on the left hand side of the assignment operator. */
 #define CCC_private_doubly_linked_list_for(                                    \
     private_struct_name, private_type_intruder_field                           \
 )                                                                              \
-    {                                                                          \
-        .head = NULL,                                                          \
-        .tail = NULL,                                                          \
+    (struct CCC_Doubly_linked_list) {                                          \
+        .head = NULL, .tail = NULL,                                            \
         .sizeof_type = sizeof(private_struct_name),                            \
         .type_intruder_offset                                                  \
-        = offsetof(private_struct_name, private_type_intruder_field),          \
-        .count = 0,                                                            \
-        .order = CCC_ORDER_ERROR,                                              \
+            = offsetof(private_struct_name, private_type_intruder_field),      \
+        .count = 0, .order = CCC_ORDER_ERROR,                                  \
     }
 
 /** @internal */
@@ -118,7 +116,7 @@ name of the list being on the left hand side of the assignment operator. */
     private_destructor,                                                        \
     private_compound_literal_array...                                          \
 )                                                                              \
-    (__extension__({                                                           \
+    (struct { struct CCC_Doubly_linked_list private; }){(__extension__({       \
         typeof(*private_compound_literal_array)                                \
             *private_doubly_linked_list_type_array                             \
             = private_compound_literal_array;                                  \
@@ -164,7 +162,7 @@ name of the list being on the left hand side of the assignment operator. */
             }                                                                  \
         }                                                                      \
         private_doubly_linked_list;                                            \
-    }))
+    }))}.private
 
 /** @internal */
 #define CCC_private_doubly_linked_list_emplace_back(                           \

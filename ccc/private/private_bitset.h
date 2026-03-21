@@ -87,9 +87,8 @@ argument. */
 #define CCC_private_bitset_for(                                                \
     private_cap, private_count, private_bitblock_pointer                       \
 )                                                                              \
-    {                                                                          \
-        .blocks = (private_bitblock_pointer),                                  \
-        .count = (private_count),                                              \
+    (struct CCC_Bitset) {                                                      \
+        .blocks = (private_bitblock_pointer), .count = (private_count),        \
         .capacity = (private_cap),                                             \
     }
 
@@ -103,7 +102,7 @@ to inline function for bit set construction. */
     private_string,                                                            \
     ...                                                                        \
 )                                                                              \
-    (__extension__({                                                           \
+    (struct { struct CCC_Bitset private; }){(__extension__({                   \
         struct CCC_Bitset private_bitset = CCC_private_bitset_default();       \
         size_t const private_cap                                               \
             = CCC_private_bitset_optional_size((private_count), __VA_ARGS__);  \
@@ -127,11 +126,11 @@ to inline function for bit set construction. */
             private_bitset.count = private_index;                              \
         }                                                                      \
         private_bitset;                                                        \
-    }))
+    }))}.private
 
 /** @internal. */
 #define CCC_private_bitset_with_capacity(private_allocate, private_cap, ...)   \
-    (__extension__({                                                           \
+    (struct { struct CCC_Bitset private; }){(__extension__({                   \
         struct CCC_Bitset private_bitset = CCC_private_bitset_default();       \
         size_t const private_count                                             \
             = CCC_private_bitset_optional_size((private_cap), __VA_ARGS__);    \
@@ -142,7 +141,7 @@ to inline function for bit set construction. */
             private_bitset.count = private_count;                              \
         }                                                                      \
         private_bitset;                                                        \
-    }))
+    }))}.private
 
 /** @internal Clang is more forgiving with what qualifies as a constant
 expression for both constructing compound literals and using static asserts.
@@ -152,8 +151,10 @@ to the user. GCC is not so forgiving. */
 /** @internal Allocates a compound literal bit block array in the scope at which
 the macro is used. However, the optional parameter supports storage duration
 specifiers which is a feature of C23. Not all compilers support this yet. */
-#    define CCC_private_bitset_storage_for(                                    \
-        private_bit_compound_literal, private_optional_storage_specifier...    \
+#    define CCC_private_bitset_count_check_storage_for(                        \
+        private_count,                                                         \
+        private_bit_compound_literal,                                          \
+        private_optional_storage_specifier...                                  \
     )                                                                          \
         (private_optional_storage_specifier struct {                           \
             static_assert(                                                     \
@@ -169,16 +170,33 @@ specifiers which is a feature of C23. Not all compilers support this yet. */
                 "use CCC_bitset_storage_for as an argument to "                \
                 "CCC_bitset_with_storage."                                     \
             );                                                                 \
+            static_assert(                                                     \
+                (private_count) <= sizeof(private_bit_compound_literal),       \
+                "Bit count is less than or equal to capacity."                 \
+            );                                                                 \
             typeof(*(struct CCC_Bitset){}.blocks) private                      \
                 [CCC_private_bitset_block_count(                               \
                     sizeof(private_bit_compound_literal)                       \
                 )];                                                            \
         }){}                                                                   \
             .private
-#else
+
 /** @internal */
 #    define CCC_private_bitset_storage_for(                                    \
         private_bit_compound_literal, private_optional_storage_specifier...    \
+    )                                                                          \
+        CCC_private_bitset_count_check_storage_for(                            \
+            0,                                                                 \
+            private_bit_compound_literal,                                      \
+            private_optional_storage_specifier                                 \
+        )
+
+#else
+/** @internal */
+#    define CCC_private_bitset_count_check_storage_for(                        \
+        private_count,                                                         \
+        private_bit_compound_literal,                                          \
+        private_optional_storage_specifier...                                  \
     )                                                                          \
         (typeof (                                                              \
             *(struct CCC_Bitset){}.blocks                                      \
@@ -186,6 +204,16 @@ specifiers which is a feature of C23. Not all compilers support this yet. */
             sizeof(private_bit_compound_literal)                               \
         )]) {                                                                  \
         }
+
+/** @internal */
+#    define CCC_private_bitset_storage_for(                                    \
+        private_bit_compound_literal, private_optional_storage_specifier...    \
+    )                                                                          \
+        CCC_private_bitset_count_check_storage_for(                            \
+            0,                                                                 \
+            private_bit_compound_literal,                                      \
+            private_optional_storage_specifier                                 \
+        )
 #endif
 
 /** @internal */
@@ -195,8 +223,10 @@ specifiers which is a feature of C23. Not all compilers support this yet. */
     private_optional_storage_specifier...                                      \
 )                                                                              \
     (struct CCC_Bitset) {                                                      \
-        .blocks = CCC_private_bitset_storage_for(                              \
-            private_compound_literal_array, private_optional_storage_specifier \
+        .blocks = CCC_private_bitset_count_check_storage_for(                  \
+            private_count,                                                     \
+            private_compound_literal_array,                                    \
+            private_optional_storage_specifier                                 \
         ),                                                                     \
         .count = (private_count),                                              \
         .capacity = CCC_private_bitset_block_count(                            \

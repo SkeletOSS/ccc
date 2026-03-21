@@ -130,35 +130,11 @@ size_t CCC_private_array_adaptive_map_allocate_slot(
     (sizeof(private_type_compound_literal_array)                               \
      / sizeof(*(private_type_compound_literal_array)))
 
-/** @internal The user can declare a fixed size realtime ordered map with the
-help of static asserts to ensure the layout is compatible with our internal
-metadata. */
-#define CCC_private_array_adaptive_map_storage_for(                            \
-    private_type_compound_literal_array, optional_storage_specifier...         \
-)                                                                              \
-    (optional_storage_specifier struct {                                       \
-        static_assert(                                                         \
-            CCC_private_array_adaptive_map_compound_literal_array_capacity(    \
-                private_type_compound_literal_array                            \
-            ) > 1,                                                             \
-            "fixed size map must have capacity greater than 1"                 \
-        );                                                                     \
-        typeof(*(private_type_compound_literal_array)) data                    \
-            [CCC_private_array_adaptive_map_compound_literal_array_capacity(   \
-                private_type_compound_literal_array                            \
-            )];                                                                \
-        struct CCC_Array_adaptive_map_node nodes                               \
-            [CCC_private_array_adaptive_map_compound_literal_array_capacity(   \
-                private_type_compound_literal_array                            \
-            )];                                                                \
-    }) {                                                                       \
-    }
-
 /** @internal  All other fields default to NULL or 0. */
 #define CCC_private_array_adaptive_map_default(                                \
     private_type_name, private_key_node_field, private_comparator...           \
 )                                                                              \
-    {                                                                          \
+    (struct CCC_Array_adaptive_map) {                                          \
         .sizeof_type = sizeof(private_type_name),                              \
         .key_offset = offsetof(private_type_name, private_key_node_field),     \
         .comparator = private_comparator,                                      \
@@ -171,13 +147,9 @@ metadata. */
     private_capacity,                                                          \
     private_memory_pointer                                                     \
 )                                                                              \
-    {                                                                          \
-        .data = (private_memory_pointer),                                      \
-        .nodes = NULL,                                                         \
-        .capacity = (private_capacity),                                        \
-        .count = 0,                                                            \
-        .root = 0,                                                             \
-        .free_list = 0,                                                        \
+    (struct CCC_Array_adaptive_map) {                                          \
+        .data = (private_memory_pointer), .nodes = NULL,                       \
+        .capacity = (private_capacity), .count = 0, .root = 0, .free_list = 0, \
         .sizeof_type = sizeof(private_type_name),                              \
         .key_offset = offsetof(private_type_name, private_key_node_field),     \
         .comparator = (private_comparator),                                    \
@@ -191,7 +163,7 @@ metadata. */
     private_optional_cap,                                                      \
     private_array_compound_literal...                                          \
 )                                                                              \
-    (__extension__({                                                           \
+    (struct { struct CCC_Array_adaptive_map private; }){(__extension__({       \
         typeof(*private_array_compound_literal)                                \
             *private_array_adaptive_map_initializer_list                       \
             = private_array_compound_literal;                                  \
@@ -248,7 +220,7 @@ metadata. */
             }                                                                  \
         }                                                                      \
         private_array_adaptive_map;                                            \
-    }))
+    }))}.private
 
 /** @internal */
 #define CCC_private_array_adaptive_map_with_capacity(                          \
@@ -258,7 +230,7 @@ metadata. */
     private_allocator,                                                         \
     private_cap                                                                \
 )                                                                              \
-    (__extension__({                                                           \
+    (struct { struct CCC_Array_adaptive_map private; }){(__extension__({       \
         struct CCC_Array_adaptive_map private_array_adaptive_map               \
             = CCC_private_array_adaptive_map_default(                          \
                 private_type_name, private_key_field, private_comparator       \
@@ -267,7 +239,31 @@ metadata. */
             &private_array_adaptive_map, private_cap, &(private_allocator)     \
         );                                                                     \
         private_array_adaptive_map;                                            \
-    }))
+    }))}.private
+
+/** @internal The user can declare a fixed size realtime ordered map with the
+help of static asserts to ensure the layout is compatible with our internal
+metadata. */
+#define CCC_private_array_adaptive_map_storage_for(                            \
+    private_type_compound_literal_array, optional_storage_specifier...         \
+)                                                                              \
+    (optional_storage_specifier struct {                                       \
+        static_assert(                                                         \
+            CCC_private_array_adaptive_map_compound_literal_array_capacity(    \
+                private_type_compound_literal_array                            \
+            ) > 1,                                                             \
+            "fixed size map must have capacity greater than 1"                 \
+        );                                                                     \
+        typeof(*(private_type_compound_literal_array)) data                    \
+            [CCC_private_array_adaptive_map_compound_literal_array_capacity(   \
+                private_type_compound_literal_array                            \
+            )];                                                                \
+        struct CCC_Array_adaptive_map_node nodes                               \
+            [CCC_private_array_adaptive_map_compound_literal_array_capacity(   \
+                private_type_compound_literal_array                            \
+            )];                                                                \
+    }) {                                                                       \
+    }
 
 /** @internal */
 #define CCC_private_array_adaptive_map_with_storage(                           \
