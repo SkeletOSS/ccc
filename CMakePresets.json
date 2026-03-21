@@ -7,7 +7,7 @@
     },
     "configurePresets": [
         {
-            "name": "base",
+            "name": "configuration",
             "hidden": true,
             "binaryDir": "${sourceDir}/build",
             "installDir": "${sourceDir}/install",
@@ -19,7 +19,6 @@
         {
             "name": "warnings",
             "hidden": true,
-            "inherits": "base",
             "environment": {
                 "CCC_WARNING_C_FLAGS": "-Wall -Wextra -Wvla -Wconversion -Wnull-dereference -Wundef -Wstrict-prototypes -Wwrite-strings -Wfloat-equal -Wtype-limits -Wpointer-arith -Wshadow -Winit-self -Wno-variadic-macros -Wno-gnu-alignof-expression -fno-common"
             }
@@ -27,7 +26,6 @@
         {
             "name": "sanitizers",
             "hidden": true,
-            "inherits": "base",
             "environment": {
                 "CCC_SANITIZER_C_FLAGS": "-fanalyzer -fno-omit-frame-pointer -fsanitize-address-use-after-scope -fsanitize=address,leak,undefined,shift,shift-exponent,integer-divide-by-zero,unreachable,null,return,signed-integer-overflow,bounds,bounds-strict,alignment,object-size,float-divide-by-zero,float-cast-overflow,enum,pointer-overflow,pointer-compare,pointer-subtract",
                 "CCC_SANITIZER_LINKER_FLAGS": "-fsanitize=address,leak,undefined,shift,shift-exponent,integer-divide-by-zero,unreachable,null,return,signed-integer-overflow,bounds,bounds-strict,alignment,object-size,float-divide-by-zero,float-cast-overflow,enum,pointer-overflow,pointer-compare,pointer-subtract"
@@ -36,7 +34,7 @@
         {
             "name": "default-debug",
             "hidden": true,
-            "inherits": "warnings",
+            "inherits": ["configuration", "warnings"],
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_RUNTIME_OUTPUT_DIRECTORY": "${sourceDir}/build/debug/bin",
@@ -46,7 +44,7 @@
         {
             "name": "default-release",
             "hidden": true,
-            "inherits": "warnings",
+            "inherits": ["configuration", "warnings"],
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_RUNTIME_OUTPUT_DIRECTORY": "${sourceDir}/build/bin",
@@ -84,7 +82,7 @@
         },
         {
             "name": "gcc-sanitize-debug",
-            "inherits": "default-debug",
+            "inherits": ["default-debug", "sanitizers"],
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "gcc",
                 "CMAKE_C_FLAGS": "-g3 -Og $env{CCC_WARNING_C_FLAGS} $env{CCC_SANITIZER_C_FLAGS}",
@@ -93,7 +91,7 @@
         },
         {
             "name": "gcc-sanitize-release",
-            "inherits": "default-release",
+            "inherits": ["default-release", "sanitizers"],
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "gcc",
                 "CMAKE_C_FLAGS": "-g3 $env{CCC_WARNING_C_FLAGS} $env{CCC_SANITIZER_C_FLAGS}",
