@@ -433,7 +433,7 @@ CCC_singly_linked_list_validate(CCC_Singly_linked_list const *list);
 linked list container. Check for namespace clashes before name shortening. */
 #ifdef SINGLY_LINKED_LIST_USING_NAMESPACE_CCC
 /* NOLINTBEGIN(readability-identifier-naming) */
-typedef CCC_Singly_linked_list_node singly_linked_list_node;
+typedef CCC_Singly_linked_list_node Singly_linked_list_node;
 typedef CCC_Singly_linked_list Singly_linked_list;
 #    define singly_linked_list_for(arguments...)                               \
         CCC_singly_linked_list_for(arguments)

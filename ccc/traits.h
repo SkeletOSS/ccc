@@ -508,22 +508,6 @@ See container documentation for specific behavior. */
 )                                                                              \
     CCC_private_clear_and_free(container_pointer, destructor_and_free_arguments)
 
-/** @brief Clears the container previously reserved and frees its underlying
-buffer. Covers the case of a one-time memory reserved container that does not
-otherwise have permissions over its own memory to resize or free.
-@param[in] container_pointer a pointer to the container.
-@param[in] destructor_and_free_arguments optional destructor function to be
-called on each element and the required allocation function to free memory.
-@return the result of the operation.
-
-See container documentation for specific behavior. */
-#define CCC_clear_and_free_reserve(                                            \
-    container_pointer, destructor_and_free_arguments...                        \
-)                                                                              \
-    CCC_private_clear_and_free_reserve(                                        \
-        container_pointer, destructor_and_free_arguments                       \
-    )
-
 /**@}*/
 
 /** @name State Interface
@@ -619,8 +603,6 @@ See container documentation for specific behavior. */
 #    define reserve(arguments...) CCC_reserve(arguments)
 #    define clear(arguments...) CCC_clear(arguments)
 #    define clear_and_free(arguments...) CCC_clear_and_free(arguments)
-#    define clear_and_free_reserve(arguments...)                               \
-        CCC_clear_and_free_reserve(arguments)
 
 #    define count(arguments...) CCC_count(arguments)
 #    define capacity(arguments...) CCC_capacity(arguments)

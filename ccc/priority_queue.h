@@ -448,7 +448,7 @@ CCC_priority_queue_order(CCC_Priority_queue const *priority_queue);
 priority queue container. Check for collisions before name shortening. */
 #ifdef PRIORITY_QUEUE_USING_NAMESPACE_CCC
 /* NOLINTBEGIN(readability-identifier-naming) */
-typedef CCC_Priority_queue_node priority_queue_node;
+typedef CCC_Priority_queue_node Priority_queue_node;
 typedef CCC_Priority_queue Priority_queue;
 #    define priority_queue_default(arguments...)                               \
         CCC_priority_queue_default(arguments)

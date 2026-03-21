@@ -115,7 +115,7 @@ element can run the efficient push and decrease key operations with pointer
 stability guaranteed. Finally these can be allocated on the stack because
 there will be at most 26 of them which is very small. */
 struct Cost {
-    priority_queue_node priority_queue_node;
+    Priority_queue_node priority_queue_node;
     int cost;
     char name;
     char from;

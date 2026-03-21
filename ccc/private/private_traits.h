@@ -137,25 +137,6 @@ limitations under the License.
         (container_entry_pointer), modifier_pointer                            \
     )
 
-#define CCC_private_and_context_modify(container_entry_pointer,                \
-                                       modifier_pointer...)                    \
-    _Generic((container_entry_pointer),                                        \
-        CCC_Flat_hash_map_entry *: CCC_flat_hash_map_and_context_modify,       \
-        CCC_Adaptive_map_entry *: CCC_adaptive_map_and_context_modify,         \
-        CCC_Array_adaptive_map_handle                                          \
-            *: CCC_array_adaptive_map_and_context_modify,                      \
-        CCC_Array_tree_map_handle *: CCC_array_tree_map_and_context_modify,    \
-        CCC_Tree_map_entry *: CCC_tree_map_and_context_modify,                 \
-        CCC_Flat_hash_map_entry const *: CCC_flat_hash_map_and_context_modify, \
-        CCC_Adaptive_map_entry const *: CCC_adaptive_map_and_context_modify,   \
-        CCC_Array_tree_map_handle const                                        \
-            *: CCC_array_tree_map_and_context_modify,                          \
-        CCC_Array_adaptive_map_handle const                                    \
-            *: CCC_array_adaptive_map_and_context_modify,                      \
-        CCC_Tree_map_entry const *: CCC_tree_map_and_context_modify)(          \
-        (container_entry_pointer), modifier_pointer                            \
-    )
-
 #define CCC_private_insert_entry(container_entry_pointer,                      \
                                  key_val_container_array_pointer...)           \
     _Generic((container_entry_pointer),                                        \
@@ -674,22 +655,6 @@ the appropriate range from the selections. */
             *: CCC_flat_double_ended_queue_clear_and_free,                     \
         CCC_Array_tree_map *: CCC_array_tree_map_clear_and_free)(              \
         (container_pointer)__VA_OPT__(, __VA_ARGS__)                           \
-    )
-
-#define CCC_private_clear_and_free_reserve(container_pointer,                  \
-                                           destructor_and_free_arguments...)   \
-    _Generic((container_pointer),                                              \
-        CCC_Bitset *: CCC_bitset_clear_and_free_reserve,                       \
-        CCC_Buffer *: CCC_buffer_clear_and_free_reserve,                       \
-        CCC_Flat_hash_map *: CCC_flat_hash_map_clear_and_free_reserve,         \
-        CCC_Array_adaptive_map                                                 \
-            *: CCC_array_adaptive_map_clear_and_free_reserve,                  \
-        CCC_Flat_priority_queue                                                \
-            *: CCC_flat_priority_queue_clear_and_free_reserve,                 \
-        CCC_Flat_double_ended_queue                                            \
-            *: CCC_flat_double_ended_queue_clear_and_free_reserve,             \
-        CCC_Array_tree_map *: CCC_array_tree_map_clear_and_free_reserve)(      \
-        (container_pointer), destructor_and_free_arguments                     \
     )
 
 /*===================    Standard Getters Interface   =======================*/
