@@ -34,6 +34,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    name: GCC Sanitize ${{ matrix.build == 'debug' && 'Debug' || 'Release' }} - ${{ matrix.portable == 'ON' && 'Portable SRMD Flat Hash Map' || 'Platform SIMD Flat Hash Map' }}
     needs: check-diff
     if: ${{ needs.check-diff.outputs.handle == 'true' }}
     strategy:
@@ -48,7 +49,7 @@ jobs:
 
     - uses: lukka/get-cmake@latest 
 
-    - name: Build Debug Sanitized Checks GCC
+    - name: Build Address and UB Sanitizers with GCC
       run: |
         make clean
         cmake --preset=gcc-sanitize-${{ matrix.build }} -DCCC_FLAT_HASH_MAP_PORTABLE=${{ matrix.portable }} && cmake --build build -j$(nproc) --target ccc tests

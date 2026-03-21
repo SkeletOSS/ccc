@@ -34,6 +34,7 @@ jobs:
 
   build:
     runs-on: macos-latest
+    name: Clang Mac-ARM ${{ matrix.build == 'debug' && 'Debug' || 'Release' }} - ${{ matrix.portable == 'ON' && 'Portable SRMD Flat Hash Map' || 'Platform SIMD Flat Hash Map' }}
     needs: check-diff
     if: ${{ needs.check-diff.outputs.handle == 'true' }}
     env:
@@ -72,7 +73,7 @@ jobs:
       run: |
         "$PWD/llvm/bin/clang" --version
         
-    - name: Build and Test all Variants
+    - name: Build and Test with Clang Mac-ARM
       run: |
         make clean
         cmake --preset=clang-${{ matrix.build }} -DCCC_FLAT_HASH_MAP_PORTABLE=${{ matrix.portable }} -DCMAKE_C_COMPILER="$PWD/llvm/bin/clang" -G "Ninja" && cmake --build build -j$(nproc) --target ccc tests samples

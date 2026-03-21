@@ -1,11 +1,10 @@
-name: linux-build
+name: memory-sanitizer-build
 
 on:
   pull_request:
   workflow_dispatch:
 
 jobs:
-
   check-diff:
     runs-on: ubuntu-latest
     outputs: 
@@ -25,7 +24,7 @@ jobs:
         run: |
           echo "Here are the changed build/C files:"
           echo "$(git --no-pager diff --name-only HEAD HEAD~1 | grep -E '\.(c|h)$|\.cmake|CMakeLists|Config\.cmake\.in')"
-          if git --no-pager diff --name-only HEAD HEAD~1 | grep -qE '\.(c|h)$|\.cmake|CMakeLists|Config\.cmake\.in'; then
+          if git diff --name-only HEAD HEAD~1 | grep -qE '\.(c|h)$|\.cmake|CMakeLists|Config\.cmake\.in'; then
             echo "run=true" >> $GITHUB_OUTPUT
             echo "Implementation and/or build files have changed, rebuilding..."
           else
@@ -35,7 +34,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    name: Clang Linux-x64 ${{ matrix.build == 'debug' && 'Debug' || 'Release' }} - ${{ matrix.portable == 'ON' && 'Portable SRMD Flat Hash Map' || 'Platform SIMD Flat Hash Map' }}
+    name: Clang Memory Sanitize Linux-x64 ${{ matrix.build == 'debug' && 'Debug' || 'Release' }} - ${{ matrix.portable == 'ON' && 'Portable SRMD Flat Hash Map' || 'Platform SIMD Flat Hash Map' }}
     needs: check-diff
     if: ${{ needs.check-diff.outputs.handle == 'true' }}
     env:
@@ -49,15 +48,11 @@ jobs:
 
     steps:
 
-    - name: Sanity Check
-      run: |
-        echo "${{ needs.check-diff.outputs.handle }}"
-  
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - uses: lukka/get-cmake@latest
-    
+    - uses: lukka/get-cmake@latest 
+
     - name: Cache LLVM
       id: cache-llvm
       uses: actions/cache@v5
@@ -78,9 +73,9 @@ jobs:
       run: |
         "$PWD/llvm/bin/clang" --version
 
-    - name: Build and Test with Clang Linux-x64
+    - name: Build and Test Memory Sanitizers with Clang Linux-x64
       run: |
         make clean
-        cmake --preset=clang-${{ matrix.build }} -DCCC_FLAT_HASH_MAP_PORTABLE=${{ matrix.portable }} -DCMAKE_C_COMPILER="$PWD/llvm/bin/clang" -G "Ninja" && cmake --build build -j$(nproc) --target ccc tests samples
+        cmake --preset=clang-${{ matrix.build }} -DCCC_FLAT_HASH_MAP_PORTABLE=${{ matrix.portable }} -DCMAKE_C_COMPILER="$PWD/llvm/bin/clang" -G "Ninja" && cmake --build build -j$(nproc) --target ccc tests
         cmake --build build --target install
         make test

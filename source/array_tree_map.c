@@ -1404,8 +1404,9 @@ remove_fixup(struct CCC_Array_tree_map *const map, size_t const remove) {
         *parent_pointer(map, x) = parent_index(map, y);
         if (!p) {
             map->root = x;
+        } else {
+            *branch_pointer(map, p, branch_index(map, p, R) == y) = x;
         }
-        *branch_pointer(map, p, branch_index(map, p, R) == y) = x;
         two_child = is_2_child(map, p, y);
     } else {
         y = min_max_from(map, branch_index(map, remove, R), L);

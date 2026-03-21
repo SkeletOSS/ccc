@@ -32,6 +32,14 @@
             }
         },
         {
+            "name": "memory-sanitizers",
+            "hidden": true,
+            "environment": {
+                "CCC_MEMORY_SANITIZER_C_FLAGS": "-fno-omit-frame-pointer -fsanitize=memory -fsanitize-memory-track-origins=2",
+                "CCC_MEMORY_SANITIZER_LINKER_FLAGS": "-fsanitize=memory"
+            }
+        },
+        {
             "name": "default-debug",
             "hidden": true,
             "inherits": ["configuration", "warnings"],
@@ -96,6 +104,24 @@
                 "CMAKE_C_COMPILER": "gcc",
                 "CMAKE_C_FLAGS": "-g3 $env{CCC_WARNING_C_FLAGS} $env{CCC_SANITIZER_C_FLAGS}",
                 "CMAKE_EXE_LINKER_FLAGS": "$env{CCC_SANITIZER_LINKER_FLAGS}"
+            }
+        },
+        {
+            "name": "clang-memory-sanitize-debug",
+            "inherits": ["default-debug", "memory-sanitizers"],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_C_FLAGS": "-g3 -O1 $env{CCC_WARNING_C_FLAGS} $env{CCC_MEMORY_SANITIZER_C_FLAGS}",
+                "CMAKE_EXE_LINKER_FLAGS": "$env{CCC_MEMORY_SANITIZER_LINKER_FLAGS}"
+            }
+        },
+        {
+            "name": "clang-memory-sanitize-release",
+            "inherits": ["default-release", "memory-sanitizers"],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_C_FLAGS": "-g3 $env{CCC_WARNING_C_FLAGS} $env{CCC_MEMORY_SANITIZER_C_FLAGS}",
+                "CMAKE_EXE_LINKER_FLAGS": "$env{CCC_MEMORY_SANITIZER_LINKER_FLAGS}"
             }
         }
     ]
