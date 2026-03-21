@@ -43,7 +43,7 @@ struct CCC_Buffer {
 
 /* @internal */
 #define CCC_private_buffer_default(private_type_name)                          \
-    {                                                                          \
+    (struct CCC_Buffer) {                                                      \
         .sizeof_type = sizeof(private_type_name),                              \
     }
 
@@ -54,11 +54,9 @@ are contiguous. */
 #define CCC_private_buffer_for(                                                \
     private_type_name, private_capacity, private_count, private_data...        \
 )                                                                              \
-    {                                                                          \
-        .data = (private_data),                                                \
-        .sizeof_type = sizeof(private_type_name),                              \
-        .count = (private_count),                                              \
-        .capacity = (private_capacity),                                        \
+    (struct CCC_Buffer) {                                                      \
+        .data = (private_data), .sizeof_type = sizeof(private_type_name),      \
+        .count = (private_count), .capacity = (private_capacity),              \
     }
 
 /** @internal For dynamic containers to perform the allocation and
@@ -68,7 +66,7 @@ initialization in one convenient step for user. */
     private_optional_capacity,                                                 \
     private_compound_literal_array...                                          \
 )                                                                              \
-    (__extension__({                                                           \
+    (struct { struct CCC_Buffer private; }){(__extension__({                   \
         typeof(*private_compound_literal_array)                                \
             *private_buffer_initializer_list = private_compound_literal_array; \
         struct CCC_Buffer private_buf = CCC_private_buffer_default(            \
@@ -91,21 +89,21 @@ initialization in one convenient step for user. */
             private_buf.count = private_n;                                     \
         }                                                                      \
         private_buf;                                                           \
-    }))
+    }))}.private
 
 /** @internal For dynamic containers to perform initialization and reservation
 of memory in one step. */
 #define CCC_private_buffer_with_capacity(                                      \
     private_type_name, private_allocator, private_capacity                     \
 )                                                                              \
-    (__extension__({                                                           \
+    (struct { struct CCC_Buffer private; }){(__extension__({                   \
         struct CCC_Buffer private_buf                                          \
             = CCC_private_buffer_default(private_type_name);                   \
         (void)CCC_buffer_reserve(                                              \
             &private_buf, (private_capacity), &(private_allocator)             \
         );                                                                     \
         private_buf;                                                           \
-    }))
+    }))}.private
 
 /** @internal Clang is more forgiving with what qualifies as a constant
 expression for both constructing compound literals and using static asserts.

@@ -63,10 +63,9 @@ void *CCC_private_flat_priority_queue_update_fixup(
 #define CCC_private_flat_priority_queue_default(                               \
     private_type_name, private_order, private_comparator...                    \
 )                                                                              \
-    {                                                                          \
+    (struct CCC_Flat_priority_queue) {                                         \
         .buffer = CCC_buffer_default(private_type_name),                       \
-        .order = (private_order),                                              \
-        .comparator = private_comparator,                                      \
+        .order = (private_order), .comparator = private_comparator,            \
     }
 
 /** @internal */
@@ -77,12 +76,11 @@ void *CCC_private_flat_priority_queue_update_fixup(
     private_capacity,                                                          \
     private_data_pointer                                                       \
 )                                                                              \
-    {                                                                          \
+    (struct CCC_Flat_priority_queue) {                                         \
         .buffer = CCC_buffer_for(                                              \
             private_type_name, private_capacity, 0, private_data_pointer       \
         ),                                                                     \
-        .order = (private_order),                                              \
-        .comparator = (private_comparator),                                    \
+        .order = (private_order), .comparator = (private_comparator),          \
     }
 
 /** @internal */
@@ -94,7 +92,7 @@ void *CCC_private_flat_priority_queue_update_fixup(
     private_size,                                                              \
     private_data_pointer...                                                    \
 )                                                                              \
-    (__extension__({                                                           \
+    (struct { struct CCC_Flat_priority_queue private; }){(__extension__({      \
         typeof(*(                                                              \
             private_data_pointer                                               \
         )) *private_flat_priority_queue_heapify_data = private_data_pointer;   \
@@ -111,7 +109,7 @@ void *CCC_private_flat_priority_queue_update_fixup(
             &private_flat_priority_queue_heapify_res, &(private_type_name){}   \
         );                                                                     \
         private_flat_priority_queue_heapify_res;                               \
-    }))
+    }))}.private
 
 /** @internal */
 #define CCC_private_flat_priority_queue_from(                                  \
@@ -148,7 +146,7 @@ void *CCC_private_flat_priority_queue_update_fixup(
     private_allocator,                                                         \
     private_capacity                                                           \
 )                                                                              \
-    (__extension__({                                                           \
+    (struct { struct CCC_Flat_priority_queue private; }){(__extension__({      \
         struct CCC_Flat_priority_queue private_flat_priority_queue = {         \
             .buffer = CCC_buffer_with_capacity(                                \
                 private_type_name, private_allocator, private_capacity         \
@@ -157,7 +155,7 @@ void *CCC_private_flat_priority_queue_update_fixup(
             .comparator = (private_comparator),                                \
         };                                                                     \
         private_flat_priority_queue;                                           \
-    }))
+    }))}.private
 
 /** @internal Clang is more forgiving with what qualifies as a constant
 expression for both constructing compound literals and using static asserts.

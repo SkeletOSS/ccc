@@ -142,11 +142,10 @@ void *CCC_private_priority_queue_struct_base(
     private_priority_queue_order,                                              \
     private_comparator...                                                      \
 )                                                                              \
-    {                                                                          \
-        .root = NULL,                                                          \
-        .count = 0,                                                            \
+    (struct CCC_Priority_queue) {                                              \
+        .root = NULL, .count = 0,                                              \
         .type_intruder_offset                                                  \
-        = offsetof(private_struct_name, private_type_intruder_field),          \
+            = offsetof(private_struct_name, private_type_intruder_field),      \
         .sizeof_type = sizeof(private_struct_name),                            \
         .order = (private_priority_queue_order),                               \
         .comparator = (private_comparator),                                    \
@@ -174,7 +173,7 @@ void *CCC_private_priority_queue_struct_base(
     private_destructor,                                                        \
     private_compound_literal_array...                                          \
 )                                                                              \
-    (__extension__({                                                           \
+    (struct { struct CCC_Priority_queue private; }){(__extension__({           \
         typeof(*private_compound_literal_array)                                \
             *private_priority_queue_type_array                                 \
             = private_compound_literal_array;                                  \
@@ -221,7 +220,7 @@ void *CCC_private_priority_queue_struct_base(
             }                                                                  \
         }                                                                      \
         private_priority_queue;                                                \
-    }))
+    }))}.private
 
 /** @internal */
 #define CCC_private_priority_queue_emplace(                                    \

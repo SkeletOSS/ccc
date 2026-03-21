@@ -247,7 +247,7 @@ be exposed to the user if they wish to know the size in bytes of this object. */
 #define CCC_private_flat_hash_map_default(                                     \
     private_type_name, private_key_field, private_hasher...                    \
 )                                                                              \
-    {                                                                          \
+    (struct CCC_Flat_hash_map) {                                               \
         .sizeof_type = sizeof(private_type_name),                              \
         .key_offset = offsetof(private_type_name, private_key_field),          \
         .hasher = private_hasher,                                              \
@@ -276,14 +276,13 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
     private_capacity,                                                          \
     private_map_pointer                                                        \
 )                                                                              \
-    {                                                                          \
-        .data = (private_map_pointer),                                         \
-        .tag = NULL,                                                           \
-        .count = 0,                                                            \
+    (struct CCC_Flat_hash_map) {                                               \
+        .data = (private_map_pointer), .tag = NULL, .count = 0,                \
         .remain = (((private_capacity) / (size_t)8) * (size_t)7),              \
         .mask                                                                  \
-        = (((private_capacity) > (size_t)0) ? ((private_capacity) - (size_t)1) \
-                                            : (size_t)0),                      \
+            = (((private_capacity) > (size_t)0)                                \
+                   ? ((private_capacity) - (size_t)1)                          \
+                   : (size_t)0),                                               \
         .sizeof_type = sizeof(private_type_name),                              \
         .key_offset = offsetof(private_type_name, private_key_field),          \
         .hasher = (private_hasher),                                            \
@@ -297,7 +296,7 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
     private_optional_cap,                                                      \
     private_array_compound_literal...                                          \
 )                                                                              \
-    (__extension__({                                                           \
+    (struct { struct CCC_Flat_hash_map private; }){(__extension__({            \
         typeof(*private_array_compound_literal)                                \
             *private_flat_hash_map_initializer_list                            \
             = private_array_compound_literal;                                  \
@@ -339,7 +338,7 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
             }                                                                  \
         }                                                                      \
         private_map;                                                           \
-    }))
+    }))}.private
 
 /** @internal Initializes the flat hash map with the specified capacity. */
 #define CCC_private_flat_hash_map_with_capacity(                               \
@@ -349,7 +348,7 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
     private_allocator,                                                         \
     private_cap                                                                \
 )                                                                              \
-    (__extension__({                                                           \
+    (struct { struct CCC_Flat_hash_map private; }){(__extension__({            \
         struct CCC_Flat_hash_map private_map                                   \
             = CCC_private_flat_hash_map_default(                               \
                 private_type_name, private_key_field, private_hasher           \
@@ -358,7 +357,7 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
             &private_map, private_cap, &(private_allocator)                    \
         );                                                                     \
         private_map;                                                           \
-    }))
+    }))}.private
 
 /** @internal We can cut out boilerplate by assuming fixed size map. */
 #define CCC_private_flat_hash_map_with_storage(                                \

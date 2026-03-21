@@ -107,12 +107,11 @@ void *CCC_private_tree_map_insert(
     private_key_node_field,                                                    \
     private_comparator...                                                      \
 )                                                                              \
-    {                                                                          \
-        .root = NULL,                                                          \
-        .count = 0,                                                            \
+    (struct CCC_Tree_map) {                                                    \
+        .root = NULL, .count = 0,                                              \
         .key_offset = offsetof(private_struct_name, private_key_node_field),   \
         .type_intruder_offset                                                  \
-        = offsetof(private_struct_name, private_node_field),                   \
+            = offsetof(private_struct_name, private_node_field),               \
         .sizeof_type = sizeof(private_struct_name),                            \
         .comparator = (private_comparator),                                    \
     }
@@ -140,7 +139,7 @@ void *CCC_private_tree_map_insert(
     private_destructor,                                                        \
     private_compound_literal_array...                                          \
 )                                                                              \
-    (__extension__({                                                           \
+    (struct { struct CCC_Tree_map private; }){(__extension__({                 \
         typeof(*private_compound_literal_array) *private_tree_map_type_array   \
             = private_compound_literal_array;                                  \
         struct CCC_Tree_map private_map = CCC_private_tree_map_default(        \
@@ -209,7 +208,7 @@ void *CCC_private_tree_map_insert(
             }                                                                  \
         }                                                                      \
         private_map;                                                           \
-    }))
+    }))}.private
 
 /*==================   Helper Macros for Repeated Logic     =================*/
 

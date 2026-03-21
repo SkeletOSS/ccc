@@ -238,7 +238,7 @@ metadata. */
 #define CCC_private_array_tree_map_default(                                    \
     private_type_name, private_key_field, private_comparator...                \
 )                                                                              \
-    {                                                                          \
+    (struct CCC_Array_tree_map) {                                              \
         .sizeof_type = sizeof(private_type_name),                              \
         .key_offset = offsetof(private_type_name, private_key_field),          \
         .comparator = (private_comparator),                                    \
@@ -256,14 +256,9 @@ runtime. */
     private_capacity,                                                          \
     private_memory_pointer                                                     \
 )                                                                              \
-    {                                                                          \
-        .data = (private_memory_pointer),                                      \
-        .nodes = NULL,                                                         \
-        .parity = NULL,                                                        \
-        .capacity = (private_capacity),                                        \
-        .count = 0,                                                            \
-        .root = 0,                                                             \
-        .free_list = 0,                                                        \
+    (struct CCC_Array_tree_map) {                                              \
+        .data = (private_memory_pointer), .nodes = NULL, .parity = NULL,       \
+        .capacity = (private_capacity), .count = 0, .root = 0, .free_list = 0, \
         .sizeof_type = sizeof(private_type_name),                              \
         .key_offset = offsetof(private_type_name, private_key_field),          \
         .comparator = (private_comparator),                                    \
@@ -277,7 +272,7 @@ runtime. */
     private_optional_cap,                                                      \
     private_array_compound_literal...                                          \
 )                                                                              \
-    (__extension__({                                                           \
+    (struct { struct CCC_Array_tree_map private; }){(__extension__({           \
         typeof(*private_array_compound_literal)                                \
             *private_array_tree_map_initializer_list                           \
             = private_array_compound_literal;                                  \
@@ -332,7 +327,7 @@ runtime. */
             }                                                                  \
         }                                                                      \
         private_array_tree_map;                                                \
-    }))
+    }))}.private
 
 /** @internal */
 #define CCC_private_array_tree_map_with_capacity(                              \
@@ -342,7 +337,7 @@ runtime. */
     private_allocator,                                                         \
     private_cap                                                                \
 )                                                                              \
-    (__extension__({                                                           \
+    (struct { struct CCC_Array_tree_map private; }){(__extension__({           \
         struct CCC_Array_tree_map private_array_tree_map                       \
             = CCC_private_array_tree_map_default(                              \
                 private_type_name, private_key_field, private_comparator       \
@@ -351,7 +346,7 @@ runtime. */
             &private_array_tree_map, private_cap, &(private_allocator)         \
         );                                                                     \
         private_array_tree_map;                                                \
-    }))
+    }))}.private
 
 /** @internal */
 #define CCC_private_array_tree_map_with_storage(                               \
