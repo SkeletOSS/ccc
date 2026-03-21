@@ -6,7 +6,6 @@ var traits_8h =
     [ "CCC_capacity", "traits_8h.html#ae6b2442930285cb2343ec96593776759", null ],
     [ "CCC_clear", "traits_8h.html#a130256931b2dc99e81678cf638c6a6af", null ],
     [ "CCC_clear_and_free", "traits_8h.html#af88ce87b927157c74dce0970339e201e", null ],
-    [ "CCC_clear_and_free_reserve", "traits_8h.html#a522e58700b40aaf7fedf3b951fca9b5f", null ],
     [ "CCC_contains", "traits_8h.html#ae4a399d979c7e3e284ddb395d6a42487", null ],
     [ "CCC_copy", "traits_8h.html#afcd2919ddd9d7ab34abf5988090af939", null ],
     [ "CCC_count", "traits_8h.html#a677dc640ef165bb424bd911d7fc32aa3", null ],
