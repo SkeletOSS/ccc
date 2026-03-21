@@ -21,6 +21,7 @@ limitations under the License.
 /** @endcond */
 
 #include "../buffer.h"
+#include "../types.h"
 
 /* NOLINTBEGIN(readability-identifier-naming) */
 

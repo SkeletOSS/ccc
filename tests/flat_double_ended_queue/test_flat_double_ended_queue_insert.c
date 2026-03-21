@@ -3,11 +3,12 @@
 #define TRAITS_USING_NAMESPACE_CCC
 #define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
 
+#include "ccc/buffer.h"
+#include "ccc/flat_double_ended_queue.h"
+#include "ccc/traits.h"
+#include "ccc/types.h"
 #include "checkers.h"
-#include "flat_double_ended_queue.h"
 #include "flat_double_ended_queue_utility.h"
-#include "traits.h"
-#include "types.h"
 #include "utility/allocate.h"
 
 check_static_begin(flat_double_ended_queue_test_insert_three) {

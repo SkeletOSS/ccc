@@ -158,7 +158,7 @@ specifiers which is a feature of C23. Not all compilers support this yet. */
     )                                                                          \
         (private_optional_storage_specifier struct {                           \
             static_assert(                                                     \
-                sizeof(private_bit_compound_literal) > 0,                      \
+                sizeof(private_bit_compound_literal),                          \
                 "Specify non-zero capacity of bits."                           \
             );                                                                 \
             static_assert(                                                     \

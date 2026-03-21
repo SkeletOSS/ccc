@@ -24,7 +24,7 @@ check_static_begin(flat_priority_queue_test_insert_iterate_pop) {
         );
     for (size_t i = 0; i < num_nodes; ++i) {
         struct Val val = {
-            /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+            /* NOLINTNEXTLINE */
             .val = (int)((size_t)rand() % (num_nodes + 1)),
             .id = (int)i,
         };
@@ -65,7 +65,7 @@ check_static_begin(flat_priority_queue_test_priority_removal) {
             &flat_priority_queue,
             &(CCC_Allocator){},
             (struct Val){
-                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                /* NOLINTNEXTLINE */
                 .val = (int)((size_t)rand() % (num_nodes + 1)),
                 .id = (int)i,
             }
@@ -104,7 +104,7 @@ check_static_begin(flat_priority_queue_test_priority_update) {
             &flat_priority_queue,
             &(CCC_Allocator){},
             (struct Val){
-                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                /* NOLINTNEXTLINE */
                 .val = (int)((size_t)rand() % (num_nodes + 1)),
                 .id = (int)i,
             }
@@ -154,7 +154,7 @@ check_static_begin(flat_priority_queue_test_priority_update_with) {
             &flat_priority_queue,
             &(CCC_Allocator){},
             (struct Val){
-                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                /* NOLINTNEXTLINE */
                 .val = (int)((size_t)rand() % (num_nodes + 1)),
                 .id = (int)i,
             }

@@ -3,9 +3,10 @@
 
 #include <stddef.h>
 
-#include "buffer.h"
+#include "ccc/buffer.h"
+#include "ccc/flat_double_ended_queue.h"
+#include "ccc/types.h"
 #include "checkers.h"
-#include "flat_double_ended_queue.h"
 
 CCC_Order compare_ints(CCC_Comparator_arguments arguments);
 

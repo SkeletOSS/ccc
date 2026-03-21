@@ -29,7 +29,7 @@ val_update(CCC_Arguments const u) {
 
 size_t
 rand_range(size_t const min, size_t const max) {
-    /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+    /* NOLINTNEXTLINE */
     return min + ((size_t)rand() / (RAND_MAX / (max - min + 1) + 1));
 }
 

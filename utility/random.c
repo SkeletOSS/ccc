@@ -13,7 +13,7 @@ int
 rand_range(int const min, int const max) {
     unsigned mn = (unsigned)min;
     unsigned mx = (unsigned)max;
-    /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp) */
+    /* NOLINTNEXTLINE */
     return (int)(mn + ((unsigned)rand() / (RAND_MAX / (mx - mn + 1) + 1)));
 }
 
@@ -27,7 +27,7 @@ rand_shuffle(
     uint8_t *elem_view = elems;
     size_t const step = elem_size * sizeof(uint8_t);
     for (size_t i = 0; i < n - 1; ++i) {
-        /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp) */
+        /* NOLINTNEXTLINE */
         size_t const rnd = (size_t)rand();
         size_t const j = i + (rnd / (RAND_MAX / (n - i) + 1));
         memcpy(temp, elem_view + (j * step), elem_size);

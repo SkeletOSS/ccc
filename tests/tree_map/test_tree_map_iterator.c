@@ -226,7 +226,7 @@ check_static_begin(tree_map_test_iterate_removal) {
         (void)swap_entry(
             &s,
             &(struct Val){
-                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                /* NOLINTNEXTLINE */
                 .key = (int)((size_t)rand() % (num_nodes + 1)),
                 .val = (int)i,
             }
@@ -265,7 +265,7 @@ check_static_begin(tree_map_test_iterate_remove_key_value_reinsert) {
         (void)swap_entry(
             &s,
             &(struct Val){
-                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                /* NOLINTNEXTLINE */
                 .key = (int)((size_t)rand() % (num_nodes + 1)),
                 .val = (int)i,
             }

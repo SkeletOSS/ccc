@@ -35,7 +35,7 @@ check_static_begin(priority_queue_test_insert_iterate_pop) {
         struct Val const *const pushed = push(
             &priority_queue,
             &(struct Val){
-                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                /* NOLINTNEXTLINE */
                 .val = (int)((size_t)rand() % (HEAP_CAP + 1)),
                 .id = (int)i,
             }
@@ -74,7 +74,7 @@ check_static_begin(priority_queue_test_priority_removal) {
         struct Val const *const pushed = push(
             &priority_queue,
             &(struct Val){
-                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                /* NOLINTNEXTLINE */
                 .val = (int)((size_t)rand() % (HEAP_CAP + 1)),
                 .id = (int)i,
             }
@@ -116,7 +116,7 @@ check_static_begin(priority_queue_test_priority_update) {
         struct Val const *const pushed = push(
             &priority_queue,
             &(struct Val){
-                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                /* NOLINTNEXTLINE */
                 .val = (int)((size_t)rand() % (HEAP_CAP + 1)),
                 .id = (int)i,
             }
@@ -170,7 +170,7 @@ check_static_begin(priority_queue_test_priority_update_with) {
         struct Val const *const pushed = push(
             &priority_queue,
             &(struct Val){
-                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                /* NOLINTNEXTLINE */
                 .val = (int)((size_t)rand() % (HEAP_CAP + 1)),
                 .id = (int)i,
             }
@@ -218,7 +218,7 @@ check_static_begin(priority_queue_test_priority_increase) {
         struct Val const *const pushed = push(
             &priority_queue,
             &(struct Val){
-                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                /* NOLINTNEXTLINE */
                 .val = (int)((size_t)rand() % (HEAP_CAP + 1)),
                 .id = (int)i,
             }
@@ -286,7 +286,7 @@ check_static_begin(priority_queue_test_priority_increase_with) {
         struct Val const *const pushed = push(
             &priority_queue,
             &(struct Val){
-                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                /* NOLINTNEXTLINE */
                 .val = (int)((size_t)rand() % (HEAP_CAP + 1)),
                 .id = (int)i,
             }
@@ -343,7 +343,7 @@ check_static_begin(priority_queue_test_priority_decrease) {
         struct Val const *const pushed = push(
             &priority_queue,
             &(struct Val){
-                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                /* NOLINTNEXTLINE */
                 .val = (int)((size_t)rand() % (HEAP_CAP + 1)),
                 .id = (int)i,
             }
@@ -411,7 +411,7 @@ check_static_begin(priority_queue_test_priority_decrease_with) {
         struct Val const *const pushed = push(
             &priority_queue,
             &(struct Val){
-                /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+                /* NOLINTNEXTLINE */
                 .val = (int)((size_t)rand() % (HEAP_CAP + 1)),
                 .id = (int)i,
             }

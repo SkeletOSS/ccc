@@ -116,7 +116,7 @@ to the user. GCC is not so forgiving. */
     )                                                                          \
         (struct {                                                              \
             static_assert(                                                     \
-                sizeof(private_compound_literal_array) > 0,                    \
+                sizeof(private_compound_literal_array),                        \
                 "provide non-zero capacity compound literal array"             \
             );                                                                 \
             static_assert(                                                     \

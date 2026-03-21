@@ -5,10 +5,11 @@
 #define TRAITS_USING_NAMESPACE_CCC
 #define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
 
+#include "ccc/buffer.h"
+#include "ccc/flat_double_ended_queue.h"
+#include "ccc/traits.h"
+#include "ccc/types.h"
 #include "checkers.h"
-#include "flat_double_ended_queue.h"
-#include "traits.h"
-#include "types.h"
 #include "utility/stack_allocator.h"
 
 static Flat_double_ended_queue const byte_ring

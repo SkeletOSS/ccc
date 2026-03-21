@@ -187,7 +187,7 @@ check_static_begin(array_adaptive_map_test_iterate_removal) {
     srand(1);
     size_t const num_nodes = 1000;
     for (size_t i = 0; i < num_nodes; ++i) {
-        /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+        /* NOLINTNEXTLINE */
         (void)swap_handle(
             &s,
             &(struct Val){.id = (int)((size_t)rand() % (num_nodes + 1)),
@@ -223,7 +223,7 @@ check_static_begin(array_adaptive_map_test_iterate_remove_key_value_reinsert) {
     srand((unsigned)time(NULL));
     size_t const num_nodes = 1000;
     for (size_t i = 0; i < num_nodes; ++i) {
-        /* NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp). */
+        /* NOLINTNEXTLINE */
         (void)swap_handle(
             &s,
             &(struct Val){

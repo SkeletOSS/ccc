@@ -315,12 +315,12 @@ compressed file has a header that can be used to reconstruct the data. */
 static void
 zip_file(SV_Str_view const to_compress, CCC_Allocator const *const allocator) {
     FILE *const f = fopen(SV_begin(to_compress), "r");
-    defer {
-        (void)fclose(f);
-    }
     if (!f) {
         (void)fprintf(stderr, "%s\n", strerror(errno));
         return;
+    }
+    defer {
+        (void)fclose(f);
     }
     size_t const fsize = file_size(f);
     printf("Zip %s (%zu bytes).\n", SV_begin(to_compress), fsize);
@@ -663,10 +663,10 @@ write_to_file(
 
     /* Path is now correct and verified try to create file. */
     FILE *const cccz = fopen(path_to_cccz, "w");
+    check(cccz, (void)fprintf(stderr, "%s", strerror(errno)););
     defer {
         (void)fclose(cccz);
     }
-    check(cccz, (void)fprintf(stderr, "%s", strerror(errno)););
 
     /* When writing bytes we need every bit to make it so use many checks. */
     size_t writ = writebytes(cccz, &header->magic, sizeof(header->magic));
@@ -786,12 +786,12 @@ unzip_file(SV_Str_view unzip, CCC_Allocator const *const allocator) {
 
     /* Checks are good and path is set this will be a fresh copy. */
     FILE *const copy_of_original = fopen(path, "w");
-    defer {
-        (void)fclose(copy_of_original);
-    }
     if (!copy_of_original) {
         (void)fprintf(stderr, "%s\n", strerror(errno));
         return;
+    }
+    defer {
+        (void)fclose(copy_of_original);
     }
     reconstruct_text(copy_of_original, &tree, &he.file_bits);
     printf("Unzipped %s (%zu bytes).\n", path, file_size(copy_of_original));
@@ -806,7 +806,9 @@ read_from_file(SV_Str_view const unzip, CCC_Allocator const *const allocator) {
     check(has_suffix);
     FILE *const cccz = fopen(SV_begin(unzip), "r");
     defer {
-        (void)fclose(cccz);
+        if (cccz) {
+            (void)fclose(cccz);
+        }
     }
     check(cccz, (void)fprintf(stderr, "%s\n", strerror(errno)););
     printf("Unzip %s (%zu bytes).\n", SV_begin(unzip), file_size(cccz));
