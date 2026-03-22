@@ -115,7 +115,7 @@ struct Path_memo {
     /** The key for the path memo. */
     char ch;
     /** The index in the bit queue where we have seen this path before. */
-    size_t path_start_index;
+    size_t bitq_start_index;
     /** The length of the known path we have already pushed to the queue. */
     size_t path_len;
 };
@@ -190,7 +190,7 @@ static uint64_t hash_char(CCC_Key_arguments);
 static CCC_Order char_order(CCC_Key_comparator_arguments);
 static CCC_Order order_freqs(CCC_Comparator_arguments);
 static CCC_Order path_memo_order(CCC_Key_comparator_arguments);
-static struct Path_memo character_path_in_bit_queue(
+static struct Path_memo append_path_to_bit_queue(
     struct Huffman_tree *, struct Bit_queue *, char, CCC_Allocator const *
 );
 static struct Bit_queue
@@ -506,37 +506,43 @@ build_encoding_bitq(
     }
     check(capacity(&path_memos).count >= tree->num_leaves);
     foreach_filechar(f, c, {
-        /* Really testing the limits of our _with interface, lazy evaluation,
-           and closures here. The entry interface allows us to express both
-           outcomes of our memoization. We either find the element and re-record
-           the path in the path bit queue or we insert a newly formed path and
-           remember where it starts and ends in the bit queue. */
-        struct Path_memo const *const path = flat_hash_map_or_insert_with(
-            flat_hash_map_and_modify_with(
-                flat_hash_map_entry_wrap(&path_memos, c, allocator),
-                struct Path_memo const *,
-                {
-                    size_t const end = T->path_start_index + T->path_len;
-                    for (size_t i = T->path_start_index; i < end; ++i) {
-                        CCC_Tribool const bit = bitq_test(&character_paths, i);
-                        check(bit != CCC_TRIBOOL_ERROR);
-                        bitq_push_back(&character_paths, bit, allocator);
-                    }
-                }
-            ),
-            character_path_in_bit_queue(tree, &character_paths, *c, allocator)
+        /* The entry interface allows us to express the complete memoization
+           technique with a single query into our hash map. We either find the
+           element and re-record the path in the path bit queue or we insert a
+           newly formed path and remember where it starts and ends in the bit
+           queue. They _with variants offer lazy evaluation of the final
+           argument only on Vacant entries. This means the expensive function
+           call only executes if the entry is Vacant which is critical because
+           appending to the bit queue is a side effect. */
+        CCC_Entry const *const entry = flat_hash_map_try_insert_with(
+            &path_memos,
+            *c,
+            allocator,
+            append_path_to_bit_queue(tree, &character_paths, *c, allocator)
         );
-        check(path);
+        check(!insert_error(entry));
+        if (occupied(entry)) {
+            struct Path_memo const *const seen_path = unwrap(entry);
+            size_t const end
+                = seen_path->bitq_start_index + seen_path->path_len;
+            for (size_t i = seen_path->bitq_start_index; i < end; ++i) {
+                CCC_Tribool const bit = bitq_test(&character_paths, i);
+                check(bit != CCC_TRIBOOL_ERROR);
+                bitq_push_back(&character_paths, bit, allocator);
+            }
+        }
     });
     return character_paths;
 }
 
-/** Finds the path to the current character in the encoding tree and adds it
-as an entry in the path memo map. This function modifies the tree nodes by
-altering their iterator field during the DFS, but it restores all nodes to their
-original state before returning. */
+/** Finds the path to the current character in the encoding tree and appends
+it to the bit queue using the encoding tree. This function modifies the tree
+nodes by altering their iterator field during the DFS, but it restores all nodes
+to their original state before returning. The path memo representing this new
+path's start position and length in the bit queue is returned. Assumes the
+character can be found, otherwise exits the program. */
 static struct Path_memo
-character_path_in_bit_queue(
+append_path_to_bit_queue(
     struct Huffman_tree *const tree,
     struct Bit_queue *const bq,
     char const c,
@@ -544,7 +550,7 @@ character_path_in_bit_queue(
 ) {
     struct Path_memo path = {
         .ch = c,
-        .path_start_index = bitq_count(bq),
+        .bitq_start_index = bitq_count(bq),
     };
     size_t cur = tree->root;
     /* An iterative depth first search is convenient because the bit path in
@@ -574,7 +580,8 @@ character_path_in_bit_queue(
     for (; cur; cur = parent_index(tree, cur)) {
         node_at(tree, cur)->child_index = 0;
     }
-    path.path_len = bitq_count(bq) - path.path_start_index;
+    path.path_len = bitq_count(bq) - path.bitq_start_index;
+    check(path.path_len);
     return path;
 }
 
