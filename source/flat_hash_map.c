@@ -1821,10 +1821,11 @@ hashed data and the full comparison will evaluate to true. Note that this
 method inevitably forces a call to the comparison callback function on every
 match so an efficient comparison is beneficial. */
 static inline struct Match_mask
-match_tag(struct Group const g, struct CCC_Flat_hash_map_tag const m) {
+match_tag(struct Group const group, struct CCC_Flat_hash_map_tag const tag) {
     return (struct Match_mask){
-        (typeof((struct Match_mask){}.v))
-            _mm_movemask_epi8(_mm_cmpeq_epi8(g.v, _mm_set1_epi8((int8_t)m.v))),
+        (typeof((struct Match_mask){}.v))_mm_movemask_epi8(
+            _mm_cmpeq_epi8(group.v, _mm_set1_epi8((int8_t)tag.v))
+        ),
     };
 }
 
@@ -1832,16 +1833,16 @@ match_tag(struct Group const g, struct CCC_Flat_hash_map_tag const m) {
 group g that are the empty special constant. The user must interpret this 0
 based index in the context of the probe sequence. */
 static inline struct Match_mask
-match_empty(struct Group const g) {
-    return match_tag(g, (struct CCC_Flat_hash_map_tag){TAG_EMPTY});
+match_empty(struct Group const group) {
+    return match_tag(group, (struct CCC_Flat_hash_map_tag){TAG_EMPTY});
 }
 
 /** Returns 0 based match with every bit on representing those tags in
 group g that are the deleted special constant. The user must interpret this 0
 based index in the context of the probe sequence. */
 static inline struct Match_mask
-match_deleted(struct Group const g) {
-    return match_tag(g, (struct CCC_Flat_hash_map_tag){TAG_DELETED});
+match_deleted(struct Group const group) {
+    return match_tag(group, (struct CCC_Flat_hash_map_tag){TAG_DELETED});
 }
 
 /** Returns a 0 based match with every bit on representing those tags
@@ -1849,19 +1850,19 @@ in the group that are the special constant empty or deleted. These are easy
 to find because they are the one tags in a group with the most significant
 bit on. */
 static inline struct Match_mask
-match_empty_deleted(struct Group const g) {
+match_empty_deleted(struct Group const group) {
     static_assert(sizeof(int) >= sizeof(uint16_t));
     return (struct Match_mask){
-        (typeof((struct Match_mask){}.v))_mm_movemask_epi8(g.v)};
+        (typeof((struct Match_mask){}.v))_mm_movemask_epi8(group.v)};
 }
 
 /** Returns a 0 based match with every bit on representing those tags in the
 group that are occupied by a hashed value. These are those tags that have the
 most significant bit off and the lower 7 bits occupied by user hash. */
 static inline struct Match_mask
-match_full(struct Group const g) {
+match_full(struct Group const group) {
     return (struct Match_mask){
-        (typeof((struct Match_mask){}.v))~match_empty_deleted(g).v};
+        (typeof((struct Match_mask){}.v))~match_empty_deleted(group).v};
 }
 
 /** Matches all full tag slots into a mask excluding the starting position and
@@ -1872,10 +1873,10 @@ range from [0, start_tag] are zeroed out in the mask.
 
 Assumes start tag is less than group size. */
 static inline struct Match_mask
-match_leading_full(struct Group const g, size_t const start_tag) {
+match_leading_full(struct Group const group, size_t const start_tag) {
     assert(start_tag < GROUP_COUNT);
     return (struct Match_mask){
-        (typeof((struct Match_mask){}.v))(~match_empty_deleted(g).v)
+        (typeof((struct Match_mask){}.v))(~match_empty_deleted(group).v)
             & (MATCH_MASK_0TH_TAG_OFF << start_tag),
     };
 }
@@ -1924,9 +1925,9 @@ TAG_FULL = 0b0101_1101 -> 0b1000_000
 The hashed bits are lost because the full slot has the high bit off and
 therefore is not a match for the constants mask. */
 static inline struct Group
-group_convert_constant_to_empty_and_full_to_deleted(struct Group const g) {
+group_convert_constant_to_empty_and_full_to_deleted(struct Group const group) {
     __m128i const zero = _mm_setzero_si128();
-    __m128i const match_mask_constants = _mm_cmpgt_epi8(zero, g.v);
+    __m128i const match_mask_constants = _mm_cmpgt_epi8(zero, group.v);
     return (struct Group){
         _mm_or_si128(match_mask_constants, _mm_set1_epi8((int8_t)TAG_DELETED)),
     };
@@ -2322,25 +2323,25 @@ static_assert(
 );
 
 static inline unsigned
-count_trailing_zeros(struct Match_mask const m) {
+count_trailing_zeros(struct Match_mask const mask) {
     static_assert(
         __builtin_ctz(0x8000) == GROUP_COUNT - 1,
         "Counting trailing zeros will always result in a valid mask "
         "based on struct Match_mask width if the mask is not 0, even though "
         "m is implicitly widened to an int."
     );
-    return m.v ? (unsigned)__builtin_ctz(m.v) : GROUP_COUNT;
+    return mask.v ? (unsigned)__builtin_ctz(mask.v) : GROUP_COUNT;
 }
 
 static inline unsigned
-count_leading_zeros(struct Match_mask const m) {
+count_leading_zeros(struct Match_mask const mask) {
     static_assert(
         sizeof((struct Match_mask){}.v) * 2UL == sizeof(unsigned),
         "a struct Match_mask will be implicitly widened to exactly twice "
         "its width if non-zero due to builtin functions available."
     );
-    return m.v ? (unsigned)__builtin_clz(((unsigned)m.v) << GROUP_COUNT)
-               : GROUP_COUNT;
+    return mask.v ? (unsigned)__builtin_clz(((unsigned)mask.v) << GROUP_COUNT)
+                  : GROUP_COUNT;
 }
 
 static inline unsigned
