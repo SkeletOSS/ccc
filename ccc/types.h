@@ -91,7 +91,9 @@ when the underlying array is resized; a handle remains valid because it is an
 index not a pointer. */
 typedef size_t CCC_Handle_index;
 
-/** @brief The result of a range query on iterable containers.
+/** @brief The result of a range query on iterable containers. Handles are
+stable indices into an array until removed, regardless of other insertions,
+removals, or array resizing.
 
 A range provides a view all elements that fit the equals range criteria
 of search-by-key containers. Use the provided range iteration functions in
@@ -104,7 +106,9 @@ typedef struct {
     CCC_Handle_index end;
 } CCC_Handle_range;
 
-/** @brief The result of a range_reverse query on iterable containers.
+/** @brief The result of a range_reverse query on iterable containers. Handles
+are stable indices into an array until removed, regardless of other insertions,
+removals, or array resizing.
 
 A range_reverse provides a view all elements that fit the equals range_reverse
 criteria of search-by-key containers. Use the provided range iteration functions
@@ -468,9 +472,9 @@ field without changing the other. It also encourages users to opt for inline
 compound literal construction passing or accurate variable naming when creating
 a modifier instance for better code readability. */
 typedef struct {
-    /** The comparison function to be passed to comparing operation. */
+    /** The modifier function to be passed to operation. */
     CCC_Modifier_interface *const modify;
-    /** Additional state to pass to the comparison. */
+    /** Additional state to pass to the modification. */
     void *const context;
 } CCC_Modifier;
 
