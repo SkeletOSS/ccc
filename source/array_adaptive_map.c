@@ -611,7 +611,11 @@ CCC_array_adaptive_map_copy(
     struct CCC_Array_adaptive_map_node *const destination_nodes
         = destination->nodes;
     size_t const destination_cap = destination->capacity;
-    *destination = *source;
+
+    destination->free_list = source->free_list;
+    destination->root = source->root;
+    destination->count = source->count;
+
     destination->data = destination_data;
     destination->nodes = destination_nodes;
     destination->capacity = destination_cap;

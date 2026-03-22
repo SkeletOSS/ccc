@@ -17,6 +17,25 @@ static Array_adaptive_map static_map = array_adaptive_map_with_storage(
     (struct Val[SMALL_FIXED_CAP]){}
 );
 
+static Array_adaptive_map
+construct_empty(void) {
+    Array_adaptive_map this = array_adaptive_map_default(
+        struct Val,
+        id,
+        (CCC_Key_comparator){
+            .compare = id_order,
+        }
+    );
+    return this;
+}
+
+check_static_begin(array_adaptive_map_construct_empty) {
+    Array_adaptive_map constructed = construct_empty();
+    check(is_empty(&constructed), CCC_TRUE);
+    check(validate(&constructed), CCC_TRUE);
+    check_end();
+}
+
 check_static_begin(array_adaptive_map_test_static) {
     check(array_adaptive_map_capacity(&static_map).count, SMALL_FIXED_CAP);
     check(array_adaptive_map_count(&static_map).count, 0);
@@ -423,6 +442,7 @@ check_static_begin(array_adaptive_map_test_init_with_capacity_fail) {
 int
 main(void) {
     return check_run(
+        array_adaptive_map_construct_empty(),
         array_adaptive_map_test_static(),
         array_adaptive_map_test_empty(),
         array_adaptive_map_test_with_literal(),

@@ -30,7 +30,7 @@ flat_hash_map_int_order(CCC_Key_comparator_arguments const order) {
     return (left > *right) - (left < *right);
 }
 
-static CCC_Flat_hash_map static_fh = flat_hash_map_with_storage(
+static Flat_hash_map static_fh = flat_hash_map_with_storage(
     key,
     ((CCC_Hasher){
         .hash = flat_hash_map_int_to_u64,
@@ -38,6 +38,25 @@ static CCC_Flat_hash_map static_fh = flat_hash_map_with_storage(
     }),
     (struct Val[SMALL_FIXED_CAP]){}
 );
+
+static Flat_hash_map
+construct_empty(void) {
+    return flat_hash_map_default(
+        struct Val,
+        key,
+        (CCC_Hasher){
+            .hash = flat_hash_map_int_to_u64,
+            .compare = flat_hash_map_id_order,
+        }
+    );
+}
+
+check_static_begin(flat_hash_map_construct_empty) {
+    Flat_hash_map constructed = construct_empty();
+    check(is_empty(&constructed), CCC_TRUE);
+    check(validate(&constructed), CCC_TRUE);
+    check_end();
+}
 
 check_static_begin(flat_hash_map_test_static_initialize) {
     check(flat_hash_map_capacity(&static_fh).count, SMALL_FIXED_CAP);
@@ -575,6 +594,7 @@ check_static_begin(flat_hash_map_test_with_anonymous_struct) {
 int
 main(void) {
     return check_run(
+        flat_hash_map_construct_empty(),
         flat_hash_map_test_static_initialize(),
         flat_hash_map_test_with_literal(),
         flat_hash_map_test_copy_no_allocate(),

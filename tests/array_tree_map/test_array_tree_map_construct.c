@@ -17,6 +17,24 @@ static Array_tree_map static_map = array_tree_map_with_storage(
     (struct Val[SMALL_FIXED_CAP]){}
 );
 
+static Array_tree_map
+construct_empty(void) {
+    return array_tree_map_default(
+        struct Val,
+        id,
+        (CCC_Key_comparator){
+            .compare = id_order,
+        }
+    );
+}
+
+check_static_begin(array_tree_map_construct_empty) {
+    Array_tree_map constructed = construct_empty();
+    check(is_empty(&constructed), CCC_TRUE);
+    check(validate(&constructed), CCC_TRUE);
+    check_end();
+}
+
 check_static_begin(array_tree_map_test_static) {
     check(array_tree_map_capacity(&static_map).count, SMALL_FIXED_CAP);
     check(array_tree_map_count(&static_map).count, 0);
@@ -462,6 +480,7 @@ check_static_begin(array_tree_map_test_context_with_allocator) {
 int
 main(void) {
     return check_run(
+        array_tree_map_construct_empty(),
         array_tree_map_test_static(),
         array_tree_map_test_empty(),
         array_tree_map_test_with_literal(),

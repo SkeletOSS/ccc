@@ -1425,14 +1425,17 @@ rehash_resize(
             group_start += GROUP_COUNT;
         }
     }
-    new_map.remain -= map->count;
-    new_map.count = map->count;
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
         .context = allocator->context,
     });
-    *map = new_map;
+    map->data = new_map.data;
+    map->tag = new_map.tag;
+    map->remain = new_map.remain - map->count;
+    map->mask = new_map.mask;
+    map->key_offset = new_map.key_offset;
+    map->sizeof_type = new_map.sizeof_type;
     return CCC_RESULT_OK;
 }
 

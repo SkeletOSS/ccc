@@ -732,7 +732,11 @@ CCC_array_tree_map_copy(
         = destination->nodes;
     Parity_block *const destination_parity = destination->parity;
     size_t const destination_cap = destination->capacity;
-    *destination = *source;
+
+    destination->root = source->root;
+    destination->free_list = source->free_list;
+    destination->count = source->count;
+
     destination->data = destination_data;
     destination->nodes = destination_nodes;
     destination->parity = destination_parity;
