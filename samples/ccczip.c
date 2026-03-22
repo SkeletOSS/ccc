@@ -190,12 +190,8 @@ static uint64_t hash_char(CCC_Key_arguments);
 static CCC_Order char_order(CCC_Key_comparator_arguments);
 static CCC_Order order_freqs(CCC_Comparator_arguments);
 static CCC_Order path_memo_order(CCC_Key_comparator_arguments);
-static void memoize_path(
-    struct Huffman_tree *,
-    Flat_hash_map *,
-    struct Bit_queue *,
-    char,
-    CCC_Allocator const *
+static struct Path_memo character_path_in_bit_queue(
+    struct Huffman_tree *, struct Bit_queue *, char, CCC_Allocator const *
 );
 static struct Bit_queue
 build_encoding_bitq(FILE *, struct Huffman_tree *, CCC_Allocator const *);
@@ -420,7 +416,7 @@ build_encoding_priority_queue(
         struct Character_frequency *const ins = flat_hash_map_or_insert_with(
             flat_hash_map_and_modify_with(
                 flat_hash_map_entry_wrap(&frequencies, c, allocator),
-                struct Character_frequency,
+                struct Character_frequency *,
                 { ++T->freq; }
             ),
             (struct Character_frequency){
@@ -437,11 +433,9 @@ build_encoding_priority_queue(
     /* For a Buffer based tree 0 is the NULL node so we can't have actual data
        we want at that index in the tree. */
     tree->tree_storage = buffer_from(
-        *allocator,
-        tree->num_nodes + 1,
-        (struct Huffman_node[]){(struct Huffman_node){}}
+        *allocator, tree->num_nodes + 1, (struct Huffman_node[]){{}}
     );
-    check(capacity(&tree->tree_storage).count >= tree->num_nodes + 1);
+    check(count(&tree->tree_storage).count == 1);
     /* Use a Buffer to simply push back elements we will heapify at the end. */
     Buffer flat_priority_queue_storage = buffer_with_capacity(
         struct Pair_node, *allocator, flat_hash_map_count(&frequencies).count
@@ -489,7 +483,7 @@ build_encoding_bitq(
     struct Huffman_tree *const tree,
     CCC_Allocator const *const allocator
 ) {
-    struct Bit_queue ret = {
+    struct Bit_queue character_paths = {
         .bs = bitset_default(),
     };
     /* By memoizing known bit sequences we can save significant time by not
@@ -497,7 +491,7 @@ build_encoding_bitq(
        alphabets aka trees with many leaves. An array of 0-256 elements as a map
        could achieve the same result faster but it would waste much more space.
        It is rare to have a file use all 256 possible character values. */
-    Flat_hash_map memo = CCC_flat_hash_map_with_capacity(
+    Flat_hash_map path_memos = CCC_flat_hash_map_with_capacity(
         struct Path_memo,
         ch,
         ((CCC_Hasher){
@@ -508,45 +502,50 @@ build_encoding_bitq(
         tree->num_leaves
     );
     defer {
-        (void)clear_and_free(&memo, &(CCC_Destructor){}, allocator);
+        (void)clear_and_free(&path_memos, &(CCC_Destructor){}, allocator);
     }
-    check(capacity(&memo).count >= tree->num_leaves);
+    check(capacity(&path_memos).count >= tree->num_leaves);
     foreach_filechar(f, c, {
-        struct Path_memo const *path = get_key_value(&memo, c);
-        if (path) {
-            size_t const end = path->path_start_index + path->path_len;
-            for (size_t i = path->path_start_index; i < end; ++i) {
-                CCC_Tribool const bit = bitq_test(&ret, i);
-                check(bit != CCC_TRIBOOL_ERROR);
-                bitq_push_back(&ret, bit, allocator);
-            }
-        } else {
-            memoize_path(tree, &memo, &ret, *c, allocator);
-        }
+        /* Really testing the limits of our _with interface, lazy evaluation,
+           and closures here. The entry interface allows us to express both
+           outcomes of our memoization. We either find the element and re-record
+           the path in the path bit queue or we insert a newly formed path and
+           remember where it starts and ends in the bit queue. */
+        struct Path_memo const *const path = flat_hash_map_or_insert_with(
+            flat_hash_map_and_modify_with(
+                flat_hash_map_entry_wrap(&path_memos, c, allocator),
+                struct Path_memo const *,
+                {
+                    size_t const end = T->path_start_index + T->path_len;
+                    for (size_t i = T->path_start_index; i < end; ++i) {
+                        CCC_Tribool const bit = bitq_test(&character_paths, i);
+                        check(bit != CCC_TRIBOOL_ERROR);
+                        bitq_push_back(&character_paths, bit, allocator);
+                    }
+                }
+            ),
+            character_path_in_bit_queue(tree, &character_paths, *c, allocator)
+        );
+        check(path);
     });
-    return ret;
+    return character_paths;
 }
 
 /** Finds the path to the current character in the encoding tree and adds it
 as an entry in the path memo map. This function modifies the tree nodes by
 altering their iterator field during the DFS, but it restores all nodes to their
 original state before returning. */
-static void
-memoize_path(
+static struct Path_memo
+character_path_in_bit_queue(
     struct Huffman_tree *const tree,
-    Flat_hash_map *const fh,
     struct Bit_queue *const bq,
     char const c,
     CCC_Allocator const *const allocator
 ) {
-    struct Path_memo *const path = insert_entry(
-        flat_hash_map_entry_wrap(fh, &c, allocator),
-        &(struct Path_memo){
-            .ch = c,
-            .path_start_index = bitq_count(bq),
-        }
-    );
-    check(path);
+    struct Path_memo path = {
+        .ch = c,
+        .path_start_index = bitq_count(bq),
+    };
     size_t cur = tree->root;
     /* An iterative depth first search is convenient because the bit path in
        the queue can represent the exact path we are currently on. Just be
@@ -575,7 +574,8 @@ memoize_path(
     for (; cur; cur = parent_index(tree, cur)) {
         node_at(tree, cur)->child_index = 0;
     }
-    path->path_len = bitq_count(bq) - path->path_start_index;
+    path.path_len = bitq_count(bq) - path.path_start_index;
+    return path;
 }
 
 /** Compresses the Huffman tree by creating its representation as a Pre-Order

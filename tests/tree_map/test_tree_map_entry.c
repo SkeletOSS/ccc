@@ -715,7 +715,7 @@ check_static_begin(tree_map_test_entry_and_modify_with) {
     );
     int size = 30;
     CCC_Tree_map_entry *ent = tree_map_entry_wrap(&rom, &(int){-1});
-    ent = tree_map_and_modify_with(ent, struct Val, { T->val++; });
+    ent = tree_map_and_modify_with(ent, struct Val *, { T->val++; });
     check(count(&rom).count, 0);
     check(occupied(ent), false);
     check(unwrap(ent) == NULL, true);
@@ -727,7 +727,7 @@ check_static_begin(tree_map_test_entry_and_modify_with) {
     check(v != NULL, true);
     check(v->val, -1);
     check(v->key, -1);
-    ent = tree_map_and_modify_with(ent, struct Val, { T->val++; });
+    ent = tree_map_and_modify_with(ent, struct Val *, { T->val++; });
     v = unwrap(ent);
     check(v != NULL, true);
     check(v->key, -1);
@@ -739,14 +739,14 @@ check_static_begin(tree_map_test_entry_and_modify_with) {
 
     i += (size / 2);
     ent = tree_map_entry_wrap(&rom, &i);
-    ent = tree_map_and_modify_with(ent, struct Val, { T->val++; });
+    ent = tree_map_and_modify_with(ent, struct Val *, { T->val++; });
     check(occupied(ent), false);
     check(unwrap(ent) == NULL, true);
     check(count(&rom).count, i + 1);
     (void)tree_map_insert_or_assign_with(&rom, i, &allocator, val(i));
     check(validate(&rom), true);
     ent = tree_map_entry_wrap(&rom, &i);
-    ent = tree_map_and_modify_with(ent, struct Val, { T->val++; });
+    ent = tree_map_and_modify_with(ent, struct Val *, { T->val++; });
     v = unwrap(ent);
     check(v != NULL, true);
     check(v->val, i + 1);
@@ -758,14 +758,14 @@ check_static_begin(tree_map_test_entry_and_modify_with) {
 
     i = size;
     ent = tree_map_entry_wrap(&rom, &i);
-    ent = tree_map_and_modify_with(ent, struct Val, { T->val++; });
+    ent = tree_map_and_modify_with(ent, struct Val *, { T->val++; });
     check(occupied(ent), false);
     check(unwrap(ent) == NULL, true);
     check(count(&rom).count, i + 1);
     (void)tree_map_insert_or_assign_with(&rom, i, &allocator, val(i));
     check(validate(&rom), true);
     ent = tree_map_entry_wrap(&rom, &i);
-    ent = tree_map_and_modify_with(ent, struct Val, { T->val++; });
+    ent = tree_map_and_modify_with(ent, struct Val *, { T->val++; });
     v = unwrap(ent);
     check(v != NULL, true);
     check(v->val, i + 1);

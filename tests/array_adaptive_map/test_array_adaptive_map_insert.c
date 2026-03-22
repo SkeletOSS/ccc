@@ -240,7 +240,7 @@ check_static_begin(array_adaptive_map_test_array_api_functional) {
         CCC_Handle_index const h = or_insert(
             array_adaptive_map_and_modify_with(
                 array_adaptive_map_handle_wrap(&array_adaptive_map, &def.id),
-                struct Val,
+                struct Val *,
                 { T->val++; }
             ),
             &def,
@@ -626,7 +626,7 @@ check_static_begin(array_adaptive_map_test_resize_macros) {
                 array_adaptive_map_handle_wrap(
                     &array_adaptive_map, &shuffled_index
                 ),
-                struct Val,
+                struct Val *,
                 { T->val = shuffled_index; }
             ),
             &std_allocator,
@@ -741,7 +741,7 @@ check_static_begin(array_adaptive_map_test_resize_from_null_macros) {
                 array_adaptive_map_handle_wrap(
                     &array_adaptive_map, &shuffled_index
                 ),
-                struct Val,
+                struct Val *,
                 { T->val = shuffled_index; }
             ),
             &std_allocator,

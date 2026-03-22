@@ -264,11 +264,12 @@ pointer to the map this pointer could be any of the following.
 All of the above cases are covered by accepting the pointer at .data and only
 evaluating the argument once. This also allows the user to pass a compound
 literal to the first argument and eliminate any dangling references, such as
-`&(static User_defined_map_type){}`. However, to accept a map from all of these
-sources at compile or runtime, we must implement lazy initialization. This is
-because we can't initialize the tag array at compile time. By setting the tag
-field to NULL we will be able to tell if our map is initialized whether it is
-fixed size and has data or is dynamic and has not yet been given allocation. */
+`&(struct My_type[MY_POWER_OF_2_CAPACITY]){}`. However, to accept a map from all
+of these sources at compile or runtime, we must implement lazy initialization.
+This is because we can't initialize the tag array at compile time. By setting
+the tag field to NULL we will be able to tell if our map is initialized whether
+it is fixed size and has data or is dynamic and has not yet been given
+allocation. */
 #define CCC_private_flat_hash_map_for(                                         \
     private_type_name,                                                         \
     private_key_field,                                                         \
@@ -394,7 +395,9 @@ fixed size and has data or is dynamic and has not yet been given allocation. */
 The user facing docs clarify that T is a correctly typed reference to the
 desired data if occupied. */
 #define CCC_private_flat_hash_map_and_modify_with(                             \
-    flat_hash_map_entry_pointer, type_name, closure_over_T...                  \
+    flat_hash_map_entry_pointer,                                               \
+    typed_pointer_to_T,                                                        \
+    closure_over_pointer_to_T...                                               \
 )                                                                              \
     (__extension__({                                                           \
         __auto_type private_flat_hash_map_mod_ent_pointer                      \
@@ -406,12 +409,13 @@ desired data if occupied. */
                 = *private_flat_hash_map_mod_ent_pointer;                      \
             if (private_flat_hash_map_mod_with_ent.status                      \
                 & CCC_ENTRY_OCCUPIED) {                                        \
-                type_name *const T = CCC_private_flat_hash_map_data_at(        \
-                    private_flat_hash_map_mod_with_ent.map,                    \
-                    private_flat_hash_map_mod_with_ent.index                   \
-                );                                                             \
+                typed_pointer_to_T const T                                     \
+                    = CCC_private_flat_hash_map_data_at(                       \
+                        private_flat_hash_map_mod_with_ent.map,                \
+                        private_flat_hash_map_mod_with_ent.index               \
+                    );                                                         \
                 if (T) {                                                       \
-                    closure_over_T                                             \
+                    closure_over_pointer_to_T                                  \
                 }                                                              \
             }                                                                  \
         }                                                                      \

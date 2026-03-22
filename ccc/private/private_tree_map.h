@@ -291,7 +291,7 @@ void *CCC_private_tree_map_insert(
 
 /** @internal */
 #define CCC_private_tree_map_and_modify_with(                                  \
-    private_tree_map_entry_pointer, type_name, closure_over_T...               \
+    private_tree_map_entry_pointer, typed_pointer_to_T, closure_over_T...      \
 )                                                                              \
     (__extension__({                                                           \
         __auto_type private_tree_map_ent_pointer                               \
@@ -301,7 +301,8 @@ void *CCC_private_tree_map_insert(
         if (private_tree_map_ent_pointer) {                                    \
             private_tree_map_mod_ent = *private_tree_map_ent_pointer;          \
             if (private_tree_map_mod_ent.entry.status & CCC_ENTRY_OCCUPIED) {  \
-                type_name *const T = private_tree_map_mod_ent.entry.type;      \
+                typed_pointer_to_T const T                                     \
+                    = private_tree_map_mod_ent.entry.type;                     \
                 if (T) {                                                       \
                     closure_over_T                                             \
                 }                                                              \

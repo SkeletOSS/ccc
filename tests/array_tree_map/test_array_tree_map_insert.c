@@ -233,7 +233,7 @@ check_static_begin(array_tree_map_test_array_api_functional) {
         CCC_Handle_index const h = or_insert(
             array_tree_map_and_modify_with(
                 array_tree_map_handle_wrap(&map, &def.id),
-                struct Val,
+                struct Val *,
                 { T->val++; }
             ),
             &def,
@@ -596,7 +596,7 @@ check_static_begin(array_tree_map_test_resize_macros) {
         CCC_Handle_index const h = array_tree_map_or_insert_with(
             array_tree_map_and_modify_with(
                 array_tree_map_handle_wrap(&map, &shuffled_index),
-                struct Val,
+                struct Val *,
                 { T->val = shuffled_index; }
             ),
             &std_allocator,
@@ -693,7 +693,7 @@ check_static_begin(array_tree_map_test_resize_from_null_macros) {
         CCC_Handle_index const h = array_tree_map_or_insert_with(
             array_tree_map_and_modify_with(
                 array_tree_map_handle_wrap(&map, &shuffled_index),
-                struct Val,
+                struct Val *,
                 { T->val = shuffled_index; }
             ),
             &std_allocator,

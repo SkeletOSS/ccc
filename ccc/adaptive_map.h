@@ -424,15 +424,16 @@ to subsequent calls in the Entry Interface. */
 
 /** @brief Modify an Occupied entry with a closure over user type T.
 @param[in] adaptive_map_entry_pointer a pointer to the obtained entry.
-@param[in] type_name the name of the user type stored in the container.
+@param[in] typed_pointer_to_T the pointer type `My_type *` or `My_type const *`
+with which to interpret an occupied entry named T.
 @param[in] closure_over_T the code to be run on the reference to user type T,
 if Occupied. This may be a semicolon separated list of statements to execute on
 T or a section of code wrapped in braces {code here} which may be preferred
 for formatting.
 @return a compound literal reference to the modified entry if it was occupied
 or a vacant entry if it was vacant.
-@note T is a reference to the user type stored in the entry guaranteed to be
-non-NULL if the closure executes.
+@note T is a reference to the user type specified by the provided pointer
+argument stored in the entry guaranteed to be non-NULL if the closure executes.
 
 ```
 #define ADAPTIVE_MAP_USING_NAMESPACE_CCC
@@ -440,7 +441,7 @@ non-NULL if the closure executes.
 Adaptive_map_entry *entry =
     adaptive_map_and_modify_with(
         entry_wrap(&map, &k),
-        Word,
+        Word *,
         T->cnt++;
     );
 // Increment the count if found otherwise insert a default value.
@@ -448,7 +449,7 @@ Word *w =
     adaptive_map_or_insert_with(
         adaptive_map_and_modify_with(
             entry_wrap(&map, &k),
-            Word,
+            Word *,
             { T->cnt++; }
         ),
         (Word){.key = k, .cnt = 1}
@@ -459,11 +460,11 @@ Note that any code written is only evaluated if the entry is Occupied and the
 container can deliver the user type T. This means any function calls are lazily
 evaluated in the closure scope. */
 #define CCC_adaptive_map_and_modify_with(                                      \
-    adaptive_map_entry_pointer, type_name, closure_over_T...                   \
+    adaptive_map_entry_pointer, typed_pointer_to_T, closure_over_T...          \
 )                                                                              \
     &(struct { CCC_Adaptive_map_entry private; }){                             \
         CCC_private_adaptive_map_and_modify_with(                              \
-            adaptive_map_entry_pointer, type_name, closure_over_T              \
+            adaptive_map_entry_pointer, typed_pointer_to_T, closure_over_T     \
         )}                                                                     \
          .private
 

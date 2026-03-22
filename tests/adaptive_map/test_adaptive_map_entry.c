@@ -736,7 +736,7 @@ check_static_begin(adaptive_map_test_entry_and_modify_with) {
     );
     int size = 30;
     CCC_Adaptive_map_entry *ent = adaptive_map_entry_wrap(&om, &(int){-1});
-    ent = adaptive_map_and_modify_with(ent, struct Val, { T->val++; });
+    ent = adaptive_map_and_modify_with(ent, struct Val *, { T->val++; });
     check(count(&om).count, 0);
     check(occupied(ent), false);
     check(unwrap(ent) == NULL, true);
@@ -748,7 +748,7 @@ check_static_begin(adaptive_map_test_entry_and_modify_with) {
     check(v != NULL, true);
     check(v->val, -1);
     check(v->key, -1);
-    ent = adaptive_map_and_modify_with(ent, struct Val, { T->val++; });
+    ent = adaptive_map_and_modify_with(ent, struct Val *, { T->val++; });
     v = unwrap(ent);
     check(v != NULL, true);
     check(v->key, -1);
@@ -760,14 +760,14 @@ check_static_begin(adaptive_map_test_entry_and_modify_with) {
 
     i += (size / 2);
     ent = adaptive_map_entry_wrap(&om, &i);
-    ent = adaptive_map_and_modify_with(ent, struct Val, { T->val++; });
+    ent = adaptive_map_and_modify_with(ent, struct Val *, { T->val++; });
     check(occupied(ent), false);
     check(unwrap(ent) == NULL, true);
     check(count(&om).count, i + 1);
     (void)adaptive_map_insert_or_assign_with(&om, i, &allocator, val(i));
     check(validate(&om), true);
     ent = adaptive_map_entry_wrap(&om, &i);
-    ent = adaptive_map_and_modify_with(ent, struct Val, { T->val++; });
+    ent = adaptive_map_and_modify_with(ent, struct Val *, { T->val++; });
     v = unwrap(ent);
     check(v != NULL, true);
     check(v->val, i + 1);
@@ -779,14 +779,14 @@ check_static_begin(adaptive_map_test_entry_and_modify_with) {
 
     i = size;
     ent = adaptive_map_entry_wrap(&om, &i);
-    ent = adaptive_map_and_modify_with(ent, struct Val, { T->val++; });
+    ent = adaptive_map_and_modify_with(ent, struct Val *, { T->val++; });
     check(occupied(ent), false);
     check(unwrap(ent) == NULL, true);
     check(count(&om).count, i + 1);
     (void)adaptive_map_insert_or_assign_with(&om, i, &allocator, val(i));
     check(validate(&om), true);
     ent = adaptive_map_entry_wrap(&om, &i);
-    ent = adaptive_map_and_modify_with(ent, struct Val, { T->val++; });
+    ent = adaptive_map_and_modify_with(ent, struct Val *, { T->val++; });
     v = unwrap(ent);
     check(v != NULL, true);
     check(v->val, i + 1);
