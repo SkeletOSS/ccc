@@ -336,19 +336,19 @@ This graph shows which files directly or indirectly include this file:</div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map_pointer</td><td>a pointer to the obtained entry. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the name of the user type stored in the container. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">typed_pointer_to_T</td><td>the pointer type <code>My_type *</code> or <code>My_type const *</code> with which to interpret an occupied entry named T. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">closure_over_T</td><td>the code to be run on the reference to user type T, if Occupied. This may be a semicolon separated list of statements to execute on T or a section of code wrapped in braces {code here} which may be preferred for formatting. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a compound literal reference to the modified entry if it was occupied or a vacant entry if it was vacant. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>T is a reference to the user type stored in the entry guaranteed to be non-NULL if the closure executes.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>T is a reference to the user type specified by the provided pointer argument stored in the entry guaranteed to be non-NULL if the closure executes.</dd></dl>
 <div class="fragment"><div class="line"><span class="preprocessor">#define TREE_MAP_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="comment">// Increment the count if found otherwise do nothing.</span></div>
 <div class="line">Tree_map_entry *e =</div>
 <div class="line">    tree_map_and_modify_with(</div>
 <div class="line">        entry_wrap(&amp;map, &amp;k),</div>
-<div class="line">        Word,</div>
+<div class="line">        Word *,</div>
 <div class="line">        T-&gt;cnt++;</div>
 <div class="line">    );</div>
 <div class="line"><span class="comment">// Increment the count if found otherwise insert a default value.</span></div>
@@ -356,7 +356,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">    tree_map_or_insert_with(</div>
 <div class="line">        tree_map_and_modify_with(</div>
 <div class="line">            entry_wrap(&amp;map, &amp;k),</div>
-<div class="line">            Word,</div>
+<div class="line">            Word *,</div>
 <div class="line">            { T-&gt;cnt++; }</div>
 <div class="line">        ),</div>
 <div class="line">        (Word){.key = k, .cnt = 1}</div>
@@ -770,7 +770,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">            map_pointer, key, allocator_pointer, type_compound_literal         \</div>
 <div class="line">        )}                                                                     \</div>
 <div class="line">         .private</div>
-<div class="ttc" id="astructCCC__Entry_html"><div class="ttname"><a href="structCCC__Entry.html">CCC_Entry</a></div><div class="ttdoc">An Occupied or Vacant position in a searchable container.</div><div class="ttdef"><b>Definition:</b> types.h:151</div></div>
+<div class="ttc" id="astructCCC__Entry_html"><div class="ttname"><a href="structCCC__Entry.html">CCC_Entry</a></div><div class="ttdoc">An Occupied or Vacant position in a searchable container.</div><div class="ttdef"><b>Definition:</b> types.h:155</div></div>
 </div><!-- fragment -->
 <p>Inserts a new key value pair or overwrites the existing entry. </p>
 <dl class="params"><dt>Parameters</dt><dd>

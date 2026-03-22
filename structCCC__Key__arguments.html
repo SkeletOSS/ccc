@@ -102,24 +102,25 @@ $(document).ready(function(){initNavTree('structCCC__Key__arguments.html',''); i
 <p><code>#include &lt;<a class="el" href="types_8h_source.html">types.h</a>&gt;</code></p>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A read only reference to a key type matching the key field type used for hash containers. </p>
-<p>A reference to any context data is also provided. This the struct one can use to hash their values with their hash function. </p>
+<p>A reference to any context data is also provided. This the struct one can use to hash their values with their hash function.</p>
+<p>The pointers are const to bind the key closely with its context, if context is provided. This discourages the user from accidentally swapping one field without changing the other. It also encourages users to opt for inline compound literal construction passing or accurate variable naming when creating callback arguments for better code readability. </p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
 <tr class="memitem:abdedaed3704cb9551cd08acd727eb3e8"><td class="memItemLeft" align="right" valign="top">void const  *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Key__arguments.html#abdedaed3704cb9551cd08acd727eb3e8">key</a></td></tr>
 <tr class="separator:abdedaed3704cb9551cd08acd727eb3e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a308784b9bc729ed6b66a2fef977c57eb"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Key__arguments.html#a308784b9bc729ed6b66a2fef977c57eb">context</a></td></tr>
-<tr class="separator:a308784b9bc729ed6b66a2fef977c57eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f479605c7c36a5da44276888ab68365"><td class="memItemLeft" align="right" valign="top">void *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Key__arguments.html#a9f479605c7c36a5da44276888ab68365">context</a></td></tr>
+<tr class="separator:a9f479605c7c36a5da44276888ab68365"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
-<a id="a308784b9bc729ed6b66a2fef977c57eb" name="a308784b9bc729ed6b66a2fef977c57eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a308784b9bc729ed6b66a2fef977c57eb">&#9670;&#160;</a></span>context</h2>
+<a id="a9f479605c7c36a5da44276888ab68365" name="a9f479605c7c36a5da44276888ab68365"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f479605c7c36a5da44276888ab68365">&#9670;&#160;</a></span>context</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void* CCC_Key_arguments::context</td>
+          <td class="memname">void* const CCC_Key_arguments::context</td>
         </tr>
       </table>
 </div><div class="memdoc">

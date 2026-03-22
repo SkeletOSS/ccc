@@ -199,9 +199,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:a4b1d7885cf410b23c2e0c02ebd507270"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#a4b1d7885cf410b23c2e0c02ebd507270">CCC_array_tree_map_handle_wrap</a>(array_tree_map_pointer,  key_pointer)</td></tr>
 <tr class="memdesc:a4b1d7885cf410b23c2e0c02ebd507270"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtains a handle for the provided key in the map for future use.  <br /></td></tr>
 <tr class="separator:a4b1d7885cf410b23c2e0c02ebd507270"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a35851785cc6333e2940557b19ce2d3f7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#a35851785cc6333e2940557b19ce2d3f7">CCC_array_tree_map_and_modify_with</a>( map_array_pointer,  type_name,  closure_over_T...)</td></tr>
-<tr class="memdesc:a35851785cc6333e2940557b19ce2d3f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modify an Occupied handle with a closure over user type T.  <br /></td></tr>
-<tr class="separator:a35851785cc6333e2940557b19ce2d3f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0228a6f46df48e32f435a2e1586500a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#ac0228a6f46df48e32f435a2e1586500a">CCC_array_tree_map_and_modify_with</a>( map_array_pointer,  typed_pointer_to_T,  closure_over_T...)</td></tr>
+<tr class="memdesc:ac0228a6f46df48e32f435a2e1586500a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modify an Occupied handle with a closure over user type T.  <br /></td></tr>
+<tr class="separator:ac0228a6f46df48e32f435a2e1586500a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a6bac0d8863c2c2d41ca587680cd0d6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#a2a6bac0d8863c2c2d41ca587680cd0d6">CCC_array_tree_map_or_insert_with</a>( map_array_pointer,  allocator_pointer,  type_compound_literal...)</td></tr>
 <tr class="memdesc:a2a6bac0d8863c2c2d41ca587680cd0d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lazily insert the desired key value into the handle if it is Vacant.  <br /></td></tr>
 <tr class="separator:a2a6bac0d8863c2c2d41ca587680cd0d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -322,8 +322,8 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="separator:a30b7dbeddf349cf4ff3fa9d46ee1d684"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a35851785cc6333e2940557b19ce2d3f7" name="a35851785cc6333e2940557b19ce2d3f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a35851785cc6333e2940557b19ce2d3f7">&#9670;&#160;</a></span>CCC_array_tree_map_and_modify_with</h2>
+<a id="ac0228a6f46df48e32f435a2e1586500a" name="ac0228a6f46df48e32f435a2e1586500a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0228a6f46df48e32f435a2e1586500a">&#9670;&#160;</a></span>CCC_array_tree_map_and_modify_with</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -338,7 +338,7 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">type_name, </td>
+          <td class="paramname">typed_pointer_to_T, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -355,7 +355,7 @@ This graph shows which files directly or indirectly include this file:</div>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Array__tree__map__handle.html">CCC_Array_tree_map_handle</a> <span class="keyword">private</span>; }){                          \</div>
 <div class="line">        CCC_private_array_tree_map_and_modify_with(                            \</div>
-<div class="line">            map_array_pointer, type_name, closure_over_T                       \</div>
+<div class="line">            map_array_pointer, typed_pointer_to_T, closure_over_T              \</div>
 <div class="line">        )}                                                                     \</div>
 <div class="line">         .private</div>
 <div class="ttc" id="astructCCC__Array__tree__map__handle_html"><div class="ttname"><a href="structCCC__Array__tree__map__handle.html">CCC_Array_tree_map_handle</a></div><div class="ttdef"><b>Definition:</b> private_array_tree_map.h:155</div></div>
@@ -364,19 +364,19 @@ This graph shows which files directly or indirectly include this file:</div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map_array_pointer</td><td>a pointer to the obtained handle. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the name of the user type stored in the container. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">typed_pointer_to_T</td><td>the pointer type <code>My_type *</code> or <code>My_type const *</code> with which to interpret an occupied entry named T. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">closure_over_T</td><td>the code to be run on the reference to user type T, if Occupied. This may be a semicolon separated list of statements to execute on T or a section of code wrapped in braces {code here} which may be preferred for formatting. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a compound literal reference to the modified handle if it was occupied or a vacant handle if it was vacant. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>T is a reference to the user type stored in the handle guaranteed to be non-NULL if the closure executes.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>T is a reference to the user type specified by the provided pointer argument stored in the entry guaranteed to be non-NULL if the closure executes.</dd></dl>
 <div class="fragment"><div class="line"><span class="preprocessor">#define ARRAY_TREE_MAP_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="comment">// Increment the count if found otherwise do nothing.</span></div>
 <div class="line">Array_tree_map_handle *h =</div>
 <div class="line">    array_tree_map_and_modify_with(</div>
 <div class="line">        handle_wrap(&amp;array_tree_map, &amp;k),</div>
-<div class="line">        Word,</div>
+<div class="line">        Word *,</div>
 <div class="line">        T-&gt;cnt++;</div>
 <div class="line">    );</div>
 <div class="line"><span class="comment">// Increment the count if found otherwise insert a default value.</span></div>
@@ -384,7 +384,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">    array_tree_map_or_insert_with(</div>
 <div class="line">        array_tree_map_and_modify_with(</div>
 <div class="line">            handle_wrap(&amp;array_tree_map, &amp;k),</div>
-<div class="line">            Word,</div>
+<div class="line">            Word *,</div>
 <div class="line">            { T-&gt;cnt++; }</div>
 <div class="line">        ),</div>
 <div class="line">        (Word){.key = k, .cnt = 1}</div>
@@ -518,7 +518,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">      )}                                                                       \</div>
 <div class="line">         .private</div>
 <div class="ttc" id="aarray__tree__map_8h_html_a310dfc4f14f6d7a75f4ceddaf41b2231"><div class="ttname"><a href="array__tree__map_8h.html#a310dfc4f14f6d7a75f4ceddaf41b2231">CCC_array_tree_map_equal_range_reverse</a></div><div class="ttdeci">CCC_Handle_range_reverse CCC_array_tree_map_equal_range_reverse(CCC_Array_tree_map const *map, void const *reverse_begin_key, void const *reverse_end_key)</div><div class="ttdoc">Return an iterable range_reverse of values from [begin_key, end_key). O(lg N).</div></div>
-<div class="ttc" id="astructCCC__Handle__range__reverse_html"><div class="ttname"><a href="structCCC__Handle__range__reverse.html">CCC_Handle_range_reverse</a></div><div class="ttdoc">The result of a range_reverse query on iterable containers.</div><div class="ttdef"><b>Definition:</b> types.h:113</div></div>
+<div class="ttc" id="astructCCC__Handle__range__reverse_html"><div class="ttname"><a href="structCCC__Handle__range__reverse.html">CCC_Handle_range_reverse</a></div><div class="ttdoc">The result of a range_reverse query on iterable containers. Handles are stable indices into an array ...</div><div class="ttdef"><b>Definition:</b> types.h:117</div></div>
 </div><!-- fragment -->
 <p>Returns a compound literal reference to the desired range_reverse. O(lg N). </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -562,7 +562,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">            (array_tree_map_pointer), begin_and_end_key_pointers               \</div>
 <div class="line">        )}                                                                     \</div>
 <div class="line">         .private</div>
-<div class="ttc" id="astructCCC__Handle__range_html"><div class="ttname"><a href="structCCC__Handle__range.html">CCC_Handle_range</a></div><div class="ttdoc">The result of a range query on iterable containers.</div><div class="ttdef"><b>Definition:</b> types.h:100</div></div>
+<div class="ttc" id="astructCCC__Handle__range_html"><div class="ttname"><a href="structCCC__Handle__range.html">CCC_Handle_range</a></div><div class="ttdoc">The result of a range query on iterable containers. Handles are stable indices into an array until re...</div><div class="ttdef"><b>Definition:</b> types.h:102</div></div>
 </div><!-- fragment -->
 <p>Returns a compound literal reference to the desired range. O(lg N). </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -869,7 +869,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <div class="line">            type_compound_literal                                              \</div>
 <div class="line">        )}                                                                     \</div>
 <div class="line">         .private</div>
-<div class="ttc" id="astructCCC__Handle_html"><div class="ttname"><a href="structCCC__Handle.html">CCC_Handle</a></div><div class="ttdoc">An Occupied or Vacant handle to a flat searchable container entry.</div><div class="ttdef"><b>Definition:</b> types.h:166</div></div>
+<div class="ttc" id="astructCCC__Handle_html"><div class="ttname"><a href="structCCC__Handle.html">CCC_Handle</a></div><div class="ttdoc">An Occupied or Vacant handle to a flat searchable container entry.</div><div class="ttdef"><b>Definition:</b> types.h:170</div></div>
 </div><!-- fragment -->
 <p>Inserts a new key value pair or overwrites the existing handle. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1807,8 +1807,8 @@ do not try to access data in the table manually with a handle. Always use this p
 <div class="line">);</div>
 <div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res</div>
 <div class="line">    = array_tree_map_copy(&amp;destination, &amp;source, &amp;(<a class="code hl_struct" href="structCCC__Allocator.html">CCC_Allocator</a>){});</div>
-<div class="ttc" id="astructCCC__Allocator_html"><div class="ttname"><a href="structCCC__Allocator.html">CCC_Allocator</a></div><div class="ttdoc">The type passed by reference to any container function that may need to allocate memory....</div><div class="ttdef"><b>Definition:</b> types.h:385</div></div>
-<div class="ttc" id="atypes_8h_html_aa1ded61d294b114942f11e711b331dcf"><div class="ttname"><a href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a></div><div class="ttdeci">CCC_Result</div><div class="ttdoc">A result of actions on containers.</div><div class="ttdef"><b>Definition:</b> types.h:208</div></div>
+<div class="ttc" id="astructCCC__Allocator_html"><div class="ttname"><a href="structCCC__Allocator.html">CCC_Allocator</a></div><div class="ttdoc">The type passed by reference to any container function that may need to allocate memory....</div><div class="ttdef"><b>Definition:</b> types.h:396</div></div>
+<div class="ttc" id="atypes_8h_html_aa1ded61d294b114942f11e711b331dcf"><div class="ttname"><a href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a></div><div class="ttdeci">CCC_Result</div><div class="ttdoc">A result of actions on containers.</div><div class="ttdef"><b>Definition:</b> types.h:212</div></div>
 </div><!-- fragment --><p>The above requires destination capacity be greater than or equal to source capacity. Here is memory management handed over to the copy function.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define ARRAY_TREE_MAP_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="keyword">struct </span>Val</div>

@@ -102,7 +102,8 @@ $(document).ready(function(){initNavTree('structCCC__Comparator__arguments.html'
 <p><code>#include &lt;<a class="el" href="types_8h_source.html">types.h</a>&gt;</code></p>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>An element comparison helper. </p>
-<p>This type helps the user define the comparison callback function, if the container takes a standard element comparison function, and helps avoid swappable argument errors. Any type LHS is considered the left hand side and any type RHS is the right hand side when considering three-way comparison return values. Context data is a reference to any context data provided upon container initialization. </p>
+<p>This type helps the user define the comparison callback function, if the container takes a standard element comparison function, and helps avoid swappable argument errors. Any type LHS is considered the left hand side and any type RHS is the right hand side when considering three-way comparison return values. Context data is a reference to any context data provided upon container initialization.</p>
+<p>The pointers are const to bind the types closely with their context, if context is provided. Because container code is providing the user reference to the types it currently stores it is critical the user does not accidentally move or misuse the pointer to jeopardize container invariants. </p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
@@ -110,18 +111,18 @@ Data Fields</h2></td></tr>
 <tr class="separator:a7dc29c838d00f7a73207ee55715d1564"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad224f308831ccec9371110dab7ba5592"><td class="memItemLeft" align="right" valign="top">void const  *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Comparator__arguments.html#ad224f308831ccec9371110dab7ba5592">type_right</a></td></tr>
 <tr class="separator:ad224f308831ccec9371110dab7ba5592"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e8c1a66fff4ac68b3f1c66c59e31fa6"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Comparator__arguments.html#a3e8c1a66fff4ac68b3f1c66c59e31fa6">context</a></td></tr>
-<tr class="separator:a3e8c1a66fff4ac68b3f1c66c59e31fa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ae55534b1a2b334030d8b45627157bd"><td class="memItemLeft" align="right" valign="top">void *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Comparator__arguments.html#a1ae55534b1a2b334030d8b45627157bd">context</a></td></tr>
+<tr class="separator:a1ae55534b1a2b334030d8b45627157bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
-<a id="a3e8c1a66fff4ac68b3f1c66c59e31fa6" name="a3e8c1a66fff4ac68b3f1c66c59e31fa6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3e8c1a66fff4ac68b3f1c66c59e31fa6">&#9670;&#160;</a></span>context</h2>
+<a id="a1ae55534b1a2b334030d8b45627157bd" name="a1ae55534b1a2b334030d8b45627157bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ae55534b1a2b334030d8b45627157bd">&#9670;&#160;</a></span>context</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void* CCC_Comparator_arguments::context</td>
+          <td class="memname">void* const CCC_Comparator_arguments::context</td>
         </tr>
       </table>
 </div><div class="memdoc">

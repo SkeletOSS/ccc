@@ -151,8 +151,8 @@ Macros</h2></td></tr>
 <tr class="separator:a7cddac3a9da8eede77888febe12d0ed4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab02a4c916de100d7b123d34024ea7bb5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__adaptive__map_8h.html#ab02a4c916de100d7b123d34024ea7bb5">CCC_private_adaptive_map_insert_and_copy_key</a>( om_insert_entry,  om_insert_entry_ret,  key,  private_allocator,  type_compound_literal...)</td></tr>
 <tr class="separator:ab02a4c916de100d7b123d34024ea7bb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e7e81c435a49da281428ee9285680a5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__adaptive__map_8h.html#a7e7e81c435a49da281428ee9285680a5">CCC_private_adaptive_map_and_modify_with</a>( adaptive_map_entry_pointer,  type_name,  closure_over_T...)</td></tr>
-<tr class="separator:a7e7e81c435a49da281428ee9285680a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c7adcb061f23e85313fcf35b1103aa4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__adaptive__map_8h.html#a1c7adcb061f23e85313fcf35b1103aa4">CCC_private_adaptive_map_and_modify_with</a>( adaptive_map_entry_pointer,  typed_pointer_to_T,  closure_over_T...)</td></tr>
+<tr class="separator:a1c7adcb061f23e85313fcf35b1103aa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34ff713f4984afe6c1549e0720344b7b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__adaptive__map_8h.html#a34ff713f4984afe6c1549e0720344b7b">CCC_private_adaptive_map_or_insert_with</a>( adaptive_map_entry_pointer,  private_allocator_pointer,  type_compound_literal...)</td></tr>
 <tr class="separator:a34ff713f4984afe6c1549e0720344b7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb43a25ca72f188836e81d11eea4721e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__adaptive__map_8h.html#adb43a25ca72f188836e81d11eea4721e">CCC_private_adaptive_map_insert_entry_with</a>( adaptive_map_entry_pointer,  private_allocator_pointer,  type_compound_literal...)</td></tr>
@@ -174,8 +174,8 @@ Functions</h2></td></tr>
 <tr class="separator:a7591c171cc0734ef8837b6284a96631a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a7e7e81c435a49da281428ee9285680a5" name="a7e7e81c435a49da281428ee9285680a5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e7e81c435a49da281428ee9285680a5">&#9670;&#160;</a></span>CCC_private_adaptive_map_and_modify_with</h2>
+<a id="a1c7adcb061f23e85313fcf35b1103aa4" name="a1c7adcb061f23e85313fcf35b1103aa4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c7adcb061f23e85313fcf35b1103aa4">&#9670;&#160;</a></span>CCC_private_adaptive_map_and_modify_with</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -190,7 +190,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">type_name, </td>
+          <td class="paramname">typed_pointer_to_T, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -214,7 +214,8 @@ Functions</h2></td></tr>
 <div class="line">            private_adaptive_map_mod_ent = *private_adaptive_map_ent_pointer;  \</div>
 <div class="line">            if (private_adaptive_map_mod_ent.<a class="code hl_variable" href="structCCC__Adaptive__map__entry.html#a2b0b0a9ce29ecd47addf7a7d846c2346">entry</a>.<a class="code hl_variable" href="structCCC__Entry.html#aa9e3883d6e8e864022a62fe4c7282815">status</a>                      \</div>
 <div class="line">                &amp; <a class="code hl_enumvalue" href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8ac6231d0bcd60ef80461c2908f4f0a630">CCC_ENTRY_OCCUPIED</a>) {                                        \</div>
-<div class="line">                type_name *<span class="keyword">const</span> T = private_adaptive_map_mod_ent.<a class="code hl_variable" href="structCCC__Adaptive__map__entry.html#a2b0b0a9ce29ecd47addf7a7d846c2346">entry</a>.<a class="code hl_variable" href="structCCC__Entry.html#a4a6fadeba22d89ee3e7f46edf38db2f4">type</a>;  \</div>
+<div class="line">                typed_pointer_to_T <span class="keyword">const</span> T                                     \</div>
+<div class="line">                    = private_adaptive_map_mod_ent.<a class="code hl_variable" href="structCCC__Adaptive__map__entry.html#a2b0b0a9ce29ecd47addf7a7d846c2346">entry</a>.<a class="code hl_variable" href="structCCC__Entry.html#a4a6fadeba22d89ee3e7f46edf38db2f4">type</a>;                 \</div>
 <div class="line">                if (T) {                                                       \</div>
 <div class="line">                    closure_over_T                                             \</div>
 <div class="line">                }                                                              \</div>
@@ -224,10 +225,10 @@ Functions</h2></td></tr>
 <div class="line">    }))</div>
 <div class="ttc" id="astructCCC__Adaptive__map__entry_html"><div class="ttname"><a href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a></div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:85</div></div>
 <div class="ttc" id="astructCCC__Adaptive__map__entry_html_a2b0b0a9ce29ecd47addf7a7d846c2346"><div class="ttname"><a href="structCCC__Adaptive__map__entry.html#a2b0b0a9ce29ecd47addf7a7d846c2346">CCC_Adaptive_map_entry::entry</a></div><div class="ttdeci">CCC_Entry entry</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:89</div></div>
-<div class="ttc" id="astructCCC__Entry_html_a4a6fadeba22d89ee3e7f46edf38db2f4"><div class="ttname"><a href="structCCC__Entry.html#a4a6fadeba22d89ee3e7f46edf38db2f4">CCC_Entry::type</a></div><div class="ttdeci">void * type</div><div class="ttdef"><b>Definition:</b> types.h:153</div></div>
-<div class="ttc" id="astructCCC__Entry_html_aa9e3883d6e8e864022a62fe4c7282815"><div class="ttname"><a href="structCCC__Entry.html#aa9e3883d6e8e864022a62fe4c7282815">CCC_Entry::status</a></div><div class="ttdeci">CCC_Entry_status status</div><div class="ttdef"><b>Definition:</b> types.h:155</div></div>
-<div class="ttc" id="atypes_8h_html_a7d5cb1838ecf421fe5b336481344b0a8ab9629d06cb3314b4fa0e6b93b2e6bf45"><div class="ttname"><a href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8ab9629d06cb3314b4fa0e6b93b2e6bf45">CCC_ENTRY_ARGUMENT_ERROR</a></div><div class="ttdeci">@ CCC_ENTRY_ARGUMENT_ERROR</div><div class="ttdef"><b>Definition:</b> types.h:137</div></div>
-<div class="ttc" id="atypes_8h_html_a7d5cb1838ecf421fe5b336481344b0a8ac6231d0bcd60ef80461c2908f4f0a630"><div class="ttname"><a href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8ac6231d0bcd60ef80461c2908f4f0a630">CCC_ENTRY_OCCUPIED</a></div><div class="ttdeci">@ CCC_ENTRY_OCCUPIED</div><div class="ttdef"><b>Definition:</b> types.h:132</div></div>
+<div class="ttc" id="astructCCC__Entry_html_a4a6fadeba22d89ee3e7f46edf38db2f4"><div class="ttname"><a href="structCCC__Entry.html#a4a6fadeba22d89ee3e7f46edf38db2f4">CCC_Entry::type</a></div><div class="ttdeci">void * type</div><div class="ttdef"><b>Definition:</b> types.h:157</div></div>
+<div class="ttc" id="astructCCC__Entry_html_aa9e3883d6e8e864022a62fe4c7282815"><div class="ttname"><a href="structCCC__Entry.html#aa9e3883d6e8e864022a62fe4c7282815">CCC_Entry::status</a></div><div class="ttdeci">CCC_Entry_status status</div><div class="ttdef"><b>Definition:</b> types.h:159</div></div>
+<div class="ttc" id="atypes_8h_html_a7d5cb1838ecf421fe5b336481344b0a8ab9629d06cb3314b4fa0e6b93b2e6bf45"><div class="ttname"><a href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8ab9629d06cb3314b4fa0e6b93b2e6bf45">CCC_ENTRY_ARGUMENT_ERROR</a></div><div class="ttdeci">@ CCC_ENTRY_ARGUMENT_ERROR</div><div class="ttdef"><b>Definition:</b> types.h:141</div></div>
+<div class="ttc" id="atypes_8h_html_a7d5cb1838ecf421fe5b336481344b0a8ac6231d0bcd60ef80461c2908f4f0a630"><div class="ttname"><a href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8ac6231d0bcd60ef80461c2908f4f0a630">CCC_ENTRY_OCCUPIED</a></div><div class="ttdeci">@ CCC_ENTRY_OCCUPIED</div><div class="ttdef"><b>Definition:</b> types.h:136</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -450,8 +451,8 @@ Functions</h2></td></tr>
 <div class="ttc" id="aprivate__adaptive__map_8h_html_a7591c171cc0734ef8837b6284a96631a"><div class="ttname"><a href="private__adaptive__map_8h.html#a7591c171cc0734ef8837b6284a96631a">CCC_private_adaptive_map_insert</a></div><div class="ttdeci">void * CCC_private_adaptive_map_insert(struct CCC_Adaptive_map *, struct CCC_Adaptive_map_node *)</div></div>
 <div class="ttc" id="aprivate__adaptive__map_8h_html_a941a7bd43f42767fdd51c1c33d422926"><div class="ttname"><a href="private__adaptive__map_8h.html#a941a7bd43f42767fdd51c1c33d422926">CCC_private_adaptive_map_key_in_slot</a></div><div class="ttdeci">void * CCC_private_adaptive_map_key_in_slot(struct CCC_Adaptive_map const *, void const *)</div></div>
 <div class="ttc" id="aprivate__adaptive__map_8h_html_abcdf48400d9282e86637fd230b82e224"><div class="ttname"><a href="private__adaptive__map_8h.html#abcdf48400d9282e86637fd230b82e224">CCC_private_adaptive_map_node_in_slot</a></div><div class="ttdeci">struct CCC_Adaptive_map_node * CCC_private_adaptive_map_node_in_slot(struct CCC_Adaptive_map const *, void const *)</div></div>
-<div class="ttc" id="astructCCC__Entry_html"><div class="ttname"><a href="structCCC__Entry.html">CCC_Entry</a></div><div class="ttdoc">An Occupied or Vacant position in a searchable container.</div><div class="ttdef"><b>Definition:</b> types.h:151</div></div>
-<div class="ttc" id="atypes_8h_html_a7d5cb1838ecf421fe5b336481344b0a8af8e9ee9cb76a30a10b44450f05c88c69"><div class="ttname"><a href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8af8e9ee9cb76a30a10b44450f05c88c69">CCC_ENTRY_INSERT_ERROR</a></div><div class="ttdeci">@ CCC_ENTRY_INSERT_ERROR</div><div class="ttdef"><b>Definition:</b> types.h:135</div></div>
+<div class="ttc" id="astructCCC__Entry_html"><div class="ttname"><a href="structCCC__Entry.html">CCC_Entry</a></div><div class="ttdoc">An Occupied or Vacant position in a searchable container.</div><div class="ttdef"><b>Definition:</b> types.h:155</div></div>
+<div class="ttc" id="atypes_8h_html_a7d5cb1838ecf421fe5b336481344b0a8af8e9ee9cb76a30a10b44450f05c88c69"><div class="ttname"><a href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8af8e9ee9cb76a30a10b44450f05c88c69">CCC_ENTRY_INSERT_ERROR</a></div><div class="ttdeci">@ CCC_ENTRY_INSERT_ERROR</div><div class="ttdef"><b>Definition:</b> types.h:139</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -612,7 +613,7 @@ Functions</h2></td></tr>
 <div class="line">        }                                                                      \</div>
 <div class="line">        private_adaptive_map_ins_allocate_ret;                                 \</div>
 <div class="line">    }))</div>
-<div class="ttc" id="astructCCC__Allocator__arguments_html"><div class="ttname"><a href="structCCC__Allocator__arguments.html">CCC_Allocator_arguments</a></div><div class="ttdoc">A bundle of arguments to pass to the user-implemented Allocator_interface function interface....</div><div class="ttdef"><b>Definition:</b> types.h:283</div></div>
+<div class="ttc" id="astructCCC__Allocator__arguments_html"><div class="ttname"><a href="structCCC__Allocator__arguments.html">CCC_Allocator_arguments</a></div><div class="ttdoc">A bundle of arguments to pass to the user-implemented Allocator_interface function interface....</div><div class="ttdef"><b>Definition:</b> types.h:298</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -671,7 +672,7 @@ Functions</h2></td></tr>
 <div class="line">        }                                                                      \</div>
 <div class="line">        private_or_ins_ret;                                                    \</div>
 <div class="line">    }))</div>
-<div class="ttc" id="astructCCC__Allocator_html"><div class="ttname"><a href="structCCC__Allocator.html">CCC_Allocator</a></div><div class="ttdoc">The type passed by reference to any container function that may need to allocate memory....</div><div class="ttdef"><b>Definition:</b> types.h:385</div></div>
+<div class="ttc" id="astructCCC__Allocator_html"><div class="ttname"><a href="structCCC__Allocator.html">CCC_Allocator</a></div><div class="ttdoc">The type passed by reference to any container function that may need to allocate memory....</div><div class="ttdef"><b>Definition:</b> types.h:396</div></div>
 </div><!-- fragment -->
 </div>
 </div>

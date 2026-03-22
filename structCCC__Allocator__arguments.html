@@ -102,15 +102,16 @@ $(document).ready(function(){initNavTree('structCCC__Allocator__arguments.html',
 <p><code>#include &lt;<a class="el" href="types_8h_source.html">types.h</a>&gt;</code></p>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A bundle of arguments to pass to the user-implemented Allocator_interface function interface. This ensures clarity in inputs and expected outputs to an allocator function the user wishes to use for managing containers. Additional context can be provided for more complex allocation schemes. </p>
+<p>The pointers are const to bind the input closely with its context, if context is provided. Because container code is providing the user a reference to a user type it currently stores, or data it manages, it is critical the user does not accidentally move or misuse the pointer to jeopardize container invariants. </p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a8ab81257574ec9a3d22bd327ec096b1b"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Allocator__arguments.html#a8ab81257574ec9a3d22bd327ec096b1b">input</a></td></tr>
-<tr class="separator:a8ab81257574ec9a3d22bd327ec096b1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7baa483806224ef7b71e016bdb1805e"><td class="memItemLeft" align="right" valign="top">void *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Allocator__arguments.html#ac7baa483806224ef7b71e016bdb1805e">input</a></td></tr>
+<tr class="separator:ac7baa483806224ef7b71e016bdb1805e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a177eb7876194c0742058a74530119de3"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Allocator__arguments.html#a177eb7876194c0742058a74530119de3">bytes</a></td></tr>
 <tr class="separator:a177eb7876194c0742058a74530119de3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33883986ff3dc09d8f0a0bed38a97694"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Allocator__arguments.html#a33883986ff3dc09d8f0a0bed38a97694">context</a></td></tr>
-<tr class="separator:a33883986ff3dc09d8f0a0bed38a97694"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a9d1ffe87e8b2197a22882255c612e4"><td class="memItemLeft" align="right" valign="top">void *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Allocator__arguments.html#a5a9d1ffe87e8b2197a22882255c612e4">context</a></td></tr>
+<tr class="separator:a5a9d1ffe87e8b2197a22882255c612e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
 <a id="a177eb7876194c0742058a74530119de3" name="a177eb7876194c0742058a74530119de3"></a>
@@ -128,14 +129,14 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
-<a id="a33883986ff3dc09d8f0a0bed38a97694" name="a33883986ff3dc09d8f0a0bed38a97694"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a33883986ff3dc09d8f0a0bed38a97694">&#9670;&#160;</a></span>context</h2>
+<a id="a5a9d1ffe87e8b2197a22882255c612e4" name="a5a9d1ffe87e8b2197a22882255c612e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a9d1ffe87e8b2197a22882255c612e4">&#9670;&#160;</a></span>context</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void* CCC_Allocator_arguments::context</td>
+          <td class="memname">void* const CCC_Allocator_arguments::context</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -143,14 +144,14 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
-<a id="a8ab81257574ec9a3d22bd327ec096b1b" name="a8ab81257574ec9a3d22bd327ec096b1b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8ab81257574ec9a3d22bd327ec096b1b">&#9670;&#160;</a></span>input</h2>
+<a id="ac7baa483806224ef7b71e016bdb1805e" name="ac7baa483806224ef7b71e016bdb1805e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7baa483806224ef7b71e016bdb1805e">&#9670;&#160;</a></span>input</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void* CCC_Allocator_arguments::input</td>
+          <td class="memname">void* const CCC_Allocator_arguments::input</td>
         </tr>
       </table>
 </div><div class="memdoc">

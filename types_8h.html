@@ -148,10 +148,10 @@ Data Structures</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The result of a range_reverse query on iterable containers.  <a href="structCCC__Range__reverse.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Handle__range.html">CCC_Handle_range</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The result of a range query on iterable containers.  <a href="structCCC__Handle__range.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The result of a range query on iterable containers. Handles are stable indices into an array until removed, regardless of other insertions, removals, or array resizing.  <a href="structCCC__Handle__range.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Handle__range__reverse.html">CCC_Handle_range_reverse</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The result of a range_reverse query on iterable containers.  <a href="structCCC__Handle__range__reverse.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The result of a range_reverse query on iterable containers. Handles are stable indices into an array until removed, regardless of other insertions, removals, or array resizing.  <a href="structCCC__Handle__range__reverse.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Entry.html">CCC_Entry</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An Occupied or Vacant position in a searchable container.  <a href="structCCC__Entry.html#details">More...</a><br /></td></tr>
@@ -175,7 +175,7 @@ Data Structures</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An element comparison helper.  <a href="structCCC__Comparator__arguments.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Comparator.html">CCC_Comparator</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type passed by reference to any container function that may need to compare elements. The context pointer is passed as the context argument of the <code><a class="el" href="structCCC__Arguments.html" title="A reference to a user type within the container.">CCC_Arguments</a></code> type, when provided.  <a href="structCCC__Comparator.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type passed by reference to any container function that may need to compare elements. The context pointer is passed as the context argument of the <code><a class="el" href="structCCC__Comparator__arguments.html" title="An element comparison helper.">CCC_Comparator_arguments</a></code> type, when provided.  <a href="structCCC__Comparator.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Modifier.html">CCC_Modifier</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type passed by reference to any container function that may need to modify elements. The context pointer is passed as the context argument of the <code><a class="el" href="structCCC__Arguments.html" title="A reference to a user type within the container.">CCC_Arguments</a></code> type, when provided.  <a href="structCCC__Modifier.html#details">More...</a><br /></td></tr>
@@ -381,32 +381,32 @@ Data Structures</h2></td></tr>
 <ul>
 <li>If input is NULL and bytes 0, NULL is returned.</li>
 <li>If input is NULL with non-zero bytes, new memory is allocated/returned.</li>
-<li>If input is non-NULL it has been previously allocated by the Allocator_interface.</li>
+<li>If input is non-NULL it has been previously allocated by the allocator.</li>
 <li>If input is non-NULL with non-zero size, input is resized to at least bytes size. The pointer returned is NULL if resizing fails. Upon success, the pointer returned might not be equal to the pointer provided.</li>
 <li>If input is non-NULL and size is 0, input is freed and NULL is returned.</li>
 </ul>
-<p>One may be tempted to use realloc to check all of these boxes but realloc is implementation defined on some of these points. So, the context parameter also discourages users from providing realloc. For example, one solution using the standard library allocator might be implemented as follows (context is not needed):</p>
+<p>For example, one solution using the standard library allocator might be implemented as follows (context is not needed):</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> *</div>
-<div class="line">std_allocate(<a class="code hl_struct" href="structCCC__Allocator__arguments.html">CCC_Allocator_arguments</a> <span class="keyword">const</span> context)</div>
+<div class="line">std_allocate(<a class="code hl_struct" href="structCCC__Allocator__arguments.html">CCC_Allocator_arguments</a> <span class="keyword">const</span> arguments)</div>
 <div class="line">{</div>
-<div class="line">    <span class="keywordflow">if</span> (!context.<a class="code hl_variable" href="structCCC__Allocator__arguments.html#a8ab81257574ec9a3d22bd327ec096b1b">input</a> &amp;&amp; !context.<a class="code hl_variable" href="structCCC__Allocator__arguments.html#a177eb7876194c0742058a74530119de3">bytes</a>)</div>
+<div class="line">    <span class="keywordflow">if</span> (!arguments.<a class="code hl_variable" href="structCCC__Allocator__arguments.html#ac7baa483806224ef7b71e016bdb1805e">input</a> &amp;&amp; !arguments.<a class="code hl_variable" href="structCCC__Allocator__arguments.html#a177eb7876194c0742058a74530119de3">bytes</a>)</div>
 <div class="line">    {</div>
 <div class="line">        <span class="keywordflow">return</span> NULL;</div>
 <div class="line">    }</div>
-<div class="line">    <span class="keywordflow">if</span> (!context.<a class="code hl_variable" href="structCCC__Allocator__arguments.html#a8ab81257574ec9a3d22bd327ec096b1b">input</a>)</div>
+<div class="line">    <span class="keywordflow">if</span> (!arguments.<a class="code hl_variable" href="structCCC__Allocator__arguments.html#ac7baa483806224ef7b71e016bdb1805e">input</a>)</div>
 <div class="line">    {</div>
-<div class="line">        <span class="keywordflow">return</span> malloc(context.<a class="code hl_variable" href="structCCC__Allocator__arguments.html#a177eb7876194c0742058a74530119de3">bytes</a>);</div>
+<div class="line">        <span class="keywordflow">return</span> malloc(arguments.<a class="code hl_variable" href="structCCC__Allocator__arguments.html#a177eb7876194c0742058a74530119de3">bytes</a>);</div>
 <div class="line">    }</div>
-<div class="line">    <span class="keywordflow">if</span> (!context.<a class="code hl_variable" href="structCCC__Allocator__arguments.html#a177eb7876194c0742058a74530119de3">bytes</a>)</div>
+<div class="line">    <span class="keywordflow">if</span> (!arguments.<a class="code hl_variable" href="structCCC__Allocator__arguments.html#a177eb7876194c0742058a74530119de3">bytes</a>)</div>
 <div class="line">    {</div>
-<div class="line">        free(context.<a class="code hl_variable" href="structCCC__Allocator__arguments.html#a8ab81257574ec9a3d22bd327ec096b1b">input</a>);</div>
+<div class="line">        free(arguments.<a class="code hl_variable" href="structCCC__Allocator__arguments.html#ac7baa483806224ef7b71e016bdb1805e">input</a>);</div>
 <div class="line">        <span class="keywordflow">return</span> NULL;</div>
 <div class="line">    }</div>
-<div class="line">    <span class="keywordflow">return</span> realloc(context.<a class="code hl_variable" href="structCCC__Allocator__arguments.html#a8ab81257574ec9a3d22bd327ec096b1b">input</a>, context.<a class="code hl_variable" href="structCCC__Allocator__arguments.html#a177eb7876194c0742058a74530119de3">bytes</a>);</div>
+<div class="line">    <span class="keywordflow">return</span> realloc(arguments.<a class="code hl_variable" href="structCCC__Allocator__arguments.html#ac7baa483806224ef7b71e016bdb1805e">input</a>, arguments.<a class="code hl_variable" href="structCCC__Allocator__arguments.html#a177eb7876194c0742058a74530119de3">bytes</a>);</div>
 <div class="line">}</div>
-<div class="ttc" id="astructCCC__Allocator__arguments_html"><div class="ttname"><a href="structCCC__Allocator__arguments.html">CCC_Allocator_arguments</a></div><div class="ttdoc">A bundle of arguments to pass to the user-implemented Allocator_interface function interface....</div><div class="ttdef"><b>Definition:</b> types.h:283</div></div>
-<div class="ttc" id="astructCCC__Allocator__arguments_html_a177eb7876194c0742058a74530119de3"><div class="ttname"><a href="structCCC__Allocator__arguments.html#a177eb7876194c0742058a74530119de3">CCC_Allocator_arguments::bytes</a></div><div class="ttdeci">size_t bytes</div><div class="ttdef"><b>Definition:</b> types.h:287</div></div>
-<div class="ttc" id="astructCCC__Allocator__arguments_html_a8ab81257574ec9a3d22bd327ec096b1b"><div class="ttname"><a href="structCCC__Allocator__arguments.html#a8ab81257574ec9a3d22bd327ec096b1b">CCC_Allocator_arguments::input</a></div><div class="ttdeci">void * input</div><div class="ttdef"><b>Definition:</b> types.h:285</div></div>
+<div class="ttc" id="astructCCC__Allocator__arguments_html"><div class="ttname"><a href="structCCC__Allocator__arguments.html">CCC_Allocator_arguments</a></div><div class="ttdoc">A bundle of arguments to pass to the user-implemented Allocator_interface function interface....</div><div class="ttdef"><b>Definition:</b> types.h:298</div></div>
+<div class="ttc" id="astructCCC__Allocator__arguments_html_a177eb7876194c0742058a74530119de3"><div class="ttname"><a href="structCCC__Allocator__arguments.html#a177eb7876194c0742058a74530119de3">CCC_Allocator_arguments::bytes</a></div><div class="ttdeci">size_t bytes</div><div class="ttdef"><b>Definition:</b> types.h:302</div></div>
+<div class="ttc" id="astructCCC__Allocator__arguments_html_ac7baa483806224ef7b71e016bdb1805e"><div class="ttname"><a href="structCCC__Allocator__arguments.html#ac7baa483806224ef7b71e016bdb1805e">CCC_Allocator_arguments::input</a></div><div class="ttdeci">void *const input</div><div class="ttdef"><b>Definition:</b> types.h:300</div></div>
 </div><!-- fragment --><p>However, the above example is only useful if the standard library allocator is used. Any allocator that implements the required behavior is sufficient. For example programs that utilize the context parameter, see the sample programs. Using custom arena allocators or container compositions are cases when context is needed. </p>
 
 </div>

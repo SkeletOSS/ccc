@@ -103,14 +103,14 @@ $(document).ready(function(){initNavTree('structCCC__Allocator.html',''); initRe
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The type passed by reference to any container function that may need to allocate memory. The allocation function controls allocation, resizing, and freeing of memory. The context pointer references any auxiliary information needed to support the allocation function. The context pointer is passed as the context argument of the <code><a class="el" href="structCCC__Allocator__arguments.html" title="A bundle of arguments to pass to the user-implemented Allocator_interface function interface....">CCC_Allocator_arguments</a></code> type, when provided. </p>
 <p>There are a few ways to pass this type when a container function requests a reference to it. First initialize it statically in a module.</p>
-<div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code hl_struct" href="structCCC__Allocator.html">CCC_Allocator</a> std_allocator = { .<a class="code hl_variable" href="structCCC__Allocator.html#a13e126856c83147b442f98f02db3b848">allocate</a> = std_allocate };</div>
+<div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code hl_struct" href="structCCC__Allocator.html">CCC_Allocator</a> <span class="keyword">const</span> std_allocator = { .<a class="code hl_variable" href="structCCC__Allocator.html#a13e126856c83147b442f98f02db3b848">allocate</a> = std_allocate };</div>
 <div class="line"><span class="keywordtype">int</span></div>
 <div class="line">main(<span class="keywordtype">void</span>) {</div>
 <div class="line">    container_insert(&amp;container, &amp;(<span class="keywordtype">int</span>){1}, &amp;std_allocator);</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="astructCCC__Allocator_html"><div class="ttname"><a href="structCCC__Allocator.html">CCC_Allocator</a></div><div class="ttdoc">The type passed by reference to any container function that may need to allocate memory....</div><div class="ttdef"><b>Definition:</b> types.h:385</div></div>
-<div class="ttc" id="astructCCC__Allocator_html_a13e126856c83147b442f98f02db3b848"><div class="ttname"><a href="structCCC__Allocator.html#a13e126856c83147b442f98f02db3b848">CCC_Allocator::allocate</a></div><div class="ttdeci">CCC_Allocator_interface * allocate</div><div class="ttdef"><b>Definition:</b> types.h:387</div></div>
+<div class="ttc" id="astructCCC__Allocator_html"><div class="ttname"><a href="structCCC__Allocator.html">CCC_Allocator</a></div><div class="ttdoc">The type passed by reference to any container function that may need to allocate memory....</div><div class="ttdef"><b>Definition:</b> types.h:396</div></div>
+<div class="ttc" id="astructCCC__Allocator_html_a13e126856c83147b442f98f02db3b848"><div class="ttname"><a href="structCCC__Allocator.html#a13e126856c83147b442f98f02db3b848">CCC_Allocator::allocate</a></div><div class="ttdeci">CCC_Allocator_interface * allocate</div><div class="ttdef"><b>Definition:</b> types.h:398</div></div>
 </div><!-- fragment --><p>Or, construct the context inline.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span></div>
 <div class="line">main(<span class="keywordtype">void</span>) {</div>

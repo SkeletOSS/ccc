@@ -102,24 +102,25 @@ $(document).ready(function(){initNavTree('structCCC__Arguments.html',''); initRe
 <p><code>#include &lt;<a class="el" href="types_8h_source.html">types.h</a>&gt;</code></p>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A reference to a user type within the container. </p>
-<p>This is to help users define callback functions that act on each node in a container. For example, a destruct function will use this type. </p>
+<p>Arguments are accepted by functions that allow the user to modify a type stored in a container. See the priority queue containers and their update, increase, and decrease capabilities as an example.</p>
+<p>The pointers are const to bind the user type closely with its context, if context is provided. Because container code is providing the user a reference to a user type it currently stores, it is critical the user does not accidentally move or misuse the pointer to jeopardize container invariants. </p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a2c18aeebf70ac28a372581832dd7ac59"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Arguments.html#a2c18aeebf70ac28a372581832dd7ac59">type</a></td></tr>
-<tr class="separator:a2c18aeebf70ac28a372581832dd7ac59"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea34af877258b201bc84b55e6c2d44d0"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Arguments.html#aea34af877258b201bc84b55e6c2d44d0">context</a></td></tr>
-<tr class="separator:aea34af877258b201bc84b55e6c2d44d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9d1d725c5e014fbfbae51a6921f9c71"><td class="memItemLeft" align="right" valign="top">void *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Arguments.html#ad9d1d725c5e014fbfbae51a6921f9c71">type</a></td></tr>
+<tr class="separator:ad9d1d725c5e014fbfbae51a6921f9c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9735cdc3a50a2431c19aebeb6c51869b"><td class="memItemLeft" align="right" valign="top">void *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Arguments.html#a9735cdc3a50a2431c19aebeb6c51869b">context</a></td></tr>
+<tr class="separator:a9735cdc3a50a2431c19aebeb6c51869b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
-<a id="aea34af877258b201bc84b55e6c2d44d0" name="aea34af877258b201bc84b55e6c2d44d0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aea34af877258b201bc84b55e6c2d44d0">&#9670;&#160;</a></span>context</h2>
+<a id="a9735cdc3a50a2431c19aebeb6c51869b" name="a9735cdc3a50a2431c19aebeb6c51869b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9735cdc3a50a2431c19aebeb6c51869b">&#9670;&#160;</a></span>context</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void* CCC_Arguments::context</td>
+          <td class="memname">void* const CCC_Arguments::context</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -127,14 +128,14 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
-<a id="a2c18aeebf70ac28a372581832dd7ac59" name="a2c18aeebf70ac28a372581832dd7ac59"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2c18aeebf70ac28a372581832dd7ac59">&#9670;&#160;</a></span>type</h2>
+<a id="ad9d1d725c5e014fbfbae51a6921f9c71" name="ad9d1d725c5e014fbfbae51a6921f9c71"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9d1d725c5e014fbfbae51a6921f9c71">&#9670;&#160;</a></span>type</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void* CCC_Arguments::type</td>
+          <td class="memname">void* const CCC_Arguments::type</td>
         </tr>
       </table>
 </div><div class="memdoc">
