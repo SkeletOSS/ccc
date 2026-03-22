@@ -281,7 +281,7 @@ move or misuse the pointer to jeopardize container invariants. */
 typedef struct {
     /** The user type being stored in the container. */
     void *const type;
-    /** A reference to context for this action on a type.. */
+    /** A reference to context for this action on a type. */
     void *const context;
 } CCC_Arguments;
 
