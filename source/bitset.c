@@ -28,15 +28,16 @@ This is because every search for a zero can be solved by bitwise inverting a
 block and searching for a 1 instead. This elimination of identical functions
 costs a single branch in the function and is worth it to avoid code duplication
 and bug doubling. */
-#include <assert.h>
+/** C23 provided headers. */
 #include <limits.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <string.h>
 
-#include "bitset.h"
-#include "private/private_bitset.h"
-#include "types.h"
+/** CCC provided headers. */
+#include "ccc/bitset.h"
+#include "ccc/configuration.h"
+#include "ccc/private/private_bitset.h"
+#include "ccc/types.h"
 
 /*=========================   Type Declarations  ============================*/
 

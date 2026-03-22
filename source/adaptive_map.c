@@ -26,13 +26,14 @@ based on the following source.
 
 Because this is a self-optimizing data structure it may benefit from many
 constant time queries for frequently accessed elements. */
-#include <assert.h>
+/** C23 provided headers. */
 #include <stddef.h>
-#include <string.h>
 
-#include "adaptive_map.h"
-#include "private/private_adaptive_map.h"
-#include "types.h"
+/** CCC provided headers. */
+#include "ccc/adaptive_map.h"
+#include "ccc/configuration.h"
+#include "ccc/private/private_adaptive_map.h"
+#include "ccc/types.h"
 
 /** @internal Instead of thinking about left and right consider only links
     in the abstract sense. Put them in an array and then flip

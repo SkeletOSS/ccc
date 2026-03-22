@@ -16,14 +16,15 @@ limitations under the License. */
 educational operating system natural merge sort algorithm used for linked lists.
 Code in the pintOS source is at  `src/lib/kernel.list.c`, but this may change
 if they refactor. */
-#include <assert.h>
+/** C23 provided headers. */
 #include <stddef.h>
-#include <string.h>
 
-#include "private/private_singly_linked_list.h"
-#include "singly_linked_list.h"
-#include "sort.h"
-#include "types.h"
+/** CCC provided headers. */
+#include "ccc/configuration.h"
+#include "ccc/private/private_singly_linked_list.h"
+#include "ccc/singly_linked_list.h"
+#include "ccc/sort.h"
+#include "ccc/types.h"
 
 /** @brief When sorting, a singly linked list is at a disadvantage for iterative
 O(1) space merge sort: it doesn't have a prev pointer. This will help list

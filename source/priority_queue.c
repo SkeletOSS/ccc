@@ -11,12 +11,14 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License. */
+/** C23 provided headers. */
 #include <stddef.h>
-#include <string.h>
 
-#include "priority_queue.h"
-#include "private/private_priority_queue.h"
-#include "types.h"
+/** CCC provided headers. */
+#include "ccc/configuration.h"
+#include "ccc/priority_queue.h"
+#include "ccc/private/private_priority_queue.h"
+#include "ccc/types.h"
 
 /*=========================  Function Prototypes   ==========================*/
 

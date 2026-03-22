@@ -16,14 +16,15 @@ limitations under the License. */
 educational operating system natural merge sort algorithm used for linked lists.
 Code in the pintOS source is at  `source/lib/kernel.list.c`, but this may change
 if they refactor. */
-#include <assert.h>
+/** C23 provided headers. */
 #include <stddef.h>
-#include <string.h>
 
-#include "doubly_linked_list.h"
-#include "private/private_doubly_linked_list.h"
-#include "sort.h"
-#include "types.h"
+/** CCC provided headers. */
+#include "ccc/configuration.h"
+#include "ccc/doubly_linked_list.h"
+#include "ccc/private/private_doubly_linked_list.h"
+#include "ccc/sort.h"
+#include "ccc/types.h"
 
 /*===========================   Prototypes    ===============================*/
 

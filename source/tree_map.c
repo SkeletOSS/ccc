@@ -45,13 +45,14 @@ easiest to check work against the research paper if we use the exact same names
 that appear in the paper. We could choose to describe the nodes in terms of
 their tree lineage but that changes with rotations so a symbolic representation
 is fine. */
-#include <assert.h>
+/** C23 provided headers. */
 #include <stddef.h>
-#include <string.h>
 
-#include "private/private_tree_map.h"
-#include "tree_map.h"
-#include "types.h"
+/** CCC provided headers. */
+#include "ccc/configuration.h"
+#include "ccc/private/private_tree_map.h"
+#include "ccc/tree_map.h"
+#include "ccc/types.h"
 
 /** @internal */
 enum Link {

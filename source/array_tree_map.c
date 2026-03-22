@@ -50,16 +50,17 @@ Sorry for the symbol heavy math variable terminology in the WAVL section. It
 is easiest to check work against the research paper if the variable names
 remain the same. Rotations change lineage so there is no less terse approach
 to that section, in my opinion. */
-#include <assert.h>
+/** C23 provided headers. */
 #include <limits.h>
 #include <stdalign.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <string.h>
 
-#include "array_tree_map.h"
-#include "private/private_array_tree_map.h"
-#include "types.h"
+/** CCC provided headers. */
+#include "ccc/array_tree_map.h"
+#include "ccc/configuration.h"
+#include "ccc/private/private_array_tree_map.h"
+#include "ccc/types.h"
 
 /*========================   Data Alignment Test   ==========================*/
 

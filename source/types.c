@@ -11,9 +11,11 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License. */
+/** C23 provided headers. */
 #include <stddef.h>
 
-#include "types.h"
+/** CCC provided headers. */
+#include "ccc/types.h"
 
 /** @internal */
 static char const *const result_messages[CCC_PRIVATE_RESULT_COUNT] = {

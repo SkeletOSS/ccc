@@ -11,17 +11,18 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License. */
-#include <assert.h>
+/** C23 provided headers. */
 #include <limits.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <string.h>
 
-#include "buffer.h"
-#include "flat_priority_queue.h"
-#include "private/private_flat_priority_queue.h"
-#include "sort.h"
-#include "types.h"
+/** CCC provided headers. */
+#include "ccc/buffer.h"
+#include "ccc/configuration.h"
+#include "ccc/flat_priority_queue.h"
+#include "ccc/private/private_flat_priority_queue.h"
+#include "ccc/sort.h"
+#include "ccc/types.h"
 
 enum : size_t {
     START_CAP = 8,

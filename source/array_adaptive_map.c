@@ -30,14 +30,15 @@ of Arrays layout to improve memory alignment and reduce wasted space. While
 it is recommended that the user reserve space for the needed nodes ahead of
 time, the amortized O(log(N)) run times of a Splay Tree remain the same in
 the dynamic resizing case. */
-#include <assert.h>
+/** C23 provided headers. */
 #include <stdalign.h>
 #include <stddef.h>
-#include <string.h>
 
-#include "array_adaptive_map.h"
-#include "private/private_array_adaptive_map.h"
-#include "types.h"
+/** CCC provided headers. */
+#include "ccc/array_adaptive_map.h"
+#include "ccc/configuration.h"
+#include "ccc/private/private_array_adaptive_map.h"
+#include "ccc/types.h"
 
 /*========================   Data Alignment Test   ==========================*/
 

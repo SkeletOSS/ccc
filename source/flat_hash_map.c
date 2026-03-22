@@ -31,16 +31,17 @@ a match against a candidate fingerprint. The details of how this is done and
 trade-offs involved can be found in the comments around the implementations
 and data structures. The ARM NEON implementation may be updated if they add
 better capabilities for 128 bit group operations. */
-#include <assert.h>
+/** C23 provided headers. */
 #include <limits.h>
 #include <stdalign.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <string.h>
 
-#include "flat_hash_map.h"
-#include "private/private_flat_hash_map.h"
-#include "types.h"
+/** CCC provided headers. */
+#include "ccc/configuration.h"
+#include "ccc/flat_hash_map.h"
+#include "ccc/private/private_flat_hash_map.h"
+#include "ccc/types.h"
 
 /*=========================   Platform Selection  ===========================*/
 
