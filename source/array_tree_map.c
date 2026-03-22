@@ -727,20 +727,6 @@ CCC_array_tree_map_copy(
         || (destination->capacity < source->capacity && !allocator->allocate)) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    void *const destination_data = destination->data;
-    struct CCC_Array_tree_map_node *const destination_nodes
-        = destination->nodes;
-    Parity_block *const destination_parity = destination->parity;
-    size_t const destination_cap = destination->capacity;
-
-    destination->root = source->root;
-    destination->free_list = source->free_list;
-    destination->count = source->count;
-
-    destination->data = destination_data;
-    destination->nodes = destination_nodes;
-    destination->parity = destination_parity;
-    destination->capacity = destination_cap;
     if (!source->capacity) {
         return CCC_RESULT_OK;
     }
@@ -762,6 +748,12 @@ CCC_array_tree_map_copy(
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     copy_soa(source, destination->data, destination->capacity);
+    destination->free_list = source->free_list;
+    destination->root = source->root;
+    destination->count = source->count;
+    destination->comparator = source->comparator;
+    destination->sizeof_type = source->sizeof_type;
+    destination->key_offset = source->key_offset;
     return CCC_RESULT_OK;
 }
 
