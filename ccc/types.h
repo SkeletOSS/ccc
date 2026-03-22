@@ -392,18 +392,12 @@ main(void) {
 ```
 
 The context provided with this allocator is separate from the context provided
-to containers that accept context for comparison or hashing functions.
-
-The pointers are const to bind the allocator closely with its context, if
-context is provided. This discourages the user from accidentally swapping one
-field without changing the other. It also encourages users to opt for inline
-compound literal construction passing or accurate variable naming when creating
-an allocator instance for better code readability. */
+to containers that accept context for comparison or hashing functions. */
 typedef struct {
     /** The allocator function to be passed to an allocating operation. */
-    CCC_Allocator_interface *const allocate;
+    CCC_Allocator_interface *allocate;
     /** Additional state to pass to the allocator to help manage memory. */
-    void *const context;
+    void *context;
 } CCC_Allocator;
 
 /** @brief An element comparison helper.
@@ -438,18 +432,12 @@ typedef CCC_Order CCC_Comparator_interface(CCC_Comparator_arguments);
 
 /** @brief The type passed by reference to any container function that may need
 to compare elements.  The context pointer is passed as the context argument of
-the `CCC_Comparator_arguments` type, when provided.
-
-The pointers are const to bind the comparator closely with its context, if
-context is provided. This discourages the user from accidentally swapping one
-field without changing the other. It also encourages users to opt for inline
-compound literal construction passing or accurate variable naming when creating
-a comparator instance for better code readability. */
+the `CCC_Comparator_arguments` type, when provided. */
 typedef struct {
     /** The comparison function to be passed to comparing operation. */
-    CCC_Comparator_interface *const compare;
+    CCC_Comparator_interface *compare;
     /** Additional state to pass to the comparison. */
-    void *const context;
+    void *context;
 } CCC_Comparator;
 
 /** @brief A callback function for modifying an element in the container.
@@ -464,18 +452,12 @@ typedef void CCC_Modifier_interface(CCC_Arguments);
 
 /** @brief The type passed by reference to any container function that may need
 to modify elements.  The context pointer is passed as the context argument of
-the `CCC_Arguments` type, when provided.
-
-The pointers are const to bind the modifier closely with its context, if
-context is provided. This discourages the user from accidentally swapping one
-field without changing the other. It also encourages users to opt for inline
-compound literal construction passing or accurate variable naming when creating
-a modifier instance for better code readability. */
+the `CCC_Arguments` type, when provided. */
 typedef struct {
     /** The modifier function to be passed to operation. */
-    CCC_Modifier_interface *const modify;
+    CCC_Modifier_interface *modify;
     /** Additional state to pass to the modification. */
-    void *const context;
+    void *context;
 } CCC_Modifier;
 
 /** @brief A callback function for destroying an element in the container.
@@ -498,18 +480,12 @@ typedef void CCC_Destructor_interface(CCC_Arguments);
 
 /** @brief The type passed by reference to any container function that may need
 to destroy elements.  The context pointer is passed as the context argument of
-the `CCC_Arguments` type, when provided.
-
-The pointers are const to bind the destructor closely with its context, if
-context is provided. This discourages the user from accidentally swapping one
-field without changing the other. It also encourages users to opt for inline
-compound literal construction passing or accurate variable naming when creating
-a destructor instance for better code readability. */
+the `CCC_Arguments` type, when provided. */
 typedef struct {
     /** The comparison function to be passed to comparing operation. */
-    CCC_Destructor_interface *const destroy;
+    CCC_Destructor_interface *destroy;
     /** Additional state to pass to the comparison. */
-    void *const context;
+    void *context;
 } CCC_Destructor;
 
 /** @brief A key comparison helper to avoid argument swapping.
@@ -552,18 +528,12 @@ typedef CCC_Order CCC_Key_comparator_interface(CCC_Key_comparator_arguments);
 
 /** @brief The type passed by reference to any container function that may need
 to compare keys.  The context pointer is passed as the context argument of
-the `CCC_Key_comparator_arguments` type, when provided.
-
-The pointers are const to bind the key comparator closely with its context, if
-context is provided. This discourages the user from accidentally swapping one
-field without changing the other. It also encourages users to opt for inline
-compound literal construction passing or accurate variable naming when creating
-a key comparator instance for better code readability. */
+the `CCC_Key_comparator_arguments` type, when provided. */
 typedef struct {
     /** The comparison function to be passed to comparing operation. */
-    CCC_Key_comparator_interface *const compare;
+    CCC_Key_comparator_interface *compare;
     /** Additional state to pass to the comparison. */
-    void *const context;
+    void *context;
 } CCC_Key_comparator;
 
 /** @brief A read only reference to a key type matching the key field type used
@@ -596,20 +566,14 @@ map metadata struct because they provide the invariants of the container
 hashing and comparison algorithm. The fields are provided as arguments to the
 `CCC_Key_arguments` type for hashing and the `CCC_Key_comparator_arguments`
 type for key comparison when needed for the user defined functions that accept
-those types.
-
-The pointers are const to bind the hasher closely with its context, if context
-is provided. This discourages the user from accidentally swapping one field
-without changing others. It also encourages users to opt for inline compound
-literal construction passing or accurate variable naming when creating a hasher
-instance for better code readability. */
+those types. */
 typedef struct {
     /** The function for hashing the key field of the user type. */
-    CCC_Key_hasher_interface *const hash;
+    CCC_Key_hasher_interface *hash;
     /** The function for comparing a key to user elements in the container. */
-    CCC_Key_comparator_interface *const compare;
+    CCC_Key_comparator_interface *compare;
     /** A reference to context needed for hashing and comparison. */
-    void *const context;
+    void *context;
 } CCC_Hasher;
 
 /**@}*/
