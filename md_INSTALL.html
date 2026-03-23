@@ -163,7 +163,7 @@ Freestanding Environments</h1>
 <div class="line"> </div>
 <div class="line"># New step allowing CCC to find the configuration header.</div>
 <div class="line">target_include_directories(ccc PRIVATE</div>
-<div class="line">  ${PROJECT_SOURCE_DIR}/my_ccc_configuration</div>
+<div class="line">  ${CMAKE_SOURCE_DIR}/my_ccc_configuration</div>
 <div class="line">)</div>
 <div class="line"># New step here or in CMakePresets.json to define preprocessor directives</div>
 <div class="line">target_compile_definitions(ccc PRIVATE</div>
