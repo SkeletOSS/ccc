@@ -500,34 +500,40 @@ void *CCC_flat_priority_queue_update(
     CCC_Modifier const *modifier
 );
 
-/** @brief Update the user type stored in the priority queue directly. O(lgN).
+/** @brief Update the held user type stored in the priority queue. O(lgN).
 @param[in] priority_queue_pointer a pointer to the flat priority queue.
-@param[in] type_pointer a pointer to the user type being updated.
-@param[in] update_closure_over_T the semicolon separated statements to execute
-on the user type at T (optionally wrapping {code here} in braces may help
-with formatting). This closure may safely modify the key used to track the user
-element's priority in the priority queue.
-@return a reference to the element at its new position in the
-flat_priority_queue on success, NULL if parameters are invalid or
-flat_priority_queue is empty.
-@warning the user must ensure type_pointer is in the flat_priority_queue.
+@param[in] closure_parameter a pointer variable to the user type being updated.
+@param[in] update_closure_over_closure_parameter the semicolon separated
+statements to execute on the user type provided (optionally wrapping {code here}
+in braces may help with formatting). This closure may safely modify the key used
+to track the user element's priority in the priority queue.
+@return a reference to the element at its new position in the priority queue on
+success, NULL if parameters are invalid or priority queue is empty.
+@warning This operation assumes the held closure parameter is in the priority
+queue.
 
 ```
 #define FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC
 Flat_priority_queue priority_queue = build_rand_int_flat_priority_queue();
-(void)flat_priority_queue_update_with(&flat_priority_queue,
-get_rand_flat_priority_queue_node(&flat_priority_queue), { *T = rand_key(); });
+int *e = get_rand_flat_priority_queue_node(&flat_priority_queue);
+(void)flat_priority_queue_update_with(&flat_priority_queue, e, {
+    *e = rand_key();
+});
 ```
 
 Note that whether the key increases or decreases does not affect runtime. */
 #define CCC_flat_priority_queue_update_with(                                   \
-    priority_queue_pointer, type_pointer, update_closure_over_T...             \
+    priority_queue_pointer,                                                    \
+    closure_parameter,                                                         \
+    update_closure_over_closure_parameter...                                   \
 )                                                                              \
     CCC_private_flat_priority_queue_update_with(                               \
-        priority_queue_pointer, type_pointer, update_closure_over_T            \
+        priority_queue_pointer,                                                \
+        closure_parameter,                                                     \
+        update_closure_over_closure_parameter                                  \
     )
 
-/** @brief Increase e that is a handle to the stored flat_priority_queue
+/** @brief Increase type that is a handle to the stored flat_priority_queue
 element. O(lgN).
 @param[in] priority_queue a pointer to the flat priority queue.
 @param[in] type a pointer to the stored priority_queue element. Must be in the
@@ -537,7 +543,7 @@ flat_priority_queue.
 @return a reference to the element at its new position in the
 flat_priority_queue on success, NULL if parameters are invalid or
 flat_priority_queue is empty.
-@warning the user must ensure e is in the flat_priority_queue.
+@warning the user must ensure type is in the flat_priority_queue.
 
 A simple way to provide a temp for swapping is with an inline compound literal
 reference provided directly to the function argument `&(name_of_type){}`. */
@@ -550,29 +556,33 @@ void *CCC_flat_priority_queue_increase(
 
 /** @brief Increase the user type stored in the priority queue directly. O(lgN).
 @param[in] flat_priority_queue_pointer a pointer to the flat priority queue.
-@param[in] type_pointer a pointer to the user type being updated.
-@param[in] increase_closure_over_T the semicolon separated statements to
-execute on the user type at T (optionally wrapping {code here} in
-braces may help with formatting). This closure may safely modify the key used to
-track the user element's priority in the priority queue.
+@param[in] closure_parameter a pointer variable to user type being increased.
+@param[in] increase_closure_over_closure_parameter the semicolon separated
+statements to execute on the user type provided (optionally wrapping {code here}
+in braces may help with formatting). This closure may safely increase the key
+used to track the user element's priority in the priority queue.
 @return a reference to the element at its new position in the
 flat_priority_queue on success, NULL if parameters are invalid or
 flat_priority_queue is empty.
-@warning the user must ensure type_pointer is in the flat_priority_queue.
+@warning the user must ensure the closure parameter is in the priority queue.
 
 ```
 #define FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC
 Flat_priority_queue priority_queue = build_rand_int_flat_priority_queue();
-(void)flat_priority_queue_increase_with(&flat_priority_queue,
-get_rand_flat_priority_queue_node(&flat_priority_queue), { (*T)++; });
+int *e = get_rand_flat_priority_queue_node(&flat_priority_queue);
+(void)flat_priority_queue_increase_with(&flat_priority_queue, e, { (*e)++; });
 ```
 
 Note that if this priority queue is min or max, the runtime is the same. */
 #define CCC_flat_priority_queue_increase_with(                                 \
-    flat_priority_queue_pointer, type_pointer, increase_closure_over_T...      \
+    flat_priority_queue_pointer,                                               \
+    closure_parameter,                                                         \
+    increase_closure_over_closure_parameter...                                 \
 )                                                                              \
     CCC_private_flat_priority_queue_increase_with(                             \
-        flat_priority_queue_pointer, type_pointer, increase_closure_over_T     \
+        flat_priority_queue_pointer,                                           \
+        closure_parameter,                                                     \
+        increase_closure_over_closure_parameter                                \
     )
 
 /** @brief Decrease e that is a handle to the stored flat_priority_queue
@@ -598,29 +608,32 @@ void *CCC_flat_priority_queue_decrease(
 
 /** @brief Increase the user type stored in the priority queue directly. O(lgN).
 @param[in] flat_priority_queue_pointer a pointer to the flat priority queue.
-@param[in] type_pointer a pointer to the user type being updated.
-@param[in] decrease_closure_over_T the semicolon separated statements to
-execute on the user type at T (optionally wrapping {code here} in
-braces may help with formatting). This closure may safely modify the key used to
-track the user element's priority in the priority queue.
-@return a reference to the element at its new position in the
-flat_priority_queue on success, NULL if parameters are invalid or
-flat_priority_queue is empty.
-@warning the user must ensure type_pointer is in the flat_priority_queue.
+@param[in] closure_parameter a pointer variable to user type being decreased.
+@param[in] decrease_closure_over_closure_parameter the semicolon separated
+statements to execute on the user type provided (optionally wrapping {code here}
+in braces may help with formatting). This closure may safely decrease the key
+used to track the user element's priority in the priority queue.
+@return a reference to the element at its new position in the priority queue on
+success, NULL if parameters are invalid or the priority queue is empty.
+@warning the user must ensure type_pointer is in the priority queue.
 
 ```
 #define FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC
 Flat_priority_queue priority_queue = build_rand_int_flat_priority_queue();
-(void)flat_priority_queue_decrease_with(&flat_priority_queue,
-get_rand_flat_priority_queue_node(&flat_priority_queue), { (*T)--; });
+int *e = get_rand_flat_priority_queue_node(&flat_priority_queue);
+(void)flat_priority_queue_decrease_with(&flat_priority_queue, e, { (*e)--; });
 ```
 
 Note that if this priority queue is min or max, the runtime is the same. */
 #define CCC_flat_priority_queue_decrease_with(                                 \
-    flat_priority_queue_pointer, type_pointer, decrease_closure_over_T...      \
+    flat_priority_queue_pointer,                                               \
+    closure_parameter,                                                         \
+    decrease_closure_over_closure_parameter...                                 \
 )                                                                              \
     CCC_private_flat_priority_queue_decrease_with(                             \
-        flat_priority_queue_pointer, type_pointer, decrease_closure_over_T     \
+        flat_priority_queue_pointer,                                           \
+        closure_parameter,                                                     \
+        decrease_closure_over_closure_parameter                                \
     )
 
 /**@}*/

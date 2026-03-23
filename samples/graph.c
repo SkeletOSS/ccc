@@ -790,8 +790,8 @@ dijkstra_shortest_path(
             if (alt < v->cost) {
                 /* Build the map with the appropriate best candidate parent. */
                 (void)priority_queue_decrease_with(&costs, v, {
-                    T->cost = alt;
-                    T->from = u->name;
+                    v->cost = alt;
+                    v->from = u->name;
                 });
                 paint_edge(graph, u->name, v->name, MAG);
                 nanosleep(&graph->speed, NULL);

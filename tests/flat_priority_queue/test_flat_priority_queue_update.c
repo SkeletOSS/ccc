@@ -166,10 +166,10 @@ check_static_begin(flat_priority_queue_test_priority_update_with) {
     for (size_t val = 0; val < num_nodes; ++val) {
         int backoff = vals[val].val / 2;
         if (vals[val].val > limit) {
-            struct Val const *const updated
-                = CCC_flat_priority_queue_update_with(
-                    &flat_priority_queue, &vals[val], { T->val = backoff; }
-                );
+            struct Val *updated = &vals[val];
+            updated = CCC_flat_priority_queue_update_with(
+                &flat_priority_queue, updated, { updated->val = backoff; }
+            );
             check(updated != NULL, true);
             check(updated->val, backoff);
             check(validate(&flat_priority_queue), true);

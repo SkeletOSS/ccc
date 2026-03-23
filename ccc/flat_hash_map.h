@@ -563,7 +563,6 @@ Entry Interface.*/
 
 /** @brief Modify an Occupied entry with a closure over user type T.
 @param[in] map_entry_pointer a pointer to the obtained entry.
-@param[in] type_name the name of the user type stored in the container.
 @param[in] closure_parameter the named pointer type, for example `My_type * e`
 or `My_type const * e` with which to interpret an occupied entry.
 @param[in] closure_over_closure_parameter the code to be run on the reference to
