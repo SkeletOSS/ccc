@@ -201,7 +201,9 @@ check_static_begin(tree_map_test_entry_api_functional) {
         def.val = (int)i;
         struct Val const *const d = or_insert(
             tree_map_and_modify_with(
-                tree_map_entry_wrap(&rom, &def.key), struct Val *, { T->val++; }
+                tree_map_entry_wrap(&rom, &def.key),
+                struct Val * e,
+                { e->val++; }
             ),
             &def.elem,
             &allocator

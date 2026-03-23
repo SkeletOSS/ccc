@@ -301,7 +301,9 @@ metadata. */
 
 /** @internal */
 #define CCC_private_array_adaptive_map_and_modify_with(                        \
-    array_adaptive_map_array_pointer, typed_pointer_to_T, closure_over_T...    \
+    array_adaptive_map_array_pointer,                                          \
+    typed_pointer,                                                             \
+    closure_over_typed_pointer...                                              \
 )                                                                              \
     (__extension__({                                                           \
         __auto_type private_array_adaptive_map_mod_hndl_pointer                \
@@ -314,14 +316,11 @@ metadata. */
                 = *private_array_adaptive_map_mod_hndl_pointer;                \
             if (private_array_adaptive_map_mod_hndl.status                     \
                 & CCC_ENTRY_OCCUPIED) {                                        \
-                typed_pointer_to_T const T                                     \
-                    = CCC_private_array_adaptive_map_data_at(                  \
-                        private_array_adaptive_map_mod_hndl.map,               \
-                        private_array_adaptive_map_mod_hndl.index              \
-                    );                                                         \
-                if (T) {                                                       \
-                    closure_over_T                                             \
-                }                                                              \
+                typed_pointer = CCC_private_array_adaptive_map_data_at(        \
+                    private_array_adaptive_map_mod_hndl.map,                   \
+                    private_array_adaptive_map_mod_hndl.index                  \
+                );                                                             \
+                closure_over_typed_pointer                                     \
             }                                                                  \
         }                                                                      \
         private_array_adaptive_map_mod_hndl;                                   \

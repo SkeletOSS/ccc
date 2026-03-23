@@ -694,16 +694,14 @@ to subsequent calls in the Handle Interface. */
 
 /** @brief Modify an Occupied handle with a closure over user type T.
 @param[in] map_array_pointer a pointer to the obtained handle.
-@param[in] typed_pointer_to_T the pointer type `My_type *` or `My_type const *`
-with which to interpret an occupied entry named T.
-@param[in] closure_over_T the code to be run on the reference to user type T,
-if Occupied. This may be a semicolon separated list of statements to execute on
-T or a section of code wrapped in braces {code here} which may be preferred
-for formatting.
+@param[in] typed_pointer the named pointer type, for example `My_type * e` or
+`My_type const * e` with which to interpret an occupied handle.
+@param[in] closure_over_typed_pointer the code to be run on the reference to
+user type, if Occupied. This may be a semicolon separated list of statements
+to execute on the named type or a section of code wrapped in braces {code here}
+which may be preferred for formatting.
 @return a compound literal reference to the modified handle if it was occupied
 or a vacant handle if it was vacant.
-@note T is a reference to the user type specified by the provided pointer
-argument stored in the entry guaranteed to be non-NULL if the closure executes.
 
 ```
 #define ARRAY_TREE_MAP_USING_NAMESPACE_CCC
@@ -711,30 +709,30 @@ argument stored in the entry guaranteed to be non-NULL if the closure executes.
 Array_tree_map_handle *h =
     array_tree_map_and_modify_with(
         handle_wrap(&array_tree_map, &k),
-        Word *,
-        T->cnt++;
+        Word * e,
+        e->cnt++;
     );
 // Increment the count if found otherwise insert a default value.
 Handle_index w =
     array_tree_map_or_insert_with(
         array_tree_map_and_modify_with(
             handle_wrap(&array_tree_map, &k),
-            Word *,
-            { T->cnt++; }
+            Word * e,
+            { e->cnt++; }
         ),
         (Word){.key = k, .cnt = 1}
     );
 ```
 
 Note that any code written is only evaluated if the handle is Occupied and the
-container can deliver the user type T. This means any function calls are lazily
+container can deliver the user type. This means any function calls are lazily
 evaluated in the closure scope. */
 #define CCC_array_tree_map_and_modify_with(                                    \
-    map_array_pointer, typed_pointer_to_T, closure_over_T...                   \
+    map_array_pointer, typed_pointer, closure_over_typed_pointer...            \
 )                                                                              \
     &(struct { CCC_Array_tree_map_handle private; }){                          \
         CCC_private_array_tree_map_and_modify_with(                            \
-            map_array_pointer, typed_pointer_to_T, closure_over_T              \
+            map_array_pointer, typed_pointer, closure_over_typed_pointer       \
         )}                                                                     \
          .private
 

@@ -414,7 +414,7 @@ create_frequency_map(
             if (!cw.error) {
                 Array_adaptive_map_handle const *e
                     = array_adaptive_map_handle_wrap(&array_adaptive_map, &cw);
-                e = array_adaptive_map_and_modify_with(e, Word *, T->freq++;);
+                e = array_adaptive_map_and_modify_with(e, Word * w, w->freq++;);
                 Word const *const w = array_adaptive_map_at(
                     &array_adaptive_map,
                     array_adaptive_map_or_insert_with(

@@ -416,8 +416,8 @@ build_encoding_priority_queue(
         struct Character_frequency *const ins = flat_hash_map_or_insert_with(
             flat_hash_map_and_modify_with(
                 flat_hash_map_entry_wrap(&frequencies, c, allocator),
-                struct Character_frequency *,
-                { ++T->freq; }
+                struct Character_frequency * e,
+                { ++e->freq; }
             ),
             (struct Character_frequency){
                 .ch = *c,

@@ -805,8 +805,9 @@ check_static_begin(array_adaptive_map_test_array_and_modify_with) {
     int size = 30;
     CCC_Array_adaptive_map_handle *hndl
         = array_adaptive_map_handle_wrap(&array_adaptive_map, &(int){-1});
-    hndl
-        = array_adaptive_map_and_modify_with(hndl, struct Val *, { T->val++; });
+    hndl = array_adaptive_map_and_modify_with(hndl, struct Val * e, {
+        e->val++;
+    });
     check(count(&array_adaptive_map).count, 0);
     check(occupied(hndl), false);
     check(count(&array_adaptive_map).count, 0);
@@ -819,8 +820,9 @@ check_static_begin(array_adaptive_map_test_array_and_modify_with) {
     check(v != NULL, true);
     check(v->val, -1);
     check(v->id, -1);
-    hndl
-        = array_adaptive_map_and_modify_with(hndl, struct Val *, { T->val++; });
+    hndl = array_adaptive_map_and_modify_with(hndl, struct Val * e, {
+        e->val++;
+    });
     v = array_adaptive_map_at(&array_adaptive_map, unwrap(hndl));
     check(v != NULL, true);
     check(v->id, -1);
@@ -835,8 +837,9 @@ check_static_begin(array_adaptive_map_test_array_and_modify_with) {
 
     i += (size / 2);
     hndl = array_adaptive_map_handle_wrap(&array_adaptive_map, &i);
-    hndl
-        = array_adaptive_map_and_modify_with(hndl, struct Val *, { T->val++; });
+    hndl = array_adaptive_map_and_modify_with(hndl, struct Val * e, {
+        e->val++;
+    });
     check(occupied(hndl), false);
     check(count(&array_adaptive_map).count, i + 1);
     (void)array_adaptive_map_insert_or_assign_with(
@@ -844,8 +847,9 @@ check_static_begin(array_adaptive_map_test_array_and_modify_with) {
     );
     check(validate(&array_adaptive_map), true);
     hndl = array_adaptive_map_handle_wrap(&array_adaptive_map, &i);
-    hndl
-        = array_adaptive_map_and_modify_with(hndl, struct Val *, { T->val++; });
+    hndl = array_adaptive_map_and_modify_with(hndl, struct Val * e, {
+        e->val++;
+    });
     v = array_adaptive_map_at(&array_adaptive_map, unwrap(hndl));
     check(v != NULL, true);
     check(v->val, i + 1);
@@ -862,8 +866,9 @@ check_static_begin(array_adaptive_map_test_array_and_modify_with) {
 
     i = size;
     hndl = array_adaptive_map_handle_wrap(&array_adaptive_map, &i);
-    hndl
-        = array_adaptive_map_and_modify_with(hndl, struct Val *, { T->val++; });
+    hndl = array_adaptive_map_and_modify_with(hndl, struct Val * e, {
+        e->val++;
+    });
     check(occupied(hndl), false);
     check(count(&array_adaptive_map).count, i + 1);
     (void)array_adaptive_map_insert_or_assign_with(
@@ -871,8 +876,9 @@ check_static_begin(array_adaptive_map_test_array_and_modify_with) {
     );
     check(validate(&array_adaptive_map), true);
     hndl = array_adaptive_map_handle_wrap(&array_adaptive_map, &i);
-    hndl
-        = array_adaptive_map_and_modify_with(hndl, struct Val *, { T->val++; });
+    hndl = array_adaptive_map_and_modify_with(hndl, struct Val * e, {
+        e->val++;
+    });
     v = array_adaptive_map_at(&array_adaptive_map, unwrap(hndl));
     check(v != NULL, true);
     check(v->val, i + 1);
