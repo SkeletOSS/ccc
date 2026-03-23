@@ -93,7 +93,7 @@ get_target_property(ccc_SOURCE_DIR ccc SOURCE_DIR)
 
 # New step allowing CCC to find the configuration header.
 target_include_directories(ccc PRIVATE
-  ${PROJECT_SOURCE_DIR}/my_ccc_configuration
+  ${CMAKE_SOURCE_DIR}/my_ccc_configuration
 )
 # New step here or in CMakePresets.json to define preprocessor directives
 target_compile_definitions(ccc PRIVATE
