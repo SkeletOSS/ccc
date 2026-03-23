@@ -147,7 +147,12 @@ Freestanding Environments</h1>
 <div class="line">    my_ccc_configuration/</div>
 <div class="line">        my_ccc_configuration.h</div>
 </div><!-- fragment --><p>In this header the user has two options: provide the listed functions directly or include their versions of the headers that provide the needed functionality. It is common for freestanding environments to provide their own <code>&lt;string.h&gt;</code> and <code>&lt;assert.h&gt;</code> that implement these functions.</p>
-<p>Then, ensure the C Container Collection can find that header.</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#ifndef MY_CCC_CONFIGURATION_H</span></div>
+<div class="line"><span class="preprocessor">#define MY_CCC_CONFIGURATION_H</span></div>
+<div class="line"><span class="preprocessor">#include &quot;lib/assert.h&quot;</span> <span class="comment">/* IWYU pragma: export */</span></div>
+<div class="line"><span class="preprocessor">#include &quot;lib/string.h&quot;</span> <span class="comment">/* IWYU pragma: export */</span></div>
+<div class="line"><span class="preprocessor">#endif</span></div>
+</div><!-- fragment --><p>The Include What You Use (IWYU) comment is helpful if you want to avoid tooling warnings in CCC code and have not marked CCC code as a system library to silence such warnings. If you are providing functions directly, this is not applicable. Then, ensure the C Container Collection can find that header.</p>
 <div class="fragment"><div class="line">include(FetchContent)</div>
 <div class="line">FetchContent_Declare(</div>
 <div class="line">  ccc</div>
@@ -180,7 +185,11 @@ Freestanding Environments</h1>
 <div class="line">    &quot;CCC_USER_CONFIGURATION&quot;: &quot;my_ccc_configuration.h&quot;,</div>
 <div class="line">    &quot;CCC_FLAT_HASH_MAP_PORTABLE&quot;: &quot;OFF&quot;</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>Now the C Container Collection is fully configured to be built as part of the user project in a free standing environment.</p>
+</div><!-- fragment --><p>Or they can be passed on the command line.</p>
+<div class="fragment"><div class="line">cmake --preset=my-preset\</div>
+<div class="line"> -DCCC_USER_CONFIGURATION=&quot;my_ccc_configuration.h&quot;\</div>
+<div class="line"> -DCCC_FLAT_HASH_MAP_PORTABLE=ON</div>
+</div><!-- fragment --><p>Now the C Container Collection is fully configured to be built as part of the user project in a freestanding environment.</p>
 <p>Any other headers such as <code>&lt;stdint.h&gt;</code>, <code>&lt;stddef.h&gt;</code>, etc. that are included directly in source code now, or will be in the future, are those provided by the C23 standard on freestanding targets. See the flat hash map documentation for how to select the optimal Single Instruction Multiple Data or Single Register Multiple Data implementation. Even on freestanding targets, the compiler intrinsics used on x86-64 and ARM NEON platforms should be available. However, <code>CCC_FLAT_HASH_MAP_PORTABLE</code> is an available directive for users that need to force a portable fallback implementation when such compiler platform intrinsics are not available. See <code><a class="el" href="flat__hash__map_8h.html" title="The Flat Hash Map Interface.">ccc/flat_hash_map.h</a></code> for more.</p>
 <h1><a class="anchor" id="autotoc_md6"></a>
 Manual Install Quick Start</h1>
