@@ -3,3 +3,11 @@ samples/ export-ignore
 utility/ export-ignore
 tools/ export-ignore
 .github/ export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+.editorconfig export-ignore
+.clang-format export-ignore
+.clang-tidy export-ignore
+.pre-commit-config.yaml export-ignore
+CONTRIBUTING.md export-ignore
+compile_commands.json export-ignore

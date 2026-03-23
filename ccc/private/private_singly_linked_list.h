@@ -17,7 +17,6 @@ limitations under the License.
 #define CCC_PRIVATE_SINGLY_LINKED_LIST_H
 
 /** @cond */
-#include <assert.h>
 #include <stddef.h>
 /** @endcond */
 

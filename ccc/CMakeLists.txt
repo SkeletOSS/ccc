@@ -35,6 +35,7 @@ target_sources(${PROJECT_NAME}
               private/private_flat_hash_map.h
               private/private_buffer.h
               private/private_bitset.h
+              configuration.h
               types.h
               buffer.h
               bitset.h

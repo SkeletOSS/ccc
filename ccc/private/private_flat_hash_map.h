@@ -34,7 +34,6 @@ most complexity in the implementation. */
 #define CCC_PRIVATE_FLAT_HASH_MAP_H
 
 /** @cond */
-#include <assert.h>
 #include <stdalign.h>
 #include <stddef.h>
 #include <stdint.h>

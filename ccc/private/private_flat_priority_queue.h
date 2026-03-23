@@ -17,7 +17,6 @@ limitations under the License.
 #define CCC_PRIVATE_FLAT_PRIORITY_QUEUE_H
 
 /** @cond */
-#include <assert.h>
 #include <stddef.h>
 /** @endcond */
 

@@ -17,7 +17,6 @@ limitations under the License.
 #define CCC_PRIVATE_BUFFER_H
 
 /** @cond */
-#include <assert.h>
 #include <stddef.h>
 #include <string.h>
 /** @endcond */

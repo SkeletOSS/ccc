@@ -1,3 +1,29 @@
+/** @cond
+Copyright 2025 Alexander G. Lopez
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+@endcond */
+/** @file
+@brief The C Container Collection Sorting Interface
+
+These functions sort various containers with different algorithms depending on
+the container. Many more sorting algorithms will likely be added here in the
+future. Containers such as the buffer and linked lists do not own comparators
+upon initialization because sorting is not the most common use case. Therefore
+comparators are adaptors we can pass while performing an algorithm. They
+then implement this algorithm internally with the passed ordering and
+comparator. A container such as a linked list may also be able to report back
+if it is sorted or insert an element in a sorted position. */
 #ifndef CCC_SORT_H
 #define CCC_SORT_H
 
