@@ -224,37 +224,50 @@ to the user. GCC is not so forgiving. */
 /** @internal Only one update fn is needed because there is no advantage to
    updates if it is known they are min/max increase/decrease etc. */
 #define CCC_private_flat_priority_queue_update_with(                           \
-    flat_priority_queue_pointer, T_pointer, update_closure_over_T...           \
+    flat_priority_queue_pointer,                                               \
+    closure_parameter,                                                         \
+    update_closure_over_closure_parameter...                                   \
 )                                                                              \
     (__extension__({                                                           \
         struct CCC_Flat_priority_queue *const private_flat_priority_queue      \
             = (flat_priority_queue_pointer);                                   \
-        typeof(*T_pointer) *T = (T_pointer);                                   \
+        typeof(*closure_parameter) *                                           \
+            private_flat_priority_queue_updated_element = (closure_parameter); \
         if (private_flat_priority_queue                                        \
-            && !CCC_buffer_is_empty(&private_flat_priority_queue->buffer)      \
-            && T) {                                                            \
-            {update_closure_over_T} T                                          \
+            && !CCC_buffer_is_empty(&private_flat_priority_queue->buffer)) {   \
+            {update_closure_over_closure_parameter};                           \
+            private_flat_priority_queue_updated_element                        \
                 = CCC_private_flat_priority_queue_update_fixup(                \
-                    private_flat_priority_queue, T, &(typeof(*T_pointer)){}    \
+                    private_flat_priority_queue,                               \
+                    private_flat_priority_queue_updated_element,               \
+                    &(typeof(*closure_parameter)){}                            \
                 );                                                             \
         }                                                                      \
-        T;                                                                     \
+        private_flat_priority_queue_updated_element;                           \
     }))
 
 /** @internal */
 #define CCC_private_flat_priority_queue_increase_with(                         \
-    flat_priority_queue_pointer, T_pointer, increase_closure_over_T...         \
+    flat_priority_queue_pointer,                                               \
+    closure_parameter,                                                         \
+    increase_closure_over_closure_parameter...                                 \
 )                                                                              \
     CCC_private_flat_priority_queue_update_with(                               \
-        flat_priority_queue_pointer, T_pointer, increase_closure_over_T        \
+        flat_priority_queue_pointer,                                           \
+        closure_parameter,                                                     \
+        increase_closure_over_closure_parameter                                \
     )
 
 /** @internal */
 #define CCC_private_flat_priority_queue_decrease_with(                         \
-    flat_priority_queue_pointer, T_pointer, decrease_closure_over_T...         \
+    flat_priority_queue_pointer,                                               \
+    closure_parameter,                                                         \
+    decrease_closure_over_closure_parameter...                                 \
 )                                                                              \
     CCC_private_flat_priority_queue_update_with(                               \
-        flat_priority_queue_pointer, T_pointer, decrease_closure_over_T        \
+        flat_priority_queue_pointer,                                           \
+        closure_parameter,                                                     \
+        decrease_closure_over_closure_parameter                                \
     )
 
 /* NOLINTEND(readability-identifier-naming) */

@@ -221,20 +221,17 @@ void *CCC_priority_queue_update(
     CCC_Modifier const *modifier
 );
 
-/** @brief Update the priority in the user type_intruder stored in the
-container.
+/** @brief Update the priority in the user type stored in the container.
 @param[in] priority_queue_pointer a pointer to the priority queue.
-@param[in] type_pointer a pointer to the user struct type_intruder in
-the priority_queue.
-@param[in] update_closure_over_T a pointer to the user struct type_intruder T is
-made available. Use a semicolon separated statements to execute on the user type
-which wraps priority_queue_node_pointer (optionally wrapping {code here} in
-braces may help with formatting). This closure may safely modify the key used to
-track the user element's priority in the priority queue.
-@return a reference to the updated user type_intruder or NULL if update failed
-due to bad arguments provided.
-@warning the user must ensure the type_pointer is a reference to an
-instance of the type_intruder actively stored in the priority queue.
+@param[in] closure_parameter a pointer variable to the user type being updated.
+@param[in] update_closure_over_closure_parameter the semicolon separated
+statements to execute on the user type provided (optionally wrapping {code here}
+in braces may help with formatting). This closure may safely modify the key used
+to track the user element's priority in the priority queue.
+@return a reference to the updated user type or NULL if update failed due to bad
+arguments provided.
+@warning the user must ensure the closure parameter is a reference to an
+instance of the type actively stored in the priority queue.
 
 ```
 #define PRIORITY_QUEUE_USING_NAMESPACE_CCC
@@ -244,18 +241,22 @@ struct Val
     int key;
 };
 Priority_queue priority_queue = build_rand_priority_queue();
-priority_queue_update_with(&priority_queue, get_rand_val(&priority_queue), {
-T->key = rand_key(); });
+struct Val *e = get_rand_val(&priority_queue);
+priority_queue_update_with(&priority_queue, e, { e->key = rand_key(); });
 ```
 
 Note that this operation may incur unnecessary overhead if the user can't
 deduce if an increase or decrease is occurring. See the increase and decrease
 operations. O(1) best case, O(lgN) worst case. */
 #define CCC_priority_queue_update_with(                                        \
-    priority_queue_pointer, type_pointer, update_closure_over_T...             \
+    priority_queue_pointer,                                                    \
+    closure_parameter,                                                         \
+    update_closure_over_closure_parameter...                                   \
 )                                                                              \
     CCC_private_priority_queue_update_with(                                    \
-        priority_queue_pointer, type_pointer, update_closure_over_T            \
+        priority_queue_pointer,                                                \
+        closure_parameter,                                                     \
+        update_closure_over_closure_parameter                                  \
     )
 
 /** @brief Increases the priority of the type_intruder wrapping elem. O(1) or
@@ -280,22 +281,20 @@ void *CCC_priority_queue_increase(
     CCC_Modifier const *modifier
 );
 
-/** @brief Increases the priority of the user type_intruder stored in the
+/** @brief Increases the priority of the user type stored in the
 container.
 @param[in] priority_queue_pointer a pointer to the priority queue.
-@param[in] type_pointer a pointer to the user struct type_intruder in
-the priority_queue.
-@param[in] increase_closure_over_T a pointer to the user struct type_intruder T
-is made available. Use a semicolon separated statements to execute on the user
-type which wraps priority_queue_node_pointer (optionally wrapping {code here} in
-braces may help with formatting). This closure may safely modify the key used to
-track the user element's priority in the priority queue.
-@return a reference to the updated user type_intruder or NULL if update failed
-due to bad arguments provided.
-@warning the user must ensure the type_pointer is a reference to an
-instance of the type_intruder actively stored in the priority queue. The data
-structure will be in an invalid state if the user decreases the priority by
-mistake in this function.
+@param[in] closure_parameter a pointer variable to the user type being updated.
+@param[in] increase_closure_over_closure_parameter the semicolon separated
+statements to execute on the user type provided (optionally wrapping {code here}
+in braces may help with formatting). This closure may safely modify the key used
+to track the user element's priority in the priority queue.
+@return a reference to the updated user type or NULL if update failed due to bad
+arguments provided.
+@warning the user must ensure the closure parameter is a reference to an
+instance of the type actively stored in the priority queue. The data structure
+will be in an invalid state if the user decreases the priority by mistake in
+this function.
 
 ```
 #define PRIORITY_QUEUE_USING_NAMESPACE_CCC
@@ -305,8 +304,8 @@ struct Val
     int key;
 };
 Priority_queue priority_queue = build_rand_priority_queue();
-priority_queue_increase_with(&priority_queue, get_rand_val(&priority_queue), {
-T->key++; });
+struct Val *e = get_rand_val(&priority_queue);
+priority_queue_increase_with(&priority_queue, e, { e->key++; });
 ```
 
 Note that this is optimal update technique if the priority queue has been
@@ -314,13 +313,16 @@ initialized as a max queue and the new value is known to be greater than the old
 value. If this is a max heap O(1), otherwise O(lgN).
 
 While the best case operation is O(1) the impact of restructuring on future pops
-from the priority_queue creates an amortized o(lgN) runtime for this function.
-*/
+from the priority_queue creates amortized o(lgN) runtime for this function. */
 #define CCC_priority_queue_increase_with(                                      \
-    priority_queue_pointer, type_pointer, increase_closure_over_T...           \
+    priority_queue_pointer,                                                    \
+    closure_parameter,                                                         \
+    increase_closure_over_closure_parameter...                                 \
 )                                                                              \
     CCC_private_priority_queue_increase_with(                                  \
-        priority_queue_pointer, type_pointer, increase_closure_over_T          \
+        priority_queue_pointer,                                                \
+        closure_parameter,                                                     \
+        increase_closure_over_closure_parameter                                \
     )
 
 /** @brief Decreases the value of the type_intruder wrapping elem. O(1) or
@@ -346,13 +348,11 @@ void *CCC_priority_queue_decrease(
 /** @brief Decreases the priority of the user type_intruder stored in the
 container.
 @param[in] priority_queue_pointer a pointer to the priority queue.
-@param[in] type_pointer a pointer to the user struct type_intruder in
-the priority_queue.
-@param[in] decrease_closure_over_T a pointer to the user struct type_intruder T
-is made available. Use a semicolon separated statements to execute on the user
-type which wraps priority_queue_node_pointer (optionally wrapping {code here} in
-braces may help with formatting). This closure may safely modify the key used to
-track the user element's priority in the priority queue.
+@param[in] closure_parameter a pointer variable to the user type being updated.
+@param[in] decrease_closure_over_closure_parameter the semicolon separated
+statements to execute on the user type provided (optionally wrapping {code here}
+in braces may help with formatting). This closure may safely modify the key used
+to track the user element's priority in the priority queue.
 @return a reference to the updated user type_intruder or NULL if update failed
 due to bad arguments provided.
 @warning the user must ensure the type_pointer is a reference to an
@@ -368,8 +368,8 @@ struct Val
     int key;
 };
 Priority_queue priority_queue = build_rand_priority_queue();
-priority_queue_decrease_with(&priority_queue,
-get_rand_priority_queue_node(&priority_queue), { T->key--; });
+struct Val *e = get_rand_priority_queue_node(&priority_queue);
+priority_queue_decrease_with(&priority_queue, e, { e->key--; });
 ```
 
 Note that this is optimal update technique if the priority queue has been
@@ -377,13 +377,16 @@ initialized as a min queue and the new value is known to be less than the old
 value. If this is a min heap O(1), otherwise O(lgN).
 
 While the best case operation is O(1) the impact of restructuring on future pops
-from the priority_queue creates an amortized o(lgN) runtime for this function.
-*/
+from the priority_queue creates amortized o(lgN) runtime for this function. */
 #define CCC_priority_queue_decrease_with(                                      \
-    priority_queue_pointer, type_pointer, decrease_closure_over_T...           \
+    priority_queue_pointer,                                                    \
+    closure_parameter,                                                         \
+    decrease_closure_over_closure_parameter...                                 \
 )                                                                              \
     CCC_private_priority_queue_decrease_with(                                  \
-        priority_queue_pointer, type_pointer, decrease_closure_over_T          \
+        priority_queue_pointer,                                                \
+        closure_parameter,                                                     \
+        decrease_closure_over_closure_parameter                                \
     )
 
 /**@}*/

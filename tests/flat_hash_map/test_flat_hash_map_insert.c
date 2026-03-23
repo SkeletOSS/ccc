@@ -549,8 +549,8 @@ check_static_begin(flat_hash_map_test_resize_macros) {
         struct Val const *const in_table = flat_hash_map_or_insert_with(
             flat_hash_map_and_modify_with(
                 flat_hash_map_entry_wrap(&fh, &shuffled_index, &std_allocator),
-                struct Val *,
-                { T->val = shuffled_index; }
+                struct Val * e,
+                { e->val = shuffled_index; }
             ),
             (struct Val){}
         );
@@ -639,8 +639,8 @@ check_static_begin(flat_hash_map_test_resize_from_null_macros) {
         struct Val const *const in_table = flat_hash_map_or_insert_with(
             flat_hash_map_and_modify_with(
                 flat_hash_map_entry_wrap(&fh, &shuffled_index, &std_allocator),
-                struct Val *,
-                { T->val = shuffled_index; }
+                struct Val * e,
+                { e->val = shuffled_index; }
             ),
             (struct Val){}
         );

@@ -395,8 +395,8 @@ The user facing docs clarify that T is a correctly typed reference to the
 desired data if occupied. */
 #define CCC_private_flat_hash_map_and_modify_with(                             \
     flat_hash_map_entry_pointer,                                               \
-    typed_pointer_to_T,                                                        \
-    closure_over_pointer_to_T...                                               \
+    closure_parameter,                                                         \
+    closure_over_closure_parameter...                                          \
 )                                                                              \
     (__extension__({                                                           \
         __auto_type private_flat_hash_map_mod_ent_pointer                      \
@@ -408,14 +408,11 @@ desired data if occupied. */
                 = *private_flat_hash_map_mod_ent_pointer;                      \
             if (private_flat_hash_map_mod_with_ent.status                      \
                 & CCC_ENTRY_OCCUPIED) {                                        \
-                typed_pointer_to_T const T                                     \
-                    = CCC_private_flat_hash_map_data_at(                       \
-                        private_flat_hash_map_mod_with_ent.map,                \
-                        private_flat_hash_map_mod_with_ent.index               \
-                    );                                                         \
-                if (T) {                                                       \
-                    closure_over_pointer_to_T                                  \
-                }                                                              \
+                closure_parameter = CCC_private_flat_hash_map_data_at(         \
+                    private_flat_hash_map_mod_with_ent.map,                    \
+                    private_flat_hash_map_mod_with_ent.index                   \
+                );                                                             \
+                closure_over_closure_parameter                                 \
             }                                                                  \
         }                                                                      \
         private_flat_hash_map_mod_with_ent;                                    \

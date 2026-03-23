@@ -384,7 +384,9 @@ runtime. */
 
 /** @internal */
 #define CCC_private_array_tree_map_and_modify_with(                            \
-    array_tree_map_array_pointer, typed_pointer_to_T, closure_over_T...        \
+    array_tree_map_array_pointer,                                              \
+    closure_parameter,                                                         \
+    closure_over_closure_parameter...                                          \
 )                                                                              \
     (__extension__({                                                           \
         __auto_type private_array_tree_map_hndl_pointer                        \
@@ -395,14 +397,11 @@ runtime. */
             private_array_tree_map_mod_hndl                                    \
                 = *private_array_tree_map_hndl_pointer;                        \
             if (private_array_tree_map_mod_hndl.status & CCC_ENTRY_OCCUPIED) { \
-                typed_pointer_to_T const T                                     \
-                    = CCC_private_array_tree_map_data_at(                      \
-                        private_array_tree_map_mod_hndl.map,                   \
-                        private_array_tree_map_mod_hndl.index                  \
-                    );                                                         \
-                if (T) {                                                       \
-                    closure_over_T                                             \
-                }                                                              \
+                closure_parameter = CCC_private_array_tree_map_data_at(        \
+                    private_array_tree_map_mod_hndl.map,                       \
+                    private_array_tree_map_mod_hndl.index                      \
+                );                                                             \
+                closure_over_closure_parameter                                 \
             }                                                                  \
         }                                                                      \
         private_array_tree_map_mod_hndl;                                       \

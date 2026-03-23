@@ -149,7 +149,7 @@ To complete steps 1-3 with one command try the following if your system supports
 make clang-ccc [OPTIONAL/INSTALL/PATH]
 ```
 
-Or build and install with gcc. However, a newer gcc than the default on many systems may be required. For example, I compile this library with gcc-14.2 as of the time of writing. To set up a `CMakeUserPresets.json` file to use a newer gcc, see [User Presets](#user-presets).
+Or build and install with gcc. However, a newer gcc than the default on many systems may be required. For example, I compile this library with gcc-14.2 as of the time of writing. To set up a `CMakeUserPresets.json` file to use a newer gcc.
 
 ```zsh
 make gcc-ccc [OPTIONAL/INSTALL/PATH]

@@ -205,8 +205,8 @@ check_static_begin(adaptive_map_test_entry_api_functional) {
         struct Val const *const d = or_insert(
             adaptive_map_and_modify_with(
                 adaptive_map_entry_wrap(&om, &def.key),
-                struct Val *,
-                { T->val++; }
+                struct Val * e,
+                { e->val++; }
             ),
             &def.elem,
             &allocator

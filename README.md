@@ -1087,7 +1087,7 @@ Other Rust Interface functions like `get_key_value`, `insert`, and `remove` are 
 
 Each container offers it's own C version of "closures" for the `and_modify_with`. Here is an example from the `samples/words.c` program.
 
-- `and_modify_with(array_adaptive_map_entry_pointer, typed_pointer_to_T, closure_over_T...)` - Run code in `closure_over_T` on the stored user type `T`.
+- `and_modify_with(map_entry_pointer, closure_parameter, closure_over_closure_parameter...)` - Run code in `closure_over_closure_parameter` on the user named pointer type for that closure.
 
 ```c
 typedef struct {
@@ -1097,7 +1097,7 @@ typedef struct {
 /* Increment a found Word or insert a default count of 1. */
 CCC_Handle_index const h = array_adaptive_map_or_insert_with(
     array_adaptive_map_and_modify_with(
-        handle_wrap(&hom, &key_ofs), Word *, { T->cnt++; }
+        handle_wrap(&hom, &key_ofs), Word * w, { w->cnt++; }
     ),
     &std_allocator,
     (Word){.ofs = ofs, .cnt = 1}

@@ -285,7 +285,9 @@ void *CCC_private_adaptive_map_insert(
 
 /** @internal */
 #define CCC_private_adaptive_map_and_modify_with(                              \
-    adaptive_map_entry_pointer, typed_pointer_to_T, closure_over_T...          \
+    adaptive_map_entry_pointer,                                                \
+    closure_parameter,                                                         \
+    closure_over_closure_parameter...                                          \
 )                                                                              \
     (__extension__({                                                           \
         __auto_type private_adaptive_map_ent_pointer                           \
@@ -296,11 +298,8 @@ void *CCC_private_adaptive_map_insert(
             private_adaptive_map_mod_ent = *private_adaptive_map_ent_pointer;  \
             if (private_adaptive_map_mod_ent.entry.status                      \
                 & CCC_ENTRY_OCCUPIED) {                                        \
-                typed_pointer_to_T const T                                     \
-                    = private_adaptive_map_mod_ent.entry.type;                 \
-                if (T) {                                                       \
-                    closure_over_T                                             \
-                }                                                              \
+                closure_parameter = private_adaptive_map_mod_ent.entry.type;   \
+                closure_over_closure_parameter                                 \
             }                                                                  \
         }                                                                      \
         private_adaptive_map_mod_ent;                                          \

@@ -186,9 +186,10 @@ check_static_begin(priority_queue_test_priority_update_with) {
     for (size_t val = 0; val < HEAP_CAP; ++val) {
         int backoff = val_array[val].val / 2;
         if (val_array[val].val > limit) {
+            struct Val *i = &val_array[val];
             check(
                 CCC_priority_queue_update_with(
-                    &priority_queue, &val_array[val], { T->val = backoff; }
+                    &priority_queue, i, { i->val = backoff; }
                 ) != NULL,
                 true
             );
@@ -302,10 +303,11 @@ check_static_begin(priority_queue_test_priority_increase_with) {
     for (size_t val = 0; val < HEAP_CAP; ++val) {
         int inc = (limit * 2) + 1;
         int dec = (val_array[val].val / 2) - 1;
+        struct Val *i = &val_array[val];
         if (val_array[val].val > limit && dec < val_array[val].val) {
             check(
                 CCC_priority_queue_decrease_with(
-                    &priority_queue, &val_array[val], { T->val = dec; }
+                    &priority_queue, i, { i->val = dec; }
                 ) != NULL,
                 true
             );
@@ -313,7 +315,7 @@ check_static_begin(priority_queue_test_priority_increase_with) {
         } else if (val_array[val].val < limit && inc > val_array[val].val) {
             check(
                 CCC_priority_queue_increase_with(
-                    &priority_queue, &val_array[val], { T->val = inc; }
+                    &priority_queue, i, { i->val = inc; }
                 ) != NULL,
                 true
             );
@@ -431,7 +433,7 @@ check_static_begin(priority_queue_test_priority_decrease_with) {
         if (i->val < limit && inc > i->val) {
             check(
                 CCC_priority_queue_increase_with(
-                    &priority_queue, i, { T->val = inc; }
+                    &priority_queue, i, { i->val = inc; }
                 ) != NULL,
                 true
             );
@@ -439,7 +441,7 @@ check_static_begin(priority_queue_test_priority_decrease_with) {
         } else if (i->val > limit && dec < i->val) {
             check(
                 CCC_priority_queue_decrease_with(
-                    &priority_queue, i, { T->val = dec; }
+                    &priority_queue, i, { i->val = dec; }
                 ) != NULL,
                 true
             );

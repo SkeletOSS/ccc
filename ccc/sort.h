@@ -107,7 +107,7 @@ CCC_Result CCC_sort_singly_linked_list_mergesort(
 
 /** @brief Sorts the list in non-decreasing order as defined by
 the provided comparison function. `O(N * log(N))` time, `O(1)` space.
-@param[in] list a pointer to the list to sort.
+@param[in] list_pointer a pointer to the list to sort.
 @param[in] order the desired order of the sorted list. CCC_ORDER_LESSER places
 elements in non-decreasing order starting from index `[0, N)`, where N is the
 count of the list. CCC_ORDER_GREATER places elements in non-increasing order
