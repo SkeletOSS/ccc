@@ -164,9 +164,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:a97a2aa2ff988d3632b332f56cb47d243"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tree__map_8h.html#a97a2aa2ff988d3632b332f56cb47d243">CCC_tree_map_entry_wrap</a>(map_pointer,  key_pointer...)</td></tr>
 <tr class="memdesc:a97a2aa2ff988d3632b332f56cb47d243"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtains an entry for the provided key in the map for future use.  <br /></td></tr>
 <tr class="separator:a97a2aa2ff988d3632b332f56cb47d243"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46d1fa65cf635849087a89b6c488762f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tree__map_8h.html#a46d1fa65cf635849087a89b6c488762f">CCC_tree_map_and_modify_with</a>( map_pointer,  type_name,  closure_over_T...)</td></tr>
-<tr class="memdesc:a46d1fa65cf635849087a89b6c488762f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modify an Occupied entry with a closure over user type T.  <br /></td></tr>
-<tr class="separator:a46d1fa65cf635849087a89b6c488762f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8d8eaaaa0e0802c8bfc660cbfbfe671"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tree__map_8h.html#ab8d8eaaaa0e0802c8bfc660cbfbfe671">CCC_tree_map_and_modify_with</a>( map_pointer,  closure_parameter,  closure_over_closure_parameter...)</td></tr>
+<tr class="memdesc:ab8d8eaaaa0e0802c8bfc660cbfbfe671"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modify an Occupied entry with a closure over user type T.  <br /></td></tr>
+<tr class="separator:ab8d8eaaaa0e0802c8bfc660cbfbfe671"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70038381772a282250d67c290d029028"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tree__map_8h.html#a70038381772a282250d67c290d029028">CCC_tree_map_or_insert_with</a>( map_pointer,  allocator_pointer,  type_compound_literal...)</td></tr>
 <tr class="memdesc:a70038381772a282250d67c290d029028"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lazily insert the desired key value into the entry if it is Vacant.  <br /></td></tr>
 <tr class="separator:a70038381772a282250d67c290d029028"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -294,8 +294,8 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="separator:a14d02a459be9e114525561211aec4bd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a46d1fa65cf635849087a89b6c488762f" name="a46d1fa65cf635849087a89b6c488762f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a46d1fa65cf635849087a89b6c488762f">&#9670;&#160;</a></span>CCC_tree_map_and_modify_with</h2>
+<a id="ab8d8eaaaa0e0802c8bfc660cbfbfe671" name="ab8d8eaaaa0e0802c8bfc660cbfbfe671"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab8d8eaaaa0e0802c8bfc660cbfbfe671">&#9670;&#160;</a></span>CCC_tree_map_and_modify_with</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -310,13 +310,13 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">type_name, </td>
+          <td class="paramname">closure_parameter, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">closure_over_T...&#160;</td>
+          <td class="paramname">closure_over_closure_parameter...&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -327,7 +327,7 @@ This graph shows which files directly or indirectly include this file:</div>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Tree__map__entry.html">CCC_Tree_map_entry</a> <span class="keyword">private</span>; }){                                 \</div>
 <div class="line">        CCC_private_tree_map_and_modify_with(                                  \</div>
-<div class="line">            map_pointer, type_name, closure_over_T                             \</div>
+<div class="line">            map_pointer, closure_parameter, closure_over_closure_parameter     \</div>
 <div class="line">        )}                                                                     \</div>
 <div class="line">         .private</div>
 <div class="ttc" id="astructCCC__Tree__map__entry_html"><div class="ttname"><a href="structCCC__Tree__map__entry.html">CCC_Tree_map_entry</a></div><div class="ttdef"><b>Definition:</b> private_tree_map.h:70</div></div>
@@ -336,32 +336,31 @@ This graph shows which files directly or indirectly include this file:</div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map_pointer</td><td>a pointer to the obtained entry. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">typed_pointer_to_T</td><td>the pointer type <code>My_type *</code> or <code>My_type const *</code> with which to interpret an occupied entry named T. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">closure_over_T</td><td>the code to be run on the reference to user type T, if Occupied. This may be a semicolon separated list of statements to execute on T or a section of code wrapped in braces {code here} which may be preferred for formatting. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">closure_parameter</td><td>the named pointer type, for example <code>My_type * e</code> or <code>My_type const * e</code> with which to interpret an occupied entry. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">closure_over_closure_parameter</td><td>the code to be run on the reference to user type, if Occupied. This may be a semicolon separated list of statements to execute on the typed pointer or a section of code wrapped in braces {code here} which may be preferred for formatting. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>a compound literal reference to the modified entry if it was occupied or a vacant entry if it was vacant. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>T is a reference to the user type specified by the provided pointer argument stored in the entry guaranteed to be non-NULL if the closure executes.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>a compound literal reference to the modified entry if it was occupied or a vacant entry if it was vacant.</dd></dl>
 <div class="fragment"><div class="line"><span class="preprocessor">#define TREE_MAP_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="comment">// Increment the count if found otherwise do nothing.</span></div>
 <div class="line">Tree_map_entry *e =</div>
 <div class="line">    tree_map_and_modify_with(</div>
 <div class="line">        entry_wrap(&amp;map, &amp;k),</div>
-<div class="line">        Word *,</div>
-<div class="line">        T-&gt;cnt++;</div>
+<div class="line">        Word * e,</div>
+<div class="line">        e-&gt;cnt++;</div>
 <div class="line">    );</div>
 <div class="line"><span class="comment">// Increment the count if found otherwise insert a default value.</span></div>
 <div class="line">Word *w =</div>
 <div class="line">    tree_map_or_insert_with(</div>
 <div class="line">        tree_map_and_modify_with(</div>
 <div class="line">            entry_wrap(&amp;map, &amp;k),</div>
-<div class="line">            Word *,</div>
-<div class="line">            { T-&gt;cnt++; }</div>
+<div class="line">            Word * e,</div>
+<div class="line">            { e-&gt;cnt++; }</div>
 <div class="line">        ),</div>
 <div class="line">        (Word){.key = k, .cnt = 1}</div>
 <div class="line">    );</div>
-</div><!-- fragment --><p>Note that any code written is only evaluated if the entry is Occupied and the container can deliver the user type T. This means any function calls are lazily evaluated in the closure scope. </p>
+</div><!-- fragment --><p>Note that any code written is only evaluated if the entry is Occupied and the container can deliver the user type. This means any function calls are lazily evaluated in the closure scope. </p>
 
 </div>
 </div>

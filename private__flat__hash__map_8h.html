@@ -155,8 +155,8 @@ Macros</h2></td></tr>
 <tr class="separator:a6e57c0677b6702e98cafa3355f986d35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a618d561b95d6f3874939e239804cc6e3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__flat__hash__map_8h.html#a618d561b95d6f3874939e239804cc6e3">CCC_private_flat_hash_map_with_storage</a>( private_key_field,  private_hasher,  private_compound_literal,  private_optional_storage_specifier...)</td></tr>
 <tr class="separator:a618d561b95d6f3874939e239804cc6e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab2e8d095e1ad0d59240cd92076e4551"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__flat__hash__map_8h.html#aab2e8d095e1ad0d59240cd92076e4551">CCC_private_flat_hash_map_and_modify_with</a>( flat_hash_map_entry_pointer,  typed_pointer_to_T,  closure_over_pointer_to_T...)</td></tr>
-<tr class="separator:aab2e8d095e1ad0d59240cd92076e4551"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab12024a6d025ecc4d6a0ee67a2e7a1cb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__flat__hash__map_8h.html#ab12024a6d025ecc4d6a0ee67a2e7a1cb">CCC_private_flat_hash_map_and_modify_with</a>( flat_hash_map_entry_pointer,  closure_parameter,  closure_over_closure_parameter...)</td></tr>
+<tr class="separator:ab12024a6d025ecc4d6a0ee67a2e7a1cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7312d6c2cd7dc3d2a53e5c8121806a32"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__flat__hash__map_8h.html#a7312d6c2cd7dc3d2a53e5c8121806a32">CCC_private_flat_hash_map_or_insert_with</a>( flat_hash_map_entry_pointer,  type_compound_literal...)</td></tr>
 <tr class="separator:a7312d6c2cd7dc3d2a53e5c8121806a32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a712be7b1ca0707f4a41b0a7b61582409"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__flat__hash__map_8h.html#a712be7b1ca0707f4a41b0a7b61582409">CCC_private_flat_hash_map_insert_entry_with</a>( flat_hash_map_entry_pointer,  type_compound_literal...)</td></tr>
@@ -192,8 +192,8 @@ Variables</h2></td></tr>
 <tr class="separator:ad75883004f3959ffc98ae1b4ff009199"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="aab2e8d095e1ad0d59240cd92076e4551" name="aab2e8d095e1ad0d59240cd92076e4551"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aab2e8d095e1ad0d59240cd92076e4551">&#9670;&#160;</a></span>CCC_private_flat_hash_map_and_modify_with</h2>
+<a id="ab12024a6d025ecc4d6a0ee67a2e7a1cb" name="ab12024a6d025ecc4d6a0ee67a2e7a1cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab12024a6d025ecc4d6a0ee67a2e7a1cb">&#9670;&#160;</a></span>CCC_private_flat_hash_map_and_modify_with</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -208,13 +208,13 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">typed_pointer_to_T, </td>
+          <td class="paramname">closure_parameter, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">closure_over_pointer_to_T...&#160;</td>
+          <td class="paramname">closure_over_closure_parameter...&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -233,14 +233,11 @@ Variables</h2></td></tr>
 <div class="line">                = *private_flat_hash_map_mod_ent_pointer;                      \</div>
 <div class="line">            if (private_flat_hash_map_mod_with_ent.<a class="code hl_variable" href="structCCC__Flat__hash__map__entry.html#ad94422a2aa5e088cdf4f11b36ee89aa2">status</a>                      \</div>
 <div class="line">                &amp; <a class="code hl_enumvalue" href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8ac6231d0bcd60ef80461c2908f4f0a630">CCC_ENTRY_OCCUPIED</a>) {                                        \</div>
-<div class="line">                typed_pointer_to_T <span class="keyword">const</span> T                                     \</div>
-<div class="line">                    = <a class="code hl_function" href="private__flat__hash__map_8h.html#aad4a10c1784d6e91e8df547cf0479386">CCC_private_flat_hash_map_data_at</a>(                       \</div>
-<div class="line">                        private_flat_hash_map_mod_with_ent.<a class="code hl_variable" href="structCCC__Flat__hash__map__entry.html#af4888e7d3af9ce175621ee87fccb63c7">map</a>,                \</div>
-<div class="line">                        private_flat_hash_map_mod_with_ent.<a class="code hl_variable" href="structCCC__Flat__hash__map__entry.html#a20f3bf7ba3ce45849f403d80fe004ba2">index</a>               \</div>
-<div class="line">                    );                                                         \</div>
-<div class="line">                if (T) {                                                       \</div>
-<div class="line">                    closure_over_pointer_to_T                                  \</div>
-<div class="line">                }                                                              \</div>
+<div class="line">                closure_parameter = <a class="code hl_function" href="private__flat__hash__map_8h.html#aad4a10c1784d6e91e8df547cf0479386">CCC_private_flat_hash_map_data_at</a>(         \</div>
+<div class="line">                    private_flat_hash_map_mod_with_ent.<a class="code hl_variable" href="structCCC__Flat__hash__map__entry.html#af4888e7d3af9ce175621ee87fccb63c7">map</a>,                    \</div>
+<div class="line">                    private_flat_hash_map_mod_with_ent.<a class="code hl_variable" href="structCCC__Flat__hash__map__entry.html#a20f3bf7ba3ce45849f403d80fe004ba2">index</a>                   \</div>
+<div class="line">                );                                                             \</div>
+<div class="line">                closure_over_closure_parameter                                 \</div>
 <div class="line">            }                                                                  \</div>
 <div class="line">        }                                                                      \</div>
 <div class="line">        private_flat_hash_map_mod_with_ent;                                    \</div>

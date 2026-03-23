@@ -182,9 +182,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:a817cd8d3d20f62f6d91b35f488551f55"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__hash__map_8h.html#a817cd8d3d20f62f6d91b35f488551f55">CCC_flat_hash_map_entry_wrap</a>( map_pointer,  key_pointer,  allocator_pointer...)</td></tr>
 <tr class="memdesc:a817cd8d3d20f62f6d91b35f488551f55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtains an entry for the provided key in the table for future use.  <br /></td></tr>
 <tr class="separator:a817cd8d3d20f62f6d91b35f488551f55"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44b15d918c283465144304f710f947f3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__hash__map_8h.html#a44b15d918c283465144304f710f947f3">CCC_flat_hash_map_and_modify_with</a>( map_entry_pointer,  typed_pointer_to_T,  closure_over_T...)</td></tr>
-<tr class="memdesc:a44b15d918c283465144304f710f947f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modify an Occupied entry with a closure over user type T.  <br /></td></tr>
-<tr class="separator:a44b15d918c283465144304f710f947f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3733d3c89a1ca188fde6674822c1733d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__hash__map_8h.html#a3733d3c89a1ca188fde6674822c1733d">CCC_flat_hash_map_and_modify_with</a>( map_entry_pointer,  closure_parameter,  closure_over_closure_parameter...)</td></tr>
+<tr class="memdesc:a3733d3c89a1ca188fde6674822c1733d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modify an Occupied entry with a closure over user type T.  <br /></td></tr>
+<tr class="separator:a3733d3c89a1ca188fde6674822c1733d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d18fa690916d569797d8570bde299ff"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__hash__map_8h.html#a0d18fa690916d569797d8570bde299ff">CCC_flat_hash_map_or_insert_with</a>( map_entry_pointer,  type_compound_literal...)</td></tr>
 <tr class="memdesc:a0d18fa690916d569797d8570bde299ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">lazily insert the desired key value into the entry if it is Vacant.  <br /></td></tr>
 <tr class="separator:a0d18fa690916d569797d8570bde299ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -312,8 +312,8 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="separator:a586d10ff39909b2b1a50f2ce25b63df8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a44b15d918c283465144304f710f947f3" name="a44b15d918c283465144304f710f947f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a44b15d918c283465144304f710f947f3">&#9670;&#160;</a></span>CCC_flat_hash_map_and_modify_with</h2>
+<a id="a3733d3c89a1ca188fde6674822c1733d" name="a3733d3c89a1ca188fde6674822c1733d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3733d3c89a1ca188fde6674822c1733d">&#9670;&#160;</a></span>CCC_flat_hash_map_and_modify_with</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -328,13 +328,13 @@ This graph shows which files directly or indirectly include this file:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">typed_pointer_to_T, </td>
+          <td class="paramname">closure_parameter, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">closure_over_T...&#160;</td>
+          <td class="paramname">closure_over_closure_parameter...&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -343,44 +343,44 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    &amp;(<span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Flat__hash__map__entry.html">CCC_Flat_hash_map_entry</a> <span class="keyword">private</span>; }){                            \</div>
-<div class="line">        CCC_private_flat_hash_map_and_modify_with(                             \</div>
-<div class="line">            map_entry_pointer, typed_pointer_to_T, closure_over_T              \</div>
-<div class="line">        )}                                                                     \</div>
+<b>Value:</b><div class="fragment"><div class="line">    &amp;(                                                                         \</div>
+<div class="line">         <span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Flat__hash__map__entry.html">CCC_Flat_hash_map_entry</a> <span class="keyword">private</span>; }                           \</div>
+<div class="line">    ){<a class="code hl_define" href="private__flat__hash__map_8h.html#ab12024a6d025ecc4d6a0ee67a2e7a1cb">CCC_private_flat_hash_map_and_modify_with</a>(                               \</div>
+<div class="line">          map_entry_pointer, closure_parameter, closure_over_closure_parameter \</div>
+<div class="line">      )}                                                                       \</div>
 <div class="line">         .private</div>
+<div class="ttc" id="aprivate__flat__hash__map_8h_html_ab12024a6d025ecc4d6a0ee67a2e7a1cb"><div class="ttname"><a href="private__flat__hash__map_8h.html#ab12024a6d025ecc4d6a0ee67a2e7a1cb">CCC_private_flat_hash_map_and_modify_with</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_and_modify_with( flat_hash_map_entry_pointer, closure_parameter, closure_over_closure_parameter...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:396</div></div>
 <div class="ttc" id="astructCCC__Flat__hash__map__entry_html"><div class="ttname"><a href="structCCC__Flat__hash__map__entry.html">CCC_Flat_hash_map_entry</a></div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:158</div></div>
 </div><!-- fragment -->
 <p>Modify an Occupied entry with a closure over user type T. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">map_entry_pointer</td><td>a pointer to the obtained entry. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type_name</td><td>the name of the user type stored in the container. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">typed_pointer_to_T</td><td>the pointer type <code>My_type *</code> or <code>My_type const *</code> with which to interpret an occupied entry named T. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">closure_over_T</td><td>the code to be run on the reference to user type T, if Occupied. This may be a semicolon separated list of statements to execute on T or a section of code wrapped in braces {code here} which may be preferred for formatting. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">closure_parameter</td><td>the named pointer type, for example <code>My_type * e</code> or <code>My_type const * e</code> with which to interpret an occupied entry. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">closure_over_closure_parameter</td><td>the code to be run on the reference to user type, if Occupied. This may be a semicolon separated list of statements to execute on the typed pointer or a section of code wrapped in braces {code here} which may be preferred for formatting. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>a compound literal reference to the modified entry if it was occupied or a vacant entry if it was vacant. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>T is a reference to the user type specified by the provided pointer argument stored in the entry guaranteed to be non-NULL if the closure executes.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>a compound literal reference to the modified entry if it was occupied or a vacant entry if it was vacant.</dd></dl>
 <div class="fragment"><div class="line"><span class="preprocessor">#define FLAT_HASH_MAP_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="comment">// Increment the count if found otherwise do nothing.</span></div>
 <div class="line">Flat_hash_map_entry *entry =</div>
 <div class="line">    flat_hash_map_and_modify_with(</div>
 <div class="line">        entry_wrap(&amp;map, &amp;k),</div>
-<div class="line">        Word *,</div>
-<div class="line">        T-&gt;cnt++;</div>
+<div class="line">        Word * e,</div>
+<div class="line">        e-&gt;cnt++;</div>
 <div class="line">    );</div>
 <div class="line"><span class="comment">// Increment the count if found otherwise insert a default value.</span></div>
 <div class="line">Word *w =</div>
 <div class="line">    flat_hash_map_or_insert_with(</div>
 <div class="line">        flat_hash_map_and_modify_with(</div>
 <div class="line">            entry_wrap(&amp;flat_hash_map, &amp;k),</div>
-<div class="line">            Word *,</div>
-<div class="line">            { T-&gt;cnt++; }</div>
+<div class="line">            Word * e,</div>
+<div class="line">            { e-&gt;cnt++; }</div>
 <div class="line">        ),</div>
 <div class="line">        (Word){.key = k, .cnt = 1}</div>
 <div class="line">    );</div>
-</div><!-- fragment --><p>Note that any code written is only evaluated if the entry is Occupied and the container can deliver the user type T. This means any function calls are lazily evaluated in the closure scope. </p>
+</div><!-- fragment --><p>Note that any code written is only evaluated if the entry is Occupied and the container can deliver the user type. This means any function calls are lazily evaluated in the closure scope. </p>
 
 </div>
 </div>
@@ -684,7 +684,7 @@ If initialization fails, the map will be returned empty. All subsequent queries,
 <b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__hash__map_8h.html#a712be7b1ca0707f4a41b0a7b61582409">CCC_private_flat_hash_map_insert_entry_with</a>(                               \</div>
 <div class="line">        map_entry_pointer, type_compound_literal                               \</div>
 <div class="line">    )</div>
-<div class="ttc" id="aprivate__flat__hash__map_8h_html_a712be7b1ca0707f4a41b0a7b61582409"><div class="ttname"><a href="private__flat__hash__map_8h.html#a712be7b1ca0707f4a41b0a7b61582409">CCC_private_flat_hash_map_insert_entry_with</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_insert_entry_with( flat_hash_map_entry_pointer, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:459</div></div>
+<div class="ttc" id="aprivate__flat__hash__map_8h_html_a712be7b1ca0707f4a41b0a7b61582409"><div class="ttname"><a href="private__flat__hash__map_8h.html#a712be7b1ca0707f4a41b0a7b61582409">CCC_private_flat_hash_map_insert_entry_with</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_insert_entry_with( flat_hash_map_entry_pointer, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:456</div></div>
 </div><!-- fragment -->
 <p>write the contents of the compound literal type_compound_literal to a slot. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -836,7 +836,7 @@ If initialization fails, the map will be returned empty. All subsequent queries,
 <b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__hash__map_8h.html#a7312d6c2cd7dc3d2a53e5c8121806a32">CCC_private_flat_hash_map_or_insert_with</a>(                                  \</div>
 <div class="line">        map_entry_pointer, type_compound_literal                               \</div>
 <div class="line">    )</div>
-<div class="ttc" id="aprivate__flat__hash__map_8h_html_a7312d6c2cd7dc3d2a53e5c8121806a32"><div class="ttname"><a href="private__flat__hash__map_8h.html#a7312d6c2cd7dc3d2a53e5c8121806a32">CCC_private_flat_hash_map_or_insert_with</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_or_insert_with( flat_hash_map_entry_pointer, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:428</div></div>
+<div class="ttc" id="aprivate__flat__hash__map_8h_html_a7312d6c2cd7dc3d2a53e5c8121806a32"><div class="ttname"><a href="private__flat__hash__map_8h.html#a7312d6c2cd7dc3d2a53e5c8121806a32">CCC_private_flat_hash_map_or_insert_with</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_or_insert_with( flat_hash_map_entry_pointer, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:425</div></div>
 </div><!-- fragment -->
 <p>lazily insert the desired key value into the entry if it is Vacant. </p>
 <dl class="params"><dt>Parameters</dt><dd>

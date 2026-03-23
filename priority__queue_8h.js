@@ -1,12 +1,12 @@
 var priority__queue_8h =
 [
-    [ "CCC_priority_queue_decrease_with", "priority__queue_8h.html#a5ff0f1be6390b266f8aae8a10ece3f52", null ],
+    [ "CCC_priority_queue_decrease_with", "priority__queue_8h.html#a09f2d0b53623f994aeb9b7d8b314397d", null ],
     [ "CCC_priority_queue_default", "priority__queue_8h.html#ad47007b5b4a31081f53ec72ec39e37c5", null ],
     [ "CCC_priority_queue_emplace", "priority__queue_8h.html#a3e74ef1ad119c422162508cbca23a720", null ],
     [ "CCC_priority_queue_for", "priority__queue_8h.html#a666c5af1ec876128146e0a0943a657da", null ],
     [ "CCC_priority_queue_from", "priority__queue_8h.html#add24d10aa02d11a5aa401814e042f97b", null ],
-    [ "CCC_priority_queue_increase_with", "priority__queue_8h.html#a4029bdafed76a978c77695ade5cb2a63", null ],
-    [ "CCC_priority_queue_update_with", "priority__queue_8h.html#ac20032f0872badfb523ec86cf4a1475b", null ],
+    [ "CCC_priority_queue_increase_with", "priority__queue_8h.html#a5ee796f5f02ac0eb096aed47f4a1d36e", null ],
+    [ "CCC_priority_queue_update_with", "priority__queue_8h.html#adad79327a3633cb222394de38c0b8eab", null ],
     [ "CCC_Priority_queue", "priority__queue_8h.html#aed789dbc832fef37638fccc3dc0a0d51", null ],
     [ "CCC_Priority_queue_node", "priority__queue_8h.html#afffbf1fc160869cf917fe3e30f50b01c", null ],
     [ "CCC_priority_queue_clear", "priority__queue_8h.html#af3c58f6c6820fd9ea03ac47cfd878896", null ],

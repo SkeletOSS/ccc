@@ -201,7 +201,7 @@ Manual Install Quick Start</h1>
 </ol>
 <p>To complete steps 1-3 with one command try the following if your system supports <code>make</code>.</p>
 <div class="fragment"><div class="line">make clang-ccc [OPTIONAL/INSTALL/PATH]</div>
-</div><!-- fragment --><p>Or build and install with gcc. However, a newer gcc than the default on many systems may be required. For example, I compile this library with gcc-14.2 as of the time of writing. To set up a <code>CMakeUserPresets.json</code> file to use a newer gcc, see User Presets.</p>
+</div><!-- fragment --><p>Or build and install with gcc. However, a newer gcc than the default on many systems may be required. For example, I compile this library with gcc-14.2 as of the time of writing. To set up a <code>CMakeUserPresets.json</code> file to use a newer gcc.</p>
 <div class="fragment"><div class="line">make gcc-ccc [OPTIONAL/INSTALL/PATH]</div>
 </div><!-- fragment --><p>This will use CMake and your default compiler to build and install the library in release mode. By default, this library does not touch your system paths and it is installed in the <code>install/</code> directory of this folder. This is best for testing the library out while pointing <code>cmake</code> to the install location. Then, deleting the <code>install/</code> folder deletes any trace of this library from your system.</p>
 <p>Then, in your <code>CMakeLists.txt</code>:</p>

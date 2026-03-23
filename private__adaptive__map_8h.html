@@ -151,8 +151,8 @@ Macros</h2></td></tr>
 <tr class="separator:a7cddac3a9da8eede77888febe12d0ed4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab02a4c916de100d7b123d34024ea7bb5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__adaptive__map_8h.html#ab02a4c916de100d7b123d34024ea7bb5">CCC_private_adaptive_map_insert_and_copy_key</a>( om_insert_entry,  om_insert_entry_ret,  key,  private_allocator,  type_compound_literal...)</td></tr>
 <tr class="separator:ab02a4c916de100d7b123d34024ea7bb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c7adcb061f23e85313fcf35b1103aa4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__adaptive__map_8h.html#a1c7adcb061f23e85313fcf35b1103aa4">CCC_private_adaptive_map_and_modify_with</a>( adaptive_map_entry_pointer,  typed_pointer_to_T,  closure_over_T...)</td></tr>
-<tr class="separator:a1c7adcb061f23e85313fcf35b1103aa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aacc453d37076677cc4a8a5f3f2bc715b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__adaptive__map_8h.html#aacc453d37076677cc4a8a5f3f2bc715b">CCC_private_adaptive_map_and_modify_with</a>( adaptive_map_entry_pointer,  closure_parameter,  closure_over_closure_parameter...)</td></tr>
+<tr class="separator:aacc453d37076677cc4a8a5f3f2bc715b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34ff713f4984afe6c1549e0720344b7b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__adaptive__map_8h.html#a34ff713f4984afe6c1549e0720344b7b">CCC_private_adaptive_map_or_insert_with</a>( adaptive_map_entry_pointer,  private_allocator_pointer,  type_compound_literal...)</td></tr>
 <tr class="separator:a34ff713f4984afe6c1549e0720344b7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb43a25ca72f188836e81d11eea4721e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__adaptive__map_8h.html#adb43a25ca72f188836e81d11eea4721e">CCC_private_adaptive_map_insert_entry_with</a>( adaptive_map_entry_pointer,  private_allocator_pointer,  type_compound_literal...)</td></tr>
@@ -174,8 +174,8 @@ Functions</h2></td></tr>
 <tr class="separator:a7591c171cc0734ef8837b6284a96631a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a1c7adcb061f23e85313fcf35b1103aa4" name="a1c7adcb061f23e85313fcf35b1103aa4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1c7adcb061f23e85313fcf35b1103aa4">&#9670;&#160;</a></span>CCC_private_adaptive_map_and_modify_with</h2>
+<a id="aacc453d37076677cc4a8a5f3f2bc715b" name="aacc453d37076677cc4a8a5f3f2bc715b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aacc453d37076677cc4a8a5f3f2bc715b">&#9670;&#160;</a></span>CCC_private_adaptive_map_and_modify_with</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -190,13 +190,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">typed_pointer_to_T, </td>
+          <td class="paramname">closure_parameter, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">closure_over_T...&#160;</td>
+          <td class="paramname">closure_over_closure_parameter...&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -214,11 +214,8 @@ Functions</h2></td></tr>
 <div class="line">            private_adaptive_map_mod_ent = *private_adaptive_map_ent_pointer;  \</div>
 <div class="line">            if (private_adaptive_map_mod_ent.<a class="code hl_variable" href="structCCC__Adaptive__map__entry.html#a2b0b0a9ce29ecd47addf7a7d846c2346">entry</a>.<a class="code hl_variable" href="structCCC__Entry.html#aa9e3883d6e8e864022a62fe4c7282815">status</a>                      \</div>
 <div class="line">                &amp; <a class="code hl_enumvalue" href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8ac6231d0bcd60ef80461c2908f4f0a630">CCC_ENTRY_OCCUPIED</a>) {                                        \</div>
-<div class="line">                typed_pointer_to_T <span class="keyword">const</span> T                                     \</div>
-<div class="line">                    = private_adaptive_map_mod_ent.<a class="code hl_variable" href="structCCC__Adaptive__map__entry.html#a2b0b0a9ce29ecd47addf7a7d846c2346">entry</a>.<a class="code hl_variable" href="structCCC__Entry.html#a4a6fadeba22d89ee3e7f46edf38db2f4">type</a>;                 \</div>
-<div class="line">                if (T) {                                                       \</div>
-<div class="line">                    closure_over_T                                             \</div>
-<div class="line">                }                                                              \</div>
+<div class="line">                closure_parameter = private_adaptive_map_mod_ent.<a class="code hl_variable" href="structCCC__Adaptive__map__entry.html#a2b0b0a9ce29ecd47addf7a7d846c2346">entry</a>.<a class="code hl_variable" href="structCCC__Entry.html#a4a6fadeba22d89ee3e7f46edf38db2f4">type</a>;   \</div>
+<div class="line">                closure_over_closure_parameter                                 \</div>
 <div class="line">            }                                                                  \</div>
 <div class="line">        }                                                                      \</div>
 <div class="line">        private_adaptive_map_mod_ent;                                          \</div>
