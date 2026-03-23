@@ -54,6 +54,10 @@ target_sources(${PROJECT_NAME}
 )
 
 option(CCC_FLAT_HASH_MAP_PORTABLE "Fallback to portable implementation of flat hash map to improve cross platform compatibility while decreasing optimizations" OFF)
+option(CCC_USER_CONFIGURATION "Freestanding environment user defined configuration providing necessary functions" OFF)
+if (CCC_USER_CONFIGURATION)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE CCC_USER_CONFIGURATION)
+endif()
 if (CCC_FLAT_HASH_MAP_PORTABLE)
     target_compile_definitions(${PROJECT_NAME} PRIVATE CCC_FLAT_HASH_MAP_PORTABLE)
 endif()

@@ -15,7 +15,7 @@ limitations under the License.
 @endcond */
 /** @file
 @brief The C Container Collection Configuration Header. For full download and
-install instructions see INSTALL.md
+install instructions using a user configuration see INSTALL.md.
 
 The C Container Collection uses the following functions or macros that must be
 supported by the user on freestanding targets.
@@ -53,8 +53,8 @@ platforms should be available. However, `CCC_FLAT_HASH_MAP_PORTABLE` is an
 available directive for users that need to force a portable fallback
 implementation when such compiler platform intrinsics are not available. See
 `ccc/flat_hash_map.h` for more. */
-#ifndef CCC_CONFIGURATION_H
-#define CCC_CONFIGURATION_H
+#ifndef CCC_PRIVATE_HOSTED_VS_FREESTANDING_CONFIGURATION_H
+#define CCC_PRIVATE_HOSTED_VS_FREESTANDING_CONFIGURATION_H
 
 #ifdef CCC_USER_CONFIGURATION
 #    include CCC_USER_CONFIGURATION
@@ -63,4 +63,4 @@ implementation when such compiler platform intrinsics are not available. See
 #    include <string.h> /* IWYU pragma: export */
 #endif
 
-#endif /* CCC_CONFIGURATION_H */
+#endif /* CCC_PRIVATE_HOSTED_VS_FREESTANDING_CONFIGURATION_H */
