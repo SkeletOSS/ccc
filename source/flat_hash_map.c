@@ -179,10 +179,8 @@ make when the user defines a fixed size map type. This is just a small type that
 will remain internal to this translation unit. The tag array is not given a
 replica group size at the end of its allocation because that wastes pointless
 space and has no impact on the following layout and pointer arithmetic tests.
-One behavior we want to ensure is that the tag array starts on the exact next
-byte after the user data type because the tag array has no alignment
-requirement: it is only a byte so any address following the data array will be
-aligned. */
+One behavior we want to ensure is that our manual pointer arithmetic at runtime
+matches the group size aligned position of the tag metadata array. */
 static struct {
     struct {
         int const i;
@@ -844,7 +842,6 @@ CCC_flat_hash_map_validate(CCC_Flat_hash_map const *const map) {
             ++occupied;
         }
     }
-    /* Do our tags agree with our manually tracked and set state? */
     if (occupied != map->count) {
         return CCC_FALSE;
     }
