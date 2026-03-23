@@ -1087,7 +1087,7 @@ Other Rust Interface functions like `get_key_value`, `insert`, and `remove` are 
 
 Each container offers it's own C version of "closures" for the `and_modify_with`. Here is an example from the `samples/words.c` program.
 
-- `and_modify_with(map_entry_pointer, typed_pointer, closure_over_typed_pointer...)` - Run code in `closure_over_typed_pointer` on the user named pointer type for that closure.
+- `and_modify_with(map_entry_pointer, closure_parameter, closure_over_closure_parameter...)` - Run code in `closure_over_closure_parameter` on the user named pointer type for that closure.
 
 ```c
 typedef struct {

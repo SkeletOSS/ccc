@@ -394,7 +394,9 @@ allocation. */
 The user facing docs clarify that T is a correctly typed reference to the
 desired data if occupied. */
 #define CCC_private_flat_hash_map_and_modify_with(                             \
-    flat_hash_map_entry_pointer, typed_pointer, closure_over_typed_pointer...  \
+    flat_hash_map_entry_pointer,                                               \
+    closure_parameter,                                                         \
+    closure_over_closure_parameter...                                          \
 )                                                                              \
     (__extension__({                                                           \
         __auto_type private_flat_hash_map_mod_ent_pointer                      \
@@ -406,11 +408,11 @@ desired data if occupied. */
                 = *private_flat_hash_map_mod_ent_pointer;                      \
             if (private_flat_hash_map_mod_with_ent.status                      \
                 & CCC_ENTRY_OCCUPIED) {                                        \
-                typed_pointer = CCC_private_flat_hash_map_data_at(             \
+                closure_parameter = CCC_private_flat_hash_map_data_at(         \
                     private_flat_hash_map_mod_with_ent.map,                    \
                     private_flat_hash_map_mod_with_ent.index                   \
                 );                                                             \
-                closure_over_typed_pointer                                     \
+                closure_over_closure_parameter                                 \
             }                                                                  \
         }                                                                      \
         private_flat_hash_map_mod_with_ent;                                    \

@@ -692,12 +692,12 @@ to subsequent calls in the Handle Interface. */
 
 /** @brief Modify an Occupied handle with a closure over user type T.
 @param[in] array_pointer a pointer to the obtained handle.
-@param[in] typed_pointer the typed and named pointer, for example `My_type * e`
-or `My_type const * e` with which to interpret an occupied entry.
-@param[in] closure_over_typed_pointer the code to be run on the named reference
-to user type, if Occupied. This may be a semicolon separated list of statements
-to execute on the type or a section of code wrapped in braces {code here} which
-may be preferred for formatting.
+@param[in] closure_parameter the typed and named pointer, for example `My_type *
+e` or `My_type const * e` with which to interpret an occupied entry.
+@param[in] closure_over_closure_parameter the code to be run on the named
+reference to user type, if Occupied. This may be a semicolon separated list of
+statements to execute on the type or a section of code wrapped in braces {code
+here} which may be preferred for formatting.
 @return a compound literal reference to the modified handle if it was occupied
 or a vacant handle if it was vacant.
 
@@ -726,11 +726,11 @@ Note that any code written is only evaluated if the handle is Occupied and the
 container can deliver the user named type. This means any function calls are
 lazily evaluated in the closure scope. */
 #define CCC_array_adaptive_map_and_modify_with(                                \
-    array_pointer, typed_pointer, closure_over_typed_pointer...                \
+    array_pointer, closure_parameter, closure_over_closure_parameter...        \
 )                                                                              \
     &(struct { CCC_Array_adaptive_map_handle private; }){                      \
         CCC_private_array_adaptive_map_and_modify_with(                        \
-            array_pointer, typed_pointer, closure_over_typed_pointer           \
+            array_pointer, closure_parameter, closure_over_closure_parameter   \
         )}                                                                     \
          .private
 

@@ -424,9 +424,9 @@ to subsequent calls in the Entry Interface. */
 
 /** @brief Modify an Occupied entry with a closure over user type.
 @param[in] adaptive_map_entry_pointer a pointer to the obtained entry.
-@param[in] typed_pointer the type and name, for example `My_type * e` or
+@param[in] closure_parameter the type and name, for example `My_type * e` or
 `My_type const * e`, with which to interpret an occupied entry.
-@param[in] closure_over_typed_pointer the code to be run on the reference to
+@param[in] closure_over_closure_parameter the code to be run on the reference to
 user typed named pointer, if Occupied. This may be a semicolon separated list of
 statements to execute or a section of code wrapped in braces {code here} which
 may be preferred for formatting.
@@ -458,13 +458,15 @@ Note that any code written is only evaluated if the entry is Occupied and the
 container can deliver the named user type. This means any function calls are
 lazily evaluated in the closure scope. */
 #define CCC_adaptive_map_and_modify_with(                                      \
-    adaptive_map_entry_pointer, typed_pointer, closure_over_typed_pointer...   \
+    adaptive_map_entry_pointer,                                                \
+    closure_parameter,                                                         \
+    closure_over_closure_parameter...                                          \
 )                                                                              \
     &(struct { CCC_Adaptive_map_entry private; }){                             \
         CCC_private_adaptive_map_and_modify_with(                              \
             adaptive_map_entry_pointer,                                        \
-            typed_pointer,                                                     \
-            closure_over_typed_pointer                                         \
+            closure_parameter,                                                 \
+            closure_over_closure_parameter                                     \
         )}                                                                     \
          .private
 

@@ -564,9 +564,9 @@ Entry Interface.*/
 /** @brief Modify an Occupied entry with a closure over user type T.
 @param[in] map_entry_pointer a pointer to the obtained entry.
 @param[in] type_name the name of the user type stored in the container.
-@param[in] typed_pointer the named pointer type, for example `My_type * e` or
-`My_type const * e` with which to interpret an occupied entry.
-@param[in] closure_over_typed_pointer the code to be run on the reference to
+@param[in] closure_parameter the named pointer type, for example `My_type * e`
+or `My_type const * e` with which to interpret an occupied entry.
+@param[in] closure_over_closure_parameter the code to be run on the reference to
 user type, if Occupied. This may be a semicolon separated list of statements to
 execute on the typed pointer or a section of code wrapped in braces {code here}
 which may be preferred for formatting.
@@ -598,12 +598,13 @@ Note that any code written is only evaluated if the entry is Occupied and the
 container can deliver the user type. This means any function calls are lazily
 evaluated in the closure scope. */
 #define CCC_flat_hash_map_and_modify_with(                                     \
-    map_entry_pointer, typed_pointer, closure_over_typed_pointer...            \
+    map_entry_pointer, closure_parameter, closure_over_closure_parameter...    \
 )                                                                              \
-    &(struct { CCC_Flat_hash_map_entry private; }){                            \
-        CCC_private_flat_hash_map_and_modify_with(                             \
-            map_entry_pointer, typed_pointer, closure_over_typed_pointer       \
-        )}                                                                     \
+    &(                                                                         \
+         struct { CCC_Flat_hash_map_entry private; }                           \
+    ){CCC_private_flat_hash_map_and_modify_with(                               \
+          map_entry_pointer, closure_parameter, closure_over_closure_parameter \
+      )}                                                                       \
          .private
 
 /** @brief Inserts the struct with handle elem if the entry is Vacant.
