@@ -28,12 +28,13 @@ var NAVTREE =
     [ "CCC DOC", "index.html", "index" ],
     [ "Building and Installation", "md_INSTALL.html", [
       [ "Fetch Content Install", "md_INSTALL.html#autotoc_md4", null ],
-      [ "Manual Install Quick Start", "md_INSTALL.html#autotoc_md5", [
-        [ "Include the Library", "md_INSTALL.html#autotoc_md6", null ],
-        [ "Without Make", "md_INSTALL.html#autotoc_md7", null ],
-        [ "User Presets", "md_INSTALL.html#autotoc_md8", null ]
+      [ "Freestanding Environments", "md_INSTALL.html#autotoc_md5", null ],
+      [ "Manual Install Quick Start", "md_INSTALL.html#autotoc_md6", [
+        [ "Include the Library", "md_INSTALL.html#autotoc_md7", null ],
+        [ "Without Make", "md_INSTALL.html#autotoc_md8", null ],
+        [ "User Presets", "md_INSTALL.html#autotoc_md9", null ]
       ] ],
-      [ "Generate Documentation", "md_INSTALL.html#autotoc_md9", null ]
+      [ "Generate Documentation", "md_INSTALL.html#autotoc_md10", null ]
     ] ],
     [ "Data Structures", "annotated.html", [
       [ "Data Structures", "annotated.html", "annotated_dup" ],
@@ -62,8 +63,8 @@ var NAVTREEINDEX =
 [
 "adaptive__map_8h.html",
 "buffer_8h.html#a8128da7871c675e2c65ccfaf65271358",
-"private__flat__hash__map_8h.html#a1558c496e3b9b4a58b948cbf2692962f",
-"traits_8h.html#a2e3406c1125540e36828a9418b71b073"
+"private__doubly__linked__list_8h_source.html",
+"traits_8h.html#a0478c724a9aa16943c6515b95a4c5c83"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

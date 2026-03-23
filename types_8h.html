@@ -114,7 +114,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <area shape="rect" href="flat__priority__queue_8h.html" title="The Flat Priority Queue Interface." alt="" coords="1231,350,1412,375"/>
 <area shape="rect" href="private__flat__double__ended__queue_8h_source.html" title=" " alt="" coords="877,255,1083,295"/>
 <area shape="rect" href="private__flat__priority__queue_8h_source.html" title=" " alt="" coords="1260,255,1423,295"/>
-<area shape="rect" href="sort_8h_source.html" title=" " alt="" coords="1690,262,1774,287"/>
+<area shape="rect" href="sort_8h.html" title="The C Container Collection Sorting Interface." alt="" coords="1690,262,1774,287"/>
 <area shape="rect" href="doubly__linked__list_8h.html" title="The Doubly Linked List Interface." alt="" coords="1603,174,1779,199"/>
 <area shape="rect" href="flat__hash__map_8h.html" title="The Flat Hash Map Interface." alt="" coords="1416,174,1571,199"/>
 <area shape="rect" href="priority__queue_8h.html" title="The Priority Queue Interface." alt="" coords="1861,174,2014,199"/>
@@ -354,7 +354,7 @@ Data Structures</h2></td></tr>
 <p>The default argument when no user data is available for an initializer that accepts a pointer to user data. NULL is never an acceptable argument to any function or macro in the C Container Collection. If NULL is used at any call site, a programmer error has occurred. To help enforce this habit, use this macro in the rare case of the <code>_for(</code> initializer macros requiring a pointer to empty user data. </p>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structCCC__Buffer.html">CCC_Buffer</a> buffer = <a class="code hl_define" href="buffer_8h.html#a32be0a41c4d346f751a04655026d0513">CCC_buffer_for</a>(<span class="keywordtype">int</span>, 0, 0, <a class="code hl_define" href="types_8h.html#af2756c9ec80e32928cffac7830e1fcd9">CCC_DEFAULT</a>);</div>
 <div class="ttc" id="abuffer_8h_html_a32be0a41c4d346f751a04655026d0513"><div class="ttname"><a href="buffer_8h.html#a32be0a41c4d346f751a04655026d0513">CCC_buffer_for</a></div><div class="ttdeci">#define CCC_buffer_for(type_name, capacity, count, data_pointer...)</div><div class="ttdoc">Initialize a contiguous Buffer of user a specified type, capacity, and optional starting size.</div><div class="ttdef"><b>Definition:</b> buffer.h:125</div></div>
-<div class="ttc" id="astructCCC__Buffer_html"><div class="ttname"><a href="structCCC__Buffer.html">CCC_Buffer</a></div><div class="ttdef"><b>Definition:</b> private_buffer.h:33</div></div>
+<div class="ttc" id="astructCCC__Buffer_html"><div class="ttname"><a href="structCCC__Buffer.html">CCC_Buffer</a></div><div class="ttdef"><b>Definition:</b> private_buffer.h:32</div></div>
 <div class="ttc" id="atypes_8h_html_af2756c9ec80e32928cffac7830e1fcd9"><div class="ttname"><a href="types_8h.html#af2756c9ec80e32928cffac7830e1fcd9">CCC_DEFAULT</a></div><div class="ttdeci">#define CCC_DEFAULT</div><div class="ttdoc">The default argument when no user data is available for an initializer that accepts a pointer to user...</div><div class="ttdef"><b>Definition:</b> types.h:54</div></div>
 </div><!-- fragment --><p>However, even then, a more specific initializer is appropriate.</p>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structCCC__Buffer.html">CCC_Buffer</a> buffer = <a class="code hl_define" href="buffer_8h.html#a5003b3b531cf68bdcd51ae5e60d4d814">CCC_buffer_default</a>(<span class="keywordtype">int</span>);</div>

@@ -93,7 +93,7 @@ $(document).ready(function(){initNavTree('md_INSTALL.html',''); initResizable();
   <div class="headertitle"><div class="title">Building and Installation </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Currently, this library utilizes some features that many compilers support such as gcc, clang, and AppleClang, but support is not ready for Windows.</p>
+<div class="textblock"><p>Currently, this library utilizes some features that many compilers support such as gcc, clang, and AppleClang, but support is not ready for Windows. The C Container Collection supports freestanding environments.</p>
 <h1><a class="anchor" id="autotoc_md4"></a>
 Fetch Content Install</h1>
 <p>This approach will allow CMake to build the collection from source as part of your project. The collection does not have external dependencies, besides the standard library, so this may be viable for you. This is helpful if you want the ability to build the library in release or debug mode along with your project and possibly step through it with a debugger during a debug build. If you would rather link to the release build library file see the next section for the manual install.</p>
@@ -114,7 +114,8 @@ Fetch Content Install</h1>
 <div class="fragment"><div class="line">include(FetchContent)</div>
 <div class="line">FetchContent_Declare(</div>
 <div class="line">  ccc</div>
-<div class="line">  URL https://github.com/agl-alexglopez/ccc/releases/download/v0.7.0/ccc-v0.7.0.zip</div>
+<div class="line">  URL https://github.com/agl-alexglopez/ccc/releases/download/v0.72.0/ccc-v0.72.0.zip</div>
+<div class="line">  URL_HASH SHA256=9965d8ea2115a40ee7711b07f10ae15b1628825151b233b9cb95f5407425ab74</div>
 <div class="line">  #DOWNLOAD_EXTRACT_TIMESTAMP FALSE # CMake may raise a warning to set this. If so, uncomment and set.</div>
 <div class="line">)</div>
 <div class="line">FetchContent_MakeAvailable(ccc)</div>
@@ -128,6 +129,60 @@ Fetch Content Install</h1>
 <div class="line">target_link_libraries(main ccc::ccc)</div>
 </div><!-- fragment --><p>Now, the C Container Collection is part of your project build, allowing you to configure as you see fit. For a more traditional approach read the manual install section below.</p>
 <h1><a class="anchor" id="autotoc_md5"></a>
+Freestanding Environments</h1>
+<p>The C Container Collection uses the following functions or macros that must be supported by the user on freestanding targets.</p>
+<p>Traditionally included via <code>&lt;string.h&gt;</code>:</p>
+<ul>
+<li><code>memcpy()</code></li>
+<li><code>memmove()</code></li>
+<li><code>memset()</code></li>
+<li><code>memcmp()</code></li>
+</ul>
+<p>Traditionally included via <code>&lt;assert.h&gt;</code>:</p>
+<ul>
+<li><code>assert()</code></li>
+</ul>
+<p>To provide these functions, the user may create a header. For example, <code>my_ccc_configuration.h</code>.</p>
+<div class="fragment"><div class="line">my_project/</div>
+<div class="line">    my_ccc_configuration/</div>
+<div class="line">        my_ccc_configuration.h</div>
+</div><!-- fragment --><p>In this header the user has two options: provide the listed functions directly or include their versions of the headers that provide the needed functionality. It is common for freestanding environments to provide their own <code>&lt;string.h&gt;</code> and <code>&lt;assert.h&gt;</code> that implement these functions.</p>
+<p>Then, ensure the C Container Collection can find that header.</p>
+<div class="fragment"><div class="line">include(FetchContent)</div>
+<div class="line">FetchContent_Declare(</div>
+<div class="line">  ccc</div>
+<div class="line">  URL https://github.com/agl-alexglopez/ccc/releases/download/v0.72.0/ccc-v0.72.0.zip</div>
+<div class="line">  URL_HASH SHA256=9965d8ea2115a40ee7711b07f10ae15b1628825151b233b9cb95f5407425ab74</div>
+<div class="line">  #DOWNLOAD_EXTRACT_TIMESTAMP FALSE # CMake may raise a warning to set this. If so, uncomment and set.</div>
+<div class="line">)</div>
+<div class="line">FetchContent_MakeAvailable(ccc)</div>
+<div class="line"># Include this line if you want to ignore compiler warnings from the ccc library when compiling your project.</div>
+<div class="line">target_compile_options(ccc PRIVATE &quot;-w&quot;)</div>
+<div class="line"># Optionally use ccc as a system library so that your tooling like clang-tidy ignores ccc.</div>
+<div class="line">get_target_property(ccc_SOURCE_DIR ccc SOURCE_DIR)</div>
+<div class="line"> </div>
+<div class="line"># New step allowing CCC to find the configuration header.</div>
+<div class="line">target_include_directories(ccc PRIVATE</div>
+<div class="line">  ${PROJECT_SOURCE_DIR}/my_ccc_configuration</div>
+<div class="line">)</div>
+<div class="line"># New step here or in CMakePresets.json to define preprocessor directives</div>
+<div class="line">target_compile_definitions(ccc PRIVATE</div>
+<div class="line">  CCC_USER_CONFIGURATION=&quot;my_ccc_configuration.h&quot;</div>
+<div class="line">  CCC_FLAT_HASH_MAP_PORTABLE</div>
+<div class="line">)</div>
+<div class="line"> </div>
+<div class="line">add_executable(freestanding freestanding.c)</div>
+<div class="line"># Optionally include ccc source directory as system so that your tooling like clang-tidy ignores ccc.</div>
+<div class="line">target_include_directories(freestanding SYSTEM PRIVATE ${ccc_SOURCE_DIR})</div>
+<div class="line">target_link_libraries(freestanding ccc::ccc)</div>
+</div><!-- fragment --><p>Instead of <code>target_compile_definitions</code>, the necessary definitions can be placed in the <code>CMakePresets.json</code> or <code>CMakeUserPresets.json</code> file, if the user prefers.</p>
+<div class="fragment"><div class="line">&quot;cacheVariables&quot;: {</div>
+<div class="line">    &quot;CCC_USER_CONFIGURATION&quot;: &quot;my_ccc_configuration.h&quot;,</div>
+<div class="line">    &quot;CCC_FLAT_HASH_MAP_PORTABLE&quot;: &quot;OFF&quot;</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>Now the C Container Collection is fully configured to be built as part of the user project in a free standing environment.</p>
+<p>Any other headers such as <code>&lt;stdint.h&gt;</code>, <code>&lt;stddef.h&gt;</code>, etc. that are included directly in source code now, or will be in the future, are those provided by the C23 standard on freestanding targets. See the flat hash map documentation for how to select the optimal Single Instruction Multiple Data or Single Register Multiple Data implementation. Even on freestanding targets, the compiler intrinsics used on x86-64 and ARM NEON platforms should be available. However, <code>CCC_FLAT_HASH_MAP_PORTABLE</code> is an available directive for users that need to force a portable fallback implementation when such compiler platform intrinsics are not available. See <code><a class="el" href="flat__hash__map_8h.html" title="The Flat Hash Map Interface.">ccc/flat_hash_map.h</a></code> for more.</p>
+<h1><a class="anchor" id="autotoc_md6"></a>
 Manual Install Quick Start</h1>
 <ol type="1">
 <li>Use the provided defaults.</li>
@@ -164,7 +219,7 @@ Manual Install Quick Start</h1>
 <div class="line">    │       └── cccTargets-release.cmake</div>
 <div class="line">    └── libccc_release.a</div>
 </div><!-- fragment --><p>Now to delete the library if needed, simply find all folders and files with the <code>*ccc*</code> string somewhere within them and delete. You can also check the <code>build/install_manifest.txt</code> to confirm the locations of any files installed with this library.</p>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="autotoc_md7"></a>
 Include the Library</h2>
 <p>Once CMake can find the package, link against it and include the container header.</p>
 <p>The <code>CMakeLists.txt</code> file.</p>
@@ -177,14 +232,14 @@ Include the Library</h2>
 </div><!-- fragment --><p>The C code.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="flat__hash__map_8h.html">ccc/flat_hash_map.h</a>&quot;</span></div>
 <div class="ttc" id="aflat__hash__map_8h_html"><div class="ttname"><a href="flat__hash__map_8h.html">flat_hash_map.h</a></div><div class="ttdoc">The Flat Hash Map Interface.</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md7"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md8"></a>
 Without Make</h2>
 <p>If your system does not support Makefiles or the <code>make</code> command here are the CMake commands one can run that will do the same.</p>
 <div class="fragment"><div class="line"># Configure the project cmake files.</div>
 <div class="line"># Replace this preset with your own if you&#39;d like.</div>
 <div class="line">cmake --preset=clang-release -DCMAKE_INSTALL_PREFIX=[DESIRED/INSTALL/LOCATION]</div>
 <div class="line">cmake --build build --target install</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md8"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md9"></a>
 User Presets</h2>
 <p>If you do not like the default presets, create a <code>CMakeUserPresets.json</code> in this folder and place your preferred configuration in that file. Here is my preferred configuration to get you started. I like to use the newest version of GCC that I have installed.</p>
 <div class="fragment"><div class="line">{</div>
@@ -249,7 +304,7 @@ User Presets</h2>
 <div class="fragment"><div class="line"># Your preferred preset with the same other steps as before.</div>
 <div class="line">cmake --preset=my-clang-release -DCMAKE_INSTALL_PREFIX=[DESIRED/INSTALL/LOCATION]</div>
 <div class="line">cmake --build build --target install</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md9"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md10"></a>
 Generate Documentation</h1>
 <p>Documentation is available <a href="https://agl-alexglopez.github.io/ccc/">HERE</a>. However, if you want to build the documentation locally you will need <code>doxygen</code> and <code>graphviz</code> installed. Then run:</p>
 <div class="fragment"><div class="line">doxygen Doxyfile</div>
