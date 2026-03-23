@@ -75,7 +75,15 @@ my_project/
 
 In this header the user has two options: provide the listed functions directly or include their versions of the headers that provide the needed functionality. It is common for freestanding environments to provide their own `<string.h>` and `<assert.h>` that implement these functions.
 
-Then, ensure the C Container Collection can find that header.
+```c
+#ifndef MY_CCC_CONFIGURATION_H
+#define MY_CCC_CONFIGURATION_H
+#include "lib/assert.h" /* IWYU pragma: export */
+#include "lib/string.h" /* IWYU pragma: export */
+#endif
+```
+
+The Include What You Use (IWYU) comment is helpful if you want to avoid tooling warnings in CCC code and have not marked CCC code as a system library to silence such warnings. If you are providing functions directly, this is not applicable. Then, ensure the C Container Collection can find that header.
 
 ```cmake
 include(FetchContent)
@@ -116,7 +124,15 @@ Instead of `target_compile_definitions`, the necessary definitions can be placed
 }
 ```
 
-Now the C Container Collection is fully configured to be built as part of the user project in a free standing environment.
+Or they can be passed on the command line.
+
+```zsh
+cmake --preset=my-preset\
+ -DCCC_USER_CONFIGURATION="my_ccc_configuration.h"\
+ -DCCC_FLAT_HASH_MAP_PORTABLE=ON
+```
+
+Now the C Container Collection is fully configured to be built as part of the user project in a freestanding environment.
 
 Any other headers such as `<stdint.h>`, `<stddef.h>`, etc. that are included directly in source code now, or will be in the future, are those provided by the C23 standard on freestanding targets. See the flat hash map documentation for how to select the optimal Single Instruction Multiple Data or Single Register Multiple Data implementation. Even on freestanding targets, the compiler intrinsics used on x86-64 and ARM NEON platforms should be available. However, `CCC_FLAT_HASH_MAP_PORTABLE` is an available directive for users that need to force a portable fallback implementation when such compiler platform intrinsics are not available. See `ccc/flat_hash_map.h` for more.
 

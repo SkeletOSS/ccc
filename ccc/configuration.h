@@ -57,7 +57,7 @@ implementation when such compiler platform intrinsics are not available. See
 #define CCC_PRIVATE_HOSTED_VS_FREESTANDING_CONFIGURATION_H
 
 #ifdef CCC_USER_CONFIGURATION
-#    include CCC_USER_CONFIGURATION
+#    include CCC_USER_CONFIGURATION /* IWYU pragma: export */
 #else
 #    include <assert.h> /* IWYU pragma: export */
 #    include <string.h> /* IWYU pragma: export */
