@@ -237,7 +237,7 @@ instance of the type actively stored in the priority queue.
 #define PRIORITY_QUEUE_USING_NAMESPACE_CCC
 struct Val
 {
-    priority_queue_node e;
+    Priority_queue_node e;
     int key;
 };
 Priority_queue priority_queue = build_rand_priority_queue();
@@ -300,7 +300,7 @@ this function.
 #define PRIORITY_QUEUE_USING_NAMESPACE_CCC
 struct Val
 {
-    priority_queue_node e;
+    Priority_queue_node e;
     int key;
 };
 Priority_queue priority_queue = build_rand_priority_queue();
@@ -364,7 +364,7 @@ mistake in this function.
 #define PRIORITY_QUEUE_USING_NAMESPACE_CCC
 struct Val
 {
-    priority_queue_node e;
+    Priority_queue_node e;
     int key;
 };
 Priority_queue priority_queue = build_rand_priority_queue();
