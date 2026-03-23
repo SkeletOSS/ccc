@@ -65,7 +65,7 @@ Traditionally included via `<assert.h>`:
 
 - `assert()`
 
-To provide these functions, the user may create a header. For example, n`my_ccc_configuration.h`.
+To provide these functions, the user may create a header. For example, `my_ccc_configuration.h`.
 
 ```txt
 my_project/
@@ -91,7 +91,6 @@ target_compile_options(ccc PRIVATE "-w")
 # Optionally use ccc as a system library so that your tooling like clang-tidy ignores ccc.
 get_target_property(ccc_SOURCE_DIR ccc SOURCE_DIR)
 
-
 # New step allowing CCC to find the configuration header.
 target_include_directories(ccc PRIVATE
   ${PROJECT_SOURCE_DIR}/my_ccc_configuration
@@ -102,14 +101,13 @@ target_compile_definitions(ccc PRIVATE
   CCC_FLAT_HASH_MAP_PORTABLE
 )
 
-
 add_executable(freestanding freestanding.c)
 # Optionally include ccc source directory as system so that your tooling like clang-tidy ignores ccc.
 target_include_directories(freestanding SYSTEM PRIVATE ${ccc_SOURCE_DIR})
 target_link_libraries(freestanding ccc::ccc)
 ```
 
-Instead of `target_compile_definitions`, the necessary definitions can be placed in the `CMakePresets.json` or `CMakeUserPresets.json` file.
+Instead of `target_compile_definitions`, the necessary definitions can be placed in the `CMakePresets.json` or `CMakeUserPresets.json` file, if the user prefers.
 
 ```json
 "cacheVariables": {
