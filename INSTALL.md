@@ -1,6 +1,6 @@
 # Building and Installation
 
-Currently, this library utilizes some features that many compilers support such as gcc, clang, and AppleClang, but support is not ready for Windows.
+Currently, this library utilizes some features that many compilers support such as gcc, clang, and AppleClang, but support is not ready for Windows. The C Container Collection supports freestanding environments.
 
 ## Fetch Content Install
 
@@ -33,7 +33,8 @@ Here is a concrete example with an arbitrary release that is likely out of date.
 include(FetchContent)
 FetchContent_Declare(
   ccc
-  URL https://github.com/agl-alexglopez/ccc/releases/download/v0.7.0/ccc-v0.7.0.zip
+  URL https://github.com/agl-alexglopez/ccc/releases/download/v0.72.0/ccc-v0.72.0.zip
+  URL_HASH SHA256=9965d8ea2115a40ee7711b07f10ae15b1628825151b233b9cb95f5407425ab74
   #DOWNLOAD_EXTRACT_TIMESTAMP FALSE # CMake may raise a warning to set this. If so, uncomment and set.
 )
 FetchContent_MakeAvailable(ccc)
@@ -48,6 +49,78 @@ target_link_libraries(main ccc::ccc)
 ```
 
 Now, the C Container Collection is part of your project build, allowing you to configure as you see fit. For a more traditional approach read the manual install section below.
+
+## Freestanding Environments
+
+The C Container Collection uses the following functions or macros that must be supported by the user on freestanding targets.
+
+Traditionally included via `<string.h>`:
+
+- `memcpy()`
+- `memmove()`
+- `memset()`
+- `memcmp()`
+
+Traditionally included via `<assert.h>`:
+
+- `assert()`
+
+To provide these functions, the user may create a header. For example, n`my_ccc_configuration.h`.
+
+```txt
+my_project/
+    my_ccc_configuration/
+        my_ccc_configuration.h
+```
+
+In this header the user has two options: provide the listed functions directly or include their versions of the headers that provide the needed functionality. It is common for freestanding environments to provide their own `<string.h>` and `<assert.h>` that implement these functions.
+
+Then, ensure the C Container Collection can find that header.
+
+```cmake
+include(FetchContent)
+FetchContent_Declare(
+  ccc
+  URL https://github.com/agl-alexglopez/ccc/releases/download/v0.72.0/ccc-v0.72.0.zip
+  URL_HASH SHA256=9965d8ea2115a40ee7711b07f10ae15b1628825151b233b9cb95f5407425ab74
+  #DOWNLOAD_EXTRACT_TIMESTAMP FALSE # CMake may raise a warning to set this. If so, uncomment and set.
+)
+FetchContent_MakeAvailable(ccc)
+# Include this line if you want to ignore compiler warnings from the ccc library when compiling your project.
+target_compile_options(ccc PRIVATE "-w")
+# Optionally use ccc as a system library so that your tooling like clang-tidy ignores ccc.
+get_target_property(ccc_SOURCE_DIR ccc SOURCE_DIR)
+
+
+# New step allowing CCC to find the configuration header.
+target_include_directories(ccc PRIVATE
+  ${PROJECT_SOURCE_DIR}/my_ccc_configuration
+)
+# New step here or in CMakePresets.json to define preprocessor directives
+target_compile_definitions(ccc PRIVATE
+  CCC_USER_CONFIGURATION="my_ccc_configuration.h"
+  CCC_FLAT_HASH_MAP_PORTABLE
+)
+
+
+add_executable(freestanding freestanding.c)
+# Optionally include ccc source directory as system so that your tooling like clang-tidy ignores ccc.
+target_include_directories(freestanding SYSTEM PRIVATE ${ccc_SOURCE_DIR})
+target_link_libraries(freestanding ccc::ccc)
+```
+
+Instead of `target_compile_definitions`, the necessary definitions can be placed in the `CMakePresets.json` or `CMakeUserPresets.json` file.
+
+```json
+"cacheVariables": {
+    "CCC_USER_CONFIGURATION": "my_ccc_configuration.h",
+    "CCC_FLAT_HASH_MAP_PORTABLE": "OFF"
+}
+```
+
+Now the C Container Collection is fully configured to be built as part of the user project in a free standing environment.
+
+Any other headers such as `<stdint.h>`, `<stddef.h>`, etc. that are included directly in source code now, or will be in the future, are those provided by the C23 standard on freestanding targets. See the flat hash map documentation for how to select the optimal Single Instruction Multiple Data or Single Register Multiple Data implementation. Even on freestanding targets, the compiler intrinsics used on x86-64 and ARM NEON platforms should be available. However, `CCC_FLAT_HASH_MAP_PORTABLE` is an available directive for users that need to force a portable fallback implementation when such compiler platform intrinsics are not available. See `ccc/flat_hash_map.h` for more.
 
 ## Manual Install Quick Start
 

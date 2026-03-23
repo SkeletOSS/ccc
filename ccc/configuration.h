@@ -14,7 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 @endcond */
 /** @file
-@brief The C Container Collection Configuration Header
+@brief The C Container Collection Configuration Header. For full download and
+install instructions see INSTALL.md
 
 The C Container Collection uses the following functions or macros that must be
 supported by the user on freestanding targets.
@@ -26,7 +27,7 @@ Traditionally included via `<string.h>`:
 - `memset()`
 - `memcmp()`
 
-Traditionally included via <assert.h>:
+Traditionally included via `<assert.h>`:
 
 - `assert()`
 
