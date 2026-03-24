@@ -77,5 +77,5 @@ install/
 
 # GCOV output
 *.gcov
-coverage.info
+*.info
 coverage-html/
