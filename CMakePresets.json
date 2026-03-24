@@ -123,6 +123,15 @@
                 "CMAKE_C_FLAGS": "-g3 $env{CCC_WARNING_C_FLAGS} $env{CCC_MEMORY_SANITIZER_C_FLAGS}",
                 "CMAKE_EXE_LINKER_FLAGS": "$env{CCC_MEMORY_SANITIZER_LINKER_FLAGS}"
             }
+        },
+        {
+            "name": "gcc-gcov",
+            "inherits": ["default-debug"],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_C_FLAGS": "--coverage -fprofile-arcs -ftest-coverage -g3 -Og $env{CCC_WARNING_C_FLAGS}",
+                "CMAKE_EXE_LINKER_FLAGS": "--coverage -fprofile-arcs -ftest-coverage"
+            }
         }
     ]
 }
