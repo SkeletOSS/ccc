@@ -649,13 +649,9 @@ CCC_flat_hash_map_clear(
     if (unlikely(is_uninitialized(map) || !map->mask || !map->tag)) {
         return CCC_RESULT_OK;
     }
-    if (!destructor->destroy) {
-        (void)memset(map->tag, TAG_EMPTY, mask_to_tag_bytes(map->mask));
-        map->remain = mask_to_capacity_with_load_factor(map->mask);
-        map->count = 0;
-        return CCC_RESULT_OK;
+    if (destructor->destroy) {
+        destory_each(map, destructor);
     }
-    destory_each(map, destructor);
     (void)memset(map->tag, TAG_EMPTY, mask_to_tag_bytes(map->mask));
     map->remain = mask_to_capacity_with_load_factor(map->mask);
     map->count = 0;
@@ -669,14 +665,10 @@ CCC_flat_hash_map_clear_and_free(
     CCC_Allocator const *const allocator
 ) {
     if (unlikely(
-            !map || !map->data || !destructor || !allocator || !map->mask
-            || is_uninitialized(map)
+            !map || !map->data || !destructor || !allocator
+            || !allocator->allocate || !map->mask || is_uninitialized(map)
         )) {
         return CCC_RESULT_ARGUMENT_ERROR;
-    }
-    if (!allocator->allocate) {
-        (void)CCC_flat_hash_map_clear(map, destructor);
-        return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
     if (destructor->destroy) {
         destory_each(map, destructor);
@@ -876,16 +868,6 @@ CCC_private_flat_hash_map_entry(
     CCC_Allocator const *const allocator
 ) {
     return entry(map, key, allocator);
-}
-
-void
-CCC_private_flat_hash_map_insert(
-    struct CCC_Flat_hash_map *const map,
-    void const *const type,
-    struct CCC_Flat_hash_map_tag const tag,
-    size_t const index
-) {
-    insert_and_copy(map, type, tag, index);
 }
 
 void

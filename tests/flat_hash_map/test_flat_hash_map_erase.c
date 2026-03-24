@@ -351,6 +351,6 @@ main(void) {
         flat_hash_map_test_shuffle_insert_erase(),
         flat_hash_map_test_shuffle_erase_fixed(),
         flat_hash_map_test_shuffle_erase_reserved(),
-        flat_hash_map_test_shuffle_erase_dynamic()
+        flat_hash_map_test_shuffle_erase_dynamic(),
     );
 }

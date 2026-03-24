@@ -10,6 +10,7 @@
 #include "traits.h"
 #include "types.h"
 #include "utility/allocate.h"
+#include "utility/random.h"
 
 struct Owner {
     int key;
@@ -109,10 +110,70 @@ check_static_begin(flat_hash_map_test_insert_allocate_clear_free) {
     });
 }
 
+check_static_begin(flat_hash_map_test_insert_clear_insert_determinism) {
+    CCC_Flat_hash_map h = flat_hash_map_with_storage(
+        key,
+        ((CCC_Hasher){
+            .hash = flat_hash_map_int_to_u64,
+            .compare = flat_hash_map_id_order,
+        }),
+        (struct Val[SMALL_FIXED_CAP]){}
+    );
+    int to_insert[SMALL_FIXED_CAP] = {};
+    int key_order[SMALL_FIXED_CAP] = {};
+    iota(to_insert, SMALL_FIXED_CAP, 0);
+    rand_shuffle(sizeof(int), to_insert, SMALL_FIXED_CAP, &(int){});
+    int i = 0;
+    do {
+        int const cur = to_insert[i];
+        struct Val const *const v = unwrap(flat_hash_map_insert_or_assign_with(
+            &h, cur, &(CCC_Allocator){}, (struct Val){.val = i}
+        ));
+        if (!v) {
+            break;
+        }
+        check(v->key, to_insert[i]);
+        check(v->val, i);
+        check(validate(&h), true);
+        ++i;
+    } while (1);
+    size_t const full_size = count(&h).count;
+    i = 0;
+    for (struct Val const *e = flat_hash_map_begin(&h);
+         e != flat_hash_map_end(&h);
+         e = flat_hash_map_next(&h, e)) {
+        key_order[i++] = e->key;
+    }
+    i = 0;
+    flat_hash_map_clear(&h, &(CCC_Destructor){});
+    do {
+        int const cur = to_insert[i];
+        struct Val const *const v = unwrap(flat_hash_map_insert_or_assign_with(
+            &h, cur, &(CCC_Allocator){}, (struct Val){.val = i}
+        ));
+        if (!v) {
+            break;
+        }
+        check(v->key, to_insert[i]);
+        check(v->val, i);
+        check(validate(&h), true);
+        ++i;
+    } while (1);
+    check(full_size, (size_t)i);
+    i = 0;
+    for (struct Val const *e = flat_hash_map_begin(&h);
+         e != flat_hash_map_end(&h);
+         e = flat_hash_map_next(&h, e)) {
+        check(key_order[i++], e->key);
+    }
+    check_end();
+}
+
 int
 main(void) {
     return check_run(
         flat_hash_map_test_insert_then_iterate(),
-        flat_hash_map_test_insert_allocate_clear_free()
+        flat_hash_map_test_insert_allocate_clear_free(),
+        flat_hash_map_test_insert_clear_insert_determinism()
     );
 }
