@@ -600,7 +600,7 @@ generates an entry.
 @param[in] entry the pointer to the entry obtained from a container function.
 @return true if an input error occurred usually meaning an invalid argument such
 as a NULL pointer was provided to a function. Error if entry is NULL. */
-CCC_Tribool CCC_entry_input_error(CCC_Entry const *entry);
+CCC_Tribool CCC_entry_argument_error(CCC_Entry const *entry);
 
 /** @brief Unwraps the provided entry providing a reference to the user type
 obtained from the operation that provides the entry.
@@ -632,7 +632,7 @@ generates an handle.
 @param[in] handle the pointer to the handle obtained from a container function.
 @return true if an input error occurred usually meaning an invalid argument such
 as a NULL pointer was provided to a function. Error if handle is NULL. */
-CCC_Tribool CCC_handle_input_error(CCC_Handle const *handle);
+CCC_Tribool CCC_handle_argument_error(CCC_Handle const *handle);
 
 /** @brief Unwraps the provided handle providing a reference to the user type
 obtained from the operation that provides the handle.
@@ -700,7 +700,7 @@ container in the provided range.
 the beginning of the range.
 
 Note the beginning of a range may be equivalent to the end or NULL. */
-CCC_Handle_index CCC_array_range_begin(CCC_Handle_range const *range);
+CCC_Handle_index CCC_handle_range_begin(CCC_Handle_range const *range);
 
 /** @brief Obtain a handle to the end user element stored in a
 container in the provided range.
@@ -711,7 +711,7 @@ the end of the range.
 Note the end of a range may be equivalent to the beginning or 0. Functions
 that obtain ranges treat the end as an exclusive bound and therefore it is
 undefined to access this element. */
-CCC_Handle_index CCC_array_range_end(CCC_Handle_range const *range);
+CCC_Handle_index CCC_handle_range_end(CCC_Handle_range const *range);
 
 /** @brief Obtain a handle to the reverse beginning user element stored in a
 container in the provided range.
@@ -722,7 +722,7 @@ the reverse beginning of the range.
 Note the reverse beginning of a range may be equivalent to the reverse end or
 0. */
 CCC_Handle_index
-CCC_array_range_reverse_begin(CCC_Handle_range_reverse const *range);
+CCC_handle_range_reverse_begin(CCC_Handle_range_reverse const *range);
 
 /** @brief Obtain a handle to the reverse end user element stored in a
 container in the provided range.
@@ -734,7 +734,7 @@ Note the reverse end of a range may be equivalent to the reverse beginning or
 0. Functions that obtain ranges treat the reverse end as an exclusive bound
 and therefore it is undefined to access this element. */
 CCC_Handle_index
-CCC_array_range_reverse_end(CCC_Handle_range_reverse const *range);
+CCC_handle_range_reverse_end(CCC_Handle_range_reverse const *range);
 
 /**@}*/
 
@@ -820,6 +820,10 @@ typedef CCC_Key_hasher_interface Key_hasher_interface;
 #    define entry_occupied(entry_pointer) CCC_entry_occupied(entry_pointer)
 #    define entry_insert_error(entry_pointer)                                  \
         CCC_entry_insert_error(entry_pointer)
+#    define entry_argument_error(entry_pointer)                                \
+        CCC_entry_argument_error(entry_pointer)
+#    define handle_argument_error(handle_pointer)                              \
+        CCC_handle_argument_error(handle_pointer)
 #    define entry_unwrap(entry_pointer) CCC_entry_unwrap(entry_pointer)
 #    define get_entry_status(entry_pointer) CCC_get_entry_status(entry_pointer)
 #    define entry_status_message(status) CCC_entry_status_message(status)
@@ -844,14 +848,14 @@ typedef CCC_Key_hasher_interface Key_hasher_interface;
 #        define range_reverse_end(range_pointer)                               \
             CCC_range_reverse_end(range_pointer)
 #    endif
-#    define array_range_begin(array_range_pointer)                             \
-        CCC_array_range_begin(array_range_pointer)
-#    define array_range_end(array_range_pointer)                               \
-        CCC_array_range_end(array_range_pointer)
-#    define array_range_reverse_begin(array_range_pointer)                     \
-        CCC_array_range_reverse_begin(array_range_pointer)
-#    define array_range_reverse_end(array_range_pointer)                       \
-        CCC_array_range_reverse_end(array_range_pointer)
+#    define handle_range_begin(handle_range_pointer)                           \
+        CCC_handle_range_begin(handle_range_pointer)
+#    define handle_range_end(handle_range_pointer)                             \
+        CCC_handle_range_end(handle_range_pointer)
+#    define handle_range_reverse_begin(handle_range_pointer)                   \
+        CCC_handle_range_reverse_begin(handle_range_pointer)
+#    define handle_range_reverse_end(handle_range_pointer)                     \
+        CCC_handle_range_reverse_end(handle_range_pointer)
 #    define result_message(res) CCC_result_message(res)
 /* NOLINTEND(readability-identifier-naming) */
 #endif /* TYPES_USING_NAMESPACE_CCC */

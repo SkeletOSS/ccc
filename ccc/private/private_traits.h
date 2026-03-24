@@ -552,22 +552,22 @@ the appropriate range from the selections. */
     _Generic((range_pointer),                                                  \
         CCC_Range *: CCC_range_begin,                                          \
         CCC_Range const *: CCC_range_begin,                                    \
-        CCC_Handle_range *: CCC_array_range_begin,                             \
-        CCC_Handle_range const *: CCC_array_range_begin)((range_pointer))
+        CCC_Handle_range *: CCC_handle_range_begin,                             \
+        CCC_Handle_range const *: CCC_handle_range_begin)((range_pointer))
 
 #define CCC_private_range_end(range_pointer)                                   \
     _Generic((range_pointer),                                                  \
         CCC_Range *: CCC_range_end,                                            \
         CCC_Range const *: CCC_range_end,                                      \
-        CCC_Handle_range *: CCC_array_range_end,                               \
-        CCC_Handle_range const *: CCC_array_range_end)((range_pointer))
+        CCC_Handle_range *: CCC_handle_range_end,                               \
+        CCC_Handle_range const *: CCC_handle_range_end)((range_pointer))
 
 #define CCC_private_range_reverse_begin(range_reverse_pointer)                 \
     _Generic((range_reverse_pointer),                                          \
         CCC_Range_reverse *: CCC_range_reverse_begin,                          \
         CCC_Range_reverse const *: CCC_range_reverse_begin,                    \
-        CCC_Handle_range_reverse *: CCC_array_range_reverse_begin,             \
-        CCC_Handle_range_reverse const *: CCC_array_range_reverse_begin)(      \
+        CCC_Handle_range_reverse *: CCC_handle_range_reverse_begin,             \
+        CCC_Handle_range_reverse const *: CCC_handle_range_reverse_begin)(      \
         (range_reverse_pointer)                                                \
     )
 
@@ -575,8 +575,8 @@ the appropriate range from the selections. */
     _Generic((range_reverse_pointer),                                          \
         CCC_Range_reverse *: CCC_range_reverse_end,                            \
         CCC_Range_reverse const *: CCC_range_reverse_end,                      \
-        CCC_Handle_range_reverse *: CCC_array_range_reverse_end,               \
-        CCC_Handle_range_reverse const *: CCC_array_range_reverse_end)(        \
+        CCC_Handle_range_reverse *: CCC_handle_range_reverse_end,               \
+        CCC_Handle_range_reverse const *: CCC_handle_range_reverse_end)(        \
         (range_reverse_pointer)                                                \
     )
 

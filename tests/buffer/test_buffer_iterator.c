@@ -23,6 +23,18 @@ check_static_begin(buffer_test_iterator_forward) {
     check_end();
 }
 
+check_static_begin(buffer_test_iterator_forward_count_vs_capacity) {
+    Buffer const b = buffer_with_storage(3, (int[6]){1, 2, 3, 4, 5, 6});
+    size_t count = 0;
+    for (int const *i = buffer_begin(&b); i != buffer_end(&b);
+         i = buffer_next(&b, i)) {
+        check(i != NULL, CCC_TRUE);
+        ++count;
+    }
+    check(count, 3);
+    check_end();
+}
+
 check_static_begin(buffer_test_iterator_reverse) {
     Buffer const b = buffer_with_storage(6, (int[6]){1, 2, 3, 4, 5, 6});
     size_t count = 0;
@@ -100,6 +112,7 @@ int
 main(void) {
     return check_run(
         buffer_test_iterator_forward(),
+        buffer_test_iterator_forward_count_vs_capacity(),
         buffer_test_iterator_reverse(),
         buffer_test_reverse_buf(),
         buffer_test_trap_rainwater_two_pointers()

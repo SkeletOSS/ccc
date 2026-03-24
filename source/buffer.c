@@ -181,6 +181,9 @@ CCC_buffer_push_back(
     void const *const data,
     CCC_Allocator const *const allocator
 ) {
+    if (!data) {
+        return NULL;
+    }
     void *const slot = CCC_buffer_allocate_back(buffer, allocator);
     if (slot) {
         (void)memcpy(slot, data, buffer->sizeof_type);
@@ -366,10 +369,11 @@ CCC_buffer_reverse_begin(CCC_Buffer const *const buffer) {
 
 void *
 CCC_buffer_next(CCC_Buffer const *const buffer, void const *const iterator) {
-    if (!buffer || !buffer->data) {
+    if (!buffer || !buffer->capacity || !iterator) {
         return NULL;
     }
-    if (iterator >= CCC_buffer_capacity_end(buffer)) {
+    if ((char *)iterator
+        >= (char *)buffer->data + ((buffer->count - 1) * buffer->sizeof_type)) {
         return CCC_buffer_end(buffer);
     }
     return (unsigned char *)iterator + buffer->sizeof_type;
@@ -379,7 +383,7 @@ void *
 CCC_buffer_reverse_next(
     CCC_Buffer const *const buffer, void const *const iterator
 ) {
-    if (!buffer || !buffer->data) {
+    if (!buffer || !buffer->data || !iterator) {
         return NULL;
     }
     if (iterator <= CCC_buffer_reverse_end(buffer)) {
@@ -410,16 +414,6 @@ CCC_buffer_reverse_end(CCC_Buffer const *const buffer) {
     return (unsigned char *)buffer->data - buffer->sizeof_type;
 }
 
-/** Will always be the address after capacity. */
-void *
-CCC_buffer_capacity_end(CCC_Buffer const *const buffer) {
-    if (!buffer || !buffer->data) {
-        return NULL;
-    }
-    return (unsigned char *)buffer->data
-         + (buffer->sizeof_type * buffer->capacity);
-}
-
 CCC_Count
 CCC_buffer_index(CCC_Buffer const *const buffer, void const *const slot) {
     if (!buffer || !buffer->data || !slot || slot < buffer->data
@@ -439,7 +433,7 @@ CCC_buffer_index(CCC_Buffer const *const buffer, void const *const slot) {
 }
 
 CCC_Result
-CCC_buffer_size_plus(CCC_Buffer *const buffer, size_t const count) {
+CCC_buffer_count_plus(CCC_Buffer *const buffer, size_t const count) {
     if (!buffer) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -453,7 +447,7 @@ CCC_buffer_size_plus(CCC_Buffer *const buffer, size_t const count) {
 }
 
 CCC_Result
-CCC_buffer_size_minus(CCC_Buffer *const buffer, size_t const count) {
+CCC_buffer_count_minus(CCC_Buffer *const buffer, size_t const count) {
     if (!buffer) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -466,7 +460,7 @@ CCC_buffer_size_minus(CCC_Buffer *const buffer, size_t const count) {
 }
 
 CCC_Result
-CCC_buffer_size_set(CCC_Buffer *const buffer, size_t const count) {
+CCC_buffer_count_set(CCC_Buffer *const buffer, size_t const count) {
     if (!buffer) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -525,6 +519,11 @@ CCC_buffer_copy(
         destination->data, source->data, source->capacity * source->sizeof_type
     );
     return CCC_RESULT_OK;
+}
+
+void *
+CCC_buffer_data(CCC_Buffer const *const buffer) {
+    return buffer ? buffer->data : NULL;
 }
 
 /*======================  Static Helpers  ==================================*/

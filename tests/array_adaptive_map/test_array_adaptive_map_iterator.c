@@ -22,14 +22,14 @@ check_static_begin(
     int const expect_range[]
 ) {
     size_t index = 0;
-    CCC_Handle_index iterator = array_range_begin(r);
-    for (; iterator != array_range_end(r) && index < n;
+    CCC_Handle_index iterator = handle_range_begin(r);
+    for (; iterator != handle_range_end(r) && index < n;
          iterator = next(map, iterator), ++index) {
         struct Val const *const v = array_adaptive_map_at(map, iterator);
         int const cur_id = v->id;
         check(expect_range[index], cur_id);
     }
-    check(iterator, array_range_end(r));
+    check(iterator, handle_range_end(r));
     if (iterator != end(map)) {
         struct Val const *const v = array_adaptive_map_at(map, iterator);
         check(v->id, expect_range[n - 1]);
@@ -43,8 +43,8 @@ check_static_begin(
         (void)fprintf(
             stderr, "%sCHECK_ERROR:%s (int[%zu]){", CHECK_RED, CHECK_GREEN, n
         );
-        iterator = array_range_begin(r);
-        for (size_t j = 0; j < n && iterator != array_range_end(r);
+        iterator = handle_range_begin(r);
+        for (size_t j = 0; j < n && iterator != handle_range_end(r);
              ++j, iterator = next(map, iterator)) {
             struct Val const *const v = array_adaptive_map_at(map, iterator);
             if (iterator == end(map) || !iterator) {
@@ -58,7 +58,8 @@ check_static_begin(
                 (void)fprintf(stderr, "%s%d, %s", CHECK_RED, v->id, CHECK_NONE);
             }
         }
-        for (; iterator != array_range_end(r); iterator = next(map, iterator)) {
+        for (; iterator != handle_range_end(r);
+             iterator = next(map, iterator)) {
             struct Val const *const v = array_adaptive_map_at(map, iterator);
             (void)fprintf(stderr, "%s%d, %s", CHECK_RED, v->id, CHECK_NONE);
         }
@@ -73,16 +74,16 @@ check_static_begin(
     size_t const n,
     int const expect_range_reverse[]
 ) {
-    CCC_Handle_index iterator = array_range_reverse_begin(r);
+    CCC_Handle_index iterator = handle_range_reverse_begin(r);
     size_t index = 0;
-    for (; iterator != array_range_reverse_end(r);
+    for (; iterator != handle_range_reverse_end(r);
          iterator = reverse_next(map, iterator)) {
         struct Val const *const v = array_adaptive_map_at(map, iterator);
         int const cur_id = v->id;
         check(expect_range_reverse[index], cur_id);
         ++index;
     }
-    check(iterator, array_range_reverse_end(r));
+    check(iterator, handle_range_reverse_end(r));
     if (iterator != reverse_end(map)) {
         struct Val const *const v = array_adaptive_map_at(map, iterator);
         check(v->id, expect_range_reverse[n - 1]);
@@ -97,8 +98,8 @@ check_static_begin(
         (void)fprintf(
             stderr, "%sCHECK_ERROR:%s (int[%zu]){", CHECK_RED, CHECK_GREEN, n
         );
-        iterator = array_range_reverse_begin(r);
-        for (j = 0; j < n && iterator != array_range_reverse_end(r);
+        iterator = handle_range_reverse_begin(r);
+        for (j = 0; j < n && iterator != handle_range_reverse_end(r);
              ++j, iterator = reverse_next(map, iterator)) {
             struct Val const *const v = array_adaptive_map_at(map, iterator);
             if (iterator == reverse_end(map) || !iterator) {
@@ -116,7 +117,7 @@ check_static_begin(
                 (void)fprintf(stderr, "%s%d, %s", CHECK_RED, v->id, CHECK_NONE);
             }
         }
-        for (; iterator != array_range_reverse_end(r);
+        for (; iterator != handle_range_reverse_end(r);
              iterator = reverse_next(map, iterator)) {
             struct Val const *const v = array_adaptive_map_at(map, iterator);
             (void)fprintf(stderr, "%s%d, %s", CHECK_RED, v->id, CHECK_NONE);
@@ -406,32 +407,32 @@ check_static_begin(array_adaptive_map_test_empty_range) {
         = equal_range(&s, &(int){-50}, &(int){-25});
     check(
         ((struct Val *)
-             array_adaptive_map_at(&s, array_range_begin(&forward_range)))
+             array_adaptive_map_at(&s, handle_range_begin(&forward_range)))
             ->id,
         0
     );
     check(
         ((struct Val *)
-             array_adaptive_map_at(&s, array_range_end(&forward_range)))
+             array_adaptive_map_at(&s, handle_range_end(&forward_range)))
             ->id,
         0
     );
-    check(array_range_begin(&forward_range), array_range_end(&forward_range));
+    check(handle_range_begin(&forward_range), handle_range_end(&forward_range));
     CCC_Handle_range_reverse const rev_range
         = equal_range_reverse(&s, &(int){150}, &(int){999});
     check(
-        array_range_reverse_begin(&rev_range),
-        array_range_reverse_end(&rev_range)
+        handle_range_reverse_begin(&rev_range),
+        handle_range_reverse_end(&rev_range)
     );
     check(
         ((struct Val *)
-             array_adaptive_map_at(&s, array_range_reverse_begin(&rev_range)))
+             array_adaptive_map_at(&s, handle_range_reverse_begin(&rev_range)))
             ->id,
         (num_nodes * step) - step
     );
     check(
         ((struct Val *)
-             array_adaptive_map_at(&s, array_range_reverse_end(&rev_range)))
+             array_adaptive_map_at(&s, handle_range_reverse_end(&rev_range)))
             ->id,
         (num_nodes * step) - step
     );

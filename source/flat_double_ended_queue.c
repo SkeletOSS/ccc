@@ -776,7 +776,11 @@ index_of(
     void const *const position
 ) {
     assert(position >= CCC_buffer_begin(&queue->buffer));
-    assert(position < CCC_buffer_capacity_end(&queue->buffer));
+    assert(
+        (char *)position
+        < (char *)queue->buffer.data
+              + (queue->buffer.capacity * queue->buffer.capacity)
+    );
     return (
         (size_t)((char *)position - (char *)CCC_buffer_begin(&queue->buffer))
         / queue->buffer.sizeof_type

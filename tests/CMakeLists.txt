@@ -85,6 +85,7 @@ add_buffer_test(test_buffer_construct)
 add_buffer_test(test_buffer_insert)
 add_buffer_test(test_buffer_erase)
 add_buffer_test(test_buffer_iterator)
+add_buffer_test(test_buffer_error)
 
 #############  Heap Priority Queue  ##########################
 add_library(flat_priority_queue_utility flat_priority_queue/flat_priority_queue_utility.h flat_priority_queue/flat_priority_queue_utility.c)

@@ -207,6 +207,51 @@ check_static_begin(buffer_test_insert_allocate) {
     check_end(buffer_clear_and_free(&b, &(CCC_Destructor){}, &std_allocator););
 }
 
+check_static_begin(buffer_test_write) {
+    Buffer b = buffer_with_storage(0, (int[8]){});
+    CCC_Result write = buffer_write(&b, 0, &(int){0});
+    check(write, CCC_RESULT_OK);
+    write = buffer_write(&b, 0, buffer_at(&b, 0));
+    check(write, CCC_RESULT_ARGUMENT_ERROR);
+    write = buffer_write(&b, 7, &(int){8});
+    check(write, CCC_RESULT_OK);
+    int *i = buffer_at(&b, 7);
+    check(i != NULL, CCC_TRUE);
+    check(*i, 8);
+    write = buffer_write(&b, 7, buffer_at(&b, 0));
+    check(write, CCC_RESULT_OK);
+    check(i != NULL, CCC_TRUE);
+    check(*i, 0);
+    write = buffer_write(&b, 8, buffer_at(&b, 0));
+    check(write, CCC_RESULT_ARGUMENT_ERROR);
+    check_end();
+}
+
+check_static_begin(buffer_test_move) {
+    Buffer b = buffer_with_storage(0, (int[8]){});
+    CCC_Result result = buffer_write(&b, 0, &(int){0});
+    check(result, CCC_RESULT_OK);
+    result = buffer_write(&b, 7, &(int){8});
+    check(result, CCC_RESULT_OK);
+    int *i = buffer_at(&b, 7);
+    check(i != NULL, CCC_TRUE);
+    check(*i, 8);
+    i = buffer_at(&b, 0);
+    check(i != NULL, CCC_TRUE);
+    check(*i, 0);
+    i = buffer_move(&b, 0, 7);
+    check(i != NULL, CCC_TRUE);
+    check(buffer_index(&b, i).count, 0);
+    check(*i, 8);
+    i = buffer_move(&b, 0, 0);
+    check(buffer_index(&b, i).count, 0);
+    check(*i, 8);
+    i = buffer_move(&b, 0, 8);
+    check(i == NULL, CCC_TRUE);
+    check(buffer_index(&b, i + 1).error, CCC_RESULT_ARGUMENT_ERROR);
+    check_end();
+}
+
 int
 main(void) {
     /* NOLINTNEXTLINE Random only needs to be seeded once. */
@@ -218,6 +263,8 @@ main(void) {
         buffer_test_push_sort(),
         buffer_test_insert_no_allocate(),
         buffer_test_insert_no_allocate_fail(),
-        buffer_test_insert_allocate()
+        buffer_test_insert_allocate(),
+        buffer_test_write(),
+        buffer_test_move()
     );
 }

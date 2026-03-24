@@ -15,6 +15,8 @@ static Buffer const rgb
 check_static_begin(buffer_test_static_global_const) {
     check(buffer_count(&rgb).count, 3);
     check(buffer_capacity(&rgb).count, 3);
+    check(buffer_count_bytes(&rgb).count, 3);
+    check(buffer_capacity_bytes(&rgb).count, 3);
     uint8_t const *const i = buffer_at(&rgb, 0);
     check(i != NULL, CCC_TRUE);
     check(*i, 0xFF);
@@ -28,6 +30,20 @@ check_static_begin(buffer_test_fixed) {
     int const *const i = buffer_at(&b, 0);
     check(i != NULL, CCC_TRUE);
     check(*i, 0);
+    check_end();
+}
+
+check_static_begin(buffer_test_manual_counts) {
+    Buffer b = buffer_with_storage(0, (int[5]){});
+    check(buffer_count(&b).count, 0);
+    check(buffer_count_plus(&b, 1), CCC_RESULT_OK);
+    check(buffer_count(&b).count, 1);
+    check(buffer_count_minus(&b, 1), CCC_RESULT_OK);
+    check(buffer_count(&b).count, 0);
+    check(buffer_count_minus(&b, 1), CCC_RESULT_ARGUMENT_ERROR);
+    check(buffer_count_set(&b, 5), CCC_RESULT_OK);
+    check(buffer_count_plus(&b, 1), CCC_RESULT_ARGUMENT_ERROR);
+    check(buffer_count_set(&b, 6), CCC_RESULT_ARGUMENT_ERROR);
     check_end();
 }
 
@@ -160,13 +176,10 @@ check_static_begin(buffer_test_init_from_fail) {
 
 check_static_begin(buffer_test_init_with_capacity) {
     CCC_Buffer b = CCC_buffer_with_capacity(int, std_allocator, 8);
-    check(CCC_buffer_capacity(&b).count, 8);
-    check(
-        CCC_buffer_push_back(&b, &(int){9}, &std_allocator) != NULL, CCC_TRUE
-    );
+    check(buffer_capacity(&b).count, 8);
+    check(buffer_data(&b) != NULL, CCC_TRUE);
     size_t count = 0;
-    for (int const *i = CCC_buffer_begin(&b); i != CCC_buffer_capacity_end(&b);
-         i = CCC_buffer_next(&b, i)) {
+    while (buffer_push_back(&b, &(int){9}, &(CCC_Allocator){})) {
         ++count;
     }
     check(count, 8);
@@ -201,11 +214,10 @@ check_static_begin(buffer_test_context_with_allocator) {
 check_static_begin(buffer_test_init_with_capacity_fail) {
     /* Forgot allocation function. */
     CCC_Buffer b = CCC_buffer_with_capacity(int, (CCC_Allocator){}, 8);
-    check(CCC_buffer_capacity(&b).count, 0);
-    check(CCC_buffer_push_back(&b, &(int){9}, &(CCC_Allocator){}), NULL);
+    check(buffer_capacity(&b).count, 0);
+    check(buffer_data(&b) == NULL, CCC_TRUE);
     size_t count = 0;
-    for (int const *i = CCC_buffer_begin(&b); i != CCC_buffer_capacity_end(&b);
-         i = CCC_buffer_next(&b, i)) {
+    while (buffer_push_back(&b, &(int){9}, &(CCC_Allocator){})) {
         ++count;
     }
     check(count, 0);
@@ -219,6 +231,7 @@ main(void) {
     return check_run(
         buffer_test_static_global_const(),
         buffer_test_fixed(),
+        buffer_test_manual_counts(),
         buffer_test_full(),
         buffer_test_reserve(),
         buffer_test_copy_no_allocate(),

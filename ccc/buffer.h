@@ -307,13 +307,7 @@ defined allocation function.
 @param[in] buffer a pointer to the buffer.
 @param[in] capacity the newly desired capacity.
 @param[in] allocator the allocation context defined by the user.
-@return the result of reallocation.
-
-This function takes the allocation function as an argument in case no
-allocation function has been provided upon initialization and the user is
-managing allocations and resizing directly. If an allocation function has
-been provided than the use of this function should be rare as the buffer
-will reallocate more memory when necessary. */
+@return the result of reallocation. */
 [[nodiscard]] CCC_Result CCC_buffer_allocate(
     CCC_Buffer *buffer, size_t capacity, CCC_Allocator const *allocator
 );
@@ -581,16 +575,6 @@ not yet been allocated.
 Note that end is determined by the size of the Buffer dynamically. */
 [[nodiscard]] void *CCC_buffer_end(CCC_Buffer const *buffer);
 
-/** @brief return the end position of the Buffer according to capacity.
-@param[in] buffer the pointer to the buffer.
-@return the address of the position one past capacity. It is undefined to
-access this position for any reason. NULL is returned if NULL is provided or
-Buffer has not yet been allocated.
-
-Note that end is determined by the capcity of the Buffer and will not change
-until a resize has occured, if permitted. */
-[[nodiscard]] void *CCC_buffer_capacity_end(CCC_Buffer const *buffer);
-
 /** @brief obtain the address of the last element in the Buffer in preparation
 for iteration according to size.
 @param[in] buffer the pointer to the buffer.
@@ -629,7 +613,7 @@ indicating bad input has been provided.
 
 If count would exceed the current capacity of the Buffer the size is set to
 capacity and the input error status is returned. */
-CCC_Result CCC_buffer_size_plus(CCC_Buffer *buffer, size_t count);
+CCC_Result CCC_buffer_count_plus(CCC_Buffer *buffer, size_t count);
 
 /** @brief Subtract count from the size of the buffer.
 @param[in] buffer the pointer to the buffer.
@@ -639,7 +623,7 @@ indicating bad input has been provided.
 
 If count would reduce the size to less than 0, the Buffer size is set to 0 and
 the input error status is returned. */
-CCC_Result CCC_buffer_size_minus(CCC_Buffer *buffer, size_t count);
+CCC_Result CCC_buffer_count_minus(CCC_Buffer *buffer, size_t count);
 
 /** @brief Set the Buffer size to n.
 @param[in] buffer the pointer to the buffer.
@@ -649,7 +633,7 @@ error indicating bad input has been provided.
 
 If count is larger than the capacity of the Buffer the size is set equal to the
 capacity and an error is returned. */
-CCC_Result CCC_buffer_size_set(CCC_Buffer *buffer, size_t count);
+CCC_Result CCC_buffer_count_set(CCC_Buffer *buffer, size_t count);
 
 /** @brief obtain the count of Buffer active slots.
 @param[in] buffer the pointer to the buffer.
@@ -698,6 +682,14 @@ element count see CCC_buffer_count_bytes. */
 @param[in] buffer the pointer to the buffer.
 @return true if the size equals the capacity. Error if buffer is NULL. */
 [[nodiscard]] CCC_Tribool CCC_buffer_is_full(CCC_Buffer const *buffer);
+
+/** @brief return a reference to the underlying data of the buffer.
+@param[in] buffer the pointer to the buffer.
+@return NULL if empty or buffer pointer is NULL, otherwise the base of the
+underlying buffer.
+@warning It is the user's responsibility to remain within bounds of this
+reference according to the capacity provided to the buffer. */
+[[nodiscard]] void *CCC_buffer_data(CCC_Buffer const *buffer);
 
 /**@}*/
 
@@ -760,9 +752,9 @@ typedef CCC_Buffer Buffer;
         CCC_buffer_clear_and_free(arguments)
 #    define buffer_count(arguments...) CCC_buffer_count(arguments)
 #    define buffer_count_bytes(arguments...) CCC_buffer_count_bytes(arguments)
-#    define buffer_size_plus(arguments...) CCC_buffer_size_plus(arguments)
-#    define buffer_size_minus(arguments...) CCC_buffer_size_minus(arguments)
-#    define buffer_size_set(arguments...) CCC_buffer_size_set(arguments)
+#    define buffer_count_plus(arguments...) CCC_buffer_count_plus(arguments)
+#    define buffer_count_minus(arguments...) CCC_buffer_count_minus(arguments)
+#    define buffer_count_set(arguments...) CCC_buffer_count_set(arguments)
 #    define buffer_capacity(arguments...) CCC_buffer_capacity(arguments)
 #    define buffer_capacity_bytes(arguments...)                                \
         CCC_buffer_capacity_bytes(arguments)
@@ -795,7 +787,7 @@ typedef CCC_Buffer Buffer;
         CCC_buffer_reverse_begin(arguments)
 #    define buffer_reverse_next(arguments...) CCC_buffer_reverse_next(arguments)
 #    define buffer_reverse_end(arguments...) CCC_buffer_reverse_end(arguments)
-#    define buffer_capacity_end(arguments...) CCC_buffer_capacity_end(arguments)
+#    define buffer_data(arguments...) CCC_buffer_data(arguments)
 /* NOLINTEND(readability-identifier-naming) */
 #endif /* BUFFER_USING_NAMESPACE_CCC */
 

@@ -10,6 +10,7 @@
 #include "checkers.h"
 #include "utility/allocate.h"
 #include "utility/random.h"
+#include "utility/stack_allocator.h"
 
 check_static_begin(buffer_test_push_pop_fixed) {
     Buffer b = buffer_with_storage(0, (int[8]){});
@@ -34,6 +35,16 @@ check_static_begin(buffer_test_push_pop_fixed) {
     }
     check(buffer_count(&b).count, count);
     check(count, 0);
+    check_end();
+}
+
+check_static_begin(buffer_test_push_erase_one) {
+    Buffer b = buffer_with_storage(0, (int[8]){});
+    check(
+        buffer_push_back(&b, &(int){99}, &(CCC_Allocator){}) == NULL, CCC_FALSE
+    );
+    check(buffer_erase(&b, 0), CCC_RESULT_OK);
+    check(buffer_count(&b).count, 0);
     check_end();
 }
 
@@ -65,6 +76,88 @@ check_static_begin(buffer_test_push_resize_pop) {
         (void)buffer_clear_and_free(&b, &(CCC_Destructor){}, &std_allocator);
         free(many);
     });
+}
+
+check_static_begin(buffer_test_clear_then_clear_and_free) {
+    Buffer b = buffer_with_storage(0, (int[8]){});
+    int i = 0;
+    while (!buffer_is_full(&b)) {
+        int *pushed = buffer_push_back(&b, &i, &(CCC_Allocator){});
+        check(pushed != NULL, CCC_TRUE);
+    }
+    check(buffer_count(&b).count, 8);
+    check(buffer_capacity(&b).count, 8);
+    CCC_Result const result = buffer_clear(&b, &(CCC_Destructor){});
+    check(result, CCC_RESULT_OK);
+    check(buffer_count(&b).count, 0);
+    check(buffer_capacity(&b).count, 8);
+    check_end({
+        (void)buffer_clear_and_free(
+            &b, &(CCC_Destructor){}, &(CCC_Allocator){}
+        );
+    });
+}
+
+static void
+destroy_elemenent(CCC_Arguments const arguments) {
+    int *const i = arguments.type;
+    Buffer *const is_destroyed_buffer = arguments.context;
+    CCC_Tribool *const status = buffer_at(is_destroyed_buffer, (size_t)*i);
+    if (status && *status == CCC_FALSE) {
+        *status = CCC_TRUE;
+    }
+}
+
+check_static_begin(buffer_test_clear_then_clear_and_free_with_destructor) {
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((int[8]){}),
+    };
+    Buffer b = buffer_with_capacity(int, allocator, 8);
+    Buffer is_destroyed_buffer = buffer_with_storage(0, (CCC_Tribool[8]){});
+    int i = 0;
+    while (!buffer_is_full(&b)) {
+        *buffer_as(&is_destroyed_buffer, CCC_Tribool, (size_t)i) = CCC_FALSE;
+        int *pushed = buffer_push_back(&b, &i, &(CCC_Allocator){});
+        check(pushed != NULL, CCC_TRUE);
+    }
+    check(buffer_count(&b).count, 8);
+    check(buffer_capacity(&b).count, 8);
+    CCC_Result result = buffer_clear(
+        &b,
+        &(CCC_Destructor){
+            .destroy = destroy_elemenent,
+            .context = &is_destroyed_buffer,
+        }
+    );
+    check(result, CCC_RESULT_OK);
+    for (CCC_Tribool const *destroyed = buffer_begin(&is_destroyed_buffer);
+         destroyed != buffer_end(&is_destroyed_buffer);
+         destroyed = buffer_next(&is_destroyed_buffer, destroyed)) {
+        check(*destroyed, CCC_TRUE);
+    }
+    check(buffer_count(&b).count, 0);
+    check(buffer_capacity(&b).count, 8);
+    while (!buffer_is_full(&b)) {
+        *buffer_as(&is_destroyed_buffer, CCC_Tribool, (size_t)i) = CCC_FALSE;
+        int *pushed = buffer_push_back(&b, &i, &(CCC_Allocator){});
+        check(pushed != NULL, CCC_TRUE);
+    }
+    result = buffer_clear_and_free(
+        &b,
+        &(CCC_Destructor){
+            .destroy = destroy_elemenent,
+            .context = &is_destroyed_buffer,
+        },
+        &allocator
+    );
+    check(result, CCC_RESULT_OK);
+    for (CCC_Tribool const *destroyed = buffer_begin(&is_destroyed_buffer);
+         destroyed != buffer_end(&is_destroyed_buffer);
+         destroyed = buffer_next(&is_destroyed_buffer, destroyed)) {
+        check(*destroyed, CCC_TRUE);
+    }
+    check_end();
 }
 
 check_static_begin(buffer_test_daily_temperatures) {
@@ -224,7 +317,10 @@ int
 main(void) {
     return check_run(
         buffer_test_push_pop_fixed(),
+        buffer_test_push_erase_one(),
         buffer_test_push_resize_pop(),
+        buffer_test_clear_then_clear_and_free(),
+        buffer_test_clear_then_clear_and_free_with_destructor(),
         buffer_test_daily_temperatures(),
         buffer_test_car_fleet(),
         buffer_test_largest_rectangle_in_histogram(),
