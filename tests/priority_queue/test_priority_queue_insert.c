@@ -3,11 +3,11 @@
 
 #define TRAITS_USING_NAMESPACE_CCC
 
+#include "ccc/priority_queue.h"
+#include "ccc/traits.h"
+#include "ccc/types.h"
 #include "checkers.h"
-#include "priority_queue.h"
 #include "priority_queue_utility.h"
-#include "traits.h"
-#include "types.h"
 #include "utility/stack_allocator.h"
 
 enum : int {
@@ -15,6 +15,7 @@ enum : int {
 };
 
 check_static_begin(priority_queue_test_insert_one) {
+    check(CCC_priority_queue_front(NULL), NULL);
     CCC_Priority_queue priority_queue = CCC_priority_queue_for(
         struct Val,
         elem,

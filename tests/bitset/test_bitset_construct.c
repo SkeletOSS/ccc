@@ -30,20 +30,38 @@ check_static_begin(bitset_test_construct) {
     CCC_Bitset bs
         = CCC_bitset_for(10, 10, CCC_bitset_storage_for((CCC_Bit[10]){}));
     check(CCC_bitset_popcount(&bs).count, 0);
-    for (size_t i = 0; i < CCC_bitset_capacity(&bs).count; ++i) {
+    size_t i = 0;
+    for (; i < CCC_bitset_capacity(&bs).count; ++i) {
         check(CCC_bitset_test(&bs, i), CCC_FALSE);
         check(CCC_bitset_test(&bs, i), CCC_FALSE);
     }
+    check(i, 10);
     check_end();
 }
 
 check_static_begin(bitset_test_construct_with_literal) {
     CCC_Bitset bs = CCC_bitset_with_storage(10, (CCC_Bit[10]){});
     check(CCC_bitset_popcount(&bs).count, 0);
-    for (size_t i = 0; i < CCC_bitset_count(&bs).count; ++i) {
+    size_t i = 0;
+    for (; i < CCC_bitset_count(&bs).count; ++i) {
         check(CCC_bitset_test(&bs, i), CCC_FALSE);
         check(CCC_bitset_test(&bs, i), CCC_FALSE);
     }
+    check(i, 10);
+    check_end();
+}
+
+check_static_begin(bitset_test_construct_with_literal_full_block) {
+    CCC_Bitset bs = CCC_bitset_with_storage(
+        CCC_BITSET_BLOCK_BITS, (CCC_Bit[CCC_BITSET_BLOCK_BITS]){}
+    );
+    check(CCC_bitset_popcount(&bs).count, 0);
+    size_t i = 0;
+    for (; i < CCC_bitset_count(&bs).count; ++i) {
+        check(CCC_bitset_test(&bs, i), CCC_FALSE);
+        check(CCC_bitset_test(&bs, i), CCC_FALSE);
+    }
+    check(i, CCC_BITSET_BLOCK_BITS);
     check_end();
 }
 
@@ -232,6 +250,7 @@ main(void) {
         bitset_test_static(),
         bitset_test_construct(),
         bitset_test_construct_with_literal(),
+        bitset_test_construct_with_literal_full_block(),
         bitset_test_copy_no_allocate(),
         bitset_test_copy_allocate(),
         bitset_test_init_from(),

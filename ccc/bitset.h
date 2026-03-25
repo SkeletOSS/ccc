@@ -112,83 +112,40 @@ number of bytes occupied by the number of bit blocks that must be allocated. */
 #define CCC_bitset_block_bytes(bit_capacity)                                   \
     CCC_private_bitset_block_bytes(bit_capacity)
 
-/** @brief Create the underlying fixed size storage for a bit set given a
-compound literal array of bits the user wishes to store.
-@param[in] bit_compound_literal_array a compound literal array of `CCC_Bit`
-representing the number of bits the user wishes to store in the bit set.
-@param[in] optional_storage_specifier a storage specifier for the backing block
-storage may be added on newer compilers.
-@warning This should rarely be used. If a fixed size bit set is desired simply
-use the CCC_bitset_with_storage() initializer. For dynamic bit sets, there
-are also many other options.
-
-This macro is required to support the edge case for the user allocating a fixed
-size bit set dynamically from an allocator at runtime. In this case, the user
-needs access to the underlying bit set blocks storage object to know how many
-bytes to allocate. See the below example.
-
-```
-int
-main(void)
-{
-    void *const storage = malloc(
-        sizeof(CCC_bitset_storage_for((CCC_Bit[4096]){}))
-    );
-    defer free(storage);
-    CCC_Bitset bitset = CCC_bitset_for(
-        NULL,
-        NULL,
-        4096,
-        storage
-    );
-    return 0;
-}
-```
-
-Usually, using a dynamic bit set and the reserve interface would be sufficient.
-However, the reserve interface only guarantees that at least the needed bytes
-are allocated. When the user must know the exact size of the backing object due
-to strict memory requirements, this is helpful. Such a use case may be rare, but
-must be supported by this container. */
-#define CCC_bitset_storage_for(                                                \
-    bit_compound_literal_array, optional_storage_specifier...                  \
-)                                                                              \
-    CCC_private_bitset_storage_for(                                            \
-        bit_compound_literal_array, optional_storage_specifier                 \
-    )
-
 /** @brief Initialize an empty default bit set.
 @return the initialized bit set on the right side of an equality operator */
 #define CCC_bitset_default() CCC_private_bitset_default()
 
-/** @brief Initialize the bit set with memory and allocation permissions.
-@param[in] cap the number of bits that will be stored in this bit set.
-@param[in] count the starting count. Set equal to cap for non-dynamic bit set.
-@param[in] bitblock_pointer the pointer to existing blocks or NULL.
+/** @brief Initialize the bit set with a starting capacity and size at runtime
+or compile time with no allocation permissions or context from a compound
+literal of bitset blocks.
+@param[in] count the count of bits <= capacity of this bit set.
+@param[in] compound_literal_array the compound literal of CCC_Bit specifying
+the desired bit count for the bit set. A platform specific array of fixed width
+integers is constructed to accommodate this bit count.
+@param[in] optional_storage_specifier a storage specifier for the backing block
+storage may be added on newer compilers.
 @return the initialized bit set on the right hand side of an equality operator
-@warning the user must use the CCC_bitset_blocks macro to help determine the
-size of the bitblock array if a fixed size bitblock array is provided at compile
-time; the necessary conversion from bits requested to number of blocks required
-to store those bits must occur before use. If capacity is zero the helper macro
-is not needed.
+Capacity will be set to the full capacity available for the compound literal.
 
-A fixed size bit set with size equal to capacity.
+
+A fixed size bit set.
 
 ```
 #define BITSET_USING_NAMESPACE_CCC
-Bitset bitset = bitset_for(9, 9, bitset_storage_for((Bit[9]){}));
+static Bitset bitset = bitset_with_storage(
+    4096,
+    (Bit[4096]){}
+);
 ```
 
-A fixed size bit set with dynamic push and pop.
-
-```
-#define BITSET_USING_NAMESPACE_CCC
-Bitset bitset = bitset_for(9, 0, bitset_storage_for((Bit[9]){}));
-```
-
-Pushing bits would continue until capacity is reached. */
-#define CCC_bitset_for(cap, count, bitblock_pointer...)                        \
-    CCC_private_bitset_for(cap, count, bitblock_pointer)
+This saves some initialization boilerplate. */
+#define CCC_bitset_with_storage(                                               \
+    count, compound_literal_array, optional_storage_specifier...               \
+)                                                                              \
+    CCC_private_bitset_with_storage(                                           \
+        count, compound_literal_array, optional_storage_specifier              \
+    )
 
 /** @brief Initialize the bit set with a custom input string.
 @param[in] allocator the allocator for memory.
@@ -278,36 +235,85 @@ static and stack based initialization options. */
 #define CCC_bitset_with_capacity(allocator, capacity, optional_count...)       \
     CCC_private_bitset_with_capacity(allocator, capacity, optional_count)
 
-/** @brief Initialize the bit set with a starting capacity and size at runtime
-or compile time with no allocation permissions or context from a compound
-literal of bitset blocks.
-@param[in] count the count of bits <= capacity of this bit set.
-@param[in] compound_literal_array the compound literal of CCC_Bit specifying
-the desired bit count for the bit set. A platform specific array of fixed width
-integers is constructed to accommodate this bit count.
+/** @brief Create the underlying fixed size storage for a bit set given a
+compound literal array of bits the user wishes to store.
+@param[in] bit_compound_literal_array a compound literal array of `CCC_Bit`
+representing the number of bits the user wishes to store in the bit set.
 @param[in] optional_storage_specifier a storage specifier for the backing block
 storage may be added on newer compilers.
-@return the initialized bit set on the right hand side of an equality operator
-Capacity will be set to the full capacity available for the compound literal.
+@warning This should rarely be used. If a fixed size bit set is desired simply
+use the CCC_bitset_with_storage() initializer. For dynamic bit sets, there
+are also many other options.
 
-
-A fixed size bit set.
+This macro is required to support the edge case for the user allocating a fixed
+size bit set dynamically from an allocator at runtime. In this case, the user
+needs access to the underlying bit set blocks storage object to know how many
+bytes to allocate. See the below example.
 
 ```
-#define BITSET_USING_NAMESPACE_CCC
-static Bitset bitset = bitset_with_storage(
-    4096,
-    (Bit[4096]){}
-);
+int
+main(void)
+{
+    void *const storage = malloc(
+        sizeof(CCC_bitset_storage_for((CCC_Bit[4096]){}))
+    );
+    defer free(storage);
+    CCC_Bitset bitset = CCC_bitset_for(
+        NULL,
+        NULL,
+        4096,
+        storage
+    );
+    return 0;
+}
 ```
 
-This saves some initialization boilerplate. */
-#define CCC_bitset_with_storage(                                               \
-    count, compound_literal_array, optional_storage_specifier...               \
+Usually, using a dynamic bit set and the reserve interface would be sufficient.
+However, the reserve interface only guarantees that at least the needed bytes
+are allocated. When the user must know the exact size of the backing object due
+to strict memory requirements, this is helpful. Such a use case may be rare, but
+must be supported by this container. */
+#define CCC_bitset_storage_for(                                                \
+    bit_compound_literal_array, optional_storage_specifier...                  \
 )                                                                              \
-    CCC_private_bitset_with_storage(                                           \
-        count, compound_literal_array, optional_storage_specifier              \
+    CCC_private_bitset_storage_for(                                            \
+        bit_compound_literal_array, optional_storage_specifier                 \
     )
+
+/** @brief Initialize a bit set from any memory source at runtime.
+@param[in] cap the number of bits that will be stored in this bit set.
+@param[in] count the starting count. Set equal to cap for non-dynamic bit set.
+@param[in] bitblock_pointer the pointer to existing blocks or NULL.
+@return the initialized bit set on the right hand side of an equality operator
+@warning In most cases this is the wrong initializer to use. For dynamic
+bitsets, using the CCC_bitset_with_capacity() is better. For fixed size bitsets
+with a capacity known at compile time, the CCC_bitset_with_storage() is better.
+This initializer is in place to support uninitialized heap or stack memory
+that the user obtains without the help of the bitset API. Therefore, it can
+only be used at runtime because it must zero out the bitset blocks.
+
+A bitset dynamically allocated at runtime by the user.
+
+```
+int
+main(void)
+{
+    void *const storage = malloc(
+        sizeof(CCC_bitset_storage_for((CCC_Bit[4096]){}))
+    );
+    defer free(storage);
+    CCC_Bitset bitset = CCC_bitset_for(
+        4096
+        4096,
+        storage
+    );
+    return 0;
+}
+```
+
+See the more specific initializers for standard usage. */
+#define CCC_bitset_for(cap, count, bitblock_pointer...)                        \
+    CCC_private_bitset_for(cap, count, bitblock_pointer)
 
 /** @brief Copy the bit set at source to destination.
 @param[in] destination the initialized destination for the copy of the source

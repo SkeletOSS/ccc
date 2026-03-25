@@ -23,6 +23,7 @@ limitations under the License.
 /** @endcond */
 
 #include "../types.h"
+#include "configuration.h"
 
 /** @internal A Bitset is a contiguous array of fixed size integers. These aid
 in cache friendly storage and operations.
@@ -61,7 +62,8 @@ of bits. Assumes the given capacity is greater than 0. Classic div round up. */
 
 /** @internal Returns the number of bytes needed for the required blocks. */
 #define CCC_private_bitset_block_bytes(private_bit_capacity)                   \
-    (sizeof(*(struct CCC_Bitset){}.blocks) * (private_bit_capacity))
+    (sizeof(*(struct CCC_Bitset){}.blocks)                                     \
+     * CCC_private_bitset_block_count(private_bit_capacity))
 
 /** @internal */
 #define CCC_private_bitset_default()                                           \
@@ -79,18 +81,23 @@ of bits. Assumes the given capacity is greater than 0. Classic div round up. */
     __VA_OPT__(CCC_private_bitset_non_)                                        \
     ##CCC_private_bitset_default_size(private_cap, __VA_ARGS__)
 
-/** @internal Capacity is required argument from the user while size is
-optional. The optional size param defaults equal to capacity if not provided.
-This covers most common cases--fixed size bit set, 0 sized dynamic bit set--and
-when the user wants a fixed size dynamic bit set they provide 0 as size
-argument. */
+/** @internal This initializer must be runtime only because the possibility the
+bitset comes from an uninitialized heap. */
 #define CCC_private_bitset_for(                                                \
     private_cap, private_count, private_bitblock_pointer                       \
 )                                                                              \
-    (struct CCC_Bitset) {                                                      \
-        .blocks = (private_bitblock_pointer), .count = (private_count),        \
-        .capacity = (private_cap),                                             \
-    }
+    (struct { struct CCC_Bitset private; }){(__extension__({                   \
+        struct CCC_Bitset private_bitset = {                                   \
+            .blocks = memset(                                                  \
+                (private_bitblock_pointer),                                    \
+                0,                                                             \
+                CCC_private_bitset_block_bytes(private_cap)                    \
+            ),                                                                 \
+            .count = (private_count),                                          \
+            .capacity = (private_cap),                                         \
+        };                                                                     \
+        private_bitset;                                                        \
+    }))}.private
 
 /** @internal Determine if user wants capacity different than count. Then pass
 to inline function for bit set construction. */

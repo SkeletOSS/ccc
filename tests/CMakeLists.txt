@@ -154,6 +154,7 @@ add_priority_queue_test(test_priority_queue_construct)
 add_priority_queue_test(test_priority_queue_insert)
 add_priority_queue_test(test_priority_queue_erase)
 add_priority_queue_test(test_priority_queue_update)
+add_priority_queue_test(test_priority_queue_error)
 
 #############  Map  ##########################
 add_library(adaptive_map_utility adaptive_map/adaptive_map_utility.h adaptive_map/adaptive_map_utility.c)
