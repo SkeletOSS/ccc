@@ -27,7 +27,6 @@ jobs:
         run: |
           make clean
           cmake --preset=gcc-gcov
-          cmake --build build --target tests
           make test
           cmake --build build --target coverage
 
