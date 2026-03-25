@@ -1,4 +1,4 @@
-.PHONY: gcc-ccc clang-ccc default build gcc-release gcc-debug clang-release clang-debug sanitize-debug sanitize-release clean tests samples all-gcc-debug all-gcc-release all-sanitize-debug all-sanitize-release gcc-gcov all-clang-debug all-clang-release test utility tidy format
+.PHONY: gcc-ccc clang-ccc default build gcc-release gcc-debug clang-release clang-debug sanitize-debug sanitize-release clean tests samples all-gcc-debug all-gcc-release all-sanitize-debug all-sanitize-release all-clang-debug all-clang-release test utility tidy format
 
 MAKE := $(MAKE)
 MAKEFLAGS += --no-print-directory
@@ -83,9 +83,6 @@ all-clang-debug:
 
 all-clang-release:
 	cmake --preset=clang-release -DCMAKE_INSTALL_PREFIX=$(PREFIX) && cmake --build build $(JOBS) --target ccc tests samples
-
-gcc-gcov:
-	cmake --preset=gcc-gcov -DCMAKE_INSTALL_PREFIX=$(PREFIX) && cmake --build build $(JOBS) --target ccc tests
 
 test: tests
 	@if [ -x "$(BUILD_DIR)debug/bin/run_tests" ]; then                \

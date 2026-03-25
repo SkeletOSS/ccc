@@ -129,8 +129,20 @@
             "inherits": ["default-debug"],
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "gcc",
-                "CMAKE_C_FLAGS": "--coverage -fprofile-arcs -ftest-coverage -g3 -ggdb3 $env{CCC_WARNING_C_FLAGS}",
-                "CMAKE_EXE_LINKER_FLAGS": "--coverage -fprofile-arcs -ftest-coverage"
+                "CMAKE_C_FLAGS": "--coverage -g3 $env{CCC_WARNING_C_FLAGS}",
+                "CMAKE_EXE_LINKER_FLAGS": "--coverage",
+                "CCC_ENABLE_COVERAGE": "ON",
+                "CCC_COVERAGE_TOOL": "gcov"
+            }
+        },
+        {
+            "name": "llvm-cov",
+            "inherits": ["default-debug"],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_C_FLAGS": "--coverage -g3 $env{CCC_WARNING_C_FLAGS}",
+                "CMAKE_EXE_LINKER_FLAGS": "--coverage",
+                "CCC_ENABLE_COVERAGE": "ON"
             }
         }
     ]

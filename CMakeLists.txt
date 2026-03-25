@@ -61,6 +61,67 @@ else()
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 endif()
 
+set(CCC_GCOV_TOOL "" CACHE STRING "Code coverage tool to use for coverage report")
+# Code coverage is easy on gcc but clang requires some extra steps. We can 
+# indicate via our presets that we are using a code coverage preset and we can
+# also manually specify the code coverage tool if we have one installed. This
+# is helpful for gcc, for example, because I have a newer gcov I like to use
+# for the gcc-XX.X compiler; this is not the default one installed.
+if (CCC_ENABLE_COVERAGE)
+
+    if (CCC_GCOV_TOOL)
+        set(GCOV_TOOL ${CCC_GCOV_TOOL})
+
+    # Clang had very tricky behavior especially on mac to successfully generate
+    # lcov compatible reports. The command line would not accept clang's 
+    # provided 'llvm-cov gcov' string so a custom script that executes that 
+    # command needs to be generated. We will just place it in the build files.
+    elseif (CMAKE_C_COMPILER_ID STREQUAL "Clang")
+        find_program(LLVM_COV_EXECUTABLE llvm-cov)
+        if (NOT LLVM_COV_EXECUTABLE)
+            message(FATAL_ERROR "llvm-cov not found")
+        endif()
+
+        set(LLVM_GCOV_WRAPPER "${CMAKE_BINARY_DIR}/llvm-gcov")
+
+        file(WRITE ${LLVM_GCOV_WRAPPER}
+"#!/usr/bin/env bash
+exec \"${LLVM_COV_EXECUTABLE}\" gcov \"$@\"
+")
+
+        file(CHMOD ${LLVM_GCOV_WRAPPER}
+            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
+                        GROUP_READ GROUP_EXECUTE
+                        WORLD_READ WORLD_EXECUTE)
+
+        set(GCOV_TOOL ${LLVM_GCOV_WRAPPER})
+
+    else()
+        set(GCOV_TOOL ${CCC_GCOV_TOOL})
+    endif()
+
+    if (NOT GCOV_TOOL)
+        message(FATAL_ERROR "no code coverage tool selected")
+    endif()
+
+    message(STATUS "Using code coverage tool: ${GCOV_TOOL}")
+    add_custom_target(coverage
+        COMMAND lcov --gcov-tool ${GCOV_TOOL}
+                     --capture
+                     --directory ${CMAKE_BINARY_DIR}
+                     --output-file ${CMAKE_SOURCE_DIR}/docs/coverage.info
+
+        COMMAND lcov --extract ${CMAKE_SOURCE_DIR}/docs/coverage.info '*/source/*'
+                     --output-file ${CMAKE_SOURCE_DIR}/docs/coverage.info
+
+        COMMAND genhtml ${CMAKE_SOURCE_DIR}/docs/coverage.info
+                        --output-directory ${CMAKE_SOURCE_DIR}/docs/coverage
+                        --prefix ${CMAKE_SOURCE_DIR}/source
+                        --flat
+                        --title "CCC Test Suite Coverage Report"
+    )
+endif()
+
 
 # where to find our CMake modules
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")

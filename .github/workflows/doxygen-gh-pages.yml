@@ -15,5 +15,21 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages
-          folder: docs/html
+          folder: docs/doxygen
           config_file: Doxyfile
+
+      - name: Build Coverage
+        run: |
+          make clean
+          cmake --preset=gcc-gcov
+          cmake --build build --target tests
+          make test
+          cmake --build build --target coverage
+
+      - name: Deploy Coverage
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/coverage
+          destination_dir: coverage
+          keep_files: true

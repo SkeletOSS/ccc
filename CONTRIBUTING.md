@@ -31,11 +31,18 @@ Required tools:
 
 ### Code Coverage
 
-The llvm-cov, gcov, and lcov tools are used to generate code coverage reports that are viewable on the web. Use the following command to regenerate and run all of the tests after changes and check for regressions. Replace the `--gcov-tool` with llvm-cov if using llvm.
+A code coverage report is hosted along with our documentation on GitHub Pages. It is updated to reflect the code coverage of the source file implementations whenever the main branch is updated. However, it would be very slow to wait for the deployment to update on every push to a pull request so run the tool locally if working on improving coverage.
+
+A preset for gcc and clang are provided. I would recommend making a custom user preset to obtain the newest tools possible for coverage reports. But here is the built in gcc preset.
 
 ```zsh
-make clean && cmake --preset=my-gcc-gcov && cmake --build build -j8 --target ccc tests && make test && lcov --gcov-tool gcov-15.2 --capture --directory build --output-file coverage.info && lcov --remove coverage.info 'tests/*.c' `tests/*/*` 'tests/*/*.h' 'utility/*' 'build/*' 'include/*' -o coverage.info && genhtml --ignore-errors source coverage.info --output-directory coverage-html --flat
+cmake --preset=gcc-gcov
+cmake --build build --target tests
+make test
+cmake --build build --target coverage
 ```
+
+View the current [coverage report here](https://skeletoss.github.io/ccc/coverage).
 
 ### Presets
 
