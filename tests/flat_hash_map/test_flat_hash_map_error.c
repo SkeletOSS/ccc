@@ -169,6 +169,65 @@ check_static_begin(flat_hash_map_test_try_insert_null_input) {
     check_end();
 }
 
+check_static_begin(flat_hash_map_test_entry_status_input) {
+    CCC_Entry *e = CCC_flat_hash_map_try_insert_wrap(
+        NULL, &(struct Val){}, &std_allocator
+    );
+    check(CCC_entry_argument_error(e), CCC_TRUE);
+    check(CCC_entry_argument_error(NULL), CCC_TRIBOOL_ERROR);
+    check(CCC_entry_insert_error(NULL), CCC_TRIBOOL_ERROR);
+    check(CCC_entry_occupied(NULL), CCC_TRIBOOL_ERROR);
+    check(CCC_entry_status(NULL), CCC_ENTRY_ARGUMENT_ERROR);
+    char const *prev = CCC_entry_status_message(CCC_ENTRY_VACANT);
+    char const *cur = CCC_entry_status_message(CCC_ENTRY_OCCUPIED);
+    check(prev != NULL, CCC_TRUE);
+    check(cur != NULL, CCC_TRUE);
+    check(prev != cur, CCC_TRUE);
+    prev = cur;
+    cur = CCC_entry_status_message(CCC_ENTRY_INSERT_ERROR);
+    check(cur != NULL, CCC_TRUE);
+    check(prev != cur, CCC_TRUE);
+    prev = cur;
+    cur = CCC_entry_status_message(CCC_ENTRY_ARGUMENT_ERROR);
+    check(cur != NULL, CCC_TRUE);
+    check(prev != cur, CCC_TRUE);
+    cur = CCC_entry_status_message(CCC_ENTRY_NO_UNWRAP);
+    check(cur != NULL, CCC_TRUE);
+    check(prev != cur, CCC_TRUE);
+    cur = CCC_entry_status_message(99);
+    check(cur != NULL, CCC_TRUE);
+    check(prev != cur, CCC_TRUE);
+    cur = CCC_handle_status_message(99);
+    check(cur != NULL, CCC_TRUE);
+    check(prev != cur, CCC_TRUE);
+    check_end();
+}
+
+/* We just need to test the code doesn't matter the container for types.c */
+check_static_begin(flat_hash_map_test_handle_status_input) {
+    CCC_Handle const *const handle
+        = &(CCC_Handle){.status = CCC_ENTRY_ARGUMENT_ERROR};
+    CCC_Handle_status status = CCC_handle_status(handle);
+    check(status, CCC_ENTRY_ARGUMENT_ERROR);
+    check(CCC_handle_status(NULL), CCC_ENTRY_ARGUMENT_ERROR);
+    check(CCC_handle_occupied(NULL), CCC_TRIBOOL_ERROR);
+    check(CCC_handle_insert_error(NULL), CCC_TRIBOOL_ERROR);
+    check(CCC_handle_argument_error(NULL), CCC_TRIBOOL_ERROR);
+    check(CCC_handle_argument_error(handle), CCC_TRUE);
+    check(CCC_handle_unwrap(NULL), 0);
+    check_end();
+}
+
+check_static_begin(flat_hash_map_test_result_message_input) {
+    char const *message = CCC_result_message(CCC_RESULT_OK);
+    check(message != NULL, CCC_TRUE);
+    check(*message, '\0');
+    message = CCC_result_message(CCC_PRIVATE_RESULT_COUNT);
+    check(message != NULL, CCC_TRUE);
+    check(*message != '\0', CCC_TRUE);
+    check_end();
+}
+
 check_static_begin(flat_hash_map_test_remove_entry_null_input) {
     CCC_Flat_hash_map_entry *fe
         = CCC_flat_hash_map_entry_wrap(NULL, &(struct Val){}, &std_allocator);
@@ -309,6 +368,9 @@ main(void) {
         flat_hash_map_test_insert_or_assign_null_input(),
         flat_hash_map_test_try_insert_null_input(),
         flat_hash_map_test_iterator_null_input(),
+        flat_hash_map_test_entry_status_input(),
+        flat_hash_map_test_handle_status_input(),
+        flat_hash_map_test_result_message_input(),
         flat_hash_map_test_remove_entry_null_input(),
         flat_hash_map_test_remove_key_value_null_input(),
         flat_hash_map_test_copy_null_input(),
