@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define FLAT_HASH_MAP_USING_NAMESPACE_CCC
 #define TRAITS_USING_NAMESPACE_CCC
@@ -346,6 +347,7 @@ check_static_begin(flat_hash_map_test_shuffle_erase_dynamic) {
 
 int
 main(void) {
+    random_seed((unsigned)time(NULL)); /* NOLINT */
     return check_run(
         flat_hash_map_test_erase(),
         flat_hash_map_test_shuffle_insert_erase(),

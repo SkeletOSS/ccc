@@ -4,11 +4,11 @@
 #define FLAT_HASH_MAP_USING_NAMESPACE_CCC
 #define TRAITS_USING_NAMESPACE_CCC
 
+#include "ccc/flat_hash_map.h"
+#include "ccc/traits.h"
+#include "ccc/types.h"
 #include "checkers.h"
-#include "flat_hash_map.h"
 #include "flat_hash_map_utility.h"
-#include "traits.h"
-#include "types.h"
 #include "utility/allocate.h"
 
 static void

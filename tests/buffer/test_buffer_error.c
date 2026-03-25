@@ -1,5 +1,6 @@
 #define BUFFER_USING_NAMESPACE_CCC
 #include "ccc/buffer.h"
+#include "ccc/types.h"
 #include "checkers.h"
 #include "utility/allocate.h"
 

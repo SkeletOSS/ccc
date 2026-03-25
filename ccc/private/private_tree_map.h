@@ -269,6 +269,7 @@ void *CCC_private_tree_map_insert(
             .status = CCC_ENTRY_INSERT_ERROR,                                  \
         };                                                                     \
         if (private_tree_map_new_ins_base) {                                   \
+            tree_map_insert_entry_ret.status = CCC_ENTRY_VACANT;               \
             *private_tree_map_new_ins_base = type_compound_literal;            \
             *((typeof(key) *)CCC_private_tree_map_key_in_slot(                 \
                 tree_map_insert_entry.map, private_tree_map_new_ins_base       \

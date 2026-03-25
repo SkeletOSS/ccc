@@ -309,6 +309,7 @@ macro(add_flat_hash_map_test TEST_NAME)
       random
       ccc
       allocate
+      stack_allocator
   )
   set_target_properties(${TEST_NAME} 
     PROPERTIES 
@@ -324,6 +325,7 @@ add_flat_hash_map_test(test_flat_hash_map_erase)
 add_flat_hash_map_test(test_flat_hash_map_lru)
 add_flat_hash_map_test(test_flat_hash_map_entry)
 add_flat_hash_map_test(test_flat_hash_map_iterator)
+add_flat_hash_map_test(test_flat_hash_map_error)
 
 #############  Doubly Linked List ##########################
 

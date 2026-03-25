@@ -757,14 +757,14 @@ char const *CCC_result_message(CCC_Result result);
 @return the status stored in the entry after the required action on the
 container completes. If entry is NULL an entry input error is returned so ensure
 e is non-NULL to avoid an inaccurate status returned. */
-CCC_Entry_status CCC_get_entry_status(CCC_Entry const *entry);
+CCC_Entry_status CCC_entry_status(CCC_Entry const *entry);
 
 /** @brief Obtain the handle status from a generic handle.
 @param[in] handle a pointer to the handle.
 @return the status stored in the handle after the required action on the
 container completes. If handle is NULL an handle input error is returned so
 ensure e is non-NULL to avoid an inaccurate status returned. */
-CCC_Handle_status CCC_get_handle_status(CCC_Handle const *handle);
+CCC_Handle_status CCC_handle_status(CCC_Handle const *handle);
 
 /** @brief Obtain a string message with a description of the entry status.
 @param[in] status the status obtained from an entry.
@@ -825,14 +825,13 @@ typedef CCC_Key_hasher_interface Key_hasher_interface;
 #    define handle_argument_error(handle_pointer)                              \
         CCC_handle_argument_error(handle_pointer)
 #    define entry_unwrap(entry_pointer) CCC_entry_unwrap(entry_pointer)
-#    define get_entry_status(entry_pointer) CCC_get_entry_status(entry_pointer)
+#    define entry_status(entry_pointer) CCC_entry_status(entry_pointer)
 #    define entry_status_message(status) CCC_entry_status_message(status)
 #    define handle_occupied(array_pointer) CCC_handle_occupied(array_pointer)
 #    define handle_insert_error(array_pointer)                                 \
         CCC_handle_insert_error(array_pointer)
 #    define handle_unwrap(array_pointer) CCC_handle_unwrap(array_pointer)
-#    define get_handle_status(array_pointer)                                   \
-        CCC_get_handle_status(array_pointer)
+#    define handle_status(array_pointer) CCC_handle_status(array_pointer)
 #    define handle_status_message(status) CCC_handle_status_message(status)
 #    ifndef range_begin
 #        define range_begin(range_pointer) CCC_range_begin(range_pointer)

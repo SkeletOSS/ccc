@@ -173,15 +173,6 @@ struct CCC_Flat_hash_map_entry CCC_private_flat_hash_map_entry(
     struct CCC_Flat_hash_map *, void const *, CCC_Allocator const *
 );
 /** @internal */
-void CCC_private_flat_hash_map_insert(
-    struct CCC_Flat_hash_map *,
-    void const *,
-    struct CCC_Flat_hash_map_tag,
-    size_t
-);
-/** @internal */
-void CCC_private_flat_hash_map_erase(struct CCC_Flat_hash_map *, size_t);
-/** @internal */
 void *
 CCC_private_flat_hash_map_data_at(struct CCC_Flat_hash_map const *, size_t);
 /** @internal */

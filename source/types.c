@@ -63,10 +63,11 @@ CCC_entry_argument_error(CCC_Entry const *const entry) {
 
 void *
 CCC_entry_unwrap(CCC_Entry const *const entry) {
-    if (!entry) {
+    if (!entry || (entry->status & CCC_ENTRY_NO_UNWRAP)
+        || (entry->status & CCC_ENTRY_INSERT_ERROR)) {
         return NULL;
     }
-    return entry->status & CCC_ENTRY_NO_UNWRAP ? NULL : entry->type;
+    return entry->type;
 }
 
 CCC_Tribool
@@ -150,7 +151,7 @@ CCC_result_message(CCC_Result const result) {
 }
 
 CCC_Entry_status
-CCC_get_entry_status(CCC_Entry const *entry) {
+CCC_entry_status(CCC_Entry const *entry) {
     if (!entry) {
         return CCC_ENTRY_ARGUMENT_ERROR;
     }
@@ -158,7 +159,7 @@ CCC_get_entry_status(CCC_Entry const *entry) {
 }
 
 CCC_Handle_status
-CCC_get_handle_status(CCC_Handle const *handle) {
+CCC_handle_status(CCC_Handle const *handle) {
     if (!handle) {
         return CCC_ENTRY_ARGUMENT_ERROR;
     }

@@ -276,10 +276,9 @@ struct Query {
 /*===========================   Prototypes   ================================*/
 
 static void swap(void *, void *, void *, size_t);
-static struct CCC_Flat_hash_map_entry
-entry(struct CCC_Flat_hash_map *, void const *, CCC_Allocator const *);
-static struct Query
-find(struct CCC_Flat_hash_map *, void const *, uint64_t, CCC_Allocator const *);
+static struct CCC_Flat_hash_map_entry maybe_rehash_find_entry(
+    struct CCC_Flat_hash_map *, void const *, CCC_Allocator const *
+);
 static struct Query
 find_key_or_slot(struct CCC_Flat_hash_map const *, void const *, uint64_t);
 static CCC_Count
@@ -415,14 +414,16 @@ CCC_flat_hash_map_entry(
     if (unlikely(!map || !key || !allocator)) {
         return (CCC_Flat_hash_map_entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
-    return entry(map, key, allocator);
+    return maybe_rehash_find_entry(map, key, allocator);
 }
 
 void *
 CCC_flat_hash_map_or_insert(
     CCC_Flat_hash_map_entry const *const entry, void const *type
 ) {
-    if (unlikely(!entry || !type)) {
+    if (unlikely(
+            !entry || !type || (entry->status & CCC_ENTRY_ARGUMENT_ERROR)
+        )) {
         return NULL;
     }
     if (entry->status & CCC_ENTRY_OCCUPIED) {
@@ -439,7 +440,9 @@ void *
 CCC_flat_hash_map_insert_entry(
     CCC_Flat_hash_map_entry const *const entry, void const *type
 ) {
-    if (unlikely(!entry || !type)) {
+    if (unlikely(
+            !entry || !type || (entry->status & CCC_ENTRY_ARGUMENT_ERROR)
+        )) {
         return NULL;
     }
     if (entry->status & CCC_ENTRY_OCCUPIED) {
@@ -490,7 +493,8 @@ CCC_flat_hash_map_swap_entry(
         return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     void *const key = key_in_slot(map, type_output);
-    struct CCC_Flat_hash_map_entry slot = entry(map, key, allocator);
+    struct CCC_Flat_hash_map_entry slot
+        = maybe_rehash_find_entry(map, key, allocator);
     if (slot.status & CCC_ENTRY_OCCUPIED) {
         swap(
             swap_slot(map),
@@ -523,7 +527,8 @@ CCC_flat_hash_map_try_insert(
         return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     void *const key = key_in_slot(map, type);
-    struct CCC_Flat_hash_map_entry slot = entry(map, key, allocator);
+    struct CCC_Flat_hash_map_entry const slot
+        = maybe_rehash_find_entry(map, key, allocator);
     if (slot.status & CCC_ENTRY_OCCUPIED) {
         return (CCC_Entry){
             .type = data_at(map, slot.index),
@@ -550,7 +555,8 @@ CCC_flat_hash_map_insert_or_assign(
         return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     void *const key = key_in_slot(map, type);
-    struct CCC_Flat_hash_map_entry slot = entry(map, key, allocator);
+    struct CCC_Flat_hash_map_entry const slot
+        = maybe_rehash_find_entry(map, key, allocator);
     if (slot.status & CCC_ENTRY_OCCUPIED) {
         (void)memcpy(data_at(map, slot.index), type, map->sizeof_type);
         return (CCC_Entry){
@@ -867,14 +873,7 @@ CCC_private_flat_hash_map_entry(
     void const *const key,
     CCC_Allocator const *const allocator
 ) {
-    return entry(map, key, allocator);
-}
-
-void
-CCC_private_flat_hash_map_erase(
-    struct CCC_Flat_hash_map *const map, size_t const index
-) {
-    erase(map, index);
+    return maybe_rehash_find_entry(map, key, allocator);
 }
 
 void *
@@ -907,49 +906,36 @@ metadata and location info necessary for future actions. If this entry was
 obtained in hopes of insertions but insertion will cause an error. A status
 flag in the handle field will indicate the error. */
 static struct CCC_Flat_hash_map_entry
-entry(
+maybe_rehash_find_entry(
     struct CCC_Flat_hash_map *const map,
     void const *const key,
     CCC_Allocator const *const allocator
 ) {
+    CCC_Result const slot_result = maybe_rehash(map, 1, allocator);
+    /* Map was not initialized correctly or cannot allocate. */
+    if (slot_result != CCC_RESULT_OK && !map->mask) {
+        return (struct CCC_Flat_hash_map_entry){
+            .map = (struct CCC_Flat_hash_map *)map,
+            .status = CCC_ENTRY_INSERT_ERROR,
+        };
+    }
     uint64_t const hash = hasher(map, key);
-    struct Query const e = find(map, key, hash, allocator);
+    struct CCC_Flat_hash_map_tag const tag = tag_from(hash);
+    struct Query const q = find_key_or_slot(map, key, hash);
+    if (q.status == CCC_ENTRY_VACANT && slot_result != CCC_RESULT_OK) {
+        /* We need to warn the user that we did not find the key and they cannot
+           insert new element due to fixed size, permissions, or exhaustion. */
+        return (struct CCC_Flat_hash_map_entry){
+            .map = (struct CCC_Flat_hash_map *)map,
+            .status = CCC_ENTRY_INSERT_ERROR,
+        };
+    }
     return (struct CCC_Flat_hash_map_entry){
         .map = (struct CCC_Flat_hash_map *)map,
-        .tag = tag_from(hash),
-        .index = e.index,
-        .status = e.status,
+        .index = q.index,
+        .tag = tag,
+        .status = q.status,
     };
-}
-
-/** Obtaining a handle may fail if a resize or rehash fails but certain queries
-must continue with that information. The status of the handle will indicate if
-an entry is occupied, vacant, or some error has occurred. */
-static struct Query
-find(
-    struct CCC_Flat_hash_map *const map,
-    void const *const key,
-    uint64_t const hash,
-    CCC_Allocator const *const allocator
-) {
-    CCC_Result const res = maybe_rehash(map, 1, allocator);
-    if (res == CCC_RESULT_OK) {
-        return find_key_or_slot(map, key, hash);
-    }
-    /* Map was not initialized correctly or cannot allocate. */
-    if (!map->mask) {
-        return (struct Query){.status = CCC_ENTRY_INSERT_ERROR};
-    }
-    struct Query q = find_key_or_slot(map, key, hash);
-    /* It's OK to find an occupied value when the map has resizing or memory
-       permission errors. If insertion occurs it will be to slot that exists. */
-    if (q.status == CCC_ENTRY_OCCUPIED) {
-        return q;
-    }
-    /* We need to warn the user that we did not find the key and they cannot
-       insert a new element due to fixed size, permissions, or exhaustion. */
-    q.status = CCC_ENTRY_INSERT_ERROR;
-    return q;
 }
 
 /** Sets the insert tag meta data and copies the user type into the associated
@@ -1561,9 +1547,6 @@ to_power_of_two(size_t const n) {
 /** Returns next power of 2 greater than n or 0 if no greater can be found. */
 static inline size_t
 next_power_of_two(size_t const n) {
-    if (n <= 1) {
-        return n + 1;
-    }
     unsigned const shifts = count_leading_zeros_size_t(n - 1);
     return shifts >= sizeof(size_t) * CHAR_BIT ? 0 : (SIZE_MAX >> shifts) + 1;
 }

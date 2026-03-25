@@ -267,6 +267,7 @@ void *CCC_private_adaptive_map_insert(
             .status = CCC_ENTRY_INSERT_ERROR,                                  \
         };                                                                     \
         if (private_adaptive_map_new_ins_base) {                               \
+            om_insert_entry_ret.status = CCC_ENTRY_VACANT;                     \
             *((typeof(type_compound_literal) *)                                \
                   private_adaptive_map_new_ins_base) = type_compound_literal;  \
             *((typeof(key) *)CCC_private_adaptive_map_key_in_slot(             \
