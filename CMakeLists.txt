@@ -115,12 +115,6 @@ exec \"${LLVM_COV_EXECUTABLE}\" gcov \"$@\"
                      --output-file ${CMAKE_SOURCE_DIR}/docs/coverage.info
 
         COMMAND lcov --remove ${CMAKE_SOURCE_DIR}/docs/coverage.info
-                 '*/tests/*.c' 
-                 '*/tests/*/*.c' 
-                 '*/tests/*/*.h' 
-                 '*/utility/*.c' 
-                 '*/utility/*.h' 
-                 '*/build/*' 
                  '*/_deps/*'
                  -o ${CMAKE_SOURCE_DIR}/docs/coverage.info
 
