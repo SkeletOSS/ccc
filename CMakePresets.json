@@ -129,7 +129,7 @@
             "inherits": ["default-debug"],
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "gcc",
-                "CMAKE_C_FLAGS": "--coverage -g3 $env{CCC_WARNING_C_FLAGS}",
+                "CMAKE_C_FLAGS": "--coverage -g3 -Og $env{CCC_WARNING_C_FLAGS}",
                 "CMAKE_EXE_LINKER_FLAGS": "--coverage",
                 "CCC_ENABLE_COVERAGE": "ON",
                 "CCC_COVERAGE_TOOL": "gcov"
@@ -140,7 +140,7 @@
             "inherits": ["default-debug"],
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "clang",
-                "CMAKE_C_FLAGS": "--coverage -g3 $env{CCC_WARNING_C_FLAGS}",
+                "CMAKE_C_FLAGS": "--coverage -g3 -Og $env{CCC_WARNING_C_FLAGS}",
                 "CMAKE_EXE_LINKER_FLAGS": "--coverage",
                 "CCC_ENABLE_COVERAGE": "ON"
             }
