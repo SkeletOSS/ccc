@@ -82,6 +82,9 @@ Or finally, just define it before including the flat hash map header.
 #include "ccc/flat_hash_map.h"
 ```
 
+See the INSTALL.md file for more ways to configure the map for hosted and
+freestanding environments.
+
 To shorten names in the interface, define the following preprocessor directive
 at the top of your file. The `CCC_` prefix may then be omitted for only this
 container.
