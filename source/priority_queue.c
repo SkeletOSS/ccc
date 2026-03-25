@@ -377,14 +377,6 @@ CCC_private_priority_queue_delete_node(
     return delete_node(priority_queue, root);
 }
 
-void *
-CCC_private_priority_queue_struct_base(
-    struct CCC_Priority_queue const *const priority_queue,
-    struct CCC_Priority_queue_node const *const node
-) {
-    return struct_base(priority_queue, node);
-}
-
 /*========================   Static Helpers  ================================*/
 
 static void
@@ -393,23 +385,21 @@ update_fixup(
     struct CCC_Priority_queue_node *const node,
     CCC_Modifier const *const modifier
 ) {
+    modifier->modify((CCC_Arguments){
+        .type = struct_base(priority_queue, node),
+        .context = modifier->context,
+    });
+    /* We could get lucky with a fast path but otherwise there is no way to
+       know whether this is an increase or decrease and by how much. */
     if (node->parent
         && order(priority_queue, node, node->parent) == priority_queue->order) {
         cut_child(node);
-        modifier->modify((CCC_Arguments){
-            .type = struct_base(priority_queue, node),
-            .context = modifier->context,
-        });
         priority_queue->root
             = merge(priority_queue, priority_queue->root, node);
         return;
     }
     priority_queue->root = delete_node(priority_queue, node);
     init_node(node);
-    modifier->modify((CCC_Arguments){
-        .type = struct_base(priority_queue, node),
-        .context = modifier->context,
-    });
     priority_queue->root = merge(priority_queue, priority_queue->root, node);
 }
 

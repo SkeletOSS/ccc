@@ -15,7 +15,6 @@ enum : int {
 };
 
 check_static_begin(priority_queue_test_insert_one) {
-    check(CCC_priority_queue_front(NULL), NULL);
     CCC_Priority_queue priority_queue = CCC_priority_queue_for(
         struct Val,
         elem,

@@ -5,12 +5,14 @@
 #include <time.h>
 
 #define TRAITS_USING_NAMESPACE_CCC
+#define BITSET_USING_NAMESPACE_CCC
 
+#include "ccc/bitset.h"
+#include "ccc/priority_queue.h"
+#include "ccc/traits.h"
+#include "ccc/types.h"
 #include "checkers.h"
-#include "priority_queue.h"
 #include "priority_queue_utility.h"
-#include "traits.h"
-#include "types.h"
 #include "utility/allocate.h"
 #include "utility/stack_allocator.h"
 
@@ -74,6 +76,36 @@ check_static_begin(priority_queue_test_insert_extract_shuffled) {
         = (struct Val *)stack_meta->blocks + STANDARD_CAP;
     for (struct Val *i = stack_meta->blocks; i != end; ++i) {
         (void)CCC_priority_queue_extract(&queue, &i->elem);
+        check(validate(&queue), true);
+    }
+    check(CCC_priority_queue_count(&queue).count, (size_t)0);
+    check_end();
+}
+
+check_static_begin(priority_queue_test_insert_erase_shuffled) {
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[STANDARD_CAP]){}),
+    };
+    CCC_Priority_queue queue = CCC_priority_queue_for(
+        struct Val,
+        elem,
+        CCC_ORDER_LESSER,
+        (CCC_Comparator){.compare = val_order}
+    );
+    int const prime = 53;
+    check(insert_shuffled(&queue, STANDARD_CAP, prime, &allocator), CHECK_PASS);
+    struct Val const *min = front(&queue);
+    check(min->val, 0);
+    enum Check_result const result
+        = check_inorder_fill(&queue, &allocator, (struct Val[STANDARD_CAP]){});
+    check(result, CHECK_PASS);
+    /* Now let's delete everything with no errors. */
+    struct Stack_allocator *const stack_meta = allocator.context;
+    struct Val const *const end
+        = (struct Val *)stack_meta->blocks + STANDARD_CAP;
+    for (struct Val *i = stack_meta->blocks; i != end; ++i) {
+        (void)CCC_priority_queue_erase(&queue, &i->elem, &allocator);
         check(validate(&queue), true);
     }
     check(CCC_priority_queue_count(&queue).count, (size_t)0);
@@ -221,7 +253,7 @@ check_static_begin(priority_queue_test_prime_shuffle) {
     struct Stack_allocator *const stack_meta = allocator.context;
     struct Val *const val_array = (struct Val *)stack_meta->blocks;
     for (int i = 0; i < STANDARD_CAP; ++i) {
-        (void)CCC_priority_queue_extract(&queue, &val_array[i].elem);
+        (void)CCC_priority_queue_erase(&queue, &val_array[i].elem, &allocator);
         check(validate(&queue), true);
         --cur_size;
         check(CCC_priority_queue_count(&queue).count, cur_size);
@@ -297,16 +329,67 @@ check_static_begin(priority_queue_test_weak_srand_allocate) {
     })
 }
 
+static void
+destroy_elem(CCC_Arguments const arguments) {
+    struct Val const *const v = arguments.type;
+    Bitset *const is_destroyed = arguments.context;
+    (void)bitset_set(is_destroyed, (size_t)v->id, CCC_TRUE);
+}
+
+check_static_begin(priority_queue_test_clear_destructor) {
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[STANDARD_CAP]){}),
+    };
+    CCC_Priority_queue queue = CCC_priority_queue_for(
+        struct Val,
+        elem,
+        CCC_ORDER_LESSER,
+        (CCC_Comparator){.compare = val_order}
+    );
+    int i = 0;
+    Bitset is_destroyed
+        = bitset_with_storage(STANDARD_CAP, (Bit[STANDARD_CAP]){});
+    while (i < STANDARD_CAP) {
+        struct Val const *const v = CCC_priority_queue_push(
+            &queue, &(struct Val){.id = i, .val = i}.elem, &allocator
+        );
+        check(v != NULL, CCC_TRUE);
+        ++i;
+    }
+    check(
+        CCC_priority_queue_clear(
+            &queue,
+            &(CCC_Destructor){
+                .destroy = destroy_elem,
+                .context = &is_destroyed,
+            },
+            &allocator
+        ),
+        CCC_RESULT_OK
+    );
+    i = 0;
+    while (!bitset_is_empty(&is_destroyed)) {
+        CCC_Tribool const was_destroyed = bitset_pop_back(&is_destroyed);
+        check(was_destroyed, CCC_TRUE);
+        ++i;
+    }
+    check(i, STANDARD_CAP);
+    check_end();
+}
+
 int
 main(void) {
     return check_run(
         priority_queue_test_insert_remove_key_value_four_dups(),
         priority_queue_test_insert_extract_shuffled(),
+        priority_queue_test_insert_erase_shuffled(),
         priority_queue_test_pop_max(),
         priority_queue_test_pop_min(),
         priority_queue_test_delete_prime_shuffle_duplicates(),
         priority_queue_test_prime_shuffle(),
         priority_queue_test_weak_srand(),
-        priority_queue_test_weak_srand_allocate()
+        priority_queue_test_weak_srand_allocate(),
+        priority_queue_test_clear_destructor(),
     );
 }
