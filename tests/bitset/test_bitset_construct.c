@@ -8,9 +8,6 @@
 
 typedef typeof(*(CCC_Bitset){}.blocks) Bitblocks;
 
-#define to_blocks(bit_count)                                                   \
-    (((bit_count) + CCC_BITSET_BLOCK_BITS - 1) / CCC_BITSET_BLOCK_BITS)
-
 static CCC_Bitset static_bitset = CCC_bitset_with_storage(32, (CCC_Bit[32]){});
 
 check_static_begin(bitset_test_static) {
