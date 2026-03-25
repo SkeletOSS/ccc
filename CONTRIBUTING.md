@@ -29,6 +29,16 @@ Required tools:
 - .clang-format - This is needed less so now that `pre-commit` helps with formatting.
 - .clang-tidy - Clang tidy should be run often on any changes to the code to catch obvious errors.
 
+### Code Coverage
+
+The llvm-cov, gcov, and lcov tools are used to generate code coverage reports that are viewable on the web. Use the following command to regenerate and run all of the tests after changes and check for regressions. Replace the `--gcov-tool` with llvm-cov if using llvm.
+
+```zsh
+make clean && cmake --preset=my-gcc-gcov && cmake --build build -j8 --target ccc tests && make test && lcov --gcov-tool gcov-15.2 --capture --directory build --output-file coverage.info && lcov --remove coverage.info 'tests/*.c' `tests/*/*` 'tests/*/*.h' 'utility/*' 'build/*' 'include/*' -o coverage.info && genhtml --ignore-errors source coverage.info --output-directory coverage-html --flat
+```
+
+### Presets
+
 Add a `CMakeUserPresets.json` file so that you can run the sanitizer presets found in `CMakePresets.json`. Here is my setup as a sample.
 
 ```json
