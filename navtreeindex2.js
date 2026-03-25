@@ -1,11 +1,10 @@
 var NAVTREEINDEX2 =
 {
+"private__buffer_8h_source.html":[3,0,0,0,4],
 "private__doubly__linked__list_8h_source.html":[3,0,0,0,5],
 "private__flat__double__ended__queue_8h_source.html":[3,0,0,0,6],
 "private__flat__hash__map_8h.html":[3,0,0,0,7],
 "private__flat__hash__map_8h.html#a1558c496e3b9b4a58b948cbf2692962f":[3,0,0,0,7,6],
-"private__flat__hash__map_8h.html#a1eb24a95ef43efc69f6262918563cc9a":[3,0,0,0,7,17],
-"private__flat__hash__map_8h.html#a3c8e7824940f5cdcd82e2836c09d5618":[3,0,0,0,7,18],
 "private__flat__hash__map_8h.html#a5d30075708daa8114ecdbc19b3e4ba12":[3,0,0,0,7,11],
 "private__flat__hash__map_8h.html#a618d561b95d6f3874939e239804cc6e3":[3,0,0,0,7,14],
 "private__flat__hash__map_8h.html#a6b80b7fd68651735d065c6f3ab7a26d8":[3,0,0,0,7,5],
@@ -16,9 +15,9 @@ var NAVTREEINDEX2 =
 "private__flat__hash__map_8h.html#aad4a10c1784d6e91e8df547cf0479386":[3,0,0,0,7,15],
 "private__flat__hash__map_8h.html#ab0ad1451d79b9c87d3ceb6669d46d6cb":[3,0,0,0,7,9],
 "private__flat__hash__map_8h.html#ab12024a6d025ecc4d6a0ee67a2e7a1cb":[3,0,0,0,7,3],
-"private__flat__hash__map_8h.html#abf94387ff07081727cf9455e40fb0348":[3,0,0,0,7,19],
-"private__flat__hash__map_8h.html#ad21f0abc14cb14877203b61442311216":[3,0,0,0,7,20],
-"private__flat__hash__map_8h.html#ad75883004f3959ffc98ae1b4ff009199":[3,0,0,0,7,21],
+"private__flat__hash__map_8h.html#abf94387ff07081727cf9455e40fb0348":[3,0,0,0,7,17],
+"private__flat__hash__map_8h.html#ad21f0abc14cb14877203b61442311216":[3,0,0,0,7,18],
+"private__flat__hash__map_8h.html#ad75883004f3959ffc98ae1b4ff009199":[3,0,0,0,7,19],
 "private__flat__hash__map_8h.html#adf4720169e59b11b21e7e638b916ef9b":[3,0,0,0,7,16],
 "private__flat__hash__map_8h.html#aea96a217b83fe6613e5dada54058a382":[3,0,0,0,7,12],
 "private__flat__hash__map_8h.html#af42f0706f253aca27fba7d8c00f05f53":[3,0,0,0,7,4],
@@ -249,5 +248,6 @@ var NAVTREEINDEX2 =
 "structCCC__Tree__map__node.html#a6fea2b4e96903c0a2c6ad09c06d07116":[2,0,42,2],
 "structCCC__Tree__map__node.html#abb4226a3e6112c1e795f8dd52c534b57":[2,0,42,0],
 "structCCC__Tree__map__node.html#ac13d6becafa50ac37c280349f0e8965a":[2,0,42,1],
-"traits_8h.html":[3,0,0,14]
+"traits_8h.html":[3,0,0,14],
+"traits_8h.html#a0478c724a9aa16943c6515b95a4c5c83":[3,0,0,14,22]
 };

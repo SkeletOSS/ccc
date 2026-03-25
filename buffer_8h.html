@@ -245,9 +245,6 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:aa156248e8c2feeec55da449e2b253836"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#aa156248e8c2feeec55da449e2b253836">CCC_buffer_end</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> const *buffer)</td></tr>
 <tr class="memdesc:aa156248e8c2feeec55da449e2b253836"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the end position of the Buffer according to size.  <br /></td></tr>
 <tr class="separator:aa156248e8c2feeec55da449e2b253836"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1abf17270ac322387227c6ca17c1d29"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#ae1abf17270ac322387227c6ca17c1d29">CCC_buffer_capacity_end</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> const *buffer)</td></tr>
-<tr class="memdesc:ae1abf17270ac322387227c6ca17c1d29"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the end position of the Buffer according to capacity.  <br /></td></tr>
-<tr class="separator:ae1abf17270ac322387227c6ca17c1d29"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d29d714feeec257bae6e418257b721b"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a2d29d714feeec257bae6e418257b721b">CCC_buffer_reverse_begin</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> const *buffer)</td></tr>
 <tr class="memdesc:a2d29d714feeec257bae6e418257b721b"><td class="mdescLeft">&#160;</td><td class="mdescRight">obtain the address of the last element in the Buffer in preparation for iteration according to size.  <br /></td></tr>
 <tr class="separator:a2d29d714feeec257bae6e418257b721b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -261,15 +258,15 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader">State Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>These functions help manage or obtain state of the buffer. </p>
 </td></tr>
-<tr class="memitem:af5a69c3f3a8d8b48b03e57e2e35a1201"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#af5a69c3f3a8d8b48b03e57e2e35a1201">CCC_buffer_size_plus</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, size_t count)</td></tr>
-<tr class="memdesc:af5a69c3f3a8d8b48b03e57e2e35a1201"><td class="mdescLeft">&#160;</td><td class="mdescRight">add count to the size of the buffer.  <br /></td></tr>
-<tr class="separator:af5a69c3f3a8d8b48b03e57e2e35a1201"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6badf4f26a8c92175ed2fc4aea6fb9d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#ad6badf4f26a8c92175ed2fc4aea6fb9d">CCC_buffer_size_minus</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, size_t count)</td></tr>
-<tr class="memdesc:ad6badf4f26a8c92175ed2fc4aea6fb9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subtract count from the size of the buffer.  <br /></td></tr>
-<tr class="separator:ad6badf4f26a8c92175ed2fc4aea6fb9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af864cb915c6a104d9a32b755ebaef56a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#af864cb915c6a104d9a32b755ebaef56a">CCC_buffer_size_set</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, size_t count)</td></tr>
-<tr class="memdesc:af864cb915c6a104d9a32b755ebaef56a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the Buffer size to n.  <br /></td></tr>
-<tr class="separator:af864cb915c6a104d9a32b755ebaef56a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b0a3fb422aefa2d4be97fd1768023b9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a0b0a3fb422aefa2d4be97fd1768023b9">CCC_buffer_count_plus</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, size_t count)</td></tr>
+<tr class="memdesc:a0b0a3fb422aefa2d4be97fd1768023b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">add count to the size of the buffer.  <br /></td></tr>
+<tr class="separator:a0b0a3fb422aefa2d4be97fd1768023b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71304e1145d9ac1c541b086e1c2d2b49"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a71304e1145d9ac1c541b086e1c2d2b49">CCC_buffer_count_minus</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, size_t count)</td></tr>
+<tr class="memdesc:a71304e1145d9ac1c541b086e1c2d2b49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subtract count from the size of the buffer.  <br /></td></tr>
+<tr class="separator:a71304e1145d9ac1c541b086e1c2d2b49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36a8f34fb7b7c6e490e1eaf994008213"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a36a8f34fb7b7c6e490e1eaf994008213">CCC_buffer_count_set</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, size_t count)</td></tr>
+<tr class="memdesc:a36a8f34fb7b7c6e490e1eaf994008213"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the Buffer size to n.  <br /></td></tr>
+<tr class="separator:a36a8f34fb7b7c6e490e1eaf994008213"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b1ef17e8011b57f1bd54cdf9911f3a7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Count.html">CCC_Count</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a8b1ef17e8011b57f1bd54cdf9911f3a7">CCC_buffer_count</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> const *buffer)</td></tr>
 <tr class="memdesc:a8b1ef17e8011b57f1bd54cdf9911f3a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">obtain the count of Buffer active slots.  <br /></td></tr>
 <tr class="separator:a8b1ef17e8011b57f1bd54cdf9911f3a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -291,6 +288,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:adbdfb7c3d5fe253f5f55b662be3c03f4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a8dbb03cfc2070934832841f50f146bcd">CCC_Tribool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#adbdfb7c3d5fe253f5f55b662be3c03f4">CCC_buffer_is_full</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> const *buffer)</td></tr>
 <tr class="memdesc:adbdfb7c3d5fe253f5f55b662be3c03f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">return true if the size of the Buffer equals capacity.  <br /></td></tr>
 <tr class="separator:adbdfb7c3d5fe253f5f55b662be3c03f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c67581452c313201dfc19758828e89b"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buffer_8h.html#a2c67581452c313201dfc19758828e89b">CCC_buffer_data</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> const *buffer)</td></tr>
+<tr class="memdesc:a2c67581452c313201dfc19758828e89b"><td class="mdescLeft">&#160;</td><td class="mdescRight">return a reference to the underlying data of the buffer.  <br /></td></tr>
+<tr class="separator:a2c67581452c313201dfc19758828e89b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Deallocation Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Free the elements of the container and the underlying buffer. </p>
@@ -854,8 +854,7 @@ This graph shows which files directly or indirectly include this file:</div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the result of reallocation.</dd></dl>
-<p>This function takes the allocation function as an argument in case no allocation function has been provided upon initialization and the user is managing allocations and resizing directly. If an allocation function has been provided than the use of this function should be rare as the buffer will reallocate more memory when necessary. </p>
+<dl class="section return"><dt>Returns</dt><dd>the result of reallocation. </dd></dl>
 
 </div>
 </div>
@@ -1044,34 +1043,6 @@ This graph shows which files directly or indirectly include this file:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the number of bytes occupied by the current capacity elements.</dd></dl>
 <p>For total possible bytes that can be stored in the Buffer given the current element count see CCC_buffer_count_bytes. </p>
-
-</div>
-</div>
-<a id="ae1abf17270ac322387227c6ca17c1d29" name="ae1abf17270ac322387227c6ca17c1d29"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae1abf17270ac322387227c6ca17c1d29">&#9670;&#160;</a></span>CCC_buffer_capacity_end()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void * CCC_buffer_capacity_end </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> const *&#160;</td>
-          <td class="paramname"><em>buffer</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>return the end position of the Buffer according to capacity. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>the pointer to the buffer. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the address of the position one past capacity. It is undefined to access this position for any reason. NULL is returned if NULL is provided or Buffer has not yet been allocated.</dd></dl>
-<p>Note that end is determined by the capcity of the Buffer and will not change until a resize has occured, if permitted. </p>
 
 </div>
 </div>
@@ -1273,6 +1244,151 @@ This graph shows which files directly or indirectly include this file:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the number of bytes occupied by the current count of elements.</dd></dl>
 <p>For total possible bytes that can be stored in the Buffer see CCC_buffer_capacity_bytes. </p>
+
+</div>
+</div>
+<a id="a71304e1145d9ac1c541b086e1c2d2b49" name="a71304e1145d9ac1c541b086e1c2d2b49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71304e1145d9ac1c541b086e1c2d2b49">&#9670;&#160;</a></span>CCC_buffer_count_minus()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> CCC_buffer_count_minus </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Subtract count from the size of the buffer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>the pointer to the buffer. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>the quantity to subtract from the current Buffer size. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the result of resizing. CCC_RESULT_OK if no errors occur or an error indicating bad input has been provided.</dd></dl>
+<p>If count would reduce the size to less than 0, the Buffer size is set to 0 and the input error status is returned. </p>
+
+</div>
+</div>
+<a id="a0b0a3fb422aefa2d4be97fd1768023b9" name="a0b0a3fb422aefa2d4be97fd1768023b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b0a3fb422aefa2d4be97fd1768023b9">&#9670;&#160;</a></span>CCC_buffer_count_plus()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> CCC_buffer_count_plus </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>add count to the size of the buffer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>the pointer to the buffer. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>the quantity to add to the current Buffer size. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the result of resizing. CCC_RESULT_OK if no errors occur or an error indicating bad input has been provided.</dd></dl>
+<p>If count would exceed the current capacity of the Buffer the size is set to capacity and the input error status is returned. </p>
+
+</div>
+</div>
+<a id="a36a8f34fb7b7c6e490e1eaf994008213" name="a36a8f34fb7b7c6e490e1eaf994008213"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a36a8f34fb7b7c6e490e1eaf994008213">&#9670;&#160;</a></span>CCC_buffer_count_set()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> CCC_buffer_count_set </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the Buffer size to n. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>the pointer to the buffer. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>the new size of the buffer. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the result of setting the size. CCC_RESULT_OK if no errors occur or an error indicating bad input has been provided.</dd></dl>
+<p>If count is larger than the capacity of the Buffer the size is set equal to the capacity and an error is returned. </p>
+
+</div>
+</div>
+<a id="a2c67581452c313201dfc19758828e89b" name="a2c67581452c313201dfc19758828e89b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c67581452c313201dfc19758828e89b">&#9670;&#160;</a></span>CCC_buffer_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void * CCC_buffer_data </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> const *&#160;</td>
+          <td class="paramname"><em>buffer</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>return a reference to the underlying data of the buffer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>the pointer to the buffer. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>NULL if empty or buffer pointer is NULL, otherwise the base of the underlying buffer. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>It is the user's responsibility to remain within bounds of this reference according to the capacity provided to the buffer. </dd></dl>
 
 </div>
 </div>
@@ -1850,123 +1966,6 @@ This graph shows which files directly or indirectly include this file:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the next iterator position according to size and in reverse order. NULL is returned if bad input is provided or the Buffer has not been allocated. </dd></dl>
-
-</div>
-</div>
-<a id="ad6badf4f26a8c92175ed2fc4aea6fb9d" name="ad6badf4f26a8c92175ed2fc4aea6fb9d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad6badf4f26a8c92175ed2fc4aea6fb9d">&#9670;&#160;</a></span>CCC_buffer_size_minus()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> CCC_buffer_size_minus </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *&#160;</td>
-          <td class="paramname"><em>buffer</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>count</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Subtract count from the size of the buffer. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>the pointer to the buffer. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>the quantity to subtract from the current Buffer size. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the result of resizing. CCC_RESULT_OK if no errors occur or an error indicating bad input has been provided.</dd></dl>
-<p>If count would reduce the size to less than 0, the Buffer size is set to 0 and the input error status is returned. </p>
-
-</div>
-</div>
-<a id="af5a69c3f3a8d8b48b03e57e2e35a1201" name="af5a69c3f3a8d8b48b03e57e2e35a1201"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af5a69c3f3a8d8b48b03e57e2e35a1201">&#9670;&#160;</a></span>CCC_buffer_size_plus()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> CCC_buffer_size_plus </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *&#160;</td>
-          <td class="paramname"><em>buffer</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>count</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>add count to the size of the buffer. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>the pointer to the buffer. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>the quantity to add to the current Buffer size. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the result of resizing. CCC_RESULT_OK if no errors occur or an error indicating bad input has been provided.</dd></dl>
-<p>If count would exceed the current capacity of the Buffer the size is set to capacity and the input error status is returned. </p>
-
-</div>
-</div>
-<a id="af864cb915c6a104d9a32b755ebaef56a" name="af864cb915c6a104d9a32b755ebaef56a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af864cb915c6a104d9a32b755ebaef56a">&#9670;&#160;</a></span>CCC_buffer_size_set()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> CCC_buffer_size_set </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *&#160;</td>
-          <td class="paramname"><em>buffer</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>count</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Set the Buffer size to n. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>the pointer to the buffer. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>the new size of the buffer. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the result of setting the size. CCC_RESULT_OK if no errors occur or an error indicating bad input has been provided.</dd></dl>
-<p>If count is larger than the capacity of the Buffer the size is set equal to the capacity and an error is returned. </p>
 
 </div>
 </div>

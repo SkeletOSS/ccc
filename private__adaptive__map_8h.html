@@ -431,6 +431,7 @@ Functions</h2></td></tr>
 <div class="line">            .status = <a class="code hl_enumvalue" href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8af8e9ee9cb76a30a10b44450f05c88c69">CCC_ENTRY_INSERT_ERROR</a>,                                  \</div>
 <div class="line">        };                                                                     \</div>
 <div class="line">        if (private_adaptive_map_new_ins_base) {                               \</div>
+<div class="line">            om_insert_entry_ret.status = <a class="code hl_enumvalue" href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8a879becedce12f4156c5e6d94ff93ab2c">CCC_ENTRY_VACANT</a>;                     \</div>
 <div class="line">            *((typeof(type_compound_literal) *)                                \</div>
 <div class="line">                  private_adaptive_map_new_ins_base) = type_compound_literal;  \</div>
 <div class="line">            *((typeof(key) *)<a class="code hl_function" href="private__adaptive__map_8h.html#a941a7bd43f42767fdd51c1c33d422926">CCC_private_adaptive_map_key_in_slot</a>(             \</div>
@@ -449,6 +450,7 @@ Functions</h2></td></tr>
 <div class="ttc" id="aprivate__adaptive__map_8h_html_a941a7bd43f42767fdd51c1c33d422926"><div class="ttname"><a href="private__adaptive__map_8h.html#a941a7bd43f42767fdd51c1c33d422926">CCC_private_adaptive_map_key_in_slot</a></div><div class="ttdeci">void * CCC_private_adaptive_map_key_in_slot(struct CCC_Adaptive_map const *, void const *)</div></div>
 <div class="ttc" id="aprivate__adaptive__map_8h_html_abcdf48400d9282e86637fd230b82e224"><div class="ttname"><a href="private__adaptive__map_8h.html#abcdf48400d9282e86637fd230b82e224">CCC_private_adaptive_map_node_in_slot</a></div><div class="ttdeci">struct CCC_Adaptive_map_node * CCC_private_adaptive_map_node_in_slot(struct CCC_Adaptive_map const *, void const *)</div></div>
 <div class="ttc" id="astructCCC__Entry_html"><div class="ttname"><a href="structCCC__Entry.html">CCC_Entry</a></div><div class="ttdoc">An Occupied or Vacant position in a searchable container.</div><div class="ttdef"><b>Definition:</b> types.h:155</div></div>
+<div class="ttc" id="atypes_8h_html_a7d5cb1838ecf421fe5b336481344b0a8a879becedce12f4156c5e6d94ff93ab2c"><div class="ttname"><a href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8a879becedce12f4156c5e6d94ff93ab2c">CCC_ENTRY_VACANT</a></div><div class="ttdeci">@ CCC_ENTRY_VACANT</div><div class="ttdef"><b>Definition:</b> types.h:134</div></div>
 <div class="ttc" id="atypes_8h_html_a7d5cb1838ecf421fe5b336481344b0a8af8e9ee9cb76a30a10b44450f05c88c69"><div class="ttname"><a href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8af8e9ee9cb76a30a10b44450f05c88c69">CCC_ENTRY_INSERT_ERROR</a></div><div class="ttdeci">@ CCC_ENTRY_INSERT_ERROR</div><div class="ttdef"><b>Definition:</b> types.h:139</div></div>
 </div><!-- fragment -->
 </div>

@@ -629,22 +629,22 @@ $(document).ready(function(){initNavTree('private__traits_8h_source.html',''); i
 <div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span><span class="preprocessor">    _Generic((range_pointer),                                                  \</span></div>
 <div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span><span class="preprocessor">        CCC_Range *: CCC_range_begin,                                          \</span></div>
 <div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span><span class="preprocessor">        CCC_Range const *: CCC_range_begin,                                    \</span></div>
-<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span><span class="preprocessor">        CCC_Handle_range *: CCC_array_range_begin,                             \</span></div>
-<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span><span class="preprocessor">        CCC_Handle_range const *: CCC_array_range_begin)((range_pointer))</span></div>
+<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span><span class="preprocessor">        CCC_Handle_range *: CCC_handle_range_begin,                             \</span></div>
+<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span><span class="preprocessor">        CCC_Handle_range const *: CCC_handle_range_begin)((range_pointer))</span></div>
 <div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span> </div>
 <div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span><span class="preprocessor">#define CCC_private_range_end(range_pointer)                                   \</span></div>
 <div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span><span class="preprocessor">    _Generic((range_pointer),                                                  \</span></div>
 <div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span><span class="preprocessor">        CCC_Range *: CCC_range_end,                                            \</span></div>
 <div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span><span class="preprocessor">        CCC_Range const *: CCC_range_end,                                      \</span></div>
-<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span><span class="preprocessor">        CCC_Handle_range *: CCC_array_range_end,                               \</span></div>
-<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span><span class="preprocessor">        CCC_Handle_range const *: CCC_array_range_end)((range_pointer))</span></div>
+<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span><span class="preprocessor">        CCC_Handle_range *: CCC_handle_range_end,                               \</span></div>
+<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span><span class="preprocessor">        CCC_Handle_range const *: CCC_handle_range_end)((range_pointer))</span></div>
 <div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span> </div>
 <div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span><span class="preprocessor">#define CCC_private_range_reverse_begin(range_reverse_pointer)                 \</span></div>
 <div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span><span class="preprocessor">    _Generic((range_reverse_pointer),                                          \</span></div>
 <div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span><span class="preprocessor">        CCC_Range_reverse *: CCC_range_reverse_begin,                          \</span></div>
 <div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span><span class="preprocessor">        CCC_Range_reverse const *: CCC_range_reverse_begin,                    \</span></div>
-<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span><span class="preprocessor">        CCC_Handle_range_reverse *: CCC_array_range_reverse_begin,             \</span></div>
-<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span><span class="preprocessor">        CCC_Handle_range_reverse const *: CCC_array_range_reverse_begin)(      \</span></div>
+<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span><span class="preprocessor">        CCC_Handle_range_reverse *: CCC_handle_range_reverse_begin,             \</span></div>
+<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span><span class="preprocessor">        CCC_Handle_range_reverse const *: CCC_handle_range_reverse_begin)(      \</span></div>
 <div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span><span class="preprocessor">        (range_reverse_pointer)                                                \</span></div>
 <div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span><span class="preprocessor">    )</span></div>
 <div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span> </div>
@@ -652,8 +652,8 @@ $(document).ready(function(){initNavTree('private__traits_8h_source.html',''); i
 <div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span><span class="preprocessor">    _Generic((range_reverse_pointer),                                          \</span></div>
 <div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span><span class="preprocessor">        CCC_Range_reverse *: CCC_range_reverse_end,                            \</span></div>
 <div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span><span class="preprocessor">        CCC_Range_reverse const *: CCC_range_reverse_end,                      \</span></div>
-<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span><span class="preprocessor">        CCC_Handle_range_reverse *: CCC_array_range_reverse_end,               \</span></div>
-<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span><span class="preprocessor">        CCC_Handle_range_reverse const *: CCC_array_range_reverse_end)(        \</span></div>
+<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span><span class="preprocessor">        CCC_Handle_range_reverse *: CCC_handle_range_reverse_end,               \</span></div>
+<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span><span class="preprocessor">        CCC_Handle_range_reverse const *: CCC_handle_range_reverse_end)(        \</span></div>
 <div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span><span class="preprocessor">        (range_reverse_pointer)                                                \</span></div>
 <div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span><span class="preprocessor">    )</span></div>
 <div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span> </div>
