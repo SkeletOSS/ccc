@@ -198,7 +198,7 @@ check_static_begin(priority_queue_test_priority_removal) {
             &priority_queue,
             &(struct Val){
                 /* NOLINTNEXTLINE */
-                .val = (int)((size_t)rand() % (HEAP_CAP + 1)),
+                .val = (int)((size_t)rand() % ((HEAP_CAP * 2) + 1)),
                 .id = (int)i,
             }
                  .elem,
@@ -207,7 +207,7 @@ check_static_begin(priority_queue_test_priority_removal) {
         check(pushed != NULL, true);
         check(validate(&priority_queue), true);
     }
-    int const limit = 400;
+    int const limit = HEAP_CAP / 2;
     struct Val *const val_array
         = ((struct Stack_allocator *)allocator.context)->blocks;
     for (size_t val = 0; val < HEAP_CAP; ++val) {
