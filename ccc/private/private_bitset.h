@@ -67,7 +67,8 @@ of bits. Assumes the given capacity is greater than 0. Classic div round up. */
 
 /** @internal */
 #define CCC_private_bitset_default()                                           \
-    {}
+    (struct CCC_Bitset) {                                                      \
+    }
 
 /** @internal NOLINTNEXTLINE */
 #define CCC_private_bitset_non_CCC_private_bitset_default_size(                \

@@ -423,11 +423,11 @@ CCC_bitset_set_range(
     size_t const range_bit_count,
     CCC_Tribool const b
 ) {
-    if (!bitset || range_start_index >= bitset->count
-        || range_start_index + range_bit_count < range_start_index) {
+    size_t const end_i = range_start_index + range_bit_count;
+    if (!bitset || !range_bit_count || range_start_index >= bitset->count
+        || end_i < range_start_index || end_i > bitset->count) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    size_t const end_i = range_start_index + range_bit_count;
     Block_count start_block = block_count_index(range_start_index);
     Bit_count const start_bit = bit_count_index(range_start_index);
     Bit_block first_block_on = BIT_BLOCK_ON << start_bit;
@@ -500,12 +500,11 @@ CCC_bitset_reset_range(
     size_t const range_start_index,
     size_t const range_bit_count
 ) {
-    if (!bitset || range_start_index >= bitset->count
-        || range_start_index + range_bit_count < range_start_index
-        || range_start_index + range_bit_count > bitset->count) {
+    size_t const end_i = range_start_index + range_bit_count;
+    if (!bitset || !range_bit_count || range_start_index >= bitset->count
+        || end_i < range_start_index || end_i > bitset->count) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    size_t const end_i = range_start_index + range_bit_count;
     Block_count start_block = block_count_index(range_start_index);
     Bit_count const start_bit = bit_count_index(range_start_index);
     Bit_block first_block_on = BIT_BLOCK_ON << start_bit;
@@ -535,13 +534,10 @@ CCC_bitset_reset_range(
 
 CCC_Tribool
 CCC_bitset_flip(CCC_Bitset *const bitset, size_t const i) {
-    if (!bitset) {
+    if (!bitset || i > bitset->count) {
         return CCC_TRIBOOL_ERROR;
     }
     Block_count const b_i = block_count_index(i);
-    if (b_i >= bitset->count) {
-        return CCC_TRIBOOL_ERROR;
-    }
     Bit_block *const block = &bitset->blocks[b_i];
     CCC_Tribool const was = status(block, i);
     *block ^= on(i);
@@ -574,12 +570,11 @@ CCC_bitset_flip_range(
     size_t const range_start_index,
     size_t const range_bit_count
 ) {
-    if (!bitset || range_start_index >= bitset->count
-        || range_start_index + range_bit_count < range_start_index
-        || range_start_index + range_bit_count > bitset->count) {
+    size_t const end_i = range_start_index + range_bit_count;
+    if (!bitset || !range_bit_count || range_start_index >= bitset->count
+        || end_i < range_start_index || end_i > bitset->count) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    size_t const end_i = range_start_index + range_bit_count;
     Block_count start_block = block_count_index(range_start_index);
     Bit_count const start_bit = bit_count_index(range_start_index);
     Bit_block first_block_on = BIT_BLOCK_ON << start_bit;
@@ -669,12 +664,11 @@ CCC_bitset_popcount_range(
     size_t const range_start_index,
     size_t const range_bit_count
 ) {
-    if (!bitset || range_start_index >= bitset->count
-        || range_start_index + range_bit_count < range_start_index
-        || range_start_index + range_bit_count > bitset->count) {
+    size_t const end_i = range_start_index + range_bit_count;
+    if (!bitset || !range_bit_count || range_start_index >= bitset->count
+        || end_i < range_start_index || end_i > bitset->count) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
-    size_t const end_i = range_start_index + range_bit_count;
     size_t popped = 0;
     Block_count start_block = block_count_index(range_start_index);
     Bit_count const start_bit = bit_count_index(range_start_index);
@@ -985,6 +979,7 @@ CCC_bitset_copy(
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     if (!source->capacity) {
+        destination->count = 0;
         return CCC_RESULT_OK;
     }
     if (destination->capacity < source->capacity) {
@@ -1030,6 +1025,9 @@ CCC_bitset_is_equal(
     }
     if (left->count != right->count) {
         return CCC_FALSE;
+    }
+    if (!left->count) {
+        return CCC_TRUE;
     }
     return memcmp(
                left->blocks,
@@ -1097,8 +1095,8 @@ maybe_resize(
     );
     size_t const new_capacity
         = (bits_needed + (BIT_BLOCK_BITS - 1)) & ~((size_t)BIT_BLOCK_BITS - 1);
-    if (new_capacity < bitset->capacity) {
-        return CCC_RESULT_FAIL;
+    if (new_capacity <= bitset->capacity) {
+        return CCC_RESULT_ARGUMENT_ERROR;
     }
     size_t const new_bytes
         = block_count(new_capacity - bitset->count) * SIZEOF_BLOCK;
@@ -1132,11 +1130,11 @@ first_trailing_bit_range(
     size_t const count,
     CCC_Tribool const is_one
 ) {
-    if (!bitset || !count || i >= bitset->count || i + count < i
-        || i + count > bitset->count) {
+    size_t const end_i = i + count;
+    if (!bitset || !count || i >= bitset->count || end_i < i
+        || end_i > bitset->count) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
-    size_t const end_i = i + count;
     Block_count start_block = block_count_index(i);
     Bit_count const start_bit = bit_count_index(i);
     Bit_block first_block_on = BIT_BLOCK_ON << start_bit;
@@ -1197,11 +1195,11 @@ first_trailing_bits_range(
     size_t const num_bits,
     CCC_Tribool const is_one
 ) {
+    size_t const range_end = i + count;
     if (!bitset || !count || i >= bitset->count || num_bits > count
-        || i + count < i || i + count > bitset->count) {
+        || range_end < i || range_end > bitset->count) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
-    size_t const range_end = i + count;
     size_t num_found = 0;
     size_t bits_start = i;
     Block_count cur_block = block_count_index(i);
@@ -1541,11 +1539,11 @@ any_or_none_range(
     size_t const count,
     CCC_Tribool const ret
 ) {
-    if (!bitset || i >= bitset->count || i + count < i
-        || i + count > bitset->count || ret < CCC_FALSE || ret > CCC_TRUE) {
+    size_t const end_i = i + count;
+    if (!bitset || !count || i >= bitset->count || end_i < i
+        || end_i > bitset->count || ret < CCC_FALSE || ret > CCC_TRUE) {
         return CCC_TRIBOOL_ERROR;
     }
-    size_t const end_i = i + count;
     Block_count start_block = block_count_index(i);
     Bit_count const start_bit = bit_count_index(i);
     Bit_block first_block_on = BIT_BLOCK_ON << start_bit;
@@ -1581,11 +1579,11 @@ static CCC_Tribool
 all_range(
     struct CCC_Bitset const *const bitset, size_t const i, size_t const count
 ) {
-    if (!bitset || i >= bitset->count || i + count < i
-        || i + count > bitset->count) {
+    size_t const end = i + count;
+    if (!bitset || !count || i >= bitset->count || end < i
+        || end > bitset->count) {
         return CCC_TRIBOOL_ERROR;
     }
-    size_t const end = i + count;
     Block_count start_block = block_count_index(i);
     Bit_count const start_bit = bit_count_index(i);
     Bit_block first_block_on = BIT_BLOCK_ON << start_bit;

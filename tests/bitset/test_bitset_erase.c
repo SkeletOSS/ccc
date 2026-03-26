@@ -35,8 +35,14 @@ check_static_begin(bitset_test_push_pop_back_no_reallocate) {
     check(CCC_bitset_count(&bs).count, 0);
     check(CCC_bitset_popcount(&bs).count, 0);
     check(CCC_bitset_capacity(&bs).count, 16);
+    check(CCC_bitset_clear(NULL), CCC_RESULT_ARGUMENT_ERROR);
     check(CCC_bitset_clear(&bs), CCC_RESULT_OK);
     check(CCC_bitset_capacity(&bs).count, 16);
+    check(
+        CCC_bitset_clear_and_free(NULL, &(CCC_Allocator){}),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(CCC_bitset_clear_and_free(&bs, NULL), CCC_RESULT_ARGUMENT_ERROR);
     check(
         CCC_bitset_clear_and_free(&bs, &(CCC_Allocator){}),
         CCC_RESULT_NO_ALLOCATION_FUNCTION
