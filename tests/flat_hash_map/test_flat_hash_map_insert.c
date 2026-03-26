@@ -782,6 +782,52 @@ check_static_begin(flat_hash_map_test_insert_and_find) {
     check_end();
 }
 
+check_static_begin(flat_hash_map_test_insert_and_find_force_collisions) {
+    Flat_hash_map fh = flat_hash_map_with_storage(
+        key,
+        ((CCC_Hasher){
+            .hash = flat_hash_map_int_last_digit,
+            .compare = flat_hash_map_id_order,
+        }),
+        (struct Val[SMALL_FIXED_CAP]){}
+    );
+    int const size = SMALL_FIXED_CAP;
+
+    for (int i = 0; i < size; i += 2) {
+        CCC_Entry e = try_insert(
+            &fh, &(struct Val){.key = i, .val = i}, &(CCC_Allocator){}
+        );
+        check(occupied(&e), false);
+        check(validate(&fh), true);
+        e = try_insert(
+            &fh, &(struct Val){.key = i, .val = i}, &(CCC_Allocator){}
+        );
+        check(occupied(&e), true);
+        check(validate(&fh), true);
+        struct Val const *const v = unwrap(&e);
+        check(v == NULL, false);
+        check(v->key, i);
+        check(v->val, i);
+    }
+    for (int i = 0; i < size; i += 2) {
+        check(contains(&fh, &i), true);
+        check(
+            occupied(flat_hash_map_entry_wrap(&fh, &i, &(CCC_Allocator){})),
+            true
+        );
+        check(validate(&fh), true);
+    }
+    for (int i = 1; i < size; i += 2) {
+        check(contains(&fh, &i), false);
+        check(
+            occupied(flat_hash_map_entry_wrap(&fh, &i, &(CCC_Allocator){})),
+            false
+        );
+        check(validate(&fh), true);
+    }
+    check_end();
+}
+
 check_static_begin(flat_hash_map_test_reserve_without_permissions) {
     Flat_hash_map fh = flat_hash_map_default(
         struct Val,
@@ -829,6 +875,7 @@ main(void) {
         flat_hash_map_test_insert(),
         flat_hash_map_test_insert_macros(),
         flat_hash_map_test_insert_and_find(),
+        flat_hash_map_test_insert_and_find_force_collisions(),
         flat_hash_map_test_insert_overwrite(),
         flat_hash_map_test_insert_then_bad_ideas(),
         flat_hash_map_test_insert_via_entry(),

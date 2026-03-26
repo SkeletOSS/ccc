@@ -80,6 +80,50 @@ check_static_begin(flat_hash_map_test_insert_then_iterate) {
     check_end();
 }
 
+check_static_begin(flat_hash_map_test_insert_delete_then_iterate) {
+    CCC_Flat_hash_map fh = flat_hash_map_with_storage(
+        key,
+        ((CCC_Hasher){
+            .hash = flat_hash_map_int_to_u64,
+            .compare = flat_hash_map_id_order,
+        }),
+        (struct Val[STANDARD_FIXED_CAP]){}
+    );
+    for (int i = 0; i < (int)STANDARD_FIXED_CAP; i += 2) {
+        CCC_Entry e = try_insert(
+            &fh, &(struct Val){.key = i, .val = i}, &(CCC_Allocator){}
+        );
+        check(occupied(&e), false);
+        check(validate(&fh), true);
+        e = try_insert(
+            &fh, &(struct Val){.key = i, .val = i}, &(CCC_Allocator){}
+        );
+        check(occupied(&e), true);
+        check(validate(&fh), true);
+        struct Val const *const v = unwrap(&e);
+        check(v == NULL, false);
+        check(v->key, i);
+        check(v->val, i);
+    }
+    int seen = 0;
+    for (int i = 0; i < (int)STANDARD_FIXED_CAP / 2; i += 2) {
+        check(contains(&fh, &i), true);
+        CCC_Entry const e
+            = flat_hash_map_remove_key_value(&fh, &(struct Val){.key = i});
+        check(occupied(&e), true);
+        check(validate(&fh), true);
+        ++seen;
+    }
+    check((size_t)seen, count(&fh).count);
+    int seen2 = 0;
+    for (struct Val const *i = begin(&fh); i != end(&fh); i = next(&fh, i)) {
+        check(i->val % 2 == 0, true);
+        ++seen2;
+    }
+    check(seen, seen2);
+    check_end();
+}
+
 /** We want to make sure the clear and free method that uses the more
 efficient iterator is able to free all elements allocated with no leaks when
 run under sanitizers. */
@@ -286,6 +330,7 @@ int
 main(void) {
     return check_run(
         flat_hash_map_test_insert_then_iterate(),
+        flat_hash_map_test_insert_delete_then_iterate(),
         flat_hash_map_test_insert_allocate_clear_free(),
         flat_hash_map_test_insert_clear_insert_determinism(),
         flat_hash_map_test_clear_with_destructor(),
