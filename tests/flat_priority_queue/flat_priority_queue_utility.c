@@ -21,6 +21,13 @@ val_order(CCC_Comparator_arguments const order) {
     return (left->val > right->val) - (left->val < right->val);
 }
 
+CCC_Order
+int_order(CCC_Comparator_arguments const order) {
+    int const *const left = order.type_left;
+    int const *const right = order.type_right;
+    return (*left > *right) - (*left < *right);
+}
+
 void
 val_update(CCC_Arguments const u) {
     struct Val *const old = u.type;

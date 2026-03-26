@@ -18,13 +18,6 @@
 #include "utility/allocate.h"
 #include "utility/stack_allocator.h"
 
-static CCC_Order
-int_order(CCC_Comparator_arguments const order) {
-    int a = *((int const *const)order.type_left);
-    int b = *((int const *const)order.type_right);
-    return (a > b) - (a < b);
-}
-
 static Flat_priority_queue const static_priority_queue
     = flat_priority_queue_with_storage(
         CCC_ORDER_LESSER, (CCC_Comparator){.compare = val_order}, (int[16]){}
@@ -34,6 +27,33 @@ check_static_begin(flat_priority_queue_test_static_const) {
     check(is_empty(&static_priority_queue), true);
     check(count(&static_priority_queue).count, 0);
     check(capacity(&static_priority_queue).count, 16);
+    check_end();
+}
+
+check_static_begin(flat_priority_queue_test_copy_exhaustion) {
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((int[8]){}),
+    };
+    Flat_priority_queue a = flat_priority_queue_default(
+        int, CCC_ORDER_LESSER, (CCC_Comparator){.compare = int_order}
+    );
+    Flat_priority_queue b = flat_priority_queue_default(
+        int, CCC_ORDER_LESSER, (CCC_Comparator){.compare = int_order}
+    );
+    check(flat_priority_queue_copy(&a, &b, &allocator), CCC_RESULT_OK);
+    check(flat_priority_queue_reserve(&b, 8, &allocator), CCC_RESULT_OK);
+    check(
+        flat_priority_queue_copy(&a, &b, &allocator), CCC_RESULT_ALLOCATOR_ERROR
+    );
+    a = flat_priority_queue_with_storage(
+        CCC_ORDER_LESSER, (CCC_Comparator){.compare = int_order}, (int[8]){}
+    );
+    check(push(&b, &(int){}, &(int){}, &(CCC_Allocator){}) != NULL, CCC_TRUE);
+    b.buffer.data = NULL;
+    check(
+        flat_priority_queue_copy(&a, &b, &allocator), CCC_RESULT_ARGUMENT_ERROR
+    );
     check_end();
 }
 
@@ -169,6 +189,43 @@ check_static_begin(flat_priority_queue_test_heapify) {
     check_end();
 }
 
+check_static_begin(flat_priority_queue_test_in_place_heapify) {
+    srand((unsigned)time(NULL)); /* NOLINT */
+    enum : size_t {
+        HEAPIFY_CAP = 100,
+    };
+    Buffer b = buffer_with_storage(HEAPIFY_CAP, (int[HEAPIFY_CAP]){});
+    for (int *i = buffer_begin(&b); i != buffer_end(&b);
+         i = buffer_next(&b, i)) {
+        *i = (int)rand_range(0, HEAPIFY_CAP * 4);
+    }
+    Flat_priority_queue priority_queue
+        = CCC_flat_priority_queue_in_place_heapify(
+            &b,
+            &(int){},
+            CCC_ORDER_EQUAL,
+            &(CCC_Comparator){.compare = int_order}
+        );
+    check(flat_priority_queue_order(&priority_queue), CCC_ORDER_ERROR);
+    check(flat_priority_queue_is_empty(&priority_queue), CCC_TRUE);
+    priority_queue = CCC_flat_priority_queue_in_place_heapify(
+        &b, &(int){}, CCC_ORDER_LESSER, &(CCC_Comparator){.compare = int_order}
+    );
+    check(buffer_is_empty(&b), CCC_TRUE);
+    check(buffer_data(&b), NULL);
+    check(flat_priority_queue_capacity(&priority_queue).count, HEAPIFY_CAP);
+    check(flat_priority_queue_count(&priority_queue).count, HEAPIFY_CAP);
+    int prev = *((int *)flat_priority_queue_front(&priority_queue));
+    (void)pop(&priority_queue, &(int){});
+    while (!flat_priority_queue_is_empty(&priority_queue)) {
+        int cur = *((int *)flat_priority_queue_front(&priority_queue));
+        (void)pop(&priority_queue, &(int){});
+        check(cur >= prev, true);
+        prev = cur;
+    }
+    check_end();
+}
+
 check_static_begin(flat_priority_queue_test_heapify_copy) {
     srand((unsigned)time(NULL)); /* NOLINT */
     enum : size_t {
@@ -187,7 +244,13 @@ check_static_begin(flat_priority_queue_test_heapify_copy) {
     }
     check(
         flat_priority_queue_copy_heapify(
-            &priority_queue, &input, &(int){}, &std_allocator
+            &priority_queue, &input, &(int){}, NULL
+        ),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        flat_priority_queue_copy_heapify(
+            &priority_queue, &input, &(int){}, &(CCC_Allocator){}
         ),
         CCC_RESULT_OK
     );
@@ -203,6 +266,26 @@ check_static_begin(flat_priority_queue_test_heapify_copy) {
     check_end();
 }
 
+check_static_begin(flat_priority_queue_test_heapify_copy_fail) {
+    enum : size_t {
+        HEAPIFY_COPY_CAP = 100,
+    };
+    Flat_priority_queue priority_queue = CCC_flat_priority_queue_with_storage(
+        CCC_ORDER_LESSER,
+        (CCC_Comparator){.compare = int_order},
+        (int[HEAPIFY_COPY_CAP - 1]){}
+    );
+    Buffer input
+        = buffer_with_storage(HEAPIFY_COPY_CAP, (int[HEAPIFY_COPY_CAP]){});
+    check(
+        flat_priority_queue_copy_heapify(
+            &priority_queue, &input, &(int){}, &(CCC_Allocator){}
+        ),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check_end();
+}
+
 check_static_begin(flat_priority_queue_test_heapsort) {
     enum : int {
         HPSORTCAP = 100,
@@ -213,6 +296,28 @@ check_static_begin(flat_priority_queue_test_heapsort) {
          i = buffer_next(&storage, i)) {
         *i = (int)rand_range(0, HPSORTCAP);
     }
+    check(
+        CCC_sort_heapsort(
+            &storage,
+            NULL,
+            CCC_ORDER_GREATER,
+            &(CCC_Comparator){.compare = int_order}
+        ),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        CCC_sort_heapsort(&storage, &(int){}, CCC_ORDER_GREATER, NULL),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        CCC_sort_heapsort(
+            &storage,
+            &(int){},
+            CCC_ORDER_EQUAL,
+            &(CCC_Comparator){.compare = int_order}
+        ),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
     CCC_Result const result = CCC_sort_heapsort(
         &storage,
         &(int){},
@@ -471,6 +576,7 @@ int
 main(void) {
     return check_run(
         flat_priority_queue_test_static_const(),
+        flat_priority_queue_test_copy_exhaustion(),
         flat_priority_queue_test_empty(),
         flat_priority_queue_test_with_storage(),
         flat_priority_queue_test_macro(),
@@ -478,7 +584,9 @@ main(void) {
         flat_priority_queue_test_push(),
         flat_priority_queue_test_raw_type(),
         flat_priority_queue_test_heapify(),
+        flat_priority_queue_test_in_place_heapify(),
         flat_priority_queue_test_heapify_copy(),
+        flat_priority_queue_test_heapify_copy_fail(),
         flat_priority_queue_test_copy_no_allocate(),
         flat_priority_queue_test_copy_no_allocate_fail(),
         flat_priority_queue_test_copy_allocate(),
