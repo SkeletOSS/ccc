@@ -35,10 +35,10 @@ union Check_bytes {
 typedef enum Check_result (*Tester)(void);
 
 /** Internal printer to save on binary size and speed up compilation. We have
-one c file translation unit where all calls to printing functions exist. This
-way static analysis and sanitizer instrumentation is rapidly reduced when
-compared to thousands of inline print statements. Builds and tests should be
-faster. */
+one c file translation unit where all calls to printing functions exist and the
+necessary branch to check for the type of bytes we are printing. This way static
+analysis and sanitizer instrumentation is rapidly reduced when compared to
+thousands of inline print statements. Builds and tests should be faster. */
 void check_print_fail_message(
     char const *function_string,
     int line,
