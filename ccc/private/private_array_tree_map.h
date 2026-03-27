@@ -172,9 +172,6 @@ CCC_private_array_tree_map_data_at(struct CCC_Array_tree_map const *, size_t);
 void *
 CCC_private_array_tree_map_key_at(struct CCC_Array_tree_map const *, size_t);
 /** @internal */
-struct CCC_Array_tree_map_node *
-CCC_private_array_tree_map_node_at(struct CCC_Array_tree_map const *, size_t);
-/** @internal */
 struct CCC_Array_tree_map_handle CCC_private_array_tree_map_handle(
     struct CCC_Array_tree_map const *, void const *
 );

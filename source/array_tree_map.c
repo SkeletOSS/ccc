@@ -839,13 +839,6 @@ CCC_private_array_tree_map_key_at(
     return key_at(map, slot);
 }
 
-struct CCC_Array_tree_map_node *
-CCC_private_array_tree_map_node_at(
-    struct CCC_Array_tree_map const *map, size_t const i
-) {
-    return node_at(map, i);
-}
-
 size_t
 CCC_private_array_tree_map_allocate_slot(
     struct CCC_Array_tree_map *const map, CCC_Allocator const *const allocator

@@ -155,7 +155,7 @@ check_static_begin(iterator_check, CCC_Adaptive_map *s) {
     }
     check(iterator_count, size);
     iterator_count = 0;
-    for (struct Val *e = reverse_begin(s); e != end(s);
+    for (struct Val *e = reverse_begin(s); e != reverse_end(s);
          e = reverse_next(s, &e->elem)) {
         ++iterator_count;
         check(iterator_count <= size, true);
@@ -172,6 +172,10 @@ check_static_begin(adaptive_map_test_forward_iterator) {
     Adaptive_map s = adaptive_map_default(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
+    check(CCC_adaptive_map_next(NULL, &(struct Val){}.elem), NULL);
+    check(CCC_adaptive_map_next(&s, NULL), NULL);
+    check(CCC_adaptive_map_reverse_next(NULL, &(struct Val){}.elem), NULL);
+    check(CCC_adaptive_map_reverse_next(&s, NULL), NULL);
     /* We should have the expected behavior iteration over empty tree. */
     int j = 0;
     for (struct Val *e = begin(&s); e != end(&s); e = next(&s, &e->elem), ++j) {
@@ -389,6 +393,36 @@ check_static_begin(adaptive_map_test_invalid_range) {
     };
     Adaptive_map s = adaptive_map_default(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
+    );
+    check(
+        CCC_range_begin(
+            adaptive_map_equal_range_wrap(NULL, &(int){}, &(int){})
+        ),
+        NULL
+    );
+    check(
+        CCC_range_begin(adaptive_map_equal_range_wrap(&s, NULL, &(int){})), NULL
+    );
+    check(
+        CCC_range_begin(adaptive_map_equal_range_wrap(&s, &(int){}, NULL)), NULL
+    );
+    check(
+        CCC_range_reverse_begin(
+            adaptive_map_equal_range_reverse_wrap(NULL, &(int){}, &(int){})
+        ),
+        NULL
+    );
+    check(
+        CCC_range_reverse_begin(
+            adaptive_map_equal_range_reverse_wrap(&s, NULL, &(int){})
+        ),
+        NULL
+    );
+    check(
+        CCC_range_reverse_begin(
+            adaptive_map_equal_range_reverse_wrap(&s, &(int){}, NULL)
+        ),
+        NULL
     );
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */

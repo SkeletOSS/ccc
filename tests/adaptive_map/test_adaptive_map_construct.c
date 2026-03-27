@@ -22,6 +22,23 @@ check_static_begin(adaptive_map_test_empty) {
     CCC_Adaptive_map s = CCC_adaptive_map_default(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
+    check(CCC_adaptive_map_is_empty(NULL), CCC_TRIBOOL_ERROR);
+    check(CCC_adaptive_map_contains(NULL, &(int){}), CCC_TRIBOOL_ERROR);
+    check(CCC_adaptive_map_contains(&s, NULL), CCC_TRIBOOL_ERROR);
+    check(CCC_adaptive_map_count(NULL).error, CCC_RESULT_ARGUMENT_ERROR);
+    check(
+        CCC_adaptive_map_clear(NULL, &(CCC_Destructor){}, &(CCC_Allocator){}),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        CCC_adaptive_map_clear(&s, NULL, &(CCC_Allocator){}),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        CCC_adaptive_map_clear(&s, &(CCC_Destructor){}, NULL),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(CCC_adaptive_map_validate(NULL), CCC_TRIBOOL_ERROR);
     check(is_empty(&s), true);
     check_end();
 }
@@ -38,6 +55,24 @@ check_static_begin(adaptive_map_test_construct) {
     CCC_Adaptive_map map = construct_empty();
     CCC_Entry entry = CCC_adaptive_map_insert_or_assign(
         &map, &push.elem, &(CCC_Allocator){}
+    );
+    check(
+        CCC_entry_status(CCC_adaptive_map_insert_or_assign_wrap(
+            NULL, &(struct Val){}.elem, &(CCC_Allocator){}
+        )),
+        CCC_ENTRY_ARGUMENT_ERROR
+    );
+    check(
+        CCC_entry_status(CCC_adaptive_map_insert_or_assign_wrap(
+            &map, NULL, &(CCC_Allocator){}
+        )),
+        CCC_ENTRY_ARGUMENT_ERROR
+    );
+    check(
+        CCC_entry_status(CCC_adaptive_map_insert_or_assign_wrap(
+            &map, &(struct Val){}.elem, NULL
+        )),
+        CCC_ENTRY_ARGUMENT_ERROR
     );
     check(CCC_adaptive_map_validate(&map), true);
     check(CCC_entry_insert_error(&entry), false);
@@ -62,6 +97,40 @@ check_static_begin(adaptive_map_test_construct_from) {
             {.key = 1, .val = 1},
             {.key = 2, .val = 2},
         }
+    );
+    check(
+        CCC_entry_status(CCC_adaptive_map_swap_entry_wrap(
+            &map, &(struct Val){.key = 3}.elem, &(struct Val){}.elem, &allocator
+        )),
+        CCC_ENTRY_INSERT_ERROR
+    );
+    check(
+        CCC_entry_status(CCC_adaptive_map_try_insert_wrap(
+            &map, &(struct Val){.key = 3}.elem, &allocator
+        )),
+        CCC_ENTRY_INSERT_ERROR
+    );
+    check(
+        CCC_entry_status(CCC_adaptive_map_insert_or_assign_wrap(
+            &map, &(struct Val){.key = 3}.elem, &allocator
+        )),
+        CCC_ENTRY_INSERT_ERROR
+    );
+    check(
+        CCC_adaptive_map_insert_entry(
+            CCC_adaptive_map_entry_wrap(&map, &(int){3}),
+            &(struct Val){.key = 3}.elem,
+            &allocator
+        ),
+        NULL
+    );
+    check(
+        CCC_adaptive_map_or_insert(
+            CCC_adaptive_map_entry_wrap(&map, &(int){3}),
+            &(struct Val){.key = 3}.elem,
+            &allocator
+        ),
+        NULL
     );
     check(CCC_adaptive_map_validate(&map), true);
     check(CCC_adaptive_map_count(&map).count, 3);
