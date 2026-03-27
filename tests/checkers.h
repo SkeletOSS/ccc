@@ -49,7 +49,6 @@ void check_print_fail_message(
     bool is_address
 );
 
-/* NOLINTBEGIN */
 /** Provides the correct type to the union for a check expression while
 silencing compiler warnings for non-compiled generic branches. Substitution
 failure is an error in C, unlike C++. The casting of an integer to uintptr_t
@@ -67,7 +66,6 @@ but that generic case would never get compiled anyway. */
 printing function. */
 #define check_is_address(x)                                                    \
     _Generic((x), void *: 1, void const *: 1, default: 0)
-/* NOLINTEND */
 
 #define check_non_check_default_params(...) __VA_ARGS__
 #define check_default_params(...) void
