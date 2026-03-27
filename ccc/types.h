@@ -33,26 +33,6 @@ the allocator function interface. */
 Types used across many containers. */
 /**@{*/
 
-/** @brief The default argument when no user data is available for an
-initializer that accepts a pointer to user data. NULL is never an acceptable
-argument to any function or macro in the C Container Collection. If NULL is
-used at any call site, a programmer error has occurred. To help enforce this
-habit, use this macro in the rare case of the `_for(` initializer macros
-requiring a pointer to empty user data.
-
-```
-CCC_Buffer buffer = CCC_buffer_for(int, 0, 0, CCC_DEFAULT);
-```
-
-However, even then, a more specific initializer is appropriate.
-
-```
-CCC_Buffer buffer = CCC_buffer_default(int);
-```
-
-In most cases, an expressive initializer exists for any use. */
-#define CCC_DEFAULT NULL
-
 /** @brief The result of a range query on iterable containers.
 
 A range provides a view all elements that fit the equals range criteria

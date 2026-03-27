@@ -103,12 +103,8 @@ check_static_begin(flat_priority_queue_test_macro) {
 }
 
 check_static_begin(flat_priority_queue_test_macro_grow) {
-    Flat_priority_queue priority_queue = flat_priority_queue_for(
-        struct Val,
-        CCC_ORDER_LESSER,
-        (CCC_Comparator){.compare = val_order},
-        0,
-        CCC_DEFAULT
+    Flat_priority_queue priority_queue = flat_priority_queue_default(
+        struct Val, CCC_ORDER_LESSER, (CCC_Comparator){.compare = val_order}
     );
     struct Val *res = flat_priority_queue_emplace(
         &priority_queue, &std_allocator, (struct Val){.val = 0, .id = 0}

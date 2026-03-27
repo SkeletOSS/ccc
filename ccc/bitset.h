@@ -283,8 +283,9 @@ must be supported by this container. */
 /** @brief Initialize a bit set from any memory source at runtime.
 @param[in] cap the number of bits that will be stored in this bit set.
 @param[in] count the starting count. Set equal to cap for non-dynamic bit set.
-@param[in] bitblock_pointer the pointer to existing blocks or NULL.
+@param[in] bitblock_pointer the non-NULL pointer to existing blocks.
 @return the initialized bit set on the right hand side of an equality operator
+@warning The bit block pointer is assumed to be non-NULL.
 @warning In most cases this is the wrong initializer to use. For dynamic
 bitsets, using the CCC_bitset_with_capacity() is better. For fixed size bitsets
 with a capacity known at compile time, the CCC_bitset_with_storage() is better.
