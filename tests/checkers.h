@@ -167,7 +167,7 @@ though the braces are not required. */
                 check_is_address(check_private_result)                         \
             );                                                                 \
             check_private_macro_res = CHECK_FAIL;                              \
-            __VA_OPT__((void)({__VA_ARGS__});)                                 \
+            __VA_OPT__((void)(__extension__({__VA_ARGS__}));)                  \
             goto please_use_at_least_one_check_and_a_check_end_macro;          \
         }                                                                      \
     } while (0)
@@ -211,7 +211,7 @@ though the braces are not required. */
                 check_is_address(check_private_result)                         \
             );                                                                 \
             check_private_macro_res = CHECK_ERROR;                             \
-            __VA_OPT__((void)({__VA_ARGS__});)                                 \
+            __VA_OPT__((void)(__extension__({__VA_ARGS__}));)                  \
             goto please_use_at_least_one_check_and_a_check_end_macro;          \
         }                                                                      \
     } while (0)
@@ -262,7 +262,7 @@ loops, or blocks from earlier in the test. See the check macro if more fine
 grained control over nested scope is required upon a failure.*/
 #define check_end(...)                                                         \
 please_use_at_least_one_check_and_a_check_end_macro:                           \
-    __VA_OPT__((void)({__VA_ARGS__});)                                         \
+    __VA_OPT__((void)(__extension__({__VA_ARGS__}));)                          \
     return check_private_macro_res;                                            \
     }
 
@@ -283,11 +283,11 @@ macro if more fine grained control over nested scope is required upon a failure.
 */
 #define check_pass_end(...)                                                    \
 please_use_at_least_one_check_and_a_check_end_macro:                           \
-    __VA_OPT__((void)({                                                        \
+    __VA_OPT__((void)(__extension__({                                          \
                    if (check_private_macro_res == CHECK_PASS) {                \
                        __VA_ARGS__                                             \
                    }                                                           \
-               });)                                                            \
+               }));)                                                           \
     return check_private_macro_res;                                            \
     }
 
@@ -308,11 +308,11 @@ macro if more fine grained control over nested scope is required upon a
 failure.*/
 #define check_fail_end(...)                                                    \
 please_use_at_least_one_check_and_a_check_end_macro:                           \
-    __VA_OPT__((void)({                                                        \
+    __VA_OPT__((void)(__extension__({                                          \
                    if (check_private_macro_res == CHECK_FAIL) {                \
                        __VA_ARGS__                                             \
                    }                                                           \
-               });)                                                            \
+               }));)                                                           \
     return check_private_macro_res;                                            \
     }
 
@@ -333,11 +333,11 @@ macro if more fine grained control over nested scope is required upon a
 failure.*/
 #define check_error_end(...)                                                   \
 please_use_at_least_one_check_and_a_check_end_macro:                           \
-    __VA_OPT__((void)({                                                        \
+    __VA_OPT__((void)(__extension__({                                          \
                    if (check_private_macro_res == CHECK_ERROR) {               \
                        __VA_ARGS__                                             \
                    }                                                           \
-               });)                                                            \
+               }));)                                                           \
     return check_private_macro_res;                                            \
     }
 
