@@ -4,15 +4,18 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define BITSET_USING_NAMESPACE_CCC
 #define TRAITS_USING_NAMESPACE_CCC
 #define ARRAY_TREE_MAP_USING_NAMESPACE_CCC
 #define TYPES_USING_NAMESPACE_CCC
 
-#include "array_tree_map.h"
 #include "array_tree_map_utility.h"
+#include "ccc/array_tree_map.h"
+#include "ccc/bitset.h"
+#include "ccc/traits.h"
+#include "ccc/types.h"
 #include "checkers.h"
-#include "traits.h"
-#include "types.h"
+#include "utility/stack_allocator.h"
 
 check_static_begin(
     check_range,
@@ -433,6 +436,112 @@ check_static_begin(array_tree_map_test_empty_range) {
     check_end();
 }
 
+static void
+destroy_element(CCC_Arguments const arguments) {
+    struct Val const *const i = arguments.type;
+    Bitset *const is_destroyed_buffer = arguments.context;
+    (void)bitset_set(is_destroyed_buffer, (size_t)i->id, CCC_TRUE);
+}
+
+check_static_begin(array_tree_map_test_clear_with_destructor) {
+    enum : size_t {
+        MIN_CAP = 16
+    };
+    CCC_Array_tree_map map = array_tree_map_with_storage(
+        id, (CCC_Key_comparator){.compare = id_order}, (struct Val[MIN_CAP]){}
+    );
+    Bitset is_destroyed = bitset_with_storage(0, (Bit[MIN_CAP]){});
+    int i = 0;
+    for (;;) {
+        CCC_Handle const *const e = array_tree_map_try_insert_with(
+            &map, i, &(CCC_Allocator){}, (struct Val){.val = i}
+        );
+        check(occupied(e), CCC_FALSE);
+        CCC_Handle_index const h = unwrap(e);
+        if (!h) {
+            break;
+        }
+        struct Val const *const v = array_tree_map_at(&map, h);
+        CCC_Result const bit_push
+            = bitset_push_back(&is_destroyed, CCC_FALSE, &(CCC_Allocator){});
+        check(bit_push, CCC_RESULT_OK);
+        check(v->id, i);
+        check(v->val, i);
+        ++i;
+    }
+    size_t const full_count = count(&map).count;
+    array_tree_map_clear(
+        &map,
+        &(CCC_Destructor){
+            .destroy = destroy_element,
+            .context = &is_destroyed,
+        }
+    );
+    i = 0;
+    while (!bitset_is_empty(&is_destroyed)) {
+        CCC_Tribool const was_destroyed = bitset_pop_back(&is_destroyed);
+        check(was_destroyed, CCC_TRUE);
+        ++i;
+    }
+    check(i, full_count);
+    check_end();
+}
+
+check_static_begin(array_tree_map_test_clear_and_free_with_destructor) {
+    enum : size_t {
+        MIN_CAP = 16
+    };
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for(
+            (typeof(array_tree_map_storage_for((struct Val[MIN_CAP]){}))[1]){}
+        ),
+    };
+    CCC_Array_tree_map map = array_tree_map_with_capacity(
+        struct Val,
+        id,
+        (CCC_Key_comparator){.compare = id_order},
+        allocator,
+        MIN_CAP
+    );
+    Bitset is_destroyed = bitset_with_storage(0, (Bit[MIN_CAP]){});
+    int i = 0;
+    for (;;) {
+        CCC_Handle const *const e = array_tree_map_try_insert_with(
+            &map, i, &(CCC_Allocator){}, (struct Val){.val = i}
+        );
+        check(occupied(e), CCC_FALSE);
+        CCC_Handle_index index = unwrap(e);
+        if (!index) {
+            break;
+        }
+        struct Val const *const v = array_tree_map_at(&map, index);
+        CCC_Result const bit_push
+            = bitset_push_back(&is_destroyed, CCC_FALSE, &(CCC_Allocator){});
+        check(bit_push, CCC_RESULT_OK);
+        check(v->id, i);
+        check(v->val, i);
+        ++i;
+    }
+    size_t const full_count = count(&map).count;
+    array_tree_map_clear_and_free(
+        &map,
+        &(CCC_Destructor){
+            .destroy = destroy_element,
+            .context = &is_destroyed,
+        },
+        &allocator
+    );
+    i = 0;
+    while (!bitset_is_empty(&is_destroyed)) {
+        CCC_Tribool const was_destroyed = bitset_pop_back(&is_destroyed);
+        check(was_destroyed, CCC_TRUE);
+        ++i;
+    }
+    check(i, full_count);
+    check_end();
+}
+
 int
 main(void) {
     return check_run(
@@ -442,6 +551,8 @@ main(void) {
         array_tree_map_test_valid_range_equals(),
         array_tree_map_test_invalid_range(),
         array_tree_map_test_empty_range(),
-        array_tree_map_test_iterate_remove_key_value_reinsert()
+        array_tree_map_test_iterate_remove_key_value_reinsert(),
+        array_tree_map_test_clear_with_destructor(),
+        array_tree_map_test_clear_and_free_with_destructor(),
     );
 }

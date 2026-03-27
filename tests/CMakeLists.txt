@@ -11,7 +11,7 @@ project("ccc tests"
 # cleans up the release distribution and makes Makefile commands easier.
 add_custom_target(tests)
 
-add_library(checkers INTERFACE checkers.h)
+add_library(checkers checkers.c checkers.h)
 add_dependencies(tests checkers)
 
 

@@ -4,15 +4,17 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define BITSET_USING_NAMESPACE_CCC
 #define TRAITS_USING_NAMESPACE_CCC
 #define TYPES_USING_NAMESPACE_CCC
 #define ADAPTIVE_MAP_USING_NAMESPACE_CCC
 
-#include "adaptive_map.h"
 #include "adaptive_map_utility.h"
+#include "ccc/adaptive_map.h"
+#include "ccc/bitset.h"
+#include "ccc/traits.h"
+#include "ccc/types.h"
 #include "checkers.h"
-#include "traits.h"
-#include "types.h"
 #include "utility/stack_allocator.h"
 
 check_static_begin(
@@ -464,6 +466,61 @@ check_static_begin(adaptive_map_test_empty_range) {
     check_end();
 }
 
+static void
+destroy_element(CCC_Arguments const arguments) {
+    struct Val const *const i = arguments.type;
+    Bitset *const is_destroyed_buffer = arguments.context;
+    (void)bitset_set(is_destroyed_buffer, (size_t)i->key, CCC_TRUE);
+}
+
+check_static_begin(adaptive_map_test_clear_with_destructor) {
+    enum : size_t {
+        MIN_CAP = 16
+    };
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[MIN_CAP]){}),
+    };
+    CCC_Adaptive_map map = adaptive_map_default(
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
+    );
+    Bitset is_destroyed = bitset_with_storage(0, (Bit[MIN_CAP]){});
+    int i = 0;
+    for (;;) {
+        CCC_Entry const *const e = adaptive_map_try_insert_with(
+            &map, i, &allocator, (struct Val){.val = i}
+        );
+        check(occupied(e), CCC_FALSE);
+        struct Val const *const v = unwrap(e);
+        if (!v) {
+            break;
+        }
+        CCC_Result const bit_push
+            = bitset_push_back(&is_destroyed, CCC_FALSE, &(CCC_Allocator){});
+        check(bit_push, CCC_RESULT_OK);
+        check(v->key, i);
+        check(v->val, i);
+        ++i;
+    }
+    size_t const full_count = count(&map).count;
+    adaptive_map_clear(
+        &map,
+        &(CCC_Destructor){
+            .destroy = destroy_element,
+            .context = &is_destroyed,
+        },
+        &allocator
+    );
+    i = 0;
+    while (!bitset_is_empty(&is_destroyed)) {
+        CCC_Tribool const was_destroyed = bitset_pop_back(&is_destroyed);
+        check(was_destroyed, CCC_TRUE);
+        ++i;
+    }
+    check(i, full_count);
+    check_end();
+}
+
 int
 main(void) {
     return check_run(
@@ -473,6 +530,7 @@ main(void) {
         adaptive_map_test_invalid_range(),
         adaptive_map_test_valid_range_equals(),
         adaptive_map_test_empty_range(),
-        adaptive_map_test_iterate_remove_key_value_reinsert()
+        adaptive_map_test_iterate_remove_key_value_reinsert(),
+        adaptive_map_test_clear_with_destructor(),
     );
 }
