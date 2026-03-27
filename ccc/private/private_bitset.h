@@ -87,18 +87,14 @@ bitset comes from an uninitialized heap. */
 #define CCC_private_bitset_for(                                                \
     private_cap, private_count, private_bitblock_pointer                       \
 )                                                                              \
-    (struct { struct CCC_Bitset private; }){(__extension__({                   \
-        struct CCC_Bitset private_bitset = {                                   \
-            .blocks = memset(                                                  \
-                (private_bitblock_pointer),                                    \
-                0,                                                             \
-                CCC_private_bitset_block_bytes(private_cap)                    \
-            ),                                                                 \
-            .count = (private_count),                                          \
-            .capacity = (private_cap),                                         \
-        };                                                                     \
-        private_bitset;                                                        \
-    }))}.private
+    (struct CCC_Bitset) {                                                      \
+        .blocks = memset(                                                      \
+            (private_bitblock_pointer),                                        \
+            0,                                                                 \
+            CCC_private_bitset_block_bytes(private_cap)                        \
+        ),                                                                     \
+        .count = (private_count), .capacity = (private_cap),                   \
+    }
 
 /** @internal Determine if user wants capacity different than count. Then pass
 to inline function for bit set construction. */
