@@ -71,6 +71,7 @@ if (CCC_ENABLE_COVERAGE)
 
     if (CCC_COVERAGE_TOOL)
         set(COVERAGE_TOOL ${CCC_COVERAGE_TOOL})
+        message(STATUS "Using code coverage tool: ${CCC_COVERAGE_TOOL}")
     endif()
 
     # Clang had very tricky behavior especially on mac to successfully generate
@@ -106,7 +107,6 @@ exec \"${LLVM_COV_EXECUTABLE}\" gcov \"$@\"
         message(FATAL_ERROR "no code coverage tool selected")
     endif()
 
-    message(STATUS "Using code coverage tool: ${COVERAGE_TOOL}")
     add_custom_target(coverage
         COMMAND lcov --ignore-errors inconsistent 
                      --gcov-tool ${COVERAGE_TOOL}
