@@ -17,7 +17,7 @@ check_print_fail_message(
             stderr,
             "%s\n--\nfailure in %s, line %d%s\n%scheck: result( %s ) == "
             "expected( "
-            "%s )%s\n%serror: result( %lx ) != expected( %lx )\n%s",
+            "%s )%s\n%serror: result( 0x%lx ) != expected( 0x%lx )\n%s",
             CHECK_CYAN,
             function_string,
             line,
