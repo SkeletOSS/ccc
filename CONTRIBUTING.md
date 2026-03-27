@@ -33,16 +33,19 @@ Required tools:
 
 A code coverage report is hosted along with our documentation on GitHub Pages. It is updated to reflect the code coverage of the source file implementations whenever the main branch is updated. However, it would be very slow to wait for the deployment to update on every push to a pull request so run the tool locally if working on improving coverage.
 
-A preset for gcc and clang are provided. I would recommend making a custom user preset to obtain the newest tools possible for coverage reports. But here is the built in gcc preset.
+A preset for gcc and clang are provided. I would recommend making a custom user preset, such as `cmake --preset=my-llvm-cov`, to obtain the newest tools possible for coverage reports. But here is the built in gcc preset.
 
 ```zsh
-cmake --preset=gcc-gcov
-cmake --build build --target tests
-make test
-cmake --build build --target coverage
+make clean && cmake --preset=llvm-cov && make test && make coverage
 ```
 
-View the current [coverage report here](https://skeletoss.github.io/ccc/coverage).
+The code coverage report is now in `docs/coverage` and double clicking `docs/coverage/index.html` will open a navigable version in your local browser. Writing the command this way ensures that the process stops if any step fails.
+
+When writing tests to increase coverage, rerun the above command to regenerate a clean report and reload the web page you are viewing in your local browser to see if the changes hit the targeted lines. Start by trying to increase function coverage to ensure container functionality is working correctly. Then start to focus on specific lines and paths that need to be exercised.
+
+View the current [coverage report here](https://skeletoss.github.io/ccc/coverage). This report stays updated to the current state of the main branch. It does not track pull request branches.
+
+In my experience, Clang generates the more accurate coverage report, even in gcov emulated compatibility mode, which is what we use to generate reports.
 
 ### Presets
 
