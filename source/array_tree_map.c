@@ -913,9 +913,6 @@ resize(
     size_t const new_capacity,
     CCC_Allocator const *const allocator
 ) {
-    if (map->capacity && new_capacity <= map->capacity - 1) {
-        return CCC_RESULT_OK;
-    }
     if (!allocator->allocate) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
