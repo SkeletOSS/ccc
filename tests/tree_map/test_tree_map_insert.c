@@ -24,20 +24,22 @@ tree_map_modplus(CCC_Arguments const t) {
 }
 
 check_static_begin(tree_map_test_insert) {
-    CCC_Tree_map rom = tree_map_for(
+    CCC_Tree_map om = tree_map_for(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
-
+    check(tree_map_get_key_value(NULL, &(int){}), NULL);
+    check(tree_map_get_key_value(&om, NULL), NULL);
+    check(tree_map_unwrap(NULL), NULL);
     /* Nothing was there before so nothing is in the entry. */
     CCC_Entry ent = swap_entry(
-        &rom,
+        &om,
         &(struct Val){.key = 137, .val = 99}.elem,
         &(struct Val){}.elem,
         &(CCC_Allocator){}
     );
     check(occupied(&ent), false);
     check(unwrap(&ent), NULL);
-    check(count(&rom).count, 1);
+    check(count(&om).count, 1);
     check_end();
 }
 

@@ -172,6 +172,7 @@ check_static_begin(adaptive_map_test_forward_iterator) {
     Adaptive_map s = adaptive_map_default(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
+    check(CCC_adaptive_map_begin(NULL), NULL);
     check(CCC_adaptive_map_next(NULL, &(struct Val){}.elem), NULL);
     check(CCC_adaptive_map_next(&s, NULL), NULL);
     check(CCC_adaptive_map_reverse_next(NULL, &(struct Val){}.elem), NULL);
