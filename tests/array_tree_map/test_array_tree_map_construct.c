@@ -29,6 +29,37 @@ construct_empty(void) {
     );
 }
 
+check_static_begin(array_tree_map_test_handle_status_input) {
+    CCC_Handle *e = CCC_array_tree_map_try_insert_wrap(
+        NULL, &(struct Val){}, &std_allocator
+    );
+    check(CCC_handle_argument_error(e), CCC_TRUE);
+    check(CCC_handle_argument_error(NULL), CCC_TRIBOOL_ERROR);
+    check(CCC_handle_insert_error(NULL), CCC_TRIBOOL_ERROR);
+    check(CCC_handle_occupied(NULL), CCC_TRIBOOL_ERROR);
+    check(CCC_handle_status(NULL), CCC_ENTRY_ARGUMENT_ERROR);
+    char const *prev = CCC_handle_status_message(CCC_ENTRY_VACANT);
+    char const *cur = CCC_handle_status_message(CCC_ENTRY_OCCUPIED);
+    check(prev != NULL, CCC_TRUE);
+    check(cur != NULL, CCC_TRUE);
+    check(prev != cur, CCC_TRUE);
+    prev = cur;
+    cur = CCC_handle_status_message(CCC_ENTRY_INSERT_ERROR);
+    check(cur != NULL, CCC_TRUE);
+    check(prev != cur, CCC_TRUE);
+    prev = cur;
+    cur = CCC_handle_status_message(CCC_ENTRY_ARGUMENT_ERROR);
+    check(cur != NULL, CCC_TRUE);
+    check(prev != cur, CCC_TRUE);
+    cur = CCC_handle_status_message(CCC_ENTRY_NO_UNWRAP);
+    check(cur != NULL, CCC_TRUE);
+    check(prev != cur, CCC_TRUE);
+    cur = CCC_handle_status_message(10); /** NOLINT */
+    check(cur != NULL, CCC_TRUE);
+    check(prev != cur, CCC_TRUE);
+    check_end();
+}
+
 check_static_begin(array_tree_map_construct_empty) {
     check(array_tree_map_validate(NULL), CCC_TRIBOOL_ERROR);
     check(array_tree_map_is_empty(NULL), CCC_TRIBOOL_ERROR);
@@ -535,6 +566,7 @@ check_static_begin(array_tree_map_test_copy_exhaustion) {
 int
 main(void) {
     return check_run(
+        array_tree_map_test_handle_status_input(),
         array_tree_map_construct_empty(),
         array_tree_map_test_static(),
         array_tree_map_test_empty(),
