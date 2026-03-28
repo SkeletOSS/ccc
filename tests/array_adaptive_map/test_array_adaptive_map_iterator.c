@@ -153,6 +153,12 @@ check_static_begin(array_adaptive_map_test_forward_iterator) {
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
+    check(array_adaptive_map_begin(NULL), 0);
+    check(array_adaptive_map_reverse_begin(NULL), 0);
+    check(array_adaptive_map_end(NULL), 0);
+    check(array_adaptive_map_reverse_end(NULL), 0);
+    check(array_adaptive_map_next(NULL, 0), 0);
+    check(array_adaptive_map_reverse_next(NULL, 0), 0);
     /* We should have the expected behavior iteration over empty tree. */
     int j = 0;
     for (CCC_Handle_index e = begin(&s); e != end(&s); e = next(&s, e), ++j) {}
@@ -161,7 +167,7 @@ check_static_begin(array_adaptive_map_test_forward_iterator) {
     int const prime = 37;
     size_t shuffled_index = (size_t)prime % (size_t)num_nodes;
     for (int i = 0; i < num_nodes; ++i) {
-        (void)swap_handle(
+        (void)insert_or_assign(
             &s,
             &(struct Val){.id = (int)shuffled_index, .val = i},
             &(CCC_Allocator){}
@@ -191,11 +197,12 @@ check_static_begin(array_adaptive_map_test_iterate_removal) {
     srand(1);
     size_t const num_nodes = 1000;
     for (size_t i = 0; i < num_nodes; ++i) {
-        /* NOLINTNEXTLINE */
-        (void)swap_handle(
+        (void)insert_or_assign(
             &s,
-            &(struct Val){.id = (int)((size_t)rand() % (num_nodes + 1)),
-                          .val = (int)i},
+            &(struct Val){
+                .id = (int)((size_t)rand() % (num_nodes + 1)), /* NOLINT */
+                .val = (int)i,
+            },
             &(CCC_Allocator){}
         );
         check(validate(&s), true);
@@ -228,7 +235,7 @@ check_static_begin(array_adaptive_map_test_iterate_remove_key_value_reinsert) {
     size_t const num_nodes = 1000;
     for (size_t i = 0; i < num_nodes; ++i) {
         /* NOLINTNEXTLINE */
-        (void)swap_handle(
+        (void)try_insert(
             &s,
             &(struct Val){
                 .id = (int)((size_t)rand() % (num_nodes + 1)),
@@ -265,7 +272,54 @@ check_static_begin(array_adaptive_map_test_valid_range) {
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
-
+    check(
+        CCC_range_begin(
+            array_adaptive_map_equal_range_wrap(NULL, &(int){}, &(int){})
+        ),
+        0
+    );
+    check(
+        CCC_range_begin(
+            array_adaptive_map_equal_range_wrap(&s, NULL, &(int){})
+        ),
+        0
+    );
+    check(
+        CCC_range_begin(
+            array_adaptive_map_equal_range_wrap(&s, &(int){}, NULL)
+        ),
+        0
+    );
+    check(
+        CCC_range_reverse_begin(array_adaptive_map_equal_range_reverse_wrap(
+            NULL, &(int){}, &(int){}
+        )),
+        0
+    );
+    check(
+        CCC_range_reverse_begin(
+            array_adaptive_map_equal_range_reverse_wrap(&s, NULL, &(int){})
+        ),
+        0
+    );
+    check(
+        CCC_range_reverse_begin(
+            array_adaptive_map_equal_range_reverse_wrap(&s, &(int){}, NULL)
+        ),
+        0
+    );
+    check(
+        CCC_range_begin(
+            array_adaptive_map_equal_range_wrap(&s, &(int){}, &(int){})
+        ),
+        0
+    );
+    check(
+        CCC_range_reverse_begin(
+            array_adaptive_map_equal_range_reverse_wrap(&s, &(int){}, &(int){})
+        ),
+        0
+    );
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
     for (int i = 0, id = 0; i < num_nodes; ++i, id += 5) {

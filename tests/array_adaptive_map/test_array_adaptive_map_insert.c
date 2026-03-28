@@ -54,19 +54,32 @@ check_static_begin(array_adaptive_map_test_insert_error) {
 }
 
 check_static_begin(array_adaptive_map_test_insert) {
-    CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id,
-        (CCC_Key_comparator){.compare = id_order},
-        (struct Val[SMALL_FIXED_CAP]){}
-    );
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for(
+            (typeof(array_adaptive_map_storage_for((struct Val[2]){}))[1]){}
+        ),
+    };
+    CCC_Array_adaptive_map array_adaptive_map
+        = array_adaptive_map_with_capacity(
+            struct Val,
+            id,
+            (CCC_Key_comparator){.compare = id_order},
+            allocator,
+            1
+        );
 
     /* Nothing was there before so nothing is in the handle. */
-    CCC_Handle *hndl = array_adaptive_map_swap_handle_wrap(
-        &array_adaptive_map,
-        (&(struct Val){.id = 137, .val = 99}),
-        &(CCC_Allocator){}
+    CCC_Handle const *hndl = array_adaptive_map_swap_handle_wrap(
+        &array_adaptive_map, (&(struct Val){.id = 137, .val = 99}), &allocator
     );
+    check(CCC_handle_insert_error(hndl), CCC_FALSE);
     check(occupied(hndl), false);
+    check(count(&array_adaptive_map).count, 1);
+    hndl = array_adaptive_map_try_insert_wrap(
+        &array_adaptive_map, &(struct Val){.id = 99}, &allocator
+    );
+    check(CCC_handle_insert_error(hndl), CCC_TRUE);
     check(count(&array_adaptive_map).count, 1);
     check_end();
 }

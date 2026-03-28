@@ -807,18 +807,16 @@ allocate_slot(
                 map->sizeof_type, map->data, map->capacity
             );
         }
-        old_cap = old_count ? old_cap : 0;
+        old_cap = old_count ? old_cap : 1;
         size_t const new_cap = map->capacity;
         size_t prev = 0;
-        for (size_t i = new_cap - 1; i > 0 && i >= old_cap; prev = i, --i) {
+        for (size_t i = new_cap - 1; i >= old_cap; prev = i, --i) {
             node_at(map, i)->next_free = prev;
         }
         map->free_list = prev;
         map->count = max(old_count, 1);
     }
-    if (!map->free_list) {
-        return 0;
-    }
+    assert(map->free_list);
     ++map->count;
     size_t const slot = map->free_list;
     map->free_list = node_at(map, slot)->next_free;

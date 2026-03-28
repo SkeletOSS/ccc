@@ -194,6 +194,9 @@ check_static_begin(flat_hash_map_test_entry_status_input) {
     cur = CCC_entry_status_message(CCC_ENTRY_NO_UNWRAP);
     check(cur != NULL, CCC_TRUE);
     check(prev != cur, CCC_TRUE);
+    cur = CCC_entry_status_message(10); /** NOLINT */
+    check(cur != NULL, CCC_TRUE);
+    check(prev != cur, CCC_TRUE);
     check_end();
 }
 
