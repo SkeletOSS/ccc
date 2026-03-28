@@ -4,11 +4,12 @@
 #define TRAITS_USING_NAMESPACE_CCC
 #define ARRAY_TREE_MAP_USING_NAMESPACE_CCC
 
-#include "array_tree_map.h"
 #include "array_tree_map_utility.h"
+#include "ccc/array_tree_map.h"
+#include "ccc/traits.h"
+#include "ccc/types.h"
 #include "checkers.h"
-#include "traits.h"
-#include "types.h"
+#include "utility/allocate.h"
 #include "utility/stack_allocator.h"
 
 static Array_tree_map static_map = array_tree_map_with_storage(
@@ -29,6 +30,10 @@ construct_empty(void) {
 }
 
 check_static_begin(array_tree_map_construct_empty) {
+    check(array_tree_map_validate(NULL), CCC_TRIBOOL_ERROR);
+    check(array_tree_map_is_empty(NULL), CCC_TRIBOOL_ERROR);
+    check(array_tree_map_count(NULL).error, CCC_RESULT_ARGUMENT_ERROR);
+    check(array_tree_map_capacity(NULL).error, CCC_RESULT_ARGUMENT_ERROR);
     Array_tree_map constructed = construct_empty();
     check(is_empty(&constructed), CCC_TRUE);
     check(validate(&constructed), CCC_TRUE);
@@ -477,6 +482,56 @@ check_static_begin(array_tree_map_test_context_with_allocator) {
     });
 }
 
+check_static_begin(array_tree_map_test_double_reserve) {
+    Array_tree_map map = array_tree_map_with_capacity(
+        struct Val,
+        id,
+        (CCC_Key_comparator){.compare = id_order},
+        std_allocator,
+        32
+    );
+    size_t const cap = array_tree_map_capacity(&map).count;
+    check(cap >= 32, CCC_TRUE);
+    /* Should not over eagerly reserve more space if we have enough cap. */
+    check(array_tree_map_reserve(&map, 1, &std_allocator), CCC_RESULT_OK);
+    check(array_tree_map_capacity(&map).count, cap);
+    check_end({
+        (void)array_tree_map_clear_and_free(
+            &map, &(CCC_Destructor){}, &std_allocator
+        );
+    });
+}
+
+check_static_begin(array_tree_map_test_copy_exhaustion) {
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for(
+            (typeof(array_tree_map_storage_for((struct Val[2]){}))[1]){}
+        ),
+    };
+    Array_tree_map source = array_tree_map_default(
+        struct Val, id, (CCC_Key_comparator){.compare = id_order}
+    );
+    Array_tree_map destination = array_tree_map_default(
+        struct Val, id, (CCC_Key_comparator){.compare = id_order}
+    );
+    check(
+        array_tree_map_copy(&destination, &source, &allocator), CCC_RESULT_OK
+    );
+    check(array_tree_map_reserve(&source, 1, &allocator), CCC_RESULT_OK);
+    check(
+        array_tree_map_copy(&destination, &source, &allocator),
+        CCC_RESULT_ALLOCATOR_ERROR
+    );
+    source.data = NULL;
+    stack_allocator_reset(allocator.context);
+    check(
+        array_tree_map_copy(&destination, &source, &allocator),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check_end();
+}
+
 int
 main(void) {
     return check_run(
@@ -494,6 +549,8 @@ main(void) {
         array_tree_map_test_init_with_capacity(),
         array_tree_map_test_init_with_capacity_no_op(),
         array_tree_map_test_init_with_capacity_fail(),
-        array_tree_map_test_context_with_allocator()
+        array_tree_map_test_context_with_allocator(),
+        array_tree_map_test_double_reserve(),
+        array_tree_map_test_copy_exhaustion(),
     );
 }

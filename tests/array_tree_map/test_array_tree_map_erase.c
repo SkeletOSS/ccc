@@ -22,6 +22,16 @@ check_static_begin(array_tree_map_test_insert_erase_shuffled) {
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
+    check(
+        CCC_handle_status(
+            array_tree_map_remove_key_value_wrap(NULL, &(struct Val){})
+        ),
+        CCC_ENTRY_ARGUMENT_ERROR
+    );
+    check(
+        CCC_handle_status(array_tree_map_remove_key_value_wrap(&s, NULL)),
+        CCC_ENTRY_ARGUMENT_ERROR
+    );
     size_t const size = 50;
     int const prime = 53;
     check(insert_shuffled(&s, size, prime, &(CCC_Allocator){}), CHECK_PASS);
@@ -47,6 +57,10 @@ check_static_begin(array_tree_map_test_prime_shuffle) {
         id,
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
+    );
+    check(
+        CCC_handle_status(CCC_array_tree_map_remove_handle_wrap(NULL)),
+        CCC_ENTRY_ARGUMENT_ERROR
     );
     enum : size_t {
         SHUFFLE_CAP = 50,

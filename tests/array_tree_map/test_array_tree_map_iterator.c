@@ -152,6 +152,12 @@ check_static_begin(array_tree_map_test_forward_iterator) {
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
+    check(array_tree_map_begin(NULL), 0);
+    check(array_tree_map_reverse_begin(NULL), 0);
+    check(array_tree_map_end(NULL), 0);
+    check(array_tree_map_reverse_end(NULL), 0);
+    check(array_tree_map_next(NULL, 0), 0);
+    check(array_tree_map_reverse_next(NULL, 0), 0);
     /* We should have the expected behavior iteration over empty tree. */
     int j = 0;
     for (CCC_Handle_index e = begin(&s); e != end(&s); e = next(&s, e), ++j) {}
@@ -269,7 +275,48 @@ check_static_begin(array_tree_map_test_valid_range) {
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
-
+    check(
+        CCC_range_begin(
+            array_tree_map_equal_range_wrap(NULL, &(int){}, &(int){})
+        ),
+        0
+    );
+    check(
+        CCC_range_begin(array_tree_map_equal_range_wrap(&s, NULL, &(int){})), 0
+    );
+    check(
+        CCC_range_begin(array_tree_map_equal_range_wrap(&s, &(int){}, NULL)), 0
+    );
+    check(
+        CCC_range_reverse_begin(
+            array_tree_map_equal_range_reverse_wrap(NULL, &(int){}, &(int){})
+        ),
+        0
+    );
+    check(
+        CCC_range_reverse_begin(
+            array_tree_map_equal_range_reverse_wrap(&s, NULL, &(int){})
+        ),
+        0
+    );
+    check(
+        CCC_range_reverse_begin(
+            array_tree_map_equal_range_reverse_wrap(&s, &(int){}, NULL)
+        ),
+        0
+    );
+    check(
+        CCC_range_begin(
+            array_tree_map_equal_range_wrap(&s, &(int){}, &(int){})
+        ),
+        0
+    );
+    check(
+        CCC_range_reverse_begin(
+            array_tree_map_equal_range_reverse_wrap(&s, &(int){}, &(int){})
+        ),
+        0
+    );
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
     for (int i = 0, id = 0; i < num_nodes; ++i, id += 5) {

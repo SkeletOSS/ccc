@@ -24,24 +24,58 @@ array_tree_map_modplus(CCC_Arguments const t) {
     ((struct Val *)t.type)->val++;
 }
 
-check_static_begin(array_tree_map_test_insert) {
-    CCC_Array_tree_map map = array_tree_map_with_storage(
-        id,
-        (CCC_Key_comparator){.compare = id_order},
-        (struct Val[SMALL_FIXED_CAP]){}
+check_static_begin(array_tree_map_test_insert_error) {
+    CCC_Array_tree_map array_tree_map = array_tree_map_with_storage(
+        id, (CCC_Key_comparator){.compare = id_order}, (struct Val[2]){}
     );
+    check(array_tree_map_unwrap(NULL), NULL);
 
     /* Nothing was there before so nothing is in the handle. */
     CCC_Handle *hndl = array_tree_map_swap_handle_wrap(
-        &map,
-        (&(struct Val){
-            .id = 137,
-            .val = 99,
-        }),
+        &array_tree_map,
+        (&(struct Val){.id = 137, .val = 99}),
         &(CCC_Allocator){}
     );
     check(occupied(hndl), false);
-    check(count(&map).count, 1);
+    check(count(&array_tree_map).count, 1);
+    CCC_Array_tree_map_handle const query
+        = array_tree_map_handle(&array_tree_map, &(int){137});
+    check(array_tree_map_insert_error(NULL), CCC_TRIBOOL_ERROR);
+    check(array_tree_map_insert_error(&query), CCC_FALSE);
+    check(array_tree_map_occupied(NULL), CCC_TRIBOOL_ERROR);
+    check(occupied(&query), CCC_TRUE);
+    hndl = CCC_array_tree_map_insert_or_assign_wrap(
+        &array_tree_map, &(struct Val){}, &(CCC_Allocator){}
+    );
+    check(array_tree_map_insert_error(NULL), CCC_TRIBOOL_ERROR);
+    check(insert_error(hndl), CCC_TRUE);
+    check(unwrap(hndl), NULL);
+    check_end();
+}
+
+check_static_begin(array_tree_map_test_insert) {
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for(
+            (typeof(array_tree_map_storage_for((struct Val[2]){}))[1]){}
+        ),
+    };
+    CCC_Array_tree_map array_tree_map = array_tree_map_with_capacity(
+        struct Val, id, (CCC_Key_comparator){.compare = id_order}, allocator, 1
+    );
+
+    /* Nothing was there before so nothing is in the handle. */
+    CCC_Handle const *hndl = array_tree_map_swap_handle_wrap(
+        &array_tree_map, (&(struct Val){.id = 137, .val = 99}), &allocator
+    );
+    check(CCC_handle_insert_error(hndl), CCC_FALSE);
+    check(occupied(hndl), false);
+    check(count(&array_tree_map).count, 1);
+    hndl = array_tree_map_try_insert_wrap(
+        &array_tree_map, &(struct Val){.id = 99}, &allocator
+    );
+    check(CCC_handle_insert_error(hndl), CCC_TRUE);
+    check(count(&array_tree_map).count, 1);
     check_end();
 }
 
@@ -51,7 +85,32 @@ check_static_begin(array_tree_map_test_insert_macros) {
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
-
+    check(
+        array_tree_map_handle_status(
+            array_tree_map_handle_wrap(NULL, &(int){2})
+        ),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        array_tree_map_handle_status(array_tree_map_handle_wrap(&map, NULL)),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        array_tree_map_or_insert(NULL, &(struct Val){}, &(CCC_Allocator){}),
+        NULL
+    );
+    check(
+        array_tree_map_or_insert(
+            &(CCC_Array_tree_map_handle){}, NULL, &(CCC_Allocator){}
+        ),
+        NULL
+    );
+    check(
+        array_tree_map_or_insert(
+            &(CCC_Array_tree_map_handle){}, &(struct Val){}, NULL
+        ),
+        NULL
+    );
     struct Val const *ins = array_tree_map_at(
         &map,
         CCC_array_tree_map_or_insert_with(
@@ -133,6 +192,24 @@ check_static_begin(array_tree_map_test_insert_overwrite) {
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
+    check(
+        CCC_handle_status(array_tree_map_swap_handle_wrap(
+            NULL, &(struct Val){}, &(CCC_Allocator){}
+        )),
+        CCC_ENTRY_ARGUMENT_ERROR
+    );
+    check(
+        CCC_handle_status(
+            array_tree_map_swap_handle_wrap(&map, NULL, &(CCC_Allocator){})
+        ),
+        CCC_ENTRY_ARGUMENT_ERROR
+    );
+    check(
+        CCC_handle_status(
+            array_tree_map_swap_handle_wrap(&map, &(struct Val){}, NULL)
+        ),
+        CCC_ENTRY_ARGUMENT_ERROR
+    );
 
     struct Val q = {.id = 137, .val = 99};
     CCC_Handle hndl = swap_handle(&map, &q, &(CCC_Allocator){});
@@ -171,6 +248,8 @@ check_static_begin(array_tree_map_test_insert_then_bad_ideas) {
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
+    check(array_tree_map_get_key_value(NULL, &(int){}), 0);
+    check(array_tree_map_get_key_value(&map, NULL), 0);
     struct Val q = {.id = 137, .val = 99};
     CCC_Handle hndl = swap_handle(&map, &q, &(CCC_Allocator){});
     check(occupied(&hndl), false);
@@ -280,6 +359,22 @@ check_static_begin(array_tree_map_test_insert_via_handle) {
         (struct Val[STANDARD_FIXED_CAP]){}
     );
     size_t const size = 200;
+    check(
+        array_tree_map_insert_handle(NULL, &(struct Val){}, &(CCC_Allocator){}),
+        NULL
+    );
+    check(
+        array_tree_map_insert_handle(
+            &(CCC_Array_tree_map_handle){}, NULL, &(CCC_Allocator){}
+        ),
+        NULL
+    );
+    check(
+        array_tree_map_insert_handle(
+            &(CCC_Array_tree_map_handle){}, &(struct Val){}, NULL
+        ),
+        NULL
+    );
 
     /* Test handle or insert with for all even values. Default should be
        inserted. All entries are hashed to last digit so many spread out
@@ -383,6 +478,15 @@ check_static_begin(array_tree_map_test_array_api_macros) {
         (struct Val[STANDARD_FIXED_CAP]){}
     );
     int const size = 200;
+    check(
+        array_tree_map_and_modify(
+            NULL, &(CCC_Modifier){.modify = array_tree_map_modplus}
+        ),
+        NULL
+    );
+    check(
+        array_tree_map_and_modify(&(CCC_Array_tree_map_handle){}, NULL), NULL
+    );
 
     /* Test handle or insert with for all even values. Default should be
        inserted. All entries are hashed to last digit so many spread out
@@ -452,6 +556,24 @@ check_static_begin(array_tree_map_test_two_sum) {
         id,
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
+    );
+    check(
+        CCC_handle_status(array_tree_map_insert_or_assign_wrap(
+            NULL, &(struct Val){}, &(CCC_Allocator){}
+        )),
+        CCC_ENTRY_ARGUMENT_ERROR
+    );
+    check(
+        CCC_handle_status(
+            array_tree_map_insert_or_assign_wrap(&map, NULL, &(CCC_Allocator){})
+        ),
+        CCC_ENTRY_ARGUMENT_ERROR
+    );
+    check(
+        CCC_handle_status(
+            array_tree_map_insert_or_assign_wrap(&map, &(struct Val){}, NULL)
+        ),
+        CCC_ENTRY_ARGUMENT_ERROR
     );
     int const addends[10] = {1, 3, -980, 6, 7, 13, 44, 32, 995, -1};
     int const target = 15;
@@ -817,6 +939,26 @@ check_static_begin(array_tree_map_test_insert_and_find) {
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
+    check(array_tree_map_contains(NULL, &(int){}), CCC_TRIBOOL_ERROR);
+    check(array_tree_map_contains(&map, NULL), CCC_TRIBOOL_ERROR);
+    check(
+        CCC_handle_status(array_tree_map_try_insert_wrap(
+            NULL, &(struct Val){}, &(CCC_Allocator){}
+        )),
+        CCC_ENTRY_ARGUMENT_ERROR
+    );
+    check(
+        CCC_handle_status(
+            array_tree_map_try_insert_wrap(&map, NULL, &(CCC_Allocator){})
+        ),
+        CCC_ENTRY_ARGUMENT_ERROR
+    );
+    check(
+        CCC_handle_status(
+            array_tree_map_try_insert_wrap(&map, &(struct Val){}, NULL)
+        ),
+        CCC_ENTRY_ARGUMENT_ERROR
+    );
 
     for (int i = 0; i < size; i += 2) {
         CCC_Handle e = try_insert(
@@ -892,6 +1034,7 @@ check_static_begin(array_tree_map_test_insert_weak_srand) {
 int
 main(void) {
     return check_run(
+        array_tree_map_test_insert_error(),
         array_tree_map_test_insert(),
         array_tree_map_test_insert_macros(),
         array_tree_map_test_insert_and_find(),

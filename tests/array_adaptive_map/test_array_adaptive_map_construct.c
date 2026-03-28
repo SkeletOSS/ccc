@@ -4,11 +4,11 @@
 #define TRAITS_USING_NAMESPACE_CCC
 #define ARRAY_ADAPTIVE_MAP_USING_NAMESPACE_CCC
 
-#include "array_adaptive_map.h"
 #include "array_adaptive_map_utility.h"
+#include "ccc/array_adaptive_map.h"
+#include "ccc/traits.h"
+#include "ccc/types.h"
 #include "checkers.h"
-#include "traits.h"
-#include "types.h"
 #include "utility/allocate.h"
 #include "utility/stack_allocator.h"
 

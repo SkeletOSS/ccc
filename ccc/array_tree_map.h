@@ -1086,12 +1086,18 @@ typedef CCC_Array_tree_map_handle Array_tree_map_handle;
         CCC_array_tree_map_reserve(arguments)
 #    define array_tree_map_at(arguments...) CCC_array_tree_map_at(arguments)
 #    define array_tree_map_as(arguments...) CCC_array_tree_map_as(arguments)
+#    define array_tree_map_and_modify(arguments...)                            \
+        CCC_array_tree_map_and_modify(arguments)
 #    define array_tree_map_and_modify_with(arguments...)                       \
         CCC_array_tree_map_and_modify_with(arguments)
+#    define array_tree_map_or_insert(arguments...)                             \
+        CCC_array_tree_map_or_insert(arguments)
 #    define array_tree_map_or_insert_with(arguments...)                        \
         CCC_array_tree_map_or_insert_with(arguments)
 #    define array_tree_map_insert_handle_with(arguments...)                    \
         CCC_array_tree_map_insert_handle_with(arguments)
+#    define array_tree_map_insert_handle(arguments...)                         \
+        CCC_array_tree_map_insert_handle(arguments)
 #    define array_tree_map_try_insert(arguments...)                            \
         CCC_array_tree_map_try_insert(arguments)
 #    define array_tree_map_try_insert_wrap(arguments...)                       \
@@ -1154,6 +1160,14 @@ typedef CCC_Array_tree_map_handle Array_tree_map_handle;
         CCC_array_tree_map_clear_and_free(arguments)
 #    define array_tree_map_validate(arguments...)                              \
         CCC_array_tree_map_validate(arguments)
+#    define array_tree_map_unwrap(arguments...)                                \
+        CCC_array_tree_map_unwrap(arguments)
+#    define array_tree_map_insert_error(arguments...)                          \
+        CCC_array_tree_map_insert_error(arguments)
+#    define array_tree_map_occupied(arguments...)                              \
+        CCC_array_tree_map_occupied(arguments)
+#    define array_tree_map_handle_status(arguments...)                         \
+        CCC_array_tree_map_handle_status(arguments)
 /* NOLINTEND(readability-identifier-naming) */
 #endif /* ARRAY_TREE_MAP_USING_NAMESPACE_CCC */
 

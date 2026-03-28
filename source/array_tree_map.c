@@ -433,8 +433,11 @@ CCC_Array_tree_map_handle *
 CCC_array_tree_map_and_modify(
     CCC_Array_tree_map_handle *const handle, CCC_Modifier const *const modifier
 ) {
-    if (handle && modifier && modifier->modify
-        && handle->status & CCC_ENTRY_OCCUPIED && handle->index > 0) {
+    if (!handle || !modifier) {
+        return NULL;
+    }
+    if (modifier->modify && handle->status & CCC_ENTRY_OCCUPIED
+        && handle->index > 0) {
         modifier->modify((CCC_Arguments){
             .type = data_at(handle->map, handle->index),
             modifier->context,
