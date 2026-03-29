@@ -93,21 +93,10 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
   <div class="headertitle"><div class="title">C Container Collection Documentation </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_DOXYGEN_README"></a></p><ul>
-<li>Navigation</li>
-<li>CCC Cardinal Rules<ul>
-<li>Understand allocators</li>
-<li>Never pass `NULL`</li>
-<li>Use the correct initializer</li>
-<li>Understand pointer versus handle stability</li>
-</ul>
-</li>
-<li>Installation</li>
-<li>Coverage Report</li>
-</ul>
+<div class="textblock"><p><a class="anchor" id="md_DOXYGEN_README"></a> </p>
 <h1><a class="anchor" id="autotoc_md1"></a>
 Header Navigation</h1>
-<p>Follow the links to the key container headers.</p>
+<p>Follow the links to the C Container Collection headers.</p>
 <ul>
 <li><a href="https://skeletoss.github.io/ccc/adaptive__map_8h.html">ccc/adaptive_map.h</a></li>
 <li><a href="https://skeletoss.github.io/ccc/array__adaptive__map_8h.html">ccc/array_adaptive_map.h</a></li>
@@ -274,14 +263,21 @@ Beware of Intrusive Containers</h3>
 <div class="line">);</div>
 <div class="ttc" id="apriority__queue_8h_html_a9e8274ed9bdc17dedf7abff36ea3d9d8"><div class="ttname"><a href="priority__queue_8h.html#a9e8274ed9bdc17dedf7abff36ea3d9d8">CCC_priority_queue_push</a></div><div class="ttdeci">void * CCC_priority_queue_push(CCC_Priority_queue *priority_queue, CCC_Priority_queue_node *type_intruder, CCC_Allocator const *allocator)</div><div class="ttdoc">Adds an element to the priority queue in correct total order. O(1).</div></div>
 </div><!-- fragment --><p>Here, the user type is passed to the function as an inline compound literal reference. This is OK because an allocator is provided. Internally, the container will try to allocate a new node for the priority queue with the provided allocator and copy in the provided values in the user provided type argument. This would not work if allocation is forbidden.</p>
+<p><b>WARNING! The following example shows possible incorrect usage of the CCC API.</b></p>
+<div class="fragment"><div class="line"><span class="keyword">struct </span>Priority *elem = malloc(<span class="keyword">sizeof</span>(<span class="keyword">struct</span> Priority));</div>
+<div class="line"><a class="code hl_function" href="priority__queue_8h.html#a9e8274ed9bdc17dedf7abff36ea3d9d8">CCC_priority_queue_push</a>(</div>
+<div class="line">    &amp;pq,</div>
+<div class="line">    &amp;(<span class="keyword">struct</span> Priority){.priority = 99}.pq_elem, <span class="comment">/* &lt;-ERROR HERE! */</span></div>
+<div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Allocator.html">CCC_Allocator</a>){}</div>
+<div class="line">);</div>
+</div><!-- fragment --><p>Because allocation has been forbidden, the container does not assume anything about the scope and lifetime of the provided user element. It simply operates on the intrusive element the user is providing to maintain internal data structure invariants. Because an inline compound literal reference has been provided the scope and lifetime of that element is the enclosing block, and that is almost always a programmer error. The user must guarantee the lifetime of the element.</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>Priority *elem = malloc(<span class="keyword">sizeof</span>(<span class="keyword">struct</span> Priority));</div>
 <div class="line"><a class="code hl_function" href="priority__queue_8h.html#a9e8274ed9bdc17dedf7abff36ea3d9d8">CCC_priority_queue_push</a>(</div>
 <div class="line">    &amp;pq,</div>
 <div class="line">    &amp;elem-&gt;pq_elem,</div>
 <div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Allocator.html">CCC_Allocator</a>){}</div>
 <div class="line">);</div>
-</div><!-- fragment --><p>Because allocation has been forbidden, the container does not assume anything about the scope and lifetime of the provided user element. It simply operates on the intrusive element the user is providing to maintain internal data structure invariants. If an inline compound literal reference had been provided the scope and lifetime of that element would be the enclosing block, and that is almost always a programmer error.</p>
-<p>This required attention to scope and lifetime applies identically to all intrusive containers.</p>
+</div><!-- fragment --><p>This required attention to scope and lifetime applies identically to all intrusive containers.</p>
 <h2><a class="anchor" id="autotoc_md6"></a>
 Use the Correct Initializer</h2>
 <p>Building upon the last rule, that <code>NULL</code> should never appear at a function or call site, the user should apply this rule to initializers. Every container offers a variety of initializers. If the container will be initialized as empty use the <code>_default()</code> initializer. Compare the following wrong choice with a subsequent correct choice.</p>
@@ -364,8 +360,9 @@ Pointers Versus Handles</h2>
 Invalidated Pointers</h3>
 <p>When a <code>Flat_</code> container is passed an allocator for an insert or push type operation, assume that all references are invalidated after that operation. This is because the underlying container has been given permission to resize. For a simple dynamic buffer this may be obvious.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> *front = <a class="code hl_function" href="buffer_8h.html#a4c9f5187b290d944a14f3d3e922f166c">CCC_buffer_front</a>(&amp;buffer);</div>
-<div class="line">(void)CCC_buffer_push(&amp;buffer, &amp;(<span class="keywordtype">int</span>){7}, &amp;allocator);</div>
+<div class="line">(void)<a class="code hl_function" href="buffer_8h.html#a4136eff57e6947dcc1406705b35396a2">CCC_buffer_push_back</a>(&amp;buffer, &amp;(<span class="keywordtype">int</span>){7}, &amp;allocator);</div>
 <div class="line"><span class="comment">/* front may be invalid */</span></div>
+<div class="ttc" id="abuffer_8h_html_a4136eff57e6947dcc1406705b35396a2"><div class="ttname"><a href="buffer_8h.html#a4136eff57e6947dcc1406705b35396a2">CCC_buffer_push_back</a></div><div class="ttdeci">void * CCC_buffer_push_back(CCC_Buffer *buffer, void const *data, CCC_Allocator const *allocator)</div><div class="ttdoc">return the newly pushed data into the last slot of the buffer according to size.</div></div>
 <div class="ttc" id="abuffer_8h_html_a4c9f5187b290d944a14f3d3e922f166c"><div class="ttname"><a href="buffer_8h.html#a4c9f5187b290d944a14f3d3e922f166c">CCC_buffer_front</a></div><div class="ttdeci">void * CCC_buffer_front(CCC_Buffer const *buffer)</div><div class="ttdoc">return the first element in the Buffer at index 0.</div></div>
 </div><!-- fragment --><p>After the push operation, the reference <code>*front</code> may be invalid if the buffer has resized to fit the new element. This is also true for more complex containers such as the flat hash map.</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>Key {</div>
@@ -409,7 +406,7 @@ Stable Pointers</h3>
 </div><!-- fragment --><p>The map assumes the pointer <code>*a</code> is still valid after the insertion of <code>*b</code>. The container assumption is the same if the user provides the element and allocation has been forbidden by passing an empty <code>&amp;(<a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a>){}</code>.</p>
 <h3><a class="anchor" id="autotoc_md10"></a>
 Stable Handles</h3>
-<p>The special <code>Array_</code> based containers promise handle stability. This is similar to pointer stability, but provides slightly greater flexibility to the implementation. A <code><a class="el" href="structCCC__Handle.html" title="An Occupied or Vacant handle to a flat searchable container entry.">CCC_Handle</a></code> and its unwrapped <code>CCC_Handle_index</code></p>
+<p>The special <code>Array_</code> based containers promise handle stability. This is similar to pointer stability, but provides slightly greater flexibility to the implementation. A <code><a class="el" href="structCCC__Handle.html" title="An Occupied or Vacant handle to a flat searchable container entry.">CCC_Handle</a></code> and its unwrapped <code>CCC_Handle_index</code> remain stable for the lifetime of the element to which they index.</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>Key {</div>
 <div class="line">    <span class="keywordtype">int</span> key;</div>
 <div class="line">    <span class="keywordtype">int</span> value;</div>
