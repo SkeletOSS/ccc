@@ -396,13 +396,13 @@ Pointers Versus Handles</h2>
 <p>There are three important concepts about references the user must understand in the C Container Collection: pointers that may be invalidated, pointers that are stable, and handles that are stable. Here is a table summarizes the container types the user will encounter in this collection.</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Container   </th><th class="markdownTableHeadNone">Memory Layout   </th><th class="markdownTableHeadNone">Pointer Stability   </th><th class="markdownTableHeadNone">Handle Stability    </th></tr>
+<th class="markdownTableHeadNone">Container   </th><th class="markdownTableHeadNone">Memory Layout   </th><th class="markdownTableHeadNone">Pointer Stable   </th><th class="markdownTableHeadNone">Handle Stable    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Intrusive   </td><td class="markdownTableBodyNone">Non-Contiguous   </td><td class="markdownTableBodyNone">Stable   </td><td class="markdownTableBodyNone">N/A    </td></tr>
+<td class="markdownTableBodyNone">Intrusive   </td><td class="markdownTableBodyNone">Non-Contiguous   </td><td class="markdownTableBodyNone">Yes   </td><td class="markdownTableBodyNone">N/A    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Flat   </td><td class="markdownTableBodyNone">Contiguous   </td><td class="markdownTableBodyNone">Unstable   </td><td class="markdownTableBodyNone">N/A    </td></tr>
+<td class="markdownTableBodyNone">Flat   </td><td class="markdownTableBodyNone">Contiguous   </td><td class="markdownTableBodyNone">No   </td><td class="markdownTableBodyNone">N/A    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Array   </td><td class="markdownTableBodyNone">Contiguous   </td><td class="markdownTableBodyNone">Unstable   </td><td class="markdownTableBodyNone">Stable   </td></tr>
+<td class="markdownTableBodyNone">Array   </td><td class="markdownTableBodyNone">Contiguous   </td><td class="markdownTableBodyNone">No   </td><td class="markdownTableBodyNone">Yes   </td></tr>
 </table>
 <h3><a class="anchor" id="invalidated-pointers"></a>
 Invalidated Pointers</h3>
