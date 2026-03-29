@@ -93,8 +93,27 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
   <div class="headertitle"><div class="title">C Container Collection Documentation </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_DOXYGEN_README"></a> </p>
-<h1><a class="anchor" id="autotoc_md1"></a>
+<div class="textblock"><p><a class="anchor" id="md_DOXYGEN_README"></a></p><ul>
+<li><a class="el" href="index.html#header-navigation">Navigation</a></li>
+<li><a class="el" href="index.html#ccc-cardinal-rules">CCC Cardinal Rules</a><ul>
+<li><a class="el" href="index.html#understand-allocators">Understand allocators</a></li>
+<li><a class="el" href="index.html#never-pass-null">Never pass NULL</a><ul>
+<li><a class="el" href="index.html#beware-of-intrusive-containers">Beware of intrusive containers</a></li>
+</ul>
+</li>
+<li><a class="el" href="index.html#use-the-correct-initializer">Use the correct initializer</a></li>
+<li><a class="el" href="index.html#pointers-versus-handles">Understand pointer versus handle stability</a><ul>
+<li><a class="el" href="index.html#invalidated-pointers">Invalidated pointers</a></li>
+<li><a class="el" href="index.html#stable-pointers">Stable pointers</a></li>
+<li><a class="el" href="index.html#stable-handles">Stable handles</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="el" href="index.html#installation">Installation</a></li>
+<li><a class="el" href="index.html#coverage-report">Coverage Report</a></li>
+</ul>
+<h1><a class="anchor" id="header-navigation"></a>
 Header Navigation</h1>
 <p>Follow the links to the C Container Collection headers.</p>
 <ul>
@@ -115,15 +134,15 @@ Header Navigation</h1>
 <li><a href="https://skeletoss.github.io/ccc/tree__map_8h.html">ccc/tree_map.h</a></li>
 <li><a href="https://skeletoss.github.io/ccc/types_8h.html">ccc/types.h</a></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md2"></a>
+<h1><a class="anchor" id="ccc-cardinal-rules"></a>
 CCC Cardinal Rules</h1>
 <ol type="1">
-<li>Understand allocators.</li>
-<li>Never pass `NULL` to any C Container Collection function or macro.</li>
-<li>Use the correct initializer.</li>
-<li>Understand pointer versus handle stability.</li>
+<li><b><a class="el" href="index.html#understand-allocators">Understand allocators</a></b>.</li>
+<li><b><a class="el" href="index.html#never-pass-null">Never pass NULL to any C Container Collection function or macro</a></b>.</li>
+<li><b><a class="el" href="index.html#use-the-correct-initializer">Use the correct initializer</a></b>.</li>
+<li><b><a class="el" href="index.html#pointers-versus-handles">Understand pointer versus handle stability</a></b>.</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md3"></a>
+<h2><a class="anchor" id="understand-allocators"></a>
 Understand Allocators</h2>
 <p>Traditionally, dynamic memory is obtained, resized, and freed through an OS or language provided interface such as <code>malloc</code>, <code>realloc</code>, and <code>free</code>; these three functions manage a global allocator. However, these three core functionalities of an allocator can be united into one function. This is the approach that the C Container Collection takes. This is the implementation of the standard library allocator through the <code>CCC_Allocator_interface</code> type function.</p>
 <div class="fragment"><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
@@ -210,7 +229,7 @@ Understand Allocators</h2>
 <div class="line">        <a class="code hl_enumvalue" href="types_8h.html#a5e471ae63519e1044855e361826fc355a7d1c8b7831377b5625db94ca6eb5c323">CCC_ORDER_LESSER</a>,</div>
 <div class="line">        (<a class="code hl_struct" href="structCCC__Comparator.html">CCC_Comparator</a>){.compare = val_order}</div>
 <div class="line">    );</div>
-<div class="line">    CCC_prority_queue_push(</div>
+<div class="line">    <a class="code hl_function" href="priority__queue_8h.html#a9e8274ed9bdc17dedf7abff36ea3d9d8">CCC_priority_queue_push</a>(</div>
 <div class="line">        &amp;priority_queue,</div>
 <div class="line">        &amp;(<span class="keyword">struct</span> Val){.val = i}.elem,</div>
 <div class="line">        &amp;allocator</div>
@@ -218,6 +237,7 @@ Understand Allocators</h2>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
 <div class="ttc" id="apriority__queue_8h_html_a666c5af1ec876128146e0a0943a657da"><div class="ttname"><a href="priority__queue_8h.html#a666c5af1ec876128146e0a0943a657da">CCC_priority_queue_for</a></div><div class="ttdeci">#define CCC_priority_queue_for( type_name, type_intruder_field, order, comparator...)</div><div class="ttdoc">Initialize a priority queue at runtime or compile time.</div><div class="ttdef"><b>Definition:</b> priority_queue.h:99</div></div>
+<div class="ttc" id="apriority__queue_8h_html_a9e8274ed9bdc17dedf7abff36ea3d9d8"><div class="ttname"><a href="priority__queue_8h.html#a9e8274ed9bdc17dedf7abff36ea3d9d8">CCC_priority_queue_push</a></div><div class="ttdeci">void * CCC_priority_queue_push(CCC_Priority_queue *priority_queue, CCC_Priority_queue_node *type_intruder, CCC_Allocator const *allocator)</div><div class="ttdoc">Adds an element to the priority queue in correct total order. O(1).</div></div>
 <div class="ttc" id="astructCCC__Comparator_html"><div class="ttname"><a href="structCCC__Comparator.html">CCC_Comparator</a></div><div class="ttdoc">The type passed by reference to any container function that may need to compare elements....</div><div class="ttdef"><b>Definition:</b> types.h:416</div></div>
 <div class="ttc" id="astructCCC__Priority__queue__node_html"><div class="ttname"><a href="structCCC__Priority__queue__node.html">CCC_Priority_queue_node</a></div><div class="ttdef"><b>Definition:</b> private_priority_queue.h:33</div></div>
 <div class="ttc" id="astructCCC__Priority__queue_html"><div class="ttname"><a href="structCCC__Priority__queue.html">CCC_Priority_queue</a></div><div class="ttdef"><b>Definition:</b> private_priority_queue.h:85</div></div>
@@ -225,22 +245,22 @@ Understand Allocators</h2>
 </div><!-- fragment --><p>Full knowledge of the stack allocator is not required to understand the gist of this code block. There is an allocation function and a structure that manages the requested block of types the user plans to use. Context is a powerful concept for allocators that can provide fine-grained control and flexibility.</p>
 <p>Passing allocators at call sites also ensures that the reader knows where in the code memory allocation may occur. Different types of allocators with various levels of debugging or safety features can also be swapped in at runtime or compile time easily. Finally, no boiler plate is required if the user plans on using only fixed size containers or managing their own memory.</p>
 <p>An empty <code>&amp;(<a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a>){}</code> can be passed to any function. How the container responds to this will depend on the API function call, but the response is always well defined.</p>
-<h2><a class="anchor" id="autotoc_md4"></a>
+<h2><a class="anchor" id="never-pass-null"></a>
 Never Pass NULL</h2>
 <p>When reading user written C Container Collection code, the presence of <code>NULL</code> at a function or macro call site indicates a programmer error. Consider the following function call inserting an element into a flat hash map.</p>
-<div class="fragment"><div class="line">(void)<a class="code hl_function" href="flat__hash__map_8h.html#a3d55ec1bbc6cf53e3c300f40ec7aa0b6">CCC_flat_hash_map_insert_or_assign</a>(</div>
+<div class="fragment"><div class="line"><a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a> <span class="keyword">const</span> e = <a class="code hl_function" href="flat__hash__map_8h.html#a3d55ec1bbc6cf53e3c300f40ec7aa0b6">CCC_flat_hash_map_insert_or_assign</a>(</div>
 <div class="line">    &amp;map,</div>
 <div class="line">    &amp;(<span class="keyword">struct</span> Val){.key = 37, .val = 1},</div>
 <div class="line">    &amp;std_allocator</div>
 <div class="line">);</div>
-</div><!-- fragment --><p>The call site of this function helps the reader understand the operation of this code without any special knowledge of the CCC API: insert or assign this key value pair into the map and if the table needs to re-size use the provided allocator; discard the return value of this function. What if the user has a fixed size map, or has otherwise reserved all the space they need, and wants to ensure no further memory is used? The user might be tempted to write the following.</p>
+<div class="ttc" id="astructCCC__Entry_html"><div class="ttname"><a href="structCCC__Entry.html">CCC_Entry</a></div><div class="ttdoc">An Occupied or Vacant position in a searchable container.</div><div class="ttdef"><b>Definition:</b> types.h:135</div></div>
+</div><!-- fragment --><p>The call site of this function helps the reader understand the operation of this code without any special knowledge of the CCC API: insert or assign this key value pair into the map and if the table needs to re-size use the provided allocator. What if the user has a fixed size map, or has otherwise reserved all the space they need, and wants to ensure no further memory is used? The user might be tempted to write the following.</p>
 <p><b>WARNING! The following example shows incorrect usage of the CCC API.</b></p>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a> <span class="keyword">const</span> e = <a class="code hl_function" href="flat__hash__map_8h.html#a3d55ec1bbc6cf53e3c300f40ec7aa0b6">CCC_flat_hash_map_insert_or_assign</a>(</div>
 <div class="line">    &amp;map,</div>
 <div class="line">    &amp;(<span class="keyword">struct</span> Val){.key = 37, .val = 1},</div>
 <div class="line">    NULL <span class="comment">/* &lt;-ERROR HERE! */</span></div>
 <div class="line">);</div>
-<div class="ttc" id="astructCCC__Entry_html"><div class="ttname"><a href="structCCC__Entry.html">CCC_Entry</a></div><div class="ttdoc">An Occupied or Vacant position in a searchable container.</div><div class="ttdef"><b>Definition:</b> types.h:135</div></div>
 </div><!-- fragment --><p>The user is trying to express that they don't want this function to allocate if the table is full. They want to keep the return value so they can check if this insertion failure has taken place and proceed with their program. However, using <code>NULL</code> is a programmer error and will return an error status because it obscures intent and may force users to consult documentation. Instead use this construction.</p>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a> <span class="keyword">const</span> e = <a class="code hl_function" href="flat__hash__map_8h.html#a3d55ec1bbc6cf53e3c300f40ec7aa0b6">CCC_flat_hash_map_insert_or_assign</a>(</div>
 <div class="line">    &amp;map,</div>
@@ -248,7 +268,7 @@ Never Pass NULL</h2>
 <div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Allocator.html">CCC_Allocator</a>){}</div>
 <div class="line">);</div>
 </div><!-- fragment --><p>This tells the reader that a key value pair will be inserted or assigned to an existing slot in the table and that resizing of the table is forbidden because a default initialized, empty <code><a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a></code> is passed to the function. An empty compound literal reference is the correct way to express that no user provided implementation of that argument exists. The API will respond accordingly. See documentation for details.</p>
-<h3><a class="anchor" id="autotoc_md5"></a>
+<h3><a class="anchor" id="beware-of-intrusive-containers"></a>
 Beware of Intrusive Containers</h3>
 <p>When passing an empty allocator some details must be remembered. One difference between <code>Flat_</code> and <code>Array_</code> based containers and the standard intrusive containers is that the former copy user provided types into a table-like structure. When an empty allocator is passed to these flat and array based containers only resizing of the underlying table is forbidden. For intrusive containers the contract is different.</p>
 <p>Consider this insertion into an intrusive priority queue.</p>
@@ -261,7 +281,6 @@ Beware of Intrusive Containers</h3>
 <div class="line">    &amp;(<span class="keyword">struct</span> Priority){.priority = 99}.pq_elem,</div>
 <div class="line">    &amp;std_allocator</div>
 <div class="line">);</div>
-<div class="ttc" id="apriority__queue_8h_html_a9e8274ed9bdc17dedf7abff36ea3d9d8"><div class="ttname"><a href="priority__queue_8h.html#a9e8274ed9bdc17dedf7abff36ea3d9d8">CCC_priority_queue_push</a></div><div class="ttdeci">void * CCC_priority_queue_push(CCC_Priority_queue *priority_queue, CCC_Priority_queue_node *type_intruder, CCC_Allocator const *allocator)</div><div class="ttdoc">Adds an element to the priority queue in correct total order. O(1).</div></div>
 </div><!-- fragment --><p>Here, the user type is passed to the function as an inline compound literal reference. This is OK because an allocator is provided. Internally, the container will try to allocate a new node for the priority queue with the provided allocator and copy in the provided values in the user provided type argument. This would not work if allocation is forbidden.</p>
 <p><b>WARNING! The following example shows possible incorrect usage of the CCC API.</b></p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>Priority *elem = malloc(<span class="keyword">sizeof</span>(<span class="keyword">struct</span> Priority));</div>
@@ -278,14 +297,14 @@ Beware of Intrusive Containers</h3>
 <div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Allocator.html">CCC_Allocator</a>){}</div>
 <div class="line">);</div>
 </div><!-- fragment --><p>This required attention to scope and lifetime applies identically to all intrusive containers.</p>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="use-the-correct-initializer"></a>
 Use the Correct Initializer</h2>
 <p>Building upon the last rule, that <code>NULL</code> should never appear at a function or call site, the user should apply this rule to initializers. Every container offers a variety of initializers. If the container will be initialized as empty use the <code>_default()</code> initializer. Compare the following wrong choice with a subsequent correct choice.</p>
 <p><b>WARNING! The following example shows incorrect usage of the CCC API.</b></p>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structCCC__Bitset.html">CCC_Bitset</a> b = <a class="code hl_define" href="bitset_8h.html#a00f0c2ca3d71e01d0bc6ff6cd2113de3">CCC_bitset_for</a>(</div>
 <div class="line">    0,</div>
 <div class="line">    0,</div>
-<div class="line">    NULL <span class="comment">/* &lt;-ERROR HERE!*/</span></div>
+<div class="line">    NULL <span class="comment">/* &lt;-ERROR HERE! */</span></div>
 <div class="line">);</div>
 <div class="ttc" id="abitset_8h_html_a00f0c2ca3d71e01d0bc6ff6cd2113de3"><div class="ttname"><a href="bitset_8h.html#a00f0c2ca3d71e01d0bc6ff6cd2113de3">CCC_bitset_for</a></div><div class="ttdeci">#define CCC_bitset_for(cap, count, bitblock_pointer...)</div><div class="ttdoc">Initialize a bit set from any memory source at runtime.</div><div class="ttdef"><b>Definition:</b> bitset.h:316</div></div>
 <div class="ttc" id="astructCCC__Bitset_html"><div class="ttname"><a href="structCCC__Bitset.html">CCC_Bitset</a></div><div class="ttdef"><b>Definition:</b> private_bitset.h:34</div></div>
@@ -353,10 +372,10 @@ Use the Correct Initializer</h2>
 <div class="ttc" id="astructCCC__Hasher_html"><div class="ttname"><a href="structCCC__Hasher.html">CCC_Hasher</a></div><div class="ttdoc">The type passed by reference to a hash map that needs a hash function and key comparison function....</div><div class="ttdef"><b>Definition:</b> types.h:550</div></div>
 <div class="ttc" id="astructCCC__Key__comparator_html"><div class="ttname"><a href="structCCC__Key__comparator.html">CCC_Key_comparator</a></div><div class="ttdoc">The type passed by reference to any container function that may need to compare keys....</div><div class="ttdef"><b>Definition:</b> types.h:512</div></div>
 </div><!-- fragment --><p>The <code>_default()</code> initializers can be used at compile or runtime as well. The correct initializer will always present the more readable and expressive code. More complex initializers such as the <code>_for()</code> family of initializers are in place to support well-documented but rare corner cases of user memory management strategies. Always read the container initialization section of the container documentation to pick the right initializer for the job.</p>
-<h2><a class="anchor" id="autotoc_md7"></a>
+<h2><a class="anchor" id="pointers-versus-handles"></a>
 Pointers Versus Handles</h2>
 <p>There are three important concepts about references the user must understand in the C Container Collection: pointers that may be invalidated, pointers that are stable, and handles that are stable.</p>
-<h3><a class="anchor" id="autotoc_md8"></a>
+<h3><a class="anchor" id="invalidated-pointers"></a>
 Invalidated Pointers</h3>
 <p>When a <code>Flat_</code> container is passed an allocator for an insert or push type operation, assume that all references are invalidated after that operation. This is because the underlying container has been given permission to resize. For a simple dynamic buffer this may be obvious.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> *front = <a class="code hl_function" href="buffer_8h.html#a4c9f5187b290d944a14f3d3e922f166c">CCC_buffer_front</a>(&amp;buffer);</div>
@@ -381,7 +400,7 @@ Invalidated Pointers</h3>
 <div class="ttc" id="aflat__hash__map_8h_html_a42a400f6483457e2b3c311aeb7b04ef1"><div class="ttname"><a href="flat__hash__map_8h.html#a42a400f6483457e2b3c311aeb7b04ef1">CCC_flat_hash_map_or_insert</a></div><div class="ttdeci">void * CCC_flat_hash_map_or_insert(CCC_Flat_hash_map_entry const *entry, void const *type)</div><div class="ttdoc">Inserts the struct with handle elem if the entry is Vacant.</div></div>
 <div class="ttc" id="aflat__hash__map_8h_html_ab58f80f5404b29cbaf4e3aeed58624e4"><div class="ttname"><a href="flat__hash__map_8h.html#ab58f80f5404b29cbaf4e3aeed58624e4">CCC_flat_hash_map_entry</a></div><div class="ttdeci">CCC_Flat_hash_map_entry CCC_flat_hash_map_entry(CCC_Flat_hash_map *map, void const *key, CCC_Allocator const *allocator)</div><div class="ttdoc">Obtains an entry for the provided key in the table for future use.</div></div>
 </div><!-- fragment --><p>After the insert or assign operation, the reference <code>*a</code> may have been invalidated.</p>
-<h3><a class="anchor" id="autotoc_md9"></a>
+<h3><a class="anchor" id="stable-pointers"></a>
 Stable Pointers</h3>
 <p>Intrusive containers assume that the user defined types upon which they intrude are pointer stable. That means they assume no insertion or removal alters pointers to any other existing elements in the data structure. Consider an intrusive map.</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>Key {</div>
@@ -404,7 +423,7 @@ Stable Pointers</h3>
 <div class="ttc" id="atree__map_8h_html_a4c1e31e01b39ff669910c653d63c060c"><div class="ttname"><a href="tree__map_8h.html#a4c1e31e01b39ff669910c653d63c060c">CCC_tree_map_entry</a></div><div class="ttdeci">CCC_Tree_map_entry CCC_tree_map_entry(CCC_Tree_map const *map, void const *key)</div><div class="ttdoc">Obtains an entry for the provided key in the map for future use.</div></div>
 <div class="ttc" id="atree__map_8h_html_a57860254596ebc4c51e4f9d48671578a"><div class="ttname"><a href="tree__map_8h.html#a57860254596ebc4c51e4f9d48671578a">CCC_tree_map_or_insert</a></div><div class="ttdeci">void * CCC_tree_map_or_insert(CCC_Tree_map_entry const *entry, CCC_Tree_map_node *type_intruder, CCC_Allocator const *allocator)</div><div class="ttdoc">Inserts the struct with handle type_intruder if the entry is Vacant.</div></div>
 </div><!-- fragment --><p>The map assumes the pointer <code>*a</code> is still valid after the insertion of <code>*b</code>. The container assumption is the same if the user provides the element and allocation has been forbidden by passing an empty <code>&amp;(<a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a>){}</code>.</p>
-<h3><a class="anchor" id="autotoc_md10"></a>
+<h3><a class="anchor" id="stable-handles"></a>
 Stable Handles</h3>
 <p>The special <code>Array_</code> based containers promise handle stability. This is similar to pointer stability, but provides slightly greater flexibility to the implementation. A <code><a class="el" href="structCCC__Handle.html" title="An Occupied or Vacant handle to a flat searchable container entry.">CCC_Handle</a></code> and its unwrapped <code>CCC_Handle_index</code> remain stable for the lifetime of the element to which they index.</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>Key {</div>
@@ -424,12 +443,12 @@ Stable Handles</h3>
 <div class="ttc" id="aarray__tree__map_8h_html_a7ebc89ac0823dd6276c466c943e0150f"><div class="ttname"><a href="array__tree__map_8h.html#a7ebc89ac0823dd6276c466c943e0150f">CCC_array_tree_map_or_insert</a></div><div class="ttdeci">CCC_Handle_index CCC_array_tree_map_or_insert(CCC_Array_tree_map_handle const *handle, void const *type, CCC_Allocator const *allocator)</div><div class="ttdoc">Inserts the provided user type if the handle is Vacant.</div></div>
 <div class="ttc" id="atypes_8h_html_a4043390f03f4ec5162e3782152360be9"><div class="ttname"><a href="types_8h.html#a4043390f03f4ec5162e3782152360be9">CCC_Handle_index</a></div><div class="ttdeci">size_t CCC_Handle_index</div><div class="ttdoc">A stable index to user data in a container that uses a flat array as the underlying storage method.</div><div class="ttdef"><b>Definition:</b> types.h:72</div></div>
 </div><!-- fragment --><p>After the second element is inserted, <code>a</code> remains valid and can be provided to the container API to obtain a pointer to the user element. The underlying storage may have been resized or moved, but the location in the array remains stable. Therefore, only the handle index remains stable, not any user held pointers.</p>
-<h1><a class="anchor" id="autotoc_md11"></a>
+<h1><a class="anchor" id="installation"></a>
 Installation</h1>
 <ul>
 <li><a class="el" href="md_INSTALL.html">INSTALL.md</a> - See the installation instructions for how to incorporate the C Container Collection into your project.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md12"></a>
+<h1><a class="anchor" id="coverage-report"></a>
 Coverage Report</h1>
 <p>If you are looking to contribute, tests that increase coverage are a great start. View the <a href="https://skeletoss.github.io/ccc/coverage">coverage report here</a>.</p>
 <p>The report is generating by running the test suite. See the tests folder for more. </p>

@@ -1,18 +1,18 @@
 var index =
 [
-    [ "Header Navigation", "index.html#autotoc_md1", null ],
-    [ "CCC Cardinal Rules", "index.html#autotoc_md2", [
-      [ "Understand Allocators", "index.html#autotoc_md3", null ],
-      [ "Never Pass NULL", "index.html#autotoc_md4", [
-        [ "Beware of Intrusive Containers", "index.html#autotoc_md5", null ]
+    [ "Header Navigation", "index.html#header-navigation", null ],
+    [ "CCC Cardinal Rules", "index.html#ccc-cardinal-rules", [
+      [ "Understand Allocators", "index.html#understand-allocators", null ],
+      [ "Never Pass NULL", "index.html#never-pass-null", [
+        [ "Beware of Intrusive Containers", "index.html#beware-of-intrusive-containers", null ]
       ] ],
-      [ "Use the Correct Initializer", "index.html#autotoc_md6", null ],
-      [ "Pointers Versus Handles", "index.html#autotoc_md7", [
-        [ "Invalidated Pointers", "index.html#autotoc_md8", null ],
-        [ "Stable Pointers", "index.html#autotoc_md9", null ],
-        [ "Stable Handles", "index.html#autotoc_md10", null ]
+      [ "Use the Correct Initializer", "index.html#use-the-correct-initializer", null ],
+      [ "Pointers Versus Handles", "index.html#pointers-versus-handles", [
+        [ "Invalidated Pointers", "index.html#invalidated-pointers", null ],
+        [ "Stable Pointers", "index.html#stable-pointers", null ],
+        [ "Stable Handles", "index.html#stable-handles", null ]
       ] ]
     ] ],
-    [ "Installation", "index.html#autotoc_md11", null ],
-    [ "Coverage Report", "index.html#autotoc_md12", null ]
+    [ "Installation", "index.html#installation", null ],
+    [ "Coverage Report", "index.html#coverage-report", null ]
 ];

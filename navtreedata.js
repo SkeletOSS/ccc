@@ -27,14 +27,14 @@ var NAVTREE =
   [ "C Container Collection (CCC)", "index.html", [
     [ "C Container Collection Documentation", "index.html", "index" ],
     [ "Building and Installation", "md_INSTALL.html", [
-      [ "Fetch Content Install", "md_INSTALL.html#autotoc_md14", null ],
-      [ "Freestanding Environments", "md_INSTALL.html#autotoc_md15", null ],
-      [ "Manual Install Quick Start", "md_INSTALL.html#autotoc_md16", [
-        [ "Include the Library", "md_INSTALL.html#autotoc_md17", null ],
-        [ "Without Make", "md_INSTALL.html#autotoc_md18", null ],
-        [ "User Presets", "md_INSTALL.html#autotoc_md19", null ]
+      [ "Fetch Content Install", "md_INSTALL.html#autotoc_md2", null ],
+      [ "Freestanding Environments", "md_INSTALL.html#autotoc_md3", null ],
+      [ "Manual Install Quick Start", "md_INSTALL.html#autotoc_md4", [
+        [ "Include the Library", "md_INSTALL.html#autotoc_md5", null ],
+        [ "Without Make", "md_INSTALL.html#autotoc_md6", null ],
+        [ "User Presets", "md_INSTALL.html#autotoc_md7", null ]
       ] ],
-      [ "Generate Documentation", "md_INSTALL.html#autotoc_md20", null ]
+      [ "Generate Documentation", "md_INSTALL.html#autotoc_md8", null ]
     ] ],
     [ "Data Structures", "annotated.html", [
       [ "Data Structures", "annotated.html", "annotated_dup" ],
