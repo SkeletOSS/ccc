@@ -556,7 +556,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">    64,</div>
 <div class="line">    &amp;flat_hash_map_storage_for((<span class="keyword">struct</span> Val[64]){})</div>
 <div class="line">);</div>
-<div class="ttc" id="astructCCC__Hasher_html"><div class="ttname"><a href="structCCC__Hasher.html">CCC_Hasher</a></div><div class="ttdoc">The type passed by reference to a hash map that needs a hash function and key comparison function....</div><div class="ttdef"><b>Definition:</b> types.h:570</div></div>
+<div class="ttc" id="astructCCC__Hasher_html"><div class="ttname"><a href="structCCC__Hasher.html">CCC_Hasher</a></div><div class="ttdoc">The type passed by reference to a hash map that needs a hash function and key comparison function....</div><div class="ttdef"><b>Definition:</b> types.h:550</div></div>
 </div><!-- fragment --><p>See other, more specific, initializers for less boilerplate. </p>
 
 </div>
@@ -741,7 +741,7 @@ If initialization fails, the map will be returned empty. All subsequent queries,
 <div class="line">            map_pointer, key, allocator_pointer, type_compound_literal         \</div>
 <div class="line">        )}                                                                     \</div>
 <div class="line">         .private</div>
-<div class="ttc" id="astructCCC__Entry_html"><div class="ttname"><a href="structCCC__Entry.html">CCC_Entry</a></div><div class="ttdoc">An Occupied or Vacant position in a searchable container.</div><div class="ttdef"><b>Definition:</b> types.h:155</div></div>
+<div class="ttc" id="astructCCC__Entry_html"><div class="ttname"><a href="structCCC__Entry.html">CCC_Entry</a></div><div class="ttdoc">An Occupied or Vacant position in a searchable container.</div><div class="ttdef"><b>Definition:</b> types.h:135</div></div>
 </div><!-- fragment -->
 <p>Inserts a new key value pair or overwrites the existing entry. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1626,7 +1626,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <div class="line">    (<span class="keyword">struct</span> Val[64]){}</div>
 <div class="line">);</div>
 <div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res = flat_hash_map_copy(&amp;destination, &amp;source, NULL);</div>
-<div class="ttc" id="atypes_8h_html_aa1ded61d294b114942f11e711b331dcf"><div class="ttname"><a href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a></div><div class="ttdeci">CCC_Result</div><div class="ttdoc">A result of actions on containers.</div><div class="ttdef"><b>Definition:</b> types.h:212</div></div>
+<div class="ttc" id="atypes_8h_html_aa1ded61d294b114942f11e711b331dcf"><div class="ttname"><a href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a></div><div class="ttdeci">CCC_Result</div><div class="ttdoc">A result of actions on containers.</div><div class="ttdef"><b>Definition:</b> types.h:192</div></div>
 </div><!-- fragment --><p>The above requires destination capacity be greater than or equal to source capacity. Here is memory management handed over to the copy function.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define FLAT_HASH_MAP_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="keyword">struct </span>Val</div>

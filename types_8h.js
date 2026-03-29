@@ -18,7 +18,6 @@ var types_8h =
     [ "CCC_Key_comparator", "structCCC__Key__comparator.html", "structCCC__Key__comparator" ],
     [ "CCC_Key_arguments", "structCCC__Key__arguments.html", "structCCC__Key__arguments" ],
     [ "CCC_Hasher", "structCCC__Hasher.html", "structCCC__Hasher" ],
-    [ "CCC_DEFAULT", "types_8h.html#af2756c9ec80e32928cffac7830e1fcd9", null ],
     [ "CCC_Allocator_interface", "types_8h.html#a5699f26bcb292b2f4a5568b15fa5454a", null ],
     [ "CCC_Comparator_interface", "types_8h.html#a3c06c1bf8c111fa6d0396da5a351db40", null ],
     [ "CCC_Destructor_interface", "types_8h.html#af463adff8bdef4f4bf6dfeeb8c31253e", null ],

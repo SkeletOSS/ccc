@@ -518,7 +518,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">      )}                                                                       \</div>
 <div class="line">         .private</div>
 <div class="ttc" id="aarray__tree__map_8h_html_a310dfc4f14f6d7a75f4ceddaf41b2231"><div class="ttname"><a href="array__tree__map_8h.html#a310dfc4f14f6d7a75f4ceddaf41b2231">CCC_array_tree_map_equal_range_reverse</a></div><div class="ttdeci">CCC_Handle_range_reverse CCC_array_tree_map_equal_range_reverse(CCC_Array_tree_map const *map, void const *reverse_begin_key, void const *reverse_end_key)</div><div class="ttdoc">Return an iterable range_reverse of values from [begin_key, end_key). O(lg N).</div></div>
-<div class="ttc" id="astructCCC__Handle__range__reverse_html"><div class="ttname"><a href="structCCC__Handle__range__reverse.html">CCC_Handle_range_reverse</a></div><div class="ttdoc">The result of a range_reverse query on iterable containers. Handles are stable indices into an array ...</div><div class="ttdef"><b>Definition:</b> types.h:117</div></div>
+<div class="ttc" id="astructCCC__Handle__range__reverse_html"><div class="ttname"><a href="structCCC__Handle__range__reverse.html">CCC_Handle_range_reverse</a></div><div class="ttdoc">The result of a range_reverse query on iterable containers. Handles are stable indices into an array ...</div><div class="ttdef"><b>Definition:</b> types.h:97</div></div>
 </div><!-- fragment -->
 <p>Returns a compound literal reference to the desired range_reverse. O(lg N). </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -562,7 +562,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">            (array_tree_map_pointer), begin_and_end_key_pointers               \</div>
 <div class="line">        )}                                                                     \</div>
 <div class="line">         .private</div>
-<div class="ttc" id="astructCCC__Handle__range_html"><div class="ttname"><a href="structCCC__Handle__range.html">CCC_Handle_range</a></div><div class="ttdoc">The result of a range query on iterable containers. Handles are stable indices into an array until re...</div><div class="ttdef"><b>Definition:</b> types.h:102</div></div>
+<div class="ttc" id="astructCCC__Handle__range_html"><div class="ttname"><a href="structCCC__Handle__range.html">CCC_Handle_range</a></div><div class="ttdoc">The result of a range query on iterable containers. Handles are stable indices into an array until re...</div><div class="ttdef"><b>Definition:</b> types.h:82</div></div>
 </div><!-- fragment -->
 <p>Returns a compound literal reference to the desired range. O(lg N). </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -869,7 +869,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <div class="line">            type_compound_literal                                              \</div>
 <div class="line">        )}                                                                     \</div>
 <div class="line">         .private</div>
-<div class="ttc" id="astructCCC__Handle_html"><div class="ttname"><a href="structCCC__Handle.html">CCC_Handle</a></div><div class="ttdoc">An Occupied or Vacant handle to a flat searchable container entry.</div><div class="ttdef"><b>Definition:</b> types.h:170</div></div>
+<div class="ttc" id="astructCCC__Handle_html"><div class="ttname"><a href="structCCC__Handle.html">CCC_Handle</a></div><div class="ttdoc">An Occupied or Vacant handle to a flat searchable container entry.</div><div class="ttdef"><b>Definition:</b> types.h:150</div></div>
 </div><!-- fragment -->
 <p>Inserts a new key value pair or overwrites the existing handle. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1807,8 +1807,8 @@ do not try to access data in the table manually with a handle. Always use this p
 <div class="line">);</div>
 <div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res</div>
 <div class="line">    = array_tree_map_copy(&amp;destination, &amp;source, &amp;(<a class="code hl_struct" href="structCCC__Allocator.html">CCC_Allocator</a>){});</div>
-<div class="ttc" id="astructCCC__Allocator_html"><div class="ttname"><a href="structCCC__Allocator.html">CCC_Allocator</a></div><div class="ttdoc">The type passed by reference to any container function that may need to allocate memory....</div><div class="ttdef"><b>Definition:</b> types.h:396</div></div>
-<div class="ttc" id="atypes_8h_html_aa1ded61d294b114942f11e711b331dcf"><div class="ttname"><a href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a></div><div class="ttdeci">CCC_Result</div><div class="ttdoc">A result of actions on containers.</div><div class="ttdef"><b>Definition:</b> types.h:212</div></div>
+<div class="ttc" id="astructCCC__Allocator_html"><div class="ttname"><a href="structCCC__Allocator.html">CCC_Allocator</a></div><div class="ttdoc">The type passed by reference to any container function that may need to allocate memory....</div><div class="ttdef"><b>Definition:</b> types.h:376</div></div>
+<div class="ttc" id="atypes_8h_html_aa1ded61d294b114942f11e711b331dcf"><div class="ttname"><a href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a></div><div class="ttdeci">CCC_Result</div><div class="ttdoc">A result of actions on containers.</div><div class="ttdef"><b>Definition:</b> types.h:192</div></div>
 </div><!-- fragment --><p>The above requires destination capacity be greater than or equal to source capacity. Here is memory management handed over to the copy function.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define ARRAY_TREE_MAP_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="keyword">struct </span>Val</div>
@@ -1933,7 +1933,7 @@ do not try to access data in the table manually with a handle. Always use this p
 <div class="line">     index != range_end(&amp;range);</div>
 <div class="line">     index = next(&amp;map, index))</div>
 <div class="line">{}</div>
-<div class="ttc" id="atypes_8h_html_a4043390f03f4ec5162e3782152360be9"><div class="ttname"><a href="types_8h.html#a4043390f03f4ec5162e3782152360be9">CCC_Handle_index</a></div><div class="ttdeci">size_t CCC_Handle_index</div><div class="ttdoc">A stable index to user data in a container that uses a flat array as the underlying storage method.</div><div class="ttdef"><b>Definition:</b> types.h:92</div></div>
+<div class="ttc" id="atypes_8h_html_a4043390f03f4ec5162e3782152360be9"><div class="ttname"><a href="types_8h.html#a4043390f03f4ec5162e3782152360be9">CCC_Handle_index</a></div><div class="ttdeci">size_t CCC_Handle_index</div><div class="ttdoc">A stable index to user data in a container that uses a flat array as the underlying storage method.</div><div class="ttdef"><b>Definition:</b> types.h:72</div></div>
 </div><!-- fragment --><p>This avoids any possible errors in handling an end range element that is in the map versus the end map sentinel. </p>
 
 </div>

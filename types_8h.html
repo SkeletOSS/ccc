@@ -199,9 +199,6 @@ Data Structures</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Container Types</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Types used across many containers. </p>
 </td></tr>
-<tr class="memitem:af2756c9ec80e32928cffac7830e1fcd9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="types_8h.html#af2756c9ec80e32928cffac7830e1fcd9">CCC_DEFAULT</a>&#160;&#160;&#160;NULL</td></tr>
-<tr class="memdesc:af2756c9ec80e32928cffac7830e1fcd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default argument when no user data is available for an initializer that accepts a pointer to user data. NULL is never an acceptable argument to any function or macro in the C Container Collection. If NULL is used at any call site, a programmer error has occurred. To help enforce this habit, use this macro in the rare case of the <code>_for(</code> initializer macros requiring a pointer to empty user data.  <br /></td></tr>
-<tr class="separator:af2756c9ec80e32928cffac7830e1fcd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7d5cb1838ecf421fe5b336481344b0a8"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8">CCC_Entry_status</a> : uint8_t { <br />
 &#160;&#160;<a class="el" href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8a879becedce12f4156c5e6d94ff93ab2c">CCC_ENTRY_VACANT</a> = 0
 , <a class="el" href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8ac6231d0bcd60ef80461c2908f4f0a630">CCC_ENTRY_OCCUPIED</a> = 0x1
@@ -338,31 +335,6 @@ Data Structures</h2></td></tr>
 <tr class="memdesc:af6a83e001fc3b4308832db6da69d8277"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtain a string message with a description of the handle status.  <br /></td></tr>
 <tr class="separator:af6a83e001fc3b4308832db6da69d8277"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="af2756c9ec80e32928cffac7830e1fcd9" name="af2756c9ec80e32928cffac7830e1fcd9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af2756c9ec80e32928cffac7830e1fcd9">&#9670;&#160;</a></span>CCC_DEFAULT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CCC_DEFAULT&#160;&#160;&#160;NULL</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The default argument when no user data is available for an initializer that accepts a pointer to user data. NULL is never an acceptable argument to any function or macro in the C Container Collection. If NULL is used at any call site, a programmer error has occurred. To help enforce this habit, use this macro in the rare case of the <code>_for(</code> initializer macros requiring a pointer to empty user data. </p>
-<div class="fragment"><div class="line"><a class="code hl_struct" href="structCCC__Buffer.html">CCC_Buffer</a> buffer = <a class="code hl_define" href="buffer_8h.html#a32be0a41c4d346f751a04655026d0513">CCC_buffer_for</a>(<span class="keywordtype">int</span>, 0, 0, <a class="code hl_define" href="types_8h.html#af2756c9ec80e32928cffac7830e1fcd9">CCC_DEFAULT</a>);</div>
-<div class="ttc" id="abuffer_8h_html_a32be0a41c4d346f751a04655026d0513"><div class="ttname"><a href="buffer_8h.html#a32be0a41c4d346f751a04655026d0513">CCC_buffer_for</a></div><div class="ttdeci">#define CCC_buffer_for(type_name, capacity, count, data_pointer...)</div><div class="ttdoc">Initialize a contiguous Buffer of user a specified type, capacity, and optional starting size.</div><div class="ttdef"><b>Definition:</b> buffer.h:125</div></div>
-<div class="ttc" id="astructCCC__Buffer_html"><div class="ttname"><a href="structCCC__Buffer.html">CCC_Buffer</a></div><div class="ttdef"><b>Definition:</b> private_buffer.h:32</div></div>
-<div class="ttc" id="atypes_8h_html_af2756c9ec80e32928cffac7830e1fcd9"><div class="ttname"><a href="types_8h.html#af2756c9ec80e32928cffac7830e1fcd9">CCC_DEFAULT</a></div><div class="ttdeci">#define CCC_DEFAULT</div><div class="ttdoc">The default argument when no user data is available for an initializer that accepts a pointer to user...</div><div class="ttdef"><b>Definition:</b> types.h:54</div></div>
-</div><!-- fragment --><p>However, even then, a more specific initializer is appropriate.</p>
-<div class="fragment"><div class="line"><a class="code hl_struct" href="structCCC__Buffer.html">CCC_Buffer</a> buffer = <a class="code hl_define" href="buffer_8h.html#a5003b3b531cf68bdcd51ae5e60d4d814">CCC_buffer_default</a>(<span class="keywordtype">int</span>);</div>
-<div class="ttc" id="abuffer_8h_html_a5003b3b531cf68bdcd51ae5e60d4d814"><div class="ttname"><a href="buffer_8h.html#a5003b3b531cf68bdcd51ae5e60d4d814">CCC_buffer_default</a></div><div class="ttdeci">#define CCC_buffer_default(type_name)</div><div class="ttdoc">Initialize a contiguous empty buffer of a type.</div><div class="ttdef"><b>Definition:</b> buffer.h:93</div></div>
-</div><!-- fragment --><p>In most cases, an expressive initializer exists for any use. </p>
-
-</div>
-</div>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="a5699f26bcb292b2f4a5568b15fa5454a" name="a5699f26bcb292b2f4a5568b15fa5454a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5699f26bcb292b2f4a5568b15fa5454a">&#9670;&#160;</a></span>CCC_Allocator_interface</h2>
@@ -404,9 +376,9 @@ Data Structures</h2></td></tr>
 <div class="line">    }</div>
 <div class="line">    <span class="keywordflow">return</span> realloc(arguments.<a class="code hl_variable" href="structCCC__Allocator__arguments.html#ac7baa483806224ef7b71e016bdb1805e">input</a>, arguments.<a class="code hl_variable" href="structCCC__Allocator__arguments.html#a177eb7876194c0742058a74530119de3">bytes</a>);</div>
 <div class="line">}</div>
-<div class="ttc" id="astructCCC__Allocator__arguments_html"><div class="ttname"><a href="structCCC__Allocator__arguments.html">CCC_Allocator_arguments</a></div><div class="ttdoc">A bundle of arguments to pass to the user-implemented Allocator_interface function interface....</div><div class="ttdef"><b>Definition:</b> types.h:298</div></div>
-<div class="ttc" id="astructCCC__Allocator__arguments_html_a177eb7876194c0742058a74530119de3"><div class="ttname"><a href="structCCC__Allocator__arguments.html#a177eb7876194c0742058a74530119de3">CCC_Allocator_arguments::bytes</a></div><div class="ttdeci">size_t bytes</div><div class="ttdef"><b>Definition:</b> types.h:302</div></div>
-<div class="ttc" id="astructCCC__Allocator__arguments_html_ac7baa483806224ef7b71e016bdb1805e"><div class="ttname"><a href="structCCC__Allocator__arguments.html#ac7baa483806224ef7b71e016bdb1805e">CCC_Allocator_arguments::input</a></div><div class="ttdeci">void *const input</div><div class="ttdef"><b>Definition:</b> types.h:300</div></div>
+<div class="ttc" id="astructCCC__Allocator__arguments_html"><div class="ttname"><a href="structCCC__Allocator__arguments.html">CCC_Allocator_arguments</a></div><div class="ttdoc">A bundle of arguments to pass to the user-implemented Allocator_interface function interface....</div><div class="ttdef"><b>Definition:</b> types.h:278</div></div>
+<div class="ttc" id="astructCCC__Allocator__arguments_html_a177eb7876194c0742058a74530119de3"><div class="ttname"><a href="structCCC__Allocator__arguments.html#a177eb7876194c0742058a74530119de3">CCC_Allocator_arguments::bytes</a></div><div class="ttdeci">size_t bytes</div><div class="ttdef"><b>Definition:</b> types.h:282</div></div>
+<div class="ttc" id="astructCCC__Allocator__arguments_html_ac7baa483806224ef7b71e016bdb1805e"><div class="ttname"><a href="structCCC__Allocator__arguments.html#ac7baa483806224ef7b71e016bdb1805e">CCC_Allocator_arguments::input</a></div><div class="ttdeci">void *const input</div><div class="ttdef"><b>Definition:</b> types.h:280</div></div>
 </div><!-- fragment --><p>However, the above example is only useful if the standard library allocator is used. Any allocator that implements the required behavior is sufficient. For example programs that utilize the context parameter, see the sample programs. Using custom arena allocators or container compositions are cases when context is needed. </p>
 
 </div>
