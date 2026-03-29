@@ -75,6 +75,39 @@ check_static_begin(adaptive_map_test_validate) {
     Adaptive_map om = adaptive_map_for(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
+    check(CCC_adaptive_map_occupied(NULL), CCC_TRIBOOL_ERROR);
+    check(
+        adaptive_map_entry_status(adaptive_map_entry_wrap(NULL, &(int){})),
+        CCC_ENTRY_ARGUMENT_ERROR
+    );
+    check(
+        adaptive_map_entry_status(adaptive_map_entry_wrap(&om, NULL)),
+        CCC_ENTRY_ARGUMENT_ERROR
+    );
+    check(
+        CCC_entry_status(adaptive_map_swap_entry_wrap(
+            NULL, &(struct Val){}.elem, &(struct Val){}.elem, &(CCC_Allocator){}
+        )),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        CCC_entry_status(adaptive_map_swap_entry_wrap(
+            &om, NULL, &(struct Val){}.elem, &(CCC_Allocator){}
+        )),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        CCC_entry_status(adaptive_map_swap_entry_wrap(
+            &om, &(struct Val){}.elem, NULL, &(CCC_Allocator){}
+        )),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        CCC_entry_status(adaptive_map_swap_entry_wrap(
+            &om, &(struct Val){}.elem, &(struct Val){}.elem, NULL
+        )),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
     CCC_Entry ent = swap_entry(
         &om,
         &(struct Val){.key = -1, .val = -1}.elem,
@@ -299,6 +332,22 @@ check_static_begin(adaptive_map_test_try_insert) {
     };
     Adaptive_map om = adaptive_map_for(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
+    );
+    check(
+        CCC_entry_status(
+            adaptive_map_try_insert_wrap(NULL, &(struct Val){}.elem, &allocator)
+        ),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        CCC_entry_status(adaptive_map_try_insert_wrap(&om, NULL, &allocator)),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        CCC_entry_status(
+            adaptive_map_try_insert_wrap(&om, &(struct Val){}.elem, NULL)
+        ),
+        CCC_RESULT_ARGUMENT_ERROR
     );
     int size = 30;
     CCC_Entry ent
@@ -803,6 +852,29 @@ check_static_begin(adaptive_map_test_or_insert) {
     Adaptive_map om = adaptive_map_for(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
+    check(
+        adaptive_map_or_insert(NULL, &(struct Val){}.elem, &(CCC_Allocator){}),
+        NULL
+    );
+    check(
+        adaptive_map_or_insert(
+            &(Adaptive_map_entry){}, NULL, &(CCC_Allocator){}
+        ),
+        NULL
+    );
+    check(
+        adaptive_map_or_insert(
+            &(Adaptive_map_entry){}, &(struct Val){}.elem, NULL
+        ),
+        NULL
+    );
+    check(adaptive_map_and_modify(NULL, &(CCC_Modifier){}), NULL);
+    check(adaptive_map_and_modify(&(Adaptive_map_entry){}, NULL), NULL);
+    check(CCC_adaptive_map_insert_error(NULL), CCC_TRIBOOL_ERROR);
+    check(
+        CCC_adaptive_map_insert_error(adaptive_map_entry_wrap(&om, &(int){-1})),
+        CCC_FALSE
+    );
     int size = 30;
     struct Val *v = or_insert(
         adaptive_map_entry_wrap(&om, &(int){-1}),
@@ -948,6 +1020,24 @@ check_static_begin(adaptive_map_test_insert_entry) {
     };
     Adaptive_map om = adaptive_map_for(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
+    );
+    check(
+        adaptive_map_insert_entry(
+            NULL, &(struct Val){}.elem, &(CCC_Allocator){}
+        ),
+        NULL
+    );
+    check(
+        adaptive_map_insert_entry(
+            &(Adaptive_map_entry){}, NULL, &(CCC_Allocator){}
+        ),
+        NULL
+    );
+    check(
+        adaptive_map_insert_entry(
+            &(Adaptive_map_entry){}, &(struct Val){}.elem, NULL
+        ),
+        NULL
     );
     int size = 30;
     struct Val *v = insert_entry(

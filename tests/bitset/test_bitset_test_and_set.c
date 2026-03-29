@@ -8,6 +8,7 @@
 #include "checkers.h"
 
 check_static_begin(bitset_test_set_one) {
+    check(bitset_set(NULL, 5, CCC_TRUE), CCC_TRIBOOL_ERROR);
     Bitset bs = bitset_with_storage(10, (Bit[10]){});
     check(bitset_capacity(&bs).count >= 10, CCC_TRUE);
     /* Was false before. */
@@ -16,10 +17,14 @@ check_static_begin(bitset_test_set_one) {
     check(bitset_popcount(&bs).count, 1);
     check(bitset_set(&bs, 5, CCC_FALSE), CCC_TRUE);
     check(bitset_set(&bs, 5, CCC_FALSE), CCC_FALSE);
+    check(bitset_set_range(&bs, 0, 1, CCC_TRUE), CCC_RESULT_OK);
+    check(bitset_test(&bs, 0), CCC_TRUE);
+    check(bitset_popcount(&bs).count, 1);
     check_end();
 }
 
 check_static_begin(bitset_test_set_shuffled) {
+    check(bitset_test(NULL, 0), CCC_TRIBOOL_ERROR);
     Bitset bs = bitset_with_storage(10, (Bit[10]){});
     size_t const larger_prime = 11;
     for (size_t i = 0, shuf_i = larger_prime % 10; i < 10;
@@ -38,6 +43,7 @@ check_static_begin(bitset_test_set_shuffled) {
 
 check_static_begin(bitset_test_set_all) {
     Bitset bs = bitset_with_storage(10, (Bit[10]){});
+    check(bitset_set_all(NULL, CCC_TRUE), CCC_RESULT_ARGUMENT_ERROR);
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(bitset_popcount(&bs).count, 10);
     for (size_t i = 0; i < 10; ++i) {
@@ -50,6 +56,7 @@ check_static_begin(bitset_test_set_all) {
 
 check_static_begin(bitset_test_set_range) {
     Bitset bs = bitset_with_storage(512, (Bit[512]){});
+    check(bitset_set_range(&bs, 0, 513, CCC_TRUE), CCC_RESULT_ARGUMENT_ERROR);
     /* Start with a full range and reduce from the end. */
     for (size_t i = 0; i < 512; ++i) {
         size_t const count = 512 - i;
@@ -84,7 +91,12 @@ check_static_begin(bitset_test_set_range) {
 }
 
 check_static_begin(bitset_test_reset) {
+    check(bitset_reset(NULL, 11), CCC_TRIBOOL_ERROR);
     Bitset bs = bitset_with_storage(10, (Bit[10]){});
+    check(bitset_reset(&bs, 11), CCC_TRIBOOL_ERROR);
+    check(bitset_set(&bs, 0, CCC_TRUE), CCC_FALSE);
+    check(bitset_reset_range(&bs, 0, 1), CCC_RESULT_OK);
+    check(bitset_popcount(&bs).count, 0);
     size_t const larger_prime = 11;
     for (size_t i = 0, shuf_i = larger_prime % 10; i < 10;
          ++i, shuf_i = (shuf_i + larger_prime) % 10) {
@@ -99,6 +111,7 @@ check_static_begin(bitset_test_reset) {
 }
 
 check_static_begin(bitset_test_reset_all) {
+    check(bitset_reset_all(NULL), CCC_RESULT_ARGUMENT_ERROR);
     Bitset bs = bitset_with_storage(10, (Bit[10]){});
     check(bitset_capacity(&bs).count >= 10, CCC_TRUE);
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
@@ -113,6 +126,7 @@ check_static_begin(bitset_test_reset_all) {
 }
 
 check_static_begin(bitset_test_reset_range) {
+    check(bitset_reset_range(NULL, 0, 1), CCC_RESULT_ARGUMENT_ERROR);
     Bitset bs = bitset_with_storage(512, (Bit[512]){});
     /* Start with a full range and reduce from the end. */
     for (size_t i = 0; i < 512; ++i) {
@@ -148,7 +162,9 @@ check_static_begin(bitset_test_reset_range) {
 }
 
 check_static_begin(bitset_test_flip) {
+    check(bitset_flip(NULL, 9), CCC_TRIBOOL_ERROR);
     Bitset bs = bitset_with_storage(10, (Bit[10]){});
+    check(bitset_flip(&bs, 11), CCC_TRIBOOL_ERROR);
     check(bitset_capacity(&bs).count >= 10, CCC_TRUE);
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(bitset_popcount(&bs).count, 10);
@@ -160,6 +176,8 @@ check_static_begin(bitset_test_flip) {
 }
 
 check_static_begin(bitset_test_flip_all) {
+    check(bitset_flip_all(&bitset_default()), CCC_RESULT_OK);
+    check(bitset_flip_all(NULL), CCC_RESULT_ARGUMENT_ERROR);
     Bitset bs = bitset_with_storage(10, (Bit[10]){});
     check(bitset_capacity(&bs).count >= 10, CCC_TRUE);
     for (size_t i = 0; i < 10; i += 2) {
@@ -181,7 +199,12 @@ check_static_begin(bitset_test_flip_all) {
 }
 
 check_static_begin(bitset_test_flip_range) {
+    check(bitset_flip_range(NULL, 0, 0), CCC_RESULT_ARGUMENT_ERROR);
+    check(bitset_popcount_range(NULL, 0, 0).error, CCC_RESULT_ARGUMENT_ERROR);
     Bitset bs = bitset_with_storage(512, (Bit[512]){});
+    check(bitset_popcount_range(&bs, 0, 0).error, CCC_RESULT_ARGUMENT_ERROR);
+    check(bitset_flip_range(&bs, 0, 513), CCC_RESULT_ARGUMENT_ERROR);
+    check(bitset_flip_range(&bs, 513, 513), CCC_RESULT_ARGUMENT_ERROR);
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     size_t const orignal_popcount = bitset_popcount(&bs).count;
     /* Start with a full range and reduce from the end. */
@@ -219,6 +242,7 @@ check_static_begin(bitset_test_flip_range) {
 
 check_static_begin(bitset_test_any) {
     Bitset bs = bitset_with_storage(512, (Bit[512]){});
+    check(bitset_any_range(&bs, 0, 0), CCC_TRIBOOL_ERROR);
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     size_t const cap = bitset_capacity(&bs).count;
     /* Start with a full range and reduce by moving start forward. */
@@ -228,12 +252,14 @@ check_static_begin(bitset_test_any) {
         check(bitset_popcount_range(&bs, i, count).count, count);
         check(bitset_popcount(&bs).count, count);
         check(bitset_any(&bs), CCC_TRUE);
+        check(bitset_any_range(&bs, 0, end), CCC_TRUE);
         check(bitset_any_range(&bs, 0, cap), CCC_TRUE);
         check(bitset_reset_range(&bs, i, count), CCC_RESULT_OK);
         check(bitset_popcount_range(&bs, i, count).count, 0);
         check(bitset_popcount(&bs).count, 0);
         check(bitset_any(&bs), CCC_FALSE);
         check(bitset_any_range(&bs, 0, cap), CCC_FALSE);
+        check(bitset_any_range(&bs, 0, count), CCC_FALSE);
     }
     check_end();
 }
@@ -256,6 +282,18 @@ check_static_begin(bitset_test_none) {
         check(bitset_none(&bs), CCC_TRUE);
         check(bitset_none_range(&bs, 0, cap), CCC_TRUE);
     }
+    check_end();
+}
+
+check_static_begin(bitset_test_all_three_blocks) {
+    Bitset bs = bitset_with_storage(128, (Bit[128]){});
+    check(bitset_all_range(&bs, 0, 0), CCC_TRIBOOL_ERROR);
+    check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
+    check(bitset_set(&bs, 64, CCC_FALSE), CCC_TRUE);
+    check(bitset_all_range(&bs, 0, 127), CCC_FALSE);
+    check(bitset_set(&bs, 64, CCC_TRUE), CCC_FALSE);
+    check(bitset_set(&bs, 126, CCC_FALSE), CCC_TRUE);
+    check(bitset_all_range(&bs, 0, 127), CCC_FALSE);
     check_end();
 }
 
@@ -285,6 +323,10 @@ check_static_begin(bitset_test_all) {
 
 check_static_begin(bitset_test_first_trailing_one) {
     Bitset bs = bitset_with_storage(512, (Bit[512]){});
+    check(
+        bitset_first_trailing_one_range(&bs, 0, 0).error,
+        CCC_RESULT_ARGUMENT_ERROR
+    );
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     /* Start with an almost full range and reduce by moving start forward. */
     for (size_t i = 0, end = 512; i < end - 1; ++i) {
@@ -387,6 +429,10 @@ check_static_begin(bitset_test_first_trailing_ones) {
 
 check_static_begin(bitset_test_first_trailing_ones_fail) {
     Bitset bs = bitset_with_storage(512, (Bit[512]){});
+    check(
+        bitset_first_trailing_ones_range(&bs, 0, 0, 0).error,
+        CCC_RESULT_ARGUMENT_ERROR
+    );
     size_t const end = bitset_block_count(512);
     size_t const first_half = BITSET_BLOCK_BITS / 2;
     size_t const second_half = first_half - 1;
@@ -658,6 +704,10 @@ check_static_begin(bitset_test_first_leading_one_range) {
 
 check_static_begin(bitset_test_first_leading_ones) {
     Bitset bs = bitset_with_storage(512, (Bit[512]){});
+    check(
+        bitset_first_leading_ones_range(&bs, 0, 0, 0).error,
+        CCC_RESULT_ARGUMENT_ERROR
+    );
     size_t window = BITSET_BLOCK_BITS;
     /* Slide a group of int size as a window across the set. */
     for (size_t i = 511; i > window + 1; --i) {
@@ -1057,8 +1107,13 @@ check_static_begin(bitset_test_first_leading_zeros_fail) {
 }
 
 check_static_begin(bitset_test_or_same_size) {
+    check(bitset_or(&bitset_default(), &bitset_default()), CCC_RESULT_OK);
     Bitset source = bitset_with_storage(512, (Bit[512]){});
     Bitset destination = bitset_with_storage(512, (Bit[512]){});
+    check(bitset_or(&destination, &bitset_default()), CCC_RESULT_OK);
+    check(bitset_or(&source, &bitset_default()), CCC_RESULT_OK);
+    check(bitset_or(NULL, &source), CCC_RESULT_ARGUMENT_ERROR);
+    check(bitset_or(&destination, NULL), CCC_RESULT_ARGUMENT_ERROR);
     size_t const size = 512;
     for (size_t i = 0; i < size; i += 2) {
         check(bitset_set(&destination, i, CCC_TRUE), CCC_FALSE);
@@ -1086,8 +1141,16 @@ check_static_begin(bitset_test_or_diff_size) {
 }
 
 check_static_begin(bitset_test_and_same_size) {
+    Bitset zero = bitset_default();
+    Bitset to_zero = bitset_with_storage(32, (Bit[32]){});
+    check(bitset_and(&zero, &to_zero), CCC_RESULT_OK);
+    check(bitset_popcount(&zero).count, 0);
+    check(bitset_and(&to_zero, &zero), CCC_RESULT_OK);
+    check(bitset_popcount(&to_zero).count, 0);
     Bitset source = bitset_with_storage(512, (Bit[512]){});
     Bitset destination = bitset_with_storage(512, (Bit[512]){});
+    check(bitset_and(NULL, &source), CCC_RESULT_ARGUMENT_ERROR);
+    check(bitset_and(&destination, NULL), CCC_RESULT_ARGUMENT_ERROR);
     size_t const size = 512;
     for (size_t i = 0; i < size; i += 2) {
         check(bitset_set(&destination, i, CCC_TRUE), CCC_FALSE);
@@ -1117,8 +1180,13 @@ check_static_begin(bitset_test_and_diff_size) {
 }
 
 check_static_begin(bitset_test_xor_same_size) {
+    check(bitset_or(&bitset_default(), &bitset_default()), CCC_RESULT_OK);
     Bitset source = bitset_with_storage(512, (Bit[512]){});
     Bitset destination = bitset_with_storage(512, (Bit[512]){});
+    check(bitset_xor(NULL, &destination), CCC_RESULT_ARGUMENT_ERROR);
+    check(bitset_xor(&destination, NULL), CCC_RESULT_ARGUMENT_ERROR);
+    check(bitset_xor(&destination, &bitset_default()), CCC_RESULT_OK);
+    check(bitset_xor(&source, &bitset_default()), CCC_RESULT_OK);
     size_t const size = 512;
     for (size_t i = 0; i < size; i += 2) {
         check(bitset_set(&destination, i, CCC_TRUE), CCC_FALSE);
@@ -1148,7 +1216,9 @@ check_static_begin(bitset_test_xor_diff_size) {
 }
 
 check_static_begin(bitset_test_shift_left) {
+    check(bitset_shift_left(NULL, 0), CCC_RESULT_ARGUMENT_ERROR);
     Bitset bs = bitset_with_storage(512, (Bit[512]){});
+    check(bitset_shift_left(&bs, 0), CCC_RESULT_OK);
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(bitset_popcount(&bs).count, 512);
     check(bitset_shift_left(&bs, 512), CCC_RESULT_OK);
@@ -1190,7 +1260,9 @@ check_static_begin(bitset_test_shift_left_edgecase_small) {
 }
 
 check_static_begin(bitset_test_shift_right) {
+    check(bitset_shift_right(NULL, 0), CCC_RESULT_ARGUMENT_ERROR);
     Bitset bs = bitset_with_storage(512, (Bit[512]){});
+    check(bitset_shift_right(&bs, 0), CCC_RESULT_OK);
     check(bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(bitset_popcount(&bs).count, 512);
     check(bitset_shift_right(&bs, 512), CCC_RESULT_OK);
@@ -1248,6 +1320,11 @@ check_static_begin(bitset_test_subset) {
     }
     check(bitset_is_subset(&subset1, &set), CCC_TRUE);
     check(bitset_is_subset(&subset2, &set), CCC_TRUE);
+    for (size_t i = 0; i < 244; i += 2) {
+        check(bitset_set(&set, i, CCC_FALSE), CCC_TRUE);
+    }
+    check(bitset_is_subset(&subset1, &set), CCC_FALSE);
+    check(bitset_is_subset(&subset2, &set), CCC_FALSE);
     check_end();
 }
 
@@ -1255,6 +1332,10 @@ check_static_begin(bitset_test_proper_subset) {
     Bitset set = bitset_with_storage(512, (Bit[512]){});
     Bitset subset1 = bitset_with_storage(512, (Bit[512]){});
     Bitset subset2 = bitset_with_storage(244, (Bit[244]){});
+    check(bitset_is_proper_subset(NULL, &set), CCC_TRIBOOL_ERROR);
+    check(bitset_is_proper_subset(&subset1, NULL), CCC_TRIBOOL_ERROR);
+    check(bitset_is_subset(NULL, &set), CCC_TRIBOOL_ERROR);
+    check(bitset_is_subset(&subset1, NULL), CCC_TRIBOOL_ERROR);
     for (size_t i = 0; i < 512; i += 2) {
         check(bitset_set(&set, i, CCC_TRUE), CCC_FALSE);
         check(bitset_set(&subset1, i, CCC_TRUE), CCC_FALSE);
@@ -1265,7 +1346,29 @@ check_static_begin(bitset_test_proper_subset) {
     check(bitset_is_proper_subset(&subset1, &set), CCC_FALSE);
     check(bitset_is_subset(&subset1, &set), CCC_TRUE);
     check(bitset_is_subset(&subset2, &set), CCC_TRUE);
+    check(bitset_is_subset(&set, &subset2), CCC_FALSE);
     check(bitset_is_proper_subset(&subset2, &set), CCC_TRUE);
+    for (size_t i = 0; i < 244; i += 2) {
+        check(bitset_set(&set, i, CCC_FALSE), CCC_TRUE);
+    }
+    check(bitset_is_subset(&subset1, &set), CCC_FALSE);
+    check(bitset_is_subset(&subset2, &set), CCC_FALSE);
+    check_end();
+}
+
+check_static_begin(bitset_test_is_equal) {
+    Bitset a = bitset_with_storage(512, (Bit[512]){});
+    Bitset b = bitset_with_storage(512, (Bit[512]){});
+    Bitset c = bitset_with_storage(244, (Bit[244]){});
+    check(bitset_is_equal(NULL, &b), CCC_TRIBOOL_ERROR);
+    check(bitset_is_equal(&a, NULL), CCC_TRIBOOL_ERROR);
+    check(bitset_is_equal(&a, &b), CCC_TRUE);
+    check(bitset_is_equal(&a, &c), CCC_FALSE);
+    (void)bitset_set(&a, 511, CCC_TRUE);
+    check(bitset_is_equal(&a, &b), CCC_FALSE);
+    (void)bitset_set(&b, 511, CCC_TRUE);
+    check(bitset_is_equal(&a, &b), CCC_TRUE);
+    check(bitset_is_equal(&bitset_default(), &bitset_default()), CCC_TRUE);
     check_end();
 }
 
@@ -1399,6 +1502,7 @@ main(void) {
         bitset_test_reset_all(),
         bitset_test_reset_range(),
         bitset_test_any(),
+        bitset_test_all_three_blocks(),
         bitset_test_all(),
         bitset_test_none(),
         bitset_test_first_trailing_one(),
@@ -1430,6 +1534,7 @@ main(void) {
         bitset_test_subset(),
         bitset_test_proper_subset(),
         bitset_test_valid_sudoku(),
-        bitset_test_invalid_sudoku()
+        bitset_test_invalid_sudoku(),
+        bitset_test_is_equal(),
     );
 }

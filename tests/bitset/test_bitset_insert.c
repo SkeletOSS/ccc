@@ -1,5 +1,7 @@
+#include <limits.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #define TRAITS_USING_NAMESPACE_CCC
 
@@ -8,10 +10,21 @@
 #include "traits.h"
 #include "types.h"
 #include "utility/allocate.h"
+#include "utility/stack_allocator.h"
 
 check_static_begin(bitset_test_push_back_no_reallocate) {
+    check(CCC_bitset_popcount(NULL).error, CCC_RESULT_ARGUMENT_ERROR);
+    check(
+        CCC_bitset_push_back(NULL, CCC_TRUE, &(CCC_Allocator){}),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
     CCC_Bitset bs
         = CCC_bitset_for(16, 0, CCC_bitset_storage_for((CCC_Bit[16]){}));
+    check(
+        CCC_bitset_push_back(&bs, CCC_TRIBOOL_ERROR, &(CCC_Allocator){}),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(CCC_bitset_push_back(&bs, CCC_TRUE, NULL), CCC_RESULT_ARGUMENT_ERROR);
     check(CCC_bitset_capacity(&bs).count, 16);
     check(CCC_bitset_count(&bs).count, 0);
     CCC_Result push_status = CCC_RESULT_OK;
@@ -68,7 +81,7 @@ check_static_begin(bitset_test_push_back_allocate) {
 
 check_static_begin(bitset_test_push_back_reserve) {
     CCC_Bitset bs = CCC_bitset_default();
-    CCC_Result const r = reserve(&bs, 512, &std_allocator);
+    CCC_Result const r = CCC_bitset_reserve(&bs, 512, &std_allocator);
     check(r, CCC_RESULT_OK);
     check(CCC_bitset_count(&bs).count, 0);
     check(CCC_bitset_capacity(&bs).count != 0, true);
@@ -94,11 +107,26 @@ check_static_begin(bitset_test_push_back_reserve) {
     check_end((void)clear_and_free(&bs, &std_allocator););
 }
 
+check_static_begin(bitset_test_reserve_fail) {
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context
+        = &stack_allocator_for(CCC_bitset_storage_for((CCC_Bit[32]){})),
+    };
+    CCC_Bitset bs = CCC_bitset_default();
+    check(CCC_bitset_reserve(&bs, 64, &allocator), CCC_RESULT_ALLOCATOR_ERROR);
+    check(
+        CCC_bitset_reserve(&bs, SIZE_MAX, &allocator), CCC_RESULT_ARGUMENT_ERROR
+    );
+    check_end((void)clear_and_free(&bs, &std_allocator););
+}
+
 int
 main(void) {
     return check_run(
         bitset_test_push_back_no_reallocate(),
         bitset_test_push_back_allocate(),
-        bitset_test_push_back_reserve()
+        bitset_test_push_back_reserve(),
+        bitset_test_reserve_fail()
     );
 }

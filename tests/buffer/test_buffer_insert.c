@@ -209,6 +209,7 @@ check_static_begin(buffer_test_insert_allocate) {
 
 check_static_begin(buffer_test_write) {
     Buffer b = buffer_with_storage(0, (int[8]){});
+    check(buffer_write(&b, 0, NULL), CCC_RESULT_ARGUMENT_ERROR);
     CCC_Result write = buffer_write(&b, 0, &(int){0});
     check(write, CCC_RESULT_OK);
     write = buffer_write(&b, 0, buffer_at(&b, 0));
@@ -224,6 +225,24 @@ check_static_begin(buffer_test_write) {
     check(*i, 0);
     write = buffer_write(&b, 8, buffer_at(&b, 0));
     check(write, CCC_RESULT_ARGUMENT_ERROR);
+    check_end();
+}
+
+check_static_begin(buffer_test_swap) {
+    Buffer b = buffer_with_storage(0, (int[8]){});
+    CCC_Result write = buffer_write(&b, 0, &(int){0});
+    check(write, CCC_RESULT_OK);
+    write = buffer_write(&b, 7, &(int){8});
+    check(write, CCC_RESULT_OK);
+    int const *x = buffer_at(&b, 7);
+    check(x != NULL, CCC_TRUE);
+    check(*x, 8);
+    check(buffer_swap(&b, &(int){}, 0, 7), CCC_RESULT_OK);
+    int const *y = buffer_at(&b, 0);
+    check(y != NULL, CCC_TRUE);
+    check(*y, 8);
+    check(*x, 0);
+    check(buffer_swap(&b, &(int){}, 0, 0), CCC_RESULT_ARGUMENT_ERROR);
     check_end();
 }
 
@@ -265,6 +284,7 @@ main(void) {
         buffer_test_insert_no_allocate_fail(),
         buffer_test_insert_allocate(),
         buffer_test_write(),
-        buffer_test_move()
+        buffer_test_swap(),
+        buffer_test_move(),
     );
 }

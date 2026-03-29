@@ -4,15 +4,18 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define BITSET_USING_NAMESPACE_CCC
 #define TRAITS_USING_NAMESPACE_CCC
 #define ARRAY_ADAPTIVE_MAP_USING_NAMESPACE_CCC
 #define TYPES_USING_NAMESPACE_CCC
 
-#include "array_adaptive_map.h"
 #include "array_adaptive_map_utility.h"
+#include "ccc/array_adaptive_map.h"
+#include "ccc/bitset.h"
+#include "ccc/traits.h"
+#include "ccc/types.h"
 #include "checkers.h"
-#include "traits.h"
-#include "types.h"
+#include "utility/stack_allocator.h"
 
 check_static_begin(
     check_range,
@@ -150,6 +153,12 @@ check_static_begin(array_adaptive_map_test_forward_iterator) {
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
+    check(array_adaptive_map_begin(NULL), 0);
+    check(array_adaptive_map_reverse_begin(NULL), 0);
+    check(array_adaptive_map_end(NULL), 0);
+    check(array_adaptive_map_reverse_end(NULL), 0);
+    check(array_adaptive_map_next(NULL, 0), 0);
+    check(array_adaptive_map_reverse_next(NULL, 0), 0);
     /* We should have the expected behavior iteration over empty tree. */
     int j = 0;
     for (CCC_Handle_index e = begin(&s); e != end(&s); e = next(&s, e), ++j) {}
@@ -158,7 +167,7 @@ check_static_begin(array_adaptive_map_test_forward_iterator) {
     int const prime = 37;
     size_t shuffled_index = (size_t)prime % (size_t)num_nodes;
     for (int i = 0; i < num_nodes; ++i) {
-        (void)swap_handle(
+        (void)insert_or_assign(
             &s,
             &(struct Val){.id = (int)shuffled_index, .val = i},
             &(CCC_Allocator){}
@@ -188,11 +197,12 @@ check_static_begin(array_adaptive_map_test_iterate_removal) {
     srand(1);
     size_t const num_nodes = 1000;
     for (size_t i = 0; i < num_nodes; ++i) {
-        /* NOLINTNEXTLINE */
-        (void)swap_handle(
+        (void)insert_or_assign(
             &s,
-            &(struct Val){.id = (int)((size_t)rand() % (num_nodes + 1)),
-                          .val = (int)i},
+            &(struct Val){
+                .id = (int)((size_t)rand() % (num_nodes + 1)), /* NOLINT */
+                .val = (int)i,
+            },
             &(CCC_Allocator){}
         );
         check(validate(&s), true);
@@ -225,7 +235,7 @@ check_static_begin(array_adaptive_map_test_iterate_remove_key_value_reinsert) {
     size_t const num_nodes = 1000;
     for (size_t i = 0; i < num_nodes; ++i) {
         /* NOLINTNEXTLINE */
-        (void)swap_handle(
+        (void)try_insert(
             &s,
             &(struct Val){
                 .id = (int)((size_t)rand() % (num_nodes + 1)),
@@ -262,7 +272,54 @@ check_static_begin(array_adaptive_map_test_valid_range) {
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
-
+    check(
+        CCC_range_begin(
+            array_adaptive_map_equal_range_wrap(NULL, &(int){}, &(int){})
+        ),
+        0
+    );
+    check(
+        CCC_range_begin(
+            array_adaptive_map_equal_range_wrap(&s, NULL, &(int){})
+        ),
+        0
+    );
+    check(
+        CCC_range_begin(
+            array_adaptive_map_equal_range_wrap(&s, &(int){}, NULL)
+        ),
+        0
+    );
+    check(
+        CCC_range_reverse_begin(array_adaptive_map_equal_range_reverse_wrap(
+            NULL, &(int){}, &(int){}
+        )),
+        0
+    );
+    check(
+        CCC_range_reverse_begin(
+            array_adaptive_map_equal_range_reverse_wrap(&s, NULL, &(int){})
+        ),
+        0
+    );
+    check(
+        CCC_range_reverse_begin(
+            array_adaptive_map_equal_range_reverse_wrap(&s, &(int){}, NULL)
+        ),
+        0
+    );
+    check(
+        CCC_range_begin(
+            array_adaptive_map_equal_range_wrap(&s, &(int){}, &(int){})
+        ),
+        0
+    );
+    check(
+        CCC_range_reverse_begin(
+            array_adaptive_map_equal_range_reverse_wrap(&s, &(int){}, &(int){})
+        ),
+        0
+    );
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
     for (int i = 0, id = 0; i < num_nodes; ++i, id += 5) {
@@ -439,6 +496,112 @@ check_static_begin(array_adaptive_map_test_empty_range) {
     check_end();
 }
 
+static void
+destroy_element(CCC_Arguments const arguments) {
+    struct Val const *const i = arguments.type;
+    Bitset *const is_destroyed_buffer = arguments.context;
+    (void)bitset_set(is_destroyed_buffer, (size_t)i->id, CCC_TRUE);
+}
+
+check_static_begin(array_adaptive_map_test_clear_with_destructor) {
+    enum : size_t {
+        MIN_CAP = 16
+    };
+    CCC_Array_adaptive_map map = array_adaptive_map_with_storage(
+        id, (CCC_Key_comparator){.compare = id_order}, (struct Val[MIN_CAP]){}
+    );
+    Bitset is_destroyed = bitset_with_storage(0, (Bit[MIN_CAP]){});
+    int i = 0;
+    for (;;) {
+        CCC_Handle const *const e = array_adaptive_map_try_insert_with(
+            &map, i, &(CCC_Allocator){}, (struct Val){.val = i}
+        );
+        check(occupied(e), CCC_FALSE);
+        CCC_Handle_index const h = unwrap(e);
+        if (!h) {
+            break;
+        }
+        struct Val const *const v = array_adaptive_map_at(&map, h);
+        CCC_Result const bit_push
+            = bitset_push_back(&is_destroyed, CCC_FALSE, &(CCC_Allocator){});
+        check(bit_push, CCC_RESULT_OK);
+        check(v->id, i);
+        check(v->val, i);
+        ++i;
+    }
+    size_t const full_count = count(&map).count;
+    array_adaptive_map_clear(
+        &map,
+        &(CCC_Destructor){
+            .destroy = destroy_element,
+            .context = &is_destroyed,
+        }
+    );
+    i = 0;
+    while (!bitset_is_empty(&is_destroyed)) {
+        CCC_Tribool const was_destroyed = bitset_pop_back(&is_destroyed);
+        check(was_destroyed, CCC_TRUE);
+        ++i;
+    }
+    check(i, full_count);
+    check_end();
+}
+
+check_static_begin(array_adaptive_map_test_clear_and_free_with_destructor) {
+    enum : size_t {
+        MIN_CAP = 16
+    };
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((
+            typeof(array_adaptive_map_storage_for((struct Val[MIN_CAP]){}))[1]
+        ){}),
+    };
+    CCC_Array_adaptive_map map = array_adaptive_map_with_capacity(
+        struct Val,
+        id,
+        (CCC_Key_comparator){.compare = id_order},
+        allocator,
+        MIN_CAP
+    );
+    Bitset is_destroyed = bitset_with_storage(0, (Bit[MIN_CAP]){});
+    int i = 0;
+    for (;;) {
+        CCC_Handle const *const e = array_adaptive_map_try_insert_with(
+            &map, i, &(CCC_Allocator){}, (struct Val){.val = i}
+        );
+        check(occupied(e), CCC_FALSE);
+        CCC_Handle_index index = unwrap(e);
+        if (!index) {
+            break;
+        }
+        struct Val const *const v = array_adaptive_map_at(&map, index);
+        CCC_Result const bit_push
+            = bitset_push_back(&is_destroyed, CCC_FALSE, &(CCC_Allocator){});
+        check(bit_push, CCC_RESULT_OK);
+        check(v->id, i);
+        check(v->val, i);
+        ++i;
+    }
+    size_t const full_count = count(&map).count;
+    array_adaptive_map_clear_and_free(
+        &map,
+        &(CCC_Destructor){
+            .destroy = destroy_element,
+            .context = &is_destroyed,
+        },
+        &allocator
+    );
+    i = 0;
+    while (!bitset_is_empty(&is_destroyed)) {
+        CCC_Tribool const was_destroyed = bitset_pop_back(&is_destroyed);
+        check(was_destroyed, CCC_TRUE);
+        ++i;
+    }
+    check(i, full_count);
+    check_end();
+}
+
 int
 main(void) {
     return check_run(
@@ -448,6 +611,8 @@ main(void) {
         array_adaptive_map_test_valid_range_equals(),
         array_adaptive_map_test_invalid_range(),
         array_adaptive_map_test_empty_range(),
-        array_adaptive_map_test_iterate_remove_key_value_reinsert()
+        array_adaptive_map_test_iterate_remove_key_value_reinsert(),
+        array_adaptive_map_test_clear_with_destructor(),
+        array_adaptive_map_test_clear_and_free_with_destructor(),
     );
 }

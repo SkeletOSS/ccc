@@ -597,7 +597,7 @@ CCC_tree_map_clear(
     CCC_Destructor const *const destructor,
     CCC_Allocator const *const allocator
 ) {
-    if (!map || !destructor) {
+    if (!map || !destructor || !allocator) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     struct CCC_Tree_map_node *node = map->root;

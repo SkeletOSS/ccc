@@ -1,70 +1,71 @@
 #ifndef CHECKERS_H
 #define CHECKERS_H
 
-#include <stdio.h> /* IWYU pragma: keep */
+#include <stdint.h>
 
 #define CHECK_RED "\033[38;5;9m"
 #define CHECK_GREEN "\033[38;5;10m"
 #define CHECK_CYAN "\033[38;5;14m"
 #define CHECK_NONE "\033[0m"
 
+/** POSIX style return mechanism with passing as 0 and failing as 1. Errors
+are negative 1 and can occur on some rare occasions or if the user wants to
+provide this value to the test runner manually. */
 enum Check_result {
     CHECK_ERROR = -1,
     CHECK_PASS,
     CHECK_FAIL,
 };
 
+/** To pass the correct byte information to the print function in the C file
+we must portably, and according to the C23 standard, provide the bytes of any
+possible type comparison that our checkers perform. The two possibilities that
+cover all types are those in this union. Any address or any integer value. We
+will copy the bytes of any integer into the widest possible type or we will
+copy a pointer to any object as its well defined integer equivalent. We
+will then be able to print the expression in the check provided by the user
+and the byte value output. */
+union Check_bytes {
+    /** The accepting field of any object pointer. */
+    uintptr_t as_address;
+    /** The accepting field of any integer width. */
+    uintmax_t as_bytes;
+};
+
 typedef enum Check_result (*Tester)(void);
 
-#define check_fail_print(result, result_string, expected, expected_string)     \
-    do {                                                                       \
-        char const *const check_private_format_string = _Generic(              \
-            (result),                                                          \
-            _Bool: "%d",                                                       \
-            char: "%c",                                                        \
-            signed char: "%hhd",                                               \
-            unsigned char: "%hhu",                                             \
-            short: "%hd",                                                      \
-            int: "%d",                                                         \
-            long: "%ld",                                                       \
-            long long: "%lld",                                                 \
-            unsigned short: "%hu",                                             \
-            unsigned int: "%u",                                                \
-            unsigned long: "%lu",                                              \
-            unsigned long long: "%llu",                                        \
-            float: "%f",                                                       \
-            double: "%f",                                                      \
-            long double: "%Lf",                                                \
-            char *: "%s",                                                      \
-            char const *: "%s",                                                \
-            wchar_t *: "%ls",                                                  \
-            wchar_t const *: "%ls",                                            \
-            void *: "%p",                                                      \
-            void const *: "%p",                                                \
-            default: "%p"                                                      \
-        );                                                                     \
-        (void)fprintf(                                                         \
-            stderr,                                                            \
-            "%s\n--\nfailure in %s, line %d%s\n",                              \
-            CHECK_CYAN,                                                        \
-            __func__,                                                          \
-            __LINE__,                                                          \
-            CHECK_NONE                                                         \
-        );                                                                     \
-        (void)fprintf(                                                         \
-            stderr,                                                            \
-            "%scheck: result( %s ) == expected( %s )%s\n",                     \
-            CHECK_GREEN,                                                       \
-            result_string,                                                     \
-            expected_string,                                                   \
-            CHECK_NONE                                                         \
-        );                                                                     \
-        (void)fprintf(stderr, "%serror: result( ", CHECK_RED);                 \
-        (void)fprintf(stderr, check_private_format_string, result);            \
-        (void)fprintf(stderr, " ) != expected( ");                             \
-        (void)fprintf(stderr, check_private_format_string, expected);          \
-        (void)fprintf(stderr, " )\n%s", CHECK_NONE);                           \
-    } while (0)
+/** Internal printer to save on binary size and speed up compilation. We have
+one c file translation unit where all calls to printing functions exist and the
+necessary branch to check for the type of bytes we are printing. This way static
+analysis and sanitizer instrumentation is rapidly reduced when compared to
+thousands of inline print statements. Builds and tests should be faster. */
+void check_print_fail_message(
+    char const *function_string,
+    int line,
+    char const *result_expression_string,
+    char const *expected_expression_string,
+    union Check_bytes result_output_bytes,
+    union Check_bytes expected_output_bytes,
+    bool is_address
+);
+
+/** Provides the correct type to the union for a check expression while
+silencing compiler warnings for non-compiled generic branches. Substitution
+failure is an error in C, unlike C++. The casting of an integer to uintptr_t
+in the non-compiled void branch could cut off bytes according to the standard
+but that generic case would never get compiled anyway. */
+#define check_to_bytes(x)                                                      \
+    _Generic(                                                                  \
+        (x),                                                                   \
+        void *: (union Check_bytes){.as_address = (uintptr_t)(x)},             \
+        void const *: (union Check_bytes){.as_address = (uintptr_t)(x)},       \
+        default: (union Check_bytes){.as_bytes = (uintmax_t)(x)}               \
+    )
+
+/** Returns the bool flag needed to correctly print the test result in the
+printing function. */
+#define check_is_address(x)                                                    \
+    _Generic((x), void *: 1, void const *: 1, default: 0)
 
 #define check_non_check_default_params(...) __VA_ARGS__
 #define check_default_params(...) void
@@ -156,14 +157,17 @@ though the braces are not required. */
         const typeof(check_private_result) check_private_expected              \
             = (typeof(check_private_result))(test_expected);                   \
         if (check_private_result != check_private_expected) {                  \
-            check_fail_print(                                                  \
-                check_private_result,                                          \
+            check_print_fail_message(                                          \
+                __func__,                                                      \
+                __LINE__,                                                      \
                 #test_result,                                                  \
-                check_private_expected,                                        \
-                #test_expected                                                 \
+                #test_expected,                                                \
+                check_to_bytes(check_private_result),                          \
+                check_to_bytes(check_private_expected),                        \
+                check_is_address(check_private_result)                         \
             );                                                                 \
             check_private_macro_res = CHECK_FAIL;                              \
-            __VA_OPT__((void)({__VA_ARGS__});)                                 \
+            __VA_OPT__((void)(__extension__({__VA_ARGS__}));)                  \
             goto please_use_at_least_one_check_and_a_check_end_macro;          \
         }                                                                      \
     } while (0)
@@ -197,14 +201,17 @@ though the braces are not required. */
         const typeof(check_private_result) check_private_expected              \
             = (test_expected);                                                 \
         if (check_private_result != check_private_expected) {                  \
-            check_fail_print(                                                  \
-                check_private_result,                                          \
+            check_print_fail_message(                                          \
+                __func__,                                                      \
+                __LINE__,                                                      \
                 #test_result,                                                  \
-                check_private_expected,                                        \
-                #test_expected                                                 \
+                #test_expected,                                                \
+                check_to_bytes(check_private_result),                          \
+                check_to_bytes(check_private_expected),                        \
+                check_is_address(check_private_result)                         \
             );                                                                 \
             check_private_macro_res = CHECK_ERROR;                             \
-            __VA_OPT__((void)({__VA_ARGS__});)                                 \
+            __VA_OPT__((void)(__extension__({__VA_ARGS__}));)                  \
             goto please_use_at_least_one_check_and_a_check_end_macro;          \
         }                                                                      \
     } while (0)
@@ -255,7 +262,7 @@ loops, or blocks from earlier in the test. See the check macro if more fine
 grained control over nested scope is required upon a failure.*/
 #define check_end(...)                                                         \
 please_use_at_least_one_check_and_a_check_end_macro:                           \
-    __VA_OPT__((void)({__VA_ARGS__});)                                         \
+    __VA_OPT__((void)(__extension__({__VA_ARGS__}));)                          \
     return check_private_macro_res;                                            \
     }
 
@@ -276,11 +283,11 @@ macro if more fine grained control over nested scope is required upon a failure.
 */
 #define check_pass_end(...)                                                    \
 please_use_at_least_one_check_and_a_check_end_macro:                           \
-    __VA_OPT__((void)({                                                        \
+    __VA_OPT__((void)(__extension__({                                          \
                    if (check_private_macro_res == CHECK_PASS) {                \
                        __VA_ARGS__                                             \
                    }                                                           \
-               });)                                                            \
+               }));)                                                           \
     return check_private_macro_res;                                            \
     }
 
@@ -301,11 +308,11 @@ macro if more fine grained control over nested scope is required upon a
 failure.*/
 #define check_fail_end(...)                                                    \
 please_use_at_least_one_check_and_a_check_end_macro:                           \
-    __VA_OPT__((void)({                                                        \
+    __VA_OPT__((void)(__extension__({                                          \
                    if (check_private_macro_res == CHECK_FAIL) {                \
                        __VA_ARGS__                                             \
                    }                                                           \
-               });)                                                            \
+               }));)                                                           \
     return check_private_macro_res;                                            \
     }
 
@@ -326,11 +333,11 @@ macro if more fine grained control over nested scope is required upon a
 failure.*/
 #define check_error_end(...)                                                   \
 please_use_at_least_one_check_and_a_check_end_macro:                           \
-    __VA_OPT__((void)({                                                        \
+    __VA_OPT__((void)(__extension__({                                          \
                    if (check_private_macro_res == CHECK_ERROR) {               \
                        __VA_ARGS__                                             \
                    }                                                           \
-               });)                                                            \
+               }));)                                                           \
     return check_private_macro_res;                                            \
     }
 

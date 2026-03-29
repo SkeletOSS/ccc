@@ -9,6 +9,22 @@
 #include "ccc/types.h"
 #include "checkers.h"
 
+check_static_begin(buffer_test_iterate_empty) {
+    Buffer const b = buffer_default(int);
+    size_t count = 0;
+    for (int const *i = buffer_begin(&b); i != buffer_end(&b);
+         i = buffer_next(&b, i)) {
+        ++count;
+    }
+    check(count, 0);
+    for (int const *i = buffer_reverse_begin(&b); i != buffer_reverse_end(&b);
+         i = buffer_reverse_next(&b, i)) {
+        ++count;
+    }
+    check(count, 0);
+    check_end();
+}
+
 check_static_begin(buffer_test_iterator_forward) {
     Buffer const b = buffer_with_storage(6, (int[6]){1, 2, 3, 4, 5, 6});
     size_t count = 0;
@@ -111,6 +127,7 @@ check_static_begin(buffer_test_trap_rainwater_two_pointers) {
 int
 main(void) {
     return check_run(
+        buffer_test_iterate_empty(),
         buffer_test_iterator_forward(),
         buffer_test_iterator_forward_count_vs_capacity(),
         buffer_test_iterator_reverse(),

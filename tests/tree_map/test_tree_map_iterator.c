@@ -5,15 +5,17 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define BITSET_USING_NAMESPACE_CCC
 #define TRAITS_USING_NAMESPACE_CCC
 #define TREE_MAP_USING_NAMESPACE_CCC
 #define TYPES_USING_NAMESPACE_CCC
 
+#include "ccc/bitset.h"
+#include "ccc/traits.h"
+#include "ccc/tree_map.h"
+#include "ccc/types.h"
 #include "checkers.h"
-#include "traits.h"
-#include "tree_map.h"
 #include "tree_map_utility.h"
-#include "types.h"
 #include "utility/stack_allocator.h"
 
 check_static_begin(
@@ -158,7 +160,7 @@ check_static_begin(iterator_check, Tree_map *s) {
     check(iterator_count, size);
     prev_key = INT_MAX;
     iterator_count = 0;
-    for (struct Val *e = reverse_begin(s); e != end(s);
+    for (struct Val *e = reverse_begin(s); e != reverse_end(s);
          e = reverse_next(s, &e->elem)) {
         ++iterator_count;
         check(prev_key > e->key, true);
@@ -177,6 +179,12 @@ check_static_begin(tree_map_test_forward_iterator) {
     Tree_map s = tree_map_for(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
+    check(CCC_tree_map_begin(NULL), NULL);
+    check(CCC_tree_map_reverse_begin(NULL), NULL);
+    check(CCC_tree_map_next(NULL, &(struct Val){}.elem), NULL);
+    check(CCC_tree_map_next(&s, NULL), NULL);
+    check(CCC_tree_map_reverse_next(NULL, &(struct Val){}.elem), NULL);
+    check(CCC_tree_map_reverse_next(&s, NULL), NULL);
     /* We should have the expected behavior iteration over empty tree. */
     int j = 0;
     for (struct Val *e = begin(&s); e != end(&s); e = next(&s, &e->elem), ++j) {
@@ -306,7 +314,15 @@ check_static_begin(tree_map_test_valid_range) {
     Tree_map s = tree_map_for(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
-
+    check(
+        CCC_range_begin(tree_map_equal_range_wrap(&s, &(int){}, &(int){})), NULL
+    );
+    check(
+        CCC_range_reverse_begin(
+            tree_map_equal_range_reverse_wrap(&s, &(int){}, &(int){})
+        ),
+        NULL
+    );
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
     for (int i = 0, id = 0; i < num_nodes; ++i, id += 5) {
@@ -405,6 +421,30 @@ check_static_begin(tree_map_test_invalid_range) {
     Tree_map s = tree_map_for(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
+    check(
+        CCC_range_begin(tree_map_equal_range_wrap(NULL, &(int){}, &(int){})),
+        NULL
+    );
+    check(CCC_range_begin(tree_map_equal_range_wrap(&s, NULL, &(int){})), NULL);
+    check(CCC_range_begin(tree_map_equal_range_wrap(&s, &(int){}, NULL)), NULL);
+    check(
+        CCC_range_reverse_begin(
+            tree_map_equal_range_reverse_wrap(NULL, &(int){}, &(int){})
+        ),
+        NULL
+    );
+    check(
+        CCC_range_reverse_begin(
+            tree_map_equal_range_reverse_wrap(&s, NULL, &(int){})
+        ),
+        NULL
+    );
+    check(
+        CCC_range_reverse_begin(
+            tree_map_equal_range_reverse_wrap(&s, &(int){}, NULL)
+        ),
+        NULL
+    );
     int const num_nodes = 25;
     /* 0, 5, 10, 15, 20, 25, 30, 35,... 120 */
     for (int i = 0, id = 0; i < num_nodes; ++i, id += 5) {
@@ -481,6 +521,61 @@ check_static_begin(tree_map_test_empty_range) {
     check_end();
 }
 
+static void
+destroy_element(CCC_Arguments const arguments) {
+    struct Val const *const i = arguments.type;
+    Bitset *const is_destroyed_buffer = arguments.context;
+    (void)bitset_set(is_destroyed_buffer, (size_t)i->key, CCC_TRUE);
+}
+
+check_static_begin(tree_map_test_clear_with_destructor) {
+    enum : size_t {
+        MIN_CAP = 16
+    };
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[MIN_CAP]){}),
+    };
+    CCC_Tree_map map = tree_map_default(
+        struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
+    );
+    Bitset is_destroyed = bitset_with_storage(0, (Bit[MIN_CAP]){});
+    int i = 0;
+    for (;;) {
+        CCC_Entry const *const e = tree_map_try_insert_with(
+            &map, i, &allocator, (struct Val){.val = i}
+        );
+        check(occupied(e), CCC_FALSE);
+        struct Val const *const v = unwrap(e);
+        if (!v) {
+            break;
+        }
+        CCC_Result const bit_push
+            = bitset_push_back(&is_destroyed, CCC_FALSE, &(CCC_Allocator){});
+        check(bit_push, CCC_RESULT_OK);
+        check(v->key, i);
+        check(v->val, i);
+        ++i;
+    }
+    size_t const full_count = count(&map).count;
+    tree_map_clear(
+        &map,
+        &(CCC_Destructor){
+            .destroy = destroy_element,
+            .context = &is_destroyed,
+        },
+        &allocator
+    );
+    i = 0;
+    while (!bitset_is_empty(&is_destroyed)) {
+        CCC_Tribool const was_destroyed = bitset_pop_back(&is_destroyed);
+        check(was_destroyed, CCC_TRUE);
+        ++i;
+    }
+    check(i, full_count);
+    check_end();
+}
+
 int
 main(void) {
     return check_run(
@@ -490,6 +585,7 @@ main(void) {
         tree_map_test_valid_range_equals(),
         tree_map_test_invalid_range(),
         tree_map_test_empty_range(),
-        tree_map_test_iterate_remove_key_value_reinsert()
+        tree_map_test_iterate_remove_key_value_reinsert(),
+        tree_map_test_clear_with_destructor(),
     );
 }

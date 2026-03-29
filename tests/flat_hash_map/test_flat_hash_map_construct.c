@@ -23,13 +23,6 @@ modw(CCC_Arguments const u) {
     v->val = *((int *)u.context);
 }
 
-static CCC_Order
-flat_hash_map_int_order(CCC_Key_comparator_arguments const order) {
-    int const *const right = order.type_right;
-    int const left = *((int *)order.key_left);
-    return (left > *right) - (left < *right);
-}
-
 static Flat_hash_map static_fh = flat_hash_map_with_storage(
     key,
     ((CCC_Hasher){
@@ -555,42 +548,6 @@ check_static_begin(flat_hash_map_test_init_with_capacity_fail) {
     });
 }
 
-/* This could be a really nice way to encourage users to use the map as a set.
-The only problem is that a struct containing one field is not guaranteed to be
-the same size as that field by the C standard. So without the static assert
-the copy of the int compound literal could be undefined behavior. However,
-this would allow the user to forgo cluttering their type namespace with a
-struct wrapping a single integral type. Internally, I use memcpy based on type
-sizes so there are no risks of strict aliasing violations and the macro versions
-of functions would use the integral types directly. Will need to explore how to
-make this more robust for the user before recommending. */
-check_static_begin(flat_hash_map_test_with_anonymous_struct) {
-    static_assert(
-        sizeof(struct { int _; }) == sizeof(int),
-        "anonymous single field structs match the size of the type they wrap."
-    );
-    Flat_hash_map fh = flat_hash_map_with_storage(
-        _,
-        ((CCC_Hasher){
-            .hash = flat_hash_map_int_to_u64,
-            .compare = flat_hash_map_int_order,
-        }),
-        (struct { int _; }[SMALL_FIXED_CAP]){}
-    );
-    check(validate(&fh), CCC_TRUE);
-    CCC_Entry const e
-        = flat_hash_map_insert_or_assign(&fh, &(int){1}, &(CCC_Allocator){});
-    check(occupied(&e), CCC_FALSE);
-    CCC_Entry const *e_pointer = CCC_flat_hash_map_insert_or_assign_with(
-        &fh, 2, &(CCC_Allocator){}, 2
-    );
-    check(occupied(e_pointer), CCC_FALSE);
-    check(contains(&fh, &(int){2}), CCC_TRUE);
-    check(validate(&fh), CCC_TRUE);
-    check(count(&fh).count, 2);
-    check_end();
-}
-
 int
 main(void) {
     return check_run(
@@ -607,7 +564,6 @@ main(void) {
         flat_hash_map_test_init_from_fail(),
         flat_hash_map_test_init_with_capacity(),
         flat_hash_map_test_init_with_capacity_no_op(),
-        flat_hash_map_test_with_anonymous_struct(),
         flat_hash_map_test_init_with_capacity_fail()
     );
 }

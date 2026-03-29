@@ -76,7 +76,7 @@ are granted to `uint8_t` (usually unsigned char) and `int8_t` (usually char)
 when passed to functions as pointers. Maybe nets performance gain but depends on
 aggressiveness of compiler. */
 struct CCC_Flat_hash_map_tag {
-    /** Can be set to DELETED or EMPTY or an arbitrary hash 0b0???????. */
+    /** @internal Set to DELETED or EMPTY or an arbitrary hash 0b0???????. */
     uint8_t v;
 };
 

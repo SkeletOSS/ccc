@@ -779,12 +779,18 @@ typedef CCC_Tree_map_entry Tree_map_entry;
 #    define tree_map_default(arguments...) CCC_tree_map_default(arguments)
 #    define tree_map_for(arguments...) CCC_tree_map_for(arguments)
 #    define tree_map_from(arguments...) CCC_tree_map_from(arguments)
+#    define tree_map_and_modify(arguments...) CCC_tree_map_and_modify(arguments)
 #    define tree_map_and_modify_with(arguments...)                             \
         CCC_tree_map_and_modify_with(arguments)
+#    define tree_map_and_modify_wrap(arguments...)                             \
+        CCC_tree_map_and_modify_wrap(arguments)
 #    define tree_map_or_insert_with(arguments...)                              \
         CCC_tree_map_or_insert_with(arguments)
 #    define tree_map_insert_entry_with(arguments...)                           \
         CCC_tree_map_insert_entry_with(arguments)
+#    define tree_map_try_insert(arguments...) CCC_tree_map_try_insert(arguments)
+#    define tree_map_try_insert_wrap(arguments...)                             \
+        CCC_tree_map_try_insert_wrap(arguments)
 #    define tree_map_try_insert_with(arguments...)                             \
         CCC_tree_map_try_insert_with(arguments)
 #    define tree_map_insert_or_assign(arguments...)                            \
@@ -800,8 +806,6 @@ typedef CCC_Tree_map_entry Tree_map_entry;
 #    define tree_map_remove_entry_wrap(arguments...)                           \
         CCC_tree_map_remove_entry_wrap(arguments)
 #    define tree_map_entry_wrap(arguments...) CCC_tree_map_entry_wrap(arguments)
-#    define tree_map_and_modify_wrap(arguments...)                             \
-        CCC_tree_map_and_modify_wrap(arguments)
 #    define tree_map_contains(arguments...) CCC_tree_map_contains(arguments)
 #    define tree_map_get_key_value(arguments...)                               \
         CCC_tree_map_get_key_value(arguments)
@@ -838,6 +842,8 @@ typedef CCC_Tree_map_entry Tree_map_entry;
 #    define tree_map_is_empty(arguments...) CCC_tree_map_is_empty(arguments)
 #    define tree_map_clear(arguments...) CCC_tree_map_clear(arguments)
 #    define tree_map_validate(arguments...) CCC_tree_map_validate(arguments)
+#    define tree_map_entry_status(arguments...)                                \
+        CCC_tree_map_entry_status(arguments)
 /* NOLINTEND(readability-identifier-naming) */
 #endif
 

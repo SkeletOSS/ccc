@@ -662,7 +662,7 @@ to subsequent calls in the Handle Interface. */
 CCC_array_adaptive_map_handle(CCC_Array_adaptive_map *map, void const *key);
 
 /** @brief Obtains a handle for the provided key in the map for future use.
-@param[in] array_pointer the map to be searched.
+@param[in] handle_pointer the map to be searched.
 @param[in] key_pointer the key used to search the map matching the stored key
 type.
 @return a compound literal reference to a specialized handle for use with other
@@ -677,9 +677,9 @@ where in the map such an element should be inserted.
 
 A handle is rarely useful on its own. It should be passed in a functional style
 to subsequent calls in the Handle Interface. */
-#define CCC_array_adaptive_map_handle_wrap(array_pointer, key_pointer)         \
+#define CCC_array_adaptive_map_handle_wrap(handle_pointer, key_pointer)        \
     &(struct { CCC_Array_adaptive_map_handle private; }){                      \
-        CCC_array_adaptive_map_handle((array_pointer), (key_pointer))}         \
+        CCC_array_adaptive_map_handle((handle_pointer), (key_pointer))}        \
          .private
 
 /** @brief Modifies the provided handle if it is Occupied.
@@ -691,7 +691,7 @@ to subsequent calls in the Handle Interface. */
 );
 
 /** @brief Modify an Occupied handle with a closure over user type T.
-@param[in] array_pointer a pointer to the obtained handle.
+@param[in] handle_pointer a pointer to the obtained handle.
 @param[in] closure_parameter the typed and named pointer, for example `My_type *
 e` or `My_type const * e` with which to interpret an occupied entry.
 @param[in] closure_over_closure_parameter the code to be run on the named
@@ -726,11 +726,11 @@ Note that any code written is only evaluated if the handle is Occupied and the
 container can deliver the user named type. This means any function calls are
 lazily evaluated in the closure scope. */
 #define CCC_array_adaptive_map_and_modify_with(                                \
-    array_pointer, closure_parameter, closure_over_closure_parameter...        \
+    handle_pointer, closure_parameter, closure_over_closure_parameter...       \
 )                                                                              \
     &(struct { CCC_Array_adaptive_map_handle private; }){                      \
         CCC_private_array_adaptive_map_and_modify_with(                        \
-            array_pointer, closure_parameter, closure_over_closure_parameter   \
+            handle_pointer, closure_parameter, closure_over_closure_parameter  \
         )}                                                                     \
          .private
 
@@ -753,7 +753,7 @@ elem has been allocated with the appropriate lifetime and scope by the user. */
 );
 
 /** @brief Lazily insert the desired key value into the handle if it is Vacant.
-@param[in] array_pointer a pointer to the obtained handle.
+@param[in] handle_pointer a pointer to the obtained handle.
 @param[in] allocator_pointer the CCC_Allocator for resizing if needed.
 @param[in] type_compound_literal the compound literal to construct in place if
 the handle is Vacant.
@@ -765,10 +765,10 @@ is not allowed.
 Note that if the compound literal uses any function calls to generate values
 or other data, such functions will not be called if the handle is Occupied. */
 #define CCC_array_adaptive_map_or_insert_with(                                 \
-    array_pointer, allocator_pointer, type_compound_literal...                 \
+    handle_pointer, allocator_pointer, type_compound_literal...                \
 )                                                                              \
     CCC_private_array_adaptive_map_or_insert_with(                             \
-        array_pointer, allocator_pointer, type_compound_literal                \
+        handle_pointer, allocator_pointer, type_compound_literal               \
     )
 
 /** @brief Inserts the provided handle invariantly.
@@ -787,16 +787,16 @@ be preserved. See the regular insert method if the old value is of interest. */
 
 /** @brief Write the contents of the compound literal type_compound_literal to a
 node.
-@param[in] array_pointer a pointer to the obtained handle.
+@param[in] handle_pointer a pointer to the obtained handle.
 @param[in] allocator_pointer the CCC_Allocator for resizing if needed.
 @param[in] type_compound_literal the compound literal to write to a new slot.
 @return a reference to the newly inserted or overwritten user type. NULL is
 returned if allocation failed or is not allowed when required. */
 #define CCC_array_adaptive_map_insert_handle_with(                             \
-    array_pointer, allocator_pointer, type_compound_literal...                 \
+    handle_pointer, allocator_pointer, type_compound_literal...                \
 )                                                                              \
     CCC_private_array_adaptive_map_insert_handle_with(                         \
-        array_pointer, allocator_pointer, type_compound_literal                \
+        handle_pointer, allocator_pointer, type_compound_literal               \
     )
 
 /** @brief Remove the handle from the map if Occupied.
@@ -808,13 +808,13 @@ prior handle existed to be removed. */
 CCC_array_adaptive_map_remove_handle(CCC_Array_adaptive_map_handle *handle);
 
 /** @brief Remove the handle from the map if Occupied.
-@param[in] array_pointer pointer to the map handle.
+@param[in] handle_pointer pointer to the map handle.
 @return a compound literal reference containing no valid reference but
 information about the old handle. If Occupied a handle in the map existed and
 was removed. If Vacant, no prior handle existed to be removed. */
-#define CCC_array_adaptive_map_remove_handle_wrap(array_pointer)               \
+#define CCC_array_adaptive_map_remove_handle_wrap(handle_pointer)              \
     &(struct { CCC_Handle private; }){                                         \
-        CCC_array_adaptive_map_remove_handle((array_pointer))}                 \
+        CCC_array_adaptive_map_remove_handle((handle_pointer))}                \
          .private
 
 /** @brief Unwraps the provided handle to obtain a view into the map element.
@@ -1135,6 +1135,8 @@ typedef CCC_Array_adaptive_map_handle Array_adaptive_map_handle;
         CCC_array_adaptive_map_unwrap(arguments)
 #    define array_adaptive_map_insert_error(arguments...)                      \
         CCC_array_adaptive_map_insert_error(arguments)
+#    define array_adaptive_map_handle_status(arguments...)                     \
+        CCC_array_adaptive_map_handle_status(arguments)
 #    define array_adaptive_map_occupied(arguments...)                          \
         CCC_array_adaptive_map_occupied(arguments)
 #    define array_adaptive_map_clear(arguments...)                             \

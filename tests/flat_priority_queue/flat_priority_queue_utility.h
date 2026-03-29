@@ -13,6 +13,7 @@ struct Val {
 };
 
 CCC_Order val_order(CCC_Comparator_arguments);
+CCC_Order int_order(CCC_Comparator_arguments);
 void val_update(CCC_Arguments);
 size_t rand_range(size_t min, size_t max);
 enum Check_result inorder_fill(int[], size_t, CCC_Flat_priority_queue const *);

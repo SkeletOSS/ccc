@@ -802,6 +802,8 @@ typedef CCC_Adaptive_map_entry Adaptive_map_entry;
         CCC_adaptive_map_or_insert_with(arguments)
 #    define adaptive_map_insert_entry_with(arguments...)                       \
         CCC_adaptive_map_insert_entry_with(arguments)
+#    define adaptive_map_try_insert_wrap(arguments...)                         \
+        CCC_adaptive_map_try_insert_wrap(arguments)
 #    define adaptive_map_try_insert_with(arguments...)                         \
         CCC_adaptive_map_try_insert_with(arguments)
 #    define adaptive_map_insert_or_assign(arguments...)                        \
@@ -818,6 +820,8 @@ typedef CCC_Adaptive_map_entry Adaptive_map_entry;
         CCC_adaptive_map_remove_entry_wrap(arguments)
 #    define adaptive_map_entry_wrap(arguments...)                              \
         CCC_adaptive_map_entry_wrap(arguments)
+#    define adaptive_map_and_modify(arguments...)                              \
+        CCC_adaptive_map_and_modify(arguments)
 #    define adaptive_map_and_modify_wrap(arguments...)                         \
         CCC_adaptive_map_and_modify_wrap(arguments)
 #    define adaptive_map_contains(arguments...)                                \
@@ -863,6 +867,8 @@ typedef CCC_Adaptive_map_entry Adaptive_map_entry;
 #    define adaptive_map_clear(arguments...) CCC_adaptive_map_clear(arguments)
 #    define adaptive_map_validate(arguments...)                                \
         CCC_adaptive_map_validate(arguments)
+#    define adaptive_map_entry_status(arguments...)                            \
+        CCC_adaptive_map_entry_status(arguments)
 /* NOLINTEND(readability-identifier-naming) */
 #endif
 

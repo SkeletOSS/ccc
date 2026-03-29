@@ -8,14 +8,20 @@
 
 typedef typeof(*(CCC_Bitset){}.blocks) Bitblocks;
 
-#define to_blocks(bit_count)                                                   \
-    (((bit_count) + CCC_BITSET_BLOCK_BITS - 1) / CCC_BITSET_BLOCK_BITS)
-
 static CCC_Bitset static_bitset = CCC_bitset_with_storage(32, (CCC_Bit[32]){});
 
 check_static_begin(bitset_test_static) {
+    check(CCC_bitset_data(NULL), NULL);
+    check(CCC_bitset_is_empty(NULL), CCC_TRIBOOL_ERROR);
+    check(CCC_bitset_capacity(NULL).error, CCC_RESULT_ARGUMENT_ERROR);
+    check(CCC_bitset_count(NULL).error, CCC_RESULT_ARGUMENT_ERROR);
+    check(CCC_bitset_blocks_capacity(NULL).error, CCC_RESULT_ARGUMENT_ERROR);
+    check(CCC_bitset_blocks_count(NULL).error, CCC_RESULT_ARGUMENT_ERROR);
+    check(CCC_bitset_data(&static_bitset) != NULL, CCC_TRUE);
     check(CCC_bitset_popcount(&static_bitset).count, 0);
     check(CCC_bitset_capacity(&static_bitset).count >= 32, CCC_TRUE);
+    check(CCC_bitset_blocks_capacity(&static_bitset).count >= 1, CCC_TRUE);
+    check(CCC_bitset_blocks_count(&static_bitset).count >= 1, CCC_TRUE);
     size_t i = 0;
     while (i < CCC_bitset_capacity(&static_bitset).count) {
         check(CCC_bitset_test(&static_bitset, i), CCC_FALSE);
@@ -30,20 +36,38 @@ check_static_begin(bitset_test_construct) {
     CCC_Bitset bs
         = CCC_bitset_for(10, 10, CCC_bitset_storage_for((CCC_Bit[10]){}));
     check(CCC_bitset_popcount(&bs).count, 0);
-    for (size_t i = 0; i < CCC_bitset_capacity(&bs).count; ++i) {
+    size_t i = 0;
+    for (; i < CCC_bitset_capacity(&bs).count; ++i) {
         check(CCC_bitset_test(&bs, i), CCC_FALSE);
         check(CCC_bitset_test(&bs, i), CCC_FALSE);
     }
+    check(i, 10);
     check_end();
 }
 
 check_static_begin(bitset_test_construct_with_literal) {
     CCC_Bitset bs = CCC_bitset_with_storage(10, (CCC_Bit[10]){});
     check(CCC_bitset_popcount(&bs).count, 0);
-    for (size_t i = 0; i < CCC_bitset_count(&bs).count; ++i) {
+    size_t i = 0;
+    for (; i < CCC_bitset_count(&bs).count; ++i) {
         check(CCC_bitset_test(&bs, i), CCC_FALSE);
         check(CCC_bitset_test(&bs, i), CCC_FALSE);
     }
+    check(i, 10);
+    check_end();
+}
+
+check_static_begin(bitset_test_construct_with_literal_full_block) {
+    CCC_Bitset bs = CCC_bitset_with_storage(
+        CCC_BITSET_BLOCK_BITS, (CCC_Bit[CCC_BITSET_BLOCK_BITS]){}
+    );
+    check(CCC_bitset_popcount(&bs).count, 0);
+    size_t i = 0;
+    for (; i < CCC_bitset_count(&bs).count; ++i) {
+        check(CCC_bitset_test(&bs, i), CCC_FALSE);
+        check(CCC_bitset_test(&bs, i), CCC_FALSE);
+    }
+    check(i, CCC_BITSET_BLOCK_BITS);
     check_end();
 }
 
@@ -63,6 +87,23 @@ check_static_begin(bitset_test_copy_no_allocate) {
     }
     check(push_status, CCC_RESULT_NO_ALLOCATION_FUNCTION);
     CCC_Bitset destination = CCC_bitset_with_storage(0, (CCC_Bit[513]){});
+    check(
+        CCC_bitset_copy(NULL, &source, &(CCC_Allocator){}),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        CCC_bitset_copy(&destination, NULL, &(CCC_Allocator){}),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        CCC_bitset_copy(&destination, &source, NULL), CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        CCC_bitset_copy(
+            &destination, &CCC_bitset_default(), &(CCC_Allocator){}
+        ),
+        CCC_RESULT_OK
+    );
     CCC_Result r = CCC_bitset_copy(&destination, &source, &(CCC_Allocator){});
     check(r, CCC_RESULT_OK);
     check(
@@ -131,6 +172,28 @@ check_static_begin(bitset_test_copy_allocate) {
         }
     }
     check(CCC_bitset_is_empty(&source), CCC_bitset_is_empty(&destination));
+    check_end();
+}
+
+check_static_begin(bitset_test_copy_exhaustion) {
+    CCC_Allocator allocator = {
+        .allocate = stack_allocator_allocate,
+        .context
+        = &stack_allocator_for(CCC_bitset_storage_for((CCC_Bit[512]){})),
+    };
+    CCC_Bitset source = CCC_bitset_with_capacity(allocator, 512, 0);
+    CCC_Bitset destination = CCC_bitset_default();
+    check(
+        CCC_bitset_copy(&destination, &source, &allocator),
+        CCC_RESULT_ALLOCATOR_ERROR
+    );
+    allocator.context
+        = &stack_allocator_for(CCC_bitset_storage_for((CCC_Bit[1024]){}));
+    source.blocks = NULL;
+    check(
+        CCC_bitset_copy(&destination, &source, &allocator),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
     check_end();
 }
 
@@ -232,8 +295,10 @@ main(void) {
         bitset_test_static(),
         bitset_test_construct(),
         bitset_test_construct_with_literal(),
+        bitset_test_construct_with_literal_full_block(),
         bitset_test_copy_no_allocate(),
         bitset_test_copy_allocate(),
+        bitset_test_copy_exhaustion(),
         bitset_test_init_from(),
         bitset_test_init_from_cap(),
         bitset_test_init_from_fail(),

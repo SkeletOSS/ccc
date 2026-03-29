@@ -4,13 +4,76 @@
 #include <time.h>
 
 #define TRAITS_USING_NAMESPACE_CCC
+#define BITSET_USING_NAMESPACE_CCC
 
+#include "ccc/bitset.h"
+#include "ccc/flat_priority_queue.h"
+#include "ccc/traits.h"
+#include "ccc/types.h"
 #include "checkers.h"
-#include "flat_priority_queue.h"
 #include "flat_priority_queue_utility.h"
-#include "traits.h"
-#include "types.h"
 #include "utility/stack_allocator.h"
+
+check_static_begin(flat_priority_queue_test_pop_one) {
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[8]){}),
+    };
+    CCC_Flat_priority_queue flat_priority_queue
+        = CCC_flat_priority_queue_with_capacity(
+            struct Val,
+            CCC_ORDER_LESSER,
+            (CCC_Comparator){.compare = val_order},
+            allocator,
+            8
+        );
+    check(
+        push(
+            &flat_priority_queue,
+            &(struct Val){.val = 1},
+            &(struct Val){},
+            &allocator
+        ) != NULL,
+        CCC_TRUE
+    );
+    check(pop(&flat_priority_queue, NULL), CCC_RESULT_ARGUMENT_ERROR);
+    check(pop(&flat_priority_queue, &(struct Val){}), CCC_RESULT_OK);
+    check(CCC_flat_priority_queue_is_empty(&flat_priority_queue), CCC_TRUE);
+    check_end();
+}
+
+check_static_begin(flat_priority_queue_test_erase_one) {
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[8]){}),
+    };
+    CCC_Flat_priority_queue flat_priority_queue
+        = CCC_flat_priority_queue_with_capacity(
+            struct Val,
+            CCC_ORDER_LESSER,
+            (CCC_Comparator){.compare = val_order},
+            allocator,
+            8
+        );
+
+    struct Val *in = push(
+        &flat_priority_queue,
+        &(struct Val){.val = 1},
+        &(struct Val){},
+        &allocator
+    );
+    check(in != NULL, CCC_TRUE);
+    check(erase(&flat_priority_queue, in, NULL), CCC_RESULT_ARGUMENT_ERROR);
+    check(update(&flat_priority_queue, in, &(struct Val){}, NULL), NULL);
+    check(update(&flat_priority_queue, in, NULL, &(CCC_Modifier){}), NULL);
+    check(
+        update(&flat_priority_queue, in, &(struct Val){}, &(CCC_Modifier){}),
+        NULL
+    );
+    check(erase(&flat_priority_queue, in, &(struct Val){}), CCC_RESULT_OK);
+    check(is_empty(&flat_priority_queue), CCC_TRUE);
+    check_end();
+}
 
 check_static_begin(flat_priority_queue_test_insert_remove_key_value_four_dups) {
     CCC_Allocator const allocator = {
@@ -327,15 +390,127 @@ check_static_begin(flat_priority_queue_test_weak_srand) {
     check_end();
 }
 
+static void
+destroy_elem(CCC_Arguments const arguments) {
+    int const *const i = arguments.type;
+    Bitset *const is_destroyed = arguments.context;
+    (void)bitset_set(is_destroyed, (size_t)*i, CCC_TRUE);
+}
+
+check_static_begin(flat_priority_queue_test_clear_destructor) {
+    enum : int {
+        CAP = 16
+    };
+    check(
+        CCC_flat_priority_queue_clear(NULL, &(CCC_Destructor){}),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    CCC_Flat_priority_queue pq = CCC_flat_priority_queue_with_storage(
+        CCC_ORDER_LESSER, (CCC_Comparator){.compare = int_order}, (int[CAP]){}
+    );
+    check(CCC_flat_priority_queue_clear(&pq, NULL), CCC_RESULT_ARGUMENT_ERROR);
+    int i = 0;
+    Bitset is_destroyed = bitset_with_storage(CAP, (Bit[CAP]){});
+    while (i < CAP) {
+        struct Val const *const v = CCC_flat_priority_queue_push(
+            &pq, &i, &(int){}, &(CCC_Allocator){}
+        );
+        check(v != NULL, CCC_TRUE);
+        ++i;
+    }
+    check(
+        CCC_flat_priority_queue_clear(
+            &pq,
+            &(CCC_Destructor){
+                .destroy = destroy_elem,
+                .context = &is_destroyed,
+            }
+        ),
+        CCC_RESULT_OK
+    );
+    i = 0;
+    while (!bitset_is_empty(&is_destroyed)) {
+        CCC_Tribool const was_destroyed = bitset_pop_back(&is_destroyed);
+        check(was_destroyed, CCC_TRUE);
+        ++i;
+    }
+    check(i, CAP);
+
+    check_end();
+}
+
+check_static_begin(flat_priority_queue_test_clear_and_free_destructor) {
+    enum : int {
+        CAP = 16
+    };
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((int[CAP]){}),
+    };
+    check(
+        CCC_flat_priority_queue_clear(NULL, &(CCC_Destructor){}),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    CCC_Flat_priority_queue pq = CCC_flat_priority_queue_default(
+        int, CCC_ORDER_LESSER, (CCC_Comparator){.compare = int_order}
+    );
+    check(
+        CCC_flat_priority_queue_reserve(&pq, CAP, NULL),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(CCC_flat_priority_queue_reserve(&pq, CAP, &allocator), CCC_RESULT_OK);
+    int i = 0;
+    Bitset is_destroyed = bitset_with_storage(CAP, (Bit[CAP]){});
+    while (i < CAP) {
+        struct Val const *const v = CCC_flat_priority_queue_push(
+            &pq, &i, &(int){}, &(CCC_Allocator){}
+        );
+        check(v != NULL, CCC_TRUE);
+        ++i;
+    }
+    check(
+        CCC_flat_priority_queue_clear_and_free(&pq, NULL, &allocator),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        CCC_flat_priority_queue_clear_and_free(&pq, &(CCC_Destructor){}, NULL),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        CCC_flat_priority_queue_clear_and_free(
+            &pq,
+            &(CCC_Destructor){
+                .destroy = destroy_elem,
+                .context = &is_destroyed,
+            },
+            &allocator
+        ),
+        CCC_RESULT_OK
+    );
+    i = 0;
+    while (!bitset_is_empty(&is_destroyed)) {
+        CCC_Tribool const was_destroyed = bitset_pop_back(&is_destroyed);
+        check(was_destroyed, CCC_TRUE);
+        ++i;
+    }
+    check(i, CAP);
+
+    check_end();
+}
+
 int
 main(void) {
     return check_run(
+        flat_priority_queue_test_pop_one(),
+        flat_priority_queue_test_erase_one(),
         flat_priority_queue_test_insert_remove_key_value_four_dups(),
         flat_priority_queue_test_insert_erase_shuffled(),
         flat_priority_queue_test_pop_max(),
         flat_priority_queue_test_pop_min(),
         flat_priority_queue_test_delete_prime_shuffle_duplicates(),
         flat_priority_queue_test_prime_shuffle(),
-        flat_priority_queue_test_weak_srand()
+        flat_priority_queue_test_weak_srand(),
+        flat_priority_queue_test_clear_destructor(),
+        flat_priority_queue_test_clear_and_free_destructor(),
     );
 }

@@ -27,6 +27,9 @@ check_static_begin(adaptive_map_test_insert) {
     Adaptive_map om = adaptive_map_for(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
+    check(adaptive_map_get_key_value(NULL, &(int){}), NULL);
+    check(adaptive_map_get_key_value(&om, NULL), NULL);
+    check(adaptive_map_unwrap(NULL), NULL);
 
     /* Nothing was there before so nothing is in the entry. */
     CCC_Entry ent = swap_entry(

@@ -128,10 +128,6 @@ void CCC_private_priority_queue_init_node(struct CCC_Priority_queue_node *);
 struct CCC_Priority_queue_node *CCC_private_priority_queue_delete_node(
     struct CCC_Priority_queue *, struct CCC_Priority_queue_node *
 );
-/** @internal */
-void *CCC_private_priority_queue_struct_base(
-    struct CCC_Priority_queue const *, struct CCC_Priority_queue_node const *
-);
 
 /*=========================  Macro Implementations     ======================*/
 

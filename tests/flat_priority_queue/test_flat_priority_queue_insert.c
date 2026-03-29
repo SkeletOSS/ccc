@@ -17,6 +17,12 @@ check_static_begin(flat_priority_queue_test_insert_one) {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for((struct Val[8]){}),
     };
+    check(CCC_flat_priority_queue_is_empty(NULL), CCC_TRIBOOL_ERROR);
+    check(CCC_flat_priority_queue_count(NULL).error, CCC_RESULT_ARGUMENT_ERROR);
+    check(
+        CCC_flat_priority_queue_capacity(NULL).error, CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(CCC_flat_priority_queue_data(NULL), NULL);
     CCC_Flat_priority_queue flat_priority_queue
         = CCC_flat_priority_queue_with_capacity(
             struct Val,
@@ -25,11 +31,20 @@ check_static_begin(flat_priority_queue_test_insert_one) {
             allocator,
             8
         );
-    (void)push(
-        &flat_priority_queue,
-        &(struct Val){.val = 1},
-        &(struct Val){},
-        &allocator
+    check(front(&flat_priority_queue), NULL);
+    check(
+        push(&flat_priority_queue, &(struct Val){.val = 1}, NULL, &allocator)
+            == NULL,
+        CCC_TRUE
+    );
+    check(
+        push(
+            &flat_priority_queue,
+            &(struct Val){.val = 1},
+            &(struct Val){},
+            &allocator
+        ) != NULL,
+        CCC_TRUE
     );
     check(CCC_flat_priority_queue_is_empty(&flat_priority_queue), false);
     check_end();

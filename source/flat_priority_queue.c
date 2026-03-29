@@ -316,9 +316,8 @@ CCC_flat_priority_queue_copy(
             && !allocator->allocate)) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    if (!source->buffer.count) {
-        return CCC_RESULT_OK;
-    }
+    destination->order = source->order;
+    destination->comparator = source->comparator;
     if (destination->buffer.capacity < source->buffer.capacity) {
         CCC_Result const r = CCC_buffer_allocate(
             &destination->buffer, source->buffer.capacity, allocator
@@ -328,17 +327,19 @@ CCC_flat_priority_queue_copy(
         }
         destination->buffer.capacity = source->buffer.capacity;
     }
-    if (!source->buffer.data || !destination->buffer.data) {
-        return CCC_RESULT_ARGUMENT_ERROR;
-    }
     destination->buffer.count = source->buffer.count;
     /* It is ok to only copy count elements because we know that all elements
        in a binary heap are contiguous from [0, C), where C is count. */
-    (void)memcpy(
-        destination->buffer.data,
-        source->buffer.data,
-        source->buffer.count * source->buffer.sizeof_type
-    );
+    if (source->buffer.count) {
+        if (!source->buffer.data || !destination->buffer.data) {
+            return CCC_RESULT_ARGUMENT_ERROR;
+        }
+        (void)memcpy(
+            destination->buffer.data,
+            source->buffer.data,
+            source->buffer.count * source->buffer.sizeof_type
+        );
+    }
     return CCC_RESULT_OK;
 }
 
@@ -472,9 +473,6 @@ void
 CCC_private_flat_priority_queue_heap_order(
     struct CCC_Flat_priority_queue *const priority_queue, void *const temp
 ) {
-    if (!priority_queue) {
-        return;
-    }
     heapify(
         &priority_queue->buffer,
         temp,

@@ -433,8 +433,11 @@ CCC_Array_tree_map_handle *
 CCC_array_tree_map_and_modify(
     CCC_Array_tree_map_handle *const handle, CCC_Modifier const *const modifier
 ) {
-    if (handle && modifier && modifier->modify
-        && handle->status & CCC_ENTRY_OCCUPIED && handle->index > 0) {
+    if (!handle || !modifier) {
+        return NULL;
+    }
+    if (modifier->modify && handle->status & CCC_ENTRY_OCCUPIED
+        && handle->index > 0) {
         modifier->modify((CCC_Arguments){
             .type = data_at(handle->map, handle->index),
             modifier->context,
@@ -839,13 +842,6 @@ CCC_private_array_tree_map_key_at(
     return key_at(map, slot);
 }
 
-struct CCC_Array_tree_map_node *
-CCC_private_array_tree_map_node_at(
-    struct CCC_Array_tree_map const *map, size_t const i
-) {
-    return node_at(map, i);
-}
-
 size_t
 CCC_private_array_tree_map_allocate_slot(
     struct CCC_Array_tree_map *const map, CCC_Allocator const *const allocator
@@ -897,19 +893,17 @@ allocate_slot(
                 map->sizeof_type, map->data, map->capacity
             );
         }
-        old_cap = old_count ? old_cap : 0;
+        old_cap = old_count ? old_cap : 1;
         size_t const new_cap = map->capacity;
         size_t prev = 0;
-        for (size_t i = new_cap - 1; i > 0 && i >= old_cap; prev = i, --i) {
+        for (size_t i = new_cap - 1; i >= old_cap; prev = i, --i) {
             node_at(map, i)->next_free = prev;
         }
         map->free_list = prev;
         map->count = max(old_count, 1);
         set_parity(map, 0, CCC_TRUE);
     }
-    if (!map->free_list) {
-        return 0;
-    }
+    assert(map->free_list);
     ++map->count;
     size_t const slot = map->free_list;
     map->free_list = node_at(map, slot)->next_free;
@@ -922,9 +916,6 @@ resize(
     size_t const new_capacity,
     CCC_Allocator const *const allocator
 ) {
-    if (map->capacity && new_capacity <= map->capacity - 1) {
-        return CCC_RESULT_OK;
-    }
     if (!allocator->allocate) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }

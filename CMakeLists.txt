@@ -71,15 +71,21 @@ if (CCC_ENABLE_COVERAGE)
 
     if (CCC_COVERAGE_TOOL)
         set(COVERAGE_TOOL ${CCC_COVERAGE_TOOL})
+        message(STATUS "Using code coverage tool: ${CCC_COVERAGE_TOOL}")
+    endif()
 
     # Clang had very tricky behavior especially on mac to successfully generate
     # lcov compatible reports. The command line would not accept clang's 
     # provided 'llvm-cov gcov' string so a custom script that executes that 
     # command needs to be generated. We will just place it in the build files.
-    elseif (CMAKE_C_COMPILER_ID STREQUAL "Clang")
-        find_program(LLVM_COV_EXECUTABLE llvm-cov)
-        if (NOT LLVM_COV_EXECUTABLE)
-            message(FATAL_ERROR "llvm-cov not found")
+    if (CMAKE_C_COMPILER_ID STREQUAL "Clang")
+        if (COVERAGE_TOOL)
+            set(LLVM_COV_EXECUTABLE ${COVERAGE_TOOL})
+        else()
+            find_program(LLVM_COV_EXECUTABLE llvm-cov)
+            if (NOT LLVM_COV_EXECUTABLE)
+                message(FATAL_ERROR "llvm-cov not found")
+            endif()
         endif()
 
         set(LLVM_GCOV_WRAPPER "${CMAKE_BINARY_DIR}/llvm-gcov")
@@ -95,33 +101,28 @@ exec \"${LLVM_COV_EXECUTABLE}\" gcov \"$@\"
                         WORLD_READ WORLD_EXECUTE)
 
         set(COVERAGE_TOOL ${LLVM_GCOV_WRAPPER})
-
-    else()
-        set(COVERAGE_TOOL ${CCC_COVERAGE_TOOL})
     endif()
 
     if (NOT COVERAGE_TOOL)
         message(FATAL_ERROR "no code coverage tool selected")
     endif()
 
-    message(STATUS "Using code coverage tool: ${COVERAGE_TOOL}")
     add_custom_target(coverage
-        COMMAND lcov --gcov-tool ${COVERAGE_TOOL}
+        COMMAND lcov --ignore-errors inconsistent 
+                     --gcov-tool ${COVERAGE_TOOL}
                      --capture
                      --directory ${CMAKE_BINARY_DIR}
                      --output-file ${CMAKE_SOURCE_DIR}/docs/coverage.info
 
-        COMMAND lcov --extract ${CMAKE_SOURCE_DIR}/docs/coverage.info '*/source/*'
+        COMMAND lcov --ignore-errors inconsistent
+                     --extract ${CMAKE_SOURCE_DIR}/docs/coverage.info '*/tests/*' '*/source/*'
                      --output-file ${CMAKE_SOURCE_DIR}/docs/coverage.info
 
-        COMMAND lcov --remove ${CMAKE_SOURCE_DIR}/docs/coverage.info
-                 '*/_deps/*'
+        COMMAND lcov --remove ${CMAKE_SOURCE_DIR}/docs/coverage.info '*/_deps/*' '*/tests/run_tests.c' '*/tests/checkers.c'
                  -o ${CMAKE_SOURCE_DIR}/docs/coverage.info
 
         COMMAND genhtml ${CMAKE_SOURCE_DIR}/docs/coverage.info
                         --output-directory ${CMAKE_SOURCE_DIR}/docs/coverage
-                        --prefix ${CMAKE_SOURCE_DIR}/source
-                        --flat
                         --title "CCC Test Suite Coverage Report"
     )
 endif()

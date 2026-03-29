@@ -24,12 +24,11 @@ array_adaptive_map_modplus(CCC_Arguments const t) {
     ((struct Val *)t.type)->val++;
 }
 
-check_static_begin(array_adaptive_map_test_insert) {
+check_static_begin(array_adaptive_map_test_insert_error) {
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
-        id,
-        (CCC_Key_comparator){.compare = id_order},
-        (struct Val[SMALL_FIXED_CAP]){}
+        id, (CCC_Key_comparator){.compare = id_order}, (struct Val[2]){}
     );
+    check(array_adaptive_map_unwrap(NULL), NULL);
 
     /* Nothing was there before so nothing is in the handle. */
     CCC_Handle *hndl = array_adaptive_map_swap_handle_wrap(
@@ -39,6 +38,49 @@ check_static_begin(array_adaptive_map_test_insert) {
     );
     check(occupied(hndl), false);
     check(count(&array_adaptive_map).count, 1);
+    CCC_Array_adaptive_map_handle const query
+        = array_adaptive_map_handle(&array_adaptive_map, &(int){137});
+    check(array_adaptive_map_insert_error(NULL), CCC_TRIBOOL_ERROR);
+    check(array_adaptive_map_insert_error(&query), CCC_FALSE);
+    check(array_adaptive_map_occupied(NULL), CCC_TRIBOOL_ERROR);
+    check(occupied(&query), CCC_TRUE);
+    hndl = CCC_array_adaptive_map_insert_or_assign_wrap(
+        &array_adaptive_map, &(struct Val){}, &(CCC_Allocator){}
+    );
+    check(array_adaptive_map_insert_error(NULL), CCC_TRIBOOL_ERROR);
+    check(insert_error(hndl), CCC_TRUE);
+    check(unwrap(hndl), NULL);
+    check_end();
+}
+
+check_static_begin(array_adaptive_map_test_insert) {
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for(
+            (typeof(array_adaptive_map_storage_for((struct Val[2]){}))[1]){}
+        ),
+    };
+    CCC_Array_adaptive_map array_adaptive_map
+        = array_adaptive_map_with_capacity(
+            struct Val,
+            id,
+            (CCC_Key_comparator){.compare = id_order},
+            allocator,
+            1
+        );
+
+    /* Nothing was there before so nothing is in the handle. */
+    CCC_Handle const *hndl = array_adaptive_map_swap_handle_wrap(
+        &array_adaptive_map, (&(struct Val){.id = 137, .val = 99}), &allocator
+    );
+    check(CCC_handle_insert_error(hndl), CCC_FALSE);
+    check(occupied(hndl), false);
+    check(count(&array_adaptive_map).count, 1);
+    hndl = array_adaptive_map_try_insert_wrap(
+        &array_adaptive_map, &(struct Val){.id = 99}, &allocator
+    );
+    check(CCC_handle_insert_error(hndl), CCC_TRUE);
+    check(count(&array_adaptive_map).count, 1);
     check_end();
 }
 
@@ -47,6 +89,34 @@ check_static_begin(array_adaptive_map_test_insert_macros) {
         id,
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
+    );
+    check(
+        array_adaptive_map_handle_status(
+            array_adaptive_map_handle_wrap(NULL, &(int){2})
+        ),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        array_adaptive_map_handle_status(
+            array_adaptive_map_handle_wrap(&array_adaptive_map, NULL)
+        ),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        array_adaptive_map_or_insert(NULL, &(struct Val){}, &(CCC_Allocator){}),
+        NULL
+    );
+    check(
+        array_adaptive_map_or_insert(
+            &(CCC_Array_adaptive_map_handle){}, NULL, &(CCC_Allocator){}
+        ),
+        NULL
+    );
+    check(
+        array_adaptive_map_or_insert(
+            &(CCC_Array_adaptive_map_handle){}, &(struct Val){}, NULL
+        ),
+        NULL
     );
 
     struct Val const *ins = array_adaptive_map_at(
@@ -134,6 +204,24 @@ check_static_begin(array_adaptive_map_test_insert_overwrite) {
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
+    check(
+        CCC_handle_status(array_adaptive_map_swap_handle_wrap(
+            NULL, &(struct Val){}, &(CCC_Allocator){}
+        )),
+        CCC_ENTRY_ARGUMENT_ERROR
+    );
+    check(
+        CCC_handle_status(array_adaptive_map_swap_handle_wrap(
+            &array_adaptive_map, NULL, &(CCC_Allocator){}
+        )),
+        CCC_ENTRY_ARGUMENT_ERROR
+    );
+    check(
+        CCC_handle_status(array_adaptive_map_swap_handle_wrap(
+            &array_adaptive_map, &(struct Val){}, NULL
+        )),
+        CCC_ENTRY_ARGUMENT_ERROR
+    );
 
     struct Val q = {.id = 137, .val = 99};
     CCC_Handle hndl = swap_handle(&array_adaptive_map, &q, &(CCC_Allocator){});
@@ -175,6 +263,8 @@ check_static_begin(array_adaptive_map_test_insert_then_bad_ideas) {
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
+    check(array_adaptive_map_get_key_value(NULL, &(int){}), 0);
+    check(array_adaptive_map_get_key_value(&array_adaptive_map, NULL), 0);
     struct Val q = {.id = 137, .val = 99};
     CCC_Handle hndl = swap_handle(&array_adaptive_map, &q, &(CCC_Allocator){});
     check(occupied(&hndl), false);
@@ -204,7 +294,7 @@ check_static_begin(array_adaptive_map_test_insert_then_bad_ideas) {
     check_end();
 }
 
-check_static_begin(array_adaptive_map_test_array_api_functional) {
+check_static_begin(array_adaptive_map_test_handle_api_functional) {
     /* Over allocate size now because we don't want to worry about resizing. */
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
         id,
@@ -288,6 +378,24 @@ check_static_begin(array_adaptive_map_test_insert_via_handle) {
         (struct Val[STANDARD_FIXED_CAP]){}
     );
     size_t const size = 200;
+    check(
+        array_adaptive_map_insert_handle(
+            NULL, &(struct Val){}, &(CCC_Allocator){}
+        ),
+        NULL
+    );
+    check(
+        array_adaptive_map_insert_handle(
+            &(CCC_Array_adaptive_map_handle){}, NULL, &(CCC_Allocator){}
+        ),
+        NULL
+    );
+    check(
+        array_adaptive_map_insert_handle(
+            &(CCC_Array_adaptive_map_handle){}, &(struct Val){}, NULL
+        ),
+        NULL
+    );
 
     /* Test handle or insert with for all even values. Default should be
        inserted. All entries are hashed to last digit so many spread out
@@ -383,7 +491,7 @@ check_static_begin(array_adaptive_map_test_insert_via_array_macros) {
     check_end();
 }
 
-check_static_begin(array_adaptive_map_test_array_api_macros) {
+check_static_begin(array_adaptive_map_test_handle_api_macros) {
     /* Over allocate size now because we don't want to worry about resizing. */
     CCC_Array_adaptive_map array_adaptive_map = array_adaptive_map_with_storage(
         id,
@@ -391,6 +499,16 @@ check_static_begin(array_adaptive_map_test_array_api_macros) {
         (struct Val[STANDARD_FIXED_CAP]){}
     );
     int const size = 200;
+    check(
+        array_adaptive_map_and_modify(
+            NULL, &(CCC_Modifier){.modify = array_adaptive_map_modplus}
+        ),
+        NULL
+    );
+    check(
+        array_adaptive_map_and_modify(&(CCC_Array_adaptive_map_handle){}, NULL),
+        NULL
+    );
 
     /* Test handle or insert with for all even values. Default should be
        inserted. All entries are hashed to last digit so many spread out
@@ -460,6 +578,24 @@ check_static_begin(array_adaptive_map_test_two_sum) {
         id,
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
+    );
+    check(
+        CCC_handle_status(array_adaptive_map_insert_or_assign_wrap(
+            NULL, &(struct Val){}, &(CCC_Allocator){}
+        )),
+        CCC_ENTRY_ARGUMENT_ERROR
+    );
+    check(
+        CCC_handle_status(array_adaptive_map_insert_or_assign_wrap(
+            &array_adaptive_map, NULL, &(CCC_Allocator){}
+        )),
+        CCC_ENTRY_ARGUMENT_ERROR
+    );
+    check(
+        CCC_handle_status(array_adaptive_map_insert_or_assign_wrap(
+            &array_adaptive_map, &(struct Val){}, NULL
+        )),
+        CCC_ENTRY_ARGUMENT_ERROR
     );
     int const addends[10] = {1, 3, -980, 6, 7, 13, 44, 32, 995, -1};
     int const target = 15;
@@ -882,7 +1018,29 @@ check_static_begin(array_adaptive_map_test_insert_and_find) {
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[SMALL_FIXED_CAP]){}
     );
-
+    check(array_adaptive_map_contains(NULL, &(int){}), CCC_TRIBOOL_ERROR);
+    check(
+        array_adaptive_map_contains(&array_adaptive_map, NULL),
+        CCC_TRIBOOL_ERROR
+    );
+    check(
+        CCC_handle_status(array_adaptive_map_try_insert_wrap(
+            NULL, &(struct Val){}, &(CCC_Allocator){}
+        )),
+        CCC_ENTRY_ARGUMENT_ERROR
+    );
+    check(
+        CCC_handle_status(array_adaptive_map_try_insert_wrap(
+            &array_adaptive_map, NULL, &(CCC_Allocator){}
+        )),
+        CCC_ENTRY_ARGUMENT_ERROR
+    );
+    check(
+        CCC_handle_status(array_adaptive_map_try_insert_wrap(
+            &array_adaptive_map, &(struct Val){}, NULL
+        )),
+        CCC_ENTRY_ARGUMENT_ERROR
+    );
     for (int i = 0; i < size; i += 2) {
         CCC_Handle e = try_insert(
             &array_adaptive_map,
@@ -971,6 +1129,7 @@ check_static_begin(array_adaptive_map_test_insert_weak_srand) {
 int
 main(void) {
     return check_run(
+        array_adaptive_map_test_insert_error(),
         array_adaptive_map_test_insert(),
         array_adaptive_map_test_insert_macros(),
         array_adaptive_map_test_insert_and_find(),
@@ -979,8 +1138,8 @@ main(void) {
         array_adaptive_map_test_insert_via_handle(),
         array_adaptive_map_test_insert_via_array_macros(),
         array_adaptive_map_test_reserve(),
-        array_adaptive_map_test_array_api_functional(),
-        array_adaptive_map_test_array_api_macros(),
+        array_adaptive_map_test_handle_api_functional(),
+        array_adaptive_map_test_handle_api_macros(),
         array_adaptive_map_test_two_sum(),
         array_adaptive_map_test_resize(),
         array_adaptive_map_test_resize_macros(),
