@@ -3,6 +3,7 @@
 - [Navigation](#header-navigation)
 - [CCC Cardinal Rules](#ccc-cardinal-rules)
     - [Understand allocators](#understand-allocators)
+        - [Empty allocators](#empty-allocators)
     - [Never pass NULL](#never-pass-null)
         - [Beware of intrusive containers](#beware-of-intrusive-containers)
     - [Use the correct initializer](#use-the-correct-initializer)
@@ -173,7 +174,14 @@ Full knowledge of the stack allocator is not required to understand the gist of 
 
 Passing allocators at call sites also ensures that the reader knows where in the code memory allocation may occur. Different types of allocators with various levels of debugging or safety features can also be swapped in at runtime or compile time easily. Finally, no boiler plate is required if the user plans on using only fixed size containers or managing their own memory.
 
-An empty `&(CCC_Allocator){}` can be passed to any function. How the container responds to this will depend on the API function call, but the response is always well defined.
+#### Empty Allocators {#empty-allocators}
+
+An empty `&(CCC_Allocator){}` can be passed to any function and means the following.
+
+- No allocation, reallocation, or deallocation will occur.
+- Any operation that requires allocation will fail and return the reason or change behavior accordingly.
+- Flat and array based containers will copy the user provided element into their internal storage if sufficient capacity already exists.
+- Intrusive containers will operate solely on the intrusive element within the user provided type, in-place. The user must guarantee the lifetime of the element.
 
 ### Never Pass NULL {#never-pass-null}
 
@@ -223,7 +231,7 @@ No destructor has been implemented, but we follow the no passing `NULL` rule. An
 
 #### Beware of Intrusive Containers {#beware-of-intrusive-containers}
 
-When passing an empty allocator some details must be remembered. One difference between `Flat_` and `Array_` based containers and the standard intrusive containers is that the former copy user provided types into a table-like structure. When an empty allocator is passed to these flat and array based containers only resizing of the underlying table is forbidden. For intrusive containers the contract is different.
+When passing an empty allocator some details must be remembered. One difference between `Flat_` and `Array_` based containers and the standard intrusive containers is that the former copy user provided types into a table-like structure. When an empty allocator is passed to these flat and array based containers resizing of the underlying table is forbidden. For intrusive containers the contract is different.
 
 Consider this insertion into an intrusive priority queue.
 
@@ -337,11 +345,19 @@ The `_default()` initializers can be used at compile or runtime as well. The cor
 
 ### Pointers Versus Handles {#pointers-versus-handles}
 
-There are three important concepts about references the user must understand in the C Container Collection: pointers that may be invalidated, pointers that are stable, and handles that are stable.
+There are three important concepts about references the user must understand in the C Container Collection: pointers that may be invalidated, pointers that are stable, and handles that are stable. Here is a table summarizes the container types the user will encounter in this collection.
+
+
+|Type|Storage|Pointer Stability|Handle Stability|
+|----|-------|-----------------|----------------|
+|Intrusive|User-owned|Stable|N/A|
+|Flat|Container-owned|Unstable|N/A|
+|Array|Container-owned|Unstable|Stable|
+
 
 #### Invalidated Pointers {#invalidated-pointers}
 
-When a `Flat_` container is passed an allocator for an insert or push type operation, assume that all references are invalidated after that operation. This is because the underlying container has been given permission to resize. For a simple dynamic buffer this may be obvious.
+Pointer invalidation occurs only when a container is permitted to allocate. When a flat container is passed an allocator for an insert or push type operation, assume that all references are invalidated after that operation. For a simple dynamic buffer this may be obvious.
 
 ```c
 int *front = CCC_buffer_front(&buffer);
