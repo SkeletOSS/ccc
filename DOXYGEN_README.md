@@ -1,6 +1,6 @@
 # C Container Collection Documentation
 
-- [Navigation](#navigation)
+- [Navigation](#header-navigation)
 - [CCC Cardinal Rules](#ccc-cardinal-rules)
     - [Understand allocators](#understand-allocators)
     - [Never pass `NULL`](#never-pass-null)
