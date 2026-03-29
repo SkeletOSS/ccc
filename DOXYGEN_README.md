@@ -1,25 +1,34 @@
 # CCC DOC
 
-- [Usage](#usage)
+- [Navigation](#navigation)
 - [CCC Cardinal Rules](#ccc-cardinal-rules)
+    - [Understand allocators](#understand-allocators)
+    - [Never pass `NULL`](#never-pass-null)
+    - [Use the correct initializer](#use-the-correct-initializer)
+    - [Understand pointer versus handle stability](#pointers-versus-handles)
 - [Installation](#installation)
 - [Coverage Report](#coverage-report)
 
-## Usage
+## Navigation
 
-Welcome to the doc! Follow the links below to become familiar with the collection.
+Follow the link to the container documentation.
 
-- [ccc](https://skeletoss.github.io/ccc/files.html) - The collection of containers. Click the header for the desired container to view its interface.
-    - Each `*.h` file listed contains the entire interface for that container.
-    - All types and functions are listed at the top of each page.
-    - All types and functions have links to the extended documentation below.
-    - Because Doxygen takes directly from the source files the same documentation can be read directly in the header files distributed with the library.
-- [types.h](https://skeletoss.github.io/ccc/types_8h.html) - The fundamental types that all containers use.
-    - Become familiar with the memory allocation interface and memory permissions.
-    - Understand the Entry and Handle interfaces for efficient associative container operations.
-- [traits.h](https://skeletoss.github.io/ccc/traits_8h.html) - Generic versions of shared functionality across containers.
-    - Write more expressive less distracting code with shorter naming.
-    - Combine shared functionality across containers with one united interface.
+- [ccc/adaptive_map.h](https://skeletoss.github.io/ccc/adaptive__map_8h.html)
+- [ccc/array_adaptive_map.h](https://skeletoss.github.io/ccc/array__adaptive__map_8h.html)
+- [ccc/array_tree_map.h](https://skeletoss.github.io/ccc/array__tree__map_8h.html)
+- [ccc/bitset.h](https://skeletoss.github.io/ccc/bitset_8h.html)
+- [ccc/buffer.h](https://skeletoss.github.io/ccc/buffer_8h.html)
+- [ccc/configuration.h](https://skeletoss.github.io/ccc/configuration_8h.html)
+- [ccc/doubly_linked_list.h](https://skeletoss.github.io/ccc/doubly__linked__list_8h.html)
+- [ccc/flat_double_ended_queue.h](https://skeletoss.github.io/ccc/flat__double__ended__queue_8h.html)
+- [ccc/flat_hash_map.h](https://skeletoss.github.io/ccc/flat__hash__map_8h.html)
+- [ccc/flat_priority_queue.h](https://skeletoss.github.io/ccc/flat__priority__queue_8h.html)
+- [ccc/priority_queue.h](https://skeletoss.github.io/ccc/priority__queue_8h.html)
+- [ccc/singly_linked_list.h](https://skeletoss.github.io/ccc/singly__linked__list_8h.html)
+- [ccc/sort.h](https://skeletoss.github.io/ccc/sort_8h.html)
+- [ccc/traits.h](https://skeletoss.github.io/ccc/traits_8h.html)
+- [ccc/tree_map.h](https://skeletoss.github.io/ccc/tree__map_8h.html)
+- [ccc/types.h](https://skeletoss.github.io/ccc/types_8h.html)
 
 ## CCC Cardinal Rules
 
@@ -29,6 +38,138 @@ Welcome to the doc! Follow the links below to become familiar with the collectio
 4. [Understand pointer versus handle stability](#pointers-versus-handles).
 
 ### Understand Allocators
+
+Traditionally, dynamic memory is obtained, resized, and freed through an OS or language provided interface such as `malloc`, `realloc`, and `free`; these three functions manage a global allocator. However, these three core functionalities of an allocator can be united into one function. This is the approach that the C Container Collection takes. This is the implementation of the standard library allocator through the `CCC_Allocator_interface` type function.
+
+```c
+typedef struct {
+    /** The input to the allocation function. NULL or previously allocated. */
+    void *const input;
+    /** The bytes being requested from the allocator. 0 is a free request. */
+    size_t bytes;
+    /** Additional state to pass to the allocator to help manage memory. */
+    void *const context;
+} CCC_Allocator_arguments;
+
+/** @brief An allocation function at the core of all containers.
+
+An allocation function implements the following behavior, when it has been
+passed an allocator context. Context is passed to a container upon its
+initialization and the programmer may choose how to best utilize this reference.
+
+- If input is NULL and bytes 0, NULL is returned.
+- If input is NULL with non-zero bytes, new memory is allocated/returned.
+- If input is non-NULL it has been previously allocated by the allocator.
+- If input is non-NULL with non-zero size, input is resized to at least bytes
+  size. The pointer returned is NULL if resizing fails. Upon success, the
+  pointer returned might not be equal to the pointer provided.
+- If input is non-NULL and size is 0, input is freed and NULL is returned.
+
+This allocator does not need context. */
+typedef void *CCC_Allocator_interface(CCC_Allocator_arguments);
+
+void *
+std_allocate(CCC_Allocator_arguments const arguments) {
+    if (!arguments.input && !arguments.bytes) {
+        return NULL;
+    }
+    if (!arguments.input) {
+        return malloc(arguments.bytes);
+    }
+    if (!arguments.bytes) {
+        free(arguments.input);
+        return NULL;
+    }
+    return realloc(arguments.input, arguments.bytes);
+}
+```
+
+Then, containers that allocate accept a reference to a `CCC_Allocator` which is a simple bundle for the `CCC_Allocator_interface` and context.
+
+```c
+typedef struct {
+    /** The allocator function to be passed to an allocating operation. */
+    CCC_Allocator_interface *allocate;
+    /** Additional state to pass to the allocator to help manage memory. */
+    void *context;
+} CCC_Allocator;
+
+(void)CCC_flat_hash_map_insert_or_assign(
+    &map,
+    &(struct Val){.key = 37, .val = 1},
+    &(CCC_Allocator){.allocate = std_allocate}
+);
+```
+
+The ability to pass context along with a `CCC_Allocator`, and have that same context provided as an argument to the allocator function call, is significant. This opens up the possibility for non-global allocators, or allocators with context that is not available until runtime. Consider the stack allocator that the CCC test suite uses to test container code paths that use an allocator, but avoid the overhead and cleanup that comes with the standard library allocator.
+
+```c
+struct Stack_allocator {
+    /** The stack array of a compile time known capacity of user types. Always
+        the first field of the struct. Do not move. */
+    void *blocks;
+    /** The size in bytes of the user type stored in this stack array. */
+    size_t sizeof_type;
+    /** The byte capacity of the compile time known array of user types. */
+    size_t bytes_capacity;
+    /** The bytes occupied within this array. Multiple of type size. */
+    size_t bytes_occupied;
+};
+
+void *
+stack_allocator_allocate(CCC_Allocator_arguments arguments) {
+    if (!arguments.bytes || arguments.input || !arguments.context) {
+        return NULL;
+    }
+    struct Stack_allocator *const allocator = arguments.context;
+    size_t const remainder = arguments.bytes % allocator->sizeof_type;
+    if (remainder) {
+        arguments.bytes = arguments.bytes + allocator->sizeof_type - remainder;
+    }
+    if (allocator->bytes_occupied + arguments.bytes
+        > allocator->bytes_capacity) {
+        return NULL;
+    }
+    void *const block = (char *)allocator->blocks + allocator->bytes_occupied;
+    allocator->bytes_occupied += arguments.bytes;
+    return block;
+}
+```
+
+It is basically a bump allocator that never frees. It requires context because it only exists within the stack frame of a function.
+
+```c
+struct Val {
+    int val;
+    CCC_Priority_queue_node elem;
+};
+
+int
+main(void) {
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[1]){}),
+    };
+    CCC_Priority_queue priority_queue = CCC_priority_queue_for(
+        struct Val,
+        elem,
+        CCC_ORDER_LESSER,
+        (CCC_Comparator){.compare = val_order}
+    );
+    CCC_prority_queue_push(
+        &priority_queue,
+        &(struct Val){.val = i}.elem,
+        &allocator
+    );
+    return 0;
+}
+```
+
+Full knowledge of the stack allocator is not required to understand the gist of this code block. There is an allocation function and a structure that manages the requested block of types the user plans to use. Context is a powerful concept for allocators that can provide fine-grained control and flexibility.
+
+Passing allocators at call sites also ensures that the reader knows where in the code memory allocation may occur. Different types of allocators with various levels of debugging or safety features can also be swapped in at runtime or compile time easily. Finally, no boiler plate is required if the user plans on using only fixed size containers or managing their own memory.
+
+An empty `&(CCC_Allocator){}` can be passed to any function. How the container responds to this will depend on the API function call, but the response is always well defined.
 
 ### Never Pass NULL
 
@@ -55,7 +196,7 @@ CCC_Entry const e = CCC_flat_hash_map_insert_or_assign(
 );
 ```
 
-The user is trying to express that they don't want this function to allocate if the table is full. They want to keep the return value so they can check if this insertion failure has taken place and proceed with their program. However, using `NULL` is a programmer error and will return an error status because it forces the reader to consult documentation to understand the function call. Instead use this construction.
+The user is trying to express that they don't want this function to allocate if the table is full. They want to keep the return value so they can check if this insertion failure has taken place and proceed with their program. However, using `NULL` is a programmer error and will return an error status because it obscures intent and may force users to consult documentation. Instead use this construction.
 
 ```c
 CCC_Entry const e = CCC_flat_hash_map_insert_or_assign(
@@ -102,7 +243,156 @@ This required attention to scope and lifetime applies identically to all intrusi
 
 ### Use the Correct Initializer
 
+Building upon the last rule, that `NULL` should never appear at a function or call site, the user should apply this rule to initializers. Every container offers a variety of initializers. If the container will be initialized as empty use the `_default()` initializer. Compare the following wrong choice with a subsequent correct choice.
+
+> [!WARNING]
+> The following example shows incorrect usage of the CCC API.
+
+```c
+CCC_Bitset b = CCC_bitset_for(
+    0,
+    0,
+    NULL /* <-ERROR HERE!*/
+);
+```
+
+This misuse breaks rule 2, and it is difficult to understand what the two zeros and `NULL` mean just from reading the code. Use the correct initializer.
+
+```c
+CCC_Bitset b = CCC_bitset_default();
+```
+
+For the `Flat_` and `Array_` based containers, consider using the `_with_storage()` initializers for expressive compile time initialization of fixed size containers.
+
+```c
+struct Key_val {
+    int key;
+    int val;
+};
+static CCC_Array_adaptive_map adaptive_map
+    = CCC_array_adaptive_map_with_storage(
+        key,
+        (CCC_Key_comparator){.compare = compare_int_key},
+        (struct Key_val[1024]){}
+    );
+static CCC_Array_tree_map tree_map
+    = CCC_array_tree_map_with_storage(
+        key,
+        (CCC_Key_comparator){.compare = compare_int_key},
+        (struct Key_val[1024]){}
+    );
+static CCC_Flat_hash_map hash_map
+    = CCC_flat_hash_map_with_storage(
+        key,
+        ((CCC_Hasher){.hash = hash_int, .compare = compare_int_key}),
+        (struct Key_val[1024]){}
+    );
+static CCC_Flat_priority_queue priority_queue
+    = CCC_flat_priority_queue_with_storage(
+        CCC_ORDER_LESSER,
+        (CCC_Comparator){.compare = compare_int},
+        (int[1024]){}
+    );
+static CCC_Flat_double_ended_queue ring_buffer
+    = CCC_flat_double_ended_queue_with_storage(
+        0,
+        (int[1024]){}
+    );
+static CCC_Buffer buffer
+    = CCC_buffer_with_storage(
+        0,
+        (int[1024]){}
+    );
+static CCC_Bitset bitset
+    = CCC_bitset_with_storage(
+        1024,
+        (CCC_Bit[1024]){}
+    );
+```
+
+The `_default()` initializers can be used at compile or runtime as well. The correct initializer will always present the more readable and expressive code. More complex initializers such as the `_for()` family of initializers are in place to support well-documented but rare corner cases of user memory management strategies. Always read the container initialization section of the container documentation to pick the right initializer for the job.
+
 ### Pointers Versus Handles
+
+There are three important concepts about references the user must understand in the C Container Collection: pointers that may be invalidated, pointers that are stable, and handles that are stable.
+
+#### Invalidated Pointers
+
+When a `Flat_` container is passed an allocator for an insert or push type operation, assume that all references are invalidated after that operation. This is because the underlying container has been given permission to resize. For a simple dynamic buffer this may be obvious.
+
+```c
+int *front = CCC_buffer_front(&buffer);
+(void)CCC_buffer_push(&buffer, &(int){7}, &allocator);
+/* front may be invalid */
+```
+
+After the push operation, the reference `front` may be invalid if the buffer has resized to fit the new element. This is also true for more complex containers such as the flat hash map.
+
+```c
+struct Key {
+    int key;
+    int value;
+};
+struct Key *a = CCC_flat_hash_map_or_insert(
+    CCC_flat_hash_map_entry(&map, &(int){7}, &allocator),
+    &(struct Key){.key = 7, .value = 7},
+);
+struct Key *a = CCC_flat_hash_map_or_insert(
+    CCC_flat_hash_map_entry(&map, &(int){8}, &allocator),
+    &(struct Key){.key = 8, .value = 8},
+);
+/* a may be invalid */
+```
+
+After the insert or assign operation, the reference `*a` may have been invalidated.
+
+#### Stable Pointers
+
+Intrusive containers assume that the user defined types upon which they intrude are pointer stable. That means they assume no insertion or removal alters pointers to any other existing elements in the data structure. Consider an intrusive map.
+
+```c
+struct Key {
+    CCC_Tree_map_node map_node;
+    int key;
+    int value;
+};
+struct Key *a = CCC_tree_map_or_insert(
+    CCC_tree_map_entry(&map, &(int){7})
+    &(struct Key){.key = 7, .value = 7}.map_node,
+    &allocator
+);
+struct Key *b = CCC_tree_map_or_insert(
+    CCC_tree_map_entry(&map, &(int){8})
+    &(struct Key){.key = 8, .value = 8}.map_node,
+    &allocator
+);
+/* a is still valid */
+```
+
+The map assumes the pointer `*a` is still valid after the insertion of `*b`. The container assumption is the same if the user provides the element and allocation has been forbidden by passing an empty `&(CCC_Allocator){}`.
+
+#### Stable Handles
+
+The special `Array_` based containers promise handle stability. This is similar to pointer stability, but provides slightly greater flexibility to the implementation. A `CCC_Handle` and its unwrapped `CCC_Handle_index`
+
+```c
+struct Key {
+    int key;
+    int value;
+};
+CCC_Handle_index a = CCC_array_tree_map_or_insert(
+    CCC_array_tree_map_entry(&map, &(int){7}),
+    &(struct Key){.key = 7, .value = 7},
+    &allocator
+);
+CCC_Handle_index b = CCC_array_tree_map_or_insert(
+    CCC_array_tree_map_entry(&map, &(int){8}),
+    &(struct Key){.key = 8, .value = 8},
+    &allocator
+);
+```
+
+After the second element is inserted, `a` remains valid and can be provided to the container API to obtain a pointer to the user element. The underlying storage may have been resized or moved, but the location in the array remains stable. Therefore, only the handle index remains stable, not any user held pointers.
 
 ## Installation
 
