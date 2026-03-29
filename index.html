@@ -96,7 +96,10 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="textblock"><p><a class="anchor" id="md_DOXYGEN_README"></a></p><ul>
 <li><a class="el" href="index.html#header-navigation">Navigation</a></li>
 <li><a class="el" href="index.html#ccc-cardinal-rules">CCC Cardinal Rules</a><ul>
-<li><a class="el" href="index.html#understand-allocators">Understand allocators</a></li>
+<li><a class="el" href="index.html#understand-allocators">Understand allocators</a><ul>
+<li><a class="el" href="index.html#empty-allocators">Empty allocators</a></li>
+</ul>
+</li>
 <li><a class="el" href="index.html#never-pass-null">Never pass NULL</a><ul>
 <li><a class="el" href="index.html#beware-of-intrusive-containers">Beware of intrusive containers</a></li>
 </ul>
@@ -244,7 +247,15 @@ Understand Allocators</h2>
 <div class="ttc" id="atypes_8h_html_a5e471ae63519e1044855e361826fc355a7d1c8b7831377b5625db94ca6eb5c323"><div class="ttname"><a href="types_8h.html#a5e471ae63519e1044855e361826fc355a7d1c8b7831377b5625db94ca6eb5c323">CCC_ORDER_LESSER</a></div><div class="ttdeci">@ CCC_ORDER_LESSER</div><div class="ttdef"><b>Definition:</b> types.h:216</div></div>
 </div><!-- fragment --><p>Full knowledge of the stack allocator is not required to understand the gist of this code block. There is an allocation function and a structure that manages the requested block of types the user plans to use. Context is a powerful concept for allocators that can provide fine-grained control and flexibility.</p>
 <p>Passing allocators at call sites also ensures that the reader knows where in the code memory allocation may occur. Different types of allocators with various levels of debugging or safety features can also be swapped in at runtime or compile time easily. Finally, no boiler plate is required if the user plans on using only fixed size containers or managing their own memory.</p>
-<p>An empty <code>&amp;(<a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a>){}</code> can be passed to any function. How the container responds to this will depend on the API function call, but the response is always well defined.</p>
+<h3><a class="anchor" id="empty-allocators"></a>
+Empty Allocators</h3>
+<p>An empty <code>&amp;(<a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a>){}</code> can be passed to any function and means the following.</p>
+<ul>
+<li>No allocation, reallocation, or deallocation will occur.</li>
+<li>Any operation that requires allocation will fail and return the reason or change behavior accordingly.</li>
+<li>Flat and array based containers will copy the user provided element into their internal storage if sufficient capacity already exists.</li>
+<li>Intrusive containers will operate solely on the intrusive element within the user provided type, in-place. The user must guarantee the lifetime of the element.</li>
+</ul>
 <h2><a class="anchor" id="never-pass-null"></a>
 Never Pass NULL</h2>
 <p>When reading user written C Container Collection code, the presence of <code>NULL</code> at a function or macro call site indicates a programmer error. Consider the following function call inserting an element into a flat hash map.</p>
@@ -278,7 +289,7 @@ Never Pass NULL</h2>
 </div><!-- fragment --><p>No destructor has been implemented, but we follow the no passing <code>NULL</code> rule. An empty compound literal reference is the correct way to express that no user provided implementation of that argument exists. The API will respond accordingly. See documentation for details.</p>
 <h3><a class="anchor" id="beware-of-intrusive-containers"></a>
 Beware of Intrusive Containers</h3>
-<p>When passing an empty allocator some details must be remembered. One difference between <code>Flat_</code> and <code>Array_</code> based containers and the standard intrusive containers is that the former copy user provided types into a table-like structure. When an empty allocator is passed to these flat and array based containers only resizing of the underlying table is forbidden. For intrusive containers the contract is different.</p>
+<p>When passing an empty allocator some details must be remembered. One difference between <code>Flat_</code> and <code>Array_</code> based containers and the standard intrusive containers is that the former copy user provided types into a table-like structure. When an empty allocator is passed to these flat and array based containers resizing of the underlying table is forbidden. For intrusive containers the contract is different.</p>
 <p>Consider this insertion into an intrusive priority queue.</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>Priority {</div>
 <div class="line">    <a class="code hl_struct" href="structCCC__Priority__queue__node.html">CCC_Priority_queue_node</a> pq_elem;</div>
@@ -382,10 +393,20 @@ Use the Correct Initializer</h2>
 </div><!-- fragment --><p>The <code>_default()</code> initializers can be used at compile or runtime as well. The correct initializer will always present the more readable and expressive code. More complex initializers such as the <code>_for()</code> family of initializers are in place to support well-documented but rare corner cases of user memory management strategies. Always read the container initialization section of the container documentation to pick the right initializer for the job.</p>
 <h2><a class="anchor" id="pointers-versus-handles"></a>
 Pointers Versus Handles</h2>
-<p>There are three important concepts about references the user must understand in the C Container Collection: pointers that may be invalidated, pointers that are stable, and handles that are stable.</p>
+<p>There are three important concepts about references the user must understand in the C Container Collection: pointers that may be invalidated, pointers that are stable, and handles that are stable. Here is a table summarizes the container types the user will encounter in this collection.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Type   </th><th class="markdownTableHeadNone">Storage   </th><th class="markdownTableHeadNone">Pointer Stability   </th><th class="markdownTableHeadNone">Handle Stability    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Intrusive   </td><td class="markdownTableBodyNone">User-owned   </td><td class="markdownTableBodyNone">Stable   </td><td class="markdownTableBodyNone">N/A    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Flat   </td><td class="markdownTableBodyNone">Container-owned   </td><td class="markdownTableBodyNone">Unstable   </td><td class="markdownTableBodyNone">N/A    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Array   </td><td class="markdownTableBodyNone">Container-owned   </td><td class="markdownTableBodyNone">Unstable   </td><td class="markdownTableBodyNone">Stable   </td></tr>
+</table>
 <h3><a class="anchor" id="invalidated-pointers"></a>
 Invalidated Pointers</h3>
-<p>When a <code>Flat_</code> container is passed an allocator for an insert or push type operation, assume that all references are invalidated after that operation. This is because the underlying container has been given permission to resize. For a simple dynamic buffer this may be obvious.</p>
+<p>Pointer invalidation occurs only when a container is permitted to allocate. When a flat container is passed an allocator for an insert or push type operation, assume that all references are invalidated after that operation. For a simple dynamic buffer this may be obvious.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> *front = <a class="code hl_function" href="buffer_8h.html#a4c9f5187b290d944a14f3d3e922f166c">CCC_buffer_front</a>(&amp;buffer);</div>
 <div class="line">(void)<a class="code hl_function" href="buffer_8h.html#a4136eff57e6947dcc1406705b35396a2">CCC_buffer_push_back</a>(&amp;buffer, &amp;(<span class="keywordtype">int</span>){7}, &amp;allocator);</div>
 <div class="line"><span class="comment">/* front may be invalid */</span></div>

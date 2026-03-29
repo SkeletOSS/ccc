@@ -2,7 +2,9 @@ var index =
 [
     [ "Header Navigation", "index.html#header-navigation", null ],
     [ "CCC Cardinal Rules", "index.html#ccc-cardinal-rules", [
-      [ "Understand Allocators", "index.html#understand-allocators", null ],
+      [ "Understand Allocators", "index.html#understand-allocators", [
+        [ "Empty Allocators", "index.html#empty-allocators", null ]
+      ] ],
       [ "Never Pass NULL", "index.html#never-pass-null", [
         [ "Beware of Intrusive Containers", "index.html#beware-of-intrusive-containers", null ]
       ] ],

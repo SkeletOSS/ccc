@@ -197,6 +197,7 @@ var NAVTREEINDEX1 =
 "index.html#beware-of-intrusive-containers":[0,1,1,0],
 "index.html#ccc-cardinal-rules":[0,1],
 "index.html#coverage-report":[0,3],
+"index.html#empty-allocators":[0,1,0,0],
 "index.html#header-navigation":[0,0],
 "index.html#installation":[0,2],
 "index.html#invalidated-pointers":[0,1,3,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "private__adaptive__map_8h.html#a646be0b0183c10fa633cf0e646446023":[3,0,0,0,0,5],
 "private__adaptive__map_8h.html#a7591c171cc0734ef8837b6284a96631a":[3,0,0,0,0,15],
 "private__adaptive__map_8h.html#a771328753c398ad056334f7fc3f5f673":[3,0,0,0,0,14],
-"private__adaptive__map_8h.html#a7cddac3a9da8eede77888febe12d0ed4":[3,0,0,0,0,9],
-"private__adaptive__map_8h.html#a941a7bd43f42767fdd51c1c33d422926":[3,0,0,0,0,16]
+"private__adaptive__map_8h.html#a7cddac3a9da8eede77888febe12d0ed4":[3,0,0,0,0,9]
 };
