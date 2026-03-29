@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-03-29 02:06:34</td>
+            <td class="headerValue">2026-03-29 02:07:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -889,10 +889,10 @@
 <span id="L827"><span class="lineNum">     827</span> <span class="tlaUNC">           0 :             return CCC_FALSE;</span></span>
 <span id="L828"><span class="lineNum">     828</span>              :         }</span>
 <span id="L829"><span class="lineNum">     829</span> <span class="tlaGNC">    22043216 :         if (t.v == TAG_EMPTY) {</span></span>
-<span id="L830"><span class="lineNum">     830</span> <span class="tlaGNC">    13167064 :             ++remain;</span></span>
+<span id="L830"><span class="lineNum">     830</span> <span class="tlaGNC">    13182408 :             ++remain;</span></span>
 <span id="L831"><span class="lineNum">     831</span> <span class="tlaGNC">    22043216 :         } else if (t.v == TAG_DELETED) {</span></span>
-<span id="L832"><span class="lineNum">     832</span> <span class="tlaGNC">     1413056 :             ++deleted;</span></span>
-<span id="L833"><span class="lineNum">     833</span> <span class="tlaGNC">     1413056 :         } else {</span></span>
+<span id="L832"><span class="lineNum">     832</span> <span class="tlaGNC">     1397712 :             ++deleted;</span></span>
+<span id="L833"><span class="lineNum">     833</span> <span class="tlaGNC">     1397712 :         } else {</span></span>
 <span id="L834"><span class="lineNum">     834</span> <span class="tlaGNC">     7463096 :             if (!tag_full(t)) {</span></span>
 <span id="L835"><span class="lineNum">     835</span> <span class="tlaUNC">           0 :                 return CCC_FALSE;</span></span>
 <span id="L836"><span class="lineNum">     836</span>              :             }</span>
@@ -1065,8 +1065,8 @@
 <span id="L1003"><span class="lineNum">    1003</span> <span class="tlaGNC">        5945 :     struct CCC_Flat_hash_map_tag const m</span></span>
 <span id="L1004"><span class="lineNum">    1004</span> <span class="tlaGNC">       11890 :         = (match_leading_zeros(prev_empties) + match_trailing_zeros(empties)</span></span>
 <span id="L1005"><span class="lineNum">    1005</span> <span class="tlaGNC">        5945 :            &gt;= GROUP_COUNT)</span></span>
-<span id="L1006"><span class="lineNum">    1006</span> <span class="tlaGNC">        3170 :             ? (struct CCC_Flat_hash_map_tag){TAG_DELETED}</span></span>
-<span id="L1007"><span class="lineNum">    1007</span> <span class="tlaGNC">        2775 :             : (struct CCC_Flat_hash_map_tag){TAG_EMPTY};</span></span>
+<span id="L1006"><span class="lineNum">    1006</span> <span class="tlaGNC">        3126 :             ? (struct CCC_Flat_hash_map_tag){TAG_DELETED}</span></span>
+<span id="L1007"><span class="lineNum">    1007</span> <span class="tlaGNC">        2819 :             : (struct CCC_Flat_hash_map_tag){TAG_EMPTY};</span></span>
 <span id="L1008"><span class="lineNum">    1008</span> <span class="tlaGNC">        5945 :     map-&gt;remain += (TAG_EMPTY == m.v);</span></span>
 <span id="L1009"><span class="lineNum">    1009</span> <span class="tlaGNC">        5945 :     --map-&gt;count;</span></span>
 <span id="L1010"><span class="lineNum">    1010</span> <span class="tlaGNC">        5945 :     tag_set(map, m, index);</span></span>
@@ -1089,41 +1089,41 @@
 <span id="L1027"><span class="lineNum">    1027</span>              :         .stride = 0,</span>
 <span id="L1028"><span class="lineNum">    1028</span>              :     };</span>
 <span id="L1029"><span class="lineNum">    1029</span> <span class="tlaGNC">       24933 :     CCC_Count empty_deleted = {.error = CCC_RESULT_FAIL};</span></span>
-<span id="L1030"><span class="lineNum">    1030</span> <span class="tlaGNC">       83510 :     for (;;) {</span></span>
-<span id="L1031"><span class="lineNum">    1031</span> <span class="tlaGNC">       83510 :         struct Group const group = group_load_unaligned(&amp;map-&gt;tag[probe.index]);</span></span>
+<span id="L1030"><span class="lineNum">    1030</span> <span class="tlaGNC">       83696 :     for (;;) {</span></span>
+<span id="L1031"><span class="lineNum">    1031</span> <span class="tlaGNC">       83696 :         struct Group const group = group_load_unaligned(&amp;map-&gt;tag[probe.index]);</span></span>
 <span id="L1032"><span class="lineNum">    1032</span>              :         {</span>
-<span id="L1033"><span class="lineNum">    1033</span> <span class="tlaGNC">       83510 :             size_t tag_index = 0;</span></span>
-<span id="L1034"><span class="lineNum">    1034</span> <span class="tlaGNC">       83510 :             struct Match_mask m = match_tag(group, tag);</span></span>
-<span id="L1035"><span class="lineNum">    1035</span> <span class="tlaGNC">      707581 :             while ((tag_index = match_next_one(&amp;m)) != GROUP_COUNT) {</span></span>
-<span id="L1036"><span class="lineNum">    1036</span> <span class="tlaGNC">      636019 :                 tag_index = (probe.index + tag_index) &amp; mask;</span></span>
-<span id="L1037"><span class="lineNum">    1037</span> <span class="tlaGNC">      636019 :                 if (likely(is_equal(map, key, tag_index))) {</span></span>
+<span id="L1033"><span class="lineNum">    1033</span> <span class="tlaGNC">       83696 :             size_t tag_index = 0;</span></span>
+<span id="L1034"><span class="lineNum">    1034</span> <span class="tlaGNC">       83696 :             struct Match_mask m = match_tag(group, tag);</span></span>
+<span id="L1035"><span class="lineNum">    1035</span> <span class="tlaGNC">      708197 :             while ((tag_index = match_next_one(&amp;m)) != GROUP_COUNT) {</span></span>
+<span id="L1036"><span class="lineNum">    1036</span> <span class="tlaGNC">      636449 :                 tag_index = (probe.index + tag_index) &amp; mask;</span></span>
+<span id="L1037"><span class="lineNum">    1037</span> <span class="tlaGNC">      636449 :                 if (likely(is_equal(map, key, tag_index))) {</span></span>
 <span id="L1038"><span class="lineNum">    1038</span> <span class="tlaGNC">       23896 :                     return (struct Query){</span></span>
 <span id="L1039"><span class="lineNum">    1039</span> <span class="tlaGNC">       11948 :                         .index = tag_index,</span></span>
 <span id="L1040"><span class="lineNum">    1040</span>              :                         .status = CCC_ENTRY_OCCUPIED,</span>
 <span id="L1041"><span class="lineNum">    1041</span>              :                     };</span>
 <span id="L1042"><span class="lineNum">    1042</span>              :                 }</span>
 <span id="L1043"><span class="lineNum">    1043</span>              :             }</span>
-<span id="L1044"><span class="lineNum">    1044</span> <span class="tlaGNC">       83510 :         }</span></span>
+<span id="L1044"><span class="lineNum">    1044</span> <span class="tlaGNC">       83696 :         }</span></span>
 <span id="L1045"><span class="lineNum">    1045</span>              :         /* Taking the first available slot once probing is done is important</span>
 <span id="L1046"><span class="lineNum">    1046</span>              :            to preserve probing operation and efficiency. */</span>
-<span id="L1047"><span class="lineNum">    1047</span> <span class="tlaGNC">       71562 :         if (likely(empty_deleted.error)) {</span></span>
-<span id="L1048"><span class="lineNum">    1048</span> <span class="tlaGNC">       79094 :             size_t const i_take</span></span>
-<span id="L1049"><span class="lineNum">    1049</span> <span class="tlaGNC">       39547 :                 = match_trailing_one(match_empty_deleted(group));</span></span>
-<span id="L1050"><span class="lineNum">    1050</span> <span class="tlaGNC">       39547 :             if (likely(i_take != GROUP_COUNT)) {</span></span>
-<span id="L1051"><span class="lineNum">    1051</span> <span class="tlaGNC">       13876 :                 empty_deleted.count = (probe.index + i_take) &amp; mask;</span></span>
-<span id="L1052"><span class="lineNum">    1052</span> <span class="tlaGNC">       13876 :                 empty_deleted.error = CCC_RESULT_OK;</span></span>
-<span id="L1053"><span class="lineNum">    1053</span> <span class="tlaGNC">       13876 :             }</span></span>
-<span id="L1054"><span class="lineNum">    1054</span> <span class="tlaGNC">       39547 :         }</span></span>
-<span id="L1055"><span class="lineNum">    1055</span> <span class="tlaGNC">       71562 :         if (likely(match_has_one(match_empty(group)))) {</span></span>
+<span id="L1047"><span class="lineNum">    1047</span> <span class="tlaGNC">       71748 :         if (likely(empty_deleted.error)) {</span></span>
+<span id="L1048"><span class="lineNum">    1048</span> <span class="tlaGNC">       79156 :             size_t const i_take</span></span>
+<span id="L1049"><span class="lineNum">    1049</span> <span class="tlaGNC">       39578 :                 = match_trailing_one(match_empty_deleted(group));</span></span>
+<span id="L1050"><span class="lineNum">    1050</span> <span class="tlaGNC">       39578 :             if (likely(i_take != GROUP_COUNT)) {</span></span>
+<span id="L1051"><span class="lineNum">    1051</span> <span class="tlaGNC">       13900 :                 empty_deleted.count = (probe.index + i_take) &amp; mask;</span></span>
+<span id="L1052"><span class="lineNum">    1052</span> <span class="tlaGNC">       13900 :                 empty_deleted.error = CCC_RESULT_OK;</span></span>
+<span id="L1053"><span class="lineNum">    1053</span> <span class="tlaGNC">       13900 :             }</span></span>
+<span id="L1054"><span class="lineNum">    1054</span> <span class="tlaGNC">       39578 :         }</span></span>
+<span id="L1055"><span class="lineNum">    1055</span> <span class="tlaGNC">       71748 :         if (likely(match_has_one(match_empty(group)))) {</span></span>
 <span id="L1056"><span class="lineNum">    1056</span> <span class="tlaGNC">       25970 :             return (struct Query){</span></span>
 <span id="L1057"><span class="lineNum">    1057</span> <span class="tlaGNC">       12985 :                 .index = empty_deleted.count,</span></span>
 <span id="L1058"><span class="lineNum">    1058</span>              :                 .status = CCC_ENTRY_VACANT,</span>
 <span id="L1059"><span class="lineNum">    1059</span>              :             };</span>
 <span id="L1060"><span class="lineNum">    1060</span>              :         }</span>
-<span id="L1061"><span class="lineNum">    1061</span> <span class="tlaGNC">       58577 :         probe.stride += GROUP_COUNT;</span></span>
-<span id="L1062"><span class="lineNum">    1062</span> <span class="tlaGNC">       58577 :         probe.index += probe.stride;</span></span>
-<span id="L1063"><span class="lineNum">    1063</span> <span class="tlaGNC">       58577 :         probe.index &amp;= mask;</span></span>
-<span id="L1064"><span class="lineNum">    1064</span> <span class="tlaGNC">       83510 :     }</span></span>
+<span id="L1061"><span class="lineNum">    1061</span> <span class="tlaGNC">       58763 :         probe.stride += GROUP_COUNT;</span></span>
+<span id="L1062"><span class="lineNum">    1062</span> <span class="tlaGNC">       58763 :         probe.index += probe.stride;</span></span>
+<span id="L1063"><span class="lineNum">    1063</span> <span class="tlaGNC">       58763 :         probe.index &amp;= mask;</span></span>
+<span id="L1064"><span class="lineNum">    1064</span> <span class="tlaGNC">       83696 :     }</span></span>
 <span id="L1065"><span class="lineNum">    1065</span> <span class="tlaGNC">       24933 : }</span></span>
 <span id="L1066"><span class="lineNum">    1066</span>              : </span>
 <span id="L1067"><span class="lineNum">    1067</span>              : /** Finds key or fails when first empty slot is encountered after a group fails</span>
@@ -1146,51 +1146,51 @@
 <span id="L1084"><span class="lineNum">    1084</span> <span class="tlaGNC">       11816 :         .index = hash &amp; mask,</span></span>
 <span id="L1085"><span class="lineNum">    1085</span>              :         .stride = 0,</span>
 <span id="L1086"><span class="lineNum">    1086</span>              :     };</span>
-<span id="L1087"><span class="lineNum">    1087</span> <span class="tlaGNC">       44536 :     for (;;) {</span></span>
-<span id="L1088"><span class="lineNum">    1088</span> <span class="tlaGNC">       44536 :         struct Group const group = group_load_unaligned(&amp;map-&gt;tag[probe.index]);</span></span>
+<span id="L1087"><span class="lineNum">    1087</span> <span class="tlaGNC">       44539 :     for (;;) {</span></span>
+<span id="L1088"><span class="lineNum">    1088</span> <span class="tlaGNC">       44539 :         struct Group const group = group_load_unaligned(&amp;map-&gt;tag[probe.index]);</span></span>
 <span id="L1089"><span class="lineNum">    1089</span>              :         {</span>
-<span id="L1090"><span class="lineNum">    1090</span> <span class="tlaGNC">       44536 :             size_t tag_index = 0;</span></span>
-<span id="L1091"><span class="lineNum">    1091</span> <span class="tlaGNC">       44536 :             struct Match_mask match = match_tag(group, tag);</span></span>
-<span id="L1092"><span class="lineNum">    1092</span> <span class="tlaGNC">       51676 :             while ((tag_index = match_next_one(&amp;match)) != GROUP_COUNT) {</span></span>
-<span id="L1093"><span class="lineNum">    1093</span> <span class="tlaGNC">       18843 :                 tag_index = (probe.index + tag_index) &amp; mask;</span></span>
-<span id="L1094"><span class="lineNum">    1094</span> <span class="tlaGNC">       18843 :                 if (likely(is_equal(map, key, tag_index))) {</span></span>
+<span id="L1090"><span class="lineNum">    1090</span> <span class="tlaGNC">       44539 :             size_t tag_index = 0;</span></span>
+<span id="L1091"><span class="lineNum">    1091</span> <span class="tlaGNC">       44539 :             struct Match_mask match = match_tag(group, tag);</span></span>
+<span id="L1092"><span class="lineNum">    1092</span> <span class="tlaGNC">       52409 :             while ((tag_index = match_next_one(&amp;match)) != GROUP_COUNT) {</span></span>
+<span id="L1093"><span class="lineNum">    1093</span> <span class="tlaGNC">       19573 :                 tag_index = (probe.index + tag_index) &amp; mask;</span></span>
+<span id="L1094"><span class="lineNum">    1094</span> <span class="tlaGNC">       19573 :                 if (likely(is_equal(map, key, tag_index))) {</span></span>
 <span id="L1095"><span class="lineNum">    1095</span> <span class="tlaGNC">       11703 :                     return (CCC_Count){.count = tag_index};</span></span>
 <span id="L1096"><span class="lineNum">    1096</span>              :                 }</span>
 <span id="L1097"><span class="lineNum">    1097</span>              :             }</span>
-<span id="L1098"><span class="lineNum">    1098</span> <span class="tlaGNC">       44536 :         }</span></span>
-<span id="L1099"><span class="lineNum">    1099</span> <span class="tlaGNC">       32833 :         if (likely(match_has_one(match_empty(group)))) {</span></span>
+<span id="L1098"><span class="lineNum">    1098</span> <span class="tlaGNC">       44539 :         }</span></span>
+<span id="L1099"><span class="lineNum">    1099</span> <span class="tlaGNC">       32836 :         if (likely(match_has_one(match_empty(group)))) {</span></span>
 <span id="L1100"><span class="lineNum">    1100</span> <span class="tlaGNC">         113 :             return (CCC_Count){.error = CCC_RESULT_FAIL};</span></span>
 <span id="L1101"><span class="lineNum">    1101</span>              :         }</span>
-<span id="L1102"><span class="lineNum">    1102</span> <span class="tlaGNC">       32720 :         probe.stride += GROUP_COUNT;</span></span>
-<span id="L1103"><span class="lineNum">    1103</span> <span class="tlaGNC">       32720 :         probe.index += probe.stride;</span></span>
-<span id="L1104"><span class="lineNum">    1104</span> <span class="tlaGNC">       32720 :         probe.index &amp;= mask;</span></span>
-<span id="L1105"><span class="lineNum">    1105</span> <span class="tlaGNC">       44536 :     }</span></span>
+<span id="L1102"><span class="lineNum">    1102</span> <span class="tlaGNC">       32723 :         probe.stride += GROUP_COUNT;</span></span>
+<span id="L1103"><span class="lineNum">    1103</span> <span class="tlaGNC">       32723 :         probe.index += probe.stride;</span></span>
+<span id="L1104"><span class="lineNum">    1104</span> <span class="tlaGNC">       32723 :         probe.index &amp;= mask;</span></span>
+<span id="L1105"><span class="lineNum">    1105</span> <span class="tlaGNC">       44539 :     }</span></span>
 <span id="L1106"><span class="lineNum">    1106</span> <span class="tlaGNC">       11816 : }</span></span>
 <span id="L1107"><span class="lineNum">    1107</span>              : </span>
 <span id="L1108"><span class="lineNum">    1108</span>              : /** Finds the first available empty or deleted insert slot or loops forever. The</span>
 <span id="L1109"><span class="lineNum">    1109</span>              : caller of this function must know that there is an available empty or deleted</span>
 <span id="L1110"><span class="lineNum">    1110</span>              : slot in the table. */</span>
 <span id="L1111"><span class="lineNum">    1111</span>              : static size_t</span>
-<span id="L1112"><span class="lineNum">    1112</span> <span class="tlaGNC">       10513 : find_slot_or_noreturn(</span></span>
+<span id="L1112"><span class="lineNum">    1112</span> <span class="tlaGNC">       11404 : find_slot_or_noreturn(</span></span>
 <span id="L1113"><span class="lineNum">    1113</span>              :     struct CCC_Flat_hash_map const *const map, uint64_t const hash</span>
 <span id="L1114"><span class="lineNum">    1114</span>              : ) {</span>
-<span id="L1115"><span class="lineNum">    1115</span> <span class="tlaGNC">       10513 :     size_t const mask = map-&gt;mask;</span></span>
-<span id="L1116"><span class="lineNum">    1116</span> <span class="tlaGNC">       21026 :     struct Probe_sequence p = {</span></span>
-<span id="L1117"><span class="lineNum">    1117</span> <span class="tlaGNC">       10513 :         .index = hash &amp; mask,</span></span>
+<span id="L1115"><span class="lineNum">    1115</span> <span class="tlaGNC">       11404 :     size_t const mask = map-&gt;mask;</span></span>
+<span id="L1116"><span class="lineNum">    1116</span> <span class="tlaGNC">       22808 :     struct Probe_sequence p = {</span></span>
+<span id="L1117"><span class="lineNum">    1117</span> <span class="tlaGNC">       11404 :         .index = hash &amp; mask,</span></span>
 <span id="L1118"><span class="lineNum">    1118</span>              :         .stride = 0,</span>
 <span id="L1119"><span class="lineNum">    1119</span>              :     };</span>
-<span id="L1120"><span class="lineNum">    1120</span> <span class="tlaGNC">       48396 :     for (;;) {</span></span>
-<span id="L1121"><span class="lineNum">    1121</span> <span class="tlaGNC">       96792 :         size_t const available_slot = match_trailing_one(</span></span>
-<span id="L1122"><span class="lineNum">    1122</span> <span class="tlaGNC">       48396 :             match_empty_deleted(group_load_unaligned(&amp;map-&gt;tag[p.index]))</span></span>
+<span id="L1120"><span class="lineNum">    1120</span> <span class="tlaGNC">       49372 :     for (;;) {</span></span>
+<span id="L1121"><span class="lineNum">    1121</span> <span class="tlaGNC">       98744 :         size_t const available_slot = match_trailing_one(</span></span>
+<span id="L1122"><span class="lineNum">    1122</span> <span class="tlaGNC">       49372 :             match_empty_deleted(group_load_unaligned(&amp;map-&gt;tag[p.index]))</span></span>
 <span id="L1123"><span class="lineNum">    1123</span>              :         );</span>
-<span id="L1124"><span class="lineNum">    1124</span> <span class="tlaGNC">       48396 :         if (likely(available_slot != GROUP_COUNT)) {</span></span>
-<span id="L1125"><span class="lineNum">    1125</span> <span class="tlaGNC">       10513 :             return (p.index + available_slot) &amp; mask;</span></span>
+<span id="L1124"><span class="lineNum">    1124</span> <span class="tlaGNC">       49372 :         if (likely(available_slot != GROUP_COUNT)) {</span></span>
+<span id="L1125"><span class="lineNum">    1125</span> <span class="tlaGNC">       11404 :             return (p.index + available_slot) &amp; mask;</span></span>
 <span id="L1126"><span class="lineNum">    1126</span>              :         }</span>
-<span id="L1127"><span class="lineNum">    1127</span> <span class="tlaGNC">       37883 :         p.stride += GROUP_COUNT;</span></span>
-<span id="L1128"><span class="lineNum">    1128</span> <span class="tlaGNC">       37883 :         p.index += p.stride;</span></span>
-<span id="L1129"><span class="lineNum">    1129</span> <span class="tlaGNC">       37883 :         p.index &amp;= mask;</span></span>
-<span id="L1130"><span class="lineNum">    1130</span> <span class="tlaGNC">       48396 :     }</span></span>
-<span id="L1131"><span class="lineNum">    1131</span> <span class="tlaGNC">       10513 : }</span></span>
+<span id="L1127"><span class="lineNum">    1127</span> <span class="tlaGNC">       37968 :         p.stride += GROUP_COUNT;</span></span>
+<span id="L1128"><span class="lineNum">    1128</span> <span class="tlaGNC">       37968 :         p.index += p.stride;</span></span>
+<span id="L1129"><span class="lineNum">    1129</span> <span class="tlaGNC">       37968 :         p.index &amp;= mask;</span></span>
+<span id="L1130"><span class="lineNum">    1130</span> <span class="tlaGNC">       49372 :     }</span></span>
+<span id="L1131"><span class="lineNum">    1131</span> <span class="tlaGNC">       11404 : }</span></span>
 <span id="L1132"><span class="lineNum">    1132</span>              : </span>
 <span id="L1133"><span class="lineNum">    1133</span>              : /** Finds the first occupied slot in the table. The full slot is one where the</span>
 <span id="L1134"><span class="lineNum">    1134</span>              : user has hash bits occupying the lower 7 bits of the tag. Assumes that the start</span>
@@ -1242,20 +1242,20 @@
 <span id="L1180"><span class="lineNum">    1180</span>              : Assumes that start is aligned to the 0th tag of a group and only progresses</span>
 <span id="L1181"><span class="lineNum">    1181</span>              : start by the size of a group such that it is always aligned. */</span>
 <span id="L1182"><span class="lineNum">    1182</span>              : static inline struct Match_mask</span>
-<span id="L1183"><span class="lineNum">    1183</span> <span class="tlaGNC">         211 : find_first_deleted_group(</span></span>
+<span id="L1183"><span class="lineNum">    1183</span> <span class="tlaGNC">         280 : find_first_deleted_group(</span></span>
 <span id="L1184"><span class="lineNum">    1184</span>              :     struct CCC_Flat_hash_map const *const map, size_t *const start</span>
 <span id="L1185"><span class="lineNum">    1185</span>              : ) {</span>
-<span id="L1186"><span class="lineNum">    1186</span> <span class="tlaGNC">         211 :     assert((*start &amp; ~((size_t)(GROUP_COUNT - 1))) == *start);</span></span>
-<span id="L1187"><span class="lineNum">    1187</span> <span class="tlaGNC">         325 :     while (*start &lt; (map-&gt;mask + 1)) {</span></span>
+<span id="L1186"><span class="lineNum">    1186</span> <span class="tlaGNC">         280 :     assert((*start &amp; ~((size_t)(GROUP_COUNT - 1))) == *start);</span></span>
+<span id="L1187"><span class="lineNum">    1187</span> <span class="tlaGNC">         390 :     while (*start &lt; (map-&gt;mask + 1)) {</span></span>
 <span id="L1188"><span class="lineNum">    1188</span>              :         struct Match_mask const deleted_group</span>
-<span id="L1189"><span class="lineNum">    1189</span> <span class="tlaGNC">         320 :             = match_deleted(group_load_aligned(&amp;map-&gt;tag[*start]));</span></span>
-<span id="L1190"><span class="lineNum">    1190</span> <span class="tlaGNC">         320 :         if (deleted_group.v) {</span></span>
-<span id="L1191"><span class="lineNum">    1191</span> <span class="tlaGNC">         206 :             return deleted_group;</span></span>
+<span id="L1189"><span class="lineNum">    1189</span> <span class="tlaGNC">         384 :             = match_deleted(group_load_aligned(&amp;map-&gt;tag[*start]));</span></span>
+<span id="L1190"><span class="lineNum">    1190</span> <span class="tlaGNC">         384 :         if (deleted_group.v) {</span></span>
+<span id="L1191"><span class="lineNum">    1191</span> <span class="tlaGNC">         274 :             return deleted_group;</span></span>
 <span id="L1192"><span class="lineNum">    1192</span>              :         }</span>
-<span id="L1193"><span class="lineNum">    1193</span> <span class="tlaGNC">         114 :         *start += GROUP_COUNT;</span></span>
-<span id="L1194"><span class="lineNum">    1194</span> <span class="tlaGNC">         114 :     }</span></span>
-<span id="L1195"><span class="lineNum">    1195</span> <span class="tlaGNC">           5 :     return (struct Match_mask){};</span></span>
-<span id="L1196"><span class="lineNum">    1196</span> <span class="tlaGNC">         211 : }</span></span>
+<span id="L1193"><span class="lineNum">    1193</span> <span class="tlaGNC">         110 :         *start += GROUP_COUNT;</span></span>
+<span id="L1194"><span class="lineNum">    1194</span> <span class="tlaGNC">         110 :     }</span></span>
+<span id="L1195"><span class="lineNum">    1195</span> <span class="tlaGNC">           6 :     return (struct Match_mask){};</span></span>
+<span id="L1196"><span class="lineNum">    1196</span> <span class="tlaGNC">         280 : }</span></span>
 <span id="L1197"><span class="lineNum">    1197</span>              : </span>
 <span id="L1198"><span class="lineNum">    1198</span>              : /** Accepts the map, elements to add, and an allocation function if resizing</span>
 <span id="L1199"><span class="lineNum">    1199</span>              : may be needed. While containers normally remember their own allocation</span>
@@ -1282,17 +1282,17 @@
 <span id="L1220"><span class="lineNum">    1220</span> <span class="tlaGNC">           3 :         return init;</span></span>
 <span id="L1221"><span class="lineNum">    1221</span>              :     }</span>
 <span id="L1222"><span class="lineNum">    1222</span> <span class="tlaGNC">       24939 :     if (likely(map-&gt;remain)) {</span></span>
-<span id="L1223"><span class="lineNum">    1223</span> <span class="tlaGNC">       24892 :         return CCC_RESULT_OK;</span></span>
+<span id="L1223"><span class="lineNum">    1223</span> <span class="tlaGNC">       24891 :         return CCC_RESULT_OK;</span></span>
 <span id="L1224"><span class="lineNum">    1224</span>              :     }</span>
-<span id="L1225"><span class="lineNum">    1225</span> <span class="tlaGNC">          47 :     size_t const current_total_cap = map-&gt;mask + 1;</span></span>
-<span id="L1226"><span class="lineNum">    1226</span> <span class="tlaGNC">          47 :     if (allocator-&gt;allocate &amp;&amp; (map-&gt;count + to_add) &gt; current_total_cap / 2) {</span></span>
+<span id="L1225"><span class="lineNum">    1225</span> <span class="tlaGNC">          48 :     size_t const current_total_cap = map-&gt;mask + 1;</span></span>
+<span id="L1226"><span class="lineNum">    1226</span> <span class="tlaGNC">          48 :     if (allocator-&gt;allocate &amp;&amp; (map-&gt;count + to_add) &gt; current_total_cap / 2) {</span></span>
 <span id="L1227"><span class="lineNum">    1227</span> <span class="tlaGNC">          23 :         return rehash_resize(map, to_add, allocator);</span></span>
 <span id="L1228"><span class="lineNum">    1228</span>              :     }</span>
-<span id="L1229"><span class="lineNum">    1229</span> <span class="tlaGNC">          24 :     if (map-&gt;count == mask_to_capacity_with_load_factor(map-&gt;mask)) {</span></span>
+<span id="L1229"><span class="lineNum">    1229</span> <span class="tlaGNC">          25 :     if (map-&gt;count == mask_to_capacity_with_load_factor(map-&gt;mask)) {</span></span>
 <span id="L1230"><span class="lineNum">    1230</span> <span class="tlaGNC">          19 :         return CCC_RESULT_NO_ALLOCATION_FUNCTION;</span></span>
 <span id="L1231"><span class="lineNum">    1231</span>              :     }</span>
-<span id="L1232"><span class="lineNum">    1232</span> <span class="tlaGNC">           5 :     rehash_in_place(map);</span></span>
-<span id="L1233"><span class="lineNum">    1233</span> <span class="tlaGNC">           5 :     return CCC_RESULT_OK;</span></span>
+<span id="L1232"><span class="lineNum">    1232</span> <span class="tlaGNC">           6 :     rehash_in_place(map);</span></span>
+<span id="L1233"><span class="lineNum">    1233</span> <span class="tlaGNC">           6 :     return CCC_RESULT_OK;</span></span>
 <span id="L1234"><span class="lineNum">    1234</span> <span class="tlaGNC">       24953 : }</span></span>
 <span id="L1235"><span class="lineNum">    1235</span>              : </span>
 <span id="L1236"><span class="lineNum">    1236</span>              : /** Rehashes the map in place. Elements may or may not move, depending on</span>
@@ -1300,71 +1300,71 @@
 <span id="L1238"><span class="lineNum">    1238</span>              : for insertion. Rehashing in place repeatedly can be expensive so the user</span>
 <span id="L1239"><span class="lineNum">    1239</span>              : should ensure to select an appropriate capacity for fixed size tables. */</span>
 <span id="L1240"><span class="lineNum">    1240</span>              : static void</span>
-<span id="L1241"><span class="lineNum">    1241</span> <span class="tlaGNC">           5 : rehash_in_place(struct CCC_Flat_hash_map *const map) {</span></span>
-<span id="L1242"><span class="lineNum">    1242</span> <span class="tlaGNC">           5 :     assert((map-&gt;mask + 1) % GROUP_COUNT == 0);</span></span>
-<span id="L1243"><span class="lineNum">    1243</span> <span class="tlaGNC">           5 :     assert(map-&gt;tag &amp;&amp; map-&gt;data);</span></span>
-<span id="L1244"><span class="lineNum">    1244</span> <span class="tlaGNC">           5 :     size_t const mask = map-&gt;mask;</span></span>
-<span id="L1245"><span class="lineNum">    1245</span> <span class="tlaGNC">         325 :     for (size_t i = 0; i &lt; mask + 1; i += GROUP_COUNT) {</span></span>
-<span id="L1246"><span class="lineNum">    1246</span> <span class="tlaGNC">         320 :         group_store_aligned(</span></span>
-<span id="L1247"><span class="lineNum">    1247</span> <span class="tlaGNC">         320 :             &amp;map-&gt;tag[i],</span></span>
-<span id="L1248"><span class="lineNum">    1248</span> <span class="tlaGNC">         320 :             group_convert_constant_to_empty_and_full_to_deleted(</span></span>
-<span id="L1249"><span class="lineNum">    1249</span> <span class="tlaGNC">         320 :                 group_load_aligned(&amp;map-&gt;tag[i])</span></span>
+<span id="L1241"><span class="lineNum">    1241</span> <span class="tlaGNC">           6 : rehash_in_place(struct CCC_Flat_hash_map *const map) {</span></span>
+<span id="L1242"><span class="lineNum">    1242</span> <span class="tlaGNC">           6 :     assert((map-&gt;mask + 1) % GROUP_COUNT == 0);</span></span>
+<span id="L1243"><span class="lineNum">    1243</span> <span class="tlaGNC">           6 :     assert(map-&gt;tag &amp;&amp; map-&gt;data);</span></span>
+<span id="L1244"><span class="lineNum">    1244</span> <span class="tlaGNC">           6 :     size_t const mask = map-&gt;mask;</span></span>
+<span id="L1245"><span class="lineNum">    1245</span> <span class="tlaGNC">         390 :     for (size_t i = 0; i &lt; mask + 1; i += GROUP_COUNT) {</span></span>
+<span id="L1246"><span class="lineNum">    1246</span> <span class="tlaGNC">         384 :         group_store_aligned(</span></span>
+<span id="L1247"><span class="lineNum">    1247</span> <span class="tlaGNC">         384 :             &amp;map-&gt;tag[i],</span></span>
+<span id="L1248"><span class="lineNum">    1248</span> <span class="tlaGNC">         384 :             group_convert_constant_to_empty_and_full_to_deleted(</span></span>
+<span id="L1249"><span class="lineNum">    1249</span> <span class="tlaGNC">         384 :                 group_load_aligned(&amp;map-&gt;tag[i])</span></span>
 <span id="L1250"><span class="lineNum">    1250</span>              :             )</span>
 <span id="L1251"><span class="lineNum">    1251</span>              :         );</span>
-<span id="L1252"><span class="lineNum">    1252</span> <span class="tlaGNC">         320 :     }</span></span>
-<span id="L1253"><span class="lineNum">    1253</span> <span class="tlaGNC">           5 :     (void)memcpy(map-&gt;tag + (mask + 1), map-&gt;tag, GROUP_COUNT);</span></span>
+<span id="L1252"><span class="lineNum">    1252</span> <span class="tlaGNC">         384 :     }</span></span>
+<span id="L1253"><span class="lineNum">    1253</span> <span class="tlaGNC">           6 :     (void)memcpy(map-&gt;tag + (mask + 1), map-&gt;tag, GROUP_COUNT);</span></span>
 <span id="L1254"><span class="lineNum">    1254</span>              :     {</span>
-<span id="L1255"><span class="lineNum">    1255</span> <span class="tlaGNC">           5 :         size_t group = 0;</span></span>
-<span id="L1256"><span class="lineNum">    1256</span> <span class="tlaGNC">           5 :         struct Match_mask deleted = {};</span></span>
+<span id="L1255"><span class="lineNum">    1255</span> <span class="tlaGNC">           6 :         size_t group = 0;</span></span>
+<span id="L1256"><span class="lineNum">    1256</span> <span class="tlaGNC">           6 :         struct Match_mask deleted = {};</span></span>
 <span id="L1257"><span class="lineNum">    1257</span>              :         /* Because the load factor is roughly 87% we could have large spans of</span>
 <span id="L1258"><span class="lineNum">    1258</span>              :            unoccupied slots in large tables due to full slots we have converted</span>
 <span id="L1259"><span class="lineNum">    1259</span>              :            to deleted tags. There could also be many tombstones that were just</span>
 <span id="L1260"><span class="lineNum">    1260</span>              :            converted to empty slots in the prep loop earlier. We can speed</span>
 <span id="L1261"><span class="lineNum">    1261</span>              :            things up by performing aligned group scans checking for any groups</span>
 <span id="L1262"><span class="lineNum">    1262</span>              :            with elements that need to be rehashed. */</span>
-<span id="L1263"><span class="lineNum">    1263</span> <span class="tlaGNC">         211 :         while ((deleted = find_first_deleted_group(map, &amp;group)).v) {</span></span>
+<span id="L1263"><span class="lineNum">    1263</span> <span class="tlaGNC">         280 :         while ((deleted = find_first_deleted_group(map, &amp;group)).v) {</span></span>
 <span id="L1264"><span class="lineNum">    1264</span>              :             {</span>
-<span id="L1265"><span class="lineNum">    1265</span> <span class="tlaGNC">         206 :                 size_t rehash = 0;</span></span>
-<span id="L1266"><span class="lineNum">    1266</span> <span class="tlaGNC">        3027 :                 while ((rehash = match_next_one(&amp;deleted)) != GROUP_COUNT) {</span></span>
-<span id="L1267"><span class="lineNum">    1267</span> <span class="tlaGNC">        2821 :                     rehash += group;</span></span>
+<span id="L1265"><span class="lineNum">    1265</span> <span class="tlaGNC">         274 :                 size_t rehash = 0;</span></span>
+<span id="L1266"><span class="lineNum">    1266</span> <span class="tlaGNC">        3997 :                 while ((rehash = match_next_one(&amp;deleted)) != GROUP_COUNT) {</span></span>
+<span id="L1267"><span class="lineNum">    1267</span> <span class="tlaGNC">        3723 :                     rehash += group;</span></span>
 <span id="L1268"><span class="lineNum">    1268</span>              :                     /* The inner loop swap case may have made a previously</span>
 <span id="L1269"><span class="lineNum">    1269</span>              :                        deleted entry in this group filled with the swapped</span>
 <span id="L1270"><span class="lineNum">    1270</span>              :                        element's hash. The mask cannot be updated to notice this</span>
 <span id="L1271"><span class="lineNum">    1271</span>              :                        and the swapped element was taken care of by retrying to</span>
 <span id="L1272"><span class="lineNum">    1272</span>              :                        find a slot in the innermost loop. Therefore skip this</span>
 <span id="L1273"><span class="lineNum">    1273</span>              :                        slot. It no longer needs processing. */</span>
-<span id="L1274"><span class="lineNum">    1274</span> <span class="tlaGNC">        2821 :                     if (map-&gt;tag[rehash].v != TAG_DELETED) {</span></span>
-<span id="L1275"><span class="lineNum">    1275</span> <span class="tlaGNC">          14 :                         continue;</span></span>
+<span id="L1274"><span class="lineNum">    1274</span> <span class="tlaGNC">        3723 :                     if (map-&gt;tag[rehash].v != TAG_DELETED) {</span></span>
+<span id="L1275"><span class="lineNum">    1275</span> <span class="tlaGNC">          25 :                         continue;</span></span>
 <span id="L1276"><span class="lineNum">    1276</span>              :                     }</span>
-<span id="L1277"><span class="lineNum">    1277</span> <span class="tlaGNC">        4473 :                     for (;;) {</span></span>
-<span id="L1278"><span class="lineNum">    1278</span> <span class="tlaGNC">        4473 :                         uint64_t const hash = hasher(map, key_at(map, rehash));</span></span>
-<span id="L1279"><span class="lineNum">    1279</span> <span class="tlaGNC">        4473 :                         size_t const slot = find_slot_or_noreturn(map, hash);</span></span>
-<span id="L1280"><span class="lineNum">    1280</span> <span class="tlaGNC">        4473 :                         struct CCC_Flat_hash_map_tag const hash_tag</span></span>
-<span id="L1281"><span class="lineNum">    1281</span> <span class="tlaGNC">        4473 :                             = tag_from(hash);</span></span>
+<span id="L1277"><span class="lineNum">    1277</span> <span class="tlaGNC">        5364 :                     for (;;) {</span></span>
+<span id="L1278"><span class="lineNum">    1278</span> <span class="tlaGNC">        5364 :                         uint64_t const hash = hasher(map, key_at(map, rehash));</span></span>
+<span id="L1279"><span class="lineNum">    1279</span> <span class="tlaGNC">        5364 :                         size_t const slot = find_slot_or_noreturn(map, hash);</span></span>
+<span id="L1280"><span class="lineNum">    1280</span> <span class="tlaGNC">        5364 :                         struct CCC_Flat_hash_map_tag const hash_tag</span></span>
+<span id="L1281"><span class="lineNum">    1281</span> <span class="tlaGNC">        5364 :                             = tag_from(hash);</span></span>
 <span id="L1282"><span class="lineNum">    1282</span>              :                         /* We analyze groups not slots. Do not move the element</span>
 <span id="L1283"><span class="lineNum">    1283</span>              :                            to another slot in the same unaligned group load. The</span>
 <span id="L1284"><span class="lineNum">    1284</span>              :                            tag is in the proper group for an unaligned load</span>
 <span id="L1285"><span class="lineNum">    1285</span>              :                            based on where the hashed value will start its loads</span>
 <span id="L1286"><span class="lineNum">    1286</span>              :                            and the match and does not need relocation. */</span>
-<span id="L1287"><span class="lineNum">    1287</span> <span class="tlaGNC">        4473 :                         if (likely(is_same_group(rehash, slot, hash, mask))) {</span></span>
-<span id="L1288"><span class="lineNum">    1288</span> <span class="tlaGNC">        2783 :                             tag_set(map, hash_tag, rehash);</span></span>
-<span id="L1289"><span class="lineNum">    1289</span> <span class="tlaGNC">        2783 :                             break; /* continues outer loop */</span></span>
+<span id="L1287"><span class="lineNum">    1287</span> <span class="tlaGNC">        5364 :                         if (likely(is_same_group(rehash, slot, hash, mask))) {</span></span>
+<span id="L1288"><span class="lineNum">    1288</span> <span class="tlaGNC">        3667 :                             tag_set(map, hash_tag, rehash);</span></span>
+<span id="L1289"><span class="lineNum">    1289</span> <span class="tlaGNC">        3667 :                             break; /* continues outer loop */</span></span>
 <span id="L1290"><span class="lineNum">    1290</span>              :                         }</span>
-<span id="L1291"><span class="lineNum">    1291</span> <span class="tlaGNC">        1690 :                         struct CCC_Flat_hash_map_tag const occupant</span></span>
-<span id="L1292"><span class="lineNum">    1292</span> <span class="tlaGNC">        1690 :                             = map-&gt;tag[slot];</span></span>
-<span id="L1293"><span class="lineNum">    1293</span> <span class="tlaGNC">        1690 :                         tag_set(map, hash_tag, slot);</span></span>
-<span id="L1294"><span class="lineNum">    1294</span> <span class="tlaGNC">        1690 :                         if (occupant.v == TAG_EMPTY) {</span></span>
-<span id="L1295"><span class="lineNum">    1295</span> <span class="tlaGNC">          24 :                             tag_set(</span></span>
-<span id="L1296"><span class="lineNum">    1296</span> <span class="tlaGNC">          24 :                                 map,</span></span>
-<span id="L1297"><span class="lineNum">    1297</span> <span class="tlaGNC">          24 :                                 (struct CCC_Flat_hash_map_tag){TAG_EMPTY},</span></span>
-<span id="L1298"><span class="lineNum">    1298</span> <span class="tlaGNC">          24 :                                 rehash</span></span>
+<span id="L1291"><span class="lineNum">    1291</span> <span class="tlaGNC">        1697 :                         struct CCC_Flat_hash_map_tag const occupant</span></span>
+<span id="L1292"><span class="lineNum">    1292</span> <span class="tlaGNC">        1697 :                             = map-&gt;tag[slot];</span></span>
+<span id="L1293"><span class="lineNum">    1293</span> <span class="tlaGNC">        1697 :                         tag_set(map, hash_tag, slot);</span></span>
+<span id="L1294"><span class="lineNum">    1294</span> <span class="tlaGNC">        1697 :                         if (occupant.v == TAG_EMPTY) {</span></span>
+<span id="L1295"><span class="lineNum">    1295</span> <span class="tlaGNC">          31 :                             tag_set(</span></span>
+<span id="L1296"><span class="lineNum">    1296</span> <span class="tlaGNC">          31 :                                 map,</span></span>
+<span id="L1297"><span class="lineNum">    1297</span> <span class="tlaGNC">          31 :                                 (struct CCC_Flat_hash_map_tag){TAG_EMPTY},</span></span>
+<span id="L1298"><span class="lineNum">    1298</span> <span class="tlaGNC">          31 :                                 rehash</span></span>
 <span id="L1299"><span class="lineNum">    1299</span>              :                             );</span>
-<span id="L1300"><span class="lineNum">    1300</span> <span class="tlaGNC">          24 :                             (void)memcpy(</span></span>
-<span id="L1301"><span class="lineNum">    1301</span> <span class="tlaGNC">          24 :                                 data_at(map, slot),</span></span>
-<span id="L1302"><span class="lineNum">    1302</span> <span class="tlaGNC">          24 :                                 data_at(map, rehash),</span></span>
-<span id="L1303"><span class="lineNum">    1303</span> <span class="tlaGNC">          24 :                                 map-&gt;sizeof_type</span></span>
+<span id="L1300"><span class="lineNum">    1300</span> <span class="tlaGNC">          31 :                             (void)memcpy(</span></span>
+<span id="L1301"><span class="lineNum">    1301</span> <span class="tlaGNC">          31 :                                 data_at(map, slot),</span></span>
+<span id="L1302"><span class="lineNum">    1302</span> <span class="tlaGNC">          31 :                                 data_at(map, rehash),</span></span>
+<span id="L1303"><span class="lineNum">    1303</span> <span class="tlaGNC">          31 :                                 map-&gt;sizeof_type</span></span>
 <span id="L1304"><span class="lineNum">    1304</span>              :                             );</span>
-<span id="L1305"><span class="lineNum">    1305</span> <span class="tlaGNC">          24 :                             break; /* continues outer loop */</span></span>
+<span id="L1305"><span class="lineNum">    1305</span> <span class="tlaGNC">          31 :                             break; /* continues outer loop */</span></span>
 <span id="L1306"><span class="lineNum">    1306</span>              :                         }</span>
 <span id="L1307"><span class="lineNum">    1307</span>              :                         /* The other slots data has been swapped and we rehash</span>
 <span id="L1308"><span class="lineNum">    1308</span>              :                            every element for this algorithm so there is no need</span>
@@ -1378,28 +1378,28 @@
 <span id="L1316"><span class="lineNum">    1316</span> <span class="tlaGNC">        1666 :                             data_at(map, slot),</span></span>
 <span id="L1317"><span class="lineNum">    1317</span> <span class="tlaGNC">        1666 :                             map-&gt;sizeof_type</span></span>
 <span id="L1318"><span class="lineNum">    1318</span>              :                         );</span>
-<span id="L1319"><span class="lineNum">    1319</span> <span class="tlaGNC">        4473 :                     }</span></span>
+<span id="L1319"><span class="lineNum">    1319</span> <span class="tlaGNC">        5364 :                     }</span></span>
 <span id="L1320"><span class="lineNum">    1320</span>              :                 }</span>
-<span id="L1321"><span class="lineNum">    1321</span> <span class="tlaGNC">         206 :             }</span></span>
-<span id="L1322"><span class="lineNum">    1322</span> <span class="tlaGNC">         206 :             group += GROUP_COUNT;</span></span>
+<span id="L1321"><span class="lineNum">    1321</span> <span class="tlaGNC">         274 :             }</span></span>
+<span id="L1322"><span class="lineNum">    1322</span> <span class="tlaGNC">         274 :             group += GROUP_COUNT;</span></span>
 <span id="L1323"><span class="lineNum">    1323</span>              :         }</span>
-<span id="L1324"><span class="lineNum">    1324</span> <span class="tlaGNC">           5 :     }</span></span>
-<span id="L1325"><span class="lineNum">    1325</span> <span class="tlaGNC">           5 :     map-&gt;remain = mask_to_capacity_with_load_factor(mask) - map-&gt;count;</span></span>
-<span id="L1326"><span class="lineNum">    1326</span> <span class="tlaGNC">           5 : }</span></span>
+<span id="L1324"><span class="lineNum">    1324</span> <span class="tlaGNC">           6 :     }</span></span>
+<span id="L1325"><span class="lineNum">    1325</span> <span class="tlaGNC">           6 :     map-&gt;remain = mask_to_capacity_with_load_factor(mask) - map-&gt;count;</span></span>
+<span id="L1326"><span class="lineNum">    1326</span> <span class="tlaGNC">           6 : }</span></span>
 <span id="L1327"><span class="lineNum">    1327</span>              : </span>
 <span id="L1328"><span class="lineNum">    1328</span>              : /** Returns true if the position being rehashed would be moved to a new slot</span>
 <span id="L1329"><span class="lineNum">    1329</span>              : in the same group it is already in. This means when this data is hashed to its</span>
 <span id="L1330"><span class="lineNum">    1330</span>              : ideal index in the table, both i and new_slot are already in that group that</span>
 <span id="L1331"><span class="lineNum">    1331</span>              : would be loaded for simultaneous scanning. */</span>
 <span id="L1332"><span class="lineNum">    1332</span>              : static inline CCC_Tribool</span>
-<span id="L1333"><span class="lineNum">    1333</span> <span class="tlaGNC">        4473 : is_same_group(</span></span>
+<span id="L1333"><span class="lineNum">    1333</span> <span class="tlaGNC">        5364 : is_same_group(</span></span>
 <span id="L1334"><span class="lineNum">    1334</span>              :     size_t const index,</span>
 <span id="L1335"><span class="lineNum">    1335</span>              :     size_t const new_index,</span>
 <span id="L1336"><span class="lineNum">    1336</span>              :     uint64_t const hash,</span>
 <span id="L1337"><span class="lineNum">    1337</span>              :     size_t const mask</span>
 <span id="L1338"><span class="lineNum">    1338</span>              : ) {</span>
-<span id="L1339"><span class="lineNum">    1339</span> <span class="tlaGNC">        8946 :     return (((index - (hash &amp; mask)) &amp; mask) / GROUP_COUNT)</span></span>
-<span id="L1340"><span class="lineNum">    1340</span> <span class="tlaGNC">        4473 :         == (((new_index - (hash &amp; mask)) &amp; mask) / GROUP_COUNT);</span></span>
+<span id="L1339"><span class="lineNum">    1339</span> <span class="tlaGNC">       10728 :     return (((index - (hash &amp; mask)) &amp; mask) / GROUP_COUNT)</span></span>
+<span id="L1340"><span class="lineNum">    1340</span> <span class="tlaGNC">        5364 :         == (((new_index - (hash &amp; mask)) &amp; mask) / GROUP_COUNT);</span></span>
 <span id="L1341"><span class="lineNum">    1341</span>              : }</span>
 <span id="L1342"><span class="lineNum">    1342</span>              : </span>
 <span id="L1343"><span class="lineNum">    1343</span>              : static CCC_Result</span>
@@ -1527,36 +1527,36 @@
 <span id="L1465"><span class="lineNum">    1465</span> <span class="tlaGNC">           2 : }</span></span>
 <span id="L1466"><span class="lineNum">    1466</span>              : </span>
 <span id="L1467"><span class="lineNum">    1467</span>              : static inline uint64_t</span>
-<span id="L1468"><span class="lineNum">    1468</span> <span class="tlaGNC">     7510358 : hasher(struct CCC_Flat_hash_map const *const map, void const *const any_key) {</span></span>
-<span id="L1469"><span class="lineNum">    1469</span> <span class="tlaGNC">    22531074 :     return map-&gt;hasher.hash((CCC_Key_arguments){</span></span>
-<span id="L1470"><span class="lineNum">    1470</span> <span class="tlaGNC">     7510358 :         .key = any_key,</span></span>
-<span id="L1471"><span class="lineNum">    1471</span> <span class="tlaGNC">     7510358 :         .context = map-&gt;hasher.context,</span></span>
+<span id="L1468"><span class="lineNum">    1468</span> <span class="tlaGNC">     7511249 : hasher(struct CCC_Flat_hash_map const *const map, void const *const any_key) {</span></span>
+<span id="L1469"><span class="lineNum">    1469</span> <span class="tlaGNC">    22533747 :     return map-&gt;hasher.hash((CCC_Key_arguments){</span></span>
+<span id="L1470"><span class="lineNum">    1470</span> <span class="tlaGNC">     7511249 :         .key = any_key,</span></span>
+<span id="L1471"><span class="lineNum">    1471</span> <span class="tlaGNC">     7511249 :         .context = map-&gt;hasher.context,</span></span>
 <span id="L1472"><span class="lineNum">    1472</span>              :     });</span>
 <span id="L1473"><span class="lineNum">    1473</span>              : }</span>
 <span id="L1474"><span class="lineNum">    1474</span>              : </span>
 <span id="L1475"><span class="lineNum">    1475</span>              : static inline CCC_Tribool</span>
-<span id="L1476"><span class="lineNum">    1476</span> <span class="tlaGNC">      654862 : is_equal(</span></span>
+<span id="L1476"><span class="lineNum">    1476</span> <span class="tlaGNC">      656022 : is_equal(</span></span>
 <span id="L1477"><span class="lineNum">    1477</span>              :     struct CCC_Flat_hash_map const *const map,</span>
 <span id="L1478"><span class="lineNum">    1478</span>              :     void const *const key,</span>
 <span id="L1479"><span class="lineNum">    1479</span>              :     size_t const index</span>
 <span id="L1480"><span class="lineNum">    1480</span>              : ) {</span>
-<span id="L1481"><span class="lineNum">    1481</span> <span class="tlaGNC">     3274310 :     return map-&gt;hasher.compare((CCC_Key_comparator_arguments){</span></span>
-<span id="L1482"><span class="lineNum">    1482</span> <span class="tlaGNC">      654862 :                .key_left = key,</span></span>
-<span id="L1483"><span class="lineNum">    1483</span> <span class="tlaGNC">      654862 :                .type_right = data_at(map, index),</span></span>
-<span id="L1484"><span class="lineNum">    1484</span> <span class="tlaGNC">      654862 :                .context = map-&gt;hasher.context,</span></span>
+<span id="L1481"><span class="lineNum">    1481</span> <span class="tlaGNC">     3280110 :     return map-&gt;hasher.compare((CCC_Key_comparator_arguments){</span></span>
+<span id="L1482"><span class="lineNum">    1482</span> <span class="tlaGNC">      656022 :                .key_left = key,</span></span>
+<span id="L1483"><span class="lineNum">    1483</span> <span class="tlaGNC">      656022 :                .type_right = data_at(map, index),</span></span>
+<span id="L1484"><span class="lineNum">    1484</span> <span class="tlaGNC">      656022 :                .context = map-&gt;hasher.context,</span></span>
 <span id="L1485"><span class="lineNum">    1485</span>              :            })</span>
-<span id="L1486"><span class="lineNum">    1486</span> <span class="tlaGNC">      654862 :         == CCC_ORDER_EQUAL;</span></span>
+<span id="L1486"><span class="lineNum">    1486</span> <span class="tlaGNC">      656022 :         == CCC_ORDER_EQUAL;</span></span>
 <span id="L1487"><span class="lineNum">    1487</span>              : }</span>
 <span id="L1488"><span class="lineNum">    1488</span>              : </span>
 <span id="L1489"><span class="lineNum">    1489</span>              : static inline void *</span>
-<span id="L1490"><span class="lineNum">    1490</span> <span class="tlaGNC">       16360 : key_at(struct CCC_Flat_hash_map const *const map, size_t const index) {</span></span>
-<span id="L1491"><span class="lineNum">    1491</span> <span class="tlaGNC">       16360 :     return (char *)data_at(map, index) + map-&gt;key_offset;</span></span>
+<span id="L1490"><span class="lineNum">    1490</span> <span class="tlaGNC">       17251 : key_at(struct CCC_Flat_hash_map const *const map, size_t const index) {</span></span>
+<span id="L1491"><span class="lineNum">    1491</span> <span class="tlaGNC">       17251 :     return (char *)data_at(map, index) + map-&gt;key_offset;</span></span>
 <span id="L1492"><span class="lineNum">    1492</span>              : }</span>
 <span id="L1493"><span class="lineNum">    1493</span>              : </span>
 <span id="L1494"><span class="lineNum">    1494</span>              : static inline void *</span>
-<span id="L1495"><span class="lineNum">    1495</span> <span class="tlaGNC">     8184544 : data_at(struct CCC_Flat_hash_map const *const map, size_t const index) {</span></span>
-<span id="L1496"><span class="lineNum">    1496</span> <span class="tlaGNC">     8184544 :     assert(index &lt;= map-&gt;mask);</span></span>
-<span id="L1497"><span class="lineNum">    1497</span> <span class="tlaGNC">     8184544 :     return (char *)map-&gt;data + (index * map-&gt;sizeof_type);</span></span>
+<span id="L1495"><span class="lineNum">    1495</span> <span class="tlaGNC">     8186609 : data_at(struct CCC_Flat_hash_map const *const map, size_t const index) {</span></span>
+<span id="L1496"><span class="lineNum">    1496</span> <span class="tlaGNC">     8186609 :     assert(index &lt;= map-&gt;mask);</span></span>
+<span id="L1497"><span class="lineNum">    1497</span> <span class="tlaGNC">     8186609 :     return (char *)map-&gt;data + (index * map-&gt;sizeof_type);</span></span>
 <span id="L1498"><span class="lineNum">    1498</span>              : }</span>
 <span id="L1499"><span class="lineNum">    1499</span>              : </span>
 <span id="L1500"><span class="lineNum">    1500</span>              : static inline CCC_Count</span>
@@ -1659,8 +1659,8 @@
 <span id="L1597"><span class="lineNum">    1597</span>              : </span>
 <span id="L1598"><span class="lineNum">    1598</span>              : Assumes the mask is non-zero. */</span>
 <span id="L1599"><span class="lineNum">    1599</span>              : static inline size_t</span>
-<span id="L1600"><span class="lineNum">    1600</span> <span class="tlaGNC">       16090 : mask_to_capacity_with_load_factor(size_t const mask) {</span></span>
-<span id="L1601"><span class="lineNum">    1601</span> <span class="tlaGNC">       16090 :     return ((mask + 1) / 8) * 7;</span></span>
+<span id="L1600"><span class="lineNum">    1600</span> <span class="tlaGNC">       16092 : mask_to_capacity_with_load_factor(size_t const mask) {</span></span>
+<span id="L1601"><span class="lineNum">    1601</span> <span class="tlaGNC">       16092 :     return ((mask + 1) / 8) * 7;</span></span>
 <span id="L1602"><span class="lineNum">    1602</span>              : }</span>
 <span id="L1603"><span class="lineNum">    1603</span>              : </span>
 <span id="L1604"><span class="lineNum">    1604</span>              : /** Returns the number of bytes taken by the user data array. This includes the</span>
@@ -1728,16 +1728,16 @@
 <span id="L1666"><span class="lineNum">    1666</span>              : /** Sets the specified tag at the index provided. Ensures that the replica</span>
 <span id="L1667"><span class="lineNum">    1667</span>              : group at the end of the tag array remains in sync with current tag if needed. */</span>
 <span id="L1668"><span class="lineNum">    1668</span>              : static inline void</span>
-<span id="L1669"><span class="lineNum">    1669</span> <span class="tlaGNC">       29382 : tag_set(</span></span>
+<span id="L1669"><span class="lineNum">    1669</span> <span class="tlaGNC">       30280 : tag_set(</span></span>
 <span id="L1670"><span class="lineNum">    1670</span>              :     struct CCC_Flat_hash_map *const map,</span>
 <span id="L1671"><span class="lineNum">    1671</span>              :     struct CCC_Flat_hash_map_tag const tag,</span>
 <span id="L1672"><span class="lineNum">    1672</span>              :     size_t const index</span>
 <span id="L1673"><span class="lineNum">    1673</span>              : ) {</span>
-<span id="L1674"><span class="lineNum">    1674</span> <span class="tlaGNC">       58764 :     size_t const replica_byte</span></span>
-<span id="L1675"><span class="lineNum">    1675</span> <span class="tlaGNC">       29382 :         = ((index - GROUP_COUNT) &amp; map-&gt;mask) + GROUP_COUNT;</span></span>
-<span id="L1676"><span class="lineNum">    1676</span> <span class="tlaGNC">       29382 :     map-&gt;tag[index] = tag;</span></span>
-<span id="L1677"><span class="lineNum">    1677</span> <span class="tlaGNC">       29382 :     map-&gt;tag[replica_byte] = tag;</span></span>
-<span id="L1678"><span class="lineNum">    1678</span> <span class="tlaGNC">       29382 : }</span></span>
+<span id="L1674"><span class="lineNum">    1674</span> <span class="tlaGNC">       60560 :     size_t const replica_byte</span></span>
+<span id="L1675"><span class="lineNum">    1675</span> <span class="tlaGNC">       30280 :         = ((index - GROUP_COUNT) &amp; map-&gt;mask) + GROUP_COUNT;</span></span>
+<span id="L1676"><span class="lineNum">    1676</span> <span class="tlaGNC">       30280 :     map-&gt;tag[index] = tag;</span></span>
+<span id="L1677"><span class="lineNum">    1677</span> <span class="tlaGNC">       30280 :     map-&gt;tag[replica_byte] = tag;</span></span>
+<span id="L1678"><span class="lineNum">    1678</span> <span class="tlaGNC">       30280 : }</span></span>
 <span id="L1679"><span class="lineNum">    1679</span>              : </span>
 <span id="L1680"><span class="lineNum">    1680</span>              : /** Returns CCC_TRUE if the tag holds user hash bits, meaning it is occupied. */</span>
 <span id="L1681"><span class="lineNum">    1681</span>              : static inline CCC_Tribool</span>
@@ -1756,20 +1756,20 @@
 <span id="L1694"><span class="lineNum">    1694</span>              : 7 bits of the hash code. Therefore, hash functions with good entropy in the</span>
 <span id="L1695"><span class="lineNum">    1695</span>              : upper bits are desirable. */</span>
 <span id="L1696"><span class="lineNum">    1696</span>              : static inline struct CCC_Flat_hash_map_tag</span>
-<span id="L1697"><span class="lineNum">    1697</span> <span class="tlaGNC">     7535291 : tag_from(uint64_t const hash) {</span></span>
-<span id="L1698"><span class="lineNum">    1698</span> <span class="tlaGNC">    15070582 :     return (struct CCC_Flat_hash_map_tag){</span></span>
-<span id="L1699"><span class="lineNum">    1699</span> <span class="tlaGNC">    15070582 :         (typeof((struct CCC_Flat_hash_map_tag){}</span></span>
-<span id="L1700"><span class="lineNum">    1700</span> <span class="tlaGNC">     7535291 :                     .v))(hash &gt;&gt; ((sizeof(hash) * CHAR_BIT) - 7))</span></span>
-<span id="L1701"><span class="lineNum">    1701</span> <span class="tlaGNC">     7535291 :             &amp; TAG_LOWER_7_MASK,</span></span>
+<span id="L1697"><span class="lineNum">    1697</span> <span class="tlaGNC">     7536182 : tag_from(uint64_t const hash) {</span></span>
+<span id="L1698"><span class="lineNum">    1698</span> <span class="tlaGNC">    15072364 :     return (struct CCC_Flat_hash_map_tag){</span></span>
+<span id="L1699"><span class="lineNum">    1699</span> <span class="tlaGNC">    15072364 :         (typeof((struct CCC_Flat_hash_map_tag){}</span></span>
+<span id="L1700"><span class="lineNum">    1700</span> <span class="tlaGNC">     7536182 :                     .v))(hash &gt;&gt; ((sizeof(hash) * CHAR_BIT) - 7))</span></span>
+<span id="L1701"><span class="lineNum">    1701</span> <span class="tlaGNC">     7536182 :             &amp; TAG_LOWER_7_MASK,</span></span>
 <span id="L1702"><span class="lineNum">    1702</span>              :     };</span>
-<span id="L1703"><span class="lineNum">    1703</span> <span class="tlaGNC">     7535291 : }</span></span>
+<span id="L1703"><span class="lineNum">    1703</span> <span class="tlaGNC">     7536182 : }</span></span>
 <span id="L1704"><span class="lineNum">    1704</span>              : </span>
 <span id="L1705"><span class="lineNum">    1705</span>              : /*========================  Index Mask Implementations   ====================*/</span>
 <span id="L1706"><span class="lineNum">    1706</span>              : </span>
 <span id="L1707"><span class="lineNum">    1707</span>              : /** Returns true if any index is on in the mask otherwise false. */</span>
 <span id="L1708"><span class="lineNum">    1708</span>              : static inline CCC_Tribool</span>
-<span id="L1709"><span class="lineNum">    1709</span> <span class="tlaGNC">      104395 : match_has_one(struct Match_mask const mask) {</span></span>
-<span id="L1710"><span class="lineNum">    1710</span> <span class="tlaGNC">      104395 :     return mask.v != 0;</span></span>
+<span id="L1709"><span class="lineNum">    1709</span> <span class="tlaGNC">      104584 : match_has_one(struct Match_mask const mask) {</span></span>
+<span id="L1710"><span class="lineNum">    1710</span> <span class="tlaGNC">      104584 :     return mask.v != 0;</span></span>
 <span id="L1711"><span class="lineNum">    1711</span>              : }</span>
 <span id="L1712"><span class="lineNum">    1712</span>              : </span>
 <span id="L1713"><span class="lineNum">    1713</span>              : /** Return the index of the first trailing one in the given match in the</span>
@@ -1778,8 +1778,8 @@
 <span id="L1716"><span class="lineNum">    1716</span>              : has matched. Because 0 is a valid index the user must check the index against</span>
 <span id="L1717"><span class="lineNum">    1717</span>              : `GROUP_COUNT`, which means no trailing one is found. */</span>
 <span id="L1718"><span class="lineNum">    1718</span>              : static inline size_t</span>
-<span id="L1719"><span class="lineNum">    1719</span> <span class="tlaGNC">      857789 : match_trailing_one(struct Match_mask const mask) {</span></span>
-<span id="L1720"><span class="lineNum">    1720</span> <span class="tlaGNC">      857789 :     return count_trailing_zeros(mask);</span></span>
+<span id="L1719"><span class="lineNum">    1719</span> <span class="tlaGNC">      861115 : match_trailing_one(struct Match_mask const mask) {</span></span>
+<span id="L1720"><span class="lineNum">    1720</span> <span class="tlaGNC">      861115 :     return count_trailing_zeros(mask);</span></span>
 <span id="L1721"><span class="lineNum">    1721</span>              : }</span>
 <span id="L1722"><span class="lineNum">    1722</span>              : </span>
 <span id="L1723"><span class="lineNum">    1723</span>              : /** A function to aid in iterating over on bits/indices in a match. The</span>
@@ -1787,12 +1787,12 @@
 <span id="L1725"><span class="lineNum">    1725</span>              : mask appropriately for future iteration by removing the lowest on index bit. If</span>
 <span id="L1726"><span class="lineNum">    1726</span>              : no bits are found the width of the mask is returned. */</span>
 <span id="L1727"><span class="lineNum">    1727</span>              : static inline size_t</span>
-<span id="L1728"><span class="lineNum">    1728</span> <span class="tlaGNC">      769698 : match_next_one(struct Match_mask *const mask) {</span></span>
-<span id="L1729"><span class="lineNum">    1729</span> <span class="tlaGNC">      769698 :     assert(mask);</span></span>
-<span id="L1730"><span class="lineNum">    1730</span> <span class="tlaGNC">      769698 :     size_t const index = match_trailing_one(*mask);</span></span>
-<span id="L1731"><span class="lineNum">    1731</span> <span class="tlaGNC">      769698 :     mask-&gt;v &amp;= (mask-&gt;v - 1);</span></span>
-<span id="L1732"><span class="lineNum">    1732</span> <span class="tlaGNC">     1539396 :     return index;</span></span>
-<span id="L1733"><span class="lineNum">    1733</span> <span class="tlaGNC">      769698 : }</span></span>
+<span id="L1728"><span class="lineNum">    1728</span> <span class="tlaGNC">      772017 : match_next_one(struct Match_mask *const mask) {</span></span>
+<span id="L1729"><span class="lineNum">    1729</span> <span class="tlaGNC">      772017 :     assert(mask);</span></span>
+<span id="L1730"><span class="lineNum">    1730</span> <span class="tlaGNC">      772017 :     size_t const index = match_trailing_one(*mask);</span></span>
+<span id="L1731"><span class="lineNum">    1731</span> <span class="tlaGNC">      772017 :     mask-&gt;v &amp;= (mask-&gt;v - 1);</span></span>
+<span id="L1732"><span class="lineNum">    1732</span> <span class="tlaGNC">     1544034 :     return index;</span></span>
+<span id="L1733"><span class="lineNum">    1733</span> <span class="tlaGNC">      772017 : }</span></span>
 <span id="L1734"><span class="lineNum">    1734</span>              : </span>
 <span id="L1735"><span class="lineNum">    1735</span>              : /** Counts the leading zeros in a match. Leading zeros are those starting</span>
 <span id="L1736"><span class="lineNum">    1736</span>              : at the most significant bit. */</span>
@@ -1846,40 +1846,40 @@
 <span id="L1784"><span class="lineNum">    1784</span>              : method inevitably forces a call to the comparison callback function on every</span>
 <span id="L1785"><span class="lineNum">    1785</span>              : match so an efficient comparison is beneficial. */</span>
 <span id="L1786"><span class="lineNum">    1786</span>              : static inline struct Match_mask</span>
-<span id="L1787"><span class="lineNum">    1787</span> <span class="tlaGNC">      244651 : match_tag(struct Group const group, struct CCC_Flat_hash_map_tag const tag) {</span></span>
-<span id="L1788"><span class="lineNum">    1788</span> <span class="tlaGNC">      489302 :     return (struct Match_mask){</span></span>
-<span id="L1789"><span class="lineNum">    1789</span> <span class="tlaGNC">      244651 :         (typeof((struct Match_mask){}.v))_mm_movemask_epi8(</span></span>
-<span id="L1790"><span class="lineNum">    1790</span> <span class="tlaGNC">      244651 :             _mm_cmpeq_epi8(group.v, _mm_set1_epi8((int8_t)tag.v))</span></span>
+<span id="L1787"><span class="lineNum">    1787</span> <span class="tlaGNC">      245093 : match_tag(struct Group const group, struct CCC_Flat_hash_map_tag const tag) {</span></span>
+<span id="L1788"><span class="lineNum">    1788</span> <span class="tlaGNC">      490186 :     return (struct Match_mask){</span></span>
+<span id="L1789"><span class="lineNum">    1789</span> <span class="tlaGNC">      245093 :         (typeof((struct Match_mask){}.v))_mm_movemask_epi8(</span></span>
+<span id="L1790"><span class="lineNum">    1790</span> <span class="tlaGNC">      245093 :             _mm_cmpeq_epi8(group.v, _mm_set1_epi8((int8_t)tag.v))</span></span>
 <span id="L1791"><span class="lineNum">    1791</span>              :         ),</span>
 <span id="L1792"><span class="lineNum">    1792</span>              :     };</span>
-<span id="L1793"><span class="lineNum">    1793</span> <span class="tlaGNC">      244651 : }</span></span>
+<span id="L1793"><span class="lineNum">    1793</span> <span class="tlaGNC">      245093 : }</span></span>
 <span id="L1794"><span class="lineNum">    1794</span>              : </span>
 <span id="L1795"><span class="lineNum">    1795</span>              : /** Returns 0 based match with every bit on representing those tags in</span>
 <span id="L1796"><span class="lineNum">    1796</span>              : group g that are the empty special constant. The user must interpret this 0</span>
 <span id="L1797"><span class="lineNum">    1797</span>              : based index in the context of the probe sequence. */</span>
 <span id="L1798"><span class="lineNum">    1798</span>              : static inline struct Match_mask</span>
-<span id="L1799"><span class="lineNum">    1799</span> <span class="tlaGNC">      116285 : match_empty(struct Group const group) {</span></span>
-<span id="L1800"><span class="lineNum">    1800</span> <span class="tlaGNC">      116285 :     return match_tag(group, (struct CCC_Flat_hash_map_tag){TAG_EMPTY});</span></span>
-<span id="L1801"><span class="lineNum">    1801</span> <span class="tlaGNC">      116285 : }</span></span>
+<span id="L1799"><span class="lineNum">    1799</span> <span class="tlaGNC">      116474 : match_empty(struct Group const group) {</span></span>
+<span id="L1800"><span class="lineNum">    1800</span> <span class="tlaGNC">      116474 :     return match_tag(group, (struct CCC_Flat_hash_map_tag){TAG_EMPTY});</span></span>
+<span id="L1801"><span class="lineNum">    1801</span> <span class="tlaGNC">      116474 : }</span></span>
 <span id="L1802"><span class="lineNum">    1802</span>              : </span>
 <span id="L1803"><span class="lineNum">    1803</span>              : /** Returns 0 based match with every bit on representing those tags in</span>
 <span id="L1804"><span class="lineNum">    1804</span>              : group g that are the deleted special constant. The user must interpret this 0</span>
 <span id="L1805"><span class="lineNum">    1805</span>              : based index in the context of the probe sequence. */</span>
 <span id="L1806"><span class="lineNum">    1806</span>              : static inline struct Match_mask</span>
-<span id="L1807"><span class="lineNum">    1807</span> <span class="tlaGNC">         320 : match_deleted(struct Group const group) {</span></span>
-<span id="L1808"><span class="lineNum">    1808</span> <span class="tlaGNC">         320 :     return match_tag(group, (struct CCC_Flat_hash_map_tag){TAG_DELETED});</span></span>
-<span id="L1809"><span class="lineNum">    1809</span> <span class="tlaGNC">         320 : }</span></span>
+<span id="L1807"><span class="lineNum">    1807</span> <span class="tlaGNC">         384 : match_deleted(struct Group const group) {</span></span>
+<span id="L1808"><span class="lineNum">    1808</span> <span class="tlaGNC">         384 :     return match_tag(group, (struct CCC_Flat_hash_map_tag){TAG_DELETED});</span></span>
+<span id="L1809"><span class="lineNum">    1809</span> <span class="tlaGNC">         384 : }</span></span>
 <span id="L1810"><span class="lineNum">    1810</span>              : </span>
 <span id="L1811"><span class="lineNum">    1811</span>              : /** Returns a 0 based match with every bit on representing those tags</span>
 <span id="L1812"><span class="lineNum">    1812</span>              : in the group that are the special constant empty or deleted. These are easy</span>
 <span id="L1813"><span class="lineNum">    1813</span>              : to find because they are the one tags in a group with the most significant</span>
 <span id="L1814"><span class="lineNum">    1814</span>              : bit on. */</span>
 <span id="L1815"><span class="lineNum">    1815</span>              : static inline struct Match_mask</span>
-<span id="L1816"><span class="lineNum">    1816</span> <span class="tlaGNC">       89468 : match_empty_deleted(struct Group const group) {</span></span>
+<span id="L1816"><span class="lineNum">    1816</span> <span class="tlaGNC">       90475 : match_empty_deleted(struct Group const group) {</span></span>
 <span id="L1817"><span class="lineNum">    1817</span>              :     static_assert(sizeof(int) &gt;= sizeof(uint16_t));</span>
-<span id="L1818"><span class="lineNum">    1818</span> <span class="tlaGNC">      178936 :     return (struct Match_mask){</span></span>
-<span id="L1819"><span class="lineNum">    1819</span> <span class="tlaGNC">       89468 :         (typeof((struct Match_mask){}.v))_mm_movemask_epi8(group.v)};</span></span>
-<span id="L1820"><span class="lineNum">    1820</span> <span class="tlaGNC">       89468 : }</span></span>
+<span id="L1818"><span class="lineNum">    1818</span> <span class="tlaGNC">      180950 :     return (struct Match_mask){</span></span>
+<span id="L1819"><span class="lineNum">    1819</span> <span class="tlaGNC">       90475 :         (typeof((struct Match_mask){}.v))_mm_movemask_epi8(group.v)};</span></span>
+<span id="L1820"><span class="lineNum">    1820</span> <span class="tlaGNC">       90475 : }</span></span>
 <span id="L1821"><span class="lineNum">    1821</span>              : </span>
 <span id="L1822"><span class="lineNum">    1822</span>              : /** Returns a 0 based match with every bit on representing those tags in the</span>
 <span id="L1823"><span class="lineNum">    1823</span>              : group that are occupied by a hashed value. These are those tags that have the</span>
@@ -1912,26 +1912,26 @@
 <span id="L1850"><span class="lineNum">    1850</span>              : load and the user must ensure the load will not go off then end of the tag</span>
 <span id="L1851"><span class="lineNum">    1851</span>              : array. */</span>
 <span id="L1852"><span class="lineNum">    1852</span>              : static inline struct Group</span>
-<span id="L1853"><span class="lineNum">    1853</span> <span class="tlaGNC">        2165 : group_load_aligned(struct CCC_Flat_hash_map_tag const *const source) {</span></span>
-<span id="L1854"><span class="lineNum">    1854</span> <span class="tlaGNC">        2165 :     return (struct Group){_mm_load_si128((__m128i *)source)};</span></span>
-<span id="L1855"><span class="lineNum">    1855</span> <span class="tlaGNC">        2165 : }</span></span>
+<span id="L1853"><span class="lineNum">    1853</span> <span class="tlaGNC">        2293 : group_load_aligned(struct CCC_Flat_hash_map_tag const *const source) {</span></span>
+<span id="L1854"><span class="lineNum">    1854</span> <span class="tlaGNC">        2293 :     return (struct Group){_mm_load_si128((__m128i *)source)};</span></span>
+<span id="L1855"><span class="lineNum">    1855</span> <span class="tlaGNC">        2293 : }</span></span>
 <span id="L1856"><span class="lineNum">    1856</span>              : </span>
 <span id="L1857"><span class="lineNum">    1857</span>              : /** Stores the source group to destination. The store is aligned and the user</span>
 <span id="L1858"><span class="lineNum">    1858</span>              : must ensure the store will not go off the end of the tag array. */</span>
 <span id="L1859"><span class="lineNum">    1859</span>              : static inline void</span>
-<span id="L1860"><span class="lineNum">    1860</span> <span class="tlaGNC">         320 : group_store_aligned(</span></span>
+<span id="L1860"><span class="lineNum">    1860</span> <span class="tlaGNC">         384 : group_store_aligned(</span></span>
 <span id="L1861"><span class="lineNum">    1861</span>              :     struct CCC_Flat_hash_map_tag *const destination, struct Group const source</span>
 <span id="L1862"><span class="lineNum">    1862</span>              : ) {</span>
-<span id="L1863"><span class="lineNum">    1863</span> <span class="tlaGNC">         320 :     _mm_store_si128((__m128i *)destination, source.v);</span></span>
-<span id="L1864"><span class="lineNum">    1864</span> <span class="tlaGNC">         320 : }</span></span>
+<span id="L1863"><span class="lineNum">    1863</span> <span class="tlaGNC">         384 :     _mm_store_si128((__m128i *)destination, source.v);</span></span>
+<span id="L1864"><span class="lineNum">    1864</span> <span class="tlaGNC">         384 : }</span></span>
 <span id="L1865"><span class="lineNum">    1865</span>              : </span>
 <span id="L1866"><span class="lineNum">    1866</span>              : /** Loads a group starting at source into a 128 bit vector. This is an unaligned</span>
 <span id="L1867"><span class="lineNum">    1867</span>              : load and the user must ensure the load will not go off then end of the tag</span>
 <span id="L1868"><span class="lineNum">    1868</span>              : array. */</span>
 <span id="L1869"><span class="lineNum">    1869</span>              : static inline struct Group</span>
-<span id="L1870"><span class="lineNum">    1870</span> <span class="tlaGNC">      188332 : group_load_unaligned(struct CCC_Flat_hash_map_tag const *const source) {</span></span>
-<span id="L1871"><span class="lineNum">    1871</span> <span class="tlaGNC">      188332 :     return (struct Group){_mm_loadu_si128((__m128i *)source)};</span></span>
-<span id="L1872"><span class="lineNum">    1872</span> <span class="tlaGNC">      188332 : }</span></span>
+<span id="L1870"><span class="lineNum">    1870</span> <span class="tlaGNC">      189497 : group_load_unaligned(struct CCC_Flat_hash_map_tag const *const source) {</span></span>
+<span id="L1871"><span class="lineNum">    1871</span> <span class="tlaGNC">      189497 :     return (struct Group){_mm_loadu_si128((__m128i *)source)};</span></span>
+<span id="L1872"><span class="lineNum">    1872</span> <span class="tlaGNC">      189497 : }</span></span>
 <span id="L1873"><span class="lineNum">    1873</span>              : </span>
 <span id="L1874"><span class="lineNum">    1874</span>              : /** Converts the empty and deleted constants all TAG_EMPTY and the full tags</span>
 <span id="L1875"><span class="lineNum">    1875</span>              : representing hashed user data TAG_DELETED. This will result in the hashed</span>
@@ -1950,13 +1950,13 @@
 <span id="L1888"><span class="lineNum">    1888</span>              : The hashed bits are lost because the full slot has the high bit off and</span>
 <span id="L1889"><span class="lineNum">    1889</span>              : therefore is not a match for the constants mask. */</span>
 <span id="L1890"><span class="lineNum">    1890</span>              : static inline struct Group</span>
-<span id="L1891"><span class="lineNum">    1891</span> <span class="tlaGNC">         320 : group_convert_constant_to_empty_and_full_to_deleted(struct Group const group) {</span></span>
-<span id="L1892"><span class="lineNum">    1892</span> <span class="tlaGNC">         320 :     __m128i const zero = _mm_setzero_si128();</span></span>
-<span id="L1893"><span class="lineNum">    1893</span> <span class="tlaGNC">         320 :     __m128i const match_mask_constants = _mm_cmpgt_epi8(zero, group.v);</span></span>
-<span id="L1894"><span class="lineNum">    1894</span> <span class="tlaGNC">         640 :     return (struct Group){</span></span>
-<span id="L1895"><span class="lineNum">    1895</span> <span class="tlaGNC">         320 :         _mm_or_si128(match_mask_constants, _mm_set1_epi8((int8_t)TAG_DELETED)),</span></span>
+<span id="L1891"><span class="lineNum">    1891</span> <span class="tlaGNC">         384 : group_convert_constant_to_empty_and_full_to_deleted(struct Group const group) {</span></span>
+<span id="L1892"><span class="lineNum">    1892</span> <span class="tlaGNC">         384 :     __m128i const zero = _mm_setzero_si128();</span></span>
+<span id="L1893"><span class="lineNum">    1893</span> <span class="tlaGNC">         384 :     __m128i const match_mask_constants = _mm_cmpgt_epi8(zero, group.v);</span></span>
+<span id="L1894"><span class="lineNum">    1894</span> <span class="tlaGNC">         768 :     return (struct Group){</span></span>
+<span id="L1895"><span class="lineNum">    1895</span> <span class="tlaGNC">         384 :         _mm_or_si128(match_mask_constants, _mm_set1_epi8((int8_t)TAG_DELETED)),</span></span>
 <span id="L1896"><span class="lineNum">    1896</span>              :     };</span>
-<span id="L1897"><span class="lineNum">    1897</span> <span class="tlaGNC">         320 : }</span></span>
+<span id="L1897"><span class="lineNum">    1897</span> <span class="tlaGNC">         384 : }</span></span>
 <span id="L1898"><span class="lineNum">    1898</span>              : </span>
 <span id="L1899"><span class="lineNum">    1899</span>              : #elifdef CCC_HAS_ARM_SIMD</span>
 <span id="L1900"><span class="lineNum">    1900</span>              : </span>
@@ -2348,14 +2348,14 @@
 <span id="L2286"><span class="lineNum">    2286</span>              : );</span>
 <span id="L2287"><span class="lineNum">    2287</span>              : </span>
 <span id="L2288"><span class="lineNum">    2288</span>              : static inline unsigned</span>
-<span id="L2289"><span class="lineNum">    2289</span> <span class="tlaGNC">      863734 : count_trailing_zeros(struct Match_mask const mask) {</span></span>
+<span id="L2289"><span class="lineNum">    2289</span> <span class="tlaGNC">      867060 : count_trailing_zeros(struct Match_mask const mask) {</span></span>
 <span id="L2290"><span class="lineNum">    2290</span>              :     static_assert(</span>
 <span id="L2291"><span class="lineNum">    2291</span>              :         __builtin_ctz(0x8000) == GROUP_COUNT - 1,</span>
 <span id="L2292"><span class="lineNum">    2292</span>              :         &quot;Counting trailing zeros will always result in a valid mask &quot;</span>
 <span id="L2293"><span class="lineNum">    2293</span>              :         &quot;based on struct Match_mask width if the mask is not 0, even though &quot;</span>
 <span id="L2294"><span class="lineNum">    2294</span>              :         &quot;m is implicitly widened to an int.&quot;</span>
 <span id="L2295"><span class="lineNum">    2295</span>              :     );</span>
-<span id="L2296"><span class="lineNum">    2296</span> <span class="tlaGNC">      863734 :     return mask.v ? (unsigned)__builtin_ctz(mask.v) : GROUP_COUNT;</span></span>
+<span id="L2296"><span class="lineNum">    2296</span> <span class="tlaGNC">      867060 :     return mask.v ? (unsigned)__builtin_ctz(mask.v) : GROUP_COUNT;</span></span>
 <span id="L2297"><span class="lineNum">    2297</span>              : }</span>
 <span id="L2298"><span class="lineNum">    2298</span>              : </span>
 <span id="L2299"><span class="lineNum">    2299</span>              : static inline unsigned</span>
