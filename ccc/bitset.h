@@ -923,7 +923,7 @@ CCC_Count CCC_bitset_popcount_range(
 
 /**@}*/
 
-/** @name Destructor_interface Interface
+/** @name Destructor Interface
 Clear the set and manage its memory. */
 /**@{*/
 

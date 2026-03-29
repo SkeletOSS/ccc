@@ -1,6 +1,19 @@
 # C Container Collection Documentation
 
-## Header Navigation
+- [Navigation](#header-navigation)
+- [CCC Cardinal Rules](#ccc-cardinal-rules)
+    - [Understand allocators](#understand-allocators)
+    - [Never pass NULL](#never-pass-null)
+        - [Beware of intrusive containers](#beware-of-intrusive-containers)
+    - [Use the correct initializer](#use-the-correct-initializer)
+    - [Understand pointer versus handle stability](#pointers-versus-handles)
+        - [Invalidated pointers](#invalidated-pointers)
+        - [Stable pointers](#stable-pointers)
+        - [Stable handles](#stable-handles)
+- [Installation](#installation)
+- [Coverage Report](#coverage-report)
+
+## Header Navigation {#header-navigation}
 
 Follow the links to the C Container Collection headers.
 
@@ -21,14 +34,14 @@ Follow the links to the C Container Collection headers.
 - [ccc/tree_map.h](https://skeletoss.github.io/ccc/tree__map_8h.html)
 - [ccc/types.h](https://skeletoss.github.io/ccc/types_8h.html)
 
-## CCC Cardinal Rules
+## CCC Cardinal Rules {#ccc-cardinal-rules}
 
-1. [Understand allocators](#understand-allocators).
-2. [Never pass `NULL` to any C Container Collection function or macro](#never-pass-null).
-3. [Use the correct initializer](#use-the-correct-initializer).
-4. [Understand pointer versus handle stability](#pointers-versus-handles).
+1. **[Understand allocators](#understand-allocators)**.
+2. **[Never pass NULL to any C Container Collection function or macro](#never-pass-null)**.
+3. **[Use the correct initializer](#use-the-correct-initializer)**.
+4. **[Understand pointer versus handle stability](#pointers-versus-handles)**.
 
-### Understand Allocators
+### Understand Allocators {#understand-allocators}
 
 Traditionally, dynamic memory is obtained, resized, and freed through an OS or language provided interface such as `malloc`, `realloc`, and `free`; these three functions manage a global allocator. However, these three core functionalities of an allocator can be united into one function. This is the approach that the C Container Collection takes. This is the implementation of the standard library allocator through the `CCC_Allocator_interface` type function.
 
@@ -147,7 +160,7 @@ main(void) {
         CCC_ORDER_LESSER,
         (CCC_Comparator){.compare = val_order}
     );
-    CCC_prority_queue_push(
+    CCC_priority_queue_push(
         &priority_queue,
         &(struct Val){.val = i}.elem,
         &allocator
@@ -162,19 +175,19 @@ Passing allocators at call sites also ensures that the reader knows where in the
 
 An empty `&(CCC_Allocator){}` can be passed to any function. How the container responds to this will depend on the API function call, but the response is always well defined.
 
-### Never Pass NULL
+### Never Pass NULL {#never-pass-null}
 
 When reading user written C Container Collection code, the presence of `NULL` at a function or macro call site indicates a programmer error. Consider the following function call inserting an element into a flat hash map.
 
 ```c
-(void)CCC_flat_hash_map_insert_or_assign(
+CCC_Entry const e = CCC_flat_hash_map_insert_or_assign(
     &map,
     &(struct Val){.key = 37, .val = 1},
     &std_allocator
 );
 ```
 
-The call site of this function helps the reader understand the operation of this code without any special knowledge of the CCC API: insert or assign this key value pair into the map and if the table needs to re-size use the provided allocator; discard the return value of this function. What if the user has a fixed size map, or has otherwise reserved all the space they need, and wants to ensure no further memory is used? The user might be tempted to write the following.
+The call site of this function helps the reader understand the operation of this code without any special knowledge of the CCC API: insert or assign this key value pair into the map and if the table needs to re-size use the provided allocator. What if the user has a fixed size map, or has otherwise reserved all the space they need, and wants to ensure no further memory is used? The user might be tempted to write the following.
 
 **WARNING! The following example shows incorrect usage of the CCC API.**
 
@@ -198,7 +211,7 @@ CCC_Entry const e = CCC_flat_hash_map_insert_or_assign(
 
 This tells the reader that a key value pair will be inserted or assigned to an existing slot in the table and that resizing of the table is forbidden because a default initialized, empty `CCC_Allocator` is passed to the function. An empty compound literal reference is the correct way to express that no user provided implementation of that argument exists. The API will respond accordingly. See documentation for details.
 
-#### Beware of Intrusive Containers
+#### Beware of Intrusive Containers {#beware-of-intrusive-containers}
 
 When passing an empty allocator some details must be remembered. One difference between `Flat_` and `Array_` based containers and the standard intrusive containers is that the former copy user provided types into a table-like structure. When an empty allocator is passed to these flat and array based containers only resizing of the underlying table is forbidden. For intrusive containers the contract is different.
 
@@ -242,7 +255,7 @@ CCC_priority_queue_push(
 
 This required attention to scope and lifetime applies identically to all intrusive containers.
 
-### Use the Correct Initializer
+### Use the Correct Initializer {#use-the-correct-initializer}
 
 Building upon the last rule, that `NULL` should never appear at a function or call site, the user should apply this rule to initializers. Every container offers a variety of initializers. If the container will be initialized as empty use the `_default()` initializer. Compare the following wrong choice with a subsequent correct choice.
 
@@ -252,7 +265,7 @@ Building upon the last rule, that `NULL` should never appear at a function or ca
 CCC_Bitset b = CCC_bitset_for(
     0,
     0,
-    NULL /* <-ERROR HERE!*/
+    NULL /* <-ERROR HERE! */
 );
 ```
 
@@ -312,11 +325,11 @@ static CCC_Bitset bitset
 
 The `_default()` initializers can be used at compile or runtime as well. The correct initializer will always present the more readable and expressive code. More complex initializers such as the `_for()` family of initializers are in place to support well-documented but rare corner cases of user memory management strategies. Always read the container initialization section of the container documentation to pick the right initializer for the job.
 
-### Pointers Versus Handles
+### Pointers Versus Handles {#pointers-versus-handles}
 
 There are three important concepts about references the user must understand in the C Container Collection: pointers that may be invalidated, pointers that are stable, and handles that are stable.
 
-#### Invalidated Pointers
+#### Invalidated Pointers {#invalidated-pointers}
 
 When a `Flat_` container is passed an allocator for an insert or push type operation, assume that all references are invalidated after that operation. This is because the underlying container has been given permission to resize. For a simple dynamic buffer this may be obvious.
 
@@ -346,7 +359,7 @@ struct Key *b = CCC_flat_hash_map_or_insert(
 
 After the insert or assign operation, the reference `*a` may have been invalidated.
 
-#### Stable Pointers
+#### Stable Pointers {#stable-pointers}
 
 Intrusive containers assume that the user defined types upon which they intrude are pointer stable. That means they assume no insertion or removal alters pointers to any other existing elements in the data structure. Consider an intrusive map.
 
@@ -371,7 +384,7 @@ struct Key *b = CCC_tree_map_or_insert(
 
 The map assumes the pointer `*a` is still valid after the insertion of `*b`. The container assumption is the same if the user provides the element and allocation has been forbidden by passing an empty `&(CCC_Allocator){}`.
 
-#### Stable Handles
+#### Stable Handles {#stable-handles}
 
 The special `Array_` based containers promise handle stability. This is similar to pointer stability, but provides slightly greater flexibility to the implementation. A `CCC_Handle` and its unwrapped `CCC_Handle_index` remain stable for the lifetime of the element to which they index.
 
@@ -394,11 +407,11 @@ CCC_Handle_index b = CCC_array_tree_map_or_insert(
 
 After the second element is inserted, `a` remains valid and can be provided to the container API to obtain a pointer to the user element. The underlying storage may have been resized or moved, but the location in the array remains stable. Therefore, only the handle index remains stable, not any user held pointers.
 
-## Installation
+## Installation {#installation}
 
 - [INSTALL.md](INSTALL.md) - See the installation instructions for how to incorporate the C Container Collection into your project.
 
-## Coverage Report
+## Coverage Report {#coverage-report}
 
 If you are looking to contribute, tests that increase coverage are a great start. View the [coverage report here](https://skeletoss.github.io/ccc/coverage).
 
