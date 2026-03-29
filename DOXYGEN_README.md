@@ -348,11 +348,11 @@ The `_default()` initializers can be used at compile or runtime as well. The cor
 There are three important concepts about references the user must understand in the C Container Collection: pointers that may be invalidated, pointers that are stable, and handles that are stable. Here is a table summarizes the container types the user will encounter in this collection.
 
 
-|Container|Memory Layout|Pointer Stability|Handle Stability|
+|Container|Memory Layout|Pointer Stable|Handle Stable|
 |----|-------|-----------------|----------------|
-|Intrusive|Non-Contiguous|Stable|N/A|
-|Flat|Contiguous|Unstable|N/A|
-|Array|Contiguous|Unstable|Stable|
+|Intrusive|Non-Contiguous|Yes|N/A|
+|Flat|Contiguous|No|N/A|
+|Array|Contiguous|No|Yes|
 
 
 #### Invalidated Pointers {#invalidated-pointers}
