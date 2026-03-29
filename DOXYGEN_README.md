@@ -255,6 +255,7 @@ Because allocation has been forbidden, the container does not assume anything ab
 
 ```c
 struct Priority *elem = malloc(sizeof(struct Priority));
+*elem = (struct Priority){.priority = 99};
 CCC_priority_queue_push(
     &pq,
     &elem->pq_elem,
