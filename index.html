@@ -245,9 +245,7 @@ Never Pass NULL</h2>
 <div class="line">    &amp;std_allocator</div>
 <div class="line">);</div>
 </div><!-- fragment --><p>The call site of this function helps the reader understand the operation of this code without any special knowledge of the CCC API: insert or assign this key value pair into the map and if the table needs to re-size use the provided allocator; discard the return value of this function. What if the user has a fixed size map, or has otherwise reserved all the space they need, and wants to ensure no further memory is used? The user might be tempted to write the following.</p>
-<blockquote class="doxtable">
-<p>&zwj;[!WARNING] The following example shows incorrect usage of the CCC API. </p>
-</blockquote>
+<p><b>WARNING! The following example shows incorrect usage of the CCC API.</b></p>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a> <span class="keyword">const</span> e = <a class="code hl_function" href="flat__hash__map_8h.html#a3d55ec1bbc6cf53e3c300f40ec7aa0b6">CCC_flat_hash_map_insert_or_assign</a>(</div>
 <div class="line">    &amp;map,</div>
 <div class="line">    &amp;(<span class="keyword">struct</span> Val){.key = 37, .val = 1},</div>
@@ -287,9 +285,7 @@ Beware of Intrusive Containers</h3>
 <h2><a class="anchor" id="autotoc_md6"></a>
 Use the Correct Initializer</h2>
 <p>Building upon the last rule, that <code>NULL</code> should never appear at a function or call site, the user should apply this rule to initializers. Every container offers a variety of initializers. If the container will be initialized as empty use the <code>_default()</code> initializer. Compare the following wrong choice with a subsequent correct choice.</p>
-<blockquote class="doxtable">
-<p>&zwj;[!WARNING] The following example shows incorrect usage of the CCC API. </p>
-</blockquote>
+<p><b>WARNING! The following example shows incorrect usage of the CCC API.</b></p>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structCCC__Bitset.html">CCC_Bitset</a> b = <a class="code hl_define" href="bitset_8h.html#a00f0c2ca3d71e01d0bc6ff6cd2113de3">CCC_bitset_for</a>(</div>
 <div class="line">    0,</div>
 <div class="line">    0,</div>
