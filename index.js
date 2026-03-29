@@ -1,6 +1,6 @@
 var index =
 [
-    [ "Navigation", "index.html#autotoc_md1", null ],
+    [ "Header Navigation", "index.html#autotoc_md1", null ],
     [ "CCC Cardinal Rules", "index.html#autotoc_md2", [
       [ "Understand Allocators", "index.html#autotoc_md3", null ],
       [ "Never Pass NULL", "index.html#autotoc_md4", [

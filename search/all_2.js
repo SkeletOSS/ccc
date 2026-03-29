@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['capacity_0',['capacity',['../structCCC__Array__adaptive__map.html#af988785fceb55686197d691680c1a66f',1,'CCC_Array_adaptive_map::capacity()'],['../structCCC__Array__tree__map.html#a2a7afb21dde4cff08c927cbe19b76f18',1,'CCC_Array_tree_map::capacity()'],['../structCCC__Bitset.html#abad4a9ceed6d1745f50be69fd8571ddc',1,'CCC_Bitset::capacity()'],['../structCCC__Buffer.html#a846e3de38cfb8dfc0bf15b9906d69b81',1,'CCC_Buffer::capacity()']]],
-  ['ccc_20doc_1',['CCC DOC',['../index.html',1,'']]],
+  ['c_20container_20collection_20documentation_0',['C Container Collection Documentation',['../index.html',1,'']]],
+  ['capacity_1',['capacity',['../structCCC__Array__adaptive__map.html#af988785fceb55686197d691680c1a66f',1,'CCC_Array_adaptive_map::capacity()'],['../structCCC__Array__tree__map.html#a2a7afb21dde4cff08c927cbe19b76f18',1,'CCC_Array_tree_map::capacity()'],['../structCCC__Bitset.html#abad4a9ceed6d1745f50be69fd8571ddc',1,'CCC_Bitset::capacity()'],['../structCCC__Buffer.html#a846e3de38cfb8dfc0bf15b9906d69b81',1,'CCC_Buffer::capacity()']]],
   ['ccc_5fadaptive_5fmap_2',['CCC_Adaptive_map',['../structCCC__Adaptive__map.html',1,'CCC_Adaptive_map'],['../adaptive__map_8h.html#a3f0d3fec74866606bc401195872efdf3',1,'CCC_Adaptive_map():&#160;adaptive_map.h']]],
   ['ccc_5fadaptive_5fmap_5fand_5fmodify_3',['CCC_adaptive_map_and_modify',['../adaptive__map_8h.html#a46252d7d530896284b5663b1d34edb27',1,'adaptive_map.h']]],
   ['ccc_5fadaptive_5fmap_5fand_5fmodify_5fwith_4',['CCC_adaptive_map_and_modify_with',['../adaptive__map_8h.html#abb66611535d54c289813b59813da8b95',1,'adaptive_map.h']]],

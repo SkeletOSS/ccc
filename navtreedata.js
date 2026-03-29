@@ -25,7 +25,7 @@
 var NAVTREE =
 [
   [ "C Container Collection (CCC)", "index.html", [
-    [ "CCC DOC", "index.html", "index" ],
+    [ "C Container Collection Documentation", "index.html", "index" ],
     [ "Building and Installation", "md_INSTALL.html", [
       [ "Fetch Content Install", "md_INSTALL.html#autotoc_md14", null ],
       [ "Freestanding Environments", "md_INSTALL.html#autotoc_md15", null ],
