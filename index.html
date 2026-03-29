@@ -272,13 +272,13 @@ Never Pass NULL</h2>
 <div class="line">    &amp;(<span class="keyword">struct</span> Val){.key = 37, .val = 1},</div>
 <div class="line">    NULL <span class="comment">/* &lt;-ERROR HERE! */</span></div>
 <div class="line">);</div>
-</div><!-- fragment --><p>The user is trying to express that they don't want this function to allocate if the table is full. They want to keep the return value so they can check if this insertion failure has taken place and proceed with their program. However, using <code>NULL</code> is a programmer error and will return an error status because it obscures intent and may force users to consult documentation. Instead use this construction.</p>
+</div><!-- fragment --><p>The user is trying to express that they don't want this function to allocate if the table is full. They want to keep the return value so they can check if this insertion failure has taken place and proceed with their program. However, using <code>NULL</code> is a programmer error and will return an error status because it obscures intent and would force a reader unfamiliar with the collection to consult documentation. Instead use this construction.</p>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structCCC__Entry.html">CCC_Entry</a> <span class="keyword">const</span> e = <a class="code hl_function" href="flat__hash__map_8h.html#a3d55ec1bbc6cf53e3c300f40ec7aa0b6">CCC_flat_hash_map_insert_or_assign</a>(</div>
 <div class="line">    &amp;map,</div>
 <div class="line">    &amp;(<span class="keyword">struct</span> Val){.key = 37, .val = 1},</div>
 <div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Allocator.html">CCC_Allocator</a>){}</div>
 <div class="line">);</div>
-</div><!-- fragment --><p>This tells the reader that a key value pair will be inserted or assigned to an existing slot in the table and that resizing of the table is forbidden because a default initialized, empty <code><a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a></code> is passed to the function. This will also be a common pattern to use when clearing a container of its allocations and no advanced destructor functionality is required to act on each element before they are all freed.</p>
+</div><!-- fragment --><p>This tells the reader that a key value pair will be inserted or assigned to an existing slot in the table and that resizing of the table is forbidden because a default initialized, empty <code><a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a></code> is passed to the function. This is also a common pattern to use when clearing a container of its allocations and no advanced destructor functionality is required to act on each element before they are all freed.</p>
 <div class="fragment"><div class="line"><a class="code hl_function" href="flat__hash__map_8h.html#a1c56ea284207e34850f11ca337afc22f">CCC_flat_hash_map_clear_and_free</a>(</div>
 <div class="line">    &amp;map,</div>
 <div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Destructor.html">CCC_Destructor</a>){},</div>
@@ -396,13 +396,13 @@ Pointers Versus Handles</h2>
 <p>There are three important concepts about references the user must understand in the C Container Collection: pointers that may be invalidated, pointers that are stable, and handles that are stable. Here is a table summarizes the container types the user will encounter in this collection.</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Type   </th><th class="markdownTableHeadNone">Storage   </th><th class="markdownTableHeadNone">Pointer Stability   </th><th class="markdownTableHeadNone">Handle Stability    </th></tr>
+<th class="markdownTableHeadNone">Container   </th><th class="markdownTableHeadNone">Memory Layout   </th><th class="markdownTableHeadNone">Pointer Stability   </th><th class="markdownTableHeadNone">Handle Stability    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Intrusive   </td><td class="markdownTableBodyNone">User-owned   </td><td class="markdownTableBodyNone">Stable   </td><td class="markdownTableBodyNone">N/A    </td></tr>
+<td class="markdownTableBodyNone">Intrusive   </td><td class="markdownTableBodyNone">Non-Contiguous   </td><td class="markdownTableBodyNone">Stable   </td><td class="markdownTableBodyNone">N/A    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Flat   </td><td class="markdownTableBodyNone">Container-owned   </td><td class="markdownTableBodyNone">Unstable   </td><td class="markdownTableBodyNone">N/A    </td></tr>
+<td class="markdownTableBodyNone">Flat   </td><td class="markdownTableBodyNone">Contiguous   </td><td class="markdownTableBodyNone">Unstable   </td><td class="markdownTableBodyNone">N/A    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Array   </td><td class="markdownTableBodyNone">Container-owned   </td><td class="markdownTableBodyNone">Unstable   </td><td class="markdownTableBodyNone">Stable   </td></tr>
+<td class="markdownTableBodyNone">Array   </td><td class="markdownTableBodyNone">Contiguous   </td><td class="markdownTableBodyNone">Unstable   </td><td class="markdownTableBodyNone">Stable   </td></tr>
 </table>
 <h3><a class="anchor" id="invalidated-pointers"></a>
 Invalidated Pointers</h3>
