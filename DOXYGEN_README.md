@@ -275,7 +275,7 @@ This required attention to scope and lifetime applies identically to all intrusi
 
 ### Use the Correct Initializer {#use-the-correct-initializer}
 
-Building upon the last rule, that `NULL` should never appear at a function or call site, the user should apply this rule to initializers. Every container offers a variety of initializers. If the container will be initialized as empty use the `_default()` initializer. Compare the following wrong choice with a subsequent correct choice.
+Building upon the last rule, that `NULL` should never appear at a function or macro call site, the user should apply this rule to initializers. Every container offers a variety of initializers. If the container will be initialized as empty use the `_default()` initializer. Compare the following wrong choice with a subsequent correct choice.
 
 **WARNING! The following example shows incorrect usage of the CCC API.**
 
