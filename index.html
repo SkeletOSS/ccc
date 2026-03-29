@@ -318,7 +318,7 @@ Beware of Intrusive Containers</h3>
 </div><!-- fragment --><p>This required attention to scope and lifetime applies identically to all intrusive containers.</p>
 <h2><a class="anchor" id="use-the-correct-initializer"></a>
 Use the Correct Initializer</h2>
-<p>Building upon the last rule, that <code>NULL</code> should never appear at a function or call site, the user should apply this rule to initializers. Every container offers a variety of initializers. If the container will be initialized as empty use the <code>_default()</code> initializer. Compare the following wrong choice with a subsequent correct choice.</p>
+<p>Building upon the last rule, that <code>NULL</code> should never appear at a function or macro call site, the user should apply this rule to initializers. Every container offers a variety of initializers. If the container will be initialized as empty use the <code>_default()</code> initializer. Compare the following wrong choice with a subsequent correct choice.</p>
 <p><b>WARNING! The following example shows incorrect usage of the CCC API.</b></p>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structCCC__Bitset.html">CCC_Bitset</a> b = <a class="code hl_define" href="bitset_8h.html#a00f0c2ca3d71e01d0bc6ff6cd2113de3">CCC_bitset_for</a>(</div>
 <div class="line">    0,</div>
