@@ -298,6 +298,7 @@ Beware of Intrusive Containers</h3>
 <div class="line">);</div>
 </div><!-- fragment --><p>Because allocation has been forbidden, the container does not assume anything about the scope and lifetime of the provided user element. It simply operates on the intrusive element the user is providing to maintain internal data structure invariants. Because an inline compound literal reference has been provided the scope and lifetime of that element is the enclosing block, and that is almost always a programmer error. The user must guarantee the lifetime of the element.</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>Priority *elem = malloc(<span class="keyword">sizeof</span>(<span class="keyword">struct</span> Priority));</div>
+<div class="line">*elem = (<span class="keyword">struct </span>Priority){.priority = 99};</div>
 <div class="line"><a class="code hl_function" href="priority__queue_8h.html#a9e8274ed9bdc17dedf7abff36ea3d9d8">CCC_priority_queue_push</a>(</div>
 <div class="line">    &amp;pq,</div>
 <div class="line">    &amp;elem-&gt;pq_elem,</div>
