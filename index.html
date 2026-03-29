@@ -410,7 +410,7 @@ Invalidated Pointers</h3>
 </div><!-- fragment --><p>After the insert or assign operation, the reference <code>*a</code> may have been invalidated.</p>
 <h3><a class="anchor" id="stable-pointers"></a>
 Stable Pointers</h3>
-<p>Intrusive containers assume that the user defined types upon which they intrude are pointer stable. That means they assume no insertion or removal alters pointers to any other existing elements in the data structure. Consider an intrusive map.</p>
+<p>Intrusive containers assume that the user defined types upon which they intrude are pointer stable. That means that when other elements are inserted or removed, the location in memory of an existing element in the container never changes. Consider an intrusive map.</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>Key {</div>
 <div class="line">    <a class="code hl_struct" href="structCCC__Tree__map__node.html">CCC_Tree_map_node</a> map_node;</div>
 <div class="line">    <span class="keywordtype">int</span> key;</div>
@@ -430,10 +430,10 @@ Stable Pointers</h3>
 <div class="ttc" id="astructCCC__Tree__map__node_html"><div class="ttname"><a href="structCCC__Tree__map__node.html">CCC_Tree_map_node</a></div><div class="ttdef"><b>Definition:</b> private_tree_map.h:30</div></div>
 <div class="ttc" id="atree__map_8h_html_a4c1e31e01b39ff669910c653d63c060c"><div class="ttname"><a href="tree__map_8h.html#a4c1e31e01b39ff669910c653d63c060c">CCC_tree_map_entry</a></div><div class="ttdeci">CCC_Tree_map_entry CCC_tree_map_entry(CCC_Tree_map const *map, void const *key)</div><div class="ttdoc">Obtains an entry for the provided key in the map for future use.</div></div>
 <div class="ttc" id="atree__map_8h_html_a57860254596ebc4c51e4f9d48671578a"><div class="ttname"><a href="tree__map_8h.html#a57860254596ebc4c51e4f9d48671578a">CCC_tree_map_or_insert</a></div><div class="ttdeci">void * CCC_tree_map_or_insert(CCC_Tree_map_entry const *entry, CCC_Tree_map_node *type_intruder, CCC_Allocator const *allocator)</div><div class="ttdoc">Inserts the struct with handle type_intruder if the entry is Vacant.</div></div>
-</div><!-- fragment --><p>The map assumes the pointer <code>*a</code> is still valid after the insertion of <code>*b</code>. The container assumption is the same if the user provides the element and allocation has been forbidden by passing an empty <code>&amp;(<a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a>){}</code>.</p>
+</div><!-- fragment --><p>The map assumes the pointer <code>*a</code> is still valid after the insertion of <code>*b</code>. The container assumption is the same whether an allocator has been provided or the user is managing memory and has passed an empty <code>&amp;(<a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a>){}</code>.</p>
 <h3><a class="anchor" id="stable-handles"></a>
 Stable Handles</h3>
-<p>The special <code>Array_</code> based containers promise handle stability. This is similar to pointer stability, but provides slightly greater flexibility to the implementation. A <code><a class="el" href="structCCC__Handle.html" title="An Occupied or Vacant handle to a flat searchable container entry.">CCC_Handle</a></code> and its unwrapped <code>CCC_Handle_index</code> remain stable for the lifetime of the element to which they index.</p>
+<p>The special <code>Array_</code> based containers promise handle stability. This is similar to pointer stability, but provides slightly greater flexibility to the container implementation. A <code><a class="el" href="structCCC__Handle.html" title="An Occupied or Vacant handle to a flat searchable container entry.">CCC_Handle</a></code> and its unwrapped <code>CCC_Handle_index</code> remain stable for the lifetime of the element in the container which they represent.</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>Key {</div>
 <div class="line">    <span class="keywordtype">int</span> key;</div>
 <div class="line">    <span class="keywordtype">int</span> value;</div>
@@ -450,7 +450,7 @@ Stable Handles</h3>
 <div class="line">);</div>
 <div class="ttc" id="aarray__tree__map_8h_html_a7ebc89ac0823dd6276c466c943e0150f"><div class="ttname"><a href="array__tree__map_8h.html#a7ebc89ac0823dd6276c466c943e0150f">CCC_array_tree_map_or_insert</a></div><div class="ttdeci">CCC_Handle_index CCC_array_tree_map_or_insert(CCC_Array_tree_map_handle const *handle, void const *type, CCC_Allocator const *allocator)</div><div class="ttdoc">Inserts the provided user type if the handle is Vacant.</div></div>
 <div class="ttc" id="atypes_8h_html_a4043390f03f4ec5162e3782152360be9"><div class="ttname"><a href="types_8h.html#a4043390f03f4ec5162e3782152360be9">CCC_Handle_index</a></div><div class="ttdeci">size_t CCC_Handle_index</div><div class="ttdoc">A stable index to user data in a container that uses a flat array as the underlying storage method.</div><div class="ttdef"><b>Definition:</b> types.h:72</div></div>
-</div><!-- fragment --><p>After the second element is inserted, <code>a</code> remains valid and can be provided to the container API to obtain a pointer to the user element. The underlying storage may have been resized or moved, but the location in the array remains stable. Therefore, only the handle index remains stable, not any user held pointers.</p>
+</div><!-- fragment --><p>After the second element is inserted, <code>a</code> remains valid and can be provided to the container API to obtain a pointer to the user element. The underlying storage may have been resized or moved, but the location in the array remains stable. Therefore, it is important to remember that only the handle index remains stable, never the pointer obtained with that index.</p>
 <h1><a class="anchor" id="installation"></a>
 Installation</h1>
 <ul>
