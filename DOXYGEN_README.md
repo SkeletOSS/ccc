@@ -1,4 +1,4 @@
-# CCC DOC
+# C Container Collection Documentation
 
 - [Navigation](#navigation)
 - [CCC Cardinal Rules](#ccc-cardinal-rules)
@@ -9,9 +9,9 @@
 - [Installation](#installation)
 - [Coverage Report](#coverage-report)
 
-## Navigation
+## Header Navigation
 
-Follow the link to the container documentation.
+Follow the links to the key container headers.
 
 - [ccc/adaptive_map.h](https://skeletoss.github.io/ccc/adaptive__map_8h.html)
 - [ccc/array_adaptive_map.h](https://skeletoss.github.io/ccc/array__adaptive__map_8h.html)
