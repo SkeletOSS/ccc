@@ -67,8 +67,8 @@ CCC_Result CCC_sort_heapsort(
     CCC_Comparator const *comparator
 );
 
-/** @brief Sorts the doubly linked list in non-decreasing order as defined by
-the provided comparison function. `O(N * log(N))` time, `O(1)` space.
+/** @brief Sorts the doubly linked list in user specified order as defined by
+the provided order and comparator. `O(N * log(N))` time, `O(1)` space.
 @param[in] list a pointer to the doubly linked list to sort.
 @param[in] order the desired order of the sorted list. CCC_ORDER_LESSER places
 elements in non-decreasing order starting from index `[0, N)`, where N is the
@@ -78,16 +78,16 @@ to remain consistent with heap order, where CCC_ORDER_LESSER places the minimum
 element at index 0 and CCC_ORDER_GREATER places the maximum element at index 0
 because 0 is the first node in the list.
 @param[in] comparator the comparator context for comparing list elements.
-@return the result of the sort, usually OK. An arg error if doubly_linked_list
-is null. */
+@return the result of the sort, usually OK. An argument error if
+doubly_linked_list is null. */
 CCC_Result CCC_sort_doubly_linked_list_mergesort(
     CCC_Doubly_linked_list *list,
     CCC_Order order,
     CCC_Comparator const *comparator
 );
 
-/** @brief Sorts the singly linked list in non-decreasing order as defined by
-the provided comparison function. `O(N * log(N))` time, `O(1)` space.
+/** @brief Sorts the singly linked list in user specified order as defined by
+the provided order and comparator. `O(N * log(N))` time, `O(1)` space.
 @param[in] list a pointer to the singly linked list to sort.
 @param[in] order the desired order of the sorted list. CCC_ORDER_LESSER places
 elements in non-decreasing order starting from index `[0, N)`, where N is the
@@ -97,16 +97,16 @@ to remain consistent with heap order, where CCC_ORDER_LESSER places the minimum
 element at index 0 and CCC_ORDER_GREATER places the maximum element at index 0
 because 0 is the first node in the list.
 @param[in] comparator the comparator context for comparing list elements.
-@return the result of the sort, usually OK. An arg error if singly_linked_list
-is null. */
+@return the result of the sort, usually OK. An argument error if
+singly_linked_list is null. */
 CCC_Result CCC_sort_singly_linked_list_mergesort(
     CCC_Singly_linked_list *list,
     CCC_Order order,
     CCC_Comparator const *comparator
 );
 
-/** @brief Sorts the list in non-decreasing order as defined by
-the provided comparison function. `O(N * log(N))` time, `O(1)` space.
+/** @brief Sorts the list in user specified order as defined by the provided
+order and comparator. `O(N * log(N))` time, `O(1)` space.
 @param[in] list_pointer a pointer to the list to sort.
 @param[in] order the desired order of the sorted list. CCC_ORDER_LESSER places
 elements in non-decreasing order starting from index `[0, N)`, where N is the
@@ -117,7 +117,7 @@ element at index 0 and CCC_ORDER_GREATER places the maximum element at index 0
 because 0 is the first node in the list.
 @param[in] comparator_pointer the pointer to the comparator context for
 comparing list elements.
-@return the result of the sort, usually OK. An arg error if list is null. */
+@return the result of the sort, usually OK. An argument error for bad input. */
 #define CCC_sort_mergesort(list_pointer, order, comparator_pointer)                                                                                             \
     _Generic((list_pointer), CCC_Singly_linked_list *: CCC_sort_singly_linked_list_mergesort, CCC_Doubly_linked_list *: CCC_sort_doubly_linked_list_mergesort)( \
         list_pointer, order, comparator_pointer                                                                                                                 \
