@@ -254,7 +254,7 @@ Empty Allocators</h3>
 <li>No allocation, reallocation, or deallocation will occur.</li>
 <li>Any operation that requires allocation will fail and return the reason or change behavior accordingly.</li>
 <li>Flat and array based containers will copy the user provided element into their internal storage if sufficient capacity already exists.</li>
-<li>Intrusive containers will operate solely on the intrusive element within the user provided type, in-place. The user must guarantee the lifetime of the element.</li>
+<li>Intrusive containers will operate solely on the intrusive element within the user provided type, in-place. The user must guarantee the lifetime of the element and is responsible for any required deallocation.</li>
 </ul>
 <h2><a class="anchor" id="never-pass-null"></a>
 Never Pass NULL</h2>
