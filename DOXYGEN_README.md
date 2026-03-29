@@ -185,8 +185,7 @@ When reading user written C Container Collection code, the presence of `NULL` at
 
 The call site of this function helps the reader understand the operation of this code without any special knowledge of the CCC API: insert or assign this key value pair into the map and if the table needs to re-size use the provided allocator; discard the return value of this function. What if the user has a fixed size map, or has otherwise reserved all the space they need, and wants to ensure no further memory is used? The user might be tempted to write the following.
 
-> [!WARNING]
-> The following example shows incorrect usage of the CCC API.
+**WARNING! The following example shows incorrect usage of the CCC API.**
 
 ```c
 CCC_Entry const e = CCC_flat_hash_map_insert_or_assign(
@@ -245,8 +244,7 @@ This required attention to scope and lifetime applies identically to all intrusi
 
 Building upon the last rule, that `NULL` should never appear at a function or call site, the user should apply this rule to initializers. Every container offers a variety of initializers. If the container will be initialized as empty use the `_default()` initializer. Compare the following wrong choice with a subsequent correct choice.
 
-> [!WARNING]
-> The following example shows incorrect usage of the CCC API.
+**WARNING! The following example shows incorrect usage of the CCC API.**
 
 ```c
 CCC_Bitset b = CCC_bitset_for(
