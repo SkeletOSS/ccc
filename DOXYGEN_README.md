@@ -244,7 +244,6 @@ Here, the user type is passed to the function as an inline compound literal refe
 **WARNING! The following example shows possible incorrect usage of the CCC API.**
 
 ```c
-struct Priority *elem = malloc(sizeof(struct Priority));
 CCC_priority_queue_push(
     &pq,
     &(struct Priority){.priority = 99}.pq_elem, /* <-ERROR HERE! */
