@@ -367,7 +367,7 @@ Invalidated Pointers</h3>
 <div class="line">(void)CCC_buffer_push(&amp;buffer, &amp;(<span class="keywordtype">int</span>){7}, &amp;allocator);</div>
 <div class="line"><span class="comment">/* front may be invalid */</span></div>
 <div class="ttc" id="abuffer_8h_html_a4c9f5187b290d944a14f3d3e922f166c"><div class="ttname"><a href="buffer_8h.html#a4c9f5187b290d944a14f3d3e922f166c">CCC_buffer_front</a></div><div class="ttdeci">void * CCC_buffer_front(CCC_Buffer const *buffer)</div><div class="ttdoc">return the first element in the Buffer at index 0.</div></div>
-</div><!-- fragment --><p>After the push operation, the reference <code>front</code> may be invalid if the buffer has resized to fit the new element. This is also true for more complex containers such as the flat hash map.</p>
+</div><!-- fragment --><p>After the push operation, the reference <code>*front</code> may be invalid if the buffer has resized to fit the new element. This is also true for more complex containers such as the flat hash map.</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>Key {</div>
 <div class="line">    <span class="keywordtype">int</span> key;</div>
 <div class="line">    <span class="keywordtype">int</span> value;</div>
@@ -376,7 +376,7 @@ Invalidated Pointers</h3>
 <div class="line">    <a class="code hl_function" href="flat__hash__map_8h.html#ab58f80f5404b29cbaf4e3aeed58624e4">CCC_flat_hash_map_entry</a>(&amp;map, &amp;(<span class="keywordtype">int</span>){7}, &amp;allocator),</div>
 <div class="line">    &amp;(<span class="keyword">struct</span> Key){.key = 7, .value = 7},</div>
 <div class="line">);</div>
-<div class="line"><span class="keyword">struct </span>Key *a = <a class="code hl_function" href="flat__hash__map_8h.html#a42a400f6483457e2b3c311aeb7b04ef1">CCC_flat_hash_map_or_insert</a>(</div>
+<div class="line"><span class="keyword">struct </span>Key *b = <a class="code hl_function" href="flat__hash__map_8h.html#a42a400f6483457e2b3c311aeb7b04ef1">CCC_flat_hash_map_or_insert</a>(</div>
 <div class="line">    <a class="code hl_function" href="flat__hash__map_8h.html#ab58f80f5404b29cbaf4e3aeed58624e4">CCC_flat_hash_map_entry</a>(&amp;map, &amp;(<span class="keywordtype">int</span>){8}, &amp;allocator),</div>
 <div class="line">    &amp;(<span class="keyword">struct</span> Key){.key = 8, .value = 8},</div>
 <div class="line">);</div>
