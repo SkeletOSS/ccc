@@ -291,8 +291,7 @@ Beware of Intrusive Containers</h3>
 <div class="line">);</div>
 </div><!-- fragment --><p>Here, the user type is passed to the function as an inline compound literal reference. This is OK because an allocator is provided. Internally, the container will try to allocate a new node for the priority queue with the provided allocator and copy in the provided values in the user provided type argument. This would not work if allocation is forbidden.</p>
 <p><b>WARNING! The following example shows possible incorrect usage of the CCC API.</b></p>
-<div class="fragment"><div class="line"><span class="keyword">struct </span>Priority *elem = malloc(<span class="keyword">sizeof</span>(<span class="keyword">struct</span> Priority));</div>
-<div class="line"><a class="code hl_function" href="priority__queue_8h.html#a9e8274ed9bdc17dedf7abff36ea3d9d8">CCC_priority_queue_push</a>(</div>
+<div class="fragment"><div class="line"><a class="code hl_function" href="priority__queue_8h.html#a9e8274ed9bdc17dedf7abff36ea3d9d8">CCC_priority_queue_push</a>(</div>
 <div class="line">    &amp;pq,</div>
 <div class="line">    &amp;(<span class="keyword">struct</span> Priority){.priority = 99}.pq_elem, <span class="comment">/* &lt;-ERROR HERE! */</span></div>
 <div class="line">    &amp;(<a class="code hl_struct" href="structCCC__Allocator.html">CCC_Allocator</a>){}</div>
