@@ -181,7 +181,7 @@ An empty `&(CCC_Allocator){}` can be passed to any function and means the follow
 - No allocation, reallocation, or deallocation will occur.
 - Any operation that requires allocation will fail and return the reason or change behavior accordingly.
 - Flat and array based containers will copy the user provided element into their internal storage if sufficient capacity already exists.
-- Intrusive containers will operate solely on the intrusive element within the user provided type, in-place. The user must guarantee the lifetime of the element.
+- Intrusive containers will operate solely on the intrusive element within the user provided type, in-place. The user must guarantee the lifetime of the element and is responsible for any required deallocation.
 
 ### Never Pass NULL {#never-pass-null}
 
