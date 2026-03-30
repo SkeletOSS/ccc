@@ -109,23 +109,17 @@ struct CCC_Priority_queue_node *CCC_private_priority_queue_node_in(
     struct CCC_Priority_queue const *, void const *
 );
 /** @internal */
-CCC_Order CCC_private_priority_queue_order(
-    struct CCC_Priority_queue const *,
-    struct CCC_Priority_queue_node const *,
-    struct CCC_Priority_queue_node const *
-);
-/** @internal */
-struct CCC_Priority_queue_node *CCC_private_priority_queue_merge(
-    struct CCC_Priority_queue *,
-    struct CCC_Priority_queue_node *,
-    struct CCC_Priority_queue_node *
-);
-/** @internal */
-void CCC_private_priority_queue_cut_child(struct CCC_Priority_queue_node *);
-/** @internal */
 void CCC_private_priority_queue_init_node(struct CCC_Priority_queue_node *);
 /** @internal */
-struct CCC_Priority_queue_node *CCC_private_priority_queue_delete_node(
+void CCC_private_priority_queue_update_fixup(
+    struct CCC_Priority_queue *, struct CCC_Priority_queue_node *
+);
+/** @internal */
+void CCC_private_priority_queue_increase_fixup(
+    struct CCC_Priority_queue *, struct CCC_Priority_queue_node *
+);
+/** @internal */
+void CCC_private_priority_queue_decrease_fixup(
     struct CCC_Priority_queue *, struct CCC_Priority_queue_node *
 );
 
@@ -277,39 +271,10 @@ struct CCC_Priority_queue_node *CCC_private_priority_queue_delete_node(
                     private_priority_queue,                                    \
                     private_priority_queue_updated_element                     \
                 );                                                             \
-            if (private_priority_queue_node_pointer->parent                    \
-                && CCC_private_priority_queue_order(                           \
-                       private_priority_queue,                                 \
-                       private_priority_queue_node_pointer,                    \
-                       private_priority_queue_node_pointer->parent             \
-                   ) == private_priority_queue->order) {                       \
-                CCC_private_priority_queue_cut_child(                          \
-                    private_priority_queue_node_pointer                        \
-                );                                                             \
-                {private_update_closure_over_closure_parameter};               \
-                private_priority_queue->root                                   \
-                    = CCC_private_priority_queue_merge(                        \
-                        private_priority_queue,                                \
-                        private_priority_queue->root,                          \
-                        private_priority_queue_node_pointer                    \
-                    );                                                         \
-            } else {                                                           \
-                private_priority_queue->root                                   \
-                    = CCC_private_priority_queue_delete_node(                  \
-                        private_priority_queue,                                \
-                        private_priority_queue_node_pointer                    \
-                    );                                                         \
-                CCC_private_priority_queue_init_node(                          \
-                    private_priority_queue_node_pointer                        \
-                );                                                             \
-                {private_update_closure_over_closure_parameter};               \
-                private_priority_queue->root                                   \
-                    = CCC_private_priority_queue_merge(                        \
-                        private_priority_queue,                                \
-                        private_priority_queue->root,                          \
-                        private_priority_queue_node_pointer                    \
-                    );                                                         \
-            }                                                                  \
+            {private_update_closure_over_closure_parameter};                   \
+            CCC_private_priority_queue_update_fixup(                           \
+                private_priority_queue, private_priority_queue_node_pointer    \
+            );                                                                 \
         }                                                                      \
         private_priority_queue_updated_element;                                \
     }))
@@ -334,25 +299,9 @@ struct CCC_Priority_queue_node *CCC_private_priority_queue_delete_node(
                     private_priority_queue,                                    \
                     private_priority_queue_updated_element                     \
                 );                                                             \
-            if (private_priority_queue->order == CCC_ORDER_GREATER) {          \
-                CCC_private_priority_queue_cut_child(                          \
-                    private_priority_queue_node_pointer                        \
-                );                                                             \
-            } else {                                                           \
-                private_priority_queue->root                                   \
-                    = CCC_private_priority_queue_delete_node(                  \
-                        private_priority_queue,                                \
-                        private_priority_queue_node_pointer                    \
-                    );                                                         \
-                CCC_private_priority_queue_init_node(                          \
-                    private_priority_queue_node_pointer                        \
-                );                                                             \
-            }                                                                  \
             {private_increase_closure_over_closure_parameter};                 \
-            private_priority_queue->root = CCC_private_priority_queue_merge(   \
-                private_priority_queue,                                        \
-                private_priority_queue->root,                                  \
-                private_priority_queue_node_pointer                            \
+            CCC_private_priority_queue_increase_fixup(                         \
+                private_priority_queue, private_priority_queue_node_pointer    \
             );                                                                 \
         }                                                                      \
         private_priority_queue_updated_element;                                \
@@ -378,25 +327,9 @@ struct CCC_Priority_queue_node *CCC_private_priority_queue_delete_node(
                     private_priority_queue,                                    \
                     private_priority_queue_updated_element                     \
                 );                                                             \
-            if (private_priority_queue->order == CCC_ORDER_LESSER) {           \
-                CCC_private_priority_queue_cut_child(                          \
-                    private_priority_queue_node_pointer                        \
-                );                                                             \
-            } else {                                                           \
-                private_priority_queue->root                                   \
-                    = CCC_private_priority_queue_delete_node(                  \
-                        private_priority_queue,                                \
-                        private_priority_queue_node_pointer                    \
-                    );                                                         \
-                CCC_private_priority_queue_init_node(                          \
-                    private_priority_queue_node_pointer                        \
-                );                                                             \
-            }                                                                  \
             {private_decrease_closure_over_closure_parameter};                 \
-            private_priority_queue->root = CCC_private_priority_queue_merge(   \
-                private_priority_queue,                                        \
-                private_priority_queue->root,                                  \
-                private_priority_queue_node_pointer                            \
+            CCC_private_priority_queue_decrease_fixup(                         \
+                private_priority_queue, private_priority_queue_node_pointer    \
             );                                                                 \
         }                                                                      \
         private_priority_queue_updated_element;                                \
