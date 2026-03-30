@@ -341,13 +341,6 @@ CCC_private_priority_queue_node_in(
 }
 
 void
-CCC_private_priority_queue_init_node(
-    struct CCC_Priority_queue_node *const child
-) {
-    init_node(child);
-}
-
-void
 CCC_private_priority_queue_update_fixup(
     struct CCC_Priority_queue *const pq,
     struct CCC_Priority_queue_node *const node
