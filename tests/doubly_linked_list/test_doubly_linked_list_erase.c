@@ -10,6 +10,161 @@
 #include "types.h"
 #include "utility/stack_allocator.h"
 
+check_static_begin(doubly_linked_list_test_push_erase) {
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[3]){}),
+    };
+    Doubly_linked_list doubly_linked_list
+        = doubly_linked_list_for(struct Val, e);
+    check(
+        CCC_doubly_linked_list_erase(NULL, &(struct Val){}.e, &allocator), NULL
+    );
+    check(
+        CCC_doubly_linked_list_erase(&doubly_linked_list, NULL, &allocator),
+        NULL
+    );
+    check(
+        CCC_doubly_linked_list_erase(
+            &doubly_linked_list, &(struct Val){}.e, NULL
+        ),
+        NULL
+    );
+    check(
+        push_back(&doubly_linked_list, &(struct Val){}.e, &allocator) != NULL,
+        true
+    );
+    check(validate(&doubly_linked_list), true);
+    struct Val *const v = push_back(
+        &doubly_linked_list, &(struct Val){.id = 1, .val = 1}.e, &allocator
+    );
+    check(v != NULL, true);
+    check(validate(&doubly_linked_list), true);
+    struct Val *v2 = CCC_doubly_linked_list_insert(
+        &doubly_linked_list,
+        &v->e,
+        &(struct Val){.id = 2, .val = 2}.e,
+        &allocator
+    );
+    check(v2 != NULL, true);
+    check(validate(&doubly_linked_list), true);
+    check(count(&doubly_linked_list).count, 3);
+    check(
+        CCC_doubly_linked_list_erase(&doubly_linked_list, &v2->e, &allocator)
+            != NULL,
+        true
+    );
+    check(validate(&doubly_linked_list), true);
+    struct Val *const b = begin(&doubly_linked_list);
+    check(b != NULL, true);
+    check(
+        CCC_doubly_linked_list_erase_range(
+            &doubly_linked_list, &b->e, &b->e, &allocator
+        ) != NULL,
+        true
+    );
+    check(validate(&doubly_linked_list), true);
+    check_end();
+}
+
+check_static_begin(doubly_linked_list_test_push_erase_range) {
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[9]){}),
+    };
+    enum : size_t {
+        CAP = 9,
+    };
+    Doubly_linked_list doubly_linked_list = doubly_linked_list_from(
+        e,
+        allocator,
+        (CCC_Destructor){},
+        (struct Val[CAP]){
+            {.val = 0},
+            {.val = 1},
+            {.val = 2},
+            {.val = 3},
+            {.val = 4},
+            {.val = 5},
+            {.val = 6},
+            {.val = 7},
+            {.val = 8},
+        }
+    );
+    check(
+        check_order(
+            &doubly_linked_list, CAP, (int[CAP]){0, 1, 2, 3, 4, 5, 6, 7, 8}
+        ),
+        CHECK_PASS
+    );
+    check(
+        CCC_doubly_linked_list_erase_range(
+            NULL, &(struct Val){}.e, &(struct Val){}.e, &allocator
+        ),
+        NULL
+    );
+    check(
+        CCC_doubly_linked_list_erase_range(
+            &doubly_linked_list, NULL, &(struct Val){}.e, &allocator
+        ),
+        NULL
+    );
+    check(
+        CCC_doubly_linked_list_erase_range(
+            &doubly_linked_list, &(struct Val){}.e, NULL, &allocator
+        ),
+        NULL
+    );
+    check(
+        CCC_doubly_linked_list_erase_range(
+            &doubly_linked_list, &(struct Val){}.e, &(struct Val){}.e, NULL
+        ),
+        NULL
+    );
+    struct Val *begin = begin(&doubly_linked_list);
+    for (size_t i = 0; i < CAP / 3; ++i) {
+        begin = next(&doubly_linked_list, &begin->e);
+    }
+    struct Val *end = reverse_begin(&doubly_linked_list);
+    for (size_t i = CAP; i > CAP - 3; --i) {
+        end = reverse_next(&doubly_linked_list, &end->e);
+    }
+    struct Val *const six = CCC_doubly_linked_list_erase_range(
+        &doubly_linked_list, &begin->e, &end->e, &allocator
+    );
+    check(six != NULL, CCC_TRUE);
+    check(six->val, 6);
+    check(validate(&doubly_linked_list), true);
+    check(
+        check_order(&doubly_linked_list, 6, (int[6]){0, 1, 2, 6, 7, 8}),
+        CHECK_PASS
+    );
+    struct Val *const one
+        = next(&doubly_linked_list, begin(&doubly_linked_list));
+    check(one != NULL, CCC_TRUE);
+    check(one->val, 1);
+    struct Val *seven = begin(&doubly_linked_list);
+    check(seven != NULL, CCC_TRUE);
+    seven = CCC_doubly_linked_list_erase_range(
+        &doubly_linked_list, &seven->e, &six->e, &allocator
+    );
+    check(seven != NULL, CCC_TRUE);
+    check(seven->val, 7);
+    check(check_order(&doubly_linked_list, 2, (int[2]){7, 8}), CHECK_PASS);
+    check(
+        CCC_doubly_linked_list_erase_range(
+            &doubly_linked_list,
+            begin(&doubly_linked_list),
+            reverse_begin(&doubly_linked_list),
+            &allocator
+        ),
+        NULL
+    );
+    check(validate(&doubly_linked_list), true);
+    check(is_empty(&doubly_linked_list), true);
+    check_end();
+}
+
 check_static_begin(doubly_linked_list_test_pop_empty) {
     Doubly_linked_list doubly_linked_list
         = doubly_linked_list_for(struct Val, e);
@@ -197,6 +352,8 @@ check_static_begin(doubly_linked_list_test_splice_two_lists) {
 int
 main(void) {
     return check_run(
+        doubly_linked_list_test_push_erase(),
+        doubly_linked_list_test_push_erase_range(),
         doubly_linked_list_test_pop_empty(),
         doubly_linked_list_test_push_pop_front(),
         doubly_linked_list_test_push_pop_back(),
