@@ -418,16 +418,16 @@ Invalidated Pointers</h3>
 <div class="line">    <span class="keywordtype">int</span> value;</div>
 <div class="line">};</div>
 <div class="line"><span class="keyword">struct </span>Key *a = <a class="code hl_function" href="flat__hash__map_8h.html#a42a400f6483457e2b3c311aeb7b04ef1">CCC_flat_hash_map_or_insert</a>(</div>
-<div class="line">    <a class="code hl_function" href="flat__hash__map_8h.html#ab58f80f5404b29cbaf4e3aeed58624e4">CCC_flat_hash_map_entry</a>(&amp;map, &amp;(<span class="keywordtype">int</span>){7}, &amp;allocator),</div>
+<div class="line">    <a class="code hl_define" href="flat__hash__map_8h.html#a817cd8d3d20f62f6d91b35f488551f55">CCC_flat_hash_map_entry_wrap</a>(&amp;map, &amp;(<span class="keywordtype">int</span>){7}, &amp;allocator),</div>
 <div class="line">    &amp;(<span class="keyword">struct</span> Key){.key = 7, .value = 7},</div>
 <div class="line">);</div>
 <div class="line"><span class="keyword">struct </span>Key *b = <a class="code hl_function" href="flat__hash__map_8h.html#a42a400f6483457e2b3c311aeb7b04ef1">CCC_flat_hash_map_or_insert</a>(</div>
-<div class="line">    <a class="code hl_function" href="flat__hash__map_8h.html#ab58f80f5404b29cbaf4e3aeed58624e4">CCC_flat_hash_map_entry</a>(&amp;map, &amp;(<span class="keywordtype">int</span>){8}, &amp;allocator),</div>
+<div class="line">    <a class="code hl_define" href="flat__hash__map_8h.html#a817cd8d3d20f62f6d91b35f488551f55">CCC_flat_hash_map_entry_wrap</a>(&amp;map, &amp;(<span class="keywordtype">int</span>){8}, &amp;allocator),</div>
 <div class="line">    &amp;(<span class="keyword">struct</span> Key){.key = 8, .value = 8},</div>
 <div class="line">);</div>
 <div class="line"><span class="comment">/* a may be invalid */</span></div>
 <div class="ttc" id="aflat__hash__map_8h_html_a42a400f6483457e2b3c311aeb7b04ef1"><div class="ttname"><a href="flat__hash__map_8h.html#a42a400f6483457e2b3c311aeb7b04ef1">CCC_flat_hash_map_or_insert</a></div><div class="ttdeci">void * CCC_flat_hash_map_or_insert(CCC_Flat_hash_map_entry const *entry, void const *type)</div><div class="ttdoc">Inserts the struct with handle elem if the entry is Vacant.</div></div>
-<div class="ttc" id="aflat__hash__map_8h_html_ab58f80f5404b29cbaf4e3aeed58624e4"><div class="ttname"><a href="flat__hash__map_8h.html#ab58f80f5404b29cbaf4e3aeed58624e4">CCC_flat_hash_map_entry</a></div><div class="ttdeci">CCC_Flat_hash_map_entry CCC_flat_hash_map_entry(CCC_Flat_hash_map *map, void const *key, CCC_Allocator const *allocator)</div><div class="ttdoc">Obtains an entry for the provided key in the table for future use.</div></div>
+<div class="ttc" id="aflat__hash__map_8h_html_a817cd8d3d20f62f6d91b35f488551f55"><div class="ttname"><a href="flat__hash__map_8h.html#a817cd8d3d20f62f6d91b35f488551f55">CCC_flat_hash_map_entry_wrap</a></div><div class="ttdeci">#define CCC_flat_hash_map_entry_wrap( map_pointer, key_pointer, allocator_pointer...)</div><div class="ttdoc">Obtains an entry for the provided key in the table for future use.</div><div class="ttdef"><b>Definition:</b> flat_hash_map.h:552</div></div>
 </div><!-- fragment --><p>After the insert or assign operation, the reference <code>*a</code> may have been invalidated.</p>
 <h3><a class="anchor" id="stable-pointers"></a>
 Stable Pointers</h3>
@@ -438,19 +438,19 @@ Stable Pointers</h3>
 <div class="line">    <span class="keywordtype">int</span> value;</div>
 <div class="line">};</div>
 <div class="line"><span class="keyword">struct </span>Key *a = <a class="code hl_function" href="tree__map_8h.html#a57860254596ebc4c51e4f9d48671578a">CCC_tree_map_or_insert</a>(</div>
-<div class="line">    <a class="code hl_function" href="tree__map_8h.html#a4c1e31e01b39ff669910c653d63c060c">CCC_tree_map_entry</a>(&amp;map, &amp;(<span class="keywordtype">int</span>){7})</div>
+<div class="line">    <a class="code hl_define" href="tree__map_8h.html#a97a2aa2ff988d3632b332f56cb47d243">CCC_tree_map_entry_wrap</a>(&amp;map, &amp;(<span class="keywordtype">int</span>){7})</div>
 <div class="line">    &amp;(<span class="keyword">struct</span> Key){.key = 7, .value = 7}.map_node,</div>
 <div class="line">    &amp;allocator</div>
 <div class="line">);</div>
 <div class="line"><span class="keyword">struct </span>Key *b = <a class="code hl_function" href="tree__map_8h.html#a57860254596ebc4c51e4f9d48671578a">CCC_tree_map_or_insert</a>(</div>
-<div class="line">    <a class="code hl_function" href="tree__map_8h.html#a4c1e31e01b39ff669910c653d63c060c">CCC_tree_map_entry</a>(&amp;map, &amp;(<span class="keywordtype">int</span>){8})</div>
+<div class="line">    <a class="code hl_define" href="tree__map_8h.html#a97a2aa2ff988d3632b332f56cb47d243">CCC_tree_map_entry_wrap</a>(&amp;map, &amp;(<span class="keywordtype">int</span>){8})</div>
 <div class="line">    &amp;(<span class="keyword">struct</span> Key){.key = 8, .value = 8}.map_node,</div>
 <div class="line">    &amp;allocator</div>
 <div class="line">);</div>
 <div class="line"><span class="comment">/* a is still valid */</span></div>
 <div class="ttc" id="astructCCC__Tree__map__node_html"><div class="ttname"><a href="structCCC__Tree__map__node.html">CCC_Tree_map_node</a></div><div class="ttdef"><b>Definition:</b> private_tree_map.h:30</div></div>
-<div class="ttc" id="atree__map_8h_html_a4c1e31e01b39ff669910c653d63c060c"><div class="ttname"><a href="tree__map_8h.html#a4c1e31e01b39ff669910c653d63c060c">CCC_tree_map_entry</a></div><div class="ttdeci">CCC_Tree_map_entry CCC_tree_map_entry(CCC_Tree_map const *map, void const *key)</div><div class="ttdoc">Obtains an entry for the provided key in the map for future use.</div></div>
 <div class="ttc" id="atree__map_8h_html_a57860254596ebc4c51e4f9d48671578a"><div class="ttname"><a href="tree__map_8h.html#a57860254596ebc4c51e4f9d48671578a">CCC_tree_map_or_insert</a></div><div class="ttdeci">void * CCC_tree_map_or_insert(CCC_Tree_map_entry const *entry, CCC_Tree_map_node *type_intruder, CCC_Allocator const *allocator)</div><div class="ttdoc">Inserts the struct with handle type_intruder if the entry is Vacant.</div></div>
+<div class="ttc" id="atree__map_8h_html_a97a2aa2ff988d3632b332f56cb47d243"><div class="ttname"><a href="tree__map_8h.html#a97a2aa2ff988d3632b332f56cb47d243">CCC_tree_map_entry_wrap</a></div><div class="ttdeci">#define CCC_tree_map_entry_wrap(map_pointer, key_pointer...)</div><div class="ttdoc">Obtains an entry for the provided key in the map for future use.</div><div class="ttdef"><b>Definition:</b> tree_map.h:412</div></div>
 </div><!-- fragment --><p>The map assumes the pointer <code>*a</code> is still valid after the insertion of <code>*b</code>. The container assumption is the same whether an allocator has been provided or the user is managing memory and has passed an empty <code>&amp;(<a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a>){}</code>.</p>
 <h3><a class="anchor" id="stable-handles"></a>
 Stable Handles</h3>
@@ -460,15 +460,16 @@ Stable Handles</h3>
 <div class="line">    <span class="keywordtype">int</span> value;</div>
 <div class="line">};</div>
 <div class="line"><a class="code hl_typedef" href="types_8h.html#a4043390f03f4ec5162e3782152360be9">CCC_Handle_index</a> a = <a class="code hl_function" href="array__tree__map_8h.html#a7ebc89ac0823dd6276c466c943e0150f">CCC_array_tree_map_or_insert</a>(</div>
-<div class="line">    CCC_array_tree_map_entry(&amp;map, &amp;(<span class="keywordtype">int</span>){7}),</div>
+<div class="line">    <a class="code hl_define" href="array__tree__map_8h.html#a4b1d7885cf410b23c2e0c02ebd507270">CCC_array_tree_map_handle_wrap</a>(&amp;map, &amp;(<span class="keywordtype">int</span>){7}),</div>
 <div class="line">    &amp;(<span class="keyword">struct</span> Key){.key = 7, .value = 7},</div>
 <div class="line">    &amp;allocator</div>
 <div class="line">);</div>
 <div class="line"><a class="code hl_typedef" href="types_8h.html#a4043390f03f4ec5162e3782152360be9">CCC_Handle_index</a> b = <a class="code hl_function" href="array__tree__map_8h.html#a7ebc89ac0823dd6276c466c943e0150f">CCC_array_tree_map_or_insert</a>(</div>
-<div class="line">    CCC_array_tree_map_entry(&amp;map, &amp;(<span class="keywordtype">int</span>){8}),</div>
+<div class="line">    <a class="code hl_define" href="array__tree__map_8h.html#a4b1d7885cf410b23c2e0c02ebd507270">CCC_array_tree_map_handle_wrap</a>(&amp;map, &amp;(<span class="keywordtype">int</span>){8}),</div>
 <div class="line">    &amp;(<span class="keyword">struct</span> Key){.key = 8, .value = 8},</div>
 <div class="line">    &amp;allocator</div>
 <div class="line">);</div>
+<div class="ttc" id="aarray__tree__map_8h_html_a4b1d7885cf410b23c2e0c02ebd507270"><div class="ttname"><a href="array__tree__map_8h.html#a4b1d7885cf410b23c2e0c02ebd507270">CCC_array_tree_map_handle_wrap</a></div><div class="ttdeci">#define CCC_array_tree_map_handle_wrap(array_tree_map_pointer, key_pointer)</div><div class="ttdoc">Obtains a handle for the provided key in the map for future use.</div><div class="ttdef"><b>Definition:</b> array_tree_map.h:682</div></div>
 <div class="ttc" id="aarray__tree__map_8h_html_a7ebc89ac0823dd6276c466c943e0150f"><div class="ttname"><a href="array__tree__map_8h.html#a7ebc89ac0823dd6276c466c943e0150f">CCC_array_tree_map_or_insert</a></div><div class="ttdeci">CCC_Handle_index CCC_array_tree_map_or_insert(CCC_Array_tree_map_handle const *handle, void const *type, CCC_Allocator const *allocator)</div><div class="ttdoc">Inserts the provided user type if the handle is Vacant.</div></div>
 <div class="ttc" id="atypes_8h_html_a4043390f03f4ec5162e3782152360be9"><div class="ttname"><a href="types_8h.html#a4043390f03f4ec5162e3782152360be9">CCC_Handle_index</a></div><div class="ttdeci">size_t CCC_Handle_index</div><div class="ttdoc">A stable index to user data in a container that uses a flat array as the underlying storage method.</div><div class="ttdef"><b>Definition:</b> types.h:72</div></div>
 </div><!-- fragment --><p>After the second element is inserted, <code>a</code> remains valid and can be provided to the container API to obtain a pointer to the user element. The underlying storage may have been resized or moved, but the location in the array remains stable. Therefore, it is important to remember that only the handle index remains stable, never the pointer obtained with that index.</p>
