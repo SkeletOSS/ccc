@@ -373,11 +373,11 @@ struct Key {
     int value;
 };
 struct Key *a = CCC_flat_hash_map_or_insert(
-    CCC_flat_hash_map_entry(&map, &(int){7}, &allocator),
+    CCC_flat_hash_map_entry_wrap(&map, &(int){7}, &allocator),
     &(struct Key){.key = 7, .value = 7},
 );
 struct Key *b = CCC_flat_hash_map_or_insert(
-    CCC_flat_hash_map_entry(&map, &(int){8}, &allocator),
+    CCC_flat_hash_map_entry_wrap(&map, &(int){8}, &allocator),
     &(struct Key){.key = 8, .value = 8},
 );
 /* a may be invalid */
@@ -396,12 +396,12 @@ struct Key {
     int value;
 };
 struct Key *a = CCC_tree_map_or_insert(
-    CCC_tree_map_entry(&map, &(int){7})
+    CCC_tree_map_entry_wrap(&map, &(int){7})
     &(struct Key){.key = 7, .value = 7}.map_node,
     &allocator
 );
 struct Key *b = CCC_tree_map_or_insert(
-    CCC_tree_map_entry(&map, &(int){8})
+    CCC_tree_map_entry_wrap(&map, &(int){8})
     &(struct Key){.key = 8, .value = 8}.map_node,
     &allocator
 );
@@ -420,12 +420,12 @@ struct Key {
     int value;
 };
 CCC_Handle_index a = CCC_array_tree_map_or_insert(
-    CCC_array_tree_map_entry(&map, &(int){7}),
+    CCC_array_tree_map_handle_wrap(&map, &(int){7}),
     &(struct Key){.key = 7, .value = 7},
     &allocator
 );
 CCC_Handle_index b = CCC_array_tree_map_or_insert(
-    CCC_array_tree_map_entry(&map, &(int){8}),
+    CCC_array_tree_map_handle_wrap(&map, &(int){8}),
     &(struct Key){.key = 8, .value = 8},
     &allocator
 );
