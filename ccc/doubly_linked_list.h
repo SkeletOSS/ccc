@@ -20,7 +20,10 @@ A doubly linked list offers efficient push, pop, extract, and erase operations
 for elements stored in the list. For single elements, the list can
 offer O(1) push front/back, pop front/back, and removal of elements in
 arbitrary positions in the list. The cost of this efficiency is higher memory
-footprint.
+footprint. The linked list does not track internal state other than the head
+and tail of the list and type information about the user type stored in the
+list. Therefore, be aware that obtaining the count of nodes is an O(N)
+operation. Determining if the list is empty, however, is O(1).
 
 This container offers pointer stability. Also, if the container function
 requesting an allocator is not provided one, all insertion code assumes that the
@@ -487,7 +490,7 @@ the sentinel but will not be NULL unless a NULL pointer is provided as l. */
 [[nodiscard]] CCC_Doubly_linked_list_node *
 CCC_doubly_linked_list_node_begin(CCC_Doubly_linked_list const *list);
 
-/** @brief Return the count of elements in the list. O(1).
+/** @brief Return the count of elements in the list. O(N).
 @param[in] list a pointer to the doubly linked list.
 @return the size of the list. An argument error is set if list is NULL. */
 [[nodiscard]] CCC_Count

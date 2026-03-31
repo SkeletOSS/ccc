@@ -21,7 +21,10 @@ access to the front or most recently added elements. When compared to a singly
 linked list, the memory overhead per node is smaller but some operations will
 have `O(N)` runtime implications when compared to a similar operation in a
 singly linked list. Review function documentation when unsure of the runtime of
-an singly linked list operation.
+an singly linked list operation. The linked list does not track internal state
+other than the head of the list and type information about the user type stored
+in the list. Therefore, be aware that obtaining the count of nodes is an O(N)
+operation. Determining if the list is empty, however, is O(1).
 
 This container offers pointer stability. Also, if a user forgoes passing an
 allocator to a function that accepts one, all insertion code assumes that the
@@ -412,7 +415,7 @@ is NULL. */
 [[nodiscard]] void *
 CCC_singly_linked_list_front(CCC_Singly_linked_list const *list);
 
-/** @brief Return the count of nodes in the list. O(1).
+/** @brief Return the count of nodes in the list. O(N).
 @param[in] list a pointer to the singly linked list.
 @return the size or an argument error is set if list is NULL. */
 [[nodiscard]] CCC_Count
