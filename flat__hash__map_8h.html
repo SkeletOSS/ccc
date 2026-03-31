@@ -127,12 +127,12 @@ This graph shows which files directly or indirectly include this file:</div>
 <p>The current implementation will seek to use the best platform specific Single Instruction Multiple Data (SIMD) or Single Register Multiple Data (SRMD) instructions available. However, if for any reason the user wishes to use the most portable Single Register Multiple Data fallback implementation, there are many options.</p>
 <p>To use the map as a set, when only keys are needed, wrap a type in a struct or union. For example a set of <code>int</code> could be represented by creating a type <code>struct My_int {int key;};</code>. All interface functions can then be used normally.</p>
 <p>If building this library separately to include its library file, add the flag to the build (and read INSTALL.md for more details).</p>
-<div class="fragment"><div class="line">cmake --preset=clang-release -DCCC_FLAT_HASH_MAP_PORTABLE</div>
+<div class="fragment"><div class="line">cmake --preset=clang-release -DCCC_FLAT_HASH_MAP_PORTABLE=ON</div>
 </div><!-- fragment --><p>If an install location other than the release folder is desired don't forget to add the install prefix.</p>
-<div class="fragment"><div class="line">cmake --preset=clang-release -DCCC_FLAT_HASH_MAP_PORTABLE \</div>
+<div class="fragment"><div class="line">cmake --preset=clang-release -DCCC_FLAT_HASH_MAP_PORTABLE=ON \</div>
 <div class="line">-DCMAKE_INSTALL_PREFIX=/my/path/</div>
 </div><!-- fragment --><p>If this library is being built as part of your project then define the flag as part of your configuration.</p>
-<div class="fragment"><div class="line">cmake --preset=my-preset -DCCC_FLAT_HASH_MAP_PORTABLE</div>
+<div class="fragment"><div class="line">cmake --preset=my-preset -DCCC_FLAT_HASH_MAP_PORTABLE=ON</div>
 </div><!-- fragment --><p>Or, add the flag to your <code>CMakePresets.json</code>.</p>
 <div class="fragment"><div class="line"><span class="stringliteral">&quot;cacheVariables&quot;</span>: {</div>
 <div class="line">    <span class="stringliteral">&quot;CCC_FLAT_HASH_MAP_PORTABLE&quot;</span>: <span class="stringliteral">&quot;ON&quot;</span></div>
