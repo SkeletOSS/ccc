@@ -244,17 +244,14 @@ CCC_doubly_linked_list_erase_range(
         || type_intruder_begin == type_intruder_end) {
         return NULL;
     }
-
     if (type_intruder_end) {
         type_intruder_end = type_intruder_end->previous;
     }
-
     if (type_intruder_begin == type_intruder_end) {
         return CCC_doubly_linked_list_erase(
             list, type_intruder_begin, allocator
         );
     }
-
     CCC_Doubly_linked_list_node *const previous = type_intruder_begin->previous;
     CCC_Doubly_linked_list_node *const next
         = type_intruder_end ? type_intruder_end->next : NULL;
