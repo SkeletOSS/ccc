@@ -75,7 +75,7 @@ check_static_begin(doubly_linked_list_test_push_erase_range) {
     enum : size_t {
         CAP = 9,
     };
-    Doubly_linked_list doubly_linked_list = doubly_linked_list_from(
+    Doubly_linked_list list = doubly_linked_list_from(
         e,
         allocator,
         (CCC_Destructor){},
@@ -92,9 +92,7 @@ check_static_begin(doubly_linked_list_test_push_erase_range) {
         }
     );
     check(
-        check_order(
-            &doubly_linked_list, CAP, (int[CAP]){0, 1, 2, 3, 4, 5, 6, 7, 8}
-        ),
+        check_order(&list, CAP, (int[CAP]){0, 1, 2, 3, 4, 5, 6, 7, 8}),
         CHECK_PASS
     );
     check(
@@ -105,57 +103,50 @@ check_static_begin(doubly_linked_list_test_push_erase_range) {
     );
     check(
         CCC_doubly_linked_list_erase_range(
-            &doubly_linked_list, NULL, &(struct Val){}.e, &allocator
+            &list, NULL, &(struct Val){}.e, &allocator
         ),
         NULL
     );
     check(
         CCC_doubly_linked_list_erase_range(
-            &doubly_linked_list, &(struct Val){}.e, &(struct Val){}.e, NULL
+            &list, &(struct Val){}.e, &(struct Val){}.e, NULL
         ),
         NULL
     );
-    struct Val *begin = begin(&doubly_linked_list);
+    struct Val *begin = begin(&list);
     for (size_t i = 0; i < CAP / 3; ++i) {
-        begin = next(&doubly_linked_list, &begin->e);
+        begin = next(&list, &begin->e);
     }
-    struct Val *end = reverse_begin(&doubly_linked_list);
+    struct Val *end = reverse_begin(&list);
     for (size_t i = CAP; i > CAP - 2; --i) {
-        end = reverse_next(&doubly_linked_list, &end->e);
+        end = reverse_next(&list, &end->e);
     }
     struct Val *const six = CCC_doubly_linked_list_erase_range(
-        &doubly_linked_list, &begin->e, &end->e, &(CCC_Allocator){}
+        &list, &begin->e, &end->e, &(CCC_Allocator){}
     );
     check(six != NULL, CCC_TRUE);
     check(six->val, 6);
-    check(validate(&doubly_linked_list), true);
-    check(
-        check_order(&doubly_linked_list, 6, (int[6]){0, 1, 2, 6, 7, 8}),
-        CHECK_PASS
-    );
-    struct Val *const one
-        = next(&doubly_linked_list, begin(&doubly_linked_list));
+    check(validate(&list), true);
+    check(check_order(&list, 6, (int[6]){0, 1, 2, 6, 7, 8}), CHECK_PASS);
+    struct Val *const one = next(&list, doubly_linked_list_node_begin(&list));
     check(one != NULL, CCC_TRUE);
     check(one->val, 1);
-    struct Val *iter = begin(&doubly_linked_list);
+    struct Val *iter = begin(&list);
     check(iter != NULL, CCC_TRUE);
     iter = CCC_doubly_linked_list_erase_range(
-        &doubly_linked_list, &iter->e, &six->e, &allocator
+        &list, &iter->e, &six->e, &allocator
     );
     check(iter != NULL, CCC_TRUE);
     check(iter->val, 6);
-    check(check_order(&doubly_linked_list, 3, (int[3]){6, 7, 8}), CHECK_PASS);
+    check(check_order(&list, 3, (int[3]){6, 7, 8}), CHECK_PASS);
     check(
         CCC_doubly_linked_list_erase_range(
-            &doubly_linked_list,
-            doubly_linked_list_node_begin(&doubly_linked_list),
-            end(&doubly_linked_list),
-            &allocator
+            &list, doubly_linked_list_node_begin(&list), end(&list), &allocator
         ),
         NULL
     );
-    check(validate(&doubly_linked_list), true);
-    check(is_empty(&doubly_linked_list), true);
+    check(validate(&list), true);
+    check(is_empty(&list), true);
     check_end();
 }
 
@@ -432,6 +423,8 @@ check_static_begin(doubly_linked_list_test_splice_two_lists) {
         ),
         CCC_RESULT_OK
     );
+    check(validate(&to_gain), true);
+    check(validate(&to_lose), true);
     check_end();
 }
 

@@ -349,7 +349,7 @@ CCC_doubly_linked_list_splice(
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     if ((to_cut_doubly_linked_list == position_doubly_linked_list)
-        && (to_cut == position || to_cut->next == position)) {
+        && (to_cut == position || (to_cut && to_cut->next == position))) {
         return CCC_RESULT_OK;
     }
     remove_node(to_cut_doubly_linked_list, to_cut);

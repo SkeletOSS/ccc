@@ -152,8 +152,10 @@ CCC_singly_linked_list_splice(
     if (!position_list || !type_intruder_splice || !splice_list) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    if (type_intruder_splice == type_intruder_position
-        || type_intruder_position->next == type_intruder_splice) {
+    if ((position_list == splice_list)
+        && (type_intruder_splice == type_intruder_position
+            || (type_intruder_position
+                && type_intruder_position->next == type_intruder_splice))) {
         return CCC_RESULT_OK;
     }
     remove_node(
@@ -402,7 +404,8 @@ CCC_singly_linked_list_is_sorted(
     CCC_Order const order,
     CCC_Comparator const *const comparator
 ) {
-    if (!list || !comparator) {
+    if (!list || !comparator || !comparator->compare
+        || (order != CCC_ORDER_GREATER && order != CCC_ORDER_LESSER)) {
         return CCC_TRIBOOL_ERROR;
     }
     if (!list->head) {
@@ -550,26 +553,28 @@ merge(
                out. However, a_count_b_first.previous is not updated because
                only current is spliced out. Algorithm will continue with new
                current, but same previous. */
-            struct CCC_Singly_linked_list_node *const lesser
+            struct CCC_Singly_linked_list_node *const merged
                 = a_count_b_first.current;
-            a_count_b_first.current = lesser->next;
-            if (a_count_b_first.previous) {
-                a_count_b_first.previous->next = lesser->next;
-            } else {
-                list->head = lesser->next;
-            }
+            a_count_b_first.current = merged->next;
+            assert(
+                a_count_b_first.previous
+                && "merged element must always have a previous pointer because "
+                   "lists of size 1 or less are not merged and merging "
+                   "iterates forward"
+            );
+            a_count_b_first.previous->next = merged->next;
             /* This is so we return an accurate b_count list link at the end. */
-            if (lesser == b_count.previous) {
+            if (merged == b_count.previous) {
                 b_count.previous = a_count_b_first.previous;
             }
             if (a_first.previous) {
-                a_first.previous->next = lesser;
+                a_first.previous->next = merged;
             } else {
-                list->head = lesser;
+                list->head = merged;
             }
-            lesser->next = a_first.current;
+            merged->next = a_first.current;
             /* Another critical update reflected in our links, not the list. */
-            a_first.previous = lesser;
+            a_first.previous = merged;
         } else {
             a_first.previous = a_first.current;
             a_first.current = a_first.current->next;

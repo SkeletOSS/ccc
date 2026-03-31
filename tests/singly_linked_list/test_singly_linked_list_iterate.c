@@ -2,17 +2,17 @@
 
 #define BITSET_USING_NAMESPACE_CCC
 #define TRAITS_USING_NAMESPACE_CCC
-#define DOUBLY_LINKED_LIST_USING_NAMESPACE_CCC
+#define SINGLY_LINKED_LIST_USING_NAMESPACE_CCC
 
 #include "ccc/bitset.h"
-#include "ccc/doubly_linked_list.h"
+#include "ccc/singly_linked_list.h"
 #include "ccc/traits.h"
 #include "ccc/types.h"
 #include "checkers.h"
-#include "doubly_linked_list_utility.h"
+#include "singly_linked_list_utility.h"
 #include "utility/stack_allocator.h"
 
-check_static_begin(doubly_linked_list_test_insert_iterate) {
+check_static_begin(singly_linked_list_test_insert_iterate) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for((struct Val[9]){}),
@@ -20,7 +20,7 @@ check_static_begin(doubly_linked_list_test_insert_iterate) {
     enum : size_t {
         CAP = 9,
     };
-    Doubly_linked_list list = doubly_linked_list_from(
+    Singly_linked_list list = singly_linked_list_from(
         e,
         allocator,
         (CCC_Destructor){},
@@ -36,12 +36,13 @@ check_static_begin(doubly_linked_list_test_insert_iterate) {
             {.val = 8},
         }
     );
-    check(CCC_doubly_linked_list_count(NULL).error, CCC_RESULT_ARGUMENT_ERROR);
-    check(CCC_doubly_linked_list_is_empty(NULL), CCC_TRIBOOL_ERROR);
-    check(CCC_doubly_linked_list_begin(NULL), NULL);
-    check(CCC_doubly_linked_list_node_begin(NULL), NULL);
-    check(CCC_doubly_linked_list_reverse_begin(NULL), NULL);
-    size_t const o_n_count = CCC_doubly_linked_list_count(&list).count;
+    check(CCC_singly_linked_list_count(NULL).error, CCC_RESULT_ARGUMENT_ERROR);
+    check(CCC_singly_linked_list_is_empty(NULL), CCC_TRIBOOL_ERROR);
+    check(CCC_singly_linked_list_node_begin(NULL), NULL);
+    check(CCC_singly_linked_list_begin(NULL), NULL);
+    check(CCC_singly_linked_list_next(NULL, &(struct Val){}.e), NULL);
+    check(CCC_singly_linked_list_next(&list, NULL), NULL);
+    size_t const o_n_count = CCC_singly_linked_list_count(&list).count;
     size_t count = 0;
     for (struct Val const *v = begin(&list); v != end(&list);
          v = next(&list, &v->e)) {
@@ -51,7 +52,7 @@ check_static_begin(doubly_linked_list_test_insert_iterate) {
     check_end();
 }
 
-check_static_begin(doubly_linked_list_test_is_sorted) {
+check_static_begin(singly_linked_list_test_is_sorted) {
     enum : size_t {
         CAP = 8
     };
@@ -59,7 +60,7 @@ check_static_begin(doubly_linked_list_test_is_sorted) {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for((struct Val[CAP]){}),
     };
-    Doubly_linked_list list = doubly_linked_list_from(
+    Singly_linked_list list = singly_linked_list_from(
         e,
         allocator,
         (CCC_Destructor){},
@@ -75,36 +76,36 @@ check_static_begin(doubly_linked_list_test_is_sorted) {
         }
     );
     check(
-        CCC_doubly_linked_list_is_sorted(
+        CCC_singly_linked_list_is_sorted(
             NULL, CCC_ORDER_GREATER, &(CCC_Comparator){}
         ),
         CCC_TRIBOOL_ERROR
     );
     check(
-        CCC_doubly_linked_list_is_sorted(
+        CCC_singly_linked_list_is_sorted(
             &list, CCC_ORDER_EQUAL, &(CCC_Comparator){}
         ),
         CCC_TRIBOOL_ERROR
     );
     check(
-        CCC_doubly_linked_list_is_sorted(&list, CCC_ORDER_GREATER, NULL),
+        CCC_singly_linked_list_is_sorted(&list, CCC_ORDER_GREATER, NULL),
         CCC_TRIBOOL_ERROR
     );
     check(
-        CCC_doubly_linked_list_is_sorted(
+        CCC_singly_linked_list_is_sorted(
             &list, CCC_ORDER_GREATER, &(CCC_Comparator){.compare = val_order}
         ),
         CCC_FALSE
     );
     check(
-        CCC_doubly_linked_list_is_sorted(
+        CCC_singly_linked_list_is_sorted(
             &list, CCC_ORDER_LESSER, &(CCC_Comparator){.compare = val_order}
         ),
         CCC_FALSE
     );
     check(
-        CCC_doubly_linked_list_is_sorted(
-            &doubly_linked_list_default(struct Val, e),
+        CCC_singly_linked_list_is_sorted(
+            &singly_linked_list_default(struct Val, e),
             CCC_ORDER_GREATER,
             &(CCC_Comparator){
                 .compare = val_order,
@@ -122,7 +123,7 @@ destroy_element(CCC_Arguments const arguments) {
     (void)bitset_set(is_destroyed_buffer, (size_t)i->val, CCC_TRUE);
 }
 
-check_static_begin(doubly_linked_list_test_clear_with_destructor) {
+check_static_begin(singly_linked_list_test_clear_with_destructor) {
     enum : size_t {
         CAP = 8
     };
@@ -130,7 +131,7 @@ check_static_begin(doubly_linked_list_test_clear_with_destructor) {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for((struct Val[CAP]){}),
     };
-    Doubly_linked_list list = doubly_linked_list_from(
+    Singly_linked_list list = singly_linked_list_from(
         e,
         allocator,
         (CCC_Destructor){},
@@ -146,20 +147,20 @@ check_static_begin(doubly_linked_list_test_clear_with_destructor) {
         }
     );
     check(
-        CCC_doubly_linked_list_clear(NULL, &(CCC_Destructor){}, &allocator),
+        CCC_singly_linked_list_clear(NULL, &(CCC_Destructor){}, &allocator),
         CCC_RESULT_ARGUMENT_ERROR
     );
     check(
-        CCC_doubly_linked_list_clear(&list, NULL, &allocator),
+        CCC_singly_linked_list_clear(&list, NULL, &allocator),
         CCC_RESULT_ARGUMENT_ERROR
     );
     check(
-        CCC_doubly_linked_list_clear(&list, &(CCC_Destructor){}, NULL),
+        CCC_singly_linked_list_clear(&list, &(CCC_Destructor){}, NULL),
         CCC_RESULT_ARGUMENT_ERROR
     );
     Bitset is_destroyed = bitset_with_storage(CAP, (Bit[CAP]){});
     check(
-        CCC_doubly_linked_list_clear(
+        CCC_singly_linked_list_clear(
             &list,
             &(CCC_Destructor){
                 .destroy = destroy_element,
@@ -182,8 +183,8 @@ check_static_begin(doubly_linked_list_test_clear_with_destructor) {
 int
 main(void) {
     return check_run(
-        doubly_linked_list_test_insert_iterate(),
-        doubly_linked_list_test_is_sorted(),
-        doubly_linked_list_test_clear_with_destructor(),
+        singly_linked_list_test_insert_iterate(),
+        singly_linked_list_test_is_sorted(),
+        singly_linked_list_test_clear_with_destructor(),
     );
 }

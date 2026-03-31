@@ -443,6 +443,8 @@ linked list container. Check for namespace clashes before name shortening. */
 /* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Singly_linked_list_node Singly_linked_list_node;
 typedef CCC_Singly_linked_list Singly_linked_list;
+#    define singly_linked_list_default(arguments...)                           \
+        CCC_singly_linked_list_default(arguments)
 #    define singly_linked_list_for(arguments...)                               \
         CCC_singly_linked_list_for(arguments)
 #    define singly_linked_list_from(arguments...)                              \
