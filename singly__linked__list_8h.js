@@ -15,7 +15,7 @@ var singly__linked__list_8h =
     [ "CCC_singly_linked_list_extract", "singly__linked__list_8h.html#a00d15ad531d1d49297d854794d7445f8", null ],
     [ "CCC_singly_linked_list_extract_range", "singly__linked__list_8h.html#a424b3b297be902ff94cf120dbac8ac83", null ],
     [ "CCC_singly_linked_list_front", "singly__linked__list_8h.html#a47a46769d70a8916b5b3c58cf6563bf9", null ],
-    [ "CCC_singly_linked_list_insert_sorted", "singly__linked__list_8h.html#af4347d8527b6ad3b439e68b2cb4149d7", null ],
+    [ "CCC_singly_linked_list_insert_sorted", "singly__linked__list_8h.html#a480b17ba5e5530377bada35ddd325f58", null ],
     [ "CCC_singly_linked_list_is_empty", "singly__linked__list_8h.html#a326fdbaaffd06a90faa3fd29d0bb8447", null ],
     [ "CCC_singly_linked_list_is_sorted", "singly__linked__list_8h.html#ae24b51e38bd34f9a25194486667a8e5d", null ],
     [ "CCC_singly_linked_list_next", "singly__linked__list_8h.html#a004dbc88e7b20514092c54fb64532781", null ],

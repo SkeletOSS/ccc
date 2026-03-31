@@ -64,7 +64,7 @@ var NAVTREEINDEX =
 "adaptive__map_8h.html",
 "buffer_8h.html#a71304e1145d9ac1c541b086e1c2d2b49",
 "private__adaptive__map_8h.html#a941a7bd43f42767fdd51c1c33d422926",
-"structCCC__Tree__map__entry.html"
+"structCCC__Tree__map__node.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -123,7 +123,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <p><a href="doubly__linked__list_8h_source.html">Go to the source code of this file.</a></p>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The Doubly Linked List Interface. </p>
-<p>A doubly linked list offers efficient push, pop, extract, and erase operations for elements stored in the list. For single elements, the list can offer O(1) push front/back, pop front/back, and removal of elements in arbitrary positions in the list. The cost of this efficiency is higher memory footprint.</p>
+<p>A doubly linked list offers efficient push, pop, extract, and erase operations for elements stored in the list. For single elements, the list can offer O(1) push front/back, pop front/back, and removal of elements in arbitrary positions in the list. The cost of this efficiency is higher memory footprint. The linked list does not track internal state other than the head and tail of the list and type information about the user type stored in the list. Therefore, be aware that obtaining the count of nodes is an O(N) operation. Determining if the list is empty, however, is O(1).</p>
 <p>This container offers pointer stability. Also, if the container function requesting an allocator is not provided one, all insertion code assumes that the user has allocated memory appropriately for the element to be inserted; it will not allocate or free in this case. If an allocator is passed to a function requesting one, the container will manage the memory as expected on insert or erase operations as defined by the interface; memory is allocated for insertions and freed for removals.</p>
 <p>To shorten names in the interface, define the following preprocessor directive at the top of your file.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define DOUBLY_LINKED_LIST_USING_NAMESPACE_CCC</span></div>
@@ -198,9 +198,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Sorting Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Sort the container. </p>
 </td></tr>
-<tr class="memitem:a91cf52c36ddc77e54423a93a4ddcabb2"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="doubly__linked__list_8h.html#a91cf52c36ddc77e54423a93a4ddcabb2">CCC_doubly_linked_list_insert_sorted</a> (<a class="el" href="structCCC__Doubly__linked__list.html">CCC_Doubly_linked_list</a> *doubly_linked_list, <a class="el" href="structCCC__Doubly__linked__list__node.html">CCC_Doubly_linked_list_node</a> *type_intruder, <a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> const *comparator, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
-<tr class="memdesc:a91cf52c36ddc77e54423a93a4ddcabb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts type_intruder in sorted position according to the non-decreasing order of the list determined by the user provided comparison function. <code>O(1)</code>.  <br /></td></tr>
-<tr class="separator:a91cf52c36ddc77e54423a93a4ddcabb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a102cd0117d74c5646d917ce0faa16f40"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="doubly__linked__list_8h.html#a102cd0117d74c5646d917ce0faa16f40">CCC_doubly_linked_list_insert_sorted</a> (<a class="el" href="structCCC__Doubly__linked__list.html">CCC_Doubly_linked_list</a> *doubly_linked_list, <a class="el" href="structCCC__Doubly__linked__list__node.html">CCC_Doubly_linked_list_node</a> *type_intruder, <a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a> order, <a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> const *comparator, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:a102cd0117d74c5646d917ce0faa16f40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts type_intruder in sorted position according to the non-decreasing order of the list determined by the user provided comparison function. <code>O(1)</code>.  <br /></td></tr>
+<tr class="separator:a102cd0117d74c5646d917ce0faa16f40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff7227ead100bb46b96fad866bdfca23"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a8dbb03cfc2070934832841f50f146bcd">CCC_Tribool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="doubly__linked__list_8h.html#aff7227ead100bb46b96fad866bdfca23">CCC_doubly_linked_list_is_sorted</a> (<a class="el" href="structCCC__Doubly__linked__list.html">CCC_Doubly_linked_list</a> const *doubly_linked_list, <a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a> order, <a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> const *comparator)</td></tr>
 <tr class="memdesc:aff7227ead100bb46b96fad866bdfca23"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the list is sorted in non-decreasing order according to the user provided comparison function.  <br /></td></tr>
 <tr class="separator:aff7227ead100bb46b96fad866bdfca23"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -247,7 +247,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memdesc:a9d767b36e2574bcf59f1f58e53d2e3c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a handle to the list element at the front of the list which may be the sentinel. O(1).  <br /></td></tr>
 <tr class="separator:a9d767b36e2574bcf59f1f58e53d2e3c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ebc9cfc9b4dc8d1c736910468bb52ac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Count.html">CCC_Count</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="doubly__linked__list_8h.html#a3ebc9cfc9b4dc8d1c736910468bb52ac">CCC_doubly_linked_list_count</a> (<a class="el" href="structCCC__Doubly__linked__list.html">CCC_Doubly_linked_list</a> const *list)</td></tr>
-<tr class="memdesc:a3ebc9cfc9b4dc8d1c736910468bb52ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the count of elements in the list. O(1).  <br /></td></tr>
+<tr class="memdesc:a3ebc9cfc9b4dc8d1c736910468bb52ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the count of elements in the list. O(N).  <br /></td></tr>
 <tr class="separator:a3ebc9cfc9b4dc8d1c736910468bb52ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad54434571c5edf4614b464ceecb5dc9c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a8dbb03cfc2070934832841f50f146bcd">CCC_Tribool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="doubly__linked__list_8h.html#ad54434571c5edf4614b464ceecb5dc9c">CCC_doubly_linked_list_is_empty</a> (<a class="el" href="structCCC__Doubly__linked__list.html">CCC_Doubly_linked_list</a> const *list)</td></tr>
 <tr class="memdesc:ad54434571c5edf4614b464ceecb5dc9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return if the size of the list is equal to 0. O(1).  <br /></td></tr>
@@ -641,7 +641,7 @@ This graph shows which files directly or indirectly include this file:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Return the count of elements in the list. O(1). </p>
+<p>Return the count of elements in the list. O(N). </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">list</td><td>a pointer to the doubly linked list. </td></tr>
@@ -940,8 +940,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="a91cf52c36ddc77e54423a93a4ddcabb2" name="a91cf52c36ddc77e54423a93a4ddcabb2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a91cf52c36ddc77e54423a93a4ddcabb2">&#9670;&#160;</a></span>CCC_doubly_linked_list_insert_sorted()</h2>
+<a id="a102cd0117d74c5646d917ce0faa16f40" name="a102cd0117d74c5646d917ce0faa16f40"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a102cd0117d74c5646d917ce0faa16f40">&#9670;&#160;</a></span>CCC_doubly_linked_list_insert_sorted()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -957,6 +957,12 @@ This graph shows which files directly or indirectly include this file:</div>
           <td></td>
           <td class="paramtype"><a class="el" href="structCCC__Doubly__linked__list__node.html">CCC_Doubly_linked_list_node</a> *&#160;</td>
           <td class="paramname"><em>type_intruder</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a>&#160;</td>
+          <td class="paramname"><em>order</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -983,6 +989,7 @@ This graph shows which files directly or indirectly include this file:</div>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">doubly_linked_list</td><td>a pointer to the doubly linked list. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">type_intruder</td><td>a pointer to the element to be inserted in order. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">order</td><td>the order by which the list should be sorted. CCC_ORDER_LESSER means the list should be in non-increasing order from [0, count). CCC_ORDER_GREATER means the list should be in non-decreasing order from [0, count). </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">comparator</td><td>the <a class="el" href="structCCC__Comparator.html" title="The type passed by reference to any container function that may need to compare elements....">CCC_Comparator</a> for comparing list elements. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>the <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> for allocating a user type. </td></tr>
   </table>
