@@ -96,6 +96,28 @@ check_static_begin(priority_queue_test_simple_increase) {
     check(max != NULL, CCC_TRUE);
     check(max, to_update);
     check(max->val, 6);
+    check(
+        priority_queue_increase(
+            &priority_queue,
+            &max->elem,
+            &(CCC_Modifier){.modify = val_update, .context = &(int){7}}
+        ) != NULL,
+        CCC_TRUE
+    );
+    check(max->val, 7);
+    check(validate(&priority_queue), CCC_TRUE);
+    check(
+        priority_queue_decrease(
+            &priority_queue,
+            &max->elem,
+            &(CCC_Modifier){.modify = val_update, .context = &(int){4}}
+        ) != NULL,
+        CCC_TRUE
+    );
+    check(validate(&priority_queue), CCC_TRUE);
+    max = priority_queue_front(&priority_queue);
+    check(max != NULL, CCC_TRUE);
+    check(max->val, 5);
     check_end();
 }
 
@@ -107,7 +129,7 @@ check_static_begin(priority_queue_test_simple_decrease) {
     CCC_Priority_queue priority_queue = priority_queue_for(
         struct Val,
         elem,
-        CCC_ORDER_GREATER,
+        CCC_ORDER_LESSER,
         (CCC_Comparator){.compare = val_order}
     );
     check(
@@ -133,9 +155,19 @@ check_static_begin(priority_queue_test_simple_decrease) {
     );
     check(to_update != NULL, CCC_TRUE);
     check(validate(&priority_queue), CCC_TRUE);
-    struct Val *max = priority_queue_front(&priority_queue);
-    check(max != NULL, CCC_TRUE);
-    check(max->val, 3);
+    struct Val *min = priority_queue_front(&priority_queue);
+    check(min != NULL, CCC_TRUE);
+    check(min->val, 0);
+    check(
+        priority_queue_decrease(
+            &priority_queue,
+            &min->elem,
+            &(CCC_Modifier){.modify = val_update, .context = &(int){-1}}
+        ) != NULL,
+        CCC_TRUE
+    );
+    check(validate(&priority_queue), CCC_TRUE);
+    check(min->val, -1);
     check_end();
 }
 

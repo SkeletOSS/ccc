@@ -21,7 +21,10 @@ access to the front or most recently added elements. When compared to a singly
 linked list, the memory overhead per node is smaller but some operations will
 have `O(N)` runtime implications when compared to a similar operation in a
 singly linked list. Review function documentation when unsure of the runtime of
-an singly linked list operation.
+an singly linked list operation. The linked list does not track internal state
+other than the head of the list and type information about the user type stored
+in the list. Therefore, be aware that obtaining the count of nodes is an O(N)
+operation. Determining if the list is empty, however, is O(1).
 
 This container offers pointer stability. Also, if a user forgoes passing an
 allocator to a function that accepts one, all insertion code assumes that the
@@ -286,6 +289,10 @@ non-decreasing order of the list determined by the user provided comparison
 function. `O(1)`.
 @param[in] singly_linked_list a pointer to the singly linked list.
 @param[in] type_intruder a pointer to the element to be inserted in order.
+@param[in] order the order by which the list should be sorted. CCC_ORDER_LESSER
+means the list should be in non-increasing order from [0, count).
+CCC_ORDER_GREATER means the list should be in non-decreasing order from
+[0, count).
 @param[in] comparator a CCC_Comparator for comparing user elements.
 @param[in] allocator an optional CCC_Allocator for allocating a new element.
 @return a pointer to the element that has been inserted or NULL if allocation
@@ -301,6 +308,7 @@ CCC_ORDER_GREATER and vice versa. If elements are equal, return CCC_ORDER_EQUAL.
 void *CCC_singly_linked_list_insert_sorted(
     CCC_Singly_linked_list *singly_linked_list,
     CCC_Singly_linked_list_node *type_intruder,
+    CCC_Order order,
     CCC_Comparator const *comparator,
     CCC_Allocator const *allocator
 );
@@ -407,7 +415,7 @@ is NULL. */
 [[nodiscard]] void *
 CCC_singly_linked_list_front(CCC_Singly_linked_list const *list);
 
-/** @brief Return the count of nodes in the list. O(1).
+/** @brief Return the count of nodes in the list. O(N).
 @param[in] list a pointer to the singly linked list.
 @return the size or an argument error is set if list is NULL. */
 [[nodiscard]] CCC_Count
@@ -435,6 +443,8 @@ linked list container. Check for namespace clashes before name shortening. */
 /* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Singly_linked_list_node Singly_linked_list_node;
 typedef CCC_Singly_linked_list Singly_linked_list;
+#    define singly_linked_list_default(arguments...)                           \
+        CCC_singly_linked_list_default(arguments)
 #    define singly_linked_list_for(arguments...)                               \
         CCC_singly_linked_list_for(arguments)
 #    define singly_linked_list_from(arguments...)                              \

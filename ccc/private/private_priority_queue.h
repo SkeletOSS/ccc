@@ -109,8 +109,6 @@ struct CCC_Priority_queue_node *CCC_private_priority_queue_node_in(
     struct CCC_Priority_queue const *, void const *
 );
 /** @internal */
-void CCC_private_priority_queue_init_node(struct CCC_Priority_queue_node *);
-/** @internal */
 void CCC_private_priority_queue_update_fixup(
     struct CCC_Priority_queue *, struct CCC_Priority_queue_node *
 );

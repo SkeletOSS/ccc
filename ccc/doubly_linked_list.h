@@ -20,7 +20,10 @@ A doubly linked list offers efficient push, pop, extract, and erase operations
 for elements stored in the list. For single elements, the list can
 offer O(1) push front/back, pop front/back, and removal of elements in
 arbitrary positions in the list. The cost of this efficiency is higher memory
-footprint.
+footprint. The linked list does not track internal state other than the head
+and tail of the list and type information about the user type stored in the
+list. Therefore, be aware that obtaining the count of nodes is an O(N)
+operation. Determining if the list is empty, however, is O(1).
 
 This container offers pointer stability. Also, if the container function
 requesting an allocator is not provided one, all insertion code assumes that the
@@ -337,6 +340,10 @@ non-decreasing order of the list determined by the user provided comparison
 function. `O(1)`.
 @param[in] doubly_linked_list a pointer to the doubly linked list.
 @param[in] type_intruder a pointer to the element to be inserted in order.
+@param[in] order the order by which the list should be sorted. CCC_ORDER_LESSER
+means the list should be in non-increasing order from [0, count).
+CCC_ORDER_GREATER means the list should be in non-decreasing order from
+[0, count).
 @param[in] comparator the CCC_Comparator for comparing list elements.
 @param[in] allocator the CCC_Allocator for allocating a user type.
 @return a pointer to the element that has been inserted or NULL if allocation
@@ -351,6 +358,7 @@ CCC_ORDER_GREATER and vice versa. If elements are equal, CCC_ORDER_EQUAL. */
 void *CCC_doubly_linked_list_insert_sorted(
     CCC_Doubly_linked_list *doubly_linked_list,
     CCC_Doubly_linked_list_node *type_intruder,
+    CCC_Order order,
     CCC_Comparator const *comparator,
     CCC_Allocator const *allocator
 );
@@ -482,7 +490,7 @@ the sentinel but will not be NULL unless a NULL pointer is provided as l. */
 [[nodiscard]] CCC_Doubly_linked_list_node *
 CCC_doubly_linked_list_node_begin(CCC_Doubly_linked_list const *list);
 
-/** @brief Return the count of elements in the list. O(1).
+/** @brief Return the count of elements in the list. O(N).
 @param[in] list a pointer to the doubly linked list.
 @return the size of the list. An argument error is set if list is NULL. */
 [[nodiscard]] CCC_Count

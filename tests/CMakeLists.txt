@@ -356,6 +356,7 @@ endmacro()
 
 add_doubly_linked_list_test(test_doubly_linked_list_construct)
 add_doubly_linked_list_test(test_doubly_linked_list_insert)
+add_doubly_linked_list_test(test_doubly_linked_list_iterate)
 add_doubly_linked_list_test(test_doubly_linked_list_erase)
 
 #############  Singly Linked List ##########################
@@ -386,6 +387,7 @@ endmacro()
 
 add_singly_linked_list_test(test_singly_linked_list_construct)
 add_singly_linked_list_test(test_singly_linked_list_insert)
+add_singly_linked_list_test(test_singly_linked_list_iterate)
 add_singly_linked_list_test(test_singly_linked_list_erase)
 
 #############  Flat Double Ended Queue ##########################

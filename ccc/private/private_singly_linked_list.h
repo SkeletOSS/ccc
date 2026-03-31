@@ -20,7 +20,7 @@ limitations under the License.
 #include <stddef.h>
 /** @endcond */
 
-#include "../types.h"
+#include "../types.h" /* IWYU pragma: keep */
 
 /* NOLINTBEGIN(readability-identifier-naming) */
 
@@ -63,14 +63,10 @@ required if multiple threads access the same list. */
 struct CCC_Singly_linked_list {
     /** @internal The pointer to the current head of the list. */
     struct CCC_Singly_linked_list_node *head;
-    /** @internal The number of elements constantly tracked for O(1) check. */
-    size_t count;
     /** @internal The size in bytes of the type which wraps this handle. */
     size_t sizeof_type;
     /** @internal The offset in bytes of the intrusive element in user type. */
     size_t type_intruder_offset;
-    /** @internal The sorted state of the list. Remembers last sort. */
-    CCC_Order order;
 };
 
 /*=========================   Private Interface  ============================*/
@@ -95,7 +91,6 @@ struct CCC_Singly_linked_list_node *CCC_private_singly_linked_list_node_in(
         .type_intruder_offset = offsetof(                                      \
             private_struct_name, private_singly_linked_list_node_field         \
         ),                                                                     \
-        .count = 0, .order = CCC_ORDER_ERROR,                                  \
     }
 
 /** @internal */

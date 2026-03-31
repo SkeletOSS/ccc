@@ -11,6 +11,50 @@
 #include "types.h"
 #include "utility/stack_allocator.h"
 
+check_static_begin(doubly_linked_list_test_push_nothing) {
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[1]){}),
+    };
+    Doubly_linked_list doubly_linked_list
+        = doubly_linked_list_default(struct Val, e);
+    check(doubly_linked_list_front(NULL), NULL);
+    check(doubly_linked_list_back(NULL), NULL);
+    check(
+        doubly_linked_list_push_front(NULL, &(struct Val){}.e, &allocator), NULL
+    );
+    check(
+        doubly_linked_list_push_front(&doubly_linked_list, NULL, &allocator),
+        NULL
+    );
+    check(
+        doubly_linked_list_push_front(
+            &doubly_linked_list, &(struct Val){}.e, NULL
+        ),
+        NULL
+    );
+    check(
+        doubly_linked_list_push_back(NULL, &(struct Val){}.e, &allocator), NULL
+    );
+    check(
+        doubly_linked_list_push_back(&doubly_linked_list, NULL, &allocator),
+        NULL
+    );
+    check(
+        doubly_linked_list_push_back(
+            &doubly_linked_list, &(struct Val){}.e, NULL
+        ),
+        NULL
+    );
+    check(
+        push_front(&doubly_linked_list, &(struct Val){}.e, &allocator) != NULL,
+        true
+    );
+    check(push_front(&doubly_linked_list, &(struct Val){}.e, &allocator), NULL);
+    check(push_back(&doubly_linked_list, &(struct Val){}.e, &allocator), NULL);
+    check_end();
+}
+
 check_static_begin(doubly_linked_list_test_push_three_front) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
@@ -80,6 +124,60 @@ check_static_begin(doubly_linked_list_test_push_three_back) {
     v = doubly_linked_list_back(&doubly_linked_list);
     check(v == NULL, false);
     check(v->id, 2);
+    check_end();
+}
+
+check_static_begin(doubly_linked_list_test_push_insert) {
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[3]){}),
+    };
+    Doubly_linked_list doubly_linked_list
+        = doubly_linked_list_for(struct Val, e);
+    check(
+        CCC_doubly_linked_list_insert(
+            NULL, &(struct Val){}.e, &(struct Val){}.e, &allocator
+        ),
+        NULL
+    );
+    check(
+        CCC_doubly_linked_list_insert(
+            &doubly_linked_list, &(struct Val){}.e, NULL, &allocator
+        ),
+        NULL
+    );
+    check(
+        CCC_doubly_linked_list_insert(
+            &doubly_linked_list, &(struct Val){}.e, &(struct Val){}.e, NULL
+        ),
+        NULL
+    );
+    check(
+        push_back(&doubly_linked_list, &(struct Val){}.e, &allocator) != NULL,
+        true
+    );
+    check(validate(&doubly_linked_list), true);
+    struct Val *const v = push_back(
+        &doubly_linked_list, &(struct Val){.id = 1, .val = 1}.e, &allocator
+    );
+    check(v != NULL, true);
+    check(validate(&doubly_linked_list), true);
+    struct Val *v2 = CCC_doubly_linked_list_insert(
+        &doubly_linked_list,
+        &v->e,
+        &(struct Val){.id = 2, .val = 2}.e,
+        &allocator
+    );
+    check(v2 != NULL, true);
+    check(validate(&doubly_linked_list), true);
+    v2 = CCC_doubly_linked_list_insert(
+        &doubly_linked_list,
+        &v->e,
+        &(struct Val){.id = 2, .val = 2}.e,
+        &allocator
+    );
+    check(v2, NULL);
+    check(count(&doubly_linked_list).count, 3);
     check_end();
 }
 
@@ -575,6 +673,7 @@ check_static_begin(doubly_linked_list_test_sort_insert) {
     struct Val *inserted = CCC_doubly_linked_list_insert_sorted(
         &doubly_linked_list,
         &to_insert[0].e,
+        CCC_ORDER_LESSER,
         &(CCC_Comparator){.compare = val_order},
         &(CCC_Allocator){}
     );
@@ -590,6 +689,7 @@ check_static_begin(doubly_linked_list_test_sort_insert) {
     inserted = doubly_linked_list_insert_sorted(
         &doubly_linked_list,
         &to_insert[1].e,
+        CCC_ORDER_LESSER,
         &(CCC_Comparator){.compare = val_order},
         &(CCC_Allocator){}
     );
@@ -605,6 +705,7 @@ check_static_begin(doubly_linked_list_test_sort_insert) {
     inserted = doubly_linked_list_insert_sorted(
         &doubly_linked_list,
         &to_insert[2].e,
+        CCC_ORDER_LESSER,
         &(CCC_Comparator){.compare = val_order},
         &(CCC_Allocator){}
     );
@@ -620,6 +721,7 @@ check_static_begin(doubly_linked_list_test_sort_insert) {
     inserted = doubly_linked_list_insert_sorted(
         &doubly_linked_list,
         &to_insert[3].e,
+        CCC_ORDER_LESSER,
         &(CCC_Comparator){.compare = val_order},
         &(CCC_Allocator){}
     );
@@ -635,6 +737,7 @@ check_static_begin(doubly_linked_list_test_sort_insert) {
     inserted = doubly_linked_list_insert_sorted(
         &doubly_linked_list,
         &to_insert[4].e,
+        CCC_ORDER_LESSER,
         &(CCC_Comparator){.compare = val_order},
         &(CCC_Allocator){}
     );
@@ -652,9 +755,142 @@ check_static_begin(doubly_linked_list_test_sort_insert) {
     check_end();
 }
 
+check_static_begin(doubly_linked_list_test_insert_sorted_allocation) {
+    enum : size_t {
+        CAP = 10
+    };
+    CCC_Allocator const *const allocator = &(CCC_Allocator){
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[CAP]){}),
+    };
+    CCC_Comparator const *const comparator
+        = &(CCC_Comparator){.compare = val_order};
+    Doubly_linked_list list = doubly_linked_list_from(
+        e,
+        *allocator,
+        (CCC_Destructor){},
+        (struct Val[]){
+            {.val = 9},
+            {.val = 4},
+            {.val = 1},
+            {.val = 1},
+            {.val = 99},
+            {.val = -55},
+            {.val = 5},
+            {.val = 2},
+            {.val = -99},
+        }
+    );
+    check(
+        check_order(&list, 9, (int[9]){9, 4, 1, 1, 99, -55, 5, 2, -99}),
+        CHECK_PASS
+    );
+    check(
+        doubly_linked_list_is_sorted(&list, CCC_ORDER_LESSER, comparator), false
+    );
+    CCC_Result r = CCC_sort_mergesort(&list, CCC_ORDER_LESSER, comparator);
+    check(
+        doubly_linked_list_is_sorted(&list, CCC_ORDER_LESSER, comparator), true
+    );
+    check(r, CCC_RESULT_OK);
+    check(validate(&list), true);
+    check(
+        check_order(&list, 9, (int[9]){-99, -55, 1, 1, 2, 4, 5, 9, 99}),
+        CHECK_PASS
+    );
+    check(
+        CCC_doubly_linked_list_insert_sorted(
+            &list,
+            &(struct Val){.val = 3}.e,
+            CCC_ORDER_LESSER,
+            comparator,
+            allocator
+        ) != NULL,
+        CCC_TRUE
+    );
+    check(validate(&list), true);
+    check(
+        check_order(&list, 10, (int[10]){-99, -55, 1, 1, 2, 3, 4, 5, 9, 99}),
+        CHECK_PASS
+    );
+    /* Allocator exhaustion. */
+    check(
+        CCC_doubly_linked_list_insert_sorted(
+            &list,
+            &(struct Val){.val = 100}.e,
+            CCC_ORDER_LESSER,
+            comparator,
+            allocator
+        ),
+        NULL
+    );
+    check(
+        CCC_doubly_linked_list_insert_sorted(
+            NULL,
+            &(struct Val){.val = 3}.e,
+            CCC_ORDER_LESSER,
+            comparator,
+            allocator
+        ),
+        NULL
+    );
+    check(
+        CCC_doubly_linked_list_insert_sorted(
+            &list, NULL, CCC_ORDER_LESSER, comparator, allocator
+        ),
+        NULL
+    );
+    check(
+        CCC_doubly_linked_list_insert_sorted(
+            &list,
+            &(struct Val){.val = 3}.e,
+            CCC_ORDER_EQUAL,
+            comparator,
+            allocator
+        ),
+        NULL
+    );
+    check(
+        CCC_doubly_linked_list_insert_sorted(
+            &list, &(struct Val){.val = 3}.e, CCC_ORDER_LESSER, NULL, allocator
+        ),
+        NULL
+    );
+    check(
+        CCC_doubly_linked_list_insert_sorted(
+            &list, &(struct Val){.val = 3}.e, CCC_ORDER_LESSER, comparator, NULL
+        ),
+        NULL
+    );
+    check_end();
+}
+
+check_static_begin(doubly_linked_list_test_mergesort_errors) {
+    Doubly_linked_list list = doubly_linked_list_default(struct Val, e);
+    check(
+        CCC_sort_doubly_linked_list_mergesort(
+            NULL, CCC_ORDER_LESSER, &(CCC_Comparator){}
+        ),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        CCC_sort_doubly_linked_list_mergesort(
+            &list, CCC_ORDER_EQUAL, &(CCC_Comparator){}
+        ),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        CCC_sort_doubly_linked_list_mergesort(&list, CCC_ORDER_LESSER, NULL),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check_end();
+}
+
 int
 main(void) {
     return check_run(
+        doubly_linked_list_test_push_nothing(),
+        doubly_linked_list_test_push_insert(),
         doubly_linked_list_test_push_three_front(),
         doubly_linked_list_test_push_three_back(),
         doubly_linked_list_test_push_and_splice(),
@@ -665,6 +901,8 @@ main(void) {
         doubly_linked_list_test_sort_reverse(),
         doubly_linked_list_test_sort_runs(),
         doubly_linked_list_test_sort_halves(),
-        doubly_linked_list_test_sort_insert()
+        doubly_linked_list_test_sort_insert(),
+        doubly_linked_list_test_insert_sorted_allocation(),
+        doubly_linked_list_test_mergesort_errors(),
     );
 }
