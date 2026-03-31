@@ -755,6 +755,137 @@ check_static_begin(doubly_linked_list_test_sort_insert) {
     check_end();
 }
 
+check_static_begin(doubly_linked_list_test_insert_sorted_allocation) {
+    enum : size_t {
+        CAP = 10
+    };
+    CCC_Allocator const *const allocator = &(CCC_Allocator){
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for((struct Val[CAP]){}),
+    };
+    CCC_Comparator const *const comparator
+        = &(CCC_Comparator){.compare = val_order};
+    Doubly_linked_list list = doubly_linked_list_from(
+        e,
+        *allocator,
+        (CCC_Destructor){},
+        (struct Val[]){
+            {.val = 9},
+            {.val = 4},
+            {.val = 1},
+            {.val = 1},
+            {.val = 99},
+            {.val = -55},
+            {.val = 5},
+            {.val = 2},
+            {.val = -99},
+        }
+    );
+    check(
+        check_order(&list, 9, (int[9]){9, 4, 1, 1, 99, -55, 5, 2, -99}),
+        CHECK_PASS
+    );
+    check(
+        doubly_linked_list_is_sorted(&list, CCC_ORDER_LESSER, comparator), false
+    );
+    CCC_Result r = CCC_sort_mergesort(&list, CCC_ORDER_LESSER, comparator);
+    check(
+        doubly_linked_list_is_sorted(&list, CCC_ORDER_LESSER, comparator), true
+    );
+    check(r, CCC_RESULT_OK);
+    check(validate(&list), true);
+    check(
+        check_order(&list, 9, (int[9]){-99, -55, 1, 1, 2, 4, 5, 9, 99}),
+        CHECK_PASS
+    );
+    check(
+        CCC_doubly_linked_list_insert_sorted(
+            &list,
+            &(struct Val){.val = 3}.e,
+            CCC_ORDER_LESSER,
+            comparator,
+            allocator
+        ) != NULL,
+        CCC_TRUE
+    );
+    check(validate(&list), true);
+    check(
+        check_order(&list, 10, (int[10]){-99, -55, 1, 1, 2, 3, 4, 5, 9, 99}),
+        CHECK_PASS
+    );
+    /* Allocator exhaustion. */
+    check(
+        CCC_doubly_linked_list_insert_sorted(
+            &list,
+            &(struct Val){.val = 100}.e,
+            CCC_ORDER_LESSER,
+            comparator,
+            allocator
+        ),
+        NULL
+    );
+    check(
+        CCC_doubly_linked_list_insert_sorted(
+            NULL,
+            &(struct Val){.val = 3}.e,
+            CCC_ORDER_LESSER,
+            comparator,
+            allocator
+        ),
+        NULL
+    );
+    check(
+        CCC_doubly_linked_list_insert_sorted(
+            &list, NULL, CCC_ORDER_LESSER, comparator, allocator
+        ),
+        NULL
+    );
+    check(
+        CCC_doubly_linked_list_insert_sorted(
+            &list,
+            &(struct Val){.val = 3}.e,
+            CCC_ORDER_EQUAL,
+            comparator,
+            allocator
+        ),
+        NULL
+    );
+    check(
+        CCC_doubly_linked_list_insert_sorted(
+            &list, &(struct Val){.val = 3}.e, CCC_ORDER_LESSER, NULL, allocator
+        ),
+        NULL
+    );
+    check(
+        CCC_doubly_linked_list_insert_sorted(
+            &list, &(struct Val){.val = 3}.e, CCC_ORDER_LESSER, comparator, NULL
+        ),
+        NULL
+    );
+    check_end();
+}
+
+check_static_begin(doubly_linked_list_test_mergesort_errors) {
+    Doubly_linked_list list = doubly_linked_list_default(struct Val, e);
+    check(
+        CCC_sort_doubly_linked_list_mergesort(
+            NULL, CCC_ORDER_LESSER, &(CCC_Comparator){}
+        ),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        CCC_sort_doubly_linked_list_mergesort(
+            &list, CCC_ORDER_EQUAL, &(CCC_Comparator){}
+        ),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        CCC_sort_doubly_linked_list_mergesort(&list, CCC_ORDER_LESSER, NULL),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check_end();
+}
+
 int
 main(void) {
     return check_run(
@@ -770,6 +901,8 @@ main(void) {
         doubly_linked_list_test_sort_reverse(),
         doubly_linked_list_test_sort_runs(),
         doubly_linked_list_test_sort_halves(),
-        doubly_linked_list_test_sort_insert()
+        doubly_linked_list_test_sort_insert(),
+        doubly_linked_list_test_insert_sorted_allocation(),
+        doubly_linked_list_test_mergesort_errors(),
     );
 }

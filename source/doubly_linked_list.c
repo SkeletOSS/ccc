@@ -700,26 +700,28 @@ merge(
     while (a_first && a_first != a_count_b_first && a_count_b_first
            && a_count_b_first != b_count) {
         if (get_order(list, a_count_b_first, a_first, comparator) == order) {
-            struct CCC_Doubly_linked_list_node *const lesser = a_count_b_first;
-            a_count_b_first = lesser->next;
-            if (lesser->next) {
-                lesser->next->previous = lesser->previous;
+            struct CCC_Doubly_linked_list_node *const merged = a_count_b_first;
+            a_count_b_first = merged->next;
+            if (merged->next) {
+                merged->next->previous = merged->previous;
             } else {
-                list->tail = lesser->previous;
+                list->tail = merged->previous;
             }
-            if (lesser->previous) {
-                lesser->previous->next = lesser->next;
-            } else {
-                list->head = lesser->next;
-            }
-            lesser->previous = a_first->previous;
-            lesser->next = a_first;
+            assert(
+                merged->previous
+                && "merged element must always have a previous pointer because "
+                   "lists of size 1 or less are not merged and merging "
+                   "iterates forward"
+            );
+            merged->previous->next = merged->next;
+            merged->previous = a_first->previous;
+            merged->next = a_first;
             if (a_first->previous) {
-                a_first->previous->next = lesser;
+                a_first->previous->next = merged;
             } else {
-                list->head = lesser;
+                list->head = merged;
             }
-            a_first->previous = lesser;
+            a_first->previous = merged;
         } else {
             a_first = a_first->next;
         }
