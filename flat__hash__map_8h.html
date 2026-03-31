@@ -127,26 +127,23 @@ This graph shows which files directly or indirectly include this file:</div>
 <p>The current implementation will seek to use the best platform specific Single Instruction Multiple Data (SIMD) or Single Register Multiple Data (SRMD) instructions available. However, if for any reason the user wishes to use the most portable Single Register Multiple Data fallback implementation, there are many options.</p>
 <p>To use the map as a set, when only keys are needed, wrap a type in a struct or union. For example a set of <code>int</code> could be represented by creating a type <code>struct My_int {int key;};</code>. All interface functions can then be used normally.</p>
 <p>If building this library separately to include its library file, add the flag to the build (and read INSTALL.md for more details).</p>
-<div class="fragment"><div class="line">cmake --preset=clang-release -DCCC_FLAT_HASH_MAP_PORTABLE=ON</div>
+<div class="fragment"><div class="line">cmake --preset=clang-ccc -DCCC_FLAT_HASH_MAP_PORTABLE=ON</div>
 </div><!-- fragment --><p>If an install location other than the release folder is desired don't forget to add the install prefix.</p>
-<div class="fragment"><div class="line">cmake --preset=clang-release -DCCC_FLAT_HASH_MAP_PORTABLE=ON \</div>
+<div class="fragment"><div class="line">cmake --preset=clang-ccc -DCCC_FLAT_HASH_MAP_PORTABLE=ON \</div>
 <div class="line">-DCMAKE_INSTALL_PREFIX=/my/path/</div>
-</div><!-- fragment --><p>If this library is being built as part of your project then define the flag as part of your configuration.</p>
+</div><!-- fragment --><p>If this library is being built as part of your project via CMake's FetchContent mechanism, or any other method, then define the flag as part of your configuration.</p>
 <div class="fragment"><div class="line">cmake --preset=my-preset -DCCC_FLAT_HASH_MAP_PORTABLE=ON</div>
 </div><!-- fragment --><p>Or, add the flag to your <code>CMakePresets.json</code>.</p>
 <div class="fragment"><div class="line"><span class="stringliteral">&quot;cacheVariables&quot;</span>: {</div>
 <div class="line">    <span class="stringliteral">&quot;CCC_FLAT_HASH_MAP_PORTABLE&quot;</span>: <span class="stringliteral">&quot;ON&quot;</span></div>
 <div class="line">}</div>
-</div><!-- fragment --><p>Or, enable on a per target basis in your <code>CMakeLists.txt</code>.</p>
-<div class="fragment"><div class="line">target_compile_definitions(my_target PRIVATE CCC_FLAT_HASH_MAP_PORTABLE)</div>
-</div><!-- fragment --><p>Or finally, just define it before including the flat hash map header.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define CCC_FLAT_HASH_MAP_PORTABLE</span></div>
-<div class="line"><span class="preprocessor">#include &quot;<a class="code" href="flat__hash__map_8h.html">ccc/flat_hash_map.h</a>&quot;</span></div>
-<div class="ttc" id="aflat__hash__map_8h_html"><div class="ttname"><a href="flat__hash__map_8h.html">flat_hash_map.h</a></div><div class="ttdoc">The Flat Hash Map Interface.</div></div>
+</div><!-- fragment --><p>Or, enable it in your <code>CMakeLists.txt</code> after including the C Container Collection via CMake's FetchContent mechanism (see INSTALL.md).</p>
+<div class="fragment"><div class="line">target_compile_definitions(ccc PRIVATE CCC_FLAT_HASH_MAP_PORTABLE)</div>
 </div><!-- fragment --><p>See the INSTALL.md file for more ways to configure the map for hosted and freestanding environments.</p>
 <p>To shorten names in the interface, define the following preprocessor directive at the top of your file. The <code>CCC_</code> prefix may then be omitted for only this container.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define FLAT_HASH_MAP_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="flat__hash__map_8h.html">ccc/flat_hash_map.h</a>&quot;</span></div>
+<div class="ttc" id="aflat__hash__map_8h_html"><div class="ttname"><a href="flat__hash__map_8h.html">flat_hash_map.h</a></div><div class="ttdoc">The Flat Hash Map Interface.</div></div>
 </div><!-- fragment --><p>All types and functions can then be written without the <code>CCC_</code> prefix. </p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Initialization Interface</h2></td></tr>
@@ -989,8 +986,8 @@ If initialization fails, the map will be returned empty. All subsequent queries,
 <div class="line">    );</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="aflat__hash__map_8h_html_a20afaa665ffa09d6d44b6faa6c3feccb"><div class="ttname"><a href="flat__hash__map_8h.html#a20afaa665ffa09d6d44b6faa6c3feccb">CCC_flat_hash_map_storage_for</a></div><div class="ttdeci">#define CCC_flat_hash_map_storage_for( user_type_compound_literal_array, optional_storage_specifier...)</div><div class="ttdoc">Create the underlying fixed size storage for a user declared compound literal array of the type the u...</div><div class="ttdef"><b>Definition:</b> flat_hash_map.h:182</div></div>
-<div class="ttc" id="aflat__hash__map_8h_html_a58c170afcded1db0b3f6bf4a1720f267"><div class="ttname"><a href="flat__hash__map_8h.html#a58c170afcded1db0b3f6bf4a1720f267">CCC_flat_hash_map_for</a></div><div class="ttdeci">#define CCC_flat_hash_map_for( type_name, key_field, hasher, capacity, map_pointer)</div><div class="ttdoc">Initialize a map of types at compile time or runtime.</div><div class="ttdef"><b>Definition:</b> flat_hash_map.h:229</div></div>
+<div class="ttc" id="aflat__hash__map_8h_html_a20afaa665ffa09d6d44b6faa6c3feccb"><div class="ttname"><a href="flat__hash__map_8h.html#a20afaa665ffa09d6d44b6faa6c3feccb">CCC_flat_hash_map_storage_for</a></div><div class="ttdeci">#define CCC_flat_hash_map_storage_for( user_type_compound_literal_array, optional_storage_specifier...)</div><div class="ttdoc">Create the underlying fixed size storage for a user declared compound literal array of the type the u...</div><div class="ttdef"><b>Definition:</b> flat_hash_map.h:177</div></div>
+<div class="ttc" id="aflat__hash__map_8h_html_a58c170afcded1db0b3f6bf4a1720f267"><div class="ttname"><a href="flat__hash__map_8h.html#a58c170afcded1db0b3f6bf4a1720f267">CCC_flat_hash_map_for</a></div><div class="ttdeci">#define CCC_flat_hash_map_for( type_name, key_field, hasher, capacity, map_pointer)</div><div class="ttdoc">Initialize a map of types at compile time or runtime.</div><div class="ttdef"><b>Definition:</b> flat_hash_map.h:224</div></div>
 <div class="ttc" id="astructCCC__Flat__hash__map_html"><div class="ttname"><a href="structCCC__Flat__hash__map.html">CCC_Flat_hash_map</a></div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:137</div></div>
 </div><!-- fragment --><p>Usually, using a dynamic map and the reserve interface would be sufficient. However, the reserve interface only guarantees that at least the needed bytes are allocated. When the user must know the exact size of the backing object due to strict memory requirements, this is helpful. Such a use case may be rare, but must be supported by this container. </p>
 
