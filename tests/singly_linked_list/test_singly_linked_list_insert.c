@@ -606,6 +606,7 @@ check_static_begin(singly_linked_list_test_sort_insert) {
     struct Val *inserted = singly_linked_list_insert_sorted(
         &singly_linked_list,
         &to_insert[0].e,
+        CCC_ORDER_LESSER,
         &(CCC_Comparator){.compare = val_order},
         &(CCC_Allocator){}
     );
@@ -617,6 +618,7 @@ check_static_begin(singly_linked_list_test_sort_insert) {
     inserted = singly_linked_list_insert_sorted(
         &singly_linked_list,
         &to_insert[1].e,
+        CCC_ORDER_LESSER,
         &(CCC_Comparator){.compare = val_order},
         &(CCC_Allocator){}
     );
@@ -628,6 +630,7 @@ check_static_begin(singly_linked_list_test_sort_insert) {
     inserted = singly_linked_list_insert_sorted(
         &singly_linked_list,
         &to_insert[2].e,
+        CCC_ORDER_LESSER,
         &(CCC_Comparator){.compare = val_order},
         &(CCC_Allocator){}
     );
@@ -639,6 +642,7 @@ check_static_begin(singly_linked_list_test_sort_insert) {
     inserted = singly_linked_list_insert_sorted(
         &singly_linked_list,
         &to_insert[3].e,
+        CCC_ORDER_LESSER,
         &(CCC_Comparator){.compare = val_order},
         &(CCC_Allocator){}
     );
@@ -650,6 +654,7 @@ check_static_begin(singly_linked_list_test_sort_insert) {
     inserted = singly_linked_list_insert_sorted(
         &singly_linked_list,
         &to_insert[4].e,
+        CCC_ORDER_LESSER,
         &(CCC_Comparator){.compare = val_order},
         &(CCC_Allocator){}
     );

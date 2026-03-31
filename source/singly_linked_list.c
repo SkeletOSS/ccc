@@ -59,10 +59,7 @@ static struct CCC_Singly_linked_list_node *before(
 static size_t
 len(struct CCC_Singly_linked_list_node const *,
     struct CCC_Singly_linked_list_node const *);
-static size_t extract_range(
-    struct CCC_Singly_linked_list_node *, struct CCC_Singly_linked_list_node *
-);
-static size_t erase_range(
+static void erase_range(
     struct CCC_Singly_linked_list *,
     struct CCC_Singly_linked_list_node const *,
     struct CCC_Singly_linked_list_node *,
@@ -102,7 +99,6 @@ CCC_singly_linked_list_push_front(
     if (!list || !type_intruder || !allocator) {
         return NULL;
     }
-    list->order = CCC_ORDER_ERROR;
     if (allocator->allocate) {
         void *const node = allocator->allocate((CCC_Allocator_arguments){
             .input = NULL,
@@ -116,7 +112,6 @@ CCC_singly_linked_list_push_front(
         type_intruder = elem_in(list, node);
     }
     insert_node(list, NULL, type_intruder);
-    ++list->count;
     return struct_base(list, list->head);
 }
 
@@ -132,7 +127,7 @@ CCC_Result
 CCC_singly_linked_list_pop_front(
     CCC_Singly_linked_list *const list, CCC_Allocator const *const allocator
 ) {
-    if (!list || !list->count || !allocator) {
+    if (!list || !list->head || !allocator) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     struct CCC_Singly_linked_list_node *const remove = list->head;
@@ -144,7 +139,6 @@ CCC_singly_linked_list_pop_front(
             .context = allocator->context,
         });
     }
-    --list->count;
     return CCC_RESULT_OK;
 }
 
@@ -162,17 +156,12 @@ CCC_singly_linked_list_splice(
         || type_intruder_position->next == type_intruder_splice) {
         return CCC_RESULT_OK;
     }
-    position_list->order = CCC_ORDER_ERROR;
     remove_node(
         splice_list,
         before(splice_list, type_intruder_splice),
         type_intruder_splice
     );
     insert_node(position_list, type_intruder_position, type_intruder_splice);
-    if (position_list != splice_list) {
-        --splice_list->count;
-        ++position_list->count;
-    }
     return CCC_RESULT_OK;
 }
 
@@ -190,7 +179,6 @@ CCC_singly_linked_list_splice_range(
     if (type_intruder_position == type_intruder_to_cut_begin) {
         return CCC_RESULT_OK;
     }
-    position_list->order = CCC_ORDER_ERROR;
     CCC_Singly_linked_list_node *const to_cut_inclusive_end
         = before(to_cut_list, type_intruder_to_cut_exclusive_end);
     if (type_intruder_to_cut_begin == to_cut_inclusive_end) {
@@ -217,12 +205,6 @@ CCC_singly_linked_list_splice_range(
         }
         position_list->head = type_intruder_to_cut_begin;
     }
-    if (position_list != to_cut_list) {
-        size_t const count
-            = len(type_intruder_to_cut_begin, to_cut_inclusive_end);
-        to_cut_list->count -= count;
-        position_list->count += count;
-    }
     return CCC_RESULT_OK;
 }
 
@@ -232,7 +214,7 @@ CCC_singly_linked_list_erase(
     CCC_Singly_linked_list_node *const type_intruder,
     CCC_Allocator const *const allocator
 ) {
-    if (!list || !type_intruder || !allocator || !list->count
+    if (!list || !type_intruder || !allocator || !list->head
         || type_intruder == NULL) {
         return NULL;
     }
@@ -247,7 +229,6 @@ CCC_singly_linked_list_erase(
             .context = allocator->context,
         });
     }
-    --list->count;
     return struct_base(list, return_this);
 }
 
@@ -258,7 +239,7 @@ CCC_singly_linked_list_erase_range(
     CCC_Singly_linked_list_node *const type_intruder_end,
     CCC_Allocator const *const allocator
 ) {
-    if (!list || !type_intruder_begin || !allocator || !list->count) {
+    if (!list || !type_intruder_begin || !allocator || !list->head) {
         return NULL;
     }
     struct CCC_Singly_linked_list_node *const inclusive_end
@@ -266,10 +247,7 @@ CCC_singly_linked_list_erase_range(
     struct CCC_Singly_linked_list_node *const before_begin
         = before(list, type_intruder_begin);
     remove_node(list, before_begin, inclusive_end);
-    size_t const deleted
-        = erase_range(list, type_intruder_begin, inclusive_end, allocator);
-    assert(deleted <= list->count);
-    list->count -= deleted;
+    erase_range(list, type_intruder_begin, inclusive_end, allocator);
     return struct_base(list, type_intruder_end);
 }
 
@@ -278,14 +256,13 @@ CCC_singly_linked_list_extract(
     CCC_Singly_linked_list *const list,
     CCC_Singly_linked_list_node *const type_intruder
 ) {
-    if (!list || !type_intruder || !list->count) {
+    if (!list || !type_intruder || !list->head) {
         return NULL;
     }
     struct CCC_Singly_linked_list_node const *const return_this
         = type_intruder->next;
     remove_node(list, before(list, type_intruder), type_intruder);
     type_intruder->next = NULL;
-    --list->count;
     return struct_base(list, return_this);
 }
 
@@ -295,7 +272,7 @@ CCC_singly_linked_list_extract_range(
     CCC_Singly_linked_list_node *const type_intruder_begin,
     CCC_Singly_linked_list_node *const type_intruder_end
 ) {
-    if (!list || !type_intruder_begin || !list->count) {
+    if (!list || !type_intruder_begin || !list->head) {
         return NULL;
     }
     struct CCC_Singly_linked_list_node *const inclusive_end
@@ -303,9 +280,9 @@ CCC_singly_linked_list_extract_range(
     struct CCC_Singly_linked_list_node *const before_begin
         = before(list, type_intruder_begin);
     remove_node(list, before_begin, inclusive_end);
-    size_t const deleted = extract_range(type_intruder_begin, inclusive_end);
-    assert(deleted <= list->count);
-    list->count -= deleted;
+    if (inclusive_end) {
+        inclusive_end->next = NULL;
+    }
     return struct_base(list, type_intruder_end);
 }
 
@@ -355,6 +332,10 @@ CCC_singly_linked_list_clear(
     if (!list || !destructor || !allocator) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
+    if (!destructor->destroy && !allocator->allocate) {
+        list->head = NULL;
+        return CCC_RESULT_OK;
+    }
     while (list->head) {
         struct CCC_Singly_linked_list_node *const remove = list->head;
         remove_node(list, NULL, remove);
@@ -373,8 +354,7 @@ CCC_singly_linked_list_clear(
             });
         }
     }
-    list->count = 0;
-    list->order = CCC_ORDER_ERROR;
+    list->head = NULL;
     return CCC_RESULT_OK;
 }
 
@@ -383,17 +363,13 @@ CCC_singly_linked_list_validate(CCC_Singly_linked_list const *const list) {
     if (!list) {
         return CCC_TRIBOOL_ERROR;
     }
-    size_t size = 0;
     for (struct CCC_Singly_linked_list_node *e = list->head; e != NULL;
-         e = e->next, ++size) {
-        if (size >= list->count) {
-            return CCC_FALSE;
-        }
+         e = e->next) {
         if (!e || e->next == e) {
             return CCC_FALSE;
         }
     }
-    return size == list->count;
+    return CCC_TRUE;
 }
 
 CCC_Count
@@ -402,7 +378,9 @@ CCC_singly_linked_list_count(CCC_Singly_linked_list const *const list) {
     if (!list) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
-    return (CCC_Count){.count = list->count};
+    return (CCC_Count){
+        .count = len(list->head, NULL),
+    };
 }
 
 CCC_Tribool
@@ -410,7 +388,7 @@ CCC_singly_linked_list_is_empty(CCC_Singly_linked_list const *const list) {
     if (!list) {
         return CCC_TRIBOOL_ERROR;
     }
-    return !list->count;
+    return !list->head;
 }
 
 /*==========================     Sorting     ================================*/
@@ -427,11 +405,7 @@ CCC_singly_linked_list_is_sorted(
     if (!list || !comparator) {
         return CCC_TRIBOOL_ERROR;
     }
-    if ((list->order != CCC_ORDER_LESSER && list->order != CCC_ORDER_GREATER)
-        || list->order != order) {
-        return CCC_FALSE;
-    }
-    if (list->count <= 1) {
+    if (!list->head) {
         return CCC_TRUE;
     }
     CCC_Order const wrong_order
@@ -454,12 +428,12 @@ void *
 CCC_singly_linked_list_insert_sorted(
     CCC_Singly_linked_list *list,
     CCC_Singly_linked_list_node *type_intruder,
+    CCC_Order const order,
     CCC_Comparator const *const comparator,
     CCC_Allocator const *const allocator
 ) {
     if (!list || !type_intruder || !allocator || !comparator
-        || !comparator->compare || list->order == CCC_ORDER_ERROR
-        || list->order == CCC_ORDER_EQUAL) {
+        || !comparator->compare) {
         return NULL;
     }
     if (allocator->allocate) {
@@ -476,11 +450,9 @@ CCC_singly_linked_list_insert_sorted(
     }
     struct CCC_Singly_linked_list_node *prev = NULL;
     struct CCC_Singly_linked_list_node *i = list->head;
-    for (; i != NULL
-           && get_order(list, type_intruder, i, comparator) != list->order;
+    for (; i != NULL && get_order(list, type_intruder, i, comparator) != order;
          prev = i, i = i->next) {}
     insert_node(list, prev, type_intruder);
-    ++list->count;
     return struct_base(list, type_intruder);
 }
 
@@ -519,7 +491,6 @@ CCC_sort_singly_linked_list_mergesort(
         || (order != CCC_ORDER_LESSER && order != CCC_ORDER_GREATER)) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    list->order = order;
     /* Algorithm is one pass if list is sorted. Merging is never true. */
     CCC_Tribool merging = CCC_FALSE;
     do {
@@ -636,7 +607,6 @@ CCC_private_singly_linked_list_push_front(
     struct CCC_Singly_linked_list_node *const type_intruder
 ) {
     insert_node(list, NULL, type_intruder);
-    ++list->count;
 }
 
 struct CCC_Singly_linked_list_node *
@@ -701,19 +671,7 @@ before(
     return i;
 }
 
-static inline size_t
-extract_range(
-    struct CCC_Singly_linked_list_node *begin,
-    struct CCC_Singly_linked_list_node *const end
-) {
-    size_t const count = len(begin, end);
-    if (end != NULL) {
-        end->next = NULL;
-    }
-    return count;
-}
-
-static size_t
+static void
 erase_range(
     struct CCC_Singly_linked_list *const list,
     struct CCC_Singly_linked_list_node const *begin,
@@ -721,35 +679,27 @@ erase_range(
     CCC_Allocator const *const allocator
 ) {
     if (!allocator->allocate) {
-        size_t const count = len(begin, end);
-        if (end != NULL) {
-            end->next = NULL;
-        }
-        return count;
+        return;
     }
-    size_t count = 0;
     for (;;) {
-        assert(count < list->count);
         CCC_Singly_linked_list_node *const next = begin->next;
         (void)allocator->allocate((CCC_Allocator_arguments){
             .input = struct_base(list, begin),
             .bytes = 0,
             .context = allocator->context,
         });
-        ++count;
         if (begin == end) {
             break;
         }
         begin = next;
     }
-    return count;
 }
 
 /** Returns the length [begin, end] inclusive. Assumes end follows begin. */
 static size_t
 len(struct CCC_Singly_linked_list_node const *begin,
     struct CCC_Singly_linked_list_node const *const end) {
-    size_t s = 1;
+    size_t s = 0;
     for (; begin != end; begin = begin->next, ++s) {}
     return s;
 }

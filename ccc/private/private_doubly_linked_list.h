@@ -20,7 +20,7 @@ limitations under the License.
 #include <stddef.h>
 /** @endcond */
 
-#include "../types.h"
+#include "../types.h" /* IWYU pragma: keep */
 
 /* NOLINTBEGIN(readability-identifier-naming) */
 
@@ -68,14 +68,10 @@ struct CCC_Doubly_linked_list {
     struct CCC_Doubly_linked_list_node *head;
     /** @internal Pointer to the tail element or NULL if list empty. */
     struct CCC_Doubly_linked_list_node *tail;
-    /** @internal The number of elements constantly tracked for O(1) check. */
-    size_t count;
     /** @internal The size in bytes of the type which wraps this handle. */
     size_t sizeof_type;
     /** @internal The offset in bytes of the intrusive element in user type. */
     size_t type_intruder_offset;
-    /** @internal The internal state of ordering. Remembers last sort. */
-    CCC_Order order;
 };
 
 /*=======================     Private Interface   ===========================*/
@@ -105,7 +101,6 @@ name of the list being on the left hand side of the assignment operator. */
         .sizeof_type = sizeof(private_struct_name),                            \
         .type_intruder_offset                                                  \
             = offsetof(private_struct_name, private_type_intruder_field),      \
-        .count = 0, .order = CCC_ORDER_ERROR,                                  \
     }
 
 /** @internal */

@@ -337,6 +337,10 @@ non-decreasing order of the list determined by the user provided comparison
 function. `O(1)`.
 @param[in] doubly_linked_list a pointer to the doubly linked list.
 @param[in] type_intruder a pointer to the element to be inserted in order.
+@param[in] order the order by which the list should be sorted. CCC_ORDER_LESSER
+means the list should be in non-increasing order from [0, count).
+CCC_ORDER_GREATER means the list should be in non-decreasing order from
+[0, count).
 @param[in] comparator the CCC_Comparator for comparing list elements.
 @param[in] allocator the CCC_Allocator for allocating a user type.
 @return a pointer to the element that has been inserted or NULL if allocation
@@ -351,6 +355,7 @@ CCC_ORDER_GREATER and vice versa. If elements are equal, CCC_ORDER_EQUAL. */
 void *CCC_doubly_linked_list_insert_sorted(
     CCC_Doubly_linked_list *doubly_linked_list,
     CCC_Doubly_linked_list_node *type_intruder,
+    CCC_Order order,
     CCC_Comparator const *comparator,
     CCC_Allocator const *allocator
 );
