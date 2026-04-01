@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-04-01 04:25:41</td>
+            <td class="headerValue">2026-04-01 04:27:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -114,7 +114,7 @@
             <tr>
               <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1239">rehash_in_place</a></td>
               
-              <td class="coverFnHi">7</td>
+              <td class="coverFnHi">9</td>
               
               
               
@@ -242,7 +242,7 @@
             <tr>
               <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1181">find_first_deleted_group</a></td>
               
-              <td class="coverFnHi">344</td>
+              <td class="coverFnHi">417</td>
               
               
               
@@ -256,9 +256,17 @@
               
             </tr>
             <tr>
+              <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1158">find_first_full_group</a></td>
+              
+              <td class="coverFnHi">458</td>
+              
+              
+              
+            </tr>
+            <tr>
               <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1889">group_convert_constant_to_empty_and_full_to_deleted</a></td>
               
-              <td class="coverFnHi">448</td>
+              <td class="coverFnHi">576</td>
               
               
               
@@ -266,7 +274,7 @@
             <tr>
               <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1858">group_store_aligned</a></td>
               
-              <td class="coverFnHi">448</td>
+              <td class="coverFnHi">576</td>
               
               
               
@@ -274,15 +282,7 @@
             <tr>
               <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1805">match_deleted</a></td>
               
-              <td class="coverFnHi">448</td>
-              
-              
-              
-            </tr>
-            <tr>
-              <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1158">find_first_full_group</a></td>
-              
-              <td class="coverFnHi">458</td>
+              <td class="coverFnHi">576</td>
               
               
               
@@ -336,22 +336,6 @@
               
             </tr>
             <tr>
-              <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1521">swap</a></td>
-              
-              <td class="coverFnHi">1668</td>
-              
-              
-              
-            </tr>
-            <tr>
-              <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1516">swap_slot</a></td>
-              
-              <td class="coverFnHi">1668</td>
-              
-              
-              
-            </tr>
-            <tr>
               <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L393">CCC_flat_hash_map_get_key_value</a></td>
               
               <td class="coverFnHi">2073</td>
@@ -376,9 +360,25 @@
               
             </tr>
             <tr>
+              <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1521">swap</a></td>
+              
+              <td class="coverFnHi">2452</td>
+              
+              
+              
+            </tr>
+            <tr>
+              <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1516">swap_slot</a></td>
+              
+              <td class="coverFnHi">2452</td>
+              
+              
+              
+            </tr>
+            <tr>
               <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1851">group_load_aligned</a></td>
               
-              <td class="coverFnHi">2421</td>
+              <td class="coverFnHi">2677</td>
               
               
               
@@ -472,14 +472,6 @@
               
             </tr>
             <tr>
-              <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1331">is_same_group</a></td>
-              
-              <td class="coverFnHi">6262</td>
-              
-              
-              
-            </tr>
-            <tr>
               <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L942">insert_and_copy</a></td>
               
               <td class="coverFnHi">6941</td>
@@ -504,6 +496,14 @@
               
             </tr>
             <tr>
+              <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1331">is_same_group</a></td>
+              
+              <td class="coverFnHi">8046</td>
+              
+              
+              
+            </tr>
+            <tr>
               <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1074">find_key_or_fail</a></td>
               
               <td class="coverFnHi">11816</td>
@@ -520,17 +520,17 @@
               
             </tr>
             <tr>
-              <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1110">find_slot_or_noreturn</a></td>
+              <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L955">set_insert_tag</a></td>
               
-              <td class="coverFnHi">12302</td>
+              <td class="coverFnHi">12900</td>
               
               
               
             </tr>
             <tr>
-              <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L955">set_insert_tag</a></td>
+              <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1110">find_slot_or_noreturn</a></td>
               
-              <td class="coverFnHi">12900</td>
+              <td class="coverFnHi">14086</td>
               
               
               
@@ -554,7 +554,7 @@
             <tr>
               <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1598">mask_to_capacity_with_load_factor</a></td>
               
-              <td class="coverFnHi">16094</td>
+              <td class="coverFnHi">16098</td>
               
               
               
@@ -570,7 +570,7 @@
             <tr>
               <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1488">key_at</a></td>
               
-              <td class="coverFnHi">18149</td>
+              <td class="coverFnHi">19933</td>
               
               
               
@@ -642,7 +642,7 @@
             <tr>
               <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1667">tag_set</a></td>
               
-              <td class="coverFnHi">31173</td>
+              <td class="coverFnHi">32968</td>
               
               
               
@@ -656,17 +656,17 @@
               
             </tr>
             <tr>
-              <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1814">match_empty_deleted</a></td>
+              <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1707">match_has_one</a></td>
               
-              <td class="coverFnHi">91338</td>
+              <td class="coverFnHi">104584</td>
               
               
               
             </tr>
             <tr>
-              <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1707">match_has_one</a></td>
+              <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1814">match_empty_deleted</a></td>
               
-              <td class="coverFnHi">104366</td>
+              <td class="coverFnHi">112241</td>
               
               
               
@@ -674,7 +674,7 @@
             <tr>
               <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1797">match_empty</a></td>
               
-              <td class="coverFnHi">116256</td>
+              <td class="coverFnHi">116474</td>
               
               
               
@@ -682,7 +682,7 @@
             <tr>
               <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1868">group_load_unaligned</a></td>
               
-              <td class="coverFnHi">190189</td>
+              <td class="coverFnHi">211215</td>
               
               
               
@@ -690,7 +690,7 @@
             <tr>
               <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1785">match_tag</a></td>
               
-              <td class="coverFnHi">244721</td>
+              <td class="coverFnHi">245285</td>
               
               
               
@@ -698,7 +698,7 @@
             <tr>
               <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1474">is_equal</a></td>
               
-              <td class="coverFnHi">655742</td>
+              <td class="coverFnHi">658337</td>
               
               
               
@@ -706,7 +706,7 @@
             <tr>
               <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1726">match_next_one</a></td>
               
-              <td class="coverFnHi">772470</td>
+              <td class="coverFnHi">776353</td>
               
               
               
@@ -714,7 +714,7 @@
             <tr>
               <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1717">match_trailing_one</a></td>
               
-              <td class="coverFnHi">862431</td>
+              <td class="coverFnHi">887217</td>
               
               
               
@@ -722,7 +722,7 @@
             <tr>
               <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L2287">count_trailing_zeros</a></td>
               
-              <td class="coverFnHi">868376</td>
+              <td class="coverFnHi">893162</td>
               
               
               
@@ -738,7 +738,7 @@
             <tr>
               <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1466">hasher</a></td>
               
-              <td class="coverFnHi">7512147</td>
+              <td class="coverFnHi">7513931</td>
               
               
               
@@ -746,7 +746,7 @@
             <tr>
               <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1695">tag_from</a></td>
               
-              <td class="coverFnHi">7537080</td>
+              <td class="coverFnHi">7538864</td>
               
               
               
@@ -754,7 +754,7 @@
             <tr>
               <td class="coverFn"><a href="flat_hash_map.c.gcov.html#L1493">data_at</a></td>
               
-              <td class="coverFnHi">8187207</td>
+              <td class="coverFnHi">8193176</td>
               
               
               
