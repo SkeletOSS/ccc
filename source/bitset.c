@@ -67,15 +67,16 @@ enum : Bit_block {
 };
 
 /** @internal An index into the block array or count of bit blocks. The block
-array is tree by the number of blocks required to support the current bit set
-capacity. Assume this index type has range [0, block count to support N bits].
+array is constructed by the number of blocks required to support the current bit
+set capacity. Assume this index type has range [0, block count to support N
+bits].
 
 User input is given as a `size_t` so distinguish from that input with this type
 to make it clear to the reader the index refers to a block not the given bit
 index the user has provided. */
 typedef size_t Block_count;
 
-/** @internal A signed index into the block array. The block array is tree by
+/** @internal A signed index into the block array. The block array is built by
 the number of blocks required to support the current bit set capacity. Assume
 this index type has range [-1, count of blocks needed to hold all bits in set].
 This makes reverse iteration problems easier.
@@ -89,7 +90,7 @@ to make it clear to the reader the index refers to a block not the given bit
 index the user has provided. */
 typedef ptrdiff_t Block_signed_count;
 
-/** @internal An index within a block. A block is tree to some number of bits
+/** @internal An index within a block. A block is set to some number of bits
 as determined by the type used for each block. This type is intended to count
 bits in a block and therefore cannot count up to arbitrary indices. Assume its
 range is `[0, BIT_BLOCK_BITS]`, for ease of use and clarity.
@@ -121,7 +122,7 @@ static_assert(
 );
 static_assert(UINT8_MAX >= BIT_BLOCK_BITS, "Bit_count counts all block bits.");
 
-/** @internal A signed index within a block. A block is tree to some number
+/** @internal A signed index within a block. A block is set to some number
 of bits as determined by the type used for each block. This type is intended to
 count bits in a block and therefore cannot count up to arbitrary indices. Assume
 its range is `[-1, BIT_BLOCK_BITS]`, for ease of use and clarity.
@@ -134,7 +135,7 @@ It also a wider type to avoid warnings or dangers when taking the value of a
 typedef int16_t Bit_signed_count;
 static_assert(
     sizeof(Bit_signed_count) > sizeof(Bit_count),
-    "Bit_signed_count x = (Bit_signed_count)x_Bit_count; is safe"
+    "Bit_signed_count x = (Bit_signed_count)x_bit_count; // is safe"
 );
 static_assert(
     (Bit_signed_count) ~((Bit_signed_count)0) < (Bit_signed_count)0,
@@ -150,7 +151,7 @@ struct Group_count {
     /** A index [0, bit block bits] indicating the status of a search. */
     Bit_count index;
     /** The number of bits of same value found starting at block_start_i. */
-    size_t count;
+    Bit_count count;
 };
 
 /** @internal A signed helper to allow for an efficient linear scan for groups
@@ -160,7 +161,7 @@ struct Group_signed_count {
     /** A index [-1, bit block bits] indicating the status of a search. */
     Bit_signed_count index;
     /** The number of bits of same value found starting at block_start_i. */
-    size_t count;
+    Bit_signed_count count;
 };
 
 /*=========================      Prototypes      ============================*/
@@ -1291,7 +1292,7 @@ max_trailing_ones(
             if ((required_mask & block_bits) == required_mask) {
                 return (struct Group_count){
                     .index = bit_index,
-                    .count = ones_remain,
+                    .count = (Bit_count)ones_remain,
                 };
             }
             ++bit_index;
@@ -1440,7 +1441,7 @@ first_leading_bits_range(
         }
         struct Group_signed_count const ones
             = max_leading_ones(bits, bit_index, num_bits - num_found);
-        if (ones.count >= num_bits) {
+        if ((size_t)ones.count >= num_bits) {
             assert(
                 ones.index >= 0
                 && "The index cannot be negative if ones were found and num "
@@ -1452,7 +1453,7 @@ first_leading_bits_range(
             };
         }
         if (ones.index == BIT_BLOCK_BITS - 1) {
-            num_found += ones.count;
+            num_found += (size_t)ones.count;
             /* Continuation from prefix blocks has resulted in success. */
             if (num_found >= num_bits) {
                 assert(
@@ -1468,7 +1469,7 @@ first_leading_bits_range(
                to the next block's Most Significant Bit .*/
             bits_start
                 = (cur_block * (Bit_signed_count)BIT_BLOCK_BITS) + ones.index;
-            num_found = ones.count;
+            num_found = (size_t)ones.count;
         }
         /* Cast was checked at entry to function for safety. */
         if (bits_start < range_end + (ptrdiff_t)num_bits) {
@@ -1511,7 +1512,7 @@ max_leading_ones(
             if ((required_mask & block_bits) == required_mask) {
                 return (struct Group_signed_count){
                     .index = bit_index,
-                    .count = ones_remaining,
+                    .count = end,
                 };
             }
             --bit_index;
@@ -1524,7 +1525,7 @@ max_leading_ones(
     return (struct Group_signed_count){
         /* May be -1 if no ones found. This make backward iteration easier. */
         .index = (Bit_signed_count)(trailing_ones - 1),
-        .count = (size_t)trailing_ones,
+        .count = trailing_ones,
     };
 }
 
