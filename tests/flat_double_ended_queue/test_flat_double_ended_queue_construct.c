@@ -99,8 +99,9 @@ check_static_begin(flat_double_ended_queue_test_copy_chunks) {
     for (int val = 8; val < 11; ++val) {
         check(CCC_flat_double_ended_queue_pop_front(&q1), CCC_RESULT_OK);
         check(
-            CCC_flat_double_ended_queue_push_back(&q1, &val, &(CCC_Allocator){})
-                != NULL,
+            CCC_flat_double_ended_queue_emplace_back(
+                &q1, &(CCC_Allocator){}, val
+            ) != NULL,
             CCC_TRUE
         );
     }
