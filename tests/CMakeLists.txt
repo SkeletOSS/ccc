@@ -418,5 +418,6 @@ endmacro()
 
 add_flat_double_ended_queue_test(test_flat_double_ended_queue_construct)
 add_flat_double_ended_queue_test(test_flat_double_ended_queue_insert)
+add_flat_double_ended_queue_test(test_flat_double_ended_queue_iterate)
 add_flat_double_ended_queue_test(test_flat_double_ended_queue_erase)
 

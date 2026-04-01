@@ -25,6 +25,29 @@ check_static_begin(pop_back_n, Flat_double_ended_queue *const q, size_t n) {
     check_end();
 }
 
+check_static_begin(flat_double_ended_queue_test_erase_errors) {
+    Flat_double_ended_queue q = flat_double_ended_queue_default(int);
+    check(CCC_flat_double_ended_queue_data(NULL), NULL);
+    check(CCC_flat_double_ended_queue_is_empty(NULL), CCC_TRIBOOL_ERROR);
+    check(
+        CCC_flat_double_ended_queue_count(NULL).error, CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        CCC_flat_double_ended_queue_capacity(NULL).error,
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(CCC_flat_double_ended_queue_front(NULL), NULL);
+    check(CCC_flat_double_ended_queue_back(NULL), NULL);
+    check(CCC_flat_double_ended_queue_at(NULL, 0), NULL);
+    check(CCC_flat_double_ended_queue_at(&q, 99), NULL);
+    check(
+        CCC_flat_double_ended_queue_pop_front(NULL), CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        CCC_flat_double_ended_queue_pop_back(NULL), CCC_RESULT_ARGUMENT_ERROR
+    );
+    check_end();
+}
 check_static_begin(flat_double_ended_queue_test_push_pop_back_three) {
     Flat_double_ended_queue q
         = flat_double_ended_queue_with_storage(0, (int[3]){});
@@ -383,6 +406,7 @@ check_static_begin(flat_double_ended_queue_test_push_pop_middle_ranges) {
 int
 main(void) {
     return check_run(
+        flat_double_ended_queue_test_erase_errors(),
         flat_double_ended_queue_test_push_pop_back_three(),
         flat_double_ended_queue_test_push_pop_front_three(),
         flat_double_ended_queue_test_push_pop_front_and_back_singles(),

@@ -65,6 +65,8 @@ allocate_front(struct CCC_Flat_double_ended_queue *, CCC_Allocator const *);
 static void *
 allocate_back(struct CCC_Flat_double_ended_queue *, CCC_Allocator const *);
 static size_t min(size_t, size_t);
+static void
+destroy_all(struct CCC_Flat_double_ended_queue const *, CCC_Destructor const *);
 
 /*==========================     Interface    ===============================*/
 
@@ -261,6 +263,9 @@ CCC_flat_double_ended_queue_next(
     CCC_Flat_double_ended_queue const *const queue,
     void const *const iterator_pointer
 ) {
+    if (!queue || !iterator_pointer) {
+        return NULL;
+    }
     size_t const next_i = increment(queue, index_of(queue, iterator_pointer));
     if (next_i == queue->front
         || distance(queue, next_i, queue->front) >= queue->buffer.count) {
@@ -274,6 +279,9 @@ CCC_flat_double_ended_queue_reverse_next(
     CCC_Flat_double_ended_queue const *const queue,
     void const *const iterator_pointer
 ) {
+    if (!queue || !iterator_pointer) {
+        return NULL;
+    }
     size_t const cur_i = index_of(queue, iterator_pointer);
     size_t const next_i = decrement(queue, cur_i);
     size_t const reverse_begin = last_index(queue);
@@ -316,6 +324,7 @@ CCC_flat_double_ended_queue_copy(
     }
     /* Copying from an empty source is odd but supported. */
     if (!source->buffer.capacity) {
+        destination->front = destination->buffer.count = 0;
         return CCC_RESULT_OK;
     }
     if (destination->buffer.capacity < source->buffer.capacity) {
@@ -352,6 +361,7 @@ CCC_flat_double_ended_queue_copy(
         destination->front = 0;
         return CCC_RESULT_OK;
     }
+    destination->front = source->front;
     (void)memcpy(
         destination->buffer.data,
         source->buffer.data,
@@ -380,18 +390,12 @@ CCC_flat_double_ended_queue_clear(
     if (!queue || !destructor) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    if (!destructor->destroy) {
+    if (!destructor->destroy || !queue->buffer.count) {
         queue->front = 0;
         queue->buffer.count = 0;
         return CCC_RESULT_OK;
     }
-    size_t const back = back_free_slot(queue);
-    for (size_t i = queue->front; i != back; i = increment(queue, i)) {
-        destructor->destroy((CCC_Arguments){
-            .type = CCC_buffer_at(&queue->buffer, i),
-            .context = destructor->context,
-        });
-    }
+    destroy_all(queue, destructor);
     return CCC_RESULT_OK;
 }
 
@@ -404,17 +408,11 @@ CCC_flat_double_ended_queue_clear_and_free(
     if (!queue || !destructor || !allocator || !allocator->allocate) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    if (!destructor->destroy) {
+    if (!destructor->destroy || !queue->buffer.count) {
         queue->buffer.count = queue->front = 0;
         return CCC_buffer_allocate(&queue->buffer, 0, allocator);
     }
-    size_t const back = back_free_slot(queue);
-    for (size_t i = queue->front; i != back; i = increment(queue, i)) {
-        destructor->destroy((CCC_Arguments){
-            .type = CCC_buffer_at(&queue->buffer, i),
-            .context = destructor->context,
-        });
-    }
+    destroy_all(queue, destructor);
     CCC_Result const r = CCC_buffer_allocate(&queue->buffer, 0, allocator);
     if (r == CCC_RESULT_OK) {
         queue->buffer.count = queue->front = 0;
@@ -740,6 +738,27 @@ maybe_resize(
     queue->front = 0;
     queue->buffer.capacity = required;
     return CCC_RESULT_OK;
+}
+
+static inline void
+destroy_all(
+    struct CCC_Flat_double_ended_queue const *const queue,
+    CCC_Destructor const *const destructor
+) {
+    assert(
+        queue->buffer.count
+        && "queue is not empty otherwise full cannot be distinguished from "
+           "empty"
+    );
+    size_t const back = back_free_slot(queue);
+    size_t i = queue->front;
+    do {
+        destructor->destroy((CCC_Arguments){
+            .type = CCC_buffer_at(&queue->buffer, i),
+            .context = destructor->context,
+        });
+        i = increment(queue, i);
+    } while (i != back);
 }
 
 /** Returns the distance between the current iterator position and the origin
