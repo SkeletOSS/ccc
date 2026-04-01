@@ -115,7 +115,7 @@ element can run the efficient push and decrease key operations with pointer
 stability guaranteed. Finally these can be allocated on the stack because
 there will be at most 26 of them which is very small. */
 struct Cost {
-    Priority_queue_node priority_queue_node;
+    Priority_queue_node node;
     int cost;
     char name;
     char from;
@@ -301,7 +301,7 @@ static void clear_paint(struct Graph *);
 static bool is_vertex(Cell);
 static bool is_path_cell(Cell);
 static struct Vertex *vertex_at(struct Graph const *, char);
-static struct Cost *map_priority_queue_at(struct Cost const *, char);
+static struct Cost *priority_map_at(struct Cost const *, char);
 static int
 paint_shortest_path(struct Graph *, struct Cost const *, struct Cost const *);
 static void encode_digits(struct Graph const *, struct Digit_encoding *);
@@ -555,11 +555,12 @@ add_edge_cost_label(
         if (consecutive_spaces_found == spaces_needed_for_cost) {
             encode_digits(
                 g,
-                &(struct Digit_encoding){.start = cur,
-                                         .cost = e->n.cost,
-                                         .spaces_needed
-                                         = spaces_needed_for_cost,
-                                         .orientation = direction}
+                &(struct Digit_encoding){
+                    .start = cur,
+                    .cost = e->n.cost,
+                    .spaces_needed = spaces_needed_for_cost,
+                    .orientation = direction,
+                }
             );
             return;
         }
@@ -754,23 +755,21 @@ dijkstra_shortest_path(
        used to store the elements; the path rebuild map remains accessible. Best
        of all, maximum priority_queue/map size is known to be small [A-Z] so
        provide memory on the stack for speed and safety. */
-    struct Cost map_priority_queue[MAX_VERTICES] = {};
+    struct Cost priority_map[MAX_VERTICES] = {};
     Priority_queue costs = priority_queue_default(
         struct Cost,
-        priority_queue_node,
+        node,
         CCC_ORDER_LESSER,
         (CCC_Comparator){.compare = order_priority_queue_costs}
     );
     for (int i = 0, vx = BEGIN_VERTICES; i < graph->vertices; ++i, ++vx) {
-        struct Cost *const v
-            = map_priority_queue_at(map_priority_queue, (char)vx);
+        struct Cost *const v = priority_map_at(priority_map, (char)vx);
         *v = (struct Cost){
             .name = (char)vx,
             .from = '\0',
             .cost = (char)vx == source ? 0 : INT_MAX,
         };
-        struct Cost const *const c
-            = push(&costs, &v->priority_queue_node, &(CCC_Allocator){});
+        struct Cost const *const c = push(&costs, &v->node, &(CCC_Allocator){});
         check(c);
     }
     while (!is_empty(&costs)) {
@@ -780,12 +779,11 @@ dijkstra_shortest_path(
             return INT_MAX;
         }
         if (u->name == destination) {
-            return paint_shortest_path(graph, map_priority_queue, u);
+            return paint_shortest_path(graph, priority_map, u);
         }
         struct Node const *const edges = vertex_at(graph, u->name)->edges;
         for (int i = 0; i < MAX_DEGREE && edges[i].name; ++i) {
-            struct Cost *const v
-                = map_priority_queue_at(map_priority_queue, edges[i].name);
+            struct Cost *const v = priority_map_at(priority_map, edges[i].name);
             int const alt = u->cost + edges[i].cost;
             if (alt < v->cost) {
                 /* Build the map with the appropriate best candidate parent. */
@@ -811,7 +809,7 @@ paint_shortest_path(
     struct Cost const *u
 ) {
     int total = 0;
-    for (; u->from; u = map_priority_queue_at(map_priority_queue, u->from)) {
+    for (; u->from; u = priority_map_at(map_priority_queue, u->from)) {
         struct Node const *const edges = vertex_at(graph, u->name)->edges;
         int i = 0;
         for (; i < MAX_DEGREE && edges[i].name != u->from; ++i) {}
@@ -824,9 +822,9 @@ paint_shortest_path(
 }
 
 static inline struct Cost *
-map_priority_queue_at(struct Cost const *const dj_arr, char const vertex) {
+priority_map_at(struct Cost const *const costs, char const vertex) {
     check(vertex >= BEGIN_VERTICES && vertex <= END_VERTICES);
-    return (struct Cost *)&dj_arr[vertex - BEGIN_VERTICES];
+    return (struct Cost *)&costs[vertex - BEGIN_VERTICES];
 }
 
 /* Paints the edge and flushes the specified color at that position. If NULL
