@@ -60,7 +60,7 @@ static size_t
 len(struct CCC_Singly_linked_list_node const *,
     struct CCC_Singly_linked_list_node const *);
 static void erase_range(
-    struct CCC_Singly_linked_list *,
+    struct CCC_Singly_linked_list const *,
     struct CCC_Singly_linked_list_node const *,
     struct CCC_Singly_linked_list_node *,
     CCC_Allocator const *
@@ -678,7 +678,7 @@ before(
 
 static void
 erase_range(
-    struct CCC_Singly_linked_list *const list,
+    struct CCC_Singly_linked_list const *const list,
     struct CCC_Singly_linked_list_node const *begin,
     struct CCC_Singly_linked_list_node *const end,
     CCC_Allocator const *const allocator

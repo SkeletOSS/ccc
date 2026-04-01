@@ -124,9 +124,9 @@ void *CCC_private_flat_double_ended_queue_allocate_back(
     (__extension__({                                                           \
         __auto_type private_flat_double_ended_queue_pointer                    \
             = (flat_double_ended_queue_pointer);                               \
-        void *const private_flat_double_ended_queue_emplace_ret = NULL;        \
+        void *private_flat_double_ended_queue_emplace_ret = NULL;              \
         if (private_flat_double_ended_queue_pointer) {                         \
-            void *const private_flat_double_ended_queue_emplace_ret            \
+            private_flat_double_ended_queue_emplace_ret                        \
                 = CCC_private_flat_double_ended_queue_allocate_back(           \
                     private_flat_double_ended_queue_pointer,                   \
                     private_allocator_pointer                                  \
@@ -146,9 +146,9 @@ void *CCC_private_flat_double_ended_queue_allocate_back(
     (__extension__({                                                           \
         __auto_type private_flat_double_ended_queue_pointer                    \
             = (flat_double_ended_queue_pointer);                               \
-        void *const private_flat_double_ended_queue_emplace_ret = NULL;        \
+        void *private_flat_double_ended_queue_emplace_ret = NULL;              \
         if (private_flat_double_ended_queue_pointer) {                         \
-            void *const private_flat_double_ended_queue_emplace_ret            \
+            private_flat_double_ended_queue_emplace_ret                        \
                 = CCC_private_flat_double_ended_queue_allocate_front(          \
                     private_flat_double_ended_queue_pointer,                   \
                     private_allocator_pointer                                  \

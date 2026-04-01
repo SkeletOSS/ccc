@@ -11,6 +11,83 @@
 #include "flat_double_ended_queue_utility.h"
 #include "utility/allocate.h"
 
+check_static_begin(flat_double_ended_queue_test_insert_errors) {
+    Flat_double_ended_queue q = flat_double_ended_queue_default(int);
+    check(
+        flat_double_ended_queue_push_back(NULL, &(int){}, &(CCC_Allocator){}),
+        NULL
+    );
+    check(
+        flat_double_ended_queue_push_back(&q, NULL, &(CCC_Allocator){}), NULL
+    );
+    check(flat_double_ended_queue_push_back(&q, &(int){}, NULL), NULL);
+    check(
+        flat_double_ended_queue_push_back_range(
+            NULL, &CCC_buffer_default(int), &(CCC_Allocator){}
+        ),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        flat_double_ended_queue_push_back_range(&q, NULL, &(CCC_Allocator){}),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        flat_double_ended_queue_push_back_range(
+            &q, &CCC_buffer_default(int), NULL
+        ),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        flat_double_ended_queue_push_front(NULL, &(int){}, &(CCC_Allocator){}),
+        NULL
+    );
+    check(
+        flat_double_ended_queue_push_front(&q, NULL, &(CCC_Allocator){}), NULL
+    );
+    check(flat_double_ended_queue_push_front(&q, &(int){}, NULL), NULL);
+    check(
+        flat_double_ended_queue_push_front_range(
+            NULL, &CCC_buffer_default(int), &(CCC_Allocator){}
+        ),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        flat_double_ended_queue_push_front_range(&q, NULL, &(CCC_Allocator){}),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        flat_double_ended_queue_push_front_range(
+            &q, &CCC_buffer_default(int), NULL
+        ),
+        CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        flat_double_ended_queue_insert_range(
+            NULL, &(int){}, &CCC_buffer_default(int), &(CCC_Allocator){}
+        ),
+        NULL
+    );
+    check(
+        flat_double_ended_queue_insert_range(
+            &q, NULL, &CCC_buffer_default(int), &(CCC_Allocator){}
+        ),
+        NULL
+    );
+    check(
+        flat_double_ended_queue_insert_range(
+            &q, &(int){}, NULL, &(CCC_Allocator){}
+        ),
+        NULL
+    );
+    check(
+        flat_double_ended_queue_insert_range(
+            &q, &(int){}, &CCC_buffer_default(int), NULL
+        ),
+        NULL
+    );
+    check_end();
+}
+
 check_static_begin(flat_double_ended_queue_test_insert_three) {
     Flat_double_ended_queue q
         = flat_double_ended_queue_with_storage(0, (int[3]){});
@@ -33,9 +110,7 @@ check_static_begin(flat_double_ended_queue_test_insert_overwrite) {
         &q, &(int){3}, &(CCC_Allocator){}
     );
     check(*(int *)CCC_flat_double_ended_queue_back(&q), 3);
-    (void)CCC_flat_double_ended_queue_push_front(
-        &q, &(int){2}, &(CCC_Allocator){}
-    );
+    (void)CCC_flat_double_ended_queue_emplace_front(&q, &(CCC_Allocator){}, 2);
     check(*(int *)CCC_flat_double_ended_queue_front(&q), 2);
     check(*(int *)CCC_flat_double_ended_queue_back(&q), 3);
     (void)CCC_flat_double_ended_queue_push_back(
@@ -203,6 +278,94 @@ check_static_begin(flat_double_ended_queue_test_push_back_ranges) {
     check_end();
 }
 
+check_static_begin(flat_double_ended_queue_test_insert_back_ranges) {
+    Flat_double_ended_queue q
+        = flat_double_ended_queue_with_storage(0, (int[6]){});
+    check(
+        create_queue(
+            &q,
+            &CCC_buffer_with_storage(3, (int[3]){0, 1, 2}),
+            &(CCC_Allocator){}
+        ),
+        CHECK_PASS
+    );
+    check(
+        check_order(&q, &CCC_buffer_with_storage(3, (int[3]){0, 1, 2})),
+        CHECK_PASS
+    );
+    (void)flat_double_ended_queue_insert_range(
+        &q,
+        end(&q),
+        &CCC_buffer_with_storage(2, (int[2]){3, 4}),
+        &(CCC_Allocator){}
+    );
+    check(
+        check_order(&q, &CCC_buffer_with_storage(5, (int[5]){0, 1, 2, 3, 4})),
+        CHECK_PASS
+    );
+    (void)flat_double_ended_queue_insert_range(
+        &q,
+        end(&q),
+        &CCC_buffer_with_storage(3, (int[3]){5, 6, 7}),
+        &(CCC_Allocator){}
+    );
+    check(
+        check_order(
+            &q, &CCC_buffer_with_storage(6, (int[6]){2, 3, 4, 5, 6, 7})
+        ),
+        CHECK_PASS
+    );
+    (void)flat_double_ended_queue_insert_range(
+        &q,
+        end(&q),
+        &CCC_buffer_with_storage(4, (int[4]){9, 10, 11, 12}),
+        &(CCC_Allocator){}
+    );
+    check(
+        check_order(
+            &q, &CCC_buffer_with_storage(6, (int[6]){6, 7, 9, 10, 11, 12})
+        ),
+        CHECK_PASS
+    );
+    (void)flat_double_ended_queue_insert_range(
+        &q,
+        end(&q),
+        &CCC_buffer_with_storage(5, (int[5]){13, 14, 15, 16, 17}),
+        &(CCC_Allocator){}
+    );
+    check(
+        check_order(
+            &q, &CCC_buffer_with_storage(6, (int[6]){12, 13, 14, 15, 16, 17})
+        ),
+        CHECK_PASS
+    );
+    (void)flat_double_ended_queue_insert_range(
+        &q,
+        end(&q),
+        &CCC_buffer_with_storage(6, (int[6]){18, 19, 20, 21, 22, 23}),
+        &(CCC_Allocator){}
+    );
+    check(
+        check_order(
+            &q, &CCC_buffer_with_storage(6, (int[6]){18, 19, 20, 21, 22, 23})
+        ),
+        CHECK_PASS
+    );
+    (void)flat_double_ended_queue_insert_range(
+        &q,
+        end(&q),
+        &CCC_buffer_with_storage(7, (int[7]){24, 25, 26, 27, 28, 29, 30}),
+        &(CCC_Allocator){}
+    );
+    check(
+        check_order(
+            &q, &CCC_buffer_with_storage(6, (int[6]){25, 26, 27, 28, 29, 30})
+        ),
+        CHECK_PASS
+    );
+    check_end();
+}
+
 check_static_begin(flat_double_ended_queue_test_push_front_ranges) {
     Flat_double_ended_queue q
         = flat_double_ended_queue_with_storage(0, (int[6]){});
@@ -269,6 +432,94 @@ check_static_begin(flat_double_ended_queue_test_push_front_ranges) {
     );
     (void)flat_double_ended_queue_push_front_range(
         &q,
+        &CCC_buffer_with_storage(7, (int[7]){24, 25, 26, 27, 28, 29, 30}),
+        &(CCC_Allocator){}
+    );
+    check(
+        check_order(
+            &q, &CCC_buffer_with_storage(6, (int[6]){25, 26, 27, 28, 29, 30})
+        ),
+        CHECK_PASS
+    );
+    check_end();
+}
+
+check_static_begin(flat_double_ended_queue_test_insert_front_ranges) {
+    Flat_double_ended_queue q
+        = flat_double_ended_queue_with_storage(0, (int[6]){});
+    check(
+        create_queue(
+            &q,
+            &CCC_buffer_with_storage(3, (int[3]){0, 1, 2}),
+            &(CCC_Allocator){}
+        ),
+        CHECK_PASS
+    );
+    check(
+        check_order(&q, &CCC_buffer_with_storage(3, (int[3]){0, 1, 2})),
+        CHECK_PASS
+    );
+    (void)flat_double_ended_queue_insert_range(
+        &q,
+        flat_double_ended_queue_front(&q),
+        &CCC_buffer_with_storage(2, (int[2]){3, 4}),
+        &(CCC_Allocator){}
+    );
+    check(
+        check_order(&q, &CCC_buffer_with_storage(5, (int[5]){3, 4, 0, 1, 2})),
+        CHECK_PASS
+    );
+    (void)flat_double_ended_queue_insert_range(
+        &q,
+        flat_double_ended_queue_front(&q),
+        &CCC_buffer_with_storage(3, (int[3]){5, 6, 7}),
+        &(CCC_Allocator){}
+    );
+    check(
+        check_order(
+            &q, &CCC_buffer_with_storage(6, (int[6]){5, 6, 7, 3, 4, 0})
+        ),
+        CHECK_PASS
+    );
+    (void)flat_double_ended_queue_insert_range(
+        &q,
+        flat_double_ended_queue_front(&q),
+        &CCC_buffer_with_storage(4, (int[4]){9, 10, 11, 12}),
+        &(CCC_Allocator){}
+    );
+    check(
+        check_order(
+            &q, &CCC_buffer_with_storage(6, (int[6]){9, 10, 11, 12, 5, 6})
+        ),
+        CHECK_PASS
+    );
+    (void)flat_double_ended_queue_insert_range(
+        &q,
+        flat_double_ended_queue_front(&q),
+        &CCC_buffer_with_storage(5, (int[5]){13, 14, 15, 16, 17}),
+        &(CCC_Allocator){}
+    );
+    check(
+        check_order(
+            &q, &CCC_buffer_with_storage(6, (int[6]){13, 14, 15, 16, 17, 9})
+        ),
+        CHECK_PASS
+    );
+    (void)flat_double_ended_queue_insert_range(
+        &q,
+        flat_double_ended_queue_front(&q),
+        &CCC_buffer_with_storage(6, (int[6]){18, 19, 20, 21, 22, 23}),
+        &(CCC_Allocator){}
+    );
+    check(
+        check_order(
+            &q, &CCC_buffer_with_storage(6, (int[6]){18, 19, 20, 21, 22, 23})
+        ),
+        CHECK_PASS
+    );
+    (void)flat_double_ended_queue_insert_range(
+        &q,
+        flat_double_ended_queue_front(&q),
         &CCC_buffer_with_storage(7, (int[7]){24, 25, 26, 27, 28, 29, 30}),
         &(CCC_Allocator){}
     );
@@ -455,10 +706,13 @@ check_static_begin(flat_double_ended_queue_test_insert_ranges_reserve) {
 int
 main(void) {
     return check_run(
+        flat_double_ended_queue_test_insert_errors(),
         flat_double_ended_queue_test_insert_three(),
         flat_double_ended_queue_test_insert_overwrite_three(),
         flat_double_ended_queue_test_push_back_ranges(),
+        flat_double_ended_queue_test_insert_back_ranges(),
         flat_double_ended_queue_test_push_front_ranges(),
+        flat_double_ended_queue_test_insert_front_ranges(),
         flat_double_ended_queue_test_insert_ranges(),
         flat_double_ended_queue_test_insert_overwrite(),
         flat_double_ended_queue_test_insert_ranges_reserve()
