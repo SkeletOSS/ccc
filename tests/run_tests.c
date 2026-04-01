@@ -62,7 +62,7 @@ static char const *const err_message = "Test process was unexpectedly killed.";
 
 static enum Check_result run(SV_Str_view);
 static enum Check_result run_test_process(struct Path_bin);
-static DIR *open_test_dir(SV_Str_view);
+static DIR *open_test_dir(char *, SV_Str_view);
 static bool fill_path(char *, SV_Str_view, SV_Str_view);
 
 /** Logs errors to stderr. Change stream as needed. */
@@ -75,14 +75,24 @@ main(int argc, char **argv) {
     if (argc == 1) {
         return 0;
     }
-    SV_Str_view arg_view = SV_from_terminated(argv[1]);
-    return check_run(run(arg_view));
+    SV_Str_view path_without_trailing_delimeters = SV_from_terminated(argv[1]);
+    size_t const path_without_trailing_delimeter_length
+        = SV_find_last_not_of(path_without_trailing_delimeters, SV_from("/\\"));
+    if (path_without_trailing_delimeter_length
+        != SV_len(path_without_trailing_delimeters)) {
+        path_without_trailing_delimeters = SV_remove_suffix(
+            path_without_trailing_delimeters,
+            SV_len(path_without_trailing_delimeters)
+                - path_without_trailing_delimeter_length - 1
+        );
+    }
+    return check_run(run(path_without_trailing_delimeters));
 }
 
 check_static_begin(run, SV_Str_view const tests_dir) {
-    DIR *dir_pointer = open_test_dir(tests_dir);
+    char absolute_path[FILESYS_MAX_PATH] = {};
+    DIR *dir_pointer = open_test_dir(absolute_path, tests_dir);
     check(dir_pointer != NULL, true);
-    char absolute_path[FILESYS_MAX_PATH];
     size_t tests_ran = 0;
     size_t tests_passed = 0;
     struct dirent const *d;
@@ -177,7 +187,7 @@ check_static_begin(run_test_process, struct Path_bin pb) {
 }
 
 static DIR *
-open_test_dir(SV_Str_view tests_folder) {
+open_test_dir(char *const path_buf, SV_Str_view tests_folder) {
     if (SV_is_empty(tests_folder) || SV_len(tests_folder) > FILESYS_MAX_PATH) {
         logerr(
             "Invalid input to path to test executables %s\n",
@@ -185,6 +195,7 @@ open_test_dir(SV_Str_view tests_folder) {
         );
         return NULL;
     }
+    (void)SV_fill(FILESYS_MAX_PATH, path_buf, tests_folder);
     DIR *dir_pointer = opendir(SV_begin(tests_folder));
     if (!dir_pointer) {
         logerr("Could not open directory %s\n", SV_begin(tests_folder));
@@ -196,12 +207,15 @@ open_test_dir(SV_Str_view tests_folder) {
 static bool
 fill_path(char *path_buf, SV_Str_view tests_dir, SV_Str_view entry) {
     size_t const dir_bytes = SV_fill(FILESYS_MAX_PATH, path_buf, tests_dir);
-    if (FILESYS_MAX_PATH - dir_bytes < SV_bytes(entry)) {
+    if (FILESYS_MAX_PATH - dir_bytes - 1 < SV_bytes(entry)) {
         logerr("Relative path exceeds FILESYS_MAX_PATH?\n%s", path_buf);
         return false;
     }
     (void)SV_fill(
-        FILESYS_MAX_PATH - dir_bytes, path_buf + SV_len(tests_dir), entry
+        FILENAME_MAX - dir_bytes - 1, path_buf + SV_len(tests_dir), SV_from("/")
+    );
+    (void)SV_fill(
+        FILESYS_MAX_PATH - dir_bytes, path_buf + SV_len(tests_dir) + 1, entry
     );
     return true;
 }
