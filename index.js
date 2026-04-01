@@ -16,5 +16,6 @@ var index =
       ] ]
     ] ],
     [ "Installation", "index.html#installation", null ],
-    [ "Coverage Report", "index.html#coverage-report", null ]
+    [ "Coverage Report", "index.html#coverage-report", null ],
+    [ "Back to Repository", "index.html#autotoc_md1", null ]
 ];
