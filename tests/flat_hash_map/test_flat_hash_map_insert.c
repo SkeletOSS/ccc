@@ -10,6 +10,7 @@
 #include "traits.h"
 #include "types.h"
 #include "utility/allocate.h"
+#include "utility/stack_allocator.h"
 
 check_static_begin(flat_hash_map_test_insert) {
     Flat_hash_map fh = flat_hash_map_with_storage(
@@ -869,6 +870,43 @@ check_static_begin(flat_hash_map_test_reserve_without_permissions) {
     });
 }
 
+check_static_begin(flat_hash_map_test_allocator_exhaustion) {
+    enum : int {
+        CAP = 16,
+    };
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for(
+            (typeof(flat_hash_map_storage_for((struct Val[CAP]){}))[1]){}
+        ),
+    };
+    CCC_Flat_hash_map map = flat_hash_map_with_capacity(
+        struct Val,
+        key,
+        ((CCC_Hasher){
+            .hash = flat_hash_map_int_zero,
+            .compare = flat_hash_map_id_order,
+        }),
+        allocator,
+        CAP
+    );
+    for (int i = 0; i < CAP; ++i) {
+        struct Val const *const v = CCC_flat_hash_map_or_insert(
+            CCC_flat_hash_map_entry_wrap(&map, &i, &allocator),
+            &(struct Val){.key = i, .val = i}
+        );
+        if (!v) {
+            break;
+        }
+    }
+    CCC_Entry const e = CCC_flat_hash_map_insert_or_assign(
+        &map, &(struct Val){.key = 999}, &allocator
+    );
+    check(CCC_entry_status(&e), CCC_ENTRY_INSERT_ERROR);
+    check(validate(&map), CCC_TRUE);
+    check_end();
+}
+
 int
 main(void) {
     return check_run(
@@ -889,6 +927,7 @@ main(void) {
         flat_hash_map_test_resize_from_null(),
         flat_hash_map_test_resize_from_null_macros(),
         flat_hash_map_test_insert_limit(),
-        flat_hash_map_test_reserve_without_permissions()
+        flat_hash_map_test_reserve_without_permissions(),
+        flat_hash_map_test_allocator_exhaustion()
     );
 }
