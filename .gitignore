@@ -80,3 +80,4 @@ install/
 *.info
 coverage-html/
 Session.nvim
+Session.vim
