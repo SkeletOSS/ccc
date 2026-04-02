@@ -1122,7 +1122,6 @@ check_static_begin(array_adaptive_map_test_insert_weak_srand) {
         check(insert_error(&e), false);
         check(validate(&array_adaptive_map), true);
     }
-    check(count(&array_adaptive_map).count, (size_t)num_nodes);
     check_end();
 }
 

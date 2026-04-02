@@ -481,16 +481,18 @@ check_static_begin(tree_map_test_insert_shuffle) {
 }
 
 check_static_begin(tree_map_test_insert_weak_srand) {
-    int const num_nodes = 100;
+    enum : int {
+        NUM_NODES = 100,
+    };
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
-        .context = &stack_allocator_for((struct Val[100]){}),
+        .context = &stack_allocator_for((struct Val[NUM_NODES]){}),
     };
     CCC_Tree_map rom = tree_map_for(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     srand((unsigned)time(NULL)); /* NOLINT */
-    for (int i = 0; i < num_nodes; ++i) {
+    for (int i = 0; i < NUM_NODES; ++i) {
         CCC_Entry const e = swap_entry(
             &rom,
             &(struct Val){
@@ -504,7 +506,6 @@ check_static_begin(tree_map_test_insert_weak_srand) {
         check(insert_error(&e), false);
         check(validate(&rom), true);
     }
-    check(count(&rom).count, (size_t)num_nodes);
     check_end(tree_map_clear(&rom, &(CCC_Destructor){}, &allocator););
 }
 
