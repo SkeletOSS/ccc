@@ -25,7 +25,46 @@ Currently, this library supports a `FetchContent` or manual installation via CMa
 ## Containers
 
 <details>
-<summary>bitset.h (dropdown)</summary>
+<summary>doubly_linked_list.h (dropdown)</summary>
+A dynamic container for efficient insertion and removal at any position.
+
+```c
+#include <assert.h>
+#define DOUBLY_LINKED_LIST_USING_NAMESPACE_CCC
+#define TRAITS_USING_NAMESPACE_CCC
+#include "ccc/doubly_linked_list.h"
+#include "ccc/traits.h"
+
+struct Int_node {
+    int i;
+    Doubly_linked_list_node e;
+};
+
+static CCC_Order
+int_cmp(CCC_Comparator_arguments const cmp) {
+    struct Int_node const *const left = cmp.type_left;
+    struct Int_node const *const right = cmp.type_right;
+    return (left->i > right->i) - (left->i < right->i);
+}
+
+int
+main(void) {
+    Doubly_linked_list l = doubly_linked_list_default(l, struct Int_node, e);
+    struct Int_node elems[3] = {{.i = 3}, {.i = 2}, {.i = 1}};
+    (void)push_back(&l, &elems[0].e, &(CCC_Allocator){});
+    (void)push_front(&l, &elems[1].e, &(CCC_Allocator){});
+    (void)push_back(&l, &elems[2].e, &(CCC_Allocator){});
+    (void)pop_back(&l, &(CCC_Allocator){});
+    struct Int_node *e = back(&l);
+    assert(e->i == 3);
+    return 0;
+}
+```
+
+</details>
+
+<details>
+<summary>flat_bitset.h (dropdown)</summary>
 A fixed or dynamic contiguous array of bits for set operations.
 
 ```c
@@ -134,7 +173,7 @@ main(void) {
 </details>
 
 <details>
-<summary>buffer.h (dropdown)</summary>
+<summary>flat_buffer.h (dropdown)</summary>
 A fixed or dynamic contiguous array of a single user defined type.
 
 ```c
@@ -181,45 +220,6 @@ main(void) {
     return 0;
 }
 ```
-</details>
-
-<details>
-<summary>doubly_linked_list.h (dropdown)</summary>
-A dynamic container for efficient insertion and removal at any position.
-
-```c
-#include <assert.h>
-#define DOUBLY_LINKED_LIST_USING_NAMESPACE_CCC
-#define TRAITS_USING_NAMESPACE_CCC
-#include "ccc/doubly_linked_list.h"
-#include "ccc/traits.h"
-
-struct Int_node {
-    int i;
-    Doubly_linked_list_node e;
-};
-
-static CCC_Order
-int_cmp(CCC_Comparator_arguments const cmp) {
-    struct Int_node const *const left = cmp.type_left;
-    struct Int_node const *const right = cmp.type_right;
-    return (left->i > right->i) - (left->i < right->i);
-}
-
-int
-main(void) {
-    Doubly_linked_list l = doubly_linked_list_default(l, struct Int_node, e);
-    struct Int_node elems[3] = {{.i = 3}, {.i = 2}, {.i = 1}};
-    (void)push_back(&l, &elems[0].e, &(CCC_Allocator){});
-    (void)push_front(&l, &elems[1].e, &(CCC_Allocator){});
-    (void)push_back(&l, &elems[2].e, &(CCC_Allocator){});
-    (void)pop_back(&l, &(CCC_Allocator){});
-    struct Int_node *e = back(&l);
-    assert(e->i == 3);
-    return 0;
-}
-```
-
 </details>
 
 <details>
@@ -367,10 +367,8 @@ main(void) {
 
 ```c
 #include <assert.h>
-#define FLAT_BUFFER_USING_NAMESPACE_CCC
 #define FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC
 #define TRAITS_USING_NAMESPACE_CCC
-#include "ccc/flat_buffer.h"
 #include "ccc/flat_priority_queue.h"
 #include "ccc/traits.h"
 
