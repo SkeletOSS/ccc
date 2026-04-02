@@ -230,12 +230,12 @@ returned index. If an error has occurred, the index is invalid. An error will be
 indicated by any non-zero value in the error field.
 
 ```
-CCC_Count res = CCC_bitset_first_trailing_one(&my_bitset);
+CCC_Count res = CCC_flat_bitset_first_trailing_one(&my_bitset);
 if (res.error)
 {
     // handle errors...
 }
-(void)CCC_bitset_set(&my_bitset, res.count, CCC_TRUE);
+(void)CCC_flat_bitset_set(&my_bitset, res.count, CCC_TRUE);
 ```
 
 Full string explanations of the exact CCC_Result error types can be provided via

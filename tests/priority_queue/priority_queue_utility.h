@@ -32,8 +32,8 @@ keys remain in the same order.
 space for the exact same number of elements as exists in the passed priority
 queue. This will be used to copy over elements and check ordering.
 @return a passing check result if successful a failing check result if not.
-@warning Buffers are allocated on the stack so only relatively small test cases
-should be used. */
+@warning Flat_buffers are allocated on the stack so only relatively small test
+cases should be used. */
 #define check_inorder_fill(                                                    \
     priority_queue_pointer,                                                    \
     priority_queue_allocator,                                                  \

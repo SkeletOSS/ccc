@@ -22,10 +22,10 @@ Follow the links to the C Container Collection headers.
 - [ccc/adaptive_map.h](https://skeletoss.github.io/ccc/adaptive__map_8h.html)
 - [ccc/array_adaptive_map.h](https://skeletoss.github.io/ccc/array__adaptive__map_8h.html)
 - [ccc/array_tree_map.h](https://skeletoss.github.io/ccc/array__tree__map_8h.html)
-- [ccc/bitset.h](https://skeletoss.github.io/ccc/bitset_8h.html)
-- [ccc/buffer.h](https://skeletoss.github.io/ccc/buffer_8h.html)
 - [ccc/configuration.h](https://skeletoss.github.io/ccc/configuration_8h.html)
 - [ccc/doubly_linked_list.h](https://skeletoss.github.io/ccc/doubly__linked__list_8h.html)
+- [ccc/flat_bitset.h](https://skeletoss.github.io/ccc/flat_bitset_8h.html)
+- [ccc/flat_buffer.h](https://skeletoss.github.io/ccc/flat_buffer_8h.html)
 - [ccc/flat_double_ended_queue.h](https://skeletoss.github.io/ccc/flat__double__ended__queue_8h.html)
 - [ccc/flat_hash_map.h](https://skeletoss.github.io/ccc/flat__hash__map_8h.html)
 - [ccc/flat_priority_queue.h](https://skeletoss.github.io/ccc/flat__priority__queue_8h.html)
@@ -281,7 +281,7 @@ Building upon the last rule, that `NULL` should never appear at a function or ma
 **WARNING! The following example shows incorrect usage of the CCC API.**
 
 ```c
-CCC_Bitset b = CCC_bitset_for(
+CCC_Flat_bitset b = CCC_flat_bitset_for(
     0,
     0,
     NULL /* <-ERROR HERE! */
@@ -291,7 +291,7 @@ CCC_Bitset b = CCC_bitset_for(
 This misuse breaks rule 2, and it is difficult to understand what the two zeros and `NULL` mean just from reading the code. Use the correct initializer.
 
 ```c
-CCC_Bitset b = CCC_bitset_default();
+CCC_Flat_bitset b = CCC_flat_bitset_default();
 ```
 
 For the `Flat_` and `Array_` based containers, consider using the `_with_storage()` initializers for expressive compile time initialization of fixed size containers.
@@ -330,13 +330,13 @@ static CCC_Flat_double_ended_queue ring_buffer
         0,
         (int[1024]){}
     );
-static CCC_Buffer buffer
-    = CCC_buffer_with_storage(
+static CCC_Flat_buffer buffer
+    = CCC_flat_buffer_with_storage(
         0,
         (int[1024]){}
     );
-static CCC_Bitset bitset
-    = CCC_bitset_with_storage(
+static CCC_Flat_bitset bitset
+    = CCC_flat_bitset_with_storage(
         1024,
         (CCC_Bit[1024]){}
     );
@@ -361,8 +361,8 @@ There are three important concepts about references the user must understand in 
 Pointer invalidation occurs only when a container is permitted to allocate. When a flat container is passed an allocator for an insert or push type operation, assume that all references are invalidated after that operation. For a simple dynamic buffer this may be obvious.
 
 ```c
-int *front = CCC_buffer_front(&buffer);
-(void)CCC_buffer_push_back(&buffer, &(int){7}, &allocator);
+int *front = CCC_flat_buffer_front(&buffer);
+(void)CCC_flat_buffer_push_back(&buffer, &(int){7}, &allocator);
 /* front may be invalid */
 ```
 

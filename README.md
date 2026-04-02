@@ -33,8 +33,8 @@ A fixed or dynamic contiguous array of bits for set operations.
 #include <stdbool.h>
 #include <stddef.h>
 
-#define BITSET_USING_NAMESPACE_CCC
-#include "ccc/Bitset.h"
+#define FLAT_BITSET_USING_NAMESPACE_CCC
+#include "ccc/flat_bitset.h"
 #include "ccc/types.h"
 
 #define DIGITS 9L
@@ -72,11 +72,11 @@ static int const invalid_board[9][9] =
 
 /* Returns if the box is valid (CCC_TRUE if valid CCC_FALSE if not). */
 static CCC_Tribool
-validate_sudoku_box(int const board[9][9], Bitset *const row_check,
-                    Bitset *const col_check, size_t const row_start,
+validate_sudoku_box(int const board[9][9], Flat_bitset *const row_check,
+                    Flat_bitset *const col_check, size_t const row_start,
                     size_t const col_start) {
-    Bitset box_check
-        = bitset_with_storage(DIGITS, bitset_storage_for(DIGITS));
+    Flat_bitset box_check
+        = flat_bitset_with_storage(DIGITS, flat_bitset_storage_for(DIGITS));
     CCC_Tribool was_on = CCC_FALSE;
     for (size_t r = row_start; r < row_start + BOX_SIZE; ++r) {
         for (size_t c = col_start; c < col_start + BOX_SIZE; ++c) {
@@ -85,15 +85,15 @@ validate_sudoku_box(int const board[9][9], Bitset *const row_check,
             }
             /* Need the zero based digit. */
             size_t const digit = board[r][c] - 1;
-            was_on = bitset_set(&box_check, digit, CCC_TRUE);
+            was_on = flat_bitset_set(&box_check, digit, CCC_TRUE);
             if (was_on) {
                 return CCC_FALSE;
             }
-            was_on = bitset_set(row_check, (r * DIGITS) + digit, CCC_TRUE);
+            was_on = flat_bitset_set(row_check, (r * DIGITS) + digit, CCC_TRUE);
             if (was_on) {
                 return CCC_FALSE;
             }
-            was_on = bitset_set(col_check, (c * DIGITS) + digit, CCC_TRUE);
+            was_on = flat_bitset_set(col_check, (c * DIGITS) + digit, CCC_TRUE);
             if (was_on) {
                 return CCC_FALSE;
             }
@@ -108,10 +108,10 @@ validate_sudoku_box(int const board[9][9], Bitset *const row_check,
 
 static CCC_Tribool
 is_valid_sudoku(int const board[9][9]) {
-    Bitset row_check = bitset_with_storage(
-        ROWS * DIGITS, bitset_storage_for(ROWS * DIGITS));
-    Bitset col_check = bitset_with_storage(
-        COLS * DIGITS, bitset_storage_for(COLS * DIGITS));
+    Flat_bitset row_check = flat_bitset_with_storage(
+        ROWS * DIGITS, flat_bitset_storage_for(ROWS * DIGITS));
+    Flat_bitset col_check = flat_bitset_with_storage(
+        COLS * DIGITS, flat_bitset_storage_for(COLS * DIGITS));
     for (size_t row = 0; row < ROWS; row += BOX_SIZE) {
         for (size_t col = 0; col < COLS; col += BOX_SIZE) {
             if (!validate_sudoku_box(board, &row_check, &col_check, row, col)) {
@@ -139,9 +139,9 @@ A fixed or dynamic contiguous array of a single user defined type.
 
 ```c
 #include <assert.h>
-#define BUFFER_USING_NAMESPACE_CCC
+#define FLAT_BUFFER_USING_NAMESPACE_CCC
 #define TRAITS_USING_NAMESPACE_CCC
-#include "ccc/buffer.h"
+#include "ccc/flat_buffer.h"
 #include "ccc/traits.h"
 
 enum : size_t {
@@ -156,12 +156,12 @@ maxint(int const a, int const b) {
 /* Trapping rainwater Leetcode problem with iterators */
 int
 main(void) {
-    Buffer const heights = buffer_with_storage(
+    Flat_buffer const heights = flat_buffer_with_storage(
         HCAP, (int[HCAP]){0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1});
     int const correct_trapped = 6;
     int trapped = 0;
-    int lpeak = *buffer_front_as(&heights, int);
-    int rpeak = *buffer_back_as(&heights, int);
+    int lpeak = *flat_buffer_front_as(&heights, int);
+    int rpeak = *flat_buffer_back_as(&heights, int);
     /* Easy way to have a "skip first" iterator because the iterator is
        returned from each iterator function. */
     int const *l = next(&heights, begin(&heights));
@@ -367,10 +367,10 @@ main(void) {
 
 ```c
 #include <assert.h>
-#define BUFFER_USING_NAMESPACE_CCC
+#define FLAT_BUFFER_USING_NAMESPACE_CCC
 #define FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC
 #define TRAITS_USING_NAMESPACE_CCC
-#include "ccc/buffer.h"
+#include "ccc/flat_buffer.h"
 #include "ccc/flat_priority_queue.h"
 #include "ccc/traits.h"
 
@@ -968,13 +968,13 @@ static CCC_Flat_double_ended_queue ring_buffer
         0,
         (int[1024]){}
     );
-static CCC_Buffer buffer
-    = CCC_buffer_with_storage(
+static CCC_Flat_buffer buffer
+    = CCC_flat_buffer_with_storage(
         0,
         (int[1024]){}
     );
-static CCC_Bitset bitset
-    = CCC_bitset_with_storage(
+static CCC_Flat_bitset bitset
+    = CCC_flat_bitset_with_storage(
         1024,
         (CCC_Bit[1024]){}
     );

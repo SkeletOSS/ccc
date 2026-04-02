@@ -6,11 +6,11 @@
 
 #define TRAITS_USING_NAMESPACE_CCC
 #define ADAPTIVE_MAP_USING_NAMESPACE_CCC
-#define BITSET_USING_NAMESPACE_CCC
+#define FLAT_BITSET_USING_NAMESPACE_CCC
 
 #include "adaptive_map_utility.h"
 #include "ccc/adaptive_map.h"
-#include "ccc/bitset.h"
+#include "ccc/flat_bitset.h"
 #include "ccc/traits.h"
 #include "ccc/types.h"
 #include "checkers.h"
@@ -31,7 +31,7 @@ check_static_begin(adaptive_map_test_prime_shuffle) {
        reduce the shuffle range so it will repeat some values. */
     size_t shuffled_index = prime % (size - less);
 
-    Bitset repeats = bitset_with_storage(50, (CCC_Bit[50]){});
+    Flat_bitset repeats = flat_bitset_with_storage(50, (CCC_Bit[50]){});
     for (size_t i = 0; i < size; ++i) {
         if (occupied(adaptive_map_insert_or_assign_wrap(
                 &s,
@@ -42,7 +42,7 @@ check_static_begin(adaptive_map_test_prime_shuffle) {
                      .elem,
                 &allocator
             ))) {
-            CCC_Tribool const was = bitset_set(&repeats, i, CCC_TRUE);
+            CCC_Tribool const was = flat_bitset_set(&repeats, i, CCC_TRUE);
             check(was != CCC_TRIBOOL_ERROR, CCC_TRUE);
         }
         check(validate(&s), true);
@@ -52,7 +52,7 @@ check_static_begin(adaptive_map_test_prime_shuffle) {
     struct Val *const vals
         = ((struct Stack_allocator *)allocator.context)->blocks;
     for (size_t i = 0; i < size; ++i) {
-        CCC_Tribool const is_repeat = bitset_test(&repeats, i);
+        CCC_Tribool const is_repeat = flat_bitset_test(&repeats, i);
         check(is_repeat != CCC_TRIBOOL_ERROR, CCC_TRUE);
         CCC_Tribool const is_occupied = occupied(adaptive_map_remove_entry_wrap(
             adaptive_map_entry_wrap(&s, &vals[i].key), &allocator
@@ -169,7 +169,8 @@ check_static_begin(adaptive_map_test_weak_srand) {
     enum : int {
         SRAND_CAP = 100,
     };
-    Bitset repeats = bitset_with_storage(SRAND_CAP, (CCC_Bit[SRAND_CAP]){});
+    Flat_bitset repeats
+        = flat_bitset_with_storage(SRAND_CAP, (CCC_Bit[SRAND_CAP]){});
     for (int i = 0; i < SRAND_CAP; ++i) {
         if (occupied(adaptive_map_insert_or_assign_wrap(
                 &s,
@@ -180,7 +181,8 @@ check_static_begin(adaptive_map_test_weak_srand) {
                       .elem),
                 &allocator
             ))) {
-            CCC_Tribool const was = bitset_set(&repeats, (size_t)i, CCC_TRUE);
+            CCC_Tribool const was
+                = flat_bitset_set(&repeats, (size_t)i, CCC_TRUE);
             check(was != CCC_TRIBOOL_ERROR, CCC_TRUE);
         }
         check(validate(&s), true);
@@ -189,7 +191,7 @@ check_static_begin(adaptive_map_test_weak_srand) {
         = ((struct Stack_allocator *)allocator.context)->blocks;
     for (int i = 0; i < SRAND_CAP; ++i) {
         CCC_Entry entry = CCC_remove_key_value(&s, &vals[i].elem, &allocator);
-        CCC_Tribool const is_repeat = bitset_test(&repeats, (size_t)i);
+        CCC_Tribool const is_repeat = flat_bitset_test(&repeats, (size_t)i);
         check(is_repeat != CCC_TRIBOOL_ERROR, CCC_TRUE);
         check(occupied(&entry) || is_repeat, true);
         check(validate(&s), true);
@@ -212,8 +214,9 @@ check_static_begin(adaptive_map_test_insert_erase_cycles) {
         CYCLES_TEST_CAP = 100,
     };
     int keys[CYCLES_TEST_CAP] = {};
-    Bitset repeats
-        = bitset_with_storage(CYCLES_TEST_CAP, (CCC_Bit[CYCLES_TEST_CAP]){});
+    Flat_bitset repeats = flat_bitset_with_storage(
+        CYCLES_TEST_CAP, (CCC_Bit[CYCLES_TEST_CAP]){}
+    );
     for (int i = 0; i < CYCLES_TEST_CAP; ++i) {
         keys[i] = (int)rand(); /* NOLINT */
         if (occupied(adaptive_map_insert_or_assign_wrap(
@@ -225,7 +228,8 @@ check_static_begin(adaptive_map_test_insert_erase_cycles) {
                      .elem,
                 &allocator
             ))) {
-            CCC_Tribool const was = bitset_set(&repeats, (size_t)i, CCC_TRUE);
+            CCC_Tribool const was
+                = flat_bitset_set(&repeats, (size_t)i, CCC_TRUE);
             check(was != CCC_TRIBOOL_ERROR, CCC_TRUE);
         }
         check(validate(&s), true);
@@ -234,7 +238,7 @@ check_static_begin(adaptive_map_test_insert_erase_cycles) {
         CCC_Entry h = adaptive_map_remove_entry(
             adaptive_map_entry_wrap(&s, &keys[i]), &allocator
         );
-        CCC_Tribool const is_repeat = bitset_test(&repeats, (size_t)i);
+        CCC_Tribool const is_repeat = flat_bitset_test(&repeats, (size_t)i);
         check(is_repeat != CCC_TRIBOOL_ERROR, CCC_TRUE);
         check(occupied(&h) || is_repeat, true);
         check(validate(&s), true);
@@ -255,7 +259,7 @@ check_static_begin(adaptive_map_test_insert_erase_cycles) {
         CCC_Entry const entry = adaptive_map_remove_entry(
             adaptive_map_entry_wrap(&s, &keys[i]), &allocator
         );
-        CCC_Tribool const is_repeat = bitset_test(&repeats, (size_t)i);
+        CCC_Tribool const is_repeat = flat_bitset_test(&repeats, (size_t)i);
         check(is_repeat != CCC_TRIBOOL_ERROR, CCC_TRUE);
         check(occupied(&entry) || is_repeat, true);
         check(validate(&s), true);

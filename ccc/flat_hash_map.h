@@ -934,7 +934,7 @@ CCC_Result CCC_flat_hash_map_clear(
 @param[in] destructor the CCC_Destructor to call on each element if needed.
 @param[in] allocator the CCC_Allocator to free the underlying storage.
 @return the result of free operation. If &(CCC_Allocator){} is provided it is
-an error to attempt to free the Buffer and a memory error is returned.
+an error to attempt to free the Flat_buffer and a memory error is returned.
 Otherwise, an OK result is returned. */
 CCC_Result CCC_flat_hash_map_clear_and_free(
     CCC_Flat_hash_map *map,

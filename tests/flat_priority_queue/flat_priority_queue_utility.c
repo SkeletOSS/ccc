@@ -2,11 +2,11 @@
 #include <stdlib.h>
 
 #define FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC
-#define BUFFER_USING_NAMESPACE_CCC
+#define FLAT_BUFFER_USING_NAMESPACE_CCC
 #define TRAITS_USING_NAMESPACE_CCC
 
-#include "buffer.h"
 #include "checkers.h"
+#include "flat_buffer.h"
 #include "flat_priority_queue.h"
 #include "flat_priority_queue_utility.h"
 #include "sort.h"
@@ -84,9 +84,9 @@ check_begin(
     if (CCC_flat_priority_queue_count(flat_priority_queue).count != size) {
         return CHECK_FAIL;
     }
-    CCC_Buffer copy = CCC_buffer_default(struct Val);
+    CCC_Flat_buffer copy = CCC_flat_buffer_default(struct Val);
     CCC_Result r
-        = buffer_copy(&copy, &flat_priority_queue->buffer, &std_allocator);
+        = flat_buffer_copy(&copy, &flat_priority_queue->buffer, &std_allocator);
     check(r, CCC_RESULT_OK);
     r = CCC_sort_heapsort(
         &copy,
@@ -95,8 +95,8 @@ check_begin(
         &flat_priority_queue->comparator
     );
     check(r, CCC_RESULT_OK);
-    check(CCC_buffer_is_empty(&copy), CCC_FALSE);
-    vals[0] = *CCC_buffer_front_as(&copy, int);
+    check(CCC_flat_buffer_is_empty(&copy), CCC_FALSE);
+    vals[0] = *CCC_flat_buffer_front_as(&copy, int);
     size_t i = 1;
     for (struct Val const *prev = begin(&copy), *v = next(&copy, prev);
          v != end(&copy);

@@ -4,14 +4,14 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define BITSET_USING_NAMESPACE_CCC
+#define FLAT_BITSET_USING_NAMESPACE_CCC
 #define TRAITS_USING_NAMESPACE_CCC
 #define ARRAY_ADAPTIVE_MAP_USING_NAMESPACE_CCC
 #define TYPES_USING_NAMESPACE_CCC
 
 #include "array_adaptive_map_utility.h"
 #include "ccc/array_adaptive_map.h"
-#include "ccc/bitset.h"
+#include "ccc/flat_bitset.h"
 #include "ccc/traits.h"
 #include "ccc/types.h"
 #include "checkers.h"
@@ -499,8 +499,8 @@ check_static_begin(array_adaptive_map_test_empty_range) {
 static void
 destroy_element(CCC_Arguments const arguments) {
     struct Val const *const i = arguments.type;
-    Bitset *const is_destroyed_buffer = arguments.context;
-    (void)bitset_set(is_destroyed_buffer, (size_t)i->id, CCC_TRUE);
+    Flat_bitset *const is_destroyed_buffer = arguments.context;
+    (void)flat_bitset_set(is_destroyed_buffer, (size_t)i->id, CCC_TRUE);
 }
 
 check_static_begin(array_adaptive_map_test_clear_with_destructor) {
@@ -510,7 +510,7 @@ check_static_begin(array_adaptive_map_test_clear_with_destructor) {
     CCC_Array_adaptive_map map = array_adaptive_map_with_storage(
         id, (CCC_Key_comparator){.compare = id_order}, (struct Val[MIN_CAP]){}
     );
-    Bitset is_destroyed = bitset_with_storage(0, (Bit[MIN_CAP]){});
+    Flat_bitset is_destroyed = flat_bitset_with_storage(0, (Bit[MIN_CAP]){});
     int i = 0;
     for (;;) {
         CCC_Handle const *const e = array_adaptive_map_try_insert_with(
@@ -522,8 +522,9 @@ check_static_begin(array_adaptive_map_test_clear_with_destructor) {
             break;
         }
         struct Val const *const v = array_adaptive_map_at(&map, h);
-        CCC_Result const bit_push
-            = bitset_push_back(&is_destroyed, CCC_FALSE, &(CCC_Allocator){});
+        CCC_Result const bit_push = flat_bitset_push_back(
+            &is_destroyed, CCC_FALSE, &(CCC_Allocator){}
+        );
         check(bit_push, CCC_RESULT_OK);
         check(v->id, i);
         check(v->val, i);
@@ -538,8 +539,8 @@ check_static_begin(array_adaptive_map_test_clear_with_destructor) {
         }
     );
     i = 0;
-    while (!bitset_is_empty(&is_destroyed)) {
-        CCC_Tribool const was_destroyed = bitset_pop_back(&is_destroyed);
+    while (!flat_bitset_is_empty(&is_destroyed)) {
+        CCC_Tribool const was_destroyed = flat_bitset_pop_back(&is_destroyed);
         check(was_destroyed, CCC_TRUE);
         ++i;
     }
@@ -564,7 +565,7 @@ check_static_begin(array_adaptive_map_test_clear_and_free_with_destructor) {
         allocator,
         MIN_CAP
     );
-    Bitset is_destroyed = bitset_with_storage(0, (Bit[MIN_CAP]){});
+    Flat_bitset is_destroyed = flat_bitset_with_storage(0, (Bit[MIN_CAP]){});
     int i = 0;
     for (;;) {
         CCC_Handle const *const e = array_adaptive_map_try_insert_with(
@@ -576,8 +577,9 @@ check_static_begin(array_adaptive_map_test_clear_and_free_with_destructor) {
             break;
         }
         struct Val const *const v = array_adaptive_map_at(&map, index);
-        CCC_Result const bit_push
-            = bitset_push_back(&is_destroyed, CCC_FALSE, &(CCC_Allocator){});
+        CCC_Result const bit_push = flat_bitset_push_back(
+            &is_destroyed, CCC_FALSE, &(CCC_Allocator){}
+        );
         check(bit_push, CCC_RESULT_OK);
         check(v->id, i);
         check(v->val, i);
@@ -593,8 +595,8 @@ check_static_begin(array_adaptive_map_test_clear_and_free_with_destructor) {
         &allocator
     );
     i = 0;
-    while (!bitset_is_empty(&is_destroyed)) {
-        CCC_Tribool const was_destroyed = bitset_pop_back(&is_destroyed);
+    while (!flat_bitset_is_empty(&is_destroyed)) {
+        CCC_Tribool const was_destroyed = flat_bitset_pop_back(&is_destroyed);
         check(was_destroyed, CCC_TRUE);
         ++i;
     }

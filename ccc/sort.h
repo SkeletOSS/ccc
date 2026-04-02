@@ -27,8 +27,8 @@ if it is sorted or insert an element in a sorted position. */
 #ifndef CCC_SORT_H
 #define CCC_SORT_H
 
-#include "buffer.h"
 #include "doubly_linked_list.h"
+#include "flat_buffer.h"
 #include "singly_linked_list.h"
 #include "types.h"
 
@@ -61,7 +61,7 @@ as `&(My_type){}`, passed directly as an argument.
 The sort is not inherently stable and uses the provided comparison function to
 order the elements. */
 CCC_Result CCC_sort_heapsort(
-    CCC_Buffer *buffer,
+    CCC_Flat_buffer *buffer,
     void *temp,
     CCC_Order order,
     CCC_Comparator const *comparator

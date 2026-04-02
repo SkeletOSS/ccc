@@ -219,13 +219,13 @@ static CCC_Flat_double_ended_queue ring_buffer
         0,
         (int[1024]){}
     );
-static CCC_Buffer buffer
-    = CCC_buffer_with_storage(
+static CCC_Flat_buffer buffer
+    = CCC_flat_buffer_with_storage(
         0,
         (int[1024]){}
     );
-static CCC_Bitset bitset
-    = CCC_bitset_with_storage(
+static CCC_Flat_bitset bitset
+    = CCC_flat_bitset_with_storage(
         1024,
         (CCC_Bit[1024]){}
     );
@@ -233,7 +233,7 @@ static CCC_Bitset bitset
 
 When practical, these initializers accept arguments as compound literals rather than arguments in an arbitrary order. A type name and designated initializer fields within a compound literal offer much more readable initialization, to someone unfamiliar with the CCC API, than arguments in arbitrary, comma-separated order. Only use compound literal argument bundles when all omitted fields have well-defined, safe defaults. If a field is required for correct operation, such as the key field for maps, it should be provided as a direct argument instead. In this example, no `CCC_Hasher`, `CCC_Key_comparator`, or `CCC_Comparator` needs context provided to the `.context` field, and that is OK.
 
-The use of compound literal arrays also helps communicate the nature of these data structures without having to supply more obtuse type, size, and capacity arguments. For most containers the provided compound literal is used directly as the backing storage. For containers such as the `Array_adaptive_map`, `Array_tree_map`, `Flat_hash_map`, and `Bitset`, the provided compound literal array is used as a guideline for structuring efficient backing storage. The maps use it to construct the first array in a struct-of-arrays (SOA) layout. The bit set uses the request for a certain number of bits as a guide for determining how many blocks of a platform specified integer width to use for efficient operation.
+The use of compound literal arrays also helps communicate the nature of these data structures without having to supply more obtuse type, size, and capacity arguments. For most containers the provided compound literal is used directly as the backing storage. For containers such as the `Array_adaptive_map`, `Array_tree_map`, `Flat_hash_map`, and `Flat_bitset`, the provided compound literal array is used as a guideline for structuring efficient backing storage. The maps use it to construct the first array in a struct-of-arrays (SOA) layout. The bit set uses the request for a certain number of bits as a guide for determining how many blocks of a platform specified integer width to use for efficient operation.
 
 In any case, the user benefits from expressing what they want with the C type system rather than our arbitrary interface conventions. This will make it easier for users to return to their code and understand its general ideas long after they have forgotten our API conventions.
 
@@ -364,7 +364,7 @@ Here is an examples from `buffer.h` (may not be in sync with current code).
 
 ```c
 CCC_Result
-CCC_Buffer_allocate(CCC_Buffer *const buf, size_t const capacity,
+CCC_Flat_buffer_allocate(CCC_Flat_buffer *const buf, size_t const capacity,
                     CCC_Allocator_interface *const allocate) {
     if (!buf) {
         return CCC_RESULT_ARGUMENT_ERROR;

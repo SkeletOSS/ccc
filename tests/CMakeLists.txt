@@ -27,8 +27,8 @@ add_dependencies(tests run_tests)
 # depending on the build type. The run_tests program then runs all binaries.
 
 #############  Bit Set ##########################
-macro(add_bitset_test TEST_NAME)
-  add_executable(${TEST_NAME} bitset/${TEST_NAME}.c)
+macro(add_flat_bitset_test TEST_NAME)
+  add_executable(${TEST_NAME} flat_bitset/${TEST_NAME}.c)
   target_link_libraries(${TEST_NAME}
     PRIVATE
       ccc
@@ -46,27 +46,27 @@ macro(add_bitset_test TEST_NAME)
 endmacro()
 
 # Add tests below here by the name of the c file without the .c suffix
-add_bitset_test(test_bitset_construct)
-add_bitset_test(test_bitset_insert)
-add_bitset_test(test_bitset_erase)
-add_bitset_test(test_bitset_test_and_set)
+add_flat_bitset_test(test_flat_bitset_construct)
+add_flat_bitset_test(test_flat_bitset_insert)
+add_flat_bitset_test(test_flat_bitset_erase)
+add_flat_bitset_test(test_flat_bitset_test_and_set)
 
-#############  Buffer ##########################
-add_library(buffer_utility buffer/buffer_utility.h buffer/buffer_utility.c)
-target_link_libraries(buffer_utility
+#############  Flat_buffer ##########################
+add_library(flat_buffer_utility flat_buffer/flat_buffer_utility.h flat_buffer/flat_buffer_utility.c)
+target_link_libraries(flat_buffer_utility
   PRIVATE
     ccc
     checkers
     random
 )
-add_dependencies(tests buffer_utility)
+add_dependencies(tests flat_buffer_utility)
 
-macro(add_buffer_test TEST_NAME)
-  add_executable(${TEST_NAME} buffer/${TEST_NAME}.c)
+macro(add_flat_buffer_test TEST_NAME)
+  add_executable(${TEST_NAME} flat_buffer/${TEST_NAME}.c)
   target_link_libraries(${TEST_NAME}
     PRIVATE
       ccc
-      buffer_utility
+      flat_buffer_utility
       checkers
       allocate
       stack_allocator
@@ -81,11 +81,11 @@ macro(add_buffer_test TEST_NAME)
 endmacro()
 
 # Add tests below here by the name of the c file without the .c suffix
-add_buffer_test(test_buffer_construct)
-add_buffer_test(test_buffer_insert)
-add_buffer_test(test_buffer_erase)
-add_buffer_test(test_buffer_iterator)
-add_buffer_test(test_buffer_error)
+add_flat_buffer_test(test_flat_buffer_construct)
+add_flat_buffer_test(test_flat_buffer_insert)
+add_flat_buffer_test(test_flat_buffer_erase)
+add_flat_buffer_test(test_flat_buffer_iterator)
+add_flat_buffer_test(test_flat_buffer_error)
 
 #############  Heap Priority Queue  ##########################
 add_library(flat_priority_queue_utility flat_priority_queue/flat_priority_queue_utility.h flat_priority_queue/flat_priority_queue_utility.c)

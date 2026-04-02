@@ -1016,7 +1016,7 @@ forfeit.
 maintenance is required on the elements in the map before their slots are
 forfeit.
 @return the result of free operation. If no allocate function is provided it is
-an error to attempt to free the Buffer and a memory error is returned.
+an error to attempt to free the Flat_buffer and a memory error is returned.
 Otherwise, an OK result is returned.
 
 If the destructor is empty runtime is O(1), else O(size). */
