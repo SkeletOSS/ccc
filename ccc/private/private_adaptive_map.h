@@ -291,8 +291,8 @@ void *CCC_private_adaptive_map_insert(
     closure_over_closure_parameter...                                          \
 )                                                                              \
     (__extension__({                                                           \
-        __auto_type private_adaptive_map_ent_pointer                           \
-            = (adaptive_map_entry_pointer);                                    \
+        struct CCC_Adaptive_map_entry const *const                             \
+            private_adaptive_map_ent_pointer = (adaptive_map_entry_pointer);   \
         struct CCC_Adaptive_map_entry private_adaptive_map_mod_ent             \
             = {.entry = {.status = CCC_ENTRY_ARGUMENT_ERROR}};                 \
         if (private_adaptive_map_ent_pointer) {                                \
@@ -313,8 +313,8 @@ void *CCC_private_adaptive_map_insert(
     type_compound_literal...                                                   \
 )                                                                              \
     (__extension__({                                                           \
-        __auto_type private_or_ins_entry_pointer                               \
-            = (adaptive_map_entry_pointer);                                    \
+        struct CCC_Adaptive_map_entry const *const                             \
+            private_or_ins_entry_pointer = (adaptive_map_entry_pointer);       \
         typeof(type_compound_literal) *private_or_ins_ret = NULL;              \
         CCC_Allocator const *const private_adaptive_map_allocator              \
             = (private_allocator_pointer);                                     \
@@ -344,7 +344,8 @@ void *CCC_private_adaptive_map_insert(
     type_compound_literal...                                                   \
 )                                                                              \
     (__extension__({                                                           \
-        __auto_type private_ins_entry_pointer = (adaptive_map_entry_pointer);  \
+        struct CCC_Adaptive_map_entry const *const private_ins_entry_pointer   \
+            = (adaptive_map_entry_pointer);                                    \
         typeof(type_compound_literal) *private_adaptive_map_ins_ent_ret        \
             = NULL;                                                            \
         CCC_Allocator const *const private_adaptive_map_allocator              \
@@ -391,7 +392,8 @@ void *CCC_private_adaptive_map_insert(
     type_compound_literal...                                                   \
 )                                                                              \
     (__extension__({                                                           \
-        __auto_type private_try_ins_map_pointer = (adaptive_map_pointer);      \
+        struct CCC_Adaptive_map *const private_try_ins_map_pointer             \
+            = (adaptive_map_pointer);                                          \
         CCC_Entry private_adaptive_map_try_ins_ent_ret                         \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                            \
         CCC_Allocator const *const private_adaptive_map_allocator              \
@@ -429,7 +431,7 @@ void *CCC_private_adaptive_map_insert(
     type_compound_literal...                                                   \
 )                                                                              \
     (__extension__({                                                           \
-        __auto_type private_ins_or_assign_map_pointer                          \
+        struct CCC_Adaptive_map *const private_ins_or_assign_map_pointer       \
             = (adaptive_map_pointer);                                          \
         CCC_Entry private_adaptive_map_ins_or_assign_ent_ret                   \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                            \

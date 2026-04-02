@@ -123,7 +123,8 @@ void *CCC_private_flat_double_ended_queue_allocate_back(
     flat_double_ended_queue_pointer, private_allocator_pointer, value...       \
 )                                                                              \
     (__extension__({                                                           \
-        __auto_type private_flat_double_ended_queue_pointer                    \
+        struct CCC_Flat_double_ended_queue *const                              \
+            private_flat_double_ended_queue_pointer                            \
             = (flat_double_ended_queue_pointer);                               \
         void *private_flat_double_ended_queue_emplace_ret = NULL;              \
         if (private_flat_double_ended_queue_pointer) {                         \
@@ -145,7 +146,8 @@ void *CCC_private_flat_double_ended_queue_allocate_back(
     flat_double_ended_queue_pointer, private_allocator_pointer, value...       \
 )                                                                              \
     (__extension__({                                                           \
-        __auto_type private_flat_double_ended_queue_pointer                    \
+        struct CCC_Flat_double_ended_queue *const                              \
+            private_flat_double_ended_queue_pointer                            \
             = (flat_double_ended_queue_pointer);                               \
         void *private_flat_double_ended_queue_emplace_ret = NULL;              \
         if (private_flat_double_ended_queue_pointer) {                         \
