@@ -4,7 +4,7 @@
 #define TRAITS_USING_NAMESPACE_CCC
 #define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
 
-#include "ccc/buffer.h"
+#include "ccc/flat_buffer.h"
 #include "ccc/flat_double_ended_queue.h"
 #include "ccc/traits.h"
 #include "ccc/types.h"
@@ -21,11 +21,11 @@ compare_ints(CCC_Comparator_arguments arguments) {
 check_begin(
     create_queue,
     Flat_double_ended_queue *const q,
-    CCC_Buffer const *const range,
+    CCC_Flat_buffer const *const range,
     CCC_Allocator const *const allocator
 ) {
     check(q != NULL && range != NULL && allocator != NULL, true);
-    if (CCC_buffer_count(range).count) {
+    if (CCC_flat_buffer_count(range).count) {
         CCC_Result const res
             = flat_double_ended_queue_push_back_range(q, range, allocator);
         check(res, CCC_RESULT_OK);
@@ -37,12 +37,12 @@ check_begin(
 check_begin(
     check_order,
     Flat_double_ended_queue const *const int_q,
-    CCC_Buffer const *const int_order
+    CCC_Flat_buffer const *const int_order
 ) {
     check(int_q != NULL && int_order != NULL, true);
     check(
-        CCC_buffer_sizeof_type(&int_q->buffer).count,
-        CCC_buffer_sizeof_type(int_order).count
+        CCC_flat_buffer_sizeof_type(&int_q->buffer).count,
+        CCC_flat_buffer_sizeof_type(int_order).count
     );
     int const *q_element = begin(int_q);
     for (int const *order_element = begin(int_order);
@@ -66,7 +66,7 @@ check_begin(
             stderr,
             "%sCHECK: (int[%zu]){",
             CHECK_GREEN,
-            CCC_buffer_count(int_order).count
+            CCC_flat_buffer_count(int_order).count
         );
         for (int const *i = begin(int_order); i != end(int_order);
              i = next(int_order, i)) {
@@ -78,7 +78,7 @@ check_begin(
             "%sCHECK_ERROR:%s (int[%zu]){",
             CHECK_RED,
             CHECK_GREEN,
-            CCC_buffer_count(int_order).count
+            CCC_flat_buffer_count(int_order).count
         );
         q_element = begin(int_q);
         for (int const *j = begin(int_order);

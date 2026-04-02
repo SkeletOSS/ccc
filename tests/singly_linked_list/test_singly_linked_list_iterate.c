@@ -1,10 +1,10 @@
 #include <stddef.h>
 
-#define BITSET_USING_NAMESPACE_CCC
+#define FLAT_BITSET_USING_NAMESPACE_CCC
 #define TRAITS_USING_NAMESPACE_CCC
 #define SINGLY_LINKED_LIST_USING_NAMESPACE_CCC
 
-#include "ccc/bitset.h"
+#include "ccc/flat_bitset.h"
 #include "ccc/singly_linked_list.h"
 #include "ccc/traits.h"
 #include "ccc/types.h"
@@ -119,8 +119,8 @@ check_static_begin(singly_linked_list_test_is_sorted) {
 static void
 destroy_element(CCC_Arguments const arguments) {
     struct Val const *const i = arguments.type;
-    Bitset *const is_destroyed_buffer = arguments.context;
-    (void)bitset_set(is_destroyed_buffer, (size_t)i->val, CCC_TRUE);
+    Flat_bitset *const is_destroyed_buffer = arguments.context;
+    (void)flat_bitset_set(is_destroyed_buffer, (size_t)i->val, CCC_TRUE);
 }
 
 check_static_begin(singly_linked_list_test_clear_with_destructor) {
@@ -158,7 +158,7 @@ check_static_begin(singly_linked_list_test_clear_with_destructor) {
         CCC_singly_linked_list_clear(&list, &(CCC_Destructor){}, NULL),
         CCC_RESULT_ARGUMENT_ERROR
     );
-    Bitset is_destroyed = bitset_with_storage(CAP, (Bit[CAP]){});
+    Flat_bitset is_destroyed = flat_bitset_with_storage(CAP, (Bit[CAP]){});
     check(
         CCC_singly_linked_list_clear(
             &list,
@@ -171,8 +171,8 @@ check_static_begin(singly_linked_list_test_clear_with_destructor) {
         CCC_RESULT_OK
     );
     size_t i = 0;
-    while (!bitset_is_empty(&is_destroyed)) {
-        CCC_Tribool const was_destroyed = bitset_pop_back(&is_destroyed);
+    while (!flat_bitset_is_empty(&is_destroyed)) {
+        CCC_Tribool const was_destroyed = flat_bitset_pop_back(&is_destroyed);
         check(was_destroyed, CCC_TRUE);
         ++i;
     }

@@ -4,11 +4,11 @@
 #include <string.h>
 #include <time.h>
 
-#define BITSET_USING_NAMESPACE_CCC
+#define FLAT_BITSET_USING_NAMESPACE_CCC
 #define TREE_MAP_USING_NAMESPACE_CCC
 #define TRAITS_USING_NAMESPACE_CCC
 
-#include "ccc/bitset.h"
+#include "ccc/flat_bitset.h"
 #include "ccc/traits.h"
 #include "ccc/tree_map.h"
 #include "ccc/types.h"
@@ -116,7 +116,8 @@ check_static_begin(tree_map_test_prime_shuffle) {
        reduce the shuffle range so it will repeat some values. */
     size_t shuffled_index = PRIME % (SHUFFLE_CAP - LESS);
     struct Val vals[SHUFFLE_CAP];
-    Bitset repeats = bitset_with_storage(SHUFFLE_CAP, (CCC_Bit[SHUFFLE_CAP]){});
+    Flat_bitset repeats
+        = flat_bitset_with_storage(SHUFFLE_CAP, (CCC_Bit[SHUFFLE_CAP]){});
     for (size_t i = 0; i < SHUFFLE_CAP; ++i) {
         vals[i].val = (int)shuffled_index;
         vals[i].key = (int)shuffled_index;
@@ -124,7 +125,7 @@ check_static_begin(tree_map_test_prime_shuffle) {
             &s, &vals[i].elem, &(struct Val){}.elem, &(CCC_Allocator){}
         );
         if (unwrap(&e)) {
-            CCC_Tribool const was = bitset_set(&repeats, i, CCC_TRUE);
+            CCC_Tribool const was = flat_bitset_set(&repeats, i, CCC_TRUE);
             check(was != CCC_TRIBOOL_ERROR, CCC_TRUE);
         }
         check(validate(&s), true);
@@ -136,7 +137,7 @@ check_static_begin(tree_map_test_prime_shuffle) {
         CCC_Entry const *const e = tree_map_remove_entry_wrap(
             tree_map_entry_wrap(&s, &vals[i].key), &(CCC_Allocator){}
         );
-        CCC_Tribool const is_repeat = bitset_test(&repeats, i);
+        CCC_Tribool const is_repeat = flat_bitset_test(&repeats, i);
         check(is_repeat != CCC_TRIBOOL_ERROR, CCC_TRUE);
         check(occupied(e) || is_repeat, true);
         check(validate(&s), true);
@@ -155,14 +156,16 @@ check_static_begin(tree_map_test_weak_srand) {
         SRAND_CAP = 100,
     };
     struct Val vals[SRAND_CAP];
-    Bitset repeats = bitset_with_storage(SRAND_CAP, (CCC_Bit[SRAND_CAP]){});
+    Flat_bitset repeats
+        = flat_bitset_with_storage(SRAND_CAP, (CCC_Bit[SRAND_CAP]){});
     for (int i = 0; i < SRAND_CAP; ++i) {
         vals[i].key = (int)rand(); // NOLINT
         vals[i].val = i;
         if (occupied(tree_map_swap_entry_wrap(
                 &s, &vals[i].elem, &(struct Val){}.elem, &(CCC_Allocator){}
             ))) {
-            CCC_Tribool const was = bitset_set(&repeats, (size_t)i, CCC_TRUE);
+            CCC_Tribool const was
+                = flat_bitset_set(&repeats, (size_t)i, CCC_TRUE);
             check(was != CCC_TRIBOOL_ERROR, CCC_TRUE);
         }
         check(validate(&s), true);
@@ -170,7 +173,7 @@ check_static_begin(tree_map_test_weak_srand) {
     for (int i = 0; i < SRAND_CAP; ++i) {
         CCC_Entry entry
             = CCC_remove_key_value(&s, &vals[i].elem, &(CCC_Allocator){});
-        CCC_Tribool const is_repeat = bitset_test(&repeats, (size_t)i);
+        CCC_Tribool const is_repeat = flat_bitset_test(&repeats, (size_t)i);
         check(is_repeat != CCC_TRIBOOL_ERROR, CCC_TRUE);
         check(occupied(&entry) || is_repeat, true);
         check(validate(&s), true);
@@ -193,7 +196,7 @@ check_static_begin(tree_map_test_insert_erase_cycles) {
         CYCLES_TEST_CAP = 100,
     };
     int keys[CYCLES_TEST_CAP] = {};
-    CCC_Bitset repeats = CCC_bitset_with_storage(
+    CCC_Flat_bitset repeats = CCC_flat_bitset_with_storage(
         CYCLES_TEST_CAP, (CCC_Bit[CYCLES_TEST_CAP]){}
     );
     for (int i = 0; i < CYCLES_TEST_CAP; ++i) {
@@ -208,7 +211,7 @@ check_static_begin(tree_map_test_insert_erase_cycles) {
                 &allocator
             ))) {
             CCC_Tribool const was
-                = CCC_bitset_set(&repeats, (size_t)i, CCC_TRUE);
+                = CCC_flat_bitset_set(&repeats, (size_t)i, CCC_TRUE);
             check(was != CCC_TRIBOOL_ERROR, CCC_TRUE);
         }
         check(validate(&s), true);
@@ -216,7 +219,7 @@ check_static_begin(tree_map_test_insert_erase_cycles) {
     for (int i = 0; i < CYCLES_TEST_CAP / 2; ++i) {
         CCC_Entry h
             = remove_entry(tree_map_entry_wrap(&s, &keys[i]), &allocator);
-        CCC_Tribool const is_repeat = CCC_bitset_test(&repeats, (size_t)i);
+        CCC_Tribool const is_repeat = CCC_flat_bitset_test(&repeats, (size_t)i);
         check(is_repeat != CCC_TRIBOOL_ERROR, CCC_TRUE);
         check(occupied(&h) || is_repeat, CCC_TRUE);
         check(validate(&s), true);
@@ -231,7 +234,7 @@ check_static_begin(tree_map_test_insert_erase_cycles) {
     for (int i = 0; i < CYCLES_TEST_CAP; ++i) {
         CCC_Entry const entry
             = remove_entry(tree_map_entry_wrap(&s, &keys[i]), &allocator);
-        CCC_Tribool const is_repeat = CCC_bitset_test(&repeats, (size_t)i);
+        CCC_Tribool const is_repeat = CCC_flat_bitset_test(&repeats, (size_t)i);
         check(is_repeat != CCC_TRIBOOL_ERROR, CCC_TRUE);
         check(occupied(&entry) || is_repeat, CCC_TRUE);
         check(validate(&s), true);

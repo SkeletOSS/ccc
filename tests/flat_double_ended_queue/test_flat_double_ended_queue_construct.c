@@ -1,11 +1,11 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define BUFFER_USING_NAMESPACE_CCC
+#define FLAT_BUFFER_USING_NAMESPACE_CCC
 #define TRAITS_USING_NAMESPACE_CCC
 #define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
 
-#include "ccc/buffer.h"
+#include "ccc/flat_buffer.h"
 #include "ccc/flat_double_ended_queue.h"
 #include "ccc/traits.h"
 #include "ccc/types.h"
@@ -110,13 +110,13 @@ check_static_begin(flat_double_ended_queue_test_copy_chunks) {
     check(flat_double_ended_queue_copy(&q2, &q1, &allocator), CCC_RESULT_OK);
     check(
         check_order(
-            &q1, &buffer_with_storage(8, (int[8]){3, 4, 5, 6, 7, 8, 9, 10})
+            &q1, &flat_buffer_with_storage(8, (int[8]){3, 4, 5, 6, 7, 8, 9, 10})
         ),
         CHECK_PASS
     );
     check(
         check_order(
-            &q2, &buffer_with_storage(8, (int[8]){3, 4, 5, 6, 7, 8, 9, 10})
+            &q2, &flat_buffer_with_storage(8, (int[8]){3, 4, 5, 6, 7, 8, 9, 10})
         ),
         CHECK_PASS
     );
@@ -169,7 +169,7 @@ check_static_begin(flat_double_ended_queue_test_copy_allocate) {
         = flat_double_ended_queue_with_capacity(int, allocator, 8);
     Flat_double_ended_queue q2 = CCC_flat_double_ended_queue_default(int);
     CCC_Result res = flat_double_ended_queue_push_back_range(
-        &q1, &buffer_with_storage(5, (int[5]){0, 1, 2, 3, 4}), &allocator
+        &q1, &flat_buffer_with_storage(5, (int[5]){0, 1, 2, 3, 4}), &allocator
     );
     check(res, CCC_RESULT_OK);
     check(*(int *)front(&q1), 0);
@@ -204,7 +204,7 @@ check_static_begin(flat_double_ended_queue_test_copy_allocate_fail) {
         = flat_double_ended_queue_with_capacity(int, allocator, 8);
     Flat_double_ended_queue q2 = CCC_flat_double_ended_queue_default(int);
     CCC_Result res = flat_double_ended_queue_push_back_range(
-        &q1, &buffer_with_storage(5, (int[5]){0, 1, 2, 3, 4}), &allocator
+        &q1, &flat_buffer_with_storage(5, (int[5]){0, 1, 2, 3, 4}), &allocator
     );
     check(res, CCC_RESULT_OK);
     check(*(int *)front(&q1), 0);
@@ -239,7 +239,7 @@ check_static_begin(flat_double_ended_queue_test_reserve) {
     check(
         CCC_flat_double_ended_queue_push_back_range(
             &queue,
-            &CCC_buffer_with_storage(7, (int[7]){1, 2, 3, 4, 5, 6, 7}),
+            &CCC_flat_buffer_with_storage(7, (int[7]){1, 2, 3, 4, 5, 6, 7}),
             &allocator
         ),
         CCC_RESULT_OK

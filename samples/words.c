@@ -21,14 +21,14 @@ Please specify a command as follows:
 #include <stdlib.h>
 #include <string.h>
 
-#define BUFFER_USING_NAMESPACE_CCC
+#define FLAT_BUFFER_USING_NAMESPACE_CCC
 #define ARRAY_ADAPTIVE_MAP_USING_NAMESPACE_CCC
 #define FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC
 #define TRAITS_USING_NAMESPACE_CCC
 #define TYPES_USING_NAMESPACE_CCC
 
 #include "ccc/array_adaptive_map.h"
-#include "ccc/buffer.h"
+#include "ccc/flat_buffer.h"
 #include "ccc/sort.h"
 #include "ccc/traits.h"
 #include "ccc/types.h"
@@ -43,7 +43,7 @@ enum Action_type {
     FIND,
 };
 
-/* A word will be counted with a map and then sorted with a Buffer and flat
+/* A word will be counted with a map and then sorted with a Flat_buffer and flat
 priority queue. One type works well for both because they don't need intrusive
 elements to operate those containers. */
 typedef struct {
@@ -117,7 +117,8 @@ static void print_top_n(FILE *, size_t, CCC_Allocator const *);
 static void print_last_n(FILE *, size_t, CCC_Allocator const *);
 static void print_alpha_n(FILE *, size_t, CCC_Allocator const *);
 static void print_ralpha_n(FILE *, size_t, CCC_Allocator const *);
-static Buffer map_to_buffer(Array_adaptive_map const *, CCC_Allocator const *);
+static Flat_buffer
+map_to_buffer(Array_adaptive_map const *, CCC_Allocator const *);
 static void print_n(
     Array_adaptive_map *,
     CCC_Order,
@@ -331,19 +332,20 @@ print_ralpha_n(FILE *const f, size_t n, CCC_Allocator const *const allocator) {
     }
 }
 
-static Buffer
+static Flat_buffer
 map_to_buffer(
     Array_adaptive_map const *const map, CCC_Allocator const *const allocator
 ) {
     check(!is_empty(map));
-    Buffer freqs = CCC_buffer_with_capacity(Word, *allocator, count(map).count);
+    Flat_buffer freqs
+        = CCC_flat_buffer_with_capacity(Word, *allocator, count(map).count);
     size_t const cap = capacity(&freqs).count;
     size_t i = 0;
     for (CCC_Handle_index iter = begin(map); iter != end(map) && i < cap;
          iter = next(map, iter), ++i) {
         Word const *const w = array_adaptive_map_at(map, iter);
         Word const *const pushed
-            = buffer_push_back(&freqs, w, &(CCC_Allocator){});
+            = flat_buffer_push_back(&freqs, w, &(CCC_Allocator){});
         check(pushed);
     }
     return freqs;
@@ -357,11 +359,11 @@ print_n(
     size_t n,
     CCC_Allocator const *const allocator
 ) {
-    Buffer freqs = map_to_buffer(map, allocator);
+    Flat_buffer freqs = map_to_buffer(map, allocator);
     defer {
         (void)clear_and_free(&freqs, &(CCC_Destructor){}, allocator);
     }
-    check(!buffer_is_empty(&freqs));
+    check(!flat_buffer_is_empty(&freqs));
     if (!n) {
         n = count(&freqs).count;
     }

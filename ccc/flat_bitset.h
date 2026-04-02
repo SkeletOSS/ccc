@@ -52,19 +52,19 @@ To shorten names in the interface, define the following preprocessor directive
 at the top of your file.
 
 ```
-#define BITSET_USING_NAMESPACE_CCC
+#define FLAT_BITSET_USING_NAMESPACE_CCC
 ```
 
 All types and functions can then be written without the `CCC_` prefix. */
-#ifndef CCC_BITSET_H
-#define CCC_BITSET_H
+#ifndef CCC_FLAT_BITSET_H
+#define CCC_FLAT_BITSET_H
 
 /** @cond */
 #include <stddef.h>
 #include <stdint.h>
 /** @endcond */
 
-#include "private/private_bitset.h"
+#include "private/private_flat_bitset.h"
 #include "types.h"
 
 /** @name Container Types
@@ -85,7 +85,7 @@ A bit set offers fast membership testing and bit range manipulations when the
 data can be modeled as a 0-indexed key value data set. In the case of a bit
 set the key is the index in the bit set and the value is 1 or 0. Operations on
 single bits occur in O(1) time. All scanning operations operate in O(N) time. */
-typedef struct CCC_Bitset CCC_Bitset;
+typedef struct CCC_Flat_bitset CCC_Flat_bitset;
 
 /**@}*/
 
@@ -95,26 +95,26 @@ Initialize and create containers with memory and permissions. */
 
 enum : size_t {
     /** @brief The number of bits in a block of the bit set. */
-    CCC_BITSET_BLOCK_BITS = CCC_PRIVATE_BITSET_BLOCK_BITS,
+    CCC_FLAT_BITSET_BLOCK_BITS = CCC_PRIVATE_FLAT_BITSET_BLOCK_BITS,
 };
 
 /** @brief Get the number of bit blocks needed for the desired bit set capacity.
 @param[in] bit_capacity the number of bits representing this bit set.
 @return the number of blocks needed for the desired bit set.
 @warning bit_capacity must be >= 1. */
-#define CCC_bitset_block_count(bit_capacity)                                   \
-    CCC_private_bitset_block_count(bit_capacity)
+#define CCC_flat_bitset_block_count(bit_capacity)                              \
+    CCC_private_flat_bitset_block_count(bit_capacity)
 
 /** @brief Get the number of bytes needed for the desired bit set capacity.
 @param[in] bit_capacity the number of bits representing this bit set.
 @return the number of bytes needed to support the bit capacity. This is the
 number of bytes occupied by the number of bit blocks that must be allocated. */
-#define CCC_bitset_block_bytes(bit_capacity)                                   \
-    CCC_private_bitset_block_bytes(bit_capacity)
+#define CCC_flat_bitset_block_bytes(bit_capacity)                              \
+    CCC_private_flat_bitset_block_bytes(bit_capacity)
 
 /** @brief Initialize an empty default bit set.
 @return the initialized bit set on the right side of an equality operator */
-#define CCC_bitset_default() CCC_private_bitset_default()
+#define CCC_flat_bitset_default() CCC_private_flat_bitset_default()
 
 /** @brief Initialize the bit set with a starting capacity and size at runtime
 or compile time with no allocation permissions or context from a compound
@@ -132,18 +132,18 @@ Capacity will be set to the full capacity available for the compound literal.
 A fixed size bit set.
 
 ```
-#define BITSET_USING_NAMESPACE_CCC
-static Bitset bitset = bitset_with_storage(
+#define FLAT_BITSET_USING_NAMESPACE_CCC
+static Flat_bitset bitset = flat_bitset_with_storage(
     4096,
     (Bit[4096]){}
 );
 ```
 
 This saves some initialization boilerplate. */
-#define CCC_bitset_with_storage(                                               \
+#define CCC_flat_bitset_with_storage(                                          \
     count, compound_literal_array, optional_storage_specifier...               \
 )                                                                              \
-    CCC_private_bitset_with_storage(                                           \
+    CCC_private_flat_bitset_with_storage(                                      \
         count, compound_literal_array, optional_storage_specifier              \
     )
 
@@ -164,26 +164,26 @@ than count, count becomes the capacity.
 @return the initialized bit set on the right hand side of an equality operator
 with count bits pushed. If the string ends early due to a null terminator, the
 count will be less than that passed as input. This can be checked by checking
-the CCC_bitset_count() function.
+the CCC_flat_bitset_count() function.
 @warning the input string is assumed to adhere to the count. If the string is
 shorter than the count input and not null terminated the behavior is undefined.
 
 A dynamic bit set with input string pushed.
 
 ```
-#define BITSET_USING_NAMESPACE_CCC
-Bitset bitset = bitset_from(std_allocator, 0, 4, '1', "1011");
+#define FLAT_BITSET_USING_NAMESPACE_CCC
+Flat_bitset bitset = flat_bitset_from(std_allocator, 0, 4, '1', "1011");
 ```
 A dynamic bit set that allocates greater capacity.
 
 ```
-#define BITSET_USING_NAMESPACE_CCC
-Bitset bitset = bitset_from(std_allocator, 0, 4, 'A', "GCAT", 4096);
+#define FLAT_BITSET_USING_NAMESPACE_CCC
+Flat_bitset bitset = flat_bitset_from(std_allocator, 0, 4, 'A', "GCAT", 4096);
 ```
 
 This initializer is only available to dynamic bit sets due to the inability to
 run such input code at compile time. */
-#define CCC_bitset_from(                                                       \
+#define CCC_flat_bitset_from(                                                  \
     allocator,                                                                 \
     start_string_index,                                                        \
     count,                                                                     \
@@ -191,7 +191,7 @@ run such input code at compile time. */
     input_string,                                                              \
     optional_capacity...                                                       \
 )                                                                              \
-    CCC_private_bitset_from(                                                   \
+    CCC_private_flat_bitset_from(                                              \
         allocator,                                                             \
         start_string_index,                                                    \
         count,                                                                 \
@@ -212,28 +212,28 @@ bit set that will push bits back would have a non-zero capacity and 0 count).
 A fixed size bit set with size equal to capacity.
 
 ```
-#define BITSET_USING_NAMESPACE_CCC
+#define FLAT_BITSET_USING_NAMESPACE_CCC
 int
 main(void)
 {
-    Bitset bitset = bitset_with_capacity(std_allocator, 4096);
+    Flat_bitset bitset = flat_bitset_with_capacity(std_allocator, 4096);
 }
 ```
 A bit set with dynamic push and pop.
 
 ```
-#define BITSET_USING_NAMESPACE_CCC
+#define FLAT_BITSET_USING_NAMESPACE_CCC
 int
 main(void)
 {
-    Bitset bitset = bitset_with_capacity(std_allocator, 4096, 0);
+    Flat_bitset bitset = flat_bitset_with_capacity(std_allocator, 4096, 0);
 }
 ```
 
 This initialization can only be used at runtime. See the normal initializer for
 static and stack based initialization options. */
-#define CCC_bitset_with_capacity(allocator, capacity, optional_count...)       \
-    CCC_private_bitset_with_capacity(allocator, capacity, optional_count)
+#define CCC_flat_bitset_with_capacity(allocator, capacity, optional_count...)  \
+    CCC_private_flat_bitset_with_capacity(allocator, capacity, optional_count)
 
 /** @brief Create the underlying fixed size storage for a bit set given a
 compound literal array of bits the user wishes to store.
@@ -242,7 +242,7 @@ representing the number of bits the user wishes to store in the bit set.
 @param[in] optional_storage_specifier a storage specifier for the backing block
 storage may be added on newer compilers.
 @warning This should rarely be used. If a fixed size bit set is desired simply
-use the CCC_bitset_with_storage() initializer. For dynamic bit sets, there
+use the CCC_flat_bitset_with_storage() initializer. For dynamic bit sets, there
 are also many other options.
 
 This macro is required to support the edge case for the user allocating a fixed
@@ -255,10 +255,10 @@ int
 main(void)
 {
     void *const storage = malloc(
-        sizeof(CCC_bitset_storage_for((CCC_Bit[4096]){}))
+        sizeof(CCC_flat_bitset_storage_for((CCC_Bit[4096]){}))
     );
     defer free(storage);
-    CCC_Bitset bitset = CCC_bitset_for(
+    CCC_Flat_bitset bitset = CCC_flat_bitset_for(
         NULL,
         NULL,
         4096,
@@ -273,10 +273,10 @@ However, the reserve interface only guarantees that at least the needed bytes
 are allocated. When the user must know the exact size of the backing object due
 to strict memory requirements, this is helpful. Such a use case may be rare, but
 must be supported by this container. */
-#define CCC_bitset_storage_for(                                                \
+#define CCC_flat_bitset_storage_for(                                           \
     bit_compound_literal_array, optional_storage_specifier...                  \
 )                                                                              \
-    CCC_private_bitset_storage_for(                                            \
+    CCC_private_flat_bitset_storage_for(                                       \
         bit_compound_literal_array, optional_storage_specifier                 \
     )
 
@@ -287,11 +287,12 @@ must be supported by this container. */
 @return the initialized bit set on the right hand side of an equality operator
 @warning The bit block pointer is assumed to be non-NULL.
 @warning In most cases this is the wrong initializer to use. For dynamic
-bitsets, using the CCC_bitset_with_capacity() is better. For fixed size bitsets
-with a capacity known at compile time, the CCC_bitset_with_storage() is better.
-This initializer is in place to support uninitialized heap or stack memory
-that the user obtains without the help of the bitset API. Therefore, it can
-only be used at runtime because it must zero out the bitset blocks.
+bitsets, using the CCC_flat_bitset_with_capacity() is better. For fixed size
+bitsets with a capacity known at compile time, the
+CCC_flat_bitset_with_storage() is better. This initializer is in place to
+support uninitialized heap or stack memory that the user obtains without the
+help of the bitset API. Therefore, it can only be used at runtime because it
+must zero out the bitset blocks.
 
 A bitset dynamically allocated at runtime by the user.
 
@@ -300,10 +301,10 @@ int
 main(void)
 {
     void *const storage = malloc(
-        sizeof(CCC_bitset_storage_for((CCC_Bit[4096]){}))
+        sizeof(CCC_flat_bitset_storage_for((CCC_Bit[4096]){}))
     );
     defer free(storage);
-    CCC_Bitset bitset = CCC_bitset_for(
+    CCC_Flat_bitset bitset = CCC_flat_bitset_for(
         4096
         4096,
         storage
@@ -313,8 +314,8 @@ main(void)
 ```
 
 See the more specific initializers for standard usage. */
-#define CCC_bitset_for(cap, count, bitblock_pointer...)                        \
-    CCC_private_bitset_for(cap, count, bitblock_pointer)
+#define CCC_flat_bitset_for(cap, count, bitblock_pointer...)                   \
+    CCC_private_flat_bitset_for(cap, count, bitblock_pointer)
 
 /** @brief Copy the bit set at source to destination.
 @param[in] destination the initialized destination for the copy of the source
@@ -336,34 +337,34 @@ to take care of allocation for the copy.
 Manual memory management with no allocation function provided.
 
 ```
-#define BITSET_USING_NAMESPACE_CCC
-static Bitset source = bitset_with_storage(
+#define FLAT_BITSET_USING_NAMESPACE_CCC
+static Flat_bitset source = flat_bitset_with_storage(
     11,
     (Bit[11]){}
 );
 set_rand_bits(&source);
-static Bitset source = bitset_with_storage(
+static Flat_bitset source = flat_bitset_with_storage(
     13
     (Bit[13]){}
 );
-CCC_Result res = bitset_copy(&destination, &source, &(CCC_Allocator){});
+CCC_Result res = flat_bitset_copy(&destination, &source, &(CCC_Allocator){});
 ```
 
 The above requires destination capacity be greater than or equal to source
 capacity. Here is memory management handed over to the copy function.
 
 ```
-#define BITSET_USING_NAMESPACE_CCC
-static Bitset source = bitset_default();
+#define FLAT_BITSET_USING_NAMESPACE_CCC
+static Flat_bitset source = flat_bitset_default();
 push_rand_bits(&source, &std_allocator);
-static Bitset source = bitset_default();
-CCC_Result res = bitset_copy(&destination, &source, &std_allocator);
+static Flat_bitset source = flat_bitset_default();
+CCC_Result res = flat_bitset_copy(&destination, &source, &std_allocator);
 ```
 These options allow users to stay consistent across containers with their
 memory management strategies. */
-CCC_Result CCC_bitset_copy(
-    CCC_Bitset *destination,
-    CCC_Bitset const *source,
+CCC_Result CCC_flat_bitset_copy(
+    CCC_Flat_bitset *destination,
+    CCC_Flat_bitset const *source,
     CCC_Allocator const *allocator
 );
 
@@ -373,8 +374,8 @@ CCC_Result CCC_bitset_copy(
 @param[in] allocator the CCC_Allocator to use to reserve memory.
 @return the result of the reservation. OK if successful, otherwise an error
 status is returned. */
-CCC_Result CCC_bitset_reserve(
-    CCC_Bitset *bitset, size_t to_add, CCC_Allocator const *allocator
+CCC_Result CCC_flat_bitset_reserve(
+    CCC_Flat_bitset *bitset, size_t to_add, CCC_Allocator const *allocator
 );
 
 /**@}*/
@@ -389,7 +390,7 @@ CCC_FALSE).
 @param[in] index the index identifying the bit to set.
 @return the state of the bit, or CCC_TRIBOOL_ERROR if bitset is NULL or index is
 out of range. */
-CCC_Tribool CCC_bitset_test(CCC_Bitset const *bitset, size_t index);
+CCC_Tribool CCC_flat_bitset_test(CCC_Flat_bitset const *bitset, size_t index);
 
 /**@}*/
 
@@ -404,14 +405,15 @@ Set and flip bits in the set. */
 @return the state of the bit before the set operation, true if it was previously
 true, false if it was previously false, or error if bitset is NULL or index is
 out of range. */
-CCC_Tribool CCC_bitset_set(CCC_Bitset *bitset, size_t index, CCC_Tribool bit);
+CCC_Tribool
+CCC_flat_bitset_set(CCC_Flat_bitset *bitset, size_t index, CCC_Tribool bit);
 
 /** @brief Set all the bits to the provided value (CCC_TRUE or CCC_FALSE).
 @param[in] bitset a pointer to the bit set.
 @param[in] bit the value to set (CCC_TRUE or CCC_FALSE).
 @return the result of the operation. OK if successful, or an input error if
 bitset is NULL. */
-CCC_Result CCC_bitset_set_all(CCC_Bitset *bitset, CCC_Tribool bit);
+CCC_Result CCC_flat_bitset_set_all(CCC_Flat_bitset *bitset, CCC_Tribool bit);
 
 /** @brief Set all the bits in the specified range starting at the Least
 Significant Bit of the range and ending at the Most Significant Bit of the range
@@ -426,8 +428,8 @@ both.
 
 Note that a range is defined from `[index, index + count)`. This is equivalent
 to moving from Least to Most Significant bit in an integer. */
-CCC_Result CCC_bitset_set_range(
-    CCC_Bitset *bitset,
+CCC_Result CCC_flat_bitset_set_range(
+    CCC_Flat_bitset *bitset,
     size_t range_start_index,
     size_t range_bit_count,
     CCC_Tribool bit
@@ -439,13 +441,13 @@ CCC_Result CCC_bitset_set_range(
 @return the state of the bit before the set operation, true if it was previously
 true, false if it was previously false, or error if bitset is NULL or index is
 out of range. */
-CCC_Tribool CCC_bitset_reset(CCC_Bitset *bitset, size_t index);
+CCC_Tribool CCC_flat_bitset_reset(CCC_Flat_bitset *bitset, size_t index);
 
 /** @brief Set all the bits to CCC_FALSE.
 @param[in] bitset a pointer to the bit set.
 @return the result of the operation. OK if successful, or an
 input error if bitset is NULL. */
-CCC_Result CCC_bitset_reset_all(CCC_Bitset *bitset);
+CCC_Result CCC_flat_bitset_reset_all(CCC_Flat_bitset *bitset);
 
 /** @brief Set all the bits in the specified range starting at the Least
 Significant Bit of the range and ending at the Most Significant Bit of the range
@@ -458,8 +460,8 @@ bitset is NULL or the range is invalid by position, count, or both.
 
 Note that a range is defined from `[index, index + count)`. This is equivalent
 to moving from Least to Most Significant bit in an integer. */
-CCC_Result CCC_bitset_reset_range(
-    CCC_Bitset *bitset, size_t range_start_index, size_t range_bit_count
+CCC_Result CCC_flat_bitset_reset_range(
+    CCC_Flat_bitset *bitset, size_t range_start_index, size_t range_bit_count
 );
 
 /** @brief Toggle the bit at index i.
@@ -468,13 +470,13 @@ CCC_Result CCC_bitset_reset_range(
 @return the state of the bit before the toggle operation, true if it was
 previously true, false if it was previously false, or error if bitset is NULL or
 index is out of range. */
-CCC_Tribool CCC_bitset_flip(CCC_Bitset *bitset, size_t index);
+CCC_Tribool CCC_flat_bitset_flip(CCC_Flat_bitset *bitset, size_t index);
 
 /** @brief Toggle all of the bits to their opposing boolean value.
 @param[in] bitset a pointer to the bit set.
 @return the result of the operation. OK if successful, or an input error if
 bitset is NULL. */
-CCC_Result CCC_bitset_flip_all(CCC_Bitset *bitset);
+CCC_Result CCC_flat_bitset_flip_all(CCC_Flat_bitset *bitset);
 
 /** @brief Flip all the bits in the range, starting at the Least Significant Bit
 in range and ending at the Most Significant Bit, to their opposite value.
@@ -487,8 +489,8 @@ bitset is NULL or the range is invalid by position, count, or both.
 Note that a range is defined from index to index + count, where `index + count`
 is the exclusive end of the range. This is equivalent to moving from Least to
 Most Significant Bit in an integer. */
-CCC_Result CCC_bitset_flip_range(
-    CCC_Bitset *bitset, size_t range_start_index, size_t range_bit_count
+CCC_Result CCC_flat_bitset_flip_range(
+    CCC_Flat_bitset *bitset, size_t range_start_index, size_t range_bit_count
 );
 
 /**@}*/
@@ -501,7 +503,7 @@ Find bits with a specific status. */
 @param[in] bitset a pointer to the bit set.
 @return CCC_TRUE if any bits are 1, CCC_FALSE if no bits are 1,
 CCC_TRIBOOL_ERROR if bitset is NULL. */
-CCC_Tribool CCC_bitset_any(CCC_Bitset const *bitset);
+CCC_Tribool CCC_flat_bitset_any(CCC_Flat_bitset const *bitset);
 
 /** @brief Return true if any bits are 1 in the range `[index, index + count)`.
 @param[in] bitset a pointer to the bit set.
@@ -510,15 +512,17 @@ CCC_Tribool CCC_bitset_any(CCC_Bitset const *bitset);
 @return CCC_TRUE if any bits are 1, CCC_FALSE if no bits are 1,
 CCC_TRIBOOL_ERROR if bitset is NULL, index is invalid, count is invalid, or both
 index and count are invalid. */
-CCC_Tribool CCC_bitset_any_range(
-    CCC_Bitset const *bitset, size_t range_start_index, size_t range_bit_count
+CCC_Tribool CCC_flat_bitset_any_range(
+    CCC_Flat_bitset const *bitset,
+    size_t range_start_index,
+    size_t range_bit_count
 );
 
 /** @brief Return true if all bits are set to 0.
 @param[in] bitset a pointer to the bit set.
 @return CCC_TRUE if all bits are 0, CCC_FALSE if any bits are 1,
 CCC_TRIBOOL_ERROR if bitset is NULL. */
-CCC_Tribool CCC_bitset_none(CCC_Bitset const *bitset);
+CCC_Tribool CCC_flat_bitset_none(CCC_Flat_bitset const *bitset);
 
 /** @brief Return true if all bits are 0 in the range `[index, index + count)`.
 @param[in] bitset a pointer to the bit set.
@@ -527,15 +531,17 @@ CCC_Tribool CCC_bitset_none(CCC_Bitset const *bitset);
 @return CCC_TRUE if all bits are 0, CCC_FALSE if any bits are 1,
 CCC_TRIBOOL_ERROR if bitset is NULL, index is invalid, count is invalid, or both
 index and count are invalid. */
-CCC_Tribool CCC_bitset_none_range(
-    CCC_Bitset const *bitset, size_t range_start_index, size_t range_bit_count
+CCC_Tribool CCC_flat_bitset_none_range(
+    CCC_Flat_bitset const *bitset,
+    size_t range_start_index,
+    size_t range_bit_count
 );
 
 /** @brief Return true if all bits in set are 1.
 @param[in] bitset a pointer to the bit set.
 @return CCC_TRUE if all bits are 1, CCC_FALSE if any bits are 0,
 CCC_TRIBOOL_ERROR if bitset is NULL. */
-CCC_Tribool CCC_bitset_all(CCC_Bitset const *bitset);
+CCC_Tribool CCC_flat_bitset_all(CCC_Flat_bitset const *bitset);
 
 /** @brief Return true if all bits are set to 1 in the range
 `[index, index + count)`.
@@ -545,8 +551,10 @@ CCC_Tribool CCC_bitset_all(CCC_Bitset const *bitset);
 @return CCC_TRUE if all bits are 1, CCC_FALSE if any bits are 0,
 CCC_TRIBOOL_ERROR if bitset is NULL, index is invalid, count is invalid, or both
 index and count are invalid. */
-CCC_Tribool CCC_bitset_all_range(
-    CCC_Bitset const *bitset, size_t range_start_index, size_t range_bit_count
+CCC_Tribool CCC_flat_bitset_all_range(
+    CCC_Flat_bitset const *bitset,
+    size_t range_start_index,
+    size_t range_bit_count
 );
 
 /** @brief Return the index of the first trailing bit set to 1 in the set.
@@ -554,7 +562,7 @@ CCC_Tribool CCC_bitset_all_range(
 @return an OK(0) status and index of the first trailing bit set to 1 or an error
 set to CCC_RESULT_FAIL if no 1 bit is found. Argument error is set if bitset is
 NULL. */
-CCC_Count CCC_bitset_first_trailing_one(CCC_Bitset const *bitset);
+CCC_Count CCC_flat_bitset_first_trailing_one(CCC_Flat_bitset const *bitset);
 
 /** @brief Return the index of the first trailing bit set to 1 in the range
 `[i, index + count)`.
@@ -564,8 +572,10 @@ CCC_Count CCC_bitset_first_trailing_one(CCC_Bitset const *bitset);
 @return an OK(0) status and the index of the first trailing bit set to 1 or
 CCC_RESULT_FAIL if no 1 bit is found. Argument error is returned bitset is NULL,
 or the range is invalid. */
-CCC_Count CCC_bitset_first_trailing_one_range(
-    CCC_Bitset const *bitset, size_t range_start_index, size_t range_bit_count
+CCC_Count CCC_flat_bitset_first_trailing_one_range(
+    CCC_Flat_bitset const *bitset,
+    size_t range_start_index,
+    size_t range_bit_count
 );
 
 /** @brief Returns the index of the start of the first trailing number of
@@ -576,8 +586,9 @@ contiguous 1 bits.
 Significant Bit of the set of the first 1 in a sequence of bit_count 1 bits. If
 such a sequence cannot be found CCC_RESULT_FAIL result error is set. If bitset
 is NULL or bit_count is too large an argument error is set. */
-CCC_Count
-CCC_bitset_first_trailing_ones(CCC_Bitset const *bitset, size_t ones_count);
+CCC_Count CCC_flat_bitset_first_trailing_ones(
+    CCC_Flat_bitset const *bitset, size_t ones_count
+);
 
 /** @brief Returns the index of the start of the first trailing number of
 contiguous 1 bits in the range `[index, index + count)`.
@@ -588,8 +599,8 @@ contiguous 1 bits in the range `[index, index + count)`.
 @return an OK(0) status and the starting index of the first 1 in a sequence of
 bit_count 1 bits. If no range is found CCC_RESULT_FAIL error is set. If bitset
 is NULL or arguments are out of range an argument error is set. */
-CCC_Count CCC_bitset_first_trailing_ones_range(
-    CCC_Bitset const *bitset,
+CCC_Count CCC_flat_bitset_first_trailing_ones_range(
+    CCC_Flat_bitset const *bitset,
     size_t range_start_index,
     size_t range_bit_count,
     size_t ones_count
@@ -600,7 +611,7 @@ CCC_Count CCC_bitset_first_trailing_ones_range(
 @return an OK(0) status and the index of the first bit set to 0 or
 CCC_RESULT_FAIL if no 0 bit is found. If bitset is NULL an argument error is
 set. */
-CCC_Count CCC_bitset_first_trailing_zero(CCC_Bitset const *bitset);
+CCC_Count CCC_flat_bitset_first_trailing_zero(CCC_Flat_bitset const *bitset);
 
 /** @brief Return the index of the first bit set to 0 in the range
 `[i, index + count)`.
@@ -610,8 +621,10 @@ CCC_Count CCC_bitset_first_trailing_zero(CCC_Bitset const *bitset);
 @return an OK(0) status and the index of the first bit set to 0 or
 CCC_RESULT_FAIL if no 0 bit is found. If bitset is NULL, or the range is
 invalid, an argument error is set. */
-CCC_Count CCC_bitset_first_trailing_zero_range(
-    CCC_Bitset const *bitset, size_t range_start_index, size_t range_bit_count
+CCC_Count CCC_flat_bitset_first_trailing_zero_range(
+    CCC_Flat_bitset const *bitset,
+    size_t range_start_index,
+    size_t range_bit_count
 );
 
 /** @brief Returns the index of the start of the first trailing number of
@@ -622,8 +635,9 @@ contiguous 0 bits in the set.
 Significant Bit of the set, of the first 0 in a sequence of zeros_count 0 bits.
 If such a sequence cannot be found CCC_RESULT_FAIL is returned. If bitset is
 NULL or num zeros is too large an argument error is set. */
-CCC_Count
-CCC_bitset_first_trailing_zeros(CCC_Bitset const *bitset, size_t zeros_count);
+CCC_Count CCC_flat_bitset_first_trailing_zeros(
+    CCC_Flat_bitset const *bitset, size_t zeros_count
+);
 
 /** @brief Returns the index of the start of the first trailing zeros_count
 contiguous 0 bits in the range `[i, index + count)`.
@@ -634,8 +648,8 @@ contiguous 0 bits in the range `[i, index + count)`.
 @return the index in a search, starting from the Least Significant Bit of the
 range, of the first 0 in a sequence of zeros_count 0 bits. If the input is
 invalid or such a sequence cannot be found CCC_RESULT_FAIL is returned. */
-CCC_Count CCC_bitset_first_trailing_zeros_range(
-    CCC_Bitset const *bitset,
+CCC_Count CCC_flat_bitset_first_trailing_zeros_range(
+    CCC_Flat_bitset const *bitset,
     size_t range_start_index,
     size_t range_bit_count,
     size_t zeros_count
@@ -646,7 +660,7 @@ starting from the Most Significant Bit at index size - 1.
 @param[in] bitset a pointer to the bit set.
 @return the index of the first leading bit set to 1 or CCC_RESULT_FAIL if no 1
 bit is found or bitset in NULL. */
-CCC_Count CCC_bitset_first_leading_one(CCC_Bitset const *bitset);
+CCC_Count CCC_flat_bitset_first_leading_one(CCC_Flat_bitset const *bitset);
 
 /** @brief Return the index of the first leading bit set to 1 in the range
 `[i, index + count)`.
@@ -655,8 +669,8 @@ CCC_Count CCC_bitset_first_leading_one(CCC_Bitset const *bitset);
 @param[in] count the size of the range to check from index towards index 0.
 @return the index of the first leading bit set to 1 or CCC_RESULT_FAIL if no 1
 bit is found, bitset is NULL, or the range is invalid. */
-CCC_Count CCC_bitset_first_leading_one_range(
-    CCC_Bitset const *bitset, size_t index, size_t count
+CCC_Count CCC_flat_bitset_first_leading_one_range(
+    CCC_Flat_bitset const *bitset, size_t index, size_t count
 );
 
 /** @brief Returns the index of the start of the first leading bit_count
@@ -668,8 +682,9 @@ within the provided set. The returned index is the most significant bit in the
 range `[returned_index, returned_index - ones_count)`. If such a sequence cannot
 be found CCC_RESULT_FAIL is set. If bitset is NULL or any argument is out of
 range an argument error is set. */
-CCC_Count
-CCC_bitset_first_leading_ones(CCC_Bitset const *bitset, size_t ones_count);
+CCC_Count CCC_flat_bitset_first_leading_ones(
+    CCC_Flat_bitset const *bitset, size_t ones_count
+);
 
 /** @brief Returns the index of the start of the first leading bit_count
 contiguous 1 bits in the range `[i, index + count)`.
@@ -682,8 +697,8 @@ within the provided range. The returned index is the most significant bit in the
 range `[returned_index, returned_index - ones_count)`. If such a sequence cannot
 be found CCC_RESULT_FAIL is set. If bitset is NULL or any argument is out of
 range an argument error is set. */
-CCC_Count CCC_bitset_first_leading_ones_range(
-    CCC_Bitset const *bitset,
+CCC_Count CCC_flat_bitset_first_leading_ones_range(
+    CCC_Flat_bitset const *bitset,
     size_t range_start_index,
     size_t range_bit_count,
     size_t ones_count
@@ -695,7 +710,7 @@ starting from the Most Significant Bit at index size - 1.
 @return an OK(0) status and the index of the first bit set to 0 or
 CCC_RESULT_FAIL if no 1 bit is found. If bitset in NULL an argument error is
 set. */
-CCC_Count CCC_bitset_first_leading_zero(CCC_Bitset const *bitset);
+CCC_Count CCC_flat_bitset_first_leading_zero(CCC_Flat_bitset const *bitset);
 
 /** @brief Return the index of the first leading bit set to 0 in the range
 `[i, index + count)`.
@@ -706,8 +721,10 @@ range.
 @return an OK(0) status and the index of the first bit set to 0 in the specified
 range CCC_RESULT_FAIL if no 0 bit is found. If bs in NULL an argument error is
 set. */
-CCC_Count CCC_bitset_first_leading_zero_range(
-    CCC_Bitset const *bitset, size_t range_start_index, size_t range_bit_count
+CCC_Count CCC_flat_bitset_first_leading_zero_range(
+    CCC_Flat_bitset const *bitset,
+    size_t range_start_index,
+    size_t range_bit_count
 );
 
 /** @brief Returns the index of the start of the first leading number of
@@ -719,8 +736,9 @@ within the provided set. The returned index is the most significant bit in the
 range `[returned_index, returned_index - zeros_count)`. If such a sequence
 cannot be found CCC_RESULT_FAIL is set. If bitset is NULL or any argument is out
 of range an argument error is set. */
-CCC_Count
-CCC_bitset_first_leading_zeros(CCC_Bitset const *bitset, size_t zeros_count);
+CCC_Count CCC_flat_bitset_first_leading_zeros(
+    CCC_Flat_bitset const *bitset, size_t zeros_count
+);
 
 /** @brief Returns the index of the start of the first leading number of
 contiguous 0 bits in the range `[i, index + count)`.
@@ -733,8 +751,8 @@ within the provided range. The returned index is the most significant bit in the
 range `[returned_index, returned_index - zeros_count)`. If such a sequence
 cannot be found CCC_RESULT_FAIL is set. If bitset is NULL or any argument is out
 of range an argument error is set. */
-CCC_Count CCC_bitset_first_leading_zeros_range(
-    CCC_Bitset const *bitset,
+CCC_Count CCC_flat_bitset_first_leading_zeros_range(
+    CCC_Flat_bitset const *bitset,
     size_t range_start_index,
     size_t range_bit_count,
     size_t zeros_count
@@ -757,7 +775,8 @@ set is conceptually padded with 0's in its higher order bits to align with the
 larger destination set (no modifications to the smaller set are performed to
 achieve this). This is done to stay consistent with how the operation would work
 on a smaller integer stored in a larger integer to align with the larger. */
-CCC_Result CCC_bitset_or(CCC_Bitset *destination, CCC_Bitset const *source);
+CCC_Result
+CCC_flat_bitset_or(CCC_Flat_bitset *destination, CCC_Flat_bitset const *source);
 
 /** @brief Bitwise AND destination set with source set.
 @param[in] destination the set to modified with the AND operation.
@@ -775,7 +794,9 @@ set is conceptually padded with 0's in its higher order bits to align with the
 larger destination set (no modifications to the smaller set are performed to
 achieve this). This is done to stay consistent with integer promotion and
 widening rules in C. */
-CCC_Result CCC_bitset_and(CCC_Bitset *destination, CCC_Bitset const *source);
+CCC_Result CCC_flat_bitset_and(
+    CCC_Flat_bitset *destination, CCC_Flat_bitset const *source
+);
 
 /** @brief Bitwise XOR destination set with source set.
 @param[in] destination the set to modified with the XOR operation.
@@ -788,29 +809,33 @@ set is conceptually padded with 0's in its higher order bits to align with the
 larger destination set (no modifications to the smaller set are performed to
 achieve this). This is done to stay consistent with how the operation would work
 on a smaller integer stored in a larger integer to align with the larger. */
-CCC_Result CCC_bitset_xor(CCC_Bitset *destination, CCC_Bitset const *source);
+CCC_Result CCC_flat_bitset_xor(
+    CCC_Flat_bitset *destination, CCC_Flat_bitset const *source
+);
 
 /** @brief Shift the bit set left by left_shifts amount.
 @param[in] bitset a pointer to the bit set.
 @param[in] left_shifts the number of left shifts to perform.
-@return an ok result if the operation was successful or an error if the Bitset
-is NULL.
+@return an ok result if the operation was successful or an error if the
+Flat_bitset is NULL.
 
 Note that if the number of shifts is greater than the bit set size the bit set
 is zeroed out rather than exhibiting undefined behavior as in the equivalent
 integer operation. */
-CCC_Result CCC_bitset_shift_left(CCC_Bitset *bitset, size_t left_shifts);
+CCC_Result
+CCC_flat_bitset_shift_left(CCC_Flat_bitset *bitset, size_t left_shifts);
 
 /** @brief Shift the bit set right by right_shifts amount.
 @param[in] bitset a pointer to the bit set.
 @param[in] right_shifts the number of right shifts to perform.
-@return an ok result if the operation was successful or an error if the Bitset
-is NULL.
+@return an ok result if the operation was successful or an error if the
+Flat_bitset is NULL.
 
 Note that if the number of shifts is greater than the bit set size the bit set
 is zeroed out rather than exhibiting undefined behavior as in the equivalent
 integer operation. */
-CCC_Result CCC_bitset_shift_right(CCC_Bitset *bitset, size_t right_shifts);
+CCC_Result
+CCC_flat_bitset_shift_right(CCC_Flat_bitset *bitset, size_t right_shifts);
 
 /** @brief Checks two bit sets of the same size (not capacity) for equality.
 @param[in] left pointer to a bit set.
@@ -818,8 +843,9 @@ CCC_Result CCC_bitset_shift_right(CCC_Bitset *bitset, size_t right_shifts);
 @return true if the bit sets are of equal size with identical bit values at
 every position, false if the sets are different sizes or have mismatched bits. A
 bool error is returned if either pointer is NULL. */
-CCC_Tribool
-CCC_bitset_is_equal(CCC_Bitset const *left, CCC_Bitset const *right);
+CCC_Tribool CCC_flat_bitset_is_equal(
+    CCC_Flat_bitset const *left, CCC_Flat_bitset const *right
+);
 
 /**@}*/
 
@@ -837,8 +863,9 @@ CCC_TRIBOOL_ERROR is returned if set or subset is NULL.
 If set is of size 0 the function returns CCC_FALSE regardless of the size of
 subset. If set is not of size 0 and subset is of size 0 the function returns
 CCC_TRUE. */
-CCC_Tribool
-CCC_bitset_is_proper_subset(CCC_Bitset const *subset, CCC_Bitset const *set);
+CCC_Tribool CCC_flat_bitset_is_proper_subset(
+    CCC_Flat_bitset const *subset, CCC_Flat_bitset const *set
+);
 
 /** @brief Return CCC_TRUE if subset is a subset of set (subset ⊆ set).
 @param[in] subset the subset to confirm as a subset of set.
@@ -849,8 +876,9 @@ NULL.
 
 If set is size zero subset must also be of size 0 to return CCC_TRUE. If subset
 is size 0 the function returns CCC_TRUE regardless of the size of set. */
-CCC_Tribool
-CCC_bitset_is_subset(CCC_Bitset const *subset, CCC_Bitset const *set);
+CCC_Tribool CCC_flat_bitset_is_subset(
+    CCC_Flat_bitset const *subset, CCC_Flat_bitset const *set
+);
 
 /**@}*/
 
@@ -865,20 +893,20 @@ NULL if bitset is NULL or has no capacity.
 
 Every block populates bits from Least Significant Bit (LSB) to Most Significant
 Bit (MSB) so this reference is to the base or LSB of the entire set. */
-void *CCC_bitset_data(CCC_Bitset const *bitset);
+void *CCC_flat_bitset_data(CCC_Flat_bitset const *bitset);
 
 /** @brief Return total number of bits the capacity of the set can hold.
 @param[in] bitset a pointer to the bit set.
 @return an OK(0) status and the capacity of bits capable of being stored in the
 current set. If bitset is NULL an argument error is set. */
-CCC_Count CCC_bitset_capacity(CCC_Bitset const *bitset);
+CCC_Count CCC_flat_bitset_capacity(CCC_Flat_bitset const *bitset);
 
 /** @brief Return total number of bits actively tracked by the user and set.
 @param[in] bitset a pointer to the bit set.
 @return an OK(0) status and the total number of bits currently tracked by the
 set regardless of true or false state of each. If bitset is NULL an argument
 error is set. */
-CCC_Count CCC_bitset_count(CCC_Bitset const *bitset);
+CCC_Count CCC_flat_bitset_count(CCC_Flat_bitset const *bitset);
 
 /** @brief Return number of CCC_bitblocks used by bit set for capacity bits.
 @param[in] bitset a pointer to the bit set.
@@ -886,7 +914,7 @@ CCC_Count CCC_bitset_count(CCC_Bitset const *bitset);
 the entire capacity of bits in the set. If bs is NULL an argument error is set.
 
 Capacity may be greater than or equal to size. */
-CCC_Count CCC_bitset_blocks_capacity(CCC_Bitset const *bitset);
+CCC_Count CCC_flat_bitset_blocks_capacity(CCC_Flat_bitset const *bitset);
 
 /** @brief Return number of CCC_bitblocks used by the bit set for size bits.
 @param[in] bitset a pointer to the bit set.
@@ -894,21 +922,22 @@ CCC_Count CCC_bitset_blocks_capacity(CCC_Bitset const *bitset);
 the set. An argument error is set if bitset is NULL.
 
 Size may be less than or equal to capacity. */
-CCC_Count CCC_bitset_blocks_count(CCC_Bitset const *bitset);
+CCC_Count CCC_flat_bitset_blocks_count(CCC_Flat_bitset const *bitset);
 
 /** @brief Return true if no bits are actively tracked by the user and set.
 @param[in] bitset a pointer to the bit set.
 @return CCC_TRUE if the size of the set is 0 meaning no bits, regardless of 0 or
 1 status, are tracked by the set. CCC_TRIBOOL_ERROR is returned if bitset is
 NULL.
-@warning if the number of bits set to 1 is desired see CCC_bitset_popcount(). */
-CCC_Tribool CCC_bitset_is_empty(CCC_Bitset const *bitset);
+@warning if the number of bits set to 1 is desired see
+CCC_flat_bitset_popcount(). */
+CCC_Tribool CCC_flat_bitset_is_empty(CCC_Flat_bitset const *bitset);
 
 /** @brief Return the number of bits set to CCC_TRUE. O(n).
 @param[in] bitset a pointer to the bit set.
 @return the total number of bits currently set to CCC_TRUE. CCC_RESULT_FAIL is
 returned if bitset is NULL. */
-CCC_Count CCC_bitset_popcount(CCC_Bitset const *bitset);
+CCC_Count CCC_flat_bitset_popcount(CCC_Flat_bitset const *bitset);
 
 /** @brief Return the number of bits set to CCC_TRUE in the range. O(n).
 @param[in] bitset a pointer to the bit set.
@@ -917,8 +946,10 @@ CCC_Count CCC_bitset_popcount(CCC_Bitset const *bitset);
 @return the total number of bits currently set in the range to CCC_TRUE. An
 argument error is set if bitset is NULL, index is invalid, count is invalid, or
 both index and count are invalid. */
-CCC_Count CCC_bitset_popcount_range(
-    CCC_Bitset const *bitset, size_t range_start_index, size_t range_bit_count
+CCC_Count CCC_flat_bitset_popcount_range(
+    CCC_Flat_bitset const *bitset,
+    size_t range_start_index,
+    size_t range_bit_count
 );
 
 /**@}*/
@@ -931,7 +962,7 @@ Clear the set and manage its memory. */
 bits to 0. The underlying memory capacity remains unchanged.
 @param[in] bitset a pointer to the bit set.
 @return the result of the clear operation, error is returned if bs is NULL . */
-CCC_Result CCC_bitset_clear(CCC_Bitset *bitset);
+CCC_Result CCC_flat_bitset_clear(CCC_Flat_bitset *bitset);
 
 /** @brief Clears the bit set by setting the size to 0 and freeing the
 underlying memory. Capacity becomes 0 as well.
@@ -940,8 +971,9 @@ underlying memory. Capacity becomes 0 as well.
 @return the result of the clear operation, error is returned if bs is NULL or
 the set cannot be freed because no allocation function was provided upon
 initialization. */
-CCC_Result
-CCC_bitset_clear_and_free(CCC_Bitset *bitset, CCC_Allocator const *allocator);
+CCC_Result CCC_flat_bitset_clear_and_free(
+    CCC_Flat_bitset *bitset, CCC_Allocator const *allocator
+);
 
 /**@}*/
 
@@ -956,109 +988,131 @@ Allows adding to and removing from the set. */
 @return the result of the operation, ok if successful or an error if bad
 parameters are provided or resizing is required to accommodate a new bit but
 resizing fails. */
-CCC_Result CCC_bitset_push_back(
-    CCC_Bitset *bitset, CCC_Tribool bit, CCC_Allocator const *allocator
+CCC_Result CCC_flat_bitset_push_back(
+    CCC_Flat_bitset *bitset, CCC_Tribool bit, CCC_Allocator const *allocator
 );
 
 /** @brief Remove the Most Significant Bit from the set.
 @param[in] bitset a pointer to the bit set.
 @return the previous value of the Most Significant Bit (CCC_TRUE or CCC_FALSE)
 or a bool error if bitset is NULL or bitset is empty. */
-CCC_Tribool CCC_bitset_pop_back(CCC_Bitset *bitset);
+CCC_Tribool CCC_flat_bitset_pop_back(CCC_Flat_bitset *bitset);
 
 /**@}*/
 
 /** Define this preprocessor macro if shorter names are desired for the bit set
 container. Check for namespace clashes before name shortening. */
-#ifdef BITSET_USING_NAMESPACE_CCC
+#ifdef FLAT_BITSET_USING_NAMESPACE_CCC
 /* NOLINTBEGIN(readability-identifier-naming) */
 typedef CCC_Bit Bit;
-typedef CCC_Bitset Bitset;
-#    define BITSET_BLOCK_BITS CCC_BITSET_BLOCK_BITS
-#    define bitset_block_count(arguments...) CCC_bitset_block_count(arguments)
-#    define bitset_block_bytes(arguments...) CCC_bitset_block_bytes(arguments)
-#    define bitset_storage_for(arguments...) CCC_bitset_storage_for(arguments)
-#    define bitset_default(arguments...) CCC_bitset_default(arguments)
-#    define bitset_for(arguments...) CCC_bitset_for(arguments)
-#    define bitset_from(arguments...) CCC_bitset_from(arguments)
-#    define bitset_with_capacity(arguments...)                                 \
-        CCC_bitset_with_capacity(arguments)
-#    define bitset_with_storage(arguments...) CCC_bitset_with_storage(arguments)
-#    define bitset_copy(arguments...) CCC_bitset_copy(arguments)
-#    define bitset_reserve(arguments...) CCC_bitset_reserve(arguments)
-#    define bitset_test(arguments...) CCC_bitset_test(arguments)
-#    define bitset_set(arguments...) CCC_bitset_set(arguments)
-#    define bitset_set_all(arguments...) CCC_bitset_set_all(arguments)
-#    define bitset_set_range(arguments...) CCC_bitset_set_range(arguments)
-#    define bitset_reset(arguments...) CCC_bitset_reset(arguments)
-#    define bitset_reset_all(arguments...) CCC_bitset_reset_all(arguments)
-#    define bitset_reset_range(arguments...) CCC_bitset_reset_range(arguments)
-#    define bitset_flip(arguments...) CCC_bitset_flip(arguments)
-#    define bitset_flip_all(arguments...) CCC_bitset_flip_all(arguments)
-#    define bitset_flip_range(arguments...) CCC_bitset_flip_range(arguments)
-#    define bitset_any(arguments...) CCC_bitset_any(arguments)
-#    define bitset_any_range(arguments...) CCC_bitset_any_range(arguments)
-#    define bitset_none(arguments...) CCC_bitset_none(arguments)
-#    define bitset_none_range(arguments...) CCC_bitset_none_range(arguments)
-#    define bitset_all(arguments...) CCC_bitset_all(arguments)
-#    define bitset_all_range(arguments...) CCC_bitset_all_range(arguments)
-#    define bitset_first_trailing_one(arguments...)                            \
-        CCC_bitset_first_trailing_one(arguments)
-#    define bitset_first_trailing_one_range(arguments...)                      \
-        CCC_bitset_first_trailing_one_range(arguments)
-#    define bitset_first_trailing_ones(arguments...)                           \
-        CCC_bitset_first_trailing_ones(arguments)
-#    define bitset_first_trailing_ones_range(arguments...)                     \
-        CCC_bitset_first_trailing_ones_range(arguments)
-#    define bitset_first_trailing_zero(arguments...)                           \
-        CCC_bitset_first_trailing_zero(arguments)
-#    define bitset_first_trailing_zero_range(arguments...)                     \
-        CCC_bitset_first_trailing_zero_range(arguments)
-#    define bitset_first_trailing_zeros(arguments...)                          \
-        CCC_bitset_first_trailing_zeros(arguments)
-#    define bitset_first_trailing_zeros_range(arguments...)                    \
-        CCC_bitset_first_trailing_zeros_range(arguments)
-#    define bitset_first_leading_one(arguments...)                             \
-        CCC_bitset_first_leading_one(arguments)
-#    define bitset_first_leading_one_range(arguments...)                       \
-        CCC_bitset_first_leading_one_range(arguments)
-#    define bitset_first_leading_ones(arguments...)                            \
-        CCC_bitset_first_leading_ones(arguments)
-#    define bitset_first_leading_ones_range(arguments...)                      \
-        CCC_bitset_first_leading_ones_range(arguments)
-#    define bitset_first_leading_zero(arguments...)                            \
-        CCC_bitset_first_leading_zero(arguments)
-#    define bitset_first_leading_zero_range(arguments...)                      \
-        CCC_bitset_first_leading_zero_range(arguments)
-#    define bitset_first_leading_zeros(arguments...)                           \
-        CCC_bitset_first_leading_zeros(arguments)
-#    define bitset_first_leading_zeros_range(arguments...)                     \
-        CCC_bitset_first_leading_zeros_range(arguments)
-#    define bitset_or(arguments...) CCC_bitset_or(arguments)
-#    define bitset_and(arguments...) CCC_bitset_and(arguments)
-#    define bitset_xor(arguments...) CCC_bitset_xor(arguments)
-#    define bitset_shift_left(arguments...) CCC_bitset_shift_left(arguments)
-#    define bitset_shift_right(arguments...) CCC_bitset_shift_right(arguments)
-#    define bitset_is_equal(arguments...) CCC_bitset_is_equal(arguments)
-#    define bitset_is_proper_subset(arguments...)                              \
-        CCC_bitset_is_proper_subset(arguments)
-#    define bitset_is_subset(arguments...) CCC_bitset_is_subset(arguments)
-#    define bitset_data(arguments...) CCC_bitset_data(arguments)
-#    define bitset_capacity(arguments...) CCC_bitset_capacity(arguments)
-#    define bitset_blocks_capacity(arguments...)                               \
-        CCC_bitset_blocks_capacity(arguments)
-#    define bitset_count(arguments...) CCC_bitset_count(arguments)
-#    define bitset_blocks_count(arguments...) CCC_bitset_blocks_count(arguments)
-#    define bitset_is_empty(arguments...) CCC_bitset_is_empty(arguments)
-#    define bitset_popcount(arguments...) CCC_bitset_popcount(arguments)
-#    define bitset_popcount_range(arguments...)                                \
-        CCC_bitset_popcount_range(arguments)
-#    define bitset_clear(arguments...) CCC_bitset_clear(arguments)
-#    define bitset_clear_and_free(arguments...)                                \
-        CCC_bitset_clear_and_free(arguments)
-#    define bitset_push_back(arguments...) CCC_bitset_push_back(arguments)
-#    define bitset_pop_back(arguments...) CCC_bitset_pop_back(arguments)
+typedef CCC_Flat_bitset Flat_bitset;
+#    define FLAT_BITSET_BLOCK_BITS CCC_FLAT_BITSET_BLOCK_BITS
+#    define flat_bitset_block_count(arguments...)                              \
+        CCC_flat_bitset_block_count(arguments)
+#    define flat_bitset_block_bytes(arguments...)                              \
+        CCC_flat_bitset_block_bytes(arguments)
+#    define flat_bitset_storage_for(arguments...)                              \
+        CCC_flat_bitset_storage_for(arguments)
+#    define flat_bitset_default(arguments...) CCC_flat_bitset_default(arguments)
+#    define flat_bitset_for(arguments...) CCC_flat_bitset_for(arguments)
+#    define flat_bitset_from(arguments...) CCC_flat_bitset_from(arguments)
+#    define flat_bitset_with_capacity(arguments...)                            \
+        CCC_flat_bitset_with_capacity(arguments)
+#    define flat_bitset_with_storage(arguments...)                             \
+        CCC_flat_bitset_with_storage(arguments)
+#    define flat_bitset_copy(arguments...) CCC_flat_bitset_copy(arguments)
+#    define flat_bitset_reserve(arguments...) CCC_flat_bitset_reserve(arguments)
+#    define flat_bitset_test(arguments...) CCC_flat_bitset_test(arguments)
+#    define flat_bitset_set(arguments...) CCC_flat_bitset_set(arguments)
+#    define flat_bitset_set_all(arguments...) CCC_flat_bitset_set_all(arguments)
+#    define flat_bitset_set_range(arguments...)                                \
+        CCC_flat_bitset_set_range(arguments)
+#    define flat_bitset_reset(arguments...) CCC_flat_bitset_reset(arguments)
+#    define flat_bitset_reset_all(arguments...)                                \
+        CCC_flat_bitset_reset_all(arguments)
+#    define flat_bitset_reset_range(arguments...)                              \
+        CCC_flat_bitset_reset_range(arguments)
+#    define flat_bitset_flip(arguments...) CCC_flat_bitset_flip(arguments)
+#    define flat_bitset_flip_all(arguments...)                                 \
+        CCC_flat_bitset_flip_all(arguments)
+#    define flat_bitset_flip_range(arguments...)                               \
+        CCC_flat_bitset_flip_range(arguments)
+#    define flat_bitset_any(arguments...) CCC_flat_bitset_any(arguments)
+#    define flat_bitset_any_range(arguments...)                                \
+        CCC_flat_bitset_any_range(arguments)
+#    define flat_bitset_none(arguments...) CCC_flat_bitset_none(arguments)
+#    define flat_bitset_none_range(arguments...)                               \
+        CCC_flat_bitset_none_range(arguments)
+#    define flat_bitset_all(arguments...) CCC_flat_bitset_all(arguments)
+#    define flat_bitset_all_range(arguments...)                                \
+        CCC_flat_bitset_all_range(arguments)
+#    define flat_bitset_first_trailing_one(arguments...)                       \
+        CCC_flat_bitset_first_trailing_one(arguments)
+#    define flat_bitset_first_trailing_one_range(arguments...)                 \
+        CCC_flat_bitset_first_trailing_one_range(arguments)
+#    define flat_bitset_first_trailing_ones(arguments...)                      \
+        CCC_flat_bitset_first_trailing_ones(arguments)
+#    define flat_bitset_first_trailing_ones_range(arguments...)                \
+        CCC_flat_bitset_first_trailing_ones_range(arguments)
+#    define flat_bitset_first_trailing_zero(arguments...)                      \
+        CCC_flat_bitset_first_trailing_zero(arguments)
+#    define flat_bitset_first_trailing_zero_range(arguments...)                \
+        CCC_flat_bitset_first_trailing_zero_range(arguments)
+#    define flat_bitset_first_trailing_zeros(arguments...)                     \
+        CCC_flat_bitset_first_trailing_zeros(arguments)
+#    define flat_bitset_first_trailing_zeros_range(arguments...)               \
+        CCC_flat_bitset_first_trailing_zeros_range(arguments)
+#    define flat_bitset_first_leading_one(arguments...)                        \
+        CCC_flat_bitset_first_leading_one(arguments)
+#    define flat_bitset_first_leading_one_range(arguments...)                  \
+        CCC_flat_bitset_first_leading_one_range(arguments)
+#    define flat_bitset_first_leading_ones(arguments...)                       \
+        CCC_flat_bitset_first_leading_ones(arguments)
+#    define flat_bitset_first_leading_ones_range(arguments...)                 \
+        CCC_flat_bitset_first_leading_ones_range(arguments)
+#    define flat_bitset_first_leading_zero(arguments...)                       \
+        CCC_flat_bitset_first_leading_zero(arguments)
+#    define flat_bitset_first_leading_zero_range(arguments...)                 \
+        CCC_flat_bitset_first_leading_zero_range(arguments)
+#    define flat_bitset_first_leading_zeros(arguments...)                      \
+        CCC_flat_bitset_first_leading_zeros(arguments)
+#    define flat_bitset_first_leading_zeros_range(arguments...)                \
+        CCC_flat_bitset_first_leading_zeros_range(arguments)
+#    define flat_bitset_or(arguments...) CCC_flat_bitset_or(arguments)
+#    define flat_bitset_and(arguments...) CCC_flat_bitset_and(arguments)
+#    define flat_bitset_xor(arguments...) CCC_flat_bitset_xor(arguments)
+#    define flat_bitset_shift_left(arguments...)                               \
+        CCC_flat_bitset_shift_left(arguments)
+#    define flat_bitset_shift_right(arguments...)                              \
+        CCC_flat_bitset_shift_right(arguments)
+#    define flat_bitset_is_equal(arguments...)                                 \
+        CCC_flat_bitset_is_equal(arguments)
+#    define flat_bitset_is_proper_subset(arguments...)                         \
+        CCC_flat_bitset_is_proper_subset(arguments)
+#    define flat_bitset_is_subset(arguments...)                                \
+        CCC_flat_bitset_is_subset(arguments)
+#    define flat_bitset_data(arguments...) CCC_flat_bitset_data(arguments)
+#    define flat_bitset_capacity(arguments...)                                 \
+        CCC_flat_bitset_capacity(arguments)
+#    define flat_bitset_blocks_capacity(arguments...)                          \
+        CCC_flat_bitset_blocks_capacity(arguments)
+#    define flat_bitset_count(arguments...) CCC_flat_bitset_count(arguments)
+#    define flat_bitset_blocks_count(arguments...)                             \
+        CCC_flat_bitset_blocks_count(arguments)
+#    define flat_bitset_is_empty(arguments...)                                 \
+        CCC_flat_bitset_is_empty(arguments)
+#    define flat_bitset_popcount(arguments...)                                 \
+        CCC_flat_bitset_popcount(arguments)
+#    define flat_bitset_popcount_range(arguments...)                           \
+        CCC_flat_bitset_popcount_range(arguments)
+#    define flat_bitset_clear(arguments...) CCC_flat_bitset_clear(arguments)
+#    define flat_bitset_clear_and_free(arguments...)                           \
+        CCC_flat_bitset_clear_and_free(arguments)
+#    define flat_bitset_push_back(arguments...)                                \
+        CCC_flat_bitset_push_back(arguments)
+#    define flat_bitset_pop_back(arguments...)                                 \
+        CCC_flat_bitset_pop_back(arguments)
 /* NOLINTEND(readability-identifier-naming) */
-#endif /* BITSET_USING_NAMESPACE_CCC */
+#endif /* FLAT_BITSET_USING_NAMESPACE_CCC */
 
-#endif /* CCC_BITSET_H */
+#endif /* CCC_FLAT_BITSET_H */

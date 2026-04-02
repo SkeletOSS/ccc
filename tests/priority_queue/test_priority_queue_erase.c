@@ -5,9 +5,9 @@
 #include <time.h>
 
 #define TRAITS_USING_NAMESPACE_CCC
-#define BITSET_USING_NAMESPACE_CCC
+#define FLAT_BITSET_USING_NAMESPACE_CCC
 
-#include "ccc/bitset.h"
+#include "ccc/flat_bitset.h"
 #include "ccc/priority_queue.h"
 #include "ccc/traits.h"
 #include "ccc/types.h"
@@ -332,8 +332,8 @@ check_static_begin(priority_queue_test_weak_srand_allocate) {
 static void
 destroy_elem(CCC_Arguments const arguments) {
     struct Val const *const v = arguments.type;
-    Bitset *const is_destroyed = arguments.context;
-    (void)bitset_set(is_destroyed, (size_t)v->id, CCC_TRUE);
+    Flat_bitset *const is_destroyed = arguments.context;
+    (void)flat_bitset_set(is_destroyed, (size_t)v->id, CCC_TRUE);
 }
 
 check_static_begin(priority_queue_test_clear_destructor) {
@@ -348,8 +348,8 @@ check_static_begin(priority_queue_test_clear_destructor) {
         (CCC_Comparator){.compare = val_order}
     );
     int i = 0;
-    Bitset is_destroyed
-        = bitset_with_storage(STANDARD_CAP, (Bit[STANDARD_CAP]){});
+    Flat_bitset is_destroyed
+        = flat_bitset_with_storage(STANDARD_CAP, (Bit[STANDARD_CAP]){});
     while (i < STANDARD_CAP) {
         struct Val const *const v = CCC_priority_queue_push(
             &queue, &(struct Val){.id = i, .val = i}.elem, &allocator
@@ -369,8 +369,8 @@ check_static_begin(priority_queue_test_clear_destructor) {
         CCC_RESULT_OK
     );
     i = 0;
-    while (!bitset_is_empty(&is_destroyed)) {
-        CCC_Tribool const was_destroyed = bitset_pop_back(&is_destroyed);
+    while (!flat_bitset_is_empty(&is_destroyed)) {
+        CCC_Tribool const was_destroyed = flat_bitset_pop_back(&is_destroyed);
         check(was_destroyed, CCC_TRUE);
         ++i;
     }

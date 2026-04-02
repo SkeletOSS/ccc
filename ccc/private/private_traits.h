@@ -20,9 +20,9 @@ limitations under the License.
 #include "../adaptive_map.h"            /* IWYU pragma: keep */
 #include "../array_adaptive_map.h"      /* IWYU pragma: keep */
 #include "../array_tree_map.h"          /* IWYU pragma: keep */
-#include "../bitset.h"                  /* IWYU pragma: keep */
-#include "../buffer.h"                  /* IWYU pragma: keep */
 #include "../doubly_linked_list.h"      /* IWYU pragma: keep */
+#include "../flat_bitset.h"             /* IWYU pragma: keep */
+#include "../flat_buffer.h"             /* IWYU pragma: keep */
 #include "../flat_double_ended_queue.h" /* IWYU pragma: keep */
 #include "../flat_hash_map.h"           /* IWYU pragma: keep */
 #include "../flat_priority_queue.h"     /* IWYU pragma: keep */
@@ -273,10 +273,10 @@ limitations under the License.
 
 #define CCC_private_push_back(container_pointer, container_array_pointer...)   \
     _Generic((container_pointer),                                              \
-        CCC_Bitset *: CCC_bitset_push_back,                                    \
+        CCC_Flat_bitset *: CCC_flat_bitset_push_back,                                    \
         CCC_Flat_double_ended_queue *: CCC_flat_double_ended_queue_push_back,  \
         CCC_Doubly_linked_list *: CCC_doubly_linked_list_push_back,            \
-        CCC_Buffer *: CCC_buffer_push_back)((container_pointer),               \
+        CCC_Flat_buffer *: CCC_flat_buffer_push_back)((container_pointer),               \
                                             container_array_pointer)
 
 #define CCC_private_push_front(container_pointer, container_array_pointer...)  \
@@ -304,10 +304,10 @@ limitations under the License.
 
 #define CCC_private_pop_back(container_pointer, ...)                           \
     _Generic((container_pointer),                                              \
-        CCC_Bitset *: CCC_bitset_pop_back,                                     \
+        CCC_Flat_bitset *: CCC_flat_bitset_pop_back,                                     \
         CCC_Flat_double_ended_queue *: CCC_flat_double_ended_queue_pop_back,   \
         CCC_Doubly_linked_list *: CCC_doubly_linked_list_pop_back,             \
-        CCC_Buffer *: CCC_buffer_pop_back)(                                    \
+        CCC_Flat_buffer *: CCC_flat_buffer_pop_back)(                                    \
         (container_pointer)__VA_OPT__(, __VA_ARGS__)                           \
     )
 
@@ -331,10 +331,10 @@ limitations under the License.
     _Generic((container_pointer),                                              \
         CCC_Flat_double_ended_queue *: CCC_flat_double_ended_queue_back,       \
         CCC_Doubly_linked_list *: CCC_doubly_linked_list_back,                 \
-        CCC_Buffer *: CCC_buffer_back,                                         \
+        CCC_Flat_buffer *: CCC_flat_buffer_back,                                         \
         CCC_Flat_double_ended_queue const *: CCC_flat_double_ended_queue_back, \
         CCC_Doubly_linked_list const *: CCC_doubly_linked_list_back,           \
-        CCC_Buffer const *: CCC_buffer_back)((container_pointer))
+        CCC_Flat_buffer const *: CCC_flat_buffer_back)((container_pointer))
 
 /*================       Priority Queue Update Interface =====================*/
 
@@ -384,7 +384,7 @@ limitations under the License.
 
 #define CCC_private_begin(container_pointer)                                   \
     _Generic((container_pointer),                                              \
-        CCC_Buffer *: CCC_buffer_begin,                                        \
+        CCC_Flat_buffer *: CCC_flat_buffer_begin,                                        \
         CCC_Flat_hash_map *: CCC_flat_hash_map_begin,                          \
         CCC_Adaptive_map *: CCC_adaptive_map_begin,                            \
         CCC_Array_adaptive_map *: CCC_array_adaptive_map_begin,                \
@@ -393,7 +393,7 @@ limitations under the License.
         CCC_Doubly_linked_list *: CCC_doubly_linked_list_begin,                \
         CCC_Tree_map *: CCC_tree_map_begin,                                    \
         CCC_Array_tree_map *: CCC_array_tree_map_begin,                        \
-        CCC_Buffer const *: CCC_buffer_begin,                                  \
+        CCC_Flat_buffer const *: CCC_flat_buffer_begin,                                  \
         CCC_Flat_hash_map const *: CCC_flat_hash_map_begin,                    \
         CCC_Adaptive_map const *: CCC_adaptive_map_begin,                      \
         CCC_Array_adaptive_map const *: CCC_array_adaptive_map_begin,          \
@@ -406,7 +406,7 @@ limitations under the License.
 
 #define CCC_private_reverse_begin(container_pointer)                           \
     _Generic((container_pointer),                                              \
-        CCC_Buffer *: CCC_buffer_reverse_begin,                                \
+        CCC_Flat_buffer *: CCC_flat_buffer_reverse_begin,                                \
         CCC_Adaptive_map *: CCC_adaptive_map_reverse_begin,                    \
         CCC_Array_adaptive_map *: CCC_array_adaptive_map_reverse_begin,        \
         CCC_Flat_double_ended_queue                                            \
@@ -414,7 +414,7 @@ limitations under the License.
         CCC_Doubly_linked_list *: CCC_doubly_linked_list_reverse_begin,        \
         CCC_Tree_map *: CCC_tree_map_reverse_begin,                            \
         CCC_Array_tree_map *: CCC_array_tree_map_reverse_begin,                \
-        CCC_Buffer const *: CCC_buffer_reverse_begin,                          \
+        CCC_Flat_buffer const *: CCC_flat_buffer_reverse_begin,                          \
         CCC_Adaptive_map const *: CCC_adaptive_map_reverse_begin,              \
         CCC_Array_adaptive_map const *: CCC_array_adaptive_map_reverse_begin,  \
         CCC_Flat_double_ended_queue const                                      \
@@ -425,7 +425,7 @@ limitations under the License.
 
 #define CCC_private_next(container_pointer, void_iterator_pointer)             \
     _Generic((container_pointer),                                              \
-        CCC_Buffer *: CCC_buffer_next,                                         \
+        CCC_Flat_buffer *: CCC_flat_buffer_next,                                         \
         CCC_Flat_hash_map *: CCC_flat_hash_map_next,                           \
         CCC_Adaptive_map *: CCC_adaptive_map_next,                             \
         CCC_Array_adaptive_map *: CCC_array_adaptive_map_next,                 \
@@ -434,7 +434,7 @@ limitations under the License.
         CCC_Doubly_linked_list *: CCC_doubly_linked_list_next,                 \
         CCC_Tree_map *: CCC_tree_map_next,                                     \
         CCC_Array_tree_map *: CCC_array_tree_map_next,                         \
-        CCC_Buffer const *: CCC_buffer_next,                                   \
+        CCC_Flat_buffer const *: CCC_flat_buffer_next,                                   \
         CCC_Flat_hash_map const *: CCC_flat_hash_map_next,                     \
         CCC_Adaptive_map const *: CCC_adaptive_map_next,                       \
         CCC_Array_adaptive_map const *: CCC_array_adaptive_map_next,           \
@@ -447,7 +447,7 @@ limitations under the License.
 
 #define CCC_private_reverse_next(container_pointer, void_iterator_pointer)     \
     _Generic((container_pointer),                                              \
-        CCC_Buffer *: CCC_buffer_reverse_next,                                 \
+        CCC_Flat_buffer *: CCC_flat_buffer_reverse_next,                                 \
         CCC_Adaptive_map *: CCC_adaptive_map_reverse_next,                     \
         CCC_Array_adaptive_map *: CCC_array_adaptive_map_reverse_next,         \
         CCC_Flat_double_ended_queue                                            \
@@ -455,7 +455,7 @@ limitations under the License.
         CCC_Doubly_linked_list *: CCC_doubly_linked_list_reverse_next,         \
         CCC_Tree_map *: CCC_tree_map_reverse_next,                             \
         CCC_Array_tree_map *: CCC_array_tree_map_reverse_next,                 \
-        CCC_Buffer const *: CCC_buffer_reverse_next,                           \
+        CCC_Flat_buffer const *: CCC_flat_buffer_reverse_next,                           \
         CCC_Adaptive_map const *: CCC_adaptive_map_reverse_next,               \
         CCC_Array_adaptive_map const *: CCC_array_adaptive_map_reverse_next,   \
         CCC_Flat_double_ended_queue const                                      \
@@ -468,7 +468,7 @@ limitations under the License.
 
 #define CCC_private_end(container_pointer)                                     \
     _Generic((container_pointer),                                              \
-        CCC_Buffer *: CCC_buffer_end,                                          \
+        CCC_Flat_buffer *: CCC_flat_buffer_end,                                          \
         CCC_Flat_hash_map *: CCC_flat_hash_map_end,                            \
         CCC_Adaptive_map *: CCC_adaptive_map_end,                              \
         CCC_Array_adaptive_map *: CCC_array_adaptive_map_end,                  \
@@ -477,7 +477,7 @@ limitations under the License.
         CCC_Doubly_linked_list *: CCC_doubly_linked_list_end,                  \
         CCC_Tree_map *: CCC_tree_map_end,                                      \
         CCC_Array_tree_map *: CCC_array_tree_map_end,                          \
-        CCC_Buffer const *: CCC_buffer_end,                                    \
+        CCC_Flat_buffer const *: CCC_flat_buffer_end,                                    \
         CCC_Flat_hash_map const *: CCC_flat_hash_map_end,                      \
         CCC_Adaptive_map const *: CCC_adaptive_map_end,                        \
         CCC_Array_adaptive_map const *: CCC_array_adaptive_map_end,            \
@@ -489,7 +489,7 @@ limitations under the License.
 
 #define CCC_private_reverse_end(container_pointer)                             \
     _Generic((container_pointer),                                              \
-        CCC_Buffer *: CCC_buffer_reverse_end,                                  \
+        CCC_Flat_buffer *: CCC_flat_buffer_reverse_end,                                  \
         CCC_Adaptive_map *: CCC_adaptive_map_reverse_end,                      \
         CCC_Array_adaptive_map *: CCC_array_adaptive_map_reverse_end,          \
         CCC_Flat_double_ended_queue                                            \
@@ -497,7 +497,7 @@ limitations under the License.
         CCC_Doubly_linked_list *: CCC_doubly_linked_list_reverse_end,          \
         CCC_Tree_map *: CCC_tree_map_reverse_end,                              \
         CCC_Array_tree_map *: CCC_array_tree_map_reverse_end,                  \
-        CCC_Buffer const *: CCC_buffer_reverse_end,                            \
+        CCC_Flat_buffer const *: CCC_flat_buffer_reverse_end,                            \
         CCC_Adaptive_map const *: CCC_adaptive_map_reverse_end,                \
         CCC_Array_adaptive_map const *: CCC_array_adaptive_map_reverse_end,    \
         CCC_Flat_double_ended_queue const                                      \
@@ -604,7 +604,7 @@ the appropriate range from the selections. */
                          source_container_pointer,                             \
                          allocate_pointer)                                     \
     _Generic((destination_container_pointer),                                  \
-        CCC_Bitset *: CCC_bitset_copy,                                         \
+        CCC_Flat_bitset *: CCC_flat_bitset_copy,                                         \
         CCC_Flat_hash_map *: CCC_flat_hash_map_copy,                           \
         CCC_Array_adaptive_map *: CCC_array_adaptive_map_copy,                 \
         CCC_Flat_priority_queue *: CCC_flat_priority_queue_copy,               \
@@ -617,8 +617,8 @@ the appropriate range from the selections. */
 
 #define CCC_private_reserve(container_pointer, n_to_add, allocate_pointer)     \
     _Generic((container_pointer),                                              \
-        CCC_Bitset *: CCC_bitset_reserve,                                      \
-        CCC_Buffer *: CCC_buffer_reserve,                                      \
+        CCC_Flat_bitset *: CCC_flat_bitset_reserve,                                      \
+        CCC_Flat_buffer *: CCC_flat_buffer_reserve,                                      \
         CCC_Flat_hash_map *: CCC_flat_hash_map_reserve,                        \
         CCC_Array_adaptive_map *: CCC_array_adaptive_map_reserve,              \
         CCC_Flat_priority_queue *: CCC_flat_priority_queue_reserve,            \
@@ -629,8 +629,8 @@ the appropriate range from the selections. */
 
 #define CCC_private_clear(container_pointer, ...)                              \
     _Generic((container_pointer),                                              \
-        CCC_Bitset *: CCC_bitset_clear,                                        \
-        CCC_Buffer *: CCC_buffer_clear,                                        \
+        CCC_Flat_bitset *: CCC_flat_bitset_clear,                                        \
+        CCC_Flat_buffer *: CCC_flat_buffer_clear,                                        \
         CCC_Flat_hash_map *: CCC_flat_hash_map_clear,                          \
         CCC_Array_adaptive_map *: CCC_array_adaptive_map_clear,                \
         CCC_Flat_priority_queue *: CCC_flat_priority_queue_clear,              \
@@ -646,8 +646,8 @@ the appropriate range from the selections. */
 
 #define CCC_private_clear_and_free(container_pointer, ...)                     \
     _Generic((container_pointer),                                              \
-        CCC_Bitset *: CCC_bitset_clear_and_free,                               \
-        CCC_Buffer *: CCC_buffer_clear_and_free,                               \
+        CCC_Flat_bitset *: CCC_flat_bitset_clear_and_free,                               \
+        CCC_Flat_buffer *: CCC_flat_buffer_clear_and_free,                               \
         CCC_Flat_hash_map *: CCC_flat_hash_map_clear_and_free,                 \
         CCC_Array_adaptive_map *: CCC_array_adaptive_map_clear_and_free,       \
         CCC_Flat_priority_queue *: CCC_flat_priority_queue_clear_and_free,     \
@@ -661,8 +661,8 @@ the appropriate range from the selections. */
 
 #define CCC_private_count(container_pointer)                                   \
     _Generic((container_pointer),                                              \
-        CCC_Bitset *: CCC_bitset_count,                                        \
-        CCC_Buffer *: CCC_buffer_count,                                        \
+        CCC_Flat_bitset *: CCC_flat_bitset_count,                                        \
+        CCC_Flat_buffer *: CCC_flat_buffer_count,                                        \
         CCC_Flat_hash_map *: CCC_flat_hash_map_count,                          \
         CCC_Adaptive_map *: CCC_adaptive_map_count,                            \
         CCC_Array_adaptive_map *: CCC_array_adaptive_map_count,                \
@@ -673,8 +673,8 @@ the appropriate range from the selections. */
         CCC_Doubly_linked_list *: CCC_doubly_linked_list_count,                \
         CCC_Tree_map *: CCC_tree_map_count,                                    \
         CCC_Array_tree_map *: CCC_array_tree_map_count,                        \
-        CCC_Bitset const *: CCC_bitset_count,                                  \
-        CCC_Buffer const *: CCC_buffer_count,                                  \
+        CCC_Flat_bitset const *: CCC_flat_bitset_count,                                  \
+        CCC_Flat_buffer const *: CCC_flat_buffer_count,                                  \
         CCC_Flat_hash_map const *: CCC_flat_hash_map_count,                    \
         CCC_Adaptive_map const *: CCC_adaptive_map_count,                      \
         CCC_Array_adaptive_map const *: CCC_array_adaptive_map_count,          \
@@ -689,15 +689,15 @@ the appropriate range from the selections. */
 
 #define CCC_private_capacity(container_pointer)                                \
     _Generic((container_pointer),                                              \
-        CCC_Bitset *: CCC_bitset_capacity,                                     \
-        CCC_Buffer *: CCC_buffer_capacity,                                     \
+        CCC_Flat_bitset *: CCC_flat_bitset_capacity,                                     \
+        CCC_Flat_buffer *: CCC_flat_buffer_capacity,                                     \
         CCC_Flat_hash_map *: CCC_flat_hash_map_capacity,                       \
         CCC_Array_adaptive_map *: CCC_array_adaptive_map_capacity,             \
         CCC_Flat_priority_queue *: CCC_flat_priority_queue_capacity,           \
         CCC_Flat_double_ended_queue *: CCC_flat_double_ended_queue_capacity,   \
         CCC_Array_tree_map *: CCC_array_tree_map_capacity,                     \
-        CCC_Bitset const *: CCC_bitset_capacity,                               \
-        CCC_Buffer const *: CCC_buffer_capacity,                               \
+        CCC_Flat_bitset const *: CCC_flat_bitset_capacity,                               \
+        CCC_Flat_buffer const *: CCC_flat_buffer_capacity,                               \
         CCC_Flat_hash_map const *: CCC_flat_hash_map_capacity,                 \
         CCC_Array_adaptive_map const *: CCC_array_adaptive_map_capacity,       \
         CCC_Flat_priority_queue const *: CCC_flat_priority_queue_capacity,     \
@@ -709,8 +709,8 @@ the appropriate range from the selections. */
 
 #define CCC_private_is_empty(container_pointer)                                \
     _Generic((container_pointer),                                              \
-        CCC_Bitset *: CCC_bitset_is_empty,                                     \
-        CCC_Buffer *: CCC_buffer_is_empty,                                     \
+        CCC_Flat_bitset *: CCC_flat_bitset_is_empty,                                     \
+        CCC_Flat_buffer *: CCC_flat_buffer_is_empty,                                     \
         CCC_Flat_hash_map *: CCC_flat_hash_map_is_empty,                       \
         CCC_Adaptive_map *: CCC_adaptive_map_is_empty,                         \
         CCC_Array_adaptive_map *: CCC_array_adaptive_map_is_empty,             \
@@ -721,8 +721,8 @@ the appropriate range from the selections. */
         CCC_Doubly_linked_list *: CCC_doubly_linked_list_is_empty,             \
         CCC_Tree_map *: CCC_tree_map_is_empty,                                 \
         CCC_Array_tree_map *: CCC_array_tree_map_is_empty,                     \
-        CCC_Bitset const *: CCC_bitset_is_empty,                               \
-        CCC_Buffer const *: CCC_buffer_is_empty,                               \
+        CCC_Flat_bitset const *: CCC_flat_bitset_is_empty,                               \
+        CCC_Flat_buffer const *: CCC_flat_buffer_is_empty,                               \
         CCC_Flat_hash_map const *: CCC_flat_hash_map_is_empty,                 \
         CCC_Adaptive_map const *: CCC_adaptive_map_is_empty,                   \
         CCC_Array_adaptive_map const *: CCC_array_adaptive_map_is_empty,       \

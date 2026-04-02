@@ -6,10 +6,10 @@
 
 #define TRAITS_USING_NAMESPACE_CCC
 #define FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC
-#define BUFFER_USING_NAMESPACE_CCC
+#define FLAT_BUFFER_USING_NAMESPACE_CCC
 
-#include "buffer.h"
 #include "checkers.h"
+#include "flat_buffer.h"
 #include "flat_priority_queue.h"
 #include "flat_priority_queue_utility.h"
 #include "sort.h"
@@ -190,9 +190,9 @@ check_static_begin(flat_priority_queue_test_in_place_heapify) {
     enum : size_t {
         HEAPIFY_CAP = 100,
     };
-    Buffer b = buffer_with_storage(HEAPIFY_CAP, (int[HEAPIFY_CAP]){});
-    for (int *i = buffer_begin(&b); i != buffer_end(&b);
-         i = buffer_next(&b, i)) {
+    Flat_buffer b = flat_buffer_with_storage(HEAPIFY_CAP, (int[HEAPIFY_CAP]){});
+    for (int *i = flat_buffer_begin(&b); i != flat_buffer_end(&b);
+         i = flat_buffer_next(&b, i)) {
         *i = (int)rand_range(0, HEAPIFY_CAP * 4);
     }
     Flat_priority_queue priority_queue
@@ -207,8 +207,8 @@ check_static_begin(flat_priority_queue_test_in_place_heapify) {
     priority_queue = CCC_flat_priority_queue_in_place_heapify(
         &b, &(int){}, CCC_ORDER_LESSER, &(CCC_Comparator){.compare = int_order}
     );
-    check(buffer_is_empty(&b), CCC_TRUE);
-    check(buffer_data(&b), NULL);
+    check(flat_buffer_is_empty(&b), CCC_TRUE);
+    check(flat_buffer_data(&b), NULL);
     check(flat_priority_queue_capacity(&priority_queue).count, HEAPIFY_CAP);
     check(flat_priority_queue_count(&priority_queue).count, HEAPIFY_CAP);
     int prev = *((int *)flat_priority_queue_front(&priority_queue));
@@ -232,10 +232,10 @@ check_static_begin(flat_priority_queue_test_heapify_copy) {
         (CCC_Comparator){.compare = int_order},
         (int[HEAPIFY_COPY_CAP]){}
     );
-    Buffer input
-        = buffer_with_storage(HEAPIFY_COPY_CAP, (int[HEAPIFY_COPY_CAP]){});
-    for (int *i = buffer_begin(&input); i != buffer_end(&input);
-         i = buffer_next(&input, i)) {
+    Flat_buffer input
+        = flat_buffer_with_storage(HEAPIFY_COPY_CAP, (int[HEAPIFY_COPY_CAP]){});
+    for (int *i = flat_buffer_begin(&input); i != flat_buffer_end(&input);
+         i = flat_buffer_next(&input, i)) {
         *i = (int)rand_range(0, 99);
     }
     check(
@@ -271,8 +271,8 @@ check_static_begin(flat_priority_queue_test_heapify_copy_fail) {
         (CCC_Comparator){.compare = int_order},
         (int[HEAPIFY_COPY_CAP - 1]){}
     );
-    Buffer input
-        = buffer_with_storage(HEAPIFY_COPY_CAP, (int[HEAPIFY_COPY_CAP]){});
+    Flat_buffer input
+        = flat_buffer_with_storage(HEAPIFY_COPY_CAP, (int[HEAPIFY_COPY_CAP]){});
     check(
         flat_priority_queue_copy_heapify(
             &priority_queue, &input, &(int){}, &(CCC_Allocator){}
@@ -287,9 +287,10 @@ check_static_begin(flat_priority_queue_test_heapsort) {
         HPSORTCAP = 100,
     };
     srand((unsigned)time(NULL)); /* NOLINT */
-    Buffer storage = buffer_with_storage(HPSORTCAP, (int[HPSORTCAP]){});
-    for (int *i = buffer_begin(&storage); i != buffer_end(&storage);
-         i = buffer_next(&storage, i)) {
+    Flat_buffer storage
+        = flat_buffer_with_storage(HPSORTCAP, (int[HPSORTCAP]){});
+    for (int *i = flat_buffer_begin(&storage); i != flat_buffer_end(&storage);
+         i = flat_buffer_next(&storage, i)) {
         *i = (int)rand_range(0, HPSORTCAP);
     }
     check(
@@ -323,7 +324,7 @@ check_static_begin(flat_priority_queue_test_heapsort) {
     check(result, CCC_RESULT_OK);
     int const *prev = begin(&storage);
     check(prev != NULL, true);
-    check(CCC_buffer_count(&storage).count, HPSORTCAP);
+    check(CCC_flat_buffer_count(&storage).count, HPSORTCAP);
     size_t count = 1;
     for (int const *cur = next(&storage, prev); cur != end(&storage);
          cur = next(&storage, cur)) {

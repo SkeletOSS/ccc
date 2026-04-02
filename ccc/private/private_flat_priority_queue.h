@@ -20,7 +20,7 @@ limitations under the License.
 #include <stddef.h>
 /** @endcond */
 
-#include "../buffer.h"
+#include "../flat_buffer.h"
 #include "../types.h"
 
 /* NOLINTBEGIN(readability-identifier-naming) */
@@ -32,8 +32,9 @@ storing an implicit complete binary tree; elements are stored contiguously from
 2`. The heap can be initialized as a min or max heap due to the use of the three
 way comparison function. */
 struct CCC_Flat_priority_queue {
-    /** @internal The underlying Buffer owned by the flat_priority_queue. */
-    CCC_Buffer buffer;
+    /** @internal The underlying Flat_buffer owned by the flat_priority_queue.
+     */
+    CCC_Flat_buffer buffer;
     /** @internal The order `CCC_ORDER_LESSER` (min) or `CCC_ORDER_GREATER`
      * (max) of the flat_priority_queue. */
     CCC_Order order;
@@ -63,7 +64,7 @@ void *CCC_private_flat_priority_queue_update_fixup(
     private_type_name, private_order, private_comparator...                    \
 )                                                                              \
     (struct CCC_Flat_priority_queue) {                                         \
-        .buffer = CCC_buffer_default(private_type_name),                       \
+        .buffer = CCC_flat_buffer_default(private_type_name),                  \
         .order = (private_order), .comparator = private_comparator,            \
     }
 
@@ -76,7 +77,7 @@ void *CCC_private_flat_priority_queue_update_fixup(
     private_data_pointer                                                       \
 )                                                                              \
     (struct CCC_Flat_priority_queue) {                                         \
-        .buffer = CCC_buffer_for(                                              \
+        .buffer = CCC_flat_buffer_for(                                         \
             private_type_name, private_capacity, 0, private_data_pointer       \
         ),                                                                     \
         .order = (private_order), .comparator = (private_comparator),          \
@@ -120,7 +121,7 @@ void *CCC_private_flat_priority_queue_update_fixup(
 )                                                                              \
     (struct { struct CCC_Flat_priority_queue private; }){(__extension__({      \
         struct CCC_Flat_priority_queue private_flat_priority_queue = {         \
-            .buffer = CCC_buffer_from(                                         \
+            .buffer = CCC_flat_buffer_from(                                    \
                 private_allocator,                                             \
                 private_optional_capacity,                                     \
                 private_compound_literal_array                                 \
@@ -147,7 +148,7 @@ void *CCC_private_flat_priority_queue_update_fixup(
 )                                                                              \
     (struct { struct CCC_Flat_priority_queue private; }){(__extension__({      \
         struct CCC_Flat_priority_queue private_flat_priority_queue = {         \
-            .buffer = CCC_buffer_with_capacity(                                \
+            .buffer = CCC_flat_buffer_with_capacity(                           \
                 private_type_name, private_allocator, private_capacity         \
             ),                                                                 \
             .order = (private_order),                                          \
@@ -172,7 +173,8 @@ to the user. GCC is not so forgiving. */
             );                                                                 \
             struct CCC_Flat_priority_queue private;                            \
         }){{                                                                   \
-               .buffer = CCC_buffer_with_storage(0, private_compound_literal), \
+               .buffer                                                         \
+               = CCC_flat_buffer_with_storage(0, private_compound_literal),    \
                .order = (private_order),                                       \
                .comparator = (private_comparator),                             \
            }}                                                                  \
@@ -183,8 +185,9 @@ to the user. GCC is not so forgiving. */
         private_order, private_comparator, private_compound_literal            \
     )                                                                          \
         (struct CCC_Flat_priority_queue) {                                     \
-            .buffer = CCC_buffer_with_storage(0, private_compound_literal),    \
-            .order = (private_order), .comparator = (private_comparator),      \
+            .buffer                                                            \
+                = CCC_flat_buffer_with_storage(0, private_compound_literal),   \
+                .order = (private_order), .comparator = (private_comparator),  \
         }
 #endif
 
@@ -198,14 +201,14 @@ to the user. GCC is not so forgiving. */
         struct CCC_Flat_priority_queue *private_flat_priority_queue            \
             = (flat_priority_queue);                                           \
         typeof(type_compound_literal) *private_flat_priority_queue_res         \
-            = CCC_buffer_allocate_back(                                        \
+            = CCC_flat_buffer_allocate_back(                                   \
                 &private_flat_priority_queue->buffer,                          \
                 private_allocator_pointer                                      \
             );                                                                 \
         if (private_flat_priority_queue_res) {                                 \
             *private_flat_priority_queue_res = type_compound_literal;          \
             if (private_flat_priority_queue->buffer.count > 1) {               \
-                private_flat_priority_queue_res = CCC_buffer_at(               \
+                private_flat_priority_queue_res = CCC_flat_buffer_at(          \
                     &private_flat_priority_queue->buffer,                      \
                     CCC_private_flat_priority_queue_bubble_up(                 \
                         private_flat_priority_queue,                           \
@@ -214,8 +217,9 @@ to the user. GCC is not so forgiving. */
                     )                                                          \
                 );                                                             \
             } else {                                                           \
-                private_flat_priority_queue_res                                \
-                    = CCC_buffer_at(&private_flat_priority_queue->buffer, 0);  \
+                private_flat_priority_queue_res = CCC_flat_buffer_at(          \
+                    &private_flat_priority_queue->buffer, 0                    \
+                );                                                             \
             }                                                                  \
         }                                                                      \
         private_flat_priority_queue_res;                                       \
@@ -234,7 +238,9 @@ to the user. GCC is not so forgiving. */
         typeof(*closure_parameter) *                                           \
             private_flat_priority_queue_updated_element = (closure_parameter); \
         if (private_flat_priority_queue                                        \
-            && !CCC_buffer_is_empty(&private_flat_priority_queue->buffer)) {   \
+            && !CCC_flat_buffer_is_empty(                                      \
+                &private_flat_priority_queue->buffer                           \
+            )) {                                                               \
             {update_closure_over_closure_parameter};                           \
             private_flat_priority_queue_updated_element                        \
                 = CCC_private_flat_priority_queue_update_fixup(                \

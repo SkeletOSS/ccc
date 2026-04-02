@@ -1,9 +1,9 @@
 #include <stddef.h>
 
-#define BITSET_USING_NAMESPACE_CCC
+#define FLAT_BITSET_USING_NAMESPACE_CCC
 #define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
 
-#include "ccc/bitset.h"
+#include "ccc/flat_bitset.h"
 #include "ccc/flat_double_ended_queue.h"
 #include "ccc/types.h"
 #include "checkers.h"
@@ -25,8 +25,8 @@ check_static_begin(flat_double_ended_queue_test_iterate_errors) {
 static void
 destroy_element(CCC_Arguments const arguments) {
     int const *const i = arguments.type;
-    Bitset *const is_destroyed_buffer = arguments.context;
-    (void)bitset_set(is_destroyed_buffer, (size_t)(*i), CCC_TRUE);
+    Flat_bitset *const is_destroyed_buffer = arguments.context;
+    (void)flat_bitset_set(is_destroyed_buffer, (size_t)(*i), CCC_TRUE);
 }
 
 check_static_begin(flat_double_ended_queue_test_clear) {
@@ -66,7 +66,7 @@ check_static_begin(flat_double_ended_queue_test_clear_destructor) {
             3,
         }
     );
-    Bitset is_destroyed = bitset_with_storage(COUNT, (Bit[COUNT]){});
+    Flat_bitset is_destroyed = flat_bitset_with_storage(COUNT, (Bit[COUNT]){});
     check(CCC_flat_double_ended_queue_capacity(&q).count >= COUNT, CCC_TRUE);
     check(CCC_flat_double_ended_queue_count(&q).count, COUNT);
     check(
@@ -87,8 +87,8 @@ check_static_begin(flat_double_ended_queue_test_clear_destructor) {
         CCC_RESULT_OK
     );
     size_t i = 0;
-    while (!bitset_is_empty(&is_destroyed)) {
-        CCC_Tribool const was_destroyed = bitset_pop_back(&is_destroyed);
+    while (!flat_bitset_is_empty(&is_destroyed)) {
+        CCC_Tribool const was_destroyed = flat_bitset_pop_back(&is_destroyed);
         check(was_destroyed, CCC_TRUE);
         ++i;
     }
@@ -145,7 +145,7 @@ check_static_begin(flat_double_ended_queue_test_clear_and_free_destructor) {
             3,
         }
     );
-    Bitset is_destroyed = bitset_with_storage(COUNT, (Bit[COUNT]){});
+    Flat_bitset is_destroyed = flat_bitset_with_storage(COUNT, (Bit[COUNT]){});
     check(CCC_flat_double_ended_queue_capacity(&q).count >= COUNT, CCC_TRUE);
     check(CCC_flat_double_ended_queue_count(&q).count, COUNT);
     check(
@@ -176,8 +176,8 @@ check_static_begin(flat_double_ended_queue_test_clear_and_free_destructor) {
         CCC_RESULT_OK
     );
     size_t i = 0;
-    while (!bitset_is_empty(&is_destroyed)) {
-        CCC_Tribool const was_destroyed = bitset_pop_back(&is_destroyed);
+    while (!flat_bitset_is_empty(&is_destroyed)) {
+        CCC_Tribool const was_destroyed = flat_bitset_pop_back(&is_destroyed);
         check(was_destroyed, CCC_TRUE);
         ++i;
     }

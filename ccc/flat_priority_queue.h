@@ -63,7 +63,7 @@ All types and functions can then be written without the `CCC_` prefix. */
 #include <stddef.h>
 /** @endcond */
 
-#include "buffer.h"
+#include "flat_buffer.h"
 #include "private/private_flat_priority_queue.h"
 #include "types.h"
 
@@ -397,14 +397,14 @@ CCC_flat_priority_queue_heapify_storage()
 This function does not modify the input buffer. */
 CCC_Result CCC_flat_priority_queue_copy_heapify(
     CCC_Flat_priority_queue *priority_queue,
-    CCC_Buffer const *buffer,
+    CCC_Flat_buffer const *buffer,
     void *temp,
     CCC_Allocator const *allocator
 );
 
-/** @brief Order count elements of the input Buffer as a flat priority queue,
-destroying the input metadata Buffer struct taking ownership of its underlying
-memory.
+/** @brief Order count elements of the input Flat_buffer as a flat priority
+queue, destroying the input metadata Flat_buffer struct taking ownership of its
+underlying memory.
 @param[in] buffer a pointer to a buffer with memory that will be sorted into
 heap order, given to the flat priority queue, and its metadata struct will be
 cleared.
@@ -422,7 +422,7 @@ remains unmodified.
 A simple way to provide a temp for swapping is with an inline compound literal
 reference provided directly to the function argument `&(name_of_type){}`. */
 CCC_Flat_priority_queue CCC_flat_priority_queue_in_place_heapify(
-    CCC_Buffer *buffer,
+    CCC_Flat_buffer *buffer,
     void *temp,
     CCC_Order order,
     CCC_Comparator const *comparator

@@ -26,7 +26,7 @@ Enter 'q' to quit. */
 #include <string.h>
 #include <time.h>
 
-#define BUFFER_USING_NAMESPACE_CCC
+#define FLAT_BUFFER_USING_NAMESPACE_CCC
 #define FLAT_HASH_MAP_USING_NAMESPACE_CCC
 #define FLAT_DOUBLE_ENDED_QUEUE_USING_NAMESPACE_CCC
 #define PRIORITY_QUEUE_USING_NAMESPACE_CCC
@@ -545,9 +545,9 @@ add_edge_cost_label(
     struct Point cur = source->pos;
     Cell const edge_id = make_edge(source->name, e->n.name);
     struct Point prev = cur;
-    /* Add a two space Buffer to either side of the label so direction of lines
-       is not lost to writing of digits. Otherwise it would be unclear which
-       edge a cost is associated with if close to other costs. */
+    /* Add a two space Flat_buffer to either side of the label so direction of
+       lines is not lost to writing of digits. Otherwise it would be unclear
+       which edge a cost is associated with if close to other costs. */
     size_t const spaces_needed_for_cost = count_digits((size_t)e->n.cost) + 2;
     size_t consecutive_spaces_found = 0;
     enum Label_orientation direction = NORTH;

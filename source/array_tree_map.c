@@ -88,7 +88,8 @@ a fixed map or heap allocation.
 
 Use an int because that will force the nodes array to be wary of
 where to start. The nodes are 8 byte aligned but an int is 4. This means the
-nodes need to start after a 4 byte Buffer of padding at end of data array. */
+nodes need to start after a 4 byte Flat_buffer of padding at end of data array.
+*/
 static __auto_type const static_data_nodes_parity_layout_test
     = CCC_private_array_tree_map_storage_for((int const[TCAP]){});
 /** Some assumptions in the code assume that parity array is last so ensure that
@@ -689,7 +690,8 @@ CCC_array_tree_map_reserve(
     if (!map || !to_add || !allocator || !allocator->allocate) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    /* Once initialized the Buffer always has a size of one for root node. */
+    /* Once initialized the Flat_buffer always has a size of one for root node.
+     */
     size_t const needed = map->count + to_add + (map->count == 0);
     if (needed <= map->capacity) {
         return CCC_RESULT_OK;

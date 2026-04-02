@@ -5,7 +5,8 @@ add_library(${namespace}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_sources(${PROJECT_NAME}
     PRIVATE
         ${PROJECT_SOURCE_DIR}/source/types.c
-        ${PROJECT_SOURCE_DIR}/source/buffer.c
+        ${PROJECT_SOURCE_DIR}/source/flat_bitset.c
+        ${PROJECT_SOURCE_DIR}/source/flat_buffer.c
         ${PROJECT_SOURCE_DIR}/source/flat_hash_map.c
         ${PROJECT_SOURCE_DIR}/source/flat_double_ended_queue.c
         ${PROJECT_SOURCE_DIR}/source/flat_priority_queue.c
@@ -16,7 +17,6 @@ target_sources(${PROJECT_NAME}
         ${PROJECT_SOURCE_DIR}/source/doubly_linked_list.c
         ${PROJECT_SOURCE_DIR}/source/tree_map.c
         ${PROJECT_SOURCE_DIR}/source/array_tree_map.c
-        ${PROJECT_SOURCE_DIR}/source/bitset.c
     PUBLIC 
         FILE_SET public_headers
             TYPE HEADERS
@@ -31,14 +31,14 @@ target_sources(${PROJECT_NAME}
               private/private_tree_map.h
               private/private_array_tree_map.h
               private/private_traits.h
+              private/private_flat_bitset.h
+              private/private_flat_buffer.h
               private/private_flat_double_ended_queue.h
               private/private_flat_hash_map.h
-              private/private_buffer.h
-              private/private_bitset.h
               configuration.h
               types.h
-              buffer.h
-              bitset.h
+              flat_buffer.h
+              flat_bitset.h
               flat_hash_map.h
               flat_double_ended_queue.h
               flat_priority_queue.h

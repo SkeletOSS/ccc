@@ -25,11 +25,11 @@ needed but support constant time push and pop to the front and back when
 resizing is not required, resulting in amortized `O(1)` operations.
 
 If a double ended queue function requesting an allocator is not provided with
-one, the behavior is equivalent to a Ring Buffer. This ring buffer behavior is
-somewhat unique in that it does not fail to insert elements when size is equal
-to capacity. This means that push front, push back, pop front, and pop back are
-`O(1)` operations. However, if any push exceeds capacity an element where the
-push should occur is overwritten.
+one, the behavior is equivalent to a Ring Flat_buffer. This ring buffer behavior
+is somewhat unique in that it does not fail to insert elements when size is
+equal to capacity. This means that push front, push back, pop front, and pop
+back are `O(1)` operations. However, if any push exceeds capacity an element
+where the push should occur is overwritten.
 
 To shorten names in the interface, define the following preprocessor directive
 at the top of your file.
@@ -46,7 +46,7 @@ All types and functions can then be written without the `CCC_` prefix. */
 #include <stddef.h>
 /** @endcond */
 
-#include "buffer.h"
+#include "flat_buffer.h"
 #include "private/private_flat_double_ended_queue.h"
 #include "types.h"
 
@@ -54,7 +54,7 @@ All types and functions can then be written without the `CCC_` prefix. */
 Types available in the container interface. */
 /**@{*/
 
-/** @brief A contiguous Buffer for O(1) push and pop from front and back.
+/** @brief A contiguous Flat_buffer for O(1) push and pop from front and back.
 @warning it is undefined behavior to use an uninitialized flat double ended
 queue.
 
@@ -355,7 +355,7 @@ ring buffer. Therefore, pushing a range that will exceed capacity will overwrite
 elements at the beginning of the flat_double_ended_queue. */
 CCC_Result CCC_flat_double_ended_queue_push_back_range(
     CCC_Flat_double_ended_queue *queue,
-    CCC_Buffer const *range,
+    CCC_Flat_buffer const *range,
     CCC_Allocator const *allocator
 );
 
@@ -388,7 +388,7 @@ ring buffer. Therefore, pushing a range that will exceed capacity will overwrite
 elements at the back of the flat_double_ended_queue. */
 CCC_Result CCC_flat_double_ended_queue_push_front_range(
     CCC_Flat_double_ended_queue *queue,
-    CCC_Buffer const *range,
+    CCC_Flat_buffer const *range,
     CCC_Allocator const *allocator
 );
 
@@ -431,7 +431,7 @@ Notice that the start of the range, `{0,0,3,...}`, is overwritten. */
 [[nodiscard]] void *CCC_flat_double_ended_queue_insert_range(
     CCC_Flat_double_ended_queue *queue,
     void *position,
-    CCC_Buffer const *range,
+    CCC_Flat_buffer const *range,
     CCC_Allocator const *allocator
 );
 
@@ -462,7 +462,7 @@ element if needed. O(1) if no destructor is provided, else O(N).
 &(CCC_Destructor){}.
 
 Note that if destructor is non-empty it will be called on each element in the
-flat_double_ended_queue. However, the underlying Buffer for the
+flat_double_ended_queue. However, the underlying Flat_buffer for the
 flat_double_ended_queue is not freed. If the destructor is NULL, setting the
 size to 0 is O(1). */
 CCC_Result CCC_flat_double_ended_queue_clear(
@@ -470,17 +470,17 @@ CCC_Result CCC_flat_double_ended_queue_clear(
 );
 
 /** @brief Set size of queue to 0 and call destructor on each
-element if needed. Free the underlying Buffer setting the capacity to 0. O(1) if
-no destructor is provided, else O(N).
+element if needed. Free the underlying Flat_buffer setting the capacity to 0.
+O(1) if no destructor is provided, else O(N).
 @param[in] queue a pointer to the flat_double_ended_queue.
 @param[in] destructor the destructor context or
 &(CCC_Destructor){}.
 @param[in] allocator the CCC_Allocator to free memory.
 
 Note that if destructor is non-empty it will be called on each element in the
-flat_double_ended_queue. After all elements are processed the Buffer is freed
-and capacity is 0. If destructor is NULL the Buffer is freed directly and
-capacity is 0. */
+flat_double_ended_queue. After all elements are processed the Flat_buffer is
+freed and capacity is 0. If destructor is NULL the Flat_buffer is freed directly
+and capacity is 0. */
 CCC_Result CCC_flat_double_ended_queue_clear_and_free(
     CCC_Flat_double_ended_queue *queue,
     CCC_Destructor const *destructor,

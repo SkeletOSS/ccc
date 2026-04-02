@@ -4,14 +4,14 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define BITSET_USING_NAMESPACE_CCC
+#define FLAT_BITSET_USING_NAMESPACE_CCC
 #define TRAITS_USING_NAMESPACE_CCC
 #define TYPES_USING_NAMESPACE_CCC
 #define ADAPTIVE_MAP_USING_NAMESPACE_CCC
 
 #include "adaptive_map_utility.h"
 #include "ccc/adaptive_map.h"
-#include "ccc/bitset.h"
+#include "ccc/flat_bitset.h"
 #include "ccc/traits.h"
 #include "ccc/types.h"
 #include "checkers.h"
@@ -514,8 +514,8 @@ check_static_begin(adaptive_map_test_empty_range) {
 static void
 destroy_element(CCC_Arguments const arguments) {
     struct Val const *const i = arguments.type;
-    Bitset *const is_destroyed_buffer = arguments.context;
-    (void)bitset_set(is_destroyed_buffer, (size_t)i->key, CCC_TRUE);
+    Flat_bitset *const is_destroyed_buffer = arguments.context;
+    (void)flat_bitset_set(is_destroyed_buffer, (size_t)i->key, CCC_TRUE);
 }
 
 check_static_begin(adaptive_map_test_clear_with_destructor) {
@@ -529,7 +529,7 @@ check_static_begin(adaptive_map_test_clear_with_destructor) {
     CCC_Adaptive_map map = adaptive_map_default(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
-    Bitset is_destroyed = bitset_with_storage(0, (Bit[MIN_CAP]){});
+    Flat_bitset is_destroyed = flat_bitset_with_storage(0, (Bit[MIN_CAP]){});
     int i = 0;
     for (;;) {
         CCC_Entry const *const e = adaptive_map_try_insert_with(
@@ -540,8 +540,9 @@ check_static_begin(adaptive_map_test_clear_with_destructor) {
         if (!v) {
             break;
         }
-        CCC_Result const bit_push
-            = bitset_push_back(&is_destroyed, CCC_FALSE, &(CCC_Allocator){});
+        CCC_Result const bit_push = flat_bitset_push_back(
+            &is_destroyed, CCC_FALSE, &(CCC_Allocator){}
+        );
         check(bit_push, CCC_RESULT_OK);
         check(v->key, i);
         check(v->val, i);
@@ -557,8 +558,8 @@ check_static_begin(adaptive_map_test_clear_with_destructor) {
         &allocator
     );
     i = 0;
-    while (!bitset_is_empty(&is_destroyed)) {
-        CCC_Tribool const was_destroyed = bitset_pop_back(&is_destroyed);
+    while (!flat_bitset_is_empty(&is_destroyed)) {
+        CCC_Tribool const was_destroyed = flat_bitset_pop_back(&is_destroyed);
         check(was_destroyed, CCC_TRUE);
         ++i;
     }

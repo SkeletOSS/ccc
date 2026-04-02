@@ -21,14 +21,14 @@ algorithms use a wide range of data structures. */
 #    define FILESYS_MAX_PATH NAME_MAX
 #endif
 
-#define BITSET_USING_NAMESPACE_CCC
-#define BUFFER_USING_NAMESPACE_CCC
+#define FLAT_BITSET_USING_NAMESPACE_CCC
+#define FLAT_BUFFER_USING_NAMESPACE_CCC
 #define FLAT_HASH_MAP_USING_NAMESPACE_CCC
 #define FLAT_PRIORITY_QUEUE_USING_NAMESPACE_CCC
 #define TRAITS_USING_NAMESPACE_CCC
 
-#include "ccc/bitset.h"
-#include "ccc/buffer.h"
+#include "ccc/flat_bitset.h"
+#include "ccc/flat_buffer.h"
 #include "ccc/flat_hash_map.h"
 #include "ccc/flat_priority_queue.h"
 #include "ccc/traits.h"
@@ -52,7 +52,7 @@ almost all the functionality needed we just need to manage what happens when
 we pop from bit set but do not manually decrease the size of the underlying bit
 set container. Instead we manage our own front and size fields. */
 struct Bit_queue {
-    Bitset bs;
+    Flat_bitset bs;
     size_t front;
     size_t count;
 };
@@ -68,13 +68,13 @@ enum : uint8_t {
     MAX_CHILD_COUNT = 2,
 };
 
-/** Tree nodes will be pushed into a CCC_Buffer. This is the same concept as
-freely allocating them in the heap, but much more efficient and convenient. We
-push elements to the back of the Buffer to allocate and because we never free
-any nodes until we are done with the entire tree this is an optimal bump
+/** Tree nodes will be pushed into a CCC_Flat_buffer. This is the same concept
+as freely allocating them in the heap, but much more efficient and convenient.
+We push elements to the back of the Flat_buffer to allocate and because we never
+free any nodes until we are done with the entire tree this is an optimal bump
 allocator. All memory is freed at once in one contiguous allocation. The only
-detail to manage is that due to resizing of the Buffer elements must track each
-other through indices not pointers. */
+detail to manage is that due to resizing of the Flat_buffer elements must track
+each other through indices not pointers. */
 struct Huffman_node {
     /** The parent for backtracking during DFS and Pre-Order traversal. */
     size_t parent;
@@ -90,8 +90,8 @@ struct Huffman_node {
 Pair nodes are paired in twos as they are popped from the priority queue and
 pushed back as the sum of their frequencies. This is how the tree is built.
 Having a small simple type in the contiguous flat priority queue is good for
-performance and the entire Buffer can be freed when the algorithm completes.
-The priority queue is only needed while building the tree. */
+performance and the entire Flat_buffer can be freed when the algorithm
+completes. The priority queue is only needed while building the tree. */
 struct Pair_node {
     size_t frequency;
     size_t node_index;
@@ -100,7 +100,7 @@ struct Pair_node {
 /** It is helpful to know how many leaves and total nodes there are for
 reserving the appropriate space for helper data structures. */
 struct Huffman_tree {
-    CCC_Buffer tree_storage;
+    CCC_Flat_buffer tree_storage;
     size_t root;
     size_t num_nodes;
     size_t num_leaves;
@@ -377,7 +377,7 @@ build_encoding_tree(FILE *const f, CCC_Allocator const *const allocator) {
             allocator
         );
         size_t const pair_root
-            = buffer_index(&ret.tree_storage, internal_one).count;
+            = flat_buffer_index(&ret.tree_storage, internal_one).count;
         check(internal_one);
         node_at(&ret, zero.node_index)->parent = pair_root;
         node_at(&ret, one.node_index)->parent = pair_root;
@@ -431,17 +431,18 @@ build_encoding_priority_queue(
     check(leaves >= 2);
     tree->num_leaves = leaves;
     tree->num_nodes = (2 * leaves) - 1;
-    /* For a Buffer based tree 0 is the NULL node so we can't have actual data
-       we want at that index in the tree. */
-    tree->tree_storage = buffer_from(
+    /* For a Flat_buffer based tree 0 is the NULL node so we can't have actual
+       data we want at that index in the tree. */
+    tree->tree_storage = flat_buffer_from(
         *allocator, tree->num_nodes + 1, (struct Huffman_node[]){{}}
     );
     check(count(&tree->tree_storage).count == 1);
-    /* Use a Buffer to simply push back elements we will heapify at the end. */
-    Buffer flat_priority_queue_storage = buffer_with_capacity(
+    /* Use a Flat_buffer to simply push back elements we will heapify at the
+     * end. */
+    Flat_buffer flat_priority_queue_storage = flat_buffer_with_capacity(
         struct Pair_node, *allocator, flat_hash_map_count(&frequencies).count
     );
-    check(buffer_capacity(&flat_priority_queue_storage).count);
+    check(flat_buffer_capacity(&flat_priority_queue_storage).count);
     for (struct Character_frequency const *i = begin(&frequencies);
          i != end(&frequencies);
          i = next(&frequencies, i)) {
@@ -451,7 +452,7 @@ build_encoding_priority_queue(
             &(CCC_Allocator){}
         );
         check(node);
-        CCC_Count index = buffer_index(&tree->tree_storage, node);
+        CCC_Count index = flat_buffer_index(&tree->tree_storage, node);
         check(!index.error);
         struct Pair_node const *const pushed = push_back(
             &flat_priority_queue_storage,
@@ -485,7 +486,7 @@ build_encoding_bitq(
     CCC_Allocator const *const allocator
 ) {
     struct Bit_queue character_paths = {
-        .bs = bitset_default(),
+        .bs = flat_bitset_default(),
     };
     /* By memoizing known bit sequences we can save significant time by not
        performing a DFS over the tree. This is especially helpful for large
@@ -602,12 +603,12 @@ compress_tree(
 ) {
     struct Compressed_huffman_tree ret = {
         .tree_paths = {
-            .bs = bitset_with_capacity(*allocator, tree->num_nodes),
+            .bs = flat_bitset_with_capacity(*allocator, tree->num_nodes),
         },
         .arena = string_arena_create(START_STRING_ARENA_CAP, allocator),
     };
     check(ret.arena.arena);
-    check(bitset_capacity(&ret.tree_paths.bs).count >= tree->num_nodes);
+    check(flat_bitset_capacity(&ret.tree_paths.bs).count >= tree->num_nodes);
     ret.leaf_string = string_arena_allocate(&ret.arena, 0, allocator);
     size_t cur = tree->root;
     /* To properly emulate a recursive Pre-Order traversal with iteration we
@@ -826,12 +827,12 @@ read_from_file(SV_Str_view const unzip, CCC_Allocator const *const allocator) {
     printf("Unzip %s (%zu bytes).\n", SV_begin(unzip), file_size(cccz));
     struct Huffman_encoding encoding = {
         .file_bits = {
-            .bs = bitset_default(),
+            .bs = flat_bitset_default(),
         },
         .blueprint = {
             .arena = string_arena_create(START_STRING_ARENA_CAP, allocator),
             .tree_paths = {
-                .bs = bitset_default(),
+                .bs = flat_bitset_default(),
             },
         },
     };
@@ -874,7 +875,7 @@ reconstruct_tree(
     size_t const bq_count = bitq_count(&blueprint->tree_paths);
     struct Huffman_tree tree = {
         /* 0 index is NULL so real data can't be there. */
-        .tree_storage = CCC_buffer_from(
+        .tree_storage = CCC_flat_buffer_from(
             *allocator,
             bq_count,
             (struct Huffman_node[]){
@@ -888,7 +889,7 @@ reconstruct_tree(
         .root = 1,
         .num_nodes = bq_count,
     };
-    check(!buffer_is_empty(&tree.tree_storage));
+    check(!flat_buffer_is_empty(&tree.tree_storage));
     (void)bitq_pop_front(&blueprint->tree_paths);
     size_t parent = tree.root;
     size_t current = 0;
@@ -905,7 +906,7 @@ reconstruct_tree(
                 },
                 allocator
             );
-            current = buffer_index(&tree.tree_storage, pushed).count;
+            current = flat_buffer_index(&tree.tree_storage, pushed).count;
             /* Get the parent reference after the buffer push in case the
                buffer resized to accommodate push. */
             struct Huffman_node *const parent_r = node_at(&tree, parent);
@@ -1005,25 +1006,26 @@ readbytes(FILE *const f, void *const destination, size_t const to_read) {
 
 static struct Huffman_node *
 node_at(struct Huffman_tree const *const t, size_t const node) {
-    return ((struct Huffman_node *)buffer_at(&t->tree_storage, node));
+    return ((struct Huffman_node *)flat_buffer_at(&t->tree_storage, node));
 }
 
 static size_t
 branch_index(
     struct Huffman_tree const *const t, size_t const node, uint8_t const dir
 ) {
-    return ((struct Huffman_node *)buffer_at(&t->tree_storage, node))
+    return ((struct Huffman_node *)flat_buffer_at(&t->tree_storage, node))
         ->link[dir];
 }
 
 static size_t
 parent_index(struct Huffman_tree const *const t, size_t node) {
-    return ((struct Huffman_node *)buffer_at(&t->tree_storage, node))->parent;
+    return ((struct Huffman_node *)flat_buffer_at(&t->tree_storage, node))
+        ->parent;
 }
 
 static char
 char_index(struct Huffman_tree const *const t, size_t const node) {
-    return ((struct Huffman_node *)buffer_at(&t->tree_storage, node))->ch;
+    return ((struct Huffman_node *)flat_buffer_at(&t->tree_storage, node))->ch;
 }
 
 /** Frees all encoding nodes from the tree provided. */
@@ -1160,13 +1162,13 @@ bitq_push_back(
     if (result != CCC_RESULT_OK) {
         return result;
     }
-    if (bq->count == bitset_count(&bq->bs).count) {
+    if (bq->count == flat_bitset_count(&bq->bs).count) {
         result = push_back(&bq->bs, bit, &(CCC_Allocator){});
         if (result != CCC_RESULT_OK) {
             return result;
         }
     } else {
-        CCC_Tribool const was = bitset_set(
+        CCC_Tribool const was = flat_bitset_set(
             &bq->bs, (bq->front + bq->count) % capacity(&bq->bs).count, bit
         );
         if (was == CCC_TRIBOOL_ERROR) {
@@ -1183,7 +1185,7 @@ bitq_pop_back(struct Bit_queue *const bq) {
         return CCC_TRIBOOL_ERROR;
     }
     size_t const i = (bq->front + bq->count - 1) % capacity(&bq->bs).count;
-    CCC_Tribool const bit = bitset_test(&bq->bs, i);
+    CCC_Tribool const bit = flat_bitset_test(&bq->bs, i);
     check(bit != CCC_TRIBOOL_ERROR);
     --bq->count;
     return bit;
@@ -1194,7 +1196,7 @@ bitq_pop_front(struct Bit_queue *const bq) {
     if (!bq->count) {
         return CCC_TRIBOOL_ERROR;
     }
-    CCC_Tribool const bit = bitset_test(&bq->bs, bq->front);
+    CCC_Tribool const bit = flat_bitset_test(&bq->bs, bq->front);
     check(bit != CCC_TRIBOOL_ERROR);
     bq->front = (bq->front + 1) % count(&bq->bs).count;
     --bq->count;
@@ -1206,7 +1208,7 @@ bitq_test(struct Bit_queue const *const bq, size_t const i) {
     if (!bq->count) {
         return CCC_TRIBOOL_ERROR;
     }
-    return bitset_test(&bq->bs, (bq->front + i) % capacity(&bq->bs).count);
+    return flat_bitset_test(&bq->bs, (bq->front + i) % capacity(&bq->bs).count);
 }
 
 /** We don't support push front so we technically don't need this logic yet
@@ -1221,22 +1223,22 @@ bitq_maybe_resize(
     size_t bits_to_add,
     CCC_Allocator const *const allocator
 ) {
-    size_t const old_capacity = bitset_capacity(&bq->bs).count;
+    size_t const old_capacity = flat_bitset_capacity(&bq->bs).count;
     size_t const requirement = bq->count + bits_to_add;
     if (requirement < old_capacity) {
         return CCC_RESULT_OK;
     }
     static_assert(
-        (CCC_BITSET_BLOCK_BITS & (CCC_BITSET_BLOCK_BITS - 1)) == 0,
+        (CCC_FLAT_BITSET_BLOCK_BITS & (CCC_FLAT_BITSET_BLOCK_BITS - 1)) == 0,
         "rounding up to next block bits capacity with powers of 2 only"
     );
     assert(requirement);
     size_t const new_capacity
-        = ((requirement * 2) + (CCC_BITSET_BLOCK_BITS - 1))
-        & ~(CCC_BITSET_BLOCK_BITS - 1);
-    Bitset compact_bits
-        = bitset_with_capacity(*allocator, new_capacity, bq->count);
-    if (!bitset_capacity(&compact_bits).count) {
+        = ((requirement * 2) + (CCC_FLAT_BITSET_BLOCK_BITS - 1))
+        & ~(CCC_FLAT_BITSET_BLOCK_BITS - 1);
+    Flat_bitset compact_bits
+        = flat_bitset_with_capacity(*allocator, new_capacity, bq->count);
+    if (!flat_bitset_capacity(&compact_bits).count) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
     if (bq->count) {
@@ -1244,8 +1246,8 @@ bitq_maybe_resize(
         size_t compacting_bit = 0;
         size_t bq_bit = bq->front;
         while (compacting_bit < first_chunk) {
-            CCC_Tribool const set = bitset_set(
-                &compact_bits, compacting_bit, bitset_test(&bq->bs, bq_bit)
+            CCC_Tribool const set = flat_bitset_set(
+                &compact_bits, compacting_bit, flat_bitset_test(&bq->bs, bq_bit)
             );
             if (set == CCC_TRIBOOL_ERROR) {
                 return CCC_RESULT_FAIL;
@@ -1255,8 +1257,8 @@ bitq_maybe_resize(
         }
         bq_bit = 0;
         while (compacting_bit < bq->count) {
-            CCC_Tribool const set = bitset_set(
-                &compact_bits, compacting_bit, bitset_test(&bq->bs, bq_bit)
+            CCC_Tribool const set = flat_bitset_set(
+                &compact_bits, compacting_bit, flat_bitset_test(&bq->bs, bq_bit)
             );
             if (set == CCC_TRIBOOL_ERROR) {
                 return CCC_RESULT_FAIL;
@@ -1265,7 +1267,7 @@ bitq_maybe_resize(
             ++bq_bit;
         }
     }
-    CCC_Result const result = bitset_clear_and_free(&bq->bs, allocator);
+    CCC_Result const result = flat_bitset_clear_and_free(&bq->bs, allocator);
     if (result != CCC_RESULT_OK) {
         return result;
     }
