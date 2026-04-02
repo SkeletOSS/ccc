@@ -381,13 +381,14 @@ runtime. */
 
 /** @internal */
 #define CCC_private_array_tree_map_and_modify_with(                            \
-    array_tree_map_array_pointer,                                              \
+    array_tree_map_handle_pointer,                                             \
     closure_parameter,                                                         \
     closure_over_closure_parameter...                                          \
 )                                                                              \
     (__extension__({                                                           \
-        __auto_type private_array_tree_map_hndl_pointer                        \
-            = (array_tree_map_array_pointer);                                  \
+        struct CCC_Array_tree_map_handle const *const                          \
+            private_array_tree_map_hndl_pointer                                \
+            = (array_tree_map_handle_pointer);                                 \
         struct CCC_Array_tree_map_handle private_array_tree_map_mod_hndl       \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                            \
         if (private_array_tree_map_hndl_pointer) {                             \
@@ -406,37 +407,37 @@ runtime. */
 
 /** @internal */
 #define CCC_private_array_tree_map_or_insert_with(                             \
-    array_tree_map_array_pointer,                                              \
+    array_tree_map_handle_pointer,                                             \
     private_allocator_pointer,                                                 \
     type_compound_literal...                                                   \
 )                                                                              \
     (__extension__({                                                           \
-        __auto_type private_or_ins_array_pointer                               \
-            = (array_tree_map_array_pointer);                                  \
+        struct CCC_Array_tree_map_handle const *const                          \
+            private_or_ins_handle_pointer = (array_tree_map_handle_pointer);   \
         CCC_Handle_index private_array_tree_map_or_ins_ret = 0;                \
         CCC_Allocator const *const private_array_tree_map_allocator            \
             = (private_allocator_pointer);                                     \
         if (private_array_tree_map_allocator                                   \
-            && private_or_ins_array_pointer) {                                 \
-            if (private_or_ins_array_pointer->status == CCC_ENTRY_OCCUPIED) {  \
+            && private_or_ins_handle_pointer) {                                \
+            if (private_or_ins_handle_pointer->status == CCC_ENTRY_OCCUPIED) { \
                 private_array_tree_map_or_ins_ret                              \
-                    = private_or_ins_array_pointer->index;                     \
+                    = private_or_ins_handle_pointer->index;                    \
             } else {                                                           \
                 private_array_tree_map_or_ins_ret                              \
                     = CCC_private_array_tree_map_allocate_slot(                \
-                        private_or_ins_array_pointer->map,                     \
+                        private_or_ins_handle_pointer->map,                    \
                         private_array_tree_map_allocator                       \
                     );                                                         \
                 if (private_array_tree_map_or_ins_ret) {                       \
                     *((typeof(type_compound_literal) *)                        \
                           CCC_private_array_tree_map_data_at(                  \
-                              private_or_ins_array_pointer->map,               \
+                              private_or_ins_handle_pointer->map,              \
                               private_array_tree_map_or_ins_ret                \
                           )) = type_compound_literal;                          \
                     CCC_private_array_tree_map_insert(                         \
-                        private_or_ins_array_pointer->map,                     \
-                        private_or_ins_array_pointer->index,                   \
-                        private_or_ins_array_pointer->last_order,              \
+                        private_or_ins_handle_pointer->map,                    \
+                        private_or_ins_handle_pointer->index,                  \
+                        private_or_ins_handle_pointer->last_order,             \
                         private_array_tree_map_or_ins_ret                      \
                     );                                                         \
                 }                                                              \
@@ -447,43 +448,43 @@ runtime. */
 
 /** @internal */
 #define CCC_private_array_tree_map_insert_handle_with(                         \
-    array_tree_map_array_pointer,                                              \
+    array_tree_map_handle_pointer,                                             \
     private_allocator_pointer,                                                 \
     type_compound_literal...                                                   \
 )                                                                              \
     (__extension__({                                                           \
-        __auto_type private_ins_array_pointer                                  \
-            = (array_tree_map_array_pointer);                                  \
+        struct CCC_Array_tree_map_handle const *const                          \
+            private_ins_handle_pointer = (array_tree_map_handle_pointer);      \
         CCC_Handle_index private_array_tree_map_ins_hndl_ret = 0;              \
         CCC_Allocator const *const private_array_tree_map_allocator            \
             = (private_allocator_pointer);                                     \
-        if (private_array_tree_map_allocator && private_ins_array_pointer) {   \
-            if (!(private_ins_array_pointer->status & CCC_ENTRY_OCCUPIED)) {   \
+        if (private_array_tree_map_allocator && private_ins_handle_pointer) {  \
+            if (!(private_ins_handle_pointer->status & CCC_ENTRY_OCCUPIED)) {  \
                 private_array_tree_map_ins_hndl_ret                            \
                     = CCC_private_array_tree_map_allocate_slot(                \
-                        private_ins_array_pointer->map,                        \
+                        private_ins_handle_pointer->map,                       \
                         private_array_tree_map_allocator                       \
                     );                                                         \
                 if (private_array_tree_map_ins_hndl_ret) {                     \
                     *((typeof(type_compound_literal) *)                        \
                           CCC_private_array_tree_map_data_at(                  \
-                              private_ins_array_pointer->map,                  \
+                              private_ins_handle_pointer->map,                 \
                               private_array_tree_map_ins_hndl_ret              \
                           )) = type_compound_literal;                          \
                     CCC_private_array_tree_map_insert(                         \
-                        private_ins_array_pointer->map,                        \
-                        private_ins_array_pointer->index,                      \
-                        private_ins_array_pointer->last_order,                 \
+                        private_ins_handle_pointer->map,                       \
+                        private_ins_handle_pointer->index,                     \
+                        private_ins_handle_pointer->last_order,                \
                         private_array_tree_map_ins_hndl_ret                    \
                     );                                                         \
                 }                                                              \
-            } else if (private_ins_array_pointer->status                       \
+            } else if (private_ins_handle_pointer->status                      \
                        == CCC_ENTRY_OCCUPIED) {                                \
                 private_array_tree_map_ins_hndl_ret                            \
-                    = private_ins_array_pointer->index;                        \
+                    = private_ins_handle_pointer->index;                       \
                 *((typeof(type_compound_literal) *)                            \
                       CCC_private_array_tree_map_data_at(                      \
-                          private_ins_array_pointer->map,                      \
+                          private_ins_handle_pointer->map,                     \
                           private_array_tree_map_ins_hndl_ret                  \
                       )) = type_compound_literal;                              \
             }                                                                  \
@@ -499,7 +500,8 @@ runtime. */
     type_compound_literal...                                                   \
 )                                                                              \
     (__extension__({                                                           \
-        __auto_type private_try_ins_map_pointer = (array_tree_map_pointer);    \
+        struct CCC_Array_tree_map *const private_try_ins_map_pointer           \
+            = (array_tree_map_pointer);                                        \
         CCC_Handle private_array_tree_map_try_ins_hndl_ret                     \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                            \
         CCC_Allocator const *const private_array_tree_map_allocator            \
@@ -560,7 +562,7 @@ runtime. */
     type_compound_literal...                                                   \
 )                                                                              \
     (__extension__({                                                           \
-        __auto_type private_ins_or_assign_map_pointer                          \
+        struct CCC_Array_tree_map *const private_ins_or_assign_map_pointer     \
             = (array_tree_map_pointer);                                        \
         CCC_Handle private_array_tree_map_ins_or_assign_hndl_ret               \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                            \

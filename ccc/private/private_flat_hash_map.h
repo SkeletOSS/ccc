@@ -390,7 +390,8 @@ desired data if occupied. */
     closure_over_closure_parameter...                                          \
 )                                                                              \
     (__extension__({                                                           \
-        __auto_type private_flat_hash_map_mod_ent_pointer                      \
+        struct CCC_Flat_hash_map_entry const *const                            \
+            private_flat_hash_map_mod_ent_pointer                              \
             = (flat_hash_map_entry_pointer);                                   \
         struct CCC_Flat_hash_map_entry private_flat_hash_map_mod_with_ent      \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                            \
@@ -417,7 +418,8 @@ problem. */
     flat_hash_map_entry_pointer, type_compound_literal...                      \
 )                                                                              \
     (__extension__({                                                           \
-        __auto_type private_flat_hash_map_or_ins_ent_pointer                   \
+        struct CCC_Flat_hash_map_entry const *const                            \
+            private_flat_hash_map_or_ins_ent_pointer                           \
             = (flat_hash_map_entry_pointer);                                   \
         typeof(type_compound_literal) *private_flat_hash_map_or_ins_res        \
             = NULL;                                                            \
@@ -448,7 +450,8 @@ occur. */
     flat_hash_map_entry_pointer, type_compound_literal...                      \
 )                                                                              \
     (__extension__({                                                           \
-        __auto_type private_flat_hash_map_ins_ent_pointer                      \
+        struct CCC_Flat_hash_map_entry const *const                            \
+            private_flat_hash_map_ins_ent_pointer                              \
             = (flat_hash_map_entry_pointer);                                   \
         typeof(type_compound_literal) *private_flat_hash_map_ins_ent_res       \
             = NULL;                                                            \

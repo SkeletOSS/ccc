@@ -175,37 +175,38 @@ ensure our runtime alignment calculations match compiler's `alignas` macro. */
     (((bytes_to_round) + GROUP_COUNT - 1) & (size_t)~(GROUP_COUNT - 1))
 
 /** @internal The following test should ensure some safety in assumptions we
-make when the user defines a fixed size map type. This is just a small type that
-will remain internal to this translation unit. The tag array is not given a
-replica group size at the end of its allocation because that wastes pointless
-space and has no impact on the following layout and pointer arithmetic tests.
-One behavior we want to ensure is that our manual pointer arithmetic at runtime
-matches the group size aligned position of the tag metadata array. */
-static struct {
-    struct {
-        int const i;
-    } const data[2 + 1];
+make when the user defines a fixed size map type. This anonymous compound
+literal construction is the same technique used to construct fixed maps for
+users. However, it is just a small type that will remain internal to this
+translation unit and does not use the same capacity static assert constraints.
+The tag array is not given a replica group size at the end of its allocation
+because that wastes pointless space and has no impact on the following layout
+and pointer arithmetic tests. One behavior we want to ensure is that our manual
+pointer arithmetic at runtime matches the group size aligned position of the tag
+metadata array. */
+static __auto_type const data_tag_layout_test = (struct {
+    int const data[2 + 1];
     alignas(GROUP_COUNT) struct CCC_Flat_hash_map_tag const tag[2];
-} const data_tag_layout_test;
+}){};
 static_assert(
     (char const *)&data_tag_layout_test.tag[2]
             - (char const *)&data_tag_layout_test.data[0]
         == (comptime_roundup((sizeof(data_tag_layout_test.data)))
             + (sizeof(struct CCC_Flat_hash_map_tag) * 2)),
-    "Calculating the size in bytes of the struct manually must match "
-    "the bytes added by a compiler alignas directive."
+    "Calculating the size in bytes of the struct manually must match the bytes "
+    "added by a compiler alignas directive."
 );
 static_assert(
     (char const *)&data_tag_layout_test.data
             + comptime_roundup((sizeof(data_tag_layout_test.data)))
         == (char const *)&data_tag_layout_test.tag,
-    "We calculate the correct position of the tag array considering "
-    "it may get extra padding at start for alignment by group size."
+    "We calculate the correct position of the tag array considering it may get "
+    "extra padding at start for alignment by group size."
 );
 static_assert(
     (offsetof(typeof(data_tag_layout_test), tag) % GROUP_COUNT) == 0,
-    "The tag array starts at an aligned group size byte boundary "
-    "within the struct."
+    "The tag array starts at an aligned group size byte boundary within the "
+    "struct."
 );
 
 /*=======================    Special Constants    ===========================*/

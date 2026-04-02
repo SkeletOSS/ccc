@@ -301,13 +301,14 @@ metadata. */
 
 /** @internal */
 #define CCC_private_array_adaptive_map_and_modify_with(                        \
-    array_adaptive_map_array_pointer,                                          \
+    array_adaptive_map_handle_pointer,                                         \
     closure_parameter,                                                         \
     closure_over_closure_parameter...                                          \
 )                                                                              \
     (__extension__({                                                           \
-        __auto_type private_array_adaptive_map_mod_hndl_pointer                \
-            = (array_adaptive_map_array_pointer);                              \
+        struct CCC_Array_adaptive_map_handle const *const                      \
+            private_array_adaptive_map_mod_hndl_pointer                        \
+            = (array_adaptive_map_handle_pointer);                             \
         struct CCC_Array_adaptive_map_handle                                   \
             private_array_adaptive_map_mod_hndl                                \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                            \
@@ -328,13 +329,14 @@ metadata. */
 
 /** @internal */
 #define CCC_private_array_adaptive_map_or_insert_with(                         \
-    array_adaptive_map_array_pointer,                                          \
+    array_adaptive_map_handle_pointer,                                         \
     private_allocator_pointer,                                                 \
     type_compound_literal...                                                   \
 )                                                                              \
     (__extension__({                                                           \
-        __auto_type private_array_adaptive_map_or_ins_hndl_pointer             \
-            = (array_adaptive_map_array_pointer);                              \
+        struct CCC_Array_adaptive_map_handle const *const                      \
+            private_array_adaptive_map_or_ins_hndl_pointer                     \
+            = (array_adaptive_map_handle_pointer);                             \
         CCC_Handle_index private_array_adaptive_map_or_ins_ret = 0;            \
         CCC_Allocator const *const private_array_adaptive_map_allocator        \
             = (private_allocator_pointer);                                     \
@@ -369,13 +371,14 @@ metadata. */
 
 /** @internal */
 #define CCC_private_array_adaptive_map_insert_handle_with(                     \
-    array_adaptive_map_array_pointer,                                          \
+    array_adaptive_map_handle_pointer,                                         \
     private_allocator_pointer,                                                 \
     type_compound_literal...                                                   \
 )                                                                              \
     (__extension__({                                                           \
-        __auto_type private_array_adaptive_map_ins_hndl_pointer                \
-            = (array_adaptive_map_array_pointer);                              \
+        struct CCC_Array_adaptive_map_handle const *const                      \
+            private_array_adaptive_map_ins_hndl_pointer                        \
+            = (array_adaptive_map_handle_pointer);                             \
         CCC_Handle_index private_array_adaptive_map_ins_hndl_ret = 0;          \
         CCC_Allocator const *const private_array_adaptive_map_allocator        \
             = (private_allocator_pointer);                                     \
@@ -422,7 +425,8 @@ metadata. */
     type_compound_literal...                                                   \
 )                                                                              \
     (__extension__({                                                           \
-        __auto_type private_array_adaptive_map_try_ins_map_pointer             \
+        struct CCC_Array_adaptive_map *const                                   \
+            private_array_adaptive_map_try_ins_map_pointer                     \
             = (array_adaptive_map_pointer);                                    \
         CCC_Handle private_array_adaptive_map_try_ins_hndl_ret                 \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                            \
@@ -484,7 +488,8 @@ metadata. */
     type_compound_literal...                                                        \
 )                                                                                   \
     (__extension__({                                                                \
-        __auto_type private_array_adaptive_map_ins_or_assign_map_pointer            \
+        struct CCC_Array_adaptive_map *const                                        \
+            private_array_adaptive_map_ins_or_assign_map_pointer                    \
             = (array_adaptive_map_pointer);                                         \
         CCC_Handle private_array_adaptive_map_ins_or_assign_hndl_ret                \
             = {.status = CCC_ENTRY_ARGUMENT_ERROR};                                 \

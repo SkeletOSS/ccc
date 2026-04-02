@@ -297,7 +297,7 @@ void *CCC_private_tree_map_insert(
     closure_over_closure_parameter...                                          \
 )                                                                              \
     (__extension__({                                                           \
-        __auto_type private_tree_map_ent_pointer                               \
+        struct CCC_Tree_map_entry const *const private_tree_map_ent_pointer    \
             = (private_tree_map_entry_pointer);                                \
         struct CCC_Tree_map_entry private_tree_map_mod_ent                     \
             = {.entry = {.status = CCC_ENTRY_ARGUMENT_ERROR}};                 \
@@ -318,7 +318,7 @@ void *CCC_private_tree_map_insert(
     type_compound_literal...                                                   \
 )                                                                              \
     (__extension__({                                                           \
-        __auto_type private_or_ins_entry_pointer                               \
+        struct CCC_Tree_map_entry const *const private_or_ins_entry_pointer    \
             = (private_tree_map_entry_pointer);                                \
         typeof(type_compound_literal) *private_tree_map_or_ins_ret = NULL;     \
         CCC_Allocator const *const private_tree_map_allocator                  \
@@ -349,7 +349,7 @@ void *CCC_private_tree_map_insert(
     type_compound_literal...                                                   \
 )                                                                              \
     (__extension__({                                                           \
-        __auto_type private_ins_entry_pointer                                  \
+        struct CCC_Tree_map_entry const *const private_ins_entry_pointer       \
             = (private_tree_map_entry_pointer);                                \
         typeof(type_compound_literal) *private_tree_map_ins_ent_ret = NULL;    \
         CCC_Allocator const *const private_tree_map_allocator                  \
