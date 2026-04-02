@@ -356,7 +356,7 @@ CCC_flat_bitset_shift_right(
     }
     Block_count const end = block_count_index(bitset->count - 1);
     Block_count const blocks = block_count_index(right_shifts);
-    Bit_count split = bit_count_index(right_shifts);
+    Bit_count const split = bit_count_index(right_shifts);
     if (!split) {
         for (Block_count shift = blocks, write = 0; shift < end + 1;
              ++shift, ++write) {
