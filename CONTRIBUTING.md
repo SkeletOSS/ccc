@@ -62,47 +62,69 @@ Add a `CMakeUserPresets.json` file so that you can run the sanitizer presets fou
     "configurePresets": [
         {
             "name": "my-gcc-debug",
-            "inherits": ["default-debug"],
+            "inherits": ["gcc-debug"],
             "cacheVariables": {
-                "CMAKE_C_COMPILER": "gcc-15.1"
+                "CMAKE_C_COMPILER": "gcc-15.2"
             }
         },
         {
             "name": "my-gcc-release",
-            "inherits": ["default-release"],
+            "inherits": ["gcc-release"],
             "cacheVariables": {
-                "CMAKE_C_COMPILER": "gcc-15.1"
+                "CMAKE_C_COMPILER": "gcc-15.2"
             }
         },
         {
             "name": "my-clang-debug",
-            "inherits": ["default-debug"],
+            "inherits": ["clang-debug"],
             "generator": "Ninja",
             "cacheVariables": {
-                "CMAKE_C_COMPILER": "clang"
+                "CMAKE_C_FLAGS": "-ggdb3 $env{CCC_WARNING_C_FLAGS}"
             }
         },
         {
             "name": "my-clang-release",
-            "inherits": ["default-release"],
-            "generator": "Ninja",
-            "cacheVariables": {
-                "CMAKE_C_COMPILER": "clang"
-            }
+            "inherits": ["clang-release"],
+            "generator": "Ninja"
         },
         {
             "name": "my-sanitize-debug",
             "inherits": ["gcc-sanitize-debug"],
+            "generator": "Ninja",
             "cacheVariables": {
-                "CMAKE_C_COMPILER": "gcc-15.1"
+                "CMAKE_C_COMPILER": "gcc-15.2"
             }
         },
         {
             "name": "my-sanitize-release",
             "inherits": ["gcc-sanitize-release"],
+            "generator": "Ninja",
             "cacheVariables": {
-                "CMAKE_C_COMPILER": "gcc-15.1"
+                "CMAKE_C_COMPILER": "gcc-15.2"
             }
+        },
+        {
+            "name": "my-memory-sanitize-debug",
+            "inherits": ["clang-memory-sanitize-debug"],
+            "generator": "Ninja"
+        },
+        {
+            "name": "my-memory-sanitize-release",
+            "inherits": ["clang-memory-sanitize-release"],
+            "generator": "Ninja"
+        },
+        {
+            "name": "my-gcc-gcov",
+            "inherits": ["gcc-gcov"],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "gcc-15.2",
+                "CCC_COVERAGE_TOOL": "gcov-15.2"
+            }
+        },
+        {
+            "name": "my-llvm-cov",
+            "inherits": ["llvm-cov"],
+            "generator": "Ninja"
         }
     ]
 }
@@ -127,11 +149,10 @@ Now that tooling is set up, the workflow is roughly as follows.
 - `ccc` - The core C Container Collection library.
     - `cmake --preset=[PRESET HERE] && cmake --build build -j[NUM THREADS] --target ccc`
 - `tests` - The tests.
-    - `cmake --preset=[PRESET HERE] && cmake --build build -j[NUM THREADS] --target tests`
-    - `make tests` to build.
+    - `cmake --preset=[PRESET HERE] && make tests`
     - `make test` to run all the tests.
 - `samples` - The samples.
-    - `cmake --preset=[PRESET HERE] && cmake --build build -j[NUM THREADS] --target samples`
+    - `cmake --preset=[PRESET HERE] && make samples`
     - `./build/debug/bin/[SAMPLE_NAME]` to run a sample in debug mode.
     - `./build/bin/[SAMPLE_NAME]` to run a sample in release mode.
 
@@ -154,11 +175,67 @@ This is a critical rule that users should internalize immediately. The collectio
     CCC_Allocator const *allocator
 );
 CCC_flat_priority_queue_push(&pq, &(int){4}, &(int){}, &allocator);
-CCC_flat_priority_queue_push(&pq, &(int){5}, &(int){}, &(CCC_Allocator){});
-CCC_flat_priority_queue_push(&pq, &(int){5}, &(int){}, /*  WRONG! */ NULL);
+CCC_flat_priority_queue_push(&pq, &(int){4}, &(int){}, &(CCC_Allocator){});
+CCC_flat_priority_queue_push(&pq, &(int){4}, &(int){}, /*  WRONG! */ NULL);
 ```
 
-The first function call site tells us the following: in this queue, push the value 4, here is a swap slot, and here is an allocator to resize the underlying storage if needed. The second signature instead says in this queue, push the value 4, here is a swap slot, and this function may not allocate if resizing is required. The third example is wrong. An empty compound literal is much more readable at the call site. The reader requires no API knowledge to understand the general idea of the code, while they would need to check our API documentation to understand the third example. The function would reject any NULL arguments and return either an error specifying a bad argument or NULL depending on the API contract.
+The first function call site tells us the following: in this queue, push the value 4, here is a swap slot, and here is an allocator to resize the underlying storage if needed. The second signature instead says in this queue, push the value 4, here is a swap slot, and this function may not allocate if resizing is required. The third example is wrong. An empty compound literal is much more readable at the call site. The reader can understand the general intent of the operation without needing to consult API documentation. The function would reject any NULL arguments and return either an error specifying a bad argument or NULL depending on the API contract.
+
+### Use the C Type System at Interface Boundaries
+
+Building upon the last point regarding how to avoid `NULL` at interface boundaries, it is important to communicate with C23's built in type system whenever possible. The last section showed extensive use of inline compound literal references, rather than `NULL`. This is an example of communicating with the C type system rather than arbitrarily chosen API argument conventions. Here is another example, from the README.md, showing fixed size data structure initialization.
+
+```c
+struct Key_val {
+    int key;
+    int val;
+};
+static CCC_Array_adaptive_map adaptive_map
+    = CCC_array_adaptive_map_with_storage(
+        key,
+        (CCC_Key_comparator){.compare = compare_int_key},
+        (struct Key_val[1024]){}
+    );
+static CCC_Array_tree_map tree_map
+    = CCC_array_tree_map_with_storage(
+        key,
+        (CCC_Key_comparator){.compare = compare_int_key},
+        (struct Key_val[1024]){}
+    );
+static CCC_Flat_hash_map hash_map
+    = CCC_flat_hash_map_with_storage(
+        key,
+        ((CCC_Hasher){.hash = hash_int, .compare = compare_int_key}),
+        (struct Key_val[1024]){}
+    );
+static CCC_Flat_priority_queue priority_queue
+    = CCC_flat_priority_queue_with_storage(
+        CCC_ORDER_LESSER,
+        (CCC_Comparator){.compare = compare_int},
+        (int[1024]){}
+    );
+static CCC_Flat_double_ended_queue ring_buffer
+    = CCC_flat_double_ended_queue_with_storage(
+        0,
+        (int[1024]){}
+    );
+static CCC_Buffer buffer
+    = CCC_buffer_with_storage(
+        0,
+        (int[1024]){}
+    );
+static CCC_Bitset bitset
+    = CCC_bitset_with_storage(
+        1024,
+        (CCC_Bit[1024]){}
+    );
+```
+
+When practical, these initializers accept arguments as compound literals rather than arguments in an arbitrary order. A type name and designated initializer fields within a compound literal offer much more readable initialization, to someone unfamiliar with the CCC API, than arguments in arbitrary, comma-separated order. Only use compound literal argument bundles when all omitted fields have well-defined, safe defaults. If a field is required for correct operation, such as the key field for maps, it should be provided as a direct argument instead. In this example, no `CCC_Hasher`, `CCC_Key_comparator`, or `CCC_Comparator` needs context provided to the `.context` field, and that is OK.
+
+The use of compound literal arrays also helps communicate the nature of these data structures without having to supply more obtuse type, size, and capacity arguments. For most containers the provided compound literal is used directly as the backing storage. For containers such as the `Array_adaptive_map`, `Array_tree_map`, `Flat_hash_map`, and `Bitset`, the provided compound literal array is used as a guideline for structuring efficient backing storage. The maps use it to construct the first array in a struct-of-arrays (SOA) layout. The bit set uses the request for a certain number of bits as a guide for determining how many blocks of a platform specified integer width to use for efficient operation.
+
+In any case, the user benefits from expressing what they want with the C type system rather than our arbitrary interface conventions. This will make it easier for users to return to their code and understand its general ideas long after they have forgotten our API conventions.
 
 ### Naming
 
