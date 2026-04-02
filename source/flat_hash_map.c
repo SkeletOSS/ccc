@@ -193,20 +193,20 @@ static_assert(
             - (char const *)&data_tag_layout_test->data[0]
         == (comptime_roundup((sizeof(data_tag_layout_test->data)))
             + (sizeof(struct CCC_Flat_hash_map_tag) * 2)),
-    "Calculating the size in bytes of the struct manually must match "
-    "the bytes added by a compiler alignas directive."
+    "Calculating the size in bytes of the struct manually must match the bytes "
+    "added by a compiler alignas directive."
 );
 static_assert(
     (char const *)&data_tag_layout_test->data
             + comptime_roundup((sizeof(data_tag_layout_test->data)))
         == (char const *)&data_tag_layout_test->tag,
-    "We calculate the correct position of the tag array considering "
-    "it may get extra padding at start for alignment by group size."
+    "We calculate the correct position of the tag array considering it may get "
+    "extra padding at start for alignment by group size."
 );
 static_assert(
     (offsetof(typeof(*data_tag_layout_test), tag) % GROUP_COUNT) == 0,
-    "The tag array starts at an aligned group size byte boundary "
-    "within the struct."
+    "The tag array starts at an aligned group size byte boundary within the "
+    "struct."
 );
 
 /*=======================    Special Constants    ===========================*/
