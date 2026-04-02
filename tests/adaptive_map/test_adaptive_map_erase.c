@@ -156,9 +156,12 @@ check_static_begin(adaptive_map_test_insert_erase_shuffled_no_allocator) {
 }
 
 check_static_begin(adaptive_map_test_weak_srand) {
+    enum : int {
+        SRAND_CAP = 100,
+    };
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
-        .context = &stack_allocator_for((struct Val[100]){}),
+        .context = &stack_allocator_for((struct Val[SRAND_CAP]){}),
     };
     Adaptive_map s = adaptive_map_default(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
@@ -166,9 +169,6 @@ check_static_begin(adaptive_map_test_weak_srand) {
     /* Seed the test with any integer for reproducible random test sequence
        currently this will change every test. NOLINTNEXTLINE */
     srand((unsigned)time(NULL));
-    enum : int {
-        SRAND_CAP = 100,
-    };
     Flat_bitset repeats
         = flat_bitset_with_storage(SRAND_CAP, (CCC_Bit[SRAND_CAP]){});
     for (int i = 0; i < SRAND_CAP; ++i) {

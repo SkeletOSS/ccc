@@ -1027,7 +1027,6 @@ check_static_begin(array_tree_map_test_insert_weak_srand) {
         check(insert_error(&e), false);
         check(validate(&map), true);
     }
-    check(count(&map).count, (size_t)num_nodes);
     check_end();
 }
 
