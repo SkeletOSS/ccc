@@ -96,7 +96,7 @@ $(document).ready(function(){initNavTree('flat__priority__queue_8h.html',''); in
 
 <p>The Flat Priority Queue Interface.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="buffer_8h_source.html">buffer.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="flat__buffer_8h_source.html">flat_buffer.h</a>&quot;</code><br />
 <code>#include &quot;private/private_flat_priority_queue.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -105,10 +105,10 @@ Include dependency graph for flat_priority_queue.h:</div>
 <div class="center"><img src="flat__priority__queue_8h__incl.png" border="0" usemap="#accc_2flat__priority__queue_8h" alt=""/></div>
 <map name="accc_2flat__priority__queue_8h" id="accc_2flat__priority__queue_8h">
 <area shape="rect" title="The Flat Priority Queue Interface." alt="" coords="5,5,187,31"/>
-<area shape="rect" href="buffer_8h.html" title="The Buffer Interface." alt="" coords="134,167,205,192"/>
-<area shape="rect" href="types_8h.html" title="The C Container Collection Fundamental Types." alt="" coords="155,313,237,339"/>
+<area shape="rect" href="flat__buffer_8h.html" title="The Flat_buffer Interface." alt="" coords="127,167,225,192"/>
+<area shape="rect" href="types_8h.html" title="The C Container Collection Fundamental Types." alt="" coords="157,328,240,353"/>
 <area shape="rect" href="private__flat__priority__queue_8h_source.html" title=" " alt="" coords="133,79,280,119"/>
-<area shape="rect" href="private__buffer_8h_source.html" title=" " alt="" coords="46,240,221,265"/>
+<area shape="rect" href="private__flat__buffer_8h_source.html" title=" " alt="" coords="71,240,217,280"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -180,12 +180,12 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:a18af31e30056e9f626489152058ef97d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__priority__queue_8h.html#a18af31e30056e9f626489152058ef97d">CCC_flat_priority_queue_decrease_with</a>( flat_priority_queue_pointer,  closure_parameter,  decrease_closure_over_closure_parameter...)</td></tr>
 <tr class="memdesc:a18af31e30056e9f626489152058ef97d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increase the user type stored in the priority queue directly. O(lgN).  <br /></td></tr>
 <tr class="separator:a18af31e30056e9f626489152058ef97d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf4aba9ef24afa3614514ca919671c17"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__priority__queue_8h.html#aaf4aba9ef24afa3614514ca919671c17">CCC_flat_priority_queue_copy_heapify</a> (<a class="el" href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a> *priority_queue, <a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> const *buffer, void *temp, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
-<tr class="memdesc:aaf4aba9ef24afa3614514ca919671c17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy input buffer into the flat priority queue, organizing into data into heap order in O(N) time.  <br /></td></tr>
-<tr class="separator:aaf4aba9ef24afa3614514ca919671c17"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a569bef8b5ea85f7420a81828561e4392"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__priority__queue_8h.html#a569bef8b5ea85f7420a81828561e4392">CCC_flat_priority_queue_in_place_heapify</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, void *temp, <a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a> order, <a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> const *comparator)</td></tr>
-<tr class="memdesc:a569bef8b5ea85f7420a81828561e4392"><td class="mdescLeft">&#160;</td><td class="mdescRight">Order count elements of the input Buffer as a flat priority queue, destroying the input metadata Buffer struct taking ownership of its underlying memory.  <br /></td></tr>
-<tr class="separator:a569bef8b5ea85f7420a81828561e4392"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95900b9b1517a938cf5fcde419f1619f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__priority__queue_8h.html#a95900b9b1517a938cf5fcde419f1619f">CCC_flat_priority_queue_copy_heapify</a> (<a class="el" href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a> *priority_queue, <a class="el" href="structCCC__Flat__buffer.html">CCC_Flat_buffer</a> const *buffer, void *temp, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
+<tr class="memdesc:a95900b9b1517a938cf5fcde419f1619f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy input buffer into the flat priority queue, organizing into data into heap order in O(N) time.  <br /></td></tr>
+<tr class="separator:a95900b9b1517a938cf5fcde419f1619f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e3520c60ec9d725867e4ee01fa0b5db"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__priority__queue_8h.html#a2e3520c60ec9d725867e4ee01fa0b5db">CCC_flat_priority_queue_in_place_heapify</a> (<a class="el" href="structCCC__Flat__buffer.html">CCC_Flat_buffer</a> *buffer, void *temp, <a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a> order, <a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> const *comparator)</td></tr>
+<tr class="memdesc:a2e3520c60ec9d725867e4ee01fa0b5db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Order count elements of the input Flat_buffer as a flat priority queue, destroying the input metadata Flat_buffer struct taking ownership of its underlying memory.  <br /></td></tr>
+<tr class="separator:a2e3520c60ec9d725867e4ee01fa0b5db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8ccef4fa4926ab89f3b602ffcd00917"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__priority__queue_8h.html#ac8ccef4fa4926ab89f3b602ffcd00917">CCC_flat_priority_queue_push</a> (<a class="el" href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a> *priority_queue, void const *type, void *temp, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
 <tr class="memdesc:ac8ccef4fa4926ab89f3b602ffcd00917"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pushes element pointed to at e into flat_priority_queue. O(lgN).  <br /></td></tr>
 <tr class="separator:ac8ccef4fa4926ab89f3b602ffcd00917"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1080,8 +1080,8 @@ This graph shows which files directly or indirectly include this file:</div>
 
 </div>
 </div>
-<a id="aaf4aba9ef24afa3614514ca919671c17" name="aaf4aba9ef24afa3614514ca919671c17"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaf4aba9ef24afa3614514ca919671c17">&#9670;&#160;</a></span>CCC_flat_priority_queue_copy_heapify()</h2>
+<a id="a95900b9b1517a938cf5fcde419f1619f" name="a95900b9b1517a938cf5fcde419f1619f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95900b9b1517a938cf5fcde419f1619f">&#9670;&#160;</a></span>CCC_flat_priority_queue_copy_heapify()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1095,7 +1095,7 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> const *&#160;</td>
+          <td class="paramtype"><a class="el" href="structCCC__Flat__buffer.html">CCC_Flat_buffer</a> const *&#160;</td>
           <td class="paramname"><em>buffer</em>, </td>
         </tr>
         <tr>
@@ -1134,11 +1134,11 @@ This graph shows which files directly or indirectly include this file:</div>
 Any elements in the original flat priority queue are overwritten or lost when the buffer contents are copied.</dd></dl>
 <p>A simple way to provide a temp for swapping is with an inline compound literal reference provided directly to the function argument <code>&amp;(My_type){}</code>.</p>
 <p>Note that this version of heapify copies elements from the input buffer. If an in place heapify is required see any of the following functions.</p>
-<div class="fragment"><div class="line"><a class="code hl_function" href="flat__priority__queue_8h.html#a569bef8b5ea85f7420a81828561e4392">CCC_flat_priority_queue_in_place_heapify</a>()</div>
+<div class="fragment"><div class="line"><a class="code hl_function" href="flat__priority__queue_8h.html#a2e3520c60ec9d725867e4ee01fa0b5db">CCC_flat_priority_queue_in_place_heapify</a>()</div>
 <div class="line"><a class="code hl_define" href="flat__priority__queue_8h.html#ab24e52decbade4e7069177fc127d393f">CCC_flat_priority_queue_heapify</a>()</div>
 <div class="line">CCC_flat_priority_queue_context_heapify_storage()</div>
 <div class="line">CCC_flat_priority_queue_heapify_storage()</div>
-<div class="ttc" id="aflat__priority__queue_8h_html_a569bef8b5ea85f7420a81828561e4392"><div class="ttname"><a href="flat__priority__queue_8h.html#a569bef8b5ea85f7420a81828561e4392">CCC_flat_priority_queue_in_place_heapify</a></div><div class="ttdeci">CCC_Flat_priority_queue CCC_flat_priority_queue_in_place_heapify(CCC_Buffer *buffer, void *temp, CCC_Order order, CCC_Comparator const *comparator)</div><div class="ttdoc">Order count elements of the input Buffer as a flat priority queue, destroying the input metadata Buff...</div></div>
+<div class="ttc" id="aflat__priority__queue_8h_html_a2e3520c60ec9d725867e4ee01fa0b5db"><div class="ttname"><a href="flat__priority__queue_8h.html#a2e3520c60ec9d725867e4ee01fa0b5db">CCC_flat_priority_queue_in_place_heapify</a></div><div class="ttdeci">CCC_Flat_priority_queue CCC_flat_priority_queue_in_place_heapify(CCC_Flat_buffer *buffer, void *temp, CCC_Order order, CCC_Comparator const *comparator)</div><div class="ttdoc">Order count elements of the input Flat_buffer as a flat priority queue, destroying the input metadata...</div></div>
 <div class="ttc" id="aflat__priority__queue_8h_html_ab24e52decbade4e7069177fc127d393f"><div class="ttname"><a href="flat__priority__queue_8h.html#ab24e52decbade4e7069177fc127d393f">CCC_flat_priority_queue_heapify</a></div><div class="ttdeci">#define CCC_flat_priority_queue_heapify( type_name, order, comparator, capacity, count, data_pointer...)</div><div class="ttdoc">Partial order an array of elements as a min or max heap at runtime in O(N) time and space equal to th...</div><div class="ttdef"><b>Definition:</b> flat_priority_queue.h:127</div></div>
 </div><!-- fragment --><p>This function does not modify the input buffer. </p>
 
@@ -1329,8 +1329,8 @@ Any elements in the original flat priority queue are overwritten or lost when th
 
 </div>
 </div>
-<a id="a569bef8b5ea85f7420a81828561e4392" name="a569bef8b5ea85f7420a81828561e4392"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a569bef8b5ea85f7420a81828561e4392">&#9670;&#160;</a></span>CCC_flat_priority_queue_in_place_heapify()</h2>
+<a id="a2e3520c60ec9d725867e4ee01fa0b5db" name="a2e3520c60ec9d725867e4ee01fa0b5db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e3520c60ec9d725867e4ee01fa0b5db">&#9670;&#160;</a></span>CCC_flat_priority_queue_in_place_heapify()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1338,7 +1338,7 @@ Any elements in the original flat priority queue are overwritten or lost when th
         <tr>
           <td class="memname"><a class="el" href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a> CCC_flat_priority_queue_in_place_heapify </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structCCC__Flat__buffer.html">CCC_Flat_buffer</a> *&#160;</td>
           <td class="paramname"><em>buffer</em>, </td>
         </tr>
         <tr>
@@ -1367,7 +1367,7 @@ Any elements in the original flat priority queue are overwritten or lost when th
       </table>
 </div><div class="memdoc">
 
-<p>Order count elements of the input Buffer as a flat priority queue, destroying the input metadata Buffer struct taking ownership of its underlying memory. </p>
+<p>Order count elements of the input Flat_buffer as a flat priority queue, destroying the input metadata Flat_buffer struct taking ownership of its underlying memory. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>a pointer to a buffer with memory that will be sorted into heap order, given to the flat priority queue, and its metadata struct will be cleared. </td></tr>

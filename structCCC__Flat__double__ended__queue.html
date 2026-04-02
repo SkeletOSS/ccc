@@ -103,32 +103,32 @@ Collaboration diagram for CCC_Flat_double_ended_queue:</div>
 <div class="center"><img src="structCCC__Flat__double__ended__queue__coll__graph.png" border="0" usemap="#aCCC__Flat__double__ended__queue_coll__map" alt="Collaboration graph"/></div>
 <map name="aCCC__Flat__double__ended__queue_coll__map" id="aCCC__Flat__double__ended__queue_coll__map">
 <area shape="rect" title=" " alt="" coords="5,93,184,133"/>
-<area shape="rect" href="structCCC__Buffer.html" title=" " alt="" coords="47,5,142,31"/>
+<area shape="rect" href="structCCC__Flat__buffer.html" title=" " alt="" coords="31,5,158,31"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A flat double ended queue is a single Buffer with push and pop at the front and back. If no allocation is permitted it is a ring buffer. Because the <code><a class="el" href="structCCC__Buffer.html">CCC_Buffer</a></code> abstraction already exists, the flat_double_ended_queue can be implemented with a single additional field rather than a front and back pointer. The back of the flat_double_ended_queue is always known if we know where the front is and how many elements are stored in the buffer. </p>
+<div class="textblock"><p>A flat double ended queue is a single Flat_buffer with push and pop at the front and back. If no allocation is permitted it is a ring buffer. Because the <code><a class="el" href="structCCC__Flat__buffer.html">CCC_Flat_buffer</a></code> abstraction already exists, the flat_double_ended_queue can be implemented with a single additional field rather than a front and back pointer. The back of the flat_double_ended_queue is always known if we know where the front is and how many elements are stored in the buffer. </p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a8b69b4f6db566da926c474efebe5829e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Buffer.html">CCC_Buffer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Flat__double__ended__queue.html#a8b69b4f6db566da926c474efebe5829e">buffer</a></td></tr>
-<tr class="separator:a8b69b4f6db566da926c474efebe5829e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5bfcc4b0b9aa3555f7a7187748c6730a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Flat__buffer.html">CCC_Flat_buffer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Flat__double__ended__queue.html#a5bfcc4b0b9aa3555f7a7187748c6730a">buffer</a></td></tr>
+<tr class="separator:a5bfcc4b0b9aa3555f7a7187748c6730a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c71b25a7763ce01b6b2c95a080a932a"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Flat__double__ended__queue.html#a4c71b25a7763ce01b6b2c95a080a932a">front</a></td></tr>
 <tr class="separator:a4c71b25a7763ce01b6b2c95a080a932a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
-<a id="a8b69b4f6db566da926c474efebe5829e" name="a8b69b4f6db566da926c474efebe5829e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8b69b4f6db566da926c474efebe5829e">&#9670;&#160;</a></span>buffer</h2>
+<a id="a5bfcc4b0b9aa3555f7a7187748c6730a" name="a5bfcc4b0b9aa3555f7a7187748c6730a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5bfcc4b0b9aa3555f7a7187748c6730a">&#9670;&#160;</a></span>buffer</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> CCC_Flat_double_ended_queue::buffer</td>
+          <td class="memname"><a class="el" href="structCCC__Flat__buffer.html">CCC_Flat_buffer</a> CCC_Flat_double_ended_queue::buffer</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The helper Buffer the flat_double_ended_queue owns. </p>
+<p>The helper Flat_buffer the flat_double_ended_queue owns. </p>
 
 </div>
 </div>

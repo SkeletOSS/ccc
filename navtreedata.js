@@ -62,7 +62,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "adaptive__map_8h.html",
-"buffer_8h.html#a71304e1145d9ac1c541b086e1c2d2b49",
+"flat__bitset_8h.html#aab84f2f725477799fee5489b33adccfd",
 "private__adaptive__map_8h.html#a7cddac3a9da8eede77888febe12d0ed4",
 "structCCC__Tree__map__entry.html#afd22296ba16f6145f22eb8c61ee3522b"
 ];

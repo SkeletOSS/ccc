@@ -1,7 +1,7 @@
 <map id="ccc/configuration.h" name="ccc/configuration.h">
 <area shape="rect" id="node1" title="The C Container Collection Configuration Header. For full download and install instructions using a u..." alt="" coords="5,5,149,31"/>
-<area shape="rect" id="node2" href="$private__bitset_8h_source.html" title=" " alt="" coords="6,79,149,119"/>
-<area shape="rect" id="node3" href="$bitset_8h.html" title="The Bit Set Interface." alt="" coords="29,167,125,192"/>
+<area shape="rect" id="node2" href="$private__flat__bitset_8h_source.html" title=" " alt="" coords="6,79,149,119"/>
+<area shape="rect" id="node3" href="$flat__bitset_8h.html" title="The Bit Set Interface." alt="" coords="15,167,139,192"/>
 <area shape="rect" id="node4" href="$private__traits_8h_source.html" title=" " alt="" coords="6,240,149,280"/>
 <area shape="rect" id="node5" href="$traits_8h.html" title="The C Container Collection Traits Interface." alt="" coords="31,328,124,353"/>
 </map>

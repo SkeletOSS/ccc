@@ -96,8 +96,8 @@ $(document).ready(function(){initNavTree('sort_8h.html',''); initResizable(); })
 
 <p>The C Container Collection Sorting Interface.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="buffer_8h_source.html">buffer.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="doubly__linked__list_8h_source.html">doubly_linked_list.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="doubly__linked__list_8h_source.html">doubly_linked_list.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="flat__buffer_8h_source.html">flat_buffer.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="singly__linked__list_8h_source.html">singly_linked_list.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -105,14 +105,14 @@ Include dependency graph for sort.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="sort_8h__incl.png" border="0" usemap="#accc_2sort_8h" alt=""/></div>
 <map name="accc_2sort_8h" id="accc_2sort_8h">
-<area shape="rect" title="The C Container Collection Sorting Interface." alt="" coords="283,5,367,31"/>
-<area shape="rect" href="buffer_8h.html" title="The Buffer Interface." alt="" coords="160,79,231,104"/>
-<area shape="rect" href="types_8h.html" title="The C Container Collection Fundamental Types." alt="" coords="278,240,361,265"/>
-<area shape="rect" href="doubly__linked__list_8h.html" title="The Doubly Linked List Interface." alt="" coords="307,79,457,104"/>
-<area shape="rect" href="singly__linked__list_8h.html" title="The Singly Linked List Interface." alt="" coords="491,79,638,104"/>
-<area shape="rect" href="private__buffer_8h_source.html" title=" " alt="" coords="5,159,180,185"/>
-<area shape="rect" href="private__doubly__linked__list_8h_source.html" title=" " alt="" coords="357,152,527,192"/>
-<area shape="rect" href="private__singly__linked__list_8h_source.html" title=" " alt="" coords="603,152,767,192"/>
+<area shape="rect" title="The C Container Collection Sorting Interface." alt="" coords="264,5,348,31"/>
+<area shape="rect" href="doubly__linked__list_8h.html" title="The Doubly Linked List Interface." alt="" coords="75,79,225,104"/>
+<area shape="rect" href="types_8h.html" title="The C Container Collection Fundamental Types." alt="" coords="273,240,355,265"/>
+<area shape="rect" href="flat__buffer_8h.html" title="The Flat_buffer Interface." alt="" coords="301,79,399,104"/>
+<area shape="rect" href="singly__linked__list_8h.html" title="The Singly Linked List Interface." alt="" coords="462,79,609,104"/>
+<area shape="rect" href="private__doubly__linked__list_8h_source.html" title=" " alt="" coords="5,152,175,192"/>
+<area shape="rect" href="private__flat__buffer_8h_source.html" title=" " alt="" coords="351,152,498,192"/>
+<area shape="rect" href="private__singly__linked__list_8h_source.html" title=" " alt="" coords="573,152,737,192"/>
 </map>
 </div>
 </div>
@@ -127,9 +127,9 @@ Include dependency graph for sort.h:</div>
 <tr class="memitem:ab796817a7a3ff555d2a94085aebd4561"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sort_8h.html#ab796817a7a3ff555d2a94085aebd4561">CCC_sort_mergesort</a>(list_pointer,  order,  comparator_pointer)</td></tr>
 <tr class="memdesc:ab796817a7a3ff555d2a94085aebd4561"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sorts the list in user specified order as defined by the provided order and comparator. <code>O(N * log(N))</code> time, <code>O(1)</code> space.  <br /></td></tr>
 <tr class="separator:ab796817a7a3ff555d2a94085aebd4561"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79e2497e0af8b02c74bf18f920045e9b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sort_8h.html#a79e2497e0af8b02c74bf18f920045e9b">CCC_sort_heapsort</a> (<a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *buffer, void *temp, <a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a> order, <a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> const *comparator)</td></tr>
-<tr class="memdesc:a79e2497e0af8b02c74bf18f920045e9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sorts the input buffer in <code>O(N * log(N))</code> time and <code>O(1)</code> space according to the desired input order.  <br /></td></tr>
-<tr class="separator:a79e2497e0af8b02c74bf18f920045e9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a327565d8df1d2a87523ae020a6d37616"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sort_8h.html#a327565d8df1d2a87523ae020a6d37616">CCC_sort_heapsort</a> (<a class="el" href="structCCC__Flat__buffer.html">CCC_Flat_buffer</a> *buffer, void *temp, <a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a> order, <a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> const *comparator)</td></tr>
+<tr class="memdesc:a327565d8df1d2a87523ae020a6d37616"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sorts the input buffer in <code>O(N * log(N))</code> time and <code>O(1)</code> space according to the desired input order.  <br /></td></tr>
+<tr class="separator:a327565d8df1d2a87523ae020a6d37616"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a531a13a9a3949fdc112c17bf0bd201a9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sort_8h.html#a531a13a9a3949fdc112c17bf0bd201a9">CCC_sort_doubly_linked_list_mergesort</a> (<a class="el" href="structCCC__Doubly__linked__list.html">CCC_Doubly_linked_list</a> *list, <a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a> order, <a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> const *comparator)</td></tr>
 <tr class="memdesc:a531a13a9a3949fdc112c17bf0bd201a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sorts the doubly linked list in user specified order as defined by the provided order and comparator. <code>O(N * log(N))</code> time, <code>O(1)</code> space.  <br /></td></tr>
 <tr class="separator:a531a13a9a3949fdc112c17bf0bd201a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -236,8 +236,8 @@ Include dependency graph for sort.h:</div>
 
 </div>
 </div>
-<a id="a79e2497e0af8b02c74bf18f920045e9b" name="a79e2497e0af8b02c74bf18f920045e9b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a79e2497e0af8b02c74bf18f920045e9b">&#9670;&#160;</a></span>CCC_sort_heapsort()</h2>
+<a id="a327565d8df1d2a87523ae020a6d37616" name="a327565d8df1d2a87523ae020a6d37616"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a327565d8df1d2a87523ae020a6d37616">&#9670;&#160;</a></span>CCC_sort_heapsort()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -245,7 +245,7 @@ Include dependency graph for sort.h:</div>
         <tr>
           <td class="memname"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> CCC_sort_heapsort </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structCCC__Buffer.html">CCC_Buffer</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structCCC__Flat__buffer.html">CCC_Flat_buffer</a> *&#160;</td>
           <td class="paramname"><em>buffer</em>, </td>
         </tr>
         <tr>
