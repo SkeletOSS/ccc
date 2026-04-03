@@ -130,7 +130,7 @@ Add a `CMakeUserPresets.json` file so that you can run the sanitizer presets fou
 }
 ```
 
-Now, I am able to run the `my-sanitized-debug` and `my-sanitized-release` sanitizer builds. There is a default sanitizer preset that is provided but setting up a custom preset with the most recent GCC compiler, preferably 14+, provides the most robust `-fanalyzer` and sanitizer diagnostics. GCC has been improving these diagnostic tools rapidly since version 14.
+Now, I am able to run the GCC undefined behavior and address sanitizer builds as well as Clang's memory sanitizer builds. GCC 14+ provides the most robust `-fanalyzer` and UB/Adress sanitizer diagnostics. GCC has been improving these diagnostic tools rapidly since version 14.
 
 ## Workflow
 
@@ -140,8 +140,8 @@ Now that tooling is set up, the workflow is roughly as follows.
 - When ready or almost ready, open a draft pr so CI can start running checks.
 - Before completion run the following tools. Most run remotely on the PR as well but feedback is faster locally.
     - Run `make tidy` on debug and release builds and fix any issues from `clang-tidy`. This is not run on the remote repository.
-    - Run `make clean && cmake --preset=my-sanitize-debug && cmake --build build -j8 --target ccc tests samples`. Replace the `-j8` flag with the number of cores on your system. This runs GCC's `-fanalyzer` and supplementary sanitizer flags. GCC's `-fanalyzer` will flag issues at compile time. Sanitizers requires you run actual programs so it can observe undefined behavior, buffer overflow, out of bounds memory access, etc. Run the tests `make dtest` and any samples your changes affect. Tests will run the PR remotely in case you forget, but feedback is faster locally.
-    - Run `make clean && cmake --preset=my-release-debug && cmake --build build -j8 --target ccc tests samples`. Replace the `-j8` flag with the number of cores on your system. This is the same as the previous step just in release mode. Sometimes the compiler can optimize in such a way to create different issues the sanitizer can catch. Run `make rtest`. Tests will run the PR remotely in case you forget, but feedback is faster locally.
+    - Run `make clean && cmake --preset=my-sanitize-debug && cmake --build build -j8 --target ccc tests samples`. Replace the `-j8` flag with the number of cores on your system. This runs GCC's `-fanalyzer` and supplementary sanitizer flags. GCC's `-fanalyzer` will flag issues at compile time. Sanitizers requires you run actual programs so it can observe undefined behavior, buffer overflow, out of bounds memory access, etc. Run the tests `make test` and any samples your changes affect. Tests will run the PR remotely in case you forget, but feedback is faster locally.
+    - Run `make clean && cmake --preset=my-release-debug && cmake --build build -j8 --target ccc tests samples`. Replace the `-j8` flag with the number of cores on your system. This is the same as the previous step just in release mode. Sometimes the compiler can optimize in such a way to create different issues the sanitizer can catch. Run `make test`. Tests will run the PR remotely in case you forget, but feedback is faster locally.
 - Mark the pr as ready for review when all CI checks pass and tools show no errors locally.
 
 ## Targets
@@ -165,7 +165,7 @@ Formatting should be taken care of by the tools. Clang tidy will settle some sma
 > [!IMPORTANT]
 > `NULL` is never an acceptable argument at any C Container Collection function call site. If `NULL` appears as an argument in user code, a programmer error has occurred.
 
-This is a critical rule that users should internalize immediately. The collection API accepts pointers whenever possible to alleviate register pressure and remain consistent across the code base. Also, with C23 semantics, passing anonymous compound literal references is an excellent way to write explicit code that communicates with the C type system rather than obtuse NULL arguments. Consider three uses of a function in the flat priority queue API.
+This is a critical rule that users should internalize immediately. The collection API usually accepts pointers to structs to alleviate register pressure and remain consistent across the code base. Also, with C23 semantics, passing anonymous compound literal references is an excellent way to write explicit code that communicates with the C type system rather than obtuse NULL arguments. Consider three uses of a function in the flat priority queue API.
 
 ```c
 [[nodiscard]] void *CCC_flat_priority_queue_push(
