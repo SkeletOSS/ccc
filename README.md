@@ -1232,14 +1232,14 @@ The samples are not included in the release. To build them, clone the repository
 Clang.
 
 ```zsh
-make all-clang-rel
+make all-clang-release
 ./build/bin/[SAMPLE] [SAMPLE CLI ARGS]
 ```
 
 GCC.
 
 ```zsh
-make all-gcc-rel
+make all-gcc-release
 ./build/bin/[SAMPLE] [SAMPLE CLI ARGS]
 ```
 
@@ -1250,14 +1250,14 @@ The tests also include various use cases that may be of interest. Tests are not 
 Clang.
 
 ```zsh
-make all-clang-rel
+make all-clang-release
 make test
 ```
 
 GCC.
 
 ```zsh
-make all-gcc-rel
+make all-gcc-release
 make test
 ```
 
