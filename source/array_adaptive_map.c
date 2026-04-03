@@ -139,7 +139,8 @@ static size_t maybe_allocate_insert(
 );
 static CCC_Result
 resize(struct CCC_Array_adaptive_map *, size_t, CCC_Allocator const *);
-static void copy_soa(struct CCC_Array_adaptive_map const *, void *, size_t);
+static void
+resize_struct_of_arrays(struct CCC_Array_adaptive_map const *, void *, size_t);
 static size_t data_bytes(size_t, size_t);
 static size_t nodes_bytes(size_t);
 static struct CCC_Array_adaptive_map_node *
@@ -628,7 +629,7 @@ CCC_array_adaptive_map_copy(
     if (!destination->data || !source->data) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    copy_soa(source, destination->data, destination->capacity);
+    resize_struct_of_arrays(source, destination->data, destination->capacity);
     destination->free_list = source->free_list;
     destination->root = source->root;
     destination->count = source->count;
@@ -843,7 +844,7 @@ resize(
     if (!new_data) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
-    copy_soa(map, new_data, new_capacity);
+    resize_struct_of_arrays(map, new_data, new_capacity);
     map->nodes = nodes_base_address(map->sizeof_type, new_data, new_capacity);
     allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
@@ -1132,7 +1133,7 @@ points to the base of an allocation that has been allocated with sufficient
 bytes to support the user data, nodes, and parity arrays for the provided new
 capacity. */
 static inline void
-copy_soa(
+resize_struct_of_arrays(
     struct CCC_Array_adaptive_map const *const source,
     void *const destination_data_base,
     size_t const destination_capacity
