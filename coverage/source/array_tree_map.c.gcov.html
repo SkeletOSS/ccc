@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-04-03 14:47:57</td>
+            <td class="headerValue">2026-04-03 14:49:34</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -366,14 +366,14 @@
 <span id="L304"><span class="lineNum">     304</span>              : /*==============================  Interface    ==============================*/</span>
 <span id="L305"><span class="lineNum">     305</span>              : </span>
 <span id="L306"><span class="lineNum">     306</span>              : void *</span>
-<span id="L307"><span class="lineNum">     307</span> <span class="tlaGNC">       16800 : CCC_array_tree_map_at(</span></span>
+<span id="L307"><span class="lineNum">     307</span> <span class="tlaGNC">       16770 : CCC_array_tree_map_at(</span></span>
 <span id="L308"><span class="lineNum">     308</span>              :     CCC_Array_tree_map const *const h, CCC_Handle_index const i</span>
 <span id="L309"><span class="lineNum">     309</span>              : ) {</span>
-<span id="L310"><span class="lineNum">     310</span> <span class="tlaGNC">       16800 :     if (!h || !i) {</span></span>
+<span id="L310"><span class="lineNum">     310</span> <span class="tlaGNC">       16770 :     if (!h || !i) {</span></span>
 <span id="L311"><span class="lineNum">     311</span> <span class="tlaGNC">          13 :         return NULL;</span></span>
 <span id="L312"><span class="lineNum">     312</span>              :     }</span>
-<span id="L313"><span class="lineNum">     313</span> <span class="tlaGNC">       16787 :     return data_at(h, i);</span></span>
-<span id="L314"><span class="lineNum">     314</span> <span class="tlaGNC">       16800 : }</span></span>
+<span id="L313"><span class="lineNum">     313</span> <span class="tlaGNC">       16757 :     return data_at(h, i);</span></span>
+<span id="L314"><span class="lineNum">     314</span> <span class="tlaGNC">       16770 : }</span></span>
 <span id="L315"><span class="lineNum">     315</span>              : </span>
 <span id="L316"><span class="lineNum">     316</span>              : CCC_Tribool</span>
 <span id="L317"><span class="lineNum">     317</span> <span class="tlaGNC">          66 : CCC_array_tree_map_contains(</span></span>
@@ -407,25 +407,25 @@
 <span id="L345"><span class="lineNum">     345</span>              :     }</span>
 <span id="L346"><span class="lineNum">     346</span> <span class="tlaGNC">        3595 :     struct Query const q = find(map, key_in_slot(map, type_output));</span></span>
 <span id="L347"><span class="lineNum">     347</span> <span class="tlaGNC">        3595 :     if (CCC_ORDER_EQUAL == q.last_order) {</span></span>
-<span id="L348"><span class="lineNum">     348</span> <span class="tlaGNC">         827 :         void *const slot = data_at(map, q.found);</span></span>
-<span id="L349"><span class="lineNum">     349</span> <span class="tlaGNC">         827 :         void *const temp = data_at(map, 0);</span></span>
-<span id="L350"><span class="lineNum">     350</span> <span class="tlaGNC">         827 :         swap(temp, type_output, slot, map-&gt;sizeof_type);</span></span>
-<span id="L351"><span class="lineNum">     351</span> <span class="tlaGNC">        1654 :         return (CCC_Handle){</span></span>
-<span id="L352"><span class="lineNum">     352</span> <span class="tlaGNC">         827 :             .index = q.found,</span></span>
+<span id="L348"><span class="lineNum">     348</span> <span class="tlaGNC">         840 :         void *const slot = data_at(map, q.found);</span></span>
+<span id="L349"><span class="lineNum">     349</span> <span class="tlaGNC">         840 :         void *const temp = data_at(map, 0);</span></span>
+<span id="L350"><span class="lineNum">     350</span> <span class="tlaGNC">         840 :         swap(temp, type_output, slot, map-&gt;sizeof_type);</span></span>
+<span id="L351"><span class="lineNum">     351</span> <span class="tlaGNC">        1680 :         return (CCC_Handle){</span></span>
+<span id="L352"><span class="lineNum">     352</span> <span class="tlaGNC">         840 :             .index = q.found,</span></span>
 <span id="L353"><span class="lineNum">     353</span>              :             .status = CCC_ENTRY_OCCUPIED,</span>
 <span id="L354"><span class="lineNum">     354</span>              :         };</span>
-<span id="L355"><span class="lineNum">     355</span> <span class="tlaGNC">         827 :     }</span></span>
-<span id="L356"><span class="lineNum">     356</span> <span class="tlaGNC">        5536 :     size_t const i = maybe_allocate_insert(</span></span>
-<span id="L357"><span class="lineNum">     357</span> <span class="tlaGNC">        2768 :         map, q.parent, q.last_order, type_output, allocator</span></span>
+<span id="L355"><span class="lineNum">     355</span> <span class="tlaGNC">         840 :     }</span></span>
+<span id="L356"><span class="lineNum">     356</span> <span class="tlaGNC">        5510 :     size_t const i = maybe_allocate_insert(</span></span>
+<span id="L357"><span class="lineNum">     357</span> <span class="tlaGNC">        2755 :         map, q.parent, q.last_order, type_output, allocator</span></span>
 <span id="L358"><span class="lineNum">     358</span>              :     );</span>
-<span id="L359"><span class="lineNum">     359</span> <span class="tlaGNC">        2768 :     if (!i) {</span></span>
+<span id="L359"><span class="lineNum">     359</span> <span class="tlaGNC">        2755 :     if (!i) {</span></span>
 <span id="L360"><span class="lineNum">     360</span> <span class="tlaGNC">           1 :         return (CCC_Handle){</span></span>
 <span id="L361"><span class="lineNum">     361</span>              :             .index = 0,</span>
 <span id="L362"><span class="lineNum">     362</span>              :             .status = CCC_ENTRY_INSERT_ERROR,</span>
 <span id="L363"><span class="lineNum">     363</span>              :         };</span>
 <span id="L364"><span class="lineNum">     364</span>              :     }</span>
-<span id="L365"><span class="lineNum">     365</span> <span class="tlaGNC">        5534 :     return (CCC_Handle){</span></span>
-<span id="L366"><span class="lineNum">     366</span> <span class="tlaGNC">        2767 :         .index = i,</span></span>
+<span id="L365"><span class="lineNum">     365</span> <span class="tlaGNC">        5508 :     return (CCC_Handle){</span></span>
+<span id="L366"><span class="lineNum">     366</span> <span class="tlaGNC">        2754 :         .index = i,</span></span>
 <span id="L367"><span class="lineNum">     367</span>              :         .status = CCC_ENTRY_VACANT,</span>
 <span id="L368"><span class="lineNum">     368</span>              :     };</span>
 <span id="L369"><span class="lineNum">     369</span> <span class="tlaGNC">        3598 : }</span></span>
@@ -461,16 +461,16 @@
 <span id="L399"><span class="lineNum">     399</span> <span class="tlaGNC">         225 : }</span></span>
 <span id="L400"><span class="lineNum">     400</span>              : </span>
 <span id="L401"><span class="lineNum">     401</span>              : CCC_Handle</span>
-<span id="L402"><span class="lineNum">     402</span> <span class="tlaGNC">        2016 : CCC_array_tree_map_insert_or_assign(</span></span>
+<span id="L402"><span class="lineNum">     402</span> <span class="tlaGNC">        1999 : CCC_array_tree_map_insert_or_assign(</span></span>
 <span id="L403"><span class="lineNum">     403</span>              :     CCC_Array_tree_map *const map,</span>
 <span id="L404"><span class="lineNum">     404</span>              :     void const *const type,</span>
 <span id="L405"><span class="lineNum">     405</span>              :     CCC_Allocator const *const allocator</span>
 <span id="L406"><span class="lineNum">     406</span>              : ) {</span>
-<span id="L407"><span class="lineNum">     407</span> <span class="tlaGNC">        2016 :     if (!map || !type || !allocator) {</span></span>
+<span id="L407"><span class="lineNum">     407</span> <span class="tlaGNC">        1999 :     if (!map || !type || !allocator) {</span></span>
 <span id="L408"><span class="lineNum">     408</span> <span class="tlaGNC">           3 :         return (CCC_Handle){.status = CCC_ENTRY_ARGUMENT_ERROR};</span></span>
 <span id="L409"><span class="lineNum">     409</span>              :     }</span>
-<span id="L410"><span class="lineNum">     410</span> <span class="tlaGNC">        2013 :     struct Query const q = find(map, key_in_slot(map, type));</span></span>
-<span id="L411"><span class="lineNum">     411</span> <span class="tlaGNC">        2013 :     if (CCC_ORDER_EQUAL == q.last_order) {</span></span>
+<span id="L410"><span class="lineNum">     410</span> <span class="tlaGNC">        1996 :     struct Query const q = find(map, key_in_slot(map, type));</span></span>
+<span id="L411"><span class="lineNum">     411</span> <span class="tlaGNC">        1996 :     if (CCC_ORDER_EQUAL == q.last_order) {</span></span>
 <span id="L412"><span class="lineNum">     412</span> <span class="tlaGNC">           3 :         void *const found = data_at(map, q.found);</span></span>
 <span id="L413"><span class="lineNum">     413</span> <span class="tlaGNC">           3 :         (void)memcpy(found, type, map-&gt;sizeof_type);</span></span>
 <span id="L414"><span class="lineNum">     414</span> <span class="tlaGNC">           6 :         return (CCC_Handle){</span></span>
@@ -478,19 +478,19 @@
 <span id="L416"><span class="lineNum">     416</span>              :             .status = CCC_ENTRY_OCCUPIED,</span>
 <span id="L417"><span class="lineNum">     417</span>              :         };</span>
 <span id="L418"><span class="lineNum">     418</span> <span class="tlaGNC">           3 :     }</span></span>
-<span id="L419"><span class="lineNum">     419</span> <span class="tlaGNC">        4020 :     size_t const i</span></span>
-<span id="L420"><span class="lineNum">     420</span> <span class="tlaGNC">        2010 :         = maybe_allocate_insert(map, q.parent, q.last_order, type, allocator);</span></span>
-<span id="L421"><span class="lineNum">     421</span> <span class="tlaGNC">        2010 :     if (!i) {</span></span>
+<span id="L419"><span class="lineNum">     419</span> <span class="tlaGNC">        3986 :     size_t const i</span></span>
+<span id="L420"><span class="lineNum">     420</span> <span class="tlaGNC">        1993 :         = maybe_allocate_insert(map, q.parent, q.last_order, type, allocator);</span></span>
+<span id="L421"><span class="lineNum">     421</span> <span class="tlaGNC">        1993 :     if (!i) {</span></span>
 <span id="L422"><span class="lineNum">     422</span> <span class="tlaGNC">           3 :         return (CCC_Handle){</span></span>
 <span id="L423"><span class="lineNum">     423</span>              :             .index = 0,</span>
 <span id="L424"><span class="lineNum">     424</span>              :             .status = CCC_ENTRY_INSERT_ERROR,</span>
 <span id="L425"><span class="lineNum">     425</span>              :         };</span>
 <span id="L426"><span class="lineNum">     426</span>              :     }</span>
-<span id="L427"><span class="lineNum">     427</span> <span class="tlaGNC">        4014 :     return (CCC_Handle){</span></span>
-<span id="L428"><span class="lineNum">     428</span> <span class="tlaGNC">        2007 :         .index = i,</span></span>
+<span id="L427"><span class="lineNum">     427</span> <span class="tlaGNC">        3980 :     return (CCC_Handle){</span></span>
+<span id="L428"><span class="lineNum">     428</span> <span class="tlaGNC">        1990 :         .index = i,</span></span>
 <span id="L429"><span class="lineNum">     429</span>              :         .status = CCC_ENTRY_VACANT,</span>
 <span id="L430"><span class="lineNum">     430</span>              :     };</span>
-<span id="L431"><span class="lineNum">     431</span> <span class="tlaGNC">        2016 : }</span></span>
+<span id="L431"><span class="lineNum">     431</span> <span class="tlaGNC">        1999 : }</span></span>
 <span id="L432"><span class="lineNum">     432</span>              : </span>
 <span id="L433"><span class="lineNum">     433</span>              : CCC_Array_tree_map_handle *</span>
 <span id="L434"><span class="lineNum">     434</span> <span class="tlaGNC">         112 : CCC_array_tree_map_and_modify(</span></span>
@@ -578,30 +578,30 @@
 <span id="L516"><span class="lineNum">     516</span> <span class="tlaGNC">          55 : }</span></span>
 <span id="L517"><span class="lineNum">     517</span>              : </span>
 <span id="L518"><span class="lineNum">     518</span>              : CCC_Handle</span>
-<span id="L519"><span class="lineNum">     519</span> <span class="tlaGNC">        2303 : CCC_array_tree_map_remove_key_value(</span></span>
+<span id="L519"><span class="lineNum">     519</span> <span class="tlaGNC">        2286 : CCC_array_tree_map_remove_key_value(</span></span>
 <span id="L520"><span class="lineNum">     520</span>              :     CCC_Array_tree_map *const map, void *const type_output</span>
 <span id="L521"><span class="lineNum">     521</span>              : ) {</span>
-<span id="L522"><span class="lineNum">     522</span> <span class="tlaGNC">        2303 :     if (!map || !type_output) {</span></span>
+<span id="L522"><span class="lineNum">     522</span> <span class="tlaGNC">        2286 :     if (!map || !type_output) {</span></span>
 <span id="L523"><span class="lineNum">     523</span> <span class="tlaGNC">           2 :         return (CCC_Handle){.status = CCC_ENTRY_ARGUMENT_ERROR};</span></span>
 <span id="L524"><span class="lineNum">     524</span>              :     }</span>
-<span id="L525"><span class="lineNum">     525</span> <span class="tlaGNC">        2301 :     struct Query const q = find(map, key_in_slot(map, type_output));</span></span>
-<span id="L526"><span class="lineNum">     526</span> <span class="tlaGNC">        2301 :     if (q.last_order != CCC_ORDER_EQUAL) {</span></span>
+<span id="L525"><span class="lineNum">     525</span> <span class="tlaGNC">        2284 :     struct Query const q = find(map, key_in_slot(map, type_output));</span></span>
+<span id="L526"><span class="lineNum">     526</span> <span class="tlaGNC">        2284 :     if (q.last_order != CCC_ORDER_EQUAL) {</span></span>
 <span id="L527"><span class="lineNum">     527</span> <span class="tlaGNC">           3 :         return (CCC_Handle){</span></span>
 <span id="L528"><span class="lineNum">     528</span>              :             .index = 0,</span>
 <span id="L529"><span class="lineNum">     529</span>              :             .status = CCC_ENTRY_VACANT,</span>
 <span id="L530"><span class="lineNum">     530</span>              :         };</span>
 <span id="L531"><span class="lineNum">     531</span>              :     }</span>
-<span id="L532"><span class="lineNum">     532</span> <span class="tlaGNC">        2298 :     size_t const removed = remove_fixup(map, q.found);</span></span>
-<span id="L533"><span class="lineNum">     533</span> <span class="tlaGNC">        2298 :     assert(removed);</span></span>
-<span id="L534"><span class="lineNum">     534</span> <span class="tlaGNC">        2298 :     void const *const r = data_at(map, removed);</span></span>
-<span id="L535"><span class="lineNum">     535</span> <span class="tlaGNC">        2298 :     if (type_output != r) {</span></span>
-<span id="L536"><span class="lineNum">     536</span> <span class="tlaGNC">        2298 :         (void)memcpy(type_output, r, map-&gt;sizeof_type);</span></span>
-<span id="L537"><span class="lineNum">     537</span> <span class="tlaGNC">        2298 :     }</span></span>
-<span id="L538"><span class="lineNum">     538</span> <span class="tlaGNC">        2298 :     return (CCC_Handle){</span></span>
+<span id="L532"><span class="lineNum">     532</span> <span class="tlaGNC">        2281 :     size_t const removed = remove_fixup(map, q.found);</span></span>
+<span id="L533"><span class="lineNum">     533</span> <span class="tlaGNC">        2281 :     assert(removed);</span></span>
+<span id="L534"><span class="lineNum">     534</span> <span class="tlaGNC">        2281 :     void const *const r = data_at(map, removed);</span></span>
+<span id="L535"><span class="lineNum">     535</span> <span class="tlaGNC">        2281 :     if (type_output != r) {</span></span>
+<span id="L536"><span class="lineNum">     536</span> <span class="tlaGNC">        2281 :         (void)memcpy(type_output, r, map-&gt;sizeof_type);</span></span>
+<span id="L537"><span class="lineNum">     537</span> <span class="tlaGNC">        2281 :     }</span></span>
+<span id="L538"><span class="lineNum">     538</span> <span class="tlaGNC">        2281 :     return (CCC_Handle){</span></span>
 <span id="L539"><span class="lineNum">     539</span>              :         .index = 0,</span>
 <span id="L540"><span class="lineNum">     540</span>              :         .status = CCC_ENTRY_OCCUPIED,</span>
 <span id="L541"><span class="lineNum">     541</span>              :     };</span>
-<span id="L542"><span class="lineNum">     542</span> <span class="tlaGNC">        2303 : }</span></span>
+<span id="L542"><span class="lineNum">     542</span> <span class="tlaGNC">        2286 : }</span></span>
 <span id="L543"><span class="lineNum">     543</span>              : </span>
 <span id="L544"><span class="lineNum">     544</span>              : CCC_Handle_range</span>
 <span id="L545"><span class="lineNum">     545</span> <span class="tlaGNC">           8 : CCC_array_tree_map_equal_range(</span></span>
@@ -712,30 +712,30 @@
 <span id="L650"><span class="lineNum">     650</span> <span class="tlaGNC">           3 : }</span></span>
 <span id="L651"><span class="lineNum">     651</span>              : </span>
 <span id="L652"><span class="lineNum">     652</span>              : CCC_Handle_index</span>
-<span id="L653"><span class="lineNum">     653</span> <span class="tlaGNC">        3046 : CCC_array_tree_map_next(</span></span>
+<span id="L653"><span class="lineNum">     653</span> <span class="tlaGNC">        3003 : CCC_array_tree_map_next(</span></span>
 <span id="L654"><span class="lineNum">     654</span>              :     CCC_Array_tree_map const *const map, CCC_Handle_index iterator</span>
 <span id="L655"><span class="lineNum">     655</span>              : ) {</span>
-<span id="L656"><span class="lineNum">     656</span> <span class="tlaGNC">        3046 :     if (!map || !iterator || !map-&gt;capacity) {</span></span>
+<span id="L656"><span class="lineNum">     656</span> <span class="tlaGNC">        3003 :     if (!map || !iterator || !map-&gt;capacity) {</span></span>
 <span id="L657"><span class="lineNum">     657</span> <span class="tlaGNC">           1 :         return 0;</span></span>
 <span id="L658"><span class="lineNum">     658</span>              :     }</span>
-<span id="L659"><span class="lineNum">     659</span> <span class="tlaGNC">        3045 :     size_t const n = next(map, iterator, INORDER);</span></span>
-<span id="L660"><span class="lineNum">     660</span> <span class="tlaGNC">        3045 :     return n;</span></span>
-<span id="L661"><span class="lineNum">     661</span> <span class="tlaGNC">        3046 : }</span></span>
+<span id="L659"><span class="lineNum">     659</span> <span class="tlaGNC">        3002 :     size_t const n = next(map, iterator, INORDER);</span></span>
+<span id="L660"><span class="lineNum">     660</span> <span class="tlaGNC">        3002 :     return n;</span></span>
+<span id="L661"><span class="lineNum">     661</span> <span class="tlaGNC">        3003 : }</span></span>
 <span id="L662"><span class="lineNum">     662</span>              : </span>
 <span id="L663"><span class="lineNum">     663</span>              : CCC_Handle_index</span>
-<span id="L664"><span class="lineNum">     664</span> <span class="tlaGNC">        1303 : CCC_array_tree_map_reverse_next(</span></span>
+<span id="L664"><span class="lineNum">     664</span> <span class="tlaGNC">        1290 : CCC_array_tree_map_reverse_next(</span></span>
 <span id="L665"><span class="lineNum">     665</span>              :     CCC_Array_tree_map const *const map, CCC_Handle_index iterator</span>
 <span id="L666"><span class="lineNum">     666</span>              : ) {</span>
-<span id="L667"><span class="lineNum">     667</span> <span class="tlaGNC">        1303 :     if (!map || !iterator || !map-&gt;capacity) {</span></span>
+<span id="L667"><span class="lineNum">     667</span> <span class="tlaGNC">        1290 :     if (!map || !iterator || !map-&gt;capacity) {</span></span>
 <span id="L668"><span class="lineNum">     668</span> <span class="tlaGNC">           1 :         return 0;</span></span>
 <span id="L669"><span class="lineNum">     669</span>              :     }</span>
-<span id="L670"><span class="lineNum">     670</span> <span class="tlaGNC">        1302 :     size_t const n = next(map, iterator, INORDER_REVERSE);</span></span>
-<span id="L671"><span class="lineNum">     671</span> <span class="tlaGNC">        1302 :     return n;</span></span>
-<span id="L672"><span class="lineNum">     672</span> <span class="tlaGNC">        1303 : }</span></span>
+<span id="L670"><span class="lineNum">     670</span> <span class="tlaGNC">        1289 :     size_t const n = next(map, iterator, INORDER_REVERSE);</span></span>
+<span id="L671"><span class="lineNum">     671</span> <span class="tlaGNC">        1289 :     return n;</span></span>
+<span id="L672"><span class="lineNum">     672</span> <span class="tlaGNC">        1290 : }</span></span>
 <span id="L673"><span class="lineNum">     673</span>              : </span>
 <span id="L674"><span class="lineNum">     674</span>              : CCC_Handle_index</span>
-<span id="L675"><span class="lineNum">     675</span> <span class="tlaGNC">        4327 : CCC_array_tree_map_end(CCC_Array_tree_map const *const) {</span></span>
-<span id="L676"><span class="lineNum">     676</span> <span class="tlaGNC">        4327 :     return 0;</span></span>
+<span id="L675"><span class="lineNum">     675</span> <span class="tlaGNC">        4271 : CCC_array_tree_map_end(CCC_Array_tree_map const *const) {</span></span>
+<span id="L676"><span class="lineNum">     676</span> <span class="tlaGNC">        4271 :     return 0;</span></span>
 <span id="L677"><span class="lineNum">     677</span>              : }</span>
 <span id="L678"><span class="lineNum">     678</span>              : </span>
 <span id="L679"><span class="lineNum">     679</span>              : CCC_Handle_index</span>
@@ -866,12 +866,12 @@
 <span id="L804"><span class="lineNum">     804</span> <span class="tlaGNC">          19 : }</span></span>
 <span id="L805"><span class="lineNum">     805</span>              : </span>
 <span id="L806"><span class="lineNum">     806</span>              : CCC_Tribool</span>
-<span id="L807"><span class="lineNum">     807</span> <span class="tlaGNC">        9898 : CCC_array_tree_map_validate(CCC_Array_tree_map const *const map) {</span></span>
-<span id="L808"><span class="lineNum">     808</span> <span class="tlaGNC">        9898 :     if (!map) {</span></span>
+<span id="L807"><span class="lineNum">     807</span> <span class="tlaGNC">        9881 : CCC_array_tree_map_validate(CCC_Array_tree_map const *const map) {</span></span>
+<span id="L808"><span class="lineNum">     808</span> <span class="tlaGNC">        9881 :     if (!map) {</span></span>
 <span id="L809"><span class="lineNum">     809</span> <span class="tlaGNC">           1 :         return CCC_TRIBOOL_ERROR;</span></span>
 <span id="L810"><span class="lineNum">     810</span>              :     }</span>
-<span id="L811"><span class="lineNum">     811</span> <span class="tlaGNC">        9897 :     return validate(map);</span></span>
-<span id="L812"><span class="lineNum">     812</span> <span class="tlaGNC">        9898 : }</span></span>
+<span id="L811"><span class="lineNum">     811</span> <span class="tlaGNC">        9880 :     return validate(map);</span></span>
+<span id="L812"><span class="lineNum">     812</span> <span class="tlaGNC">        9881 : }</span></span>
 <span id="L813"><span class="lineNum">     813</span>              : </span>
 <span id="L814"><span class="lineNum">     814</span>              : /*========================  Private Interface  ==============================*/</span>
 <span id="L815"><span class="lineNum">     815</span>              : </span>
@@ -916,7 +916,7 @@
 <span id="L854"><span class="lineNum">     854</span>              : /*==========================  Static Helpers   ==============================*/</span>
 <span id="L855"><span class="lineNum">     855</span>              : </span>
 <span id="L856"><span class="lineNum">     856</span>              : static size_t</span>
-<span id="L857"><span class="lineNum">     857</span> <span class="tlaGNC">       10333 : maybe_allocate_insert(</span></span>
+<span id="L857"><span class="lineNum">     857</span> <span class="tlaGNC">       10303 : maybe_allocate_insert(</span></span>
 <span id="L858"><span class="lineNum">     858</span>              :     struct CCC_Array_tree_map *const map,</span>
 <span id="L859"><span class="lineNum">     859</span>              :     size_t const parent,</span>
 <span id="L860"><span class="lineNum">     860</span>              :     CCC_Order const last_order,</span>
@@ -925,24 +925,24 @@
 <span id="L863"><span class="lineNum">     863</span>              : ) {</span>
 <span id="L864"><span class="lineNum">     864</span>              :     /* The end sentinel node will always be at 0. This also means once</span>
 <span id="L865"><span class="lineNum">     865</span>              :        initialized the internal size for implementer is always at least 1. */</span>
-<span id="L866"><span class="lineNum">     866</span> <span class="tlaGNC">       10333 :     size_t const node = allocate_slot(map, allocator);</span></span>
-<span id="L867"><span class="lineNum">     867</span> <span class="tlaGNC">       10333 :     if (!node) {</span></span>
+<span id="L866"><span class="lineNum">     866</span> <span class="tlaGNC">       10303 :     size_t const node = allocate_slot(map, allocator);</span></span>
+<span id="L867"><span class="lineNum">     867</span> <span class="tlaGNC">       10303 :     if (!node) {</span></span>
 <span id="L868"><span class="lineNum">     868</span> <span class="tlaGNC">           8 :         return 0;</span></span>
 <span id="L869"><span class="lineNum">     869</span>              :     }</span>
-<span id="L870"><span class="lineNum">     870</span> <span class="tlaGNC">       10325 :     (void)memcpy(data_at(map, node), user_type, map-&gt;sizeof_type);</span></span>
-<span id="L871"><span class="lineNum">     871</span> <span class="tlaGNC">       10325 :     insert(map, parent, last_order, node);</span></span>
-<span id="L872"><span class="lineNum">     872</span> <span class="tlaGNC">       10325 :     return node;</span></span>
-<span id="L873"><span class="lineNum">     873</span> <span class="tlaGNC">       10333 : }</span></span>
+<span id="L870"><span class="lineNum">     870</span> <span class="tlaGNC">       10295 :     (void)memcpy(data_at(map, node), user_type, map-&gt;sizeof_type);</span></span>
+<span id="L871"><span class="lineNum">     871</span> <span class="tlaGNC">       10295 :     insert(map, parent, last_order, node);</span></span>
+<span id="L872"><span class="lineNum">     872</span> <span class="tlaGNC">       10295 :     return node;</span></span>
+<span id="L873"><span class="lineNum">     873</span> <span class="tlaGNC">       10303 : }</span></span>
 <span id="L874"><span class="lineNum">     874</span>              : </span>
 <span id="L875"><span class="lineNum">     875</span>              : static size_t</span>
-<span id="L876"><span class="lineNum">     876</span> <span class="tlaGNC">       10479 : allocate_slot(</span></span>
+<span id="L876"><span class="lineNum">     876</span> <span class="tlaGNC">       10449 : allocate_slot(</span></span>
 <span id="L877"><span class="lineNum">     877</span>              :     struct CCC_Array_tree_map *const map, CCC_Allocator const *const allocator</span>
 <span id="L878"><span class="lineNum">     878</span>              : ) {</span>
 <span id="L879"><span class="lineNum">     879</span>              :     /* The end sentinel node will always be at 0. This also means once</span>
 <span id="L880"><span class="lineNum">     880</span>              :        initialized the internal size for implementer is always at least 1. */</span>
-<span id="L881"><span class="lineNum">     881</span> <span class="tlaGNC">       10479 :     size_t const old_count = map-&gt;count;</span></span>
-<span id="L882"><span class="lineNum">     882</span> <span class="tlaGNC">       10479 :     size_t old_cap = map-&gt;capacity;</span></span>
-<span id="L883"><span class="lineNum">     883</span> <span class="tlaGNC">       10479 :     if (!old_count || old_count == old_cap) {</span></span>
+<span id="L881"><span class="lineNum">     881</span> <span class="tlaGNC">       10449 :     size_t const old_count = map-&gt;count;</span></span>
+<span id="L882"><span class="lineNum">     882</span> <span class="tlaGNC">       10449 :     size_t old_cap = map-&gt;capacity;</span></span>
+<span id="L883"><span class="lineNum">     883</span> <span class="tlaGNC">       10449 :     if (!old_count || old_count == old_cap) {</span></span>
 <span id="L884"><span class="lineNum">     884</span> <span class="tlaGNC">          83 :         assert(!map-&gt;free_list);</span></span>
 <span id="L885"><span class="lineNum">     885</span> <span class="tlaGNC">          83 :         if (old_count == old_cap) {</span></span>
 <span id="L886"><span class="lineNum">     886</span> <span class="tlaGNC">          39 :             if (resize(map, max(old_cap * 2, PARITY_BLOCK_BITS), allocator)</span></span>
@@ -967,12 +967,12 @@
 <span id="L905"><span class="lineNum">     905</span> <span class="tlaGNC">          73 :         map-&gt;count = max(old_count, 1);</span></span>
 <span id="L906"><span class="lineNum">     906</span> <span class="tlaGNC">          73 :         set_parity(map, 0, CCC_TRUE);</span></span>
 <span id="L907"><span class="lineNum">     907</span> <span class="tlaGNC">          73 :     }</span></span>
-<span id="L908"><span class="lineNum">     908</span> <span class="tlaGNC">       10469 :     assert(map-&gt;free_list);</span></span>
-<span id="L909"><span class="lineNum">     909</span> <span class="tlaGNC">       10469 :     ++map-&gt;count;</span></span>
-<span id="L910"><span class="lineNum">     910</span> <span class="tlaGNC">       10469 :     size_t const slot = map-&gt;free_list;</span></span>
-<span id="L911"><span class="lineNum">     911</span> <span class="tlaGNC">       10469 :     map-&gt;free_list = node_at(map, slot)-&gt;next_free;</span></span>
-<span id="L912"><span class="lineNum">     912</span> <span class="tlaGNC">       10469 :     return slot;</span></span>
-<span id="L913"><span class="lineNum">     913</span> <span class="tlaGNC">       10479 : }</span></span>
+<span id="L908"><span class="lineNum">     908</span> <span class="tlaGNC">       10439 :     assert(map-&gt;free_list);</span></span>
+<span id="L909"><span class="lineNum">     909</span> <span class="tlaGNC">       10439 :     ++map-&gt;count;</span></span>
+<span id="L910"><span class="lineNum">     910</span> <span class="tlaGNC">       10439 :     size_t const slot = map-&gt;free_list;</span></span>
+<span id="L911"><span class="lineNum">     911</span> <span class="tlaGNC">       10439 :     map-&gt;free_list = node_at(map, slot)-&gt;next_free;</span></span>
+<span id="L912"><span class="lineNum">     912</span> <span class="tlaGNC">       10439 :     return slot;</span></span>
+<span id="L913"><span class="lineNum">     913</span> <span class="tlaGNC">       10449 : }</span></span>
 <span id="L914"><span class="lineNum">     914</span>              : </span>
 <span id="L915"><span class="lineNum">     915</span>              : static CCC_Result</span>
 <span id="L916"><span class="lineNum">     916</span> <span class="tlaGNC">          54 : resize(</span></span>
@@ -1006,30 +1006,30 @@
 <span id="L944"><span class="lineNum">     944</span> <span class="tlaGNC">          54 : }</span></span>
 <span id="L945"><span class="lineNum">     945</span>              : </span>
 <span id="L946"><span class="lineNum">     946</span>              : static void</span>
-<span id="L947"><span class="lineNum">     947</span> <span class="tlaGNC">       10469 : insert(</span></span>
+<span id="L947"><span class="lineNum">     947</span> <span class="tlaGNC">       10439 : insert(</span></span>
 <span id="L948"><span class="lineNum">     948</span>              :     struct CCC_Array_tree_map *const map,</span>
 <span id="L949"><span class="lineNum">     949</span>              :     size_t const parent_i,</span>
 <span id="L950"><span class="lineNum">     950</span>              :     CCC_Order const last_order,</span>
 <span id="L951"><span class="lineNum">     951</span>              :     size_t const elem_i</span>
 <span id="L952"><span class="lineNum">     952</span>              : ) {</span>
-<span id="L953"><span class="lineNum">     953</span> <span class="tlaGNC">       10469 :     struct CCC_Array_tree_map_node *elem = node_at(map, elem_i);</span></span>
-<span id="L954"><span class="lineNum">     954</span> <span class="tlaGNC">       10469 :     init_node(map, elem_i);</span></span>
-<span id="L955"><span class="lineNum">     955</span> <span class="tlaGNC">       10469 :     if (map-&gt;count == INSERT_ROOT_COUNT) {</span></span>
+<span id="L953"><span class="lineNum">     953</span> <span class="tlaGNC">       10439 :     struct CCC_Array_tree_map_node *elem = node_at(map, elem_i);</span></span>
+<span id="L954"><span class="lineNum">     954</span> <span class="tlaGNC">       10439 :     init_node(map, elem_i);</span></span>
+<span id="L955"><span class="lineNum">     955</span> <span class="tlaGNC">       10439 :     if (map-&gt;count == INSERT_ROOT_COUNT) {</span></span>
 <span id="L956"><span class="lineNum">     956</span> <span class="tlaGNC">          60 :         map-&gt;root = elem_i;</span></span>
 <span id="L957"><span class="lineNum">     957</span> <span class="tlaGNC">          60 :         return;</span></span>
 <span id="L958"><span class="lineNum">     958</span>              :     }</span>
-<span id="L959"><span class="lineNum">     959</span> <span class="tlaGNC">       10409 :     assert(last_order == CCC_ORDER_GREATER || last_order == CCC_ORDER_LESSER);</span></span>
-<span id="L960"><span class="lineNum">     960</span> <span class="tlaGNC">       10409 :     CCC_Tribool rank_rule_break = false;</span></span>
-<span id="L961"><span class="lineNum">     961</span> <span class="tlaGNC">       10409 :     if (parent_i) {</span></span>
-<span id="L962"><span class="lineNum">     962</span> <span class="tlaGNC">       10409 :         struct CCC_Array_tree_map_node *parent = node_at(map, parent_i);</span></span>
-<span id="L963"><span class="lineNum">     963</span> <span class="tlaGNC">       10409 :         rank_rule_break = !parent-&gt;branch[L] &amp;&amp; !parent-&gt;branch[R];</span></span>
-<span id="L964"><span class="lineNum">     964</span> <span class="tlaGNC">       10409 :         parent-&gt;branch[CCC_ORDER_GREATER == last_order] = elem_i;</span></span>
-<span id="L965"><span class="lineNum">     965</span> <span class="tlaGNC">       10409 :     }</span></span>
-<span id="L966"><span class="lineNum">     966</span> <span class="tlaGNC">       10409 :     elem-&gt;parent = parent_i;</span></span>
-<span id="L967"><span class="lineNum">     967</span> <span class="tlaGNC">       10409 :     if (rank_rule_break) {</span></span>
-<span id="L968"><span class="lineNum">     968</span> <span class="tlaGNC">        9413 :         insert_fixup(map, parent_i, elem_i);</span></span>
-<span id="L969"><span class="lineNum">     969</span> <span class="tlaGNC">        9413 :     }</span></span>
-<span id="L970"><span class="lineNum">     970</span> <span class="tlaGNC">       10469 : }</span></span>
+<span id="L959"><span class="lineNum">     959</span> <span class="tlaGNC">       10379 :     assert(last_order == CCC_ORDER_GREATER || last_order == CCC_ORDER_LESSER);</span></span>
+<span id="L960"><span class="lineNum">     960</span> <span class="tlaGNC">       10379 :     CCC_Tribool rank_rule_break = false;</span></span>
+<span id="L961"><span class="lineNum">     961</span> <span class="tlaGNC">       10379 :     if (parent_i) {</span></span>
+<span id="L962"><span class="lineNum">     962</span> <span class="tlaGNC">       10379 :         struct CCC_Array_tree_map_node *parent = node_at(map, parent_i);</span></span>
+<span id="L963"><span class="lineNum">     963</span> <span class="tlaGNC">       10379 :         rank_rule_break = !parent-&gt;branch[L] &amp;&amp; !parent-&gt;branch[R];</span></span>
+<span id="L964"><span class="lineNum">     964</span> <span class="tlaGNC">       10379 :         parent-&gt;branch[CCC_ORDER_GREATER == last_order] = elem_i;</span></span>
+<span id="L965"><span class="lineNum">     965</span> <span class="tlaGNC">       10379 :     }</span></span>
+<span id="L966"><span class="lineNum">     966</span> <span class="tlaGNC">       10379 :     elem-&gt;parent = parent_i;</span></span>
+<span id="L967"><span class="lineNum">     967</span> <span class="tlaGNC">       10379 :     if (rank_rule_break) {</span></span>
+<span id="L968"><span class="lineNum">     968</span> <span class="tlaGNC">        9443 :         insert_fixup(map, parent_i, elem_i);</span></span>
+<span id="L969"><span class="lineNum">     969</span> <span class="tlaGNC">        9443 :     }</span></span>
+<span id="L970"><span class="lineNum">     970</span> <span class="tlaGNC">       10439 : }</span></span>
 <span id="L971"><span class="lineNum">     971</span>              : </span>
 <span id="L972"><span class="lineNum">     972</span>              : static struct CCC_Array_tree_map_handle</span>
 <span id="L973"><span class="lineNum">     973</span> <span class="tlaGNC">       13090 : handle(struct CCC_Array_tree_map const *const map, void const *const key) {</span></span>
@@ -1051,49 +1051,49 @@
 <span id="L989"><span class="lineNum">     989</span> <span class="tlaGNC">       13090 : }</span></span>
 <span id="L990"><span class="lineNum">     990</span>              : </span>
 <span id="L991"><span class="lineNum">     991</span>              : static struct Query</span>
-<span id="L992"><span class="lineNum">     992</span> <span class="tlaGNC">       23315 : find(struct CCC_Array_tree_map const *const map, void const *const key) {</span></span>
-<span id="L993"><span class="lineNum">     993</span> <span class="tlaGNC">       23315 :     size_t parent = 0;</span></span>
-<span id="L994"><span class="lineNum">     994</span> <span class="tlaGNC">       23315 :     struct Query q = {</span></span>
+<span id="L992"><span class="lineNum">     992</span> <span class="tlaGNC">       23281 : find(struct CCC_Array_tree_map const *const map, void const *const key) {</span></span>
+<span id="L993"><span class="lineNum">     993</span> <span class="tlaGNC">       23281 :     size_t parent = 0;</span></span>
+<span id="L994"><span class="lineNum">     994</span> <span class="tlaGNC">       23281 :     struct Query q = {</span></span>
 <span id="L995"><span class="lineNum">     995</span>              :         .last_order = CCC_ORDER_ERROR,</span>
-<span id="L996"><span class="lineNum">     996</span> <span class="tlaGNC">       23315 :         .found = map-&gt;root,</span></span>
+<span id="L996"><span class="lineNum">     996</span> <span class="tlaGNC">       23281 :         .found = map-&gt;root,</span></span>
 <span id="L997"><span class="lineNum">     997</span>              :     };</span>
-<span id="L998"><span class="lineNum">     998</span> <span class="tlaGNC">      199206 :     while (q.found) {</span></span>
-<span id="L999"><span class="lineNum">     999</span> <span class="tlaGNC">      188620 :         q.last_order = order_nodes(map, key, q.found);</span></span>
-<span id="L1000"><span class="lineNum">    1000</span> <span class="tlaGNC">      188620 :         if (CCC_ORDER_EQUAL == q.last_order) {</span></span>
-<span id="L1001"><span class="lineNum">    1001</span> <span class="tlaGNC">       12729 :             return q;</span></span>
+<span id="L998"><span class="lineNum">     998</span> <span class="tlaGNC">      199082 :     while (q.found) {</span></span>
+<span id="L999"><span class="lineNum">     999</span> <span class="tlaGNC">      188526 :         q.last_order = order_nodes(map, key, q.found);</span></span>
+<span id="L1000"><span class="lineNum">    1000</span> <span class="tlaGNC">      188526 :         if (CCC_ORDER_EQUAL == q.last_order) {</span></span>
+<span id="L1001"><span class="lineNum">    1001</span> <span class="tlaGNC">       12725 :             return q;</span></span>
 <span id="L1002"><span class="lineNum">    1002</span>              :         }</span>
-<span id="L1003"><span class="lineNum">    1003</span> <span class="tlaGNC">      175891 :         parent = q.found;</span></span>
-<span id="L1004"><span class="lineNum">    1004</span> <span class="tlaGNC">      175891 :         q.found = branch_index(map, q.found, CCC_ORDER_GREATER == q.last_order);</span></span>
+<span id="L1003"><span class="lineNum">    1003</span> <span class="tlaGNC">      175801 :         parent = q.found;</span></span>
+<span id="L1004"><span class="lineNum">    1004</span> <span class="tlaGNC">      175801 :         q.found = branch_index(map, q.found, CCC_ORDER_GREATER == q.last_order);</span></span>
 <span id="L1005"><span class="lineNum">    1005</span>              :     }</span>
 <span id="L1006"><span class="lineNum">    1006</span>              :     /* Type punning here OK as both union members have same type and size. */</span>
-<span id="L1007"><span class="lineNum">    1007</span> <span class="tlaGNC">       10586 :     q.parent = parent;</span></span>
-<span id="L1008"><span class="lineNum">    1008</span> <span class="tlaGNC">       10586 :     return q;</span></span>
-<span id="L1009"><span class="lineNum">    1009</span> <span class="tlaGNC">       23315 : }</span></span>
+<span id="L1007"><span class="lineNum">    1007</span> <span class="tlaGNC">       10556 :     q.parent = parent;</span></span>
+<span id="L1008"><span class="lineNum">    1008</span> <span class="tlaGNC">       10556 :     return q;</span></span>
+<span id="L1009"><span class="lineNum">    1009</span> <span class="tlaGNC">       23281 : }</span></span>
 <span id="L1010"><span class="lineNum">    1010</span>              : </span>
 <span id="L1011"><span class="lineNum">    1011</span>              : static size_t</span>
-<span id="L1012"><span class="lineNum">    1012</span> <span class="tlaGNC">        4354 : next(</span></span>
+<span id="L1012"><span class="lineNum">    1012</span> <span class="tlaGNC">        4298 : next(</span></span>
 <span id="L1013"><span class="lineNum">    1013</span>              :     struct CCC_Array_tree_map const *const map,</span>
 <span id="L1014"><span class="lineNum">    1014</span>              :     size_t n,</span>
 <span id="L1015"><span class="lineNum">    1015</span>              :     enum Link const traversal</span>
 <span id="L1016"><span class="lineNum">    1016</span>              : ) {</span>
-<span id="L1017"><span class="lineNum">    1017</span> <span class="tlaGNC">        4354 :     if (!n) {</span></span>
+<span id="L1017"><span class="lineNum">    1017</span> <span class="tlaGNC">        4298 :     if (!n) {</span></span>
 <span id="L1018"><span class="lineNum">    1018</span> <span class="tlaUNC">           0 :         return 0;</span></span>
 <span id="L1019"><span class="lineNum">    1019</span>              :     }</span>
-<span id="L1020"><span class="lineNum">    1020</span> <span class="tlaGNC">        4354 :     assert(!parent_index(map, map-&gt;root));</span></span>
+<span id="L1020"><span class="lineNum">    1020</span> <span class="tlaGNC">        4298 :     assert(!parent_index(map, map-&gt;root));</span></span>
 <span id="L1021"><span class="lineNum">    1021</span>              :     /* The node is an internal one that has a sub-tree to explore first. */</span>
-<span id="L1022"><span class="lineNum">    1022</span> <span class="tlaGNC">        4354 :     if (branch_index(map, n, traversal)) {</span></span>
+<span id="L1022"><span class="lineNum">    1022</span> <span class="tlaGNC">        4298 :     if (branch_index(map, n, traversal)) {</span></span>
 <span id="L1023"><span class="lineNum">    1023</span>              :         /* The goal is to get far left/right ASAP in any traversal. */</span>
-<span id="L1024"><span class="lineNum">    1024</span> <span class="tlaGNC">        5579 :         for (n = branch_index(map, n, traversal);</span></span>
-<span id="L1025"><span class="lineNum">    1025</span> <span class="tlaGNC">        5579 :              branch_index(map, n, !traversal);</span></span>
-<span id="L1026"><span class="lineNum">    1026</span> <span class="tlaGNC">        3238 :              n = branch_index(map, n, !traversal)) {}</span></span>
-<span id="L1027"><span class="lineNum">    1027</span> <span class="tlaGNC">        2341 :         return n;</span></span>
+<span id="L1024"><span class="lineNum">    1024</span> <span class="tlaGNC">        5530 :         for (n = branch_index(map, n, traversal);</span></span>
+<span id="L1025"><span class="lineNum">    1025</span> <span class="tlaGNC">        5530 :              branch_index(map, n, !traversal);</span></span>
+<span id="L1026"><span class="lineNum">    1026</span> <span class="tlaGNC">        3217 :              n = branch_index(map, n, !traversal)) {}</span></span>
+<span id="L1027"><span class="lineNum">    1027</span> <span class="tlaGNC">        2313 :         return n;</span></span>
 <span id="L1028"><span class="lineNum">    1028</span>              :     }</span>
 <span id="L1029"><span class="lineNum">    1029</span>              :     /* This is how to return internal nodes on the way back up from a leaf. */</span>
-<span id="L1030"><span class="lineNum">    1030</span> <span class="tlaGNC">        2013 :     size_t p = parent_index(map, n);</span></span>
-<span id="L1031"><span class="lineNum">    1031</span> <span class="tlaGNC">        3897 :     for (; p &amp;&amp; branch_index(map, p, !traversal) != n;</span></span>
-<span id="L1032"><span class="lineNum">    1032</span> <span class="tlaGNC">        1884 :          n = p, p = parent_index(map, p)) {}</span></span>
-<span id="L1033"><span class="lineNum">    1033</span> <span class="tlaGNC">        2013 :     return p;</span></span>
-<span id="L1034"><span class="lineNum">    1034</span> <span class="tlaGNC">        4354 : }</span></span>
+<span id="L1030"><span class="lineNum">    1030</span> <span class="tlaGNC">        1985 :     size_t p = parent_index(map, n);</span></span>
+<span id="L1031"><span class="lineNum">    1031</span> <span class="tlaGNC">        3847 :     for (; p &amp;&amp; branch_index(map, p, !traversal) != n;</span></span>
+<span id="L1032"><span class="lineNum">    1032</span> <span class="tlaGNC">        1862 :          n = p, p = parent_index(map, p)) {}</span></span>
+<span id="L1033"><span class="lineNum">    1033</span> <span class="tlaGNC">        1985 :     return p;</span></span>
+<span id="L1034"><span class="lineNum">    1034</span> <span class="tlaGNC">        4298 : }</span></span>
 <span id="L1035"><span class="lineNum">    1035</span>              : </span>
 <span id="L1036"><span class="lineNum">    1036</span>              : static CCC_Handle_range</span>
 <span id="L1037"><span class="lineNum">    1037</span> <span class="tlaGNC">          10 : equal_range(</span></span>
@@ -1121,18 +1121,18 @@
 <span id="L1059"><span class="lineNum">    1059</span> <span class="tlaGNC">          10 : }</span></span>
 <span id="L1060"><span class="lineNum">    1060</span>              : </span>
 <span id="L1061"><span class="lineNum">    1061</span>              : static size_t</span>
-<span id="L1062"><span class="lineNum">    1062</span> <span class="tlaGNC">        1063 : min_max_from(</span></span>
+<span id="L1062"><span class="lineNum">    1062</span> <span class="tlaGNC">        1115 : min_max_from(</span></span>
 <span id="L1063"><span class="lineNum">    1063</span>              :     struct CCC_Array_tree_map const *const map,</span>
 <span id="L1064"><span class="lineNum">    1064</span>              :     size_t start,</span>
 <span id="L1065"><span class="lineNum">    1065</span>              :     enum Link const dir</span>
 <span id="L1066"><span class="lineNum">    1066</span>              : ) {</span>
-<span id="L1067"><span class="lineNum">    1067</span> <span class="tlaGNC">        1063 :     if (!start) {</span></span>
+<span id="L1067"><span class="lineNum">    1067</span> <span class="tlaGNC">        1115 :     if (!start) {</span></span>
 <span id="L1068"><span class="lineNum">    1068</span> <span class="tlaGNC">           1 :         return 0;</span></span>
 <span id="L1069"><span class="lineNum">    1069</span>              :     }</span>
-<span id="L1070"><span class="lineNum">    1070</span> <span class="tlaGNC">        3463 :     for (; branch_index(map, start, dir);</span></span>
-<span id="L1071"><span class="lineNum">    1071</span> <span class="tlaGNC">        2401 :          start = branch_index(map, start, dir)) {}</span></span>
-<span id="L1072"><span class="lineNum">    1072</span> <span class="tlaGNC">        1062 :     return start;</span></span>
-<span id="L1073"><span class="lineNum">    1073</span> <span class="tlaGNC">        1063 : }</span></span>
+<span id="L1070"><span class="lineNum">    1070</span> <span class="tlaGNC">        3564 :     for (; branch_index(map, start, dir);</span></span>
+<span id="L1071"><span class="lineNum">    1071</span> <span class="tlaGNC">        2450 :          start = branch_index(map, start, dir)) {}</span></span>
+<span id="L1072"><span class="lineNum">    1072</span> <span class="tlaGNC">        1114 :     return start;</span></span>
+<span id="L1073"><span class="lineNum">    1073</span> <span class="tlaGNC">        1115 : }</span></span>
 <span id="L1074"><span class="lineNum">    1074</span>              : </span>
 <span id="L1075"><span class="lineNum">    1075</span>              : /** Deletes all nodes in the tree by calling destructor function on them in</span>
 <span id="L1076"><span class="lineNum">    1076</span>              : linear time and constant space. This function modifies nodes as it deletes the</span>
@@ -1167,15 +1167,15 @@
 <span id="L1105"><span class="lineNum">    1105</span> <span class="tlaGNC">           2 : }</span></span>
 <span id="L1106"><span class="lineNum">    1106</span>              : </span>
 <span id="L1107"><span class="lineNum">    1107</span>              : static inline CCC_Order</span>
-<span id="L1108"><span class="lineNum">    1108</span> <span class="tlaGNC">     7050697 : order_nodes(</span></span>
+<span id="L1108"><span class="lineNum">    1108</span> <span class="tlaGNC">     7027414 : order_nodes(</span></span>
 <span id="L1109"><span class="lineNum">    1109</span>              :     struct CCC_Array_tree_map const *const map,</span>
 <span id="L1110"><span class="lineNum">    1110</span>              :     void const *const key,</span>
 <span id="L1111"><span class="lineNum">    1111</span>              :     size_t const node</span>
 <span id="L1112"><span class="lineNum">    1112</span>              : ) {</span>
-<span id="L1113"><span class="lineNum">    1113</span> <span class="tlaGNC">    28202788 :     return map-&gt;comparator.compare((CCC_Key_comparator_arguments){</span></span>
-<span id="L1114"><span class="lineNum">    1114</span> <span class="tlaGNC">     7050697 :         .key_left = key,</span></span>
-<span id="L1115"><span class="lineNum">    1115</span> <span class="tlaGNC">     7050697 :         .type_right = data_at(map, node),</span></span>
-<span id="L1116"><span class="lineNum">    1116</span> <span class="tlaGNC">     7050697 :         .context = map-&gt;comparator.context,</span></span>
+<span id="L1113"><span class="lineNum">    1113</span> <span class="tlaGNC">    28109656 :     return map-&gt;comparator.compare((CCC_Key_comparator_arguments){</span></span>
+<span id="L1114"><span class="lineNum">    1114</span> <span class="tlaGNC">     7027414 :         .key_left = key,</span></span>
+<span id="L1115"><span class="lineNum">    1115</span> <span class="tlaGNC">     7027414 :         .type_right = data_at(map, node),</span></span>
+<span id="L1116"><span class="lineNum">    1116</span> <span class="tlaGNC">     7027414 :         .context = map-&gt;comparator.context,</span></span>
 <span id="L1117"><span class="lineNum">    1117</span>              :     });</span>
 <span id="L1118"><span class="lineNum">    1118</span>              : }</span>
 <span id="L1119"><span class="lineNum">    1119</span>              : </span>
@@ -1294,84 +1294,84 @@
 <span id="L1232"><span class="lineNum">    1232</span> <span class="tlaGNC">          70 : }</span></span>
 <span id="L1233"><span class="lineNum">    1233</span>              : </span>
 <span id="L1234"><span class="lineNum">    1234</span>              : static inline void</span>
-<span id="L1235"><span class="lineNum">    1235</span> <span class="tlaGNC">       10469 : init_node(struct CCC_Array_tree_map const *const map, size_t const node) {</span></span>
-<span id="L1236"><span class="lineNum">    1236</span> <span class="tlaGNC">       10469 :     set_parity(map, node, CCC_FALSE);</span></span>
-<span id="L1237"><span class="lineNum">    1237</span> <span class="tlaGNC">       10469 :     struct CCC_Array_tree_map_node *const e = node_at(map, node);</span></span>
-<span id="L1238"><span class="lineNum">    1238</span> <span class="tlaGNC">       10469 :     e-&gt;branch[L] = e-&gt;branch[R] = e-&gt;parent = 0;</span></span>
-<span id="L1239"><span class="lineNum">    1239</span> <span class="tlaGNC">       10469 : }</span></span>
+<span id="L1235"><span class="lineNum">    1235</span> <span class="tlaGNC">       10439 : init_node(struct CCC_Array_tree_map const *const map, size_t const node) {</span></span>
+<span id="L1236"><span class="lineNum">    1236</span> <span class="tlaGNC">       10439 :     set_parity(map, node, CCC_FALSE);</span></span>
+<span id="L1237"><span class="lineNum">    1237</span> <span class="tlaGNC">       10439 :     struct CCC_Array_tree_map_node *const e = node_at(map, node);</span></span>
+<span id="L1238"><span class="lineNum">    1238</span> <span class="tlaGNC">       10439 :     e-&gt;branch[L] = e-&gt;branch[R] = e-&gt;parent = 0;</span></span>
+<span id="L1239"><span class="lineNum">    1239</span> <span class="tlaGNC">       10439 : }</span></span>
 <span id="L1240"><span class="lineNum">    1240</span>              : </span>
 <span id="L1241"><span class="lineNum">    1241</span>              : static inline void</span>
-<span id="L1242"><span class="lineNum">    1242</span> <span class="tlaGNC">         827 : swap(void *const temp, void *const a, void *const b, size_t const sizeof_type) {</span></span>
-<span id="L1243"><span class="lineNum">    1243</span> <span class="tlaGNC">         827 :     if (a == b || !a || !b) {</span></span>
+<span id="L1242"><span class="lineNum">    1242</span> <span class="tlaGNC">         840 : swap(void *const temp, void *const a, void *const b, size_t const sizeof_type) {</span></span>
+<span id="L1243"><span class="lineNum">    1243</span> <span class="tlaGNC">         840 :     if (a == b || !a || !b) {</span></span>
 <span id="L1244"><span class="lineNum">    1244</span> <span class="tlaUNC">           0 :         return;</span></span>
 <span id="L1245"><span class="lineNum">    1245</span>              :     }</span>
-<span id="L1246"><span class="lineNum">    1246</span> <span class="tlaGNC">         827 :     (void)memcpy(temp, a, sizeof_type);</span></span>
-<span id="L1247"><span class="lineNum">    1247</span> <span class="tlaGNC">         827 :     (void)memcpy(a, b, sizeof_type);</span></span>
-<span id="L1248"><span class="lineNum">    1248</span> <span class="tlaGNC">         827 :     (void)memcpy(b, temp, sizeof_type);</span></span>
-<span id="L1249"><span class="lineNum">    1249</span> <span class="tlaGNC">        1654 : }</span></span>
+<span id="L1246"><span class="lineNum">    1246</span> <span class="tlaGNC">         840 :     (void)memcpy(temp, a, sizeof_type);</span></span>
+<span id="L1247"><span class="lineNum">    1247</span> <span class="tlaGNC">         840 :     (void)memcpy(a, b, sizeof_type);</span></span>
+<span id="L1248"><span class="lineNum">    1248</span> <span class="tlaGNC">         840 :     (void)memcpy(b, temp, sizeof_type);</span></span>
+<span id="L1249"><span class="lineNum">    1249</span> <span class="tlaGNC">        1680 : }</span></span>
 <span id="L1250"><span class="lineNum">    1250</span>              : </span>
 <span id="L1251"><span class="lineNum">    1251</span>              : static inline struct CCC_Array_tree_map_node *</span>
-<span id="L1252"><span class="lineNum">    1252</span> <span class="tlaGNC">    29435863 : node_at(struct CCC_Array_tree_map const *const map, size_t const i) {</span></span>
-<span id="L1253"><span class="lineNum">    1253</span> <span class="tlaGNC">    29435863 :     return &amp;map-&gt;nodes[i];</span></span>
+<span id="L1252"><span class="lineNum">    1252</span> <span class="tlaGNC">    29341802 : node_at(struct CCC_Array_tree_map const *const map, size_t const i) {</span></span>
+<span id="L1253"><span class="lineNum">    1253</span> <span class="tlaGNC">    29341802 :     return &amp;map-&gt;nodes[i];</span></span>
 <span id="L1254"><span class="lineNum">    1254</span>              : }</span>
 <span id="L1255"><span class="lineNum">    1255</span>              : </span>
 <span id="L1256"><span class="lineNum">    1256</span>              : static inline void *</span>
-<span id="L1257"><span class="lineNum">    1257</span> <span class="tlaGNC">    13949260 : data_at(struct CCC_Array_tree_map const *const map, size_t const i) {</span></span>
-<span id="L1258"><span class="lineNum">    1258</span> <span class="tlaGNC">    13949260 :     return (char *)map-&gt;data + (map-&gt;sizeof_type * i);</span></span>
+<span id="L1257"><span class="lineNum">    1257</span> <span class="tlaGNC">    13902737 : data_at(struct CCC_Array_tree_map const *const map, size_t const i) {</span></span>
+<span id="L1258"><span class="lineNum">    1258</span> <span class="tlaGNC">    13902737 :     return (char *)map-&gt;data + (map-&gt;sizeof_type * i);</span></span>
 <span id="L1259"><span class="lineNum">    1259</span>              : }</span>
 <span id="L1260"><span class="lineNum">    1260</span>              : </span>
 <span id="L1261"><span class="lineNum">    1261</span>              : static inline Parity_block *</span>
-<span id="L1262"><span class="lineNum">    1262</span> <span class="tlaGNC">      184317 : block_at(struct CCC_Array_tree_map const *const map, size_t const i) {</span></span>
+<span id="L1262"><span class="lineNum">    1262</span> <span class="tlaGNC">      183160 : block_at(struct CCC_Array_tree_map const *const map, size_t const i) {</span></span>
 <span id="L1263"><span class="lineNum">    1263</span>              :     static_assert(</span>
 <span id="L1264"><span class="lineNum">    1264</span>              :         (typeof(i))~((typeof(i))0) &gt;= (typeof(i))0,</span>
 <span id="L1265"><span class="lineNum">    1265</span>              :         &quot;shifting to avoid division with power of 2 divisor is only &quot;</span>
 <span id="L1266"><span class="lineNum">    1266</span>              :         &quot;defined for unsigned types&quot;</span>
 <span id="L1267"><span class="lineNum">    1267</span>              :     );</span>
 <span id="L1268"><span class="lineNum">    1268</span>              :     /* Avoid division because why not? */</span>
-<span id="L1269"><span class="lineNum">    1269</span> <span class="tlaGNC">      184317 :     return &amp;map-&gt;parity[i &gt;&gt; PARITY_BLOCK_BITS_LOG2];</span></span>
+<span id="L1269"><span class="lineNum">    1269</span> <span class="tlaGNC">      183160 :     return &amp;map-&gt;parity[i &gt;&gt; PARITY_BLOCK_BITS_LOG2];</span></span>
 <span id="L1270"><span class="lineNum">    1270</span>              : }</span>
 <span id="L1271"><span class="lineNum">    1271</span>              : </span>
 <span id="L1272"><span class="lineNum">    1272</span>              : static inline Parity_block</span>
-<span id="L1273"><span class="lineNum">    1273</span> <span class="tlaGNC">      184317 : bit_on(size_t const i) {</span></span>
+<span id="L1273"><span class="lineNum">    1273</span> <span class="tlaGNC">      183160 : bit_on(size_t const i) {</span></span>
 <span id="L1274"><span class="lineNum">    1274</span>              :     static_assert(</span>
 <span id="L1275"><span class="lineNum">    1275</span>              :         (PARITY_BLOCK_BITS &amp; (PARITY_BLOCK_BITS - 1)) == 0,</span>
 <span id="L1276"><span class="lineNum">    1276</span>              :         &quot;the number of bits in a block is always a power of two, &quot;</span>
 <span id="L1277"><span class="lineNum">    1277</span>              :         &quot;avoiding modulo operations.&quot;</span>
 <span id="L1278"><span class="lineNum">    1278</span>              :     );</span>
-<span id="L1279"><span class="lineNum">    1279</span> <span class="tlaGNC">      184317 :     return ((Parity_block)1) &lt;&lt; (i &amp; (PARITY_BLOCK_BITS - 1));</span></span>
+<span id="L1279"><span class="lineNum">    1279</span> <span class="tlaGNC">      183160 :     return ((Parity_block)1) &lt;&lt; (i &amp; (PARITY_BLOCK_BITS - 1));</span></span>
 <span id="L1280"><span class="lineNum">    1280</span>              : }</span>
 <span id="L1281"><span class="lineNum">    1281</span>              : </span>
 <span id="L1282"><span class="lineNum">    1282</span>              : static inline size_t</span>
-<span id="L1283"><span class="lineNum">    1283</span> <span class="tlaGNC">    21315581 : branch_index(</span></span>
+<span id="L1283"><span class="lineNum">    1283</span> <span class="tlaGNC">    21239087 : branch_index(</span></span>
 <span id="L1284"><span class="lineNum">    1284</span>              :     struct CCC_Array_tree_map const *const map,</span>
 <span id="L1285"><span class="lineNum">    1285</span>              :     size_t const parent,</span>
 <span id="L1286"><span class="lineNum">    1286</span>              :     enum Link const dir</span>
 <span id="L1287"><span class="lineNum">    1287</span>              : ) {</span>
-<span id="L1288"><span class="lineNum">    1288</span> <span class="tlaGNC">    21315581 :     return node_at(map, parent)-&gt;branch[dir];</span></span>
+<span id="L1288"><span class="lineNum">    1288</span> <span class="tlaGNC">    21239087 :     return node_at(map, parent)-&gt;branch[dir];</span></span>
 <span id="L1289"><span class="lineNum">    1289</span>              : }</span>
 <span id="L1290"><span class="lineNum">    1290</span>              : </span>
 <span id="L1291"><span class="lineNum">    1291</span>              : static inline size_t</span>
-<span id="L1292"><span class="lineNum">    1292</span> <span class="tlaGNC">     3577125 : parent_index(struct CCC_Array_tree_map const *const map, size_t const child) {</span></span>
-<span id="L1293"><span class="lineNum">    1293</span> <span class="tlaGNC">     3577125 :     return node_at(map, child)-&gt;parent;</span></span>
+<span id="L1292"><span class="lineNum">    1292</span> <span class="tlaGNC">     3564318 : parent_index(struct CCC_Array_tree_map const *const map, size_t const child) {</span></span>
+<span id="L1293"><span class="lineNum">    1293</span> <span class="tlaGNC">     3564318 :     return node_at(map, child)-&gt;parent;</span></span>
 <span id="L1294"><span class="lineNum">    1294</span>              : }</span>
 <span id="L1295"><span class="lineNum">    1295</span>              : </span>
 <span id="L1296"><span class="lineNum">    1296</span>              : static inline CCC_Tribool</span>
-<span id="L1297"><span class="lineNum">    1297</span> <span class="tlaGNC">      143259 : parity(struct CCC_Array_tree_map const *const map, size_t const node) {</span></span>
-<span id="L1298"><span class="lineNum">    1298</span> <span class="tlaGNC">      143259 :     return (*block_at(map, node) &amp; bit_on(node)) != 0;</span></span>
+<span id="L1297"><span class="lineNum">    1297</span> <span class="tlaGNC">      142224 : parity(struct CCC_Array_tree_map const *const map, size_t const node) {</span></span>
+<span id="L1298"><span class="lineNum">    1298</span> <span class="tlaGNC">      142224 :     return (*block_at(map, node) &amp; bit_on(node)) != 0;</span></span>
 <span id="L1299"><span class="lineNum">    1299</span>              : }</span>
 <span id="L1300"><span class="lineNum">    1300</span>              : </span>
 <span id="L1301"><span class="lineNum">    1301</span>              : static inline void</span>
-<span id="L1302"><span class="lineNum">    1302</span> <span class="tlaGNC">       11600 : set_parity(</span></span>
+<span id="L1302"><span class="lineNum">    1302</span> <span class="tlaGNC">       11622 : set_parity(</span></span>
 <span id="L1303"><span class="lineNum">    1303</span>              :     struct CCC_Array_tree_map const *const map,</span>
 <span id="L1304"><span class="lineNum">    1304</span>              :     size_t const node,</span>
 <span id="L1305"><span class="lineNum">    1305</span>              :     CCC_Tribool const status</span>
 <span id="L1306"><span class="lineNum">    1306</span>              : ) {</span>
-<span id="L1307"><span class="lineNum">    1307</span> <span class="tlaGNC">       11600 :     if (status) {</span></span>
-<span id="L1308"><span class="lineNum">    1308</span> <span class="tlaGNC">         453 :         *block_at(map, node) |= bit_on(node);</span></span>
-<span id="L1309"><span class="lineNum">    1309</span> <span class="tlaGNC">         453 :     } else {</span></span>
-<span id="L1310"><span class="lineNum">    1310</span> <span class="tlaGNC">       11147 :         *block_at(map, node) &amp;= ~bit_on(node);</span></span>
+<span id="L1307"><span class="lineNum">    1307</span> <span class="tlaGNC">       11622 :     if (status) {</span></span>
+<span id="L1308"><span class="lineNum">    1308</span> <span class="tlaGNC">         445 :         *block_at(map, node) |= bit_on(node);</span></span>
+<span id="L1309"><span class="lineNum">    1309</span> <span class="tlaGNC">         445 :     } else {</span></span>
+<span id="L1310"><span class="lineNum">    1310</span> <span class="tlaGNC">       11177 :         *block_at(map, node) &amp;= ~bit_on(node);</span></span>
 <span id="L1311"><span class="lineNum">    1311</span>              :     }</span>
-<span id="L1312"><span class="lineNum">    1312</span> <span class="tlaGNC">       11600 : }</span></span>
+<span id="L1312"><span class="lineNum">    1312</span> <span class="tlaGNC">       11622 : }</span></span>
 <span id="L1313"><span class="lineNum">    1313</span>              : </span>
 <span id="L1314"><span class="lineNum">    1314</span>              : static inline size_t</span>
 <span id="L1315"><span class="lineNum">    1315</span> <span class="tlaGNC">          71 : block_count(size_t const node_count) {</span></span>
@@ -1384,28 +1384,28 @@
 <span id="L1322"><span class="lineNum">    1322</span>              : }</span>
 <span id="L1323"><span class="lineNum">    1323</span>              : </span>
 <span id="L1324"><span class="lineNum">    1324</span>              : static inline size_t *</span>
-<span id="L1325"><span class="lineNum">    1325</span> <span class="tlaGNC">        3120 : branch_pointer(</span></span>
+<span id="L1325"><span class="lineNum">    1325</span> <span class="tlaGNC">        3161 : branch_pointer(</span></span>
 <span id="L1326"><span class="lineNum">    1326</span>              :     struct CCC_Array_tree_map const *t,</span>
 <span id="L1327"><span class="lineNum">    1327</span>              :     size_t const node,</span>
 <span id="L1328"><span class="lineNum">    1328</span>              :     enum Link const branch</span>
 <span id="L1329"><span class="lineNum">    1329</span>              : ) {</span>
-<span id="L1330"><span class="lineNum">    1330</span> <span class="tlaGNC">        3120 :     return &amp;node_at(t, node)-&gt;branch[branch];</span></span>
+<span id="L1330"><span class="lineNum">    1330</span> <span class="tlaGNC">        3161 :     return &amp;node_at(t, node)-&gt;branch[branch];</span></span>
 <span id="L1331"><span class="lineNum">    1331</span>              : }</span>
 <span id="L1332"><span class="lineNum">    1332</span>              : </span>
 <span id="L1333"><span class="lineNum">    1333</span>              : static inline size_t *</span>
-<span id="L1334"><span class="lineNum">    1334</span> <span class="tlaGNC">       13032 : parent_pointer(struct CCC_Array_tree_map const *t, size_t const node) {</span></span>
+<span id="L1334"><span class="lineNum">    1334</span> <span class="tlaGNC">       13144 : parent_pointer(struct CCC_Array_tree_map const *t, size_t const node) {</span></span>
 <span id="L1335"><span class="lineNum">    1335</span>              : </span>
-<span id="L1336"><span class="lineNum">    1336</span> <span class="tlaGNC">       13032 :     return &amp;node_at(t, node)-&gt;parent;</span></span>
+<span id="L1336"><span class="lineNum">    1336</span> <span class="tlaGNC">       13144 :     return &amp;node_at(t, node)-&gt;parent;</span></span>
 <span id="L1337"><span class="lineNum">    1337</span>              : }</span>
 <span id="L1338"><span class="lineNum">    1338</span>              : </span>
 <span id="L1339"><span class="lineNum">    1339</span>              : static inline void *</span>
-<span id="L1340"><span class="lineNum">    1340</span> <span class="tlaGNC">     6862113 : key_at(struct CCC_Array_tree_map const *const map, size_t const i) {</span></span>
-<span id="L1341"><span class="lineNum">    1341</span> <span class="tlaGNC">     6862113 :     return (char *)data_at(map, i) + map-&gt;key_offset;</span></span>
+<span id="L1340"><span class="lineNum">    1340</span> <span class="tlaGNC">     6838924 : key_at(struct CCC_Array_tree_map const *const map, size_t const i) {</span></span>
+<span id="L1341"><span class="lineNum">    1341</span> <span class="tlaGNC">     6838924 :     return (char *)data_at(map, i) + map-&gt;key_offset;</span></span>
 <span id="L1342"><span class="lineNum">    1342</span>              : }</span>
 <span id="L1343"><span class="lineNum">    1343</span>              : </span>
 <span id="L1344"><span class="lineNum">    1344</span>              : static void *</span>
-<span id="L1345"><span class="lineNum">    1345</span> <span class="tlaGNC">        8130 : key_in_slot(struct CCC_Array_tree_map const *t, void const *const user_struct) {</span></span>
-<span id="L1346"><span class="lineNum">    1346</span> <span class="tlaGNC">        8130 :     return (char *)user_struct + t-&gt;key_offset;</span></span>
+<span id="L1345"><span class="lineNum">    1345</span> <span class="tlaGNC">        8096 : key_in_slot(struct CCC_Array_tree_map const *t, void const *const user_struct) {</span></span>
+<span id="L1346"><span class="lineNum">    1346</span> <span class="tlaGNC">        8096 :     return (char *)user_struct + t-&gt;key_offset;</span></span>
 <span id="L1347"><span class="lineNum">    1347</span>              : }</span>
 <span id="L1348"><span class="lineNum">    1348</span>              : </span>
 <span id="L1349"><span class="lineNum">    1349</span>              : /*=======================   WAVL Tree Maintenance   =========================*/</span>
@@ -1413,160 +1413,160 @@
 <span id="L1351"><span class="lineNum">    1351</span>              : /** Follows the specification in the &quot;Rank-Balanced Trees&quot; paper by Haeupler,</span>
 <span id="L1352"><span class="lineNum">    1352</span>              : Sen, and Tarjan (Fig. 2. pg 7). Assumes x's parent z is not null. */</span>
 <span id="L1353"><span class="lineNum">    1353</span>              : static void</span>
-<span id="L1354"><span class="lineNum">    1354</span> <span class="tlaGNC">        9413 : insert_fixup(struct CCC_Array_tree_map *const map, size_t z, size_t x) {</span></span>
-<span id="L1355"><span class="lineNum">    1355</span> <span class="tlaGNC">        9413 :     assert(z);</span></span>
-<span id="L1356"><span class="lineNum">    1356</span> <span class="tlaGNC">        9413 :     do {</span></span>
-<span id="L1357"><span class="lineNum">    1357</span> <span class="tlaGNC">       18634 :         promote(map, z);</span></span>
-<span id="L1358"><span class="lineNum">    1358</span> <span class="tlaGNC">       18634 :         x = z;</span></span>
-<span id="L1359"><span class="lineNum">    1359</span> <span class="tlaGNC">       18634 :         z = parent_index(map, z);</span></span>
-<span id="L1360"><span class="lineNum">    1360</span> <span class="tlaGNC">       18634 :         if (!z) {</span></span>
+<span id="L1354"><span class="lineNum">    1354</span> <span class="tlaGNC">        9443 : insert_fixup(struct CCC_Array_tree_map *const map, size_t z, size_t x) {</span></span>
+<span id="L1355"><span class="lineNum">    1355</span> <span class="tlaGNC">        9443 :     assert(z);</span></span>
+<span id="L1356"><span class="lineNum">    1356</span> <span class="tlaGNC">        9443 :     do {</span></span>
+<span id="L1357"><span class="lineNum">    1357</span> <span class="tlaGNC">       18567 :         promote(map, z);</span></span>
+<span id="L1358"><span class="lineNum">    1358</span> <span class="tlaGNC">       18567 :         x = z;</span></span>
+<span id="L1359"><span class="lineNum">    1359</span> <span class="tlaGNC">       18567 :         z = parent_index(map, z);</span></span>
+<span id="L1360"><span class="lineNum">    1360</span> <span class="tlaGNC">       18567 :         if (!z) {</span></span>
 <span id="L1361"><span class="lineNum">    1361</span> <span class="tlaGNC">         271 :             return;</span></span>
 <span id="L1362"><span class="lineNum">    1362</span>              :         }</span>
-<span id="L1363"><span class="lineNum">    1363</span> <span class="tlaGNC">       18363 :     } while (is_01_parent(map, x, z, sibling_of(map, x)));</span></span>
+<span id="L1363"><span class="lineNum">    1363</span> <span class="tlaGNC">       18296 :     } while (is_01_parent(map, x, z, sibling_of(map, x)));</span></span>
 <span id="L1364"><span class="lineNum">    1364</span>              : </span>
-<span id="L1365"><span class="lineNum">    1365</span> <span class="tlaGNC">        9142 :     if (!is_02_parent(map, x, z, sibling_of(map, x))) {</span></span>
-<span id="L1366"><span class="lineNum">    1366</span> <span class="tlaGNC">        3563 :         return;</span></span>
+<span id="L1365"><span class="lineNum">    1365</span> <span class="tlaGNC">        9172 :     if (!is_02_parent(map, x, z, sibling_of(map, x))) {</span></span>
+<span id="L1366"><span class="lineNum">    1366</span> <span class="tlaGNC">        3584 :         return;</span></span>
 <span id="L1367"><span class="lineNum">    1367</span>              :     }</span>
-<span id="L1368"><span class="lineNum">    1368</span> <span class="tlaGNC">        5579 :     assert(x);</span></span>
-<span id="L1369"><span class="lineNum">    1369</span> <span class="tlaGNC">        5579 :     assert(is_0_child(map, z, x));</span></span>
-<span id="L1370"><span class="lineNum">    1370</span> <span class="tlaGNC">        5579 :     enum Link const p_to_x_dir = branch_index(map, z, R) == x;</span></span>
-<span id="L1371"><span class="lineNum">    1371</span> <span class="tlaGNC">        5579 :     size_t const y = branch_index(map, x, !p_to_x_dir);</span></span>
-<span id="L1372"><span class="lineNum">    1372</span> <span class="tlaGNC">        5579 :     if (!y || is_2_child(map, z, y)) {</span></span>
-<span id="L1373"><span class="lineNum">    1373</span> <span class="tlaGNC">        4704 :         rotate(map, z, x, y, !p_to_x_dir);</span></span>
-<span id="L1374"><span class="lineNum">    1374</span> <span class="tlaGNC">        4704 :         demote(map, z);</span></span>
-<span id="L1375"><span class="lineNum">    1375</span> <span class="tlaGNC">        4704 :     } else {</span></span>
-<span id="L1376"><span class="lineNum">    1376</span> <span class="tlaGNC">         875 :         assert(is_1_child(map, z, y));</span></span>
-<span id="L1377"><span class="lineNum">    1377</span> <span class="tlaGNC">         875 :         double_rotate(map, z, x, y, p_to_x_dir);</span></span>
-<span id="L1378"><span class="lineNum">    1378</span> <span class="tlaGNC">         875 :         promote(map, y);</span></span>
-<span id="L1379"><span class="lineNum">    1379</span> <span class="tlaGNC">         875 :         demote(map, x);</span></span>
-<span id="L1380"><span class="lineNum">    1380</span> <span class="tlaGNC">         875 :         demote(map, z);</span></span>
+<span id="L1368"><span class="lineNum">    1368</span> <span class="tlaGNC">        5588 :     assert(x);</span></span>
+<span id="L1369"><span class="lineNum">    1369</span> <span class="tlaGNC">        5588 :     assert(is_0_child(map, z, x));</span></span>
+<span id="L1370"><span class="lineNum">    1370</span> <span class="tlaGNC">        5588 :     enum Link const p_to_x_dir = branch_index(map, z, R) == x;</span></span>
+<span id="L1371"><span class="lineNum">    1371</span> <span class="tlaGNC">        5588 :     size_t const y = branch_index(map, x, !p_to_x_dir);</span></span>
+<span id="L1372"><span class="lineNum">    1372</span> <span class="tlaGNC">        5588 :     if (!y || is_2_child(map, z, y)) {</span></span>
+<span id="L1373"><span class="lineNum">    1373</span> <span class="tlaGNC">        4705 :         rotate(map, z, x, y, !p_to_x_dir);</span></span>
+<span id="L1374"><span class="lineNum">    1374</span> <span class="tlaGNC">        4705 :         demote(map, z);</span></span>
+<span id="L1375"><span class="lineNum">    1375</span> <span class="tlaGNC">        4705 :     } else {</span></span>
+<span id="L1376"><span class="lineNum">    1376</span> <span class="tlaGNC">         883 :         assert(is_1_child(map, z, y));</span></span>
+<span id="L1377"><span class="lineNum">    1377</span> <span class="tlaGNC">         883 :         double_rotate(map, z, x, y, p_to_x_dir);</span></span>
+<span id="L1378"><span class="lineNum">    1378</span> <span class="tlaGNC">         883 :         promote(map, y);</span></span>
+<span id="L1379"><span class="lineNum">    1379</span> <span class="tlaGNC">         883 :         demote(map, x);</span></span>
+<span id="L1380"><span class="lineNum">    1380</span> <span class="tlaGNC">         883 :         demote(map, z);</span></span>
 <span id="L1381"><span class="lineNum">    1381</span>              :     }</span>
-<span id="L1382"><span class="lineNum">    1382</span> <span class="tlaGNC">       14992 : }</span></span>
+<span id="L1382"><span class="lineNum">    1382</span> <span class="tlaGNC">       15031 : }</span></span>
 <span id="L1383"><span class="lineNum">    1383</span>              : </span>
 <span id="L1384"><span class="lineNum">    1384</span>              : static size_t</span>
-<span id="L1385"><span class="lineNum">    1385</span> <span class="tlaGNC">        2342 : remove_fixup(struct CCC_Array_tree_map *const map, size_t const remove) {</span></span>
-<span id="L1386"><span class="lineNum">    1386</span> <span class="tlaGNC">        2342 :     size_t y = 0;</span></span>
-<span id="L1387"><span class="lineNum">    1387</span> <span class="tlaGNC">        2342 :     size_t x = 0;</span></span>
-<span id="L1388"><span class="lineNum">    1388</span> <span class="tlaGNC">        2342 :     size_t p = 0;</span></span>
-<span id="L1389"><span class="lineNum">    1389</span> <span class="tlaGNC">        2342 :     CCC_Tribool two_child = CCC_FALSE;</span></span>
-<span id="L1390"><span class="lineNum">    1390</span> <span class="tlaGNC">        2342 :     if (!branch_index(map, remove, R) || !branch_index(map, remove, L)) {</span></span>
-<span id="L1391"><span class="lineNum">    1391</span> <span class="tlaGNC">        1295 :         y = remove;</span></span>
-<span id="L1392"><span class="lineNum">    1392</span> <span class="tlaGNC">        1295 :         p = parent_index(map, y);</span></span>
-<span id="L1393"><span class="lineNum">    1393</span> <span class="tlaGNC">        1295 :         x = branch_index(map, y, !branch_index(map, y, L));</span></span>
-<span id="L1394"><span class="lineNum">    1394</span> <span class="tlaGNC">        1295 :         *parent_pointer(map, x) = parent_index(map, y);</span></span>
-<span id="L1395"><span class="lineNum">    1395</span> <span class="tlaGNC">        1295 :         if (!p) {</span></span>
+<span id="L1385"><span class="lineNum">    1385</span> <span class="tlaGNC">        2325 : remove_fixup(struct CCC_Array_tree_map *const map, size_t const remove) {</span></span>
+<span id="L1386"><span class="lineNum">    1386</span> <span class="tlaGNC">        2325 :     size_t y = 0;</span></span>
+<span id="L1387"><span class="lineNum">    1387</span> <span class="tlaGNC">        2325 :     size_t x = 0;</span></span>
+<span id="L1388"><span class="lineNum">    1388</span> <span class="tlaGNC">        2325 :     size_t p = 0;</span></span>
+<span id="L1389"><span class="lineNum">    1389</span> <span class="tlaGNC">        2325 :     CCC_Tribool two_child = CCC_FALSE;</span></span>
+<span id="L1390"><span class="lineNum">    1390</span> <span class="tlaGNC">        2325 :     if (!branch_index(map, remove, R) || !branch_index(map, remove, L)) {</span></span>
+<span id="L1391"><span class="lineNum">    1391</span> <span class="tlaGNC">        1226 :         y = remove;</span></span>
+<span id="L1392"><span class="lineNum">    1392</span> <span class="tlaGNC">        1226 :         p = parent_index(map, y);</span></span>
+<span id="L1393"><span class="lineNum">    1393</span> <span class="tlaGNC">        1226 :         x = branch_index(map, y, !branch_index(map, y, L));</span></span>
+<span id="L1394"><span class="lineNum">    1394</span> <span class="tlaGNC">        1226 :         *parent_pointer(map, x) = parent_index(map, y);</span></span>
+<span id="L1395"><span class="lineNum">    1395</span> <span class="tlaGNC">        1226 :         if (!p) {</span></span>
 <span id="L1396"><span class="lineNum">    1396</span> <span class="tlaGNC">          17 :             map-&gt;root = x;</span></span>
 <span id="L1397"><span class="lineNum">    1397</span> <span class="tlaGNC">          17 :         } else {</span></span>
-<span id="L1398"><span class="lineNum">    1398</span> <span class="tlaGNC">        1278 :             *branch_pointer(map, p, branch_index(map, p, R) == y) = x;</span></span>
+<span id="L1398"><span class="lineNum">    1398</span> <span class="tlaGNC">        1209 :             *branch_pointer(map, p, branch_index(map, p, R) == y) = x;</span></span>
 <span id="L1399"><span class="lineNum">    1399</span>              :         }</span>
-<span id="L1400"><span class="lineNum">    1400</span> <span class="tlaGNC">        1295 :         two_child = is_2_child(map, p, y);</span></span>
-<span id="L1401"><span class="lineNum">    1401</span> <span class="tlaGNC">        1295 :     } else {</span></span>
-<span id="L1402"><span class="lineNum">    1402</span> <span class="tlaGNC">        1047 :         y = min_max_from(map, branch_index(map, remove, R), L);</span></span>
-<span id="L1403"><span class="lineNum">    1403</span> <span class="tlaGNC">        1047 :         p = parent_index(map, y);</span></span>
-<span id="L1404"><span class="lineNum">    1404</span> <span class="tlaGNC">        1047 :         x = branch_index(map, y, !branch_index(map, y, L));</span></span>
-<span id="L1405"><span class="lineNum">    1405</span> <span class="tlaGNC">        1047 :         *parent_pointer(map, x) = parent_index(map, y);</span></span>
+<span id="L1400"><span class="lineNum">    1400</span> <span class="tlaGNC">        1226 :         two_child = is_2_child(map, p, y);</span></span>
+<span id="L1401"><span class="lineNum">    1401</span> <span class="tlaGNC">        1226 :     } else {</span></span>
+<span id="L1402"><span class="lineNum">    1402</span> <span class="tlaGNC">        1099 :         y = min_max_from(map, branch_index(map, remove, R), L);</span></span>
+<span id="L1403"><span class="lineNum">    1403</span> <span class="tlaGNC">        1099 :         p = parent_index(map, y);</span></span>
+<span id="L1404"><span class="lineNum">    1404</span> <span class="tlaGNC">        1099 :         x = branch_index(map, y, !branch_index(map, y, L));</span></span>
+<span id="L1405"><span class="lineNum">    1405</span> <span class="tlaGNC">        1099 :         *parent_pointer(map, x) = parent_index(map, y);</span></span>
 <span id="L1406"><span class="lineNum">    1406</span>              : </span>
 <span id="L1407"><span class="lineNum">    1407</span>              :         /* Save if check and improve readability by assuming this is true. */</span>
-<span id="L1408"><span class="lineNum">    1408</span> <span class="tlaGNC">        1047 :         assert(p);</span></span>
+<span id="L1408"><span class="lineNum">    1408</span> <span class="tlaGNC">        1099 :         assert(p);</span></span>
 <span id="L1409"><span class="lineNum">    1409</span>              : </span>
-<span id="L1410"><span class="lineNum">    1410</span> <span class="tlaGNC">        1047 :         two_child = is_2_child(map, p, y);</span></span>
-<span id="L1411"><span class="lineNum">    1411</span> <span class="tlaGNC">        1047 :         *branch_pointer(map, p, branch_index(map, p, R) == y) = x;</span></span>
-<span id="L1412"><span class="lineNum">    1412</span> <span class="tlaGNC">        1047 :         transplant(map, remove, y);</span></span>
-<span id="L1413"><span class="lineNum">    1413</span> <span class="tlaGNC">        1047 :         if (remove == p) {</span></span>
-<span id="L1414"><span class="lineNum">    1414</span> <span class="tlaGNC">         253 :             p = y;</span></span>
-<span id="L1415"><span class="lineNum">    1415</span> <span class="tlaGNC">         253 :         }</span></span>
+<span id="L1410"><span class="lineNum">    1410</span> <span class="tlaGNC">        1099 :         two_child = is_2_child(map, p, y);</span></span>
+<span id="L1411"><span class="lineNum">    1411</span> <span class="tlaGNC">        1099 :         *branch_pointer(map, p, branch_index(map, p, R) == y) = x;</span></span>
+<span id="L1412"><span class="lineNum">    1412</span> <span class="tlaGNC">        1099 :         transplant(map, remove, y);</span></span>
+<span id="L1413"><span class="lineNum">    1413</span> <span class="tlaGNC">        1099 :         if (remove == p) {</span></span>
+<span id="L1414"><span class="lineNum">    1414</span> <span class="tlaGNC">         292 :             p = y;</span></span>
+<span id="L1415"><span class="lineNum">    1415</span> <span class="tlaGNC">         292 :         }</span></span>
 <span id="L1416"><span class="lineNum">    1416</span>              :     }</span>
 <span id="L1417"><span class="lineNum">    1417</span>              : </span>
-<span id="L1418"><span class="lineNum">    1418</span> <span class="tlaGNC">        2342 :     if (p) {</span></span>
-<span id="L1419"><span class="lineNum">    1419</span> <span class="tlaGNC">        2325 :         if (two_child) {</span></span>
-<span id="L1420"><span class="lineNum">    1420</span> <span class="tlaGNC">        1409 :             assert(p);</span></span>
-<span id="L1421"><span class="lineNum">    1421</span> <span class="tlaGNC">        1409 :             rebalance_3_child(map, p, x);</span></span>
-<span id="L1422"><span class="lineNum">    1422</span> <span class="tlaGNC">        2325 :         } else if (!x &amp;&amp; branch_index(map, p, L) == branch_index(map, p, R)) {</span></span>
-<span id="L1423"><span class="lineNum">    1423</span> <span class="tlaGNC">         343 :             assert(p);</span></span>
-<span id="L1424"><span class="lineNum">    1424</span> <span class="tlaGNC">         686 :             CCC_Tribool const demote_makes_3_child</span></span>
-<span id="L1425"><span class="lineNum">    1425</span> <span class="tlaGNC">         343 :                 = is_2_child(map, parent_index(map, p), p);</span></span>
-<span id="L1426"><span class="lineNum">    1426</span> <span class="tlaGNC">         343 :             demote(map, p);</span></span>
-<span id="L1427"><span class="lineNum">    1427</span> <span class="tlaGNC">         343 :             if (demote_makes_3_child) {</span></span>
-<span id="L1428"><span class="lineNum">    1428</span> <span class="tlaGNC">         194 :                 rebalance_3_child(map, parent_index(map, p), p);</span></span>
-<span id="L1429"><span class="lineNum">    1429</span> <span class="tlaGNC">         194 :             }</span></span>
-<span id="L1430"><span class="lineNum">    1430</span> <span class="tlaGNC">         343 :         }</span></span>
-<span id="L1431"><span class="lineNum">    1431</span> <span class="tlaGNC">        2325 :         assert(!is_leaf(map, p) || !parity(map, p));</span></span>
-<span id="L1432"><span class="lineNum">    1432</span> <span class="tlaGNC">        2325 :     }</span></span>
-<span id="L1433"><span class="lineNum">    1433</span> <span class="tlaGNC">        2342 :     node_at(map, remove)-&gt;next_free = map-&gt;free_list;</span></span>
-<span id="L1434"><span class="lineNum">    1434</span> <span class="tlaGNC">        2342 :     map-&gt;free_list = remove;</span></span>
-<span id="L1435"><span class="lineNum">    1435</span> <span class="tlaGNC">        2342 :     --map-&gt;count;</span></span>
-<span id="L1436"><span class="lineNum">    1436</span> <span class="tlaGNC">        4684 :     return remove;</span></span>
-<span id="L1437"><span class="lineNum">    1437</span> <span class="tlaGNC">        2342 : }</span></span>
+<span id="L1418"><span class="lineNum">    1418</span> <span class="tlaGNC">        2325 :     if (p) {</span></span>
+<span id="L1419"><span class="lineNum">    1419</span> <span class="tlaGNC">        2308 :         if (two_child) {</span></span>
+<span id="L1420"><span class="lineNum">    1420</span> <span class="tlaGNC">        1421 :             assert(p);</span></span>
+<span id="L1421"><span class="lineNum">    1421</span> <span class="tlaGNC">        1421 :             rebalance_3_child(map, p, x);</span></span>
+<span id="L1422"><span class="lineNum">    1422</span> <span class="tlaGNC">        2308 :         } else if (!x &amp;&amp; branch_index(map, p, L) == branch_index(map, p, R)) {</span></span>
+<span id="L1423"><span class="lineNum">    1423</span> <span class="tlaGNC">         344 :             assert(p);</span></span>
+<span id="L1424"><span class="lineNum">    1424</span> <span class="tlaGNC">         688 :             CCC_Tribool const demote_makes_3_child</span></span>
+<span id="L1425"><span class="lineNum">    1425</span> <span class="tlaGNC">         344 :                 = is_2_child(map, parent_index(map, p), p);</span></span>
+<span id="L1426"><span class="lineNum">    1426</span> <span class="tlaGNC">         344 :             demote(map, p);</span></span>
+<span id="L1427"><span class="lineNum">    1427</span> <span class="tlaGNC">         344 :             if (demote_makes_3_child) {</span></span>
+<span id="L1428"><span class="lineNum">    1428</span> <span class="tlaGNC">         158 :                 rebalance_3_child(map, parent_index(map, p), p);</span></span>
+<span id="L1429"><span class="lineNum">    1429</span> <span class="tlaGNC">         158 :             }</span></span>
+<span id="L1430"><span class="lineNum">    1430</span> <span class="tlaGNC">         344 :         }</span></span>
+<span id="L1431"><span class="lineNum">    1431</span> <span class="tlaGNC">        2308 :         assert(!is_leaf(map, p) || !parity(map, p));</span></span>
+<span id="L1432"><span class="lineNum">    1432</span> <span class="tlaGNC">        2308 :     }</span></span>
+<span id="L1433"><span class="lineNum">    1433</span> <span class="tlaGNC">        2325 :     node_at(map, remove)-&gt;next_free = map-&gt;free_list;</span></span>
+<span id="L1434"><span class="lineNum">    1434</span> <span class="tlaGNC">        2325 :     map-&gt;free_list = remove;</span></span>
+<span id="L1435"><span class="lineNum">    1435</span> <span class="tlaGNC">        2325 :     --map-&gt;count;</span></span>
+<span id="L1436"><span class="lineNum">    1436</span> <span class="tlaGNC">        4650 :     return remove;</span></span>
+<span id="L1437"><span class="lineNum">    1437</span> <span class="tlaGNC">        2325 : }</span></span>
 <span id="L1438"><span class="lineNum">    1438</span>              : </span>
 <span id="L1439"><span class="lineNum">    1439</span>              : static void</span>
-<span id="L1440"><span class="lineNum">    1440</span> <span class="tlaGNC">        1047 : transplant(</span></span>
+<span id="L1440"><span class="lineNum">    1440</span> <span class="tlaGNC">        1099 : transplant(</span></span>
 <span id="L1441"><span class="lineNum">    1441</span>              :     struct CCC_Array_tree_map *const map,</span>
 <span id="L1442"><span class="lineNum">    1442</span>              :     size_t const remove,</span>
 <span id="L1443"><span class="lineNum">    1443</span>              :     size_t const replacement</span>
 <span id="L1444"><span class="lineNum">    1444</span>              : ) {</span>
-<span id="L1445"><span class="lineNum">    1445</span> <span class="tlaGNC">        1047 :     assert(remove);</span></span>
-<span id="L1446"><span class="lineNum">    1446</span> <span class="tlaGNC">        1047 :     assert(replacement);</span></span>
-<span id="L1447"><span class="lineNum">    1447</span> <span class="tlaGNC">        1047 :     *parent_pointer(map, replacement) = parent_index(map, remove);</span></span>
-<span id="L1448"><span class="lineNum">    1448</span> <span class="tlaGNC">        1047 :     if (!parent_index(map, remove)) {</span></span>
-<span id="L1449"><span class="lineNum">    1449</span> <span class="tlaGNC">         252 :         map-&gt;root = replacement;</span></span>
-<span id="L1450"><span class="lineNum">    1450</span> <span class="tlaGNC">         252 :     } else {</span></span>
-<span id="L1451"><span class="lineNum">    1451</span> <span class="tlaGNC">         795 :         size_t const p = parent_index(map, remove);</span></span>
-<span id="L1452"><span class="lineNum">    1452</span> <span class="tlaGNC">         795 :         *branch_pointer(map, p, branch_index(map, p, R) == remove)</span></span>
-<span id="L1453"><span class="lineNum">    1453</span> <span class="tlaGNC">        1590 :             = replacement;</span></span>
-<span id="L1454"><span class="lineNum">    1454</span> <span class="tlaGNC">         795 :     }</span></span>
-<span id="L1455"><span class="lineNum">    1455</span> <span class="tlaGNC">        1047 :     struct CCC_Array_tree_map_node *const remove_r = node_at(map, remove);</span></span>
-<span id="L1456"><span class="lineNum">    1456</span> <span class="tlaGNC">        1047 :     struct CCC_Array_tree_map_node *const replace_r = node_at(map, replacement);</span></span>
-<span id="L1457"><span class="lineNum">    1457</span> <span class="tlaGNC">        1047 :     *parent_pointer(map, remove_r-&gt;branch[R]) = replacement;</span></span>
-<span id="L1458"><span class="lineNum">    1458</span> <span class="tlaGNC">        1047 :     *parent_pointer(map, remove_r-&gt;branch[L]) = replacement;</span></span>
-<span id="L1459"><span class="lineNum">    1459</span> <span class="tlaGNC">        1047 :     replace_r-&gt;branch[R] = remove_r-&gt;branch[R];</span></span>
-<span id="L1460"><span class="lineNum">    1460</span> <span class="tlaGNC">        1047 :     replace_r-&gt;branch[L] = remove_r-&gt;branch[L];</span></span>
-<span id="L1461"><span class="lineNum">    1461</span> <span class="tlaGNC">        1047 :     set_parity(map, replacement, parity(map, remove));</span></span>
-<span id="L1462"><span class="lineNum">    1462</span> <span class="tlaGNC">        1047 : }</span></span>
+<span id="L1445"><span class="lineNum">    1445</span> <span class="tlaGNC">        1099 :     assert(remove);</span></span>
+<span id="L1446"><span class="lineNum">    1446</span> <span class="tlaGNC">        1099 :     assert(replacement);</span></span>
+<span id="L1447"><span class="lineNum">    1447</span> <span class="tlaGNC">        1099 :     *parent_pointer(map, replacement) = parent_index(map, remove);</span></span>
+<span id="L1448"><span class="lineNum">    1448</span> <span class="tlaGNC">        1099 :     if (!parent_index(map, remove)) {</span></span>
+<span id="L1449"><span class="lineNum">    1449</span> <span class="tlaGNC">         246 :         map-&gt;root = replacement;</span></span>
+<span id="L1450"><span class="lineNum">    1450</span> <span class="tlaGNC">         246 :     } else {</span></span>
+<span id="L1451"><span class="lineNum">    1451</span> <span class="tlaGNC">         853 :         size_t const p = parent_index(map, remove);</span></span>
+<span id="L1452"><span class="lineNum">    1452</span> <span class="tlaGNC">         853 :         *branch_pointer(map, p, branch_index(map, p, R) == remove)</span></span>
+<span id="L1453"><span class="lineNum">    1453</span> <span class="tlaGNC">        1706 :             = replacement;</span></span>
+<span id="L1454"><span class="lineNum">    1454</span> <span class="tlaGNC">         853 :     }</span></span>
+<span id="L1455"><span class="lineNum">    1455</span> <span class="tlaGNC">        1099 :     struct CCC_Array_tree_map_node *const remove_r = node_at(map, remove);</span></span>
+<span id="L1456"><span class="lineNum">    1456</span> <span class="tlaGNC">        1099 :     struct CCC_Array_tree_map_node *const replace_r = node_at(map, replacement);</span></span>
+<span id="L1457"><span class="lineNum">    1457</span> <span class="tlaGNC">        1099 :     *parent_pointer(map, remove_r-&gt;branch[R]) = replacement;</span></span>
+<span id="L1458"><span class="lineNum">    1458</span> <span class="tlaGNC">        1099 :     *parent_pointer(map, remove_r-&gt;branch[L]) = replacement;</span></span>
+<span id="L1459"><span class="lineNum">    1459</span> <span class="tlaGNC">        1099 :     replace_r-&gt;branch[R] = remove_r-&gt;branch[R];</span></span>
+<span id="L1460"><span class="lineNum">    1460</span> <span class="tlaGNC">        1099 :     replace_r-&gt;branch[L] = remove_r-&gt;branch[L];</span></span>
+<span id="L1461"><span class="lineNum">    1461</span> <span class="tlaGNC">        1099 :     set_parity(map, replacement, parity(map, remove));</span></span>
+<span id="L1462"><span class="lineNum">    1462</span> <span class="tlaGNC">        1099 : }</span></span>
 <span id="L1463"><span class="lineNum">    1463</span>              : </span>
 <span id="L1464"><span class="lineNum">    1464</span>              : /** Follows the specification in the &quot;Rank-Balanced Trees&quot; paper by Haeupler,</span>
 <span id="L1465"><span class="lineNum">    1465</span>              : Sen, and Tarjan (Fig. 3. pg 8). */</span>
 <span id="L1466"><span class="lineNum">    1466</span>              : static void</span>
-<span id="L1467"><span class="lineNum">    1467</span> <span class="tlaGNC">        1603 : rebalance_3_child(struct CCC_Array_tree_map *const map, size_t z, size_t x) {</span></span>
-<span id="L1468"><span class="lineNum">    1468</span> <span class="tlaGNC">        1603 :     CCC_Tribool made_3_child = CCC_TRUE;</span></span>
-<span id="L1469"><span class="lineNum">    1469</span> <span class="tlaGNC">        2931 :     while (z &amp;&amp; made_3_child) {</span></span>
-<span id="L1470"><span class="lineNum">    1470</span> <span class="tlaGNC">        2167 :         assert(branch_index(map, z, L) == x || branch_index(map, z, R) == x);</span></span>
-<span id="L1471"><span class="lineNum">    1471</span> <span class="tlaGNC">        2167 :         size_t const g = parent_index(map, z);</span></span>
-<span id="L1472"><span class="lineNum">    1472</span> <span class="tlaGNC">        2167 :         size_t const y = branch_index(map, z, branch_index(map, z, L) == x);</span></span>
-<span id="L1473"><span class="lineNum">    1473</span> <span class="tlaGNC">        2167 :         made_3_child = g &amp;&amp; is_2_child(map, g, z);</span></span>
-<span id="L1474"><span class="lineNum">    1474</span> <span class="tlaGNC">        2167 :         if (is_2_child(map, z, y)) {</span></span>
-<span id="L1475"><span class="lineNum">    1475</span> <span class="tlaGNC">        1147 :             demote(map, z);</span></span>
-<span id="L1476"><span class="lineNum">    1476</span> <span class="tlaGNC">        2167 :         } else if (y</span></span>
-<span id="L1477"><span class="lineNum">    1477</span> <span class="tlaGNC">        1020 :                    &amp;&amp; is_22_parent(</span></span>
-<span id="L1478"><span class="lineNum">    1478</span> <span class="tlaGNC">        1020 :                        map, branch_index(map, y, L), y, branch_index(map, y, R)</span></span>
+<span id="L1467"><span class="lineNum">    1467</span> <span class="tlaGNC">        1579 : rebalance_3_child(struct CCC_Array_tree_map *const map, size_t z, size_t x) {</span></span>
+<span id="L1468"><span class="lineNum">    1468</span> <span class="tlaGNC">        1579 :     CCC_Tribool made_3_child = CCC_TRUE;</span></span>
+<span id="L1469"><span class="lineNum">    1469</span> <span class="tlaGNC">        2922 :     while (z &amp;&amp; made_3_child) {</span></span>
+<span id="L1470"><span class="lineNum">    1470</span> <span class="tlaGNC">        2144 :         assert(branch_index(map, z, L) == x || branch_index(map, z, R) == x);</span></span>
+<span id="L1471"><span class="lineNum">    1471</span> <span class="tlaGNC">        2144 :         size_t const g = parent_index(map, z);</span></span>
+<span id="L1472"><span class="lineNum">    1472</span> <span class="tlaGNC">        2144 :         size_t const y = branch_index(map, z, branch_index(map, z, L) == x);</span></span>
+<span id="L1473"><span class="lineNum">    1473</span> <span class="tlaGNC">        2144 :         made_3_child = g &amp;&amp; is_2_child(map, g, z);</span></span>
+<span id="L1474"><span class="lineNum">    1474</span> <span class="tlaGNC">        2144 :         if (is_2_child(map, z, y)) {</span></span>
+<span id="L1475"><span class="lineNum">    1475</span> <span class="tlaGNC">        1193 :             demote(map, z);</span></span>
+<span id="L1476"><span class="lineNum">    1476</span> <span class="tlaGNC">        2144 :         } else if (y</span></span>
+<span id="L1477"><span class="lineNum">    1477</span> <span class="tlaGNC">         951 :                    &amp;&amp; is_22_parent(</span></span>
+<span id="L1478"><span class="lineNum">    1478</span> <span class="tlaGNC">         951 :                        map, branch_index(map, y, L), y, branch_index(map, y, R)</span></span>
 <span id="L1479"><span class="lineNum">    1479</span>              :                    )) {</span>
-<span id="L1480"><span class="lineNum">    1480</span> <span class="tlaGNC">         181 :             demote(map, z);</span></span>
-<span id="L1481"><span class="lineNum">    1481</span> <span class="tlaGNC">         181 :             demote(map, y);</span></span>
-<span id="L1482"><span class="lineNum">    1482</span> <span class="tlaGNC">        1020 :         } else if (y) {</span></span>
+<span id="L1480"><span class="lineNum">    1480</span> <span class="tlaGNC">         150 :             demote(map, z);</span></span>
+<span id="L1481"><span class="lineNum">    1481</span> <span class="tlaGNC">         150 :             demote(map, y);</span></span>
+<span id="L1482"><span class="lineNum">    1482</span> <span class="tlaGNC">         951 :         } else if (y) {</span></span>
 <span id="L1483"><span class="lineNum">    1483</span>              :             /* p(x) is 1,3, y is not a 2,2 parent, and x is 3-child.*/</span>
-<span id="L1484"><span class="lineNum">    1484</span> <span class="tlaGNC">         839 :             assert(is_1_child(map, z, y));</span></span>
-<span id="L1485"><span class="lineNum">    1485</span> <span class="tlaGNC">         839 :             assert(is_3_child(map, z, x));</span></span>
-<span id="L1486"><span class="lineNum">    1486</span> <span class="tlaGNC">         839 :             assert(!is_2_child(map, z, y));</span></span>
-<span id="L1487"><span class="lineNum">    1487</span> <span class="tlaGNC">         839 :             assert(!is_22_parent(</span></span>
-<span id="L1488"><span class="lineNum">    1488</span> <span class="tlaGNC">         839 :                 map, branch_index(map, y, L), y, branch_index(map, y, R)</span></span>
+<span id="L1484"><span class="lineNum">    1484</span> <span class="tlaGNC">         801 :             assert(is_1_child(map, z, y));</span></span>
+<span id="L1485"><span class="lineNum">    1485</span> <span class="tlaGNC">         801 :             assert(is_3_child(map, z, x));</span></span>
+<span id="L1486"><span class="lineNum">    1486</span> <span class="tlaGNC">         801 :             assert(!is_2_child(map, z, y));</span></span>
+<span id="L1487"><span class="lineNum">    1487</span> <span class="tlaGNC">         801 :             assert(!is_22_parent(</span></span>
+<span id="L1488"><span class="lineNum">    1488</span> <span class="tlaGNC">         801 :                 map, branch_index(map, y, L), y, branch_index(map, y, R)</span></span>
 <span id="L1489"><span class="lineNum">    1489</span>              :             ));</span>
-<span id="L1490"><span class="lineNum">    1490</span> <span class="tlaGNC">         839 :             enum Link const z_to_x_dir = branch_index(map, z, R) == x;</span></span>
-<span id="L1491"><span class="lineNum">    1491</span> <span class="tlaGNC">         839 :             size_t const w = branch_index(map, y, !z_to_x_dir);</span></span>
-<span id="L1492"><span class="lineNum">    1492</span> <span class="tlaGNC">         839 :             if (is_1_child(map, y, w)) {</span></span>
-<span id="L1493"><span class="lineNum">    1493</span> <span class="tlaGNC">         583 :                 rotate(map, z, y, branch_index(map, y, z_to_x_dir), z_to_x_dir);</span></span>
-<span id="L1494"><span class="lineNum">    1494</span> <span class="tlaGNC">         583 :                 promote(map, y);</span></span>
-<span id="L1495"><span class="lineNum">    1495</span> <span class="tlaGNC">         583 :                 demote(map, z);</span></span>
-<span id="L1496"><span class="lineNum">    1496</span> <span class="tlaGNC">         583 :                 if (is_leaf(map, z)) {</span></span>
-<span id="L1497"><span class="lineNum">    1497</span> <span class="tlaGNC">         120 :                     demote(map, z);</span></span>
-<span id="L1498"><span class="lineNum">    1498</span> <span class="tlaGNC">         120 :                 }</span></span>
-<span id="L1499"><span class="lineNum">    1499</span> <span class="tlaGNC">         583 :             } else {</span></span>
+<span id="L1490"><span class="lineNum">    1490</span> <span class="tlaGNC">         801 :             enum Link const z_to_x_dir = branch_index(map, z, R) == x;</span></span>
+<span id="L1491"><span class="lineNum">    1491</span> <span class="tlaGNC">         801 :             size_t const w = branch_index(map, y, !z_to_x_dir);</span></span>
+<span id="L1492"><span class="lineNum">    1492</span> <span class="tlaGNC">         801 :             if (is_1_child(map, y, w)) {</span></span>
+<span id="L1493"><span class="lineNum">    1493</span> <span class="tlaGNC">         551 :                 rotate(map, z, y, branch_index(map, y, z_to_x_dir), z_to_x_dir);</span></span>
+<span id="L1494"><span class="lineNum">    1494</span> <span class="tlaGNC">         551 :                 promote(map, y);</span></span>
+<span id="L1495"><span class="lineNum">    1495</span> <span class="tlaGNC">         551 :                 demote(map, z);</span></span>
+<span id="L1496"><span class="lineNum">    1496</span> <span class="tlaGNC">         551 :                 if (is_leaf(map, z)) {</span></span>
+<span id="L1497"><span class="lineNum">    1497</span> <span class="tlaGNC">         122 :                     demote(map, z);</span></span>
+<span id="L1498"><span class="lineNum">    1498</span> <span class="tlaGNC">         122 :                 }</span></span>
+<span id="L1499"><span class="lineNum">    1499</span> <span class="tlaGNC">         551 :             } else {</span></span>
 <span id="L1500"><span class="lineNum">    1500</span>              :                 /* w is a 2-child and v will be a 1-child. */</span>
-<span id="L1501"><span class="lineNum">    1501</span> <span class="tlaGNC">         256 :                 size_t const v = branch_index(map, y, z_to_x_dir);</span></span>
-<span id="L1502"><span class="lineNum">    1502</span> <span class="tlaGNC">         256 :                 assert(is_2_child(map, y, w));</span></span>
-<span id="L1503"><span class="lineNum">    1503</span> <span class="tlaGNC">         256 :                 assert(is_1_child(map, y, v));</span></span>
-<span id="L1504"><span class="lineNum">    1504</span> <span class="tlaGNC">         256 :                 double_rotate(map, z, y, v, !z_to_x_dir);</span></span>
-<span id="L1505"><span class="lineNum">    1505</span> <span class="tlaGNC">         256 :                 double_promote(map, v);</span></span>
-<span id="L1506"><span class="lineNum">    1506</span> <span class="tlaGNC">         256 :                 demote(map, y);</span></span>
-<span id="L1507"><span class="lineNum">    1507</span> <span class="tlaGNC">         256 :                 double_demote(map, z);</span></span>
+<span id="L1501"><span class="lineNum">    1501</span> <span class="tlaGNC">         250 :                 size_t const v = branch_index(map, y, z_to_x_dir);</span></span>
+<span id="L1502"><span class="lineNum">    1502</span> <span class="tlaGNC">         250 :                 assert(is_2_child(map, y, w));</span></span>
+<span id="L1503"><span class="lineNum">    1503</span> <span class="tlaGNC">         250 :                 assert(is_1_child(map, y, v));</span></span>
+<span id="L1504"><span class="lineNum">    1504</span> <span class="tlaGNC">         250 :                 double_rotate(map, z, y, v, !z_to_x_dir);</span></span>
+<span id="L1505"><span class="lineNum">    1505</span> <span class="tlaGNC">         250 :                 double_promote(map, v);</span></span>
+<span id="L1506"><span class="lineNum">    1506</span> <span class="tlaGNC">         250 :                 demote(map, y);</span></span>
+<span id="L1507"><span class="lineNum">    1507</span> <span class="tlaGNC">         250 :                 double_demote(map, z);</span></span>
 <span id="L1508"><span class="lineNum">    1508</span>              :                 /* Optional &quot;Rebalancing with Promotion,&quot; defined as follows:</span>
 <span id="L1509"><span class="lineNum">    1509</span>              :                        if node z is a non-leaf 1,1 node, we promote it;</span>
 <span id="L1510"><span class="lineNum">    1510</span>              :                        otherwise, if y is a non-leaf 1,1 node, we promote it.</span>
@@ -1574,28 +1574,28 @@
 <span id="L1512"><span class="lineNum">    1512</span>              :                    This reduces constants in some of theorems mentioned in the</span>
 <span id="L1513"><span class="lineNum">    1513</span>              :                    paper but may not be worth doing. Rotations stay at 2 worst</span>
 <span id="L1514"><span class="lineNum">    1514</span>              :                    case. Should revisit after more performance testing. */</span>
-<span id="L1515"><span class="lineNum">    1515</span> <span class="tlaGNC">         256 :                 if (!is_leaf(map, z)</span></span>
-<span id="L1516"><span class="lineNum">    1516</span> <span class="tlaGNC">         256 :                     &amp;&amp; is_11_parent(</span></span>
-<span id="L1517"><span class="lineNum">    1517</span> <span class="tlaGNC">         121 :                         map, branch_index(map, z, L), z, branch_index(map, z, R)</span></span>
+<span id="L1515"><span class="lineNum">    1515</span> <span class="tlaGNC">         250 :                 if (!is_leaf(map, z)</span></span>
+<span id="L1516"><span class="lineNum">    1516</span> <span class="tlaGNC">         250 :                     &amp;&amp; is_11_parent(</span></span>
+<span id="L1517"><span class="lineNum">    1517</span> <span class="tlaGNC">          91 :                         map, branch_index(map, z, L), z, branch_index(map, z, R)</span></span>
 <span id="L1518"><span class="lineNum">    1518</span>              :                     )) {</span>
-<span id="L1519"><span class="lineNum">    1519</span> <span class="tlaGNC">          64 :                     promote(map, z);</span></span>
-<span id="L1520"><span class="lineNum">    1520</span> <span class="tlaGNC">         256 :                 } else if (!is_leaf(map, y)</span></span>
-<span id="L1521"><span class="lineNum">    1521</span> <span class="tlaGNC">         192 :                            &amp;&amp; is_11_parent(</span></span>
-<span id="L1522"><span class="lineNum">    1522</span> <span class="tlaGNC">          57 :                                map,</span></span>
-<span id="L1523"><span class="lineNum">    1523</span> <span class="tlaGNC">          57 :                                branch_index(map, y, L),</span></span>
-<span id="L1524"><span class="lineNum">    1524</span> <span class="tlaGNC">          57 :                                y,</span></span>
-<span id="L1525"><span class="lineNum">    1525</span> <span class="tlaGNC">          57 :                                branch_index(map, y, R)</span></span>
+<span id="L1519"><span class="lineNum">    1519</span> <span class="tlaGNC">          50 :                     promote(map, z);</span></span>
+<span id="L1520"><span class="lineNum">    1520</span> <span class="tlaGNC">         250 :                 } else if (!is_leaf(map, y)</span></span>
+<span id="L1521"><span class="lineNum">    1521</span> <span class="tlaGNC">         200 :                            &amp;&amp; is_11_parent(</span></span>
+<span id="L1522"><span class="lineNum">    1522</span> <span class="tlaGNC">          41 :                                map,</span></span>
+<span id="L1523"><span class="lineNum">    1523</span> <span class="tlaGNC">          41 :                                branch_index(map, y, L),</span></span>
+<span id="L1524"><span class="lineNum">    1524</span> <span class="tlaGNC">          41 :                                y,</span></span>
+<span id="L1525"><span class="lineNum">    1525</span> <span class="tlaGNC">          41 :                                branch_index(map, y, R)</span></span>
 <span id="L1526"><span class="lineNum">    1526</span>              :                            )) {</span>
-<span id="L1527"><span class="lineNum">    1527</span> <span class="tlaGNC">          37 :                     promote(map, y);</span></span>
-<span id="L1528"><span class="lineNum">    1528</span> <span class="tlaGNC">          37 :                 }</span></span>
-<span id="L1529"><span class="lineNum">    1529</span> <span class="tlaGNC">         256 :             }</span></span>
+<span id="L1527"><span class="lineNum">    1527</span> <span class="tlaGNC">          32 :                     promote(map, y);</span></span>
+<span id="L1528"><span class="lineNum">    1528</span> <span class="tlaGNC">          32 :                 }</span></span>
+<span id="L1529"><span class="lineNum">    1529</span> <span class="tlaGNC">         250 :             }</span></span>
 <span id="L1530"><span class="lineNum">    1530</span>              :             /* Returning here confirms O(1) rotations for re-balance. */</span>
 <span id="L1531"><span class="lineNum">    1531</span>              :             return;</span>
-<span id="L1532"><span class="lineNum">    1532</span> <span class="tlaGNC">         839 :         }</span></span>
-<span id="L1533"><span class="lineNum">    1533</span> <span class="tlaGNC">        1328 :         x = z;</span></span>
-<span id="L1534"><span class="lineNum">    1534</span> <span class="tlaGNC">        1328 :         z = g;</span></span>
-<span id="L1535"><span class="lineNum">    1535</span> <span class="tlaGNC">        2167 :     }</span></span>
-<span id="L1536"><span class="lineNum">    1536</span> <span class="tlaGNC">        1603 : }</span></span>
+<span id="L1532"><span class="lineNum">    1532</span> <span class="tlaGNC">         801 :         }</span></span>
+<span id="L1533"><span class="lineNum">    1533</span> <span class="tlaGNC">        1343 :         x = z;</span></span>
+<span id="L1534"><span class="lineNum">    1534</span> <span class="tlaGNC">        1343 :         z = g;</span></span>
+<span id="L1535"><span class="lineNum">    1535</span> <span class="tlaGNC">        2144 :     }</span></span>
+<span id="L1536"><span class="lineNum">    1536</span> <span class="tlaGNC">        1579 : }</span></span>
 <span id="L1537"><span class="lineNum">    1537</span>              : </span>
 <span id="L1538"><span class="lineNum">    1538</span>              : /** A single rotation is symmetric. Here is the right case. Lowercase are nodes</span>
 <span id="L1539"><span class="lineNum">    1539</span>              : and uppercase are arbitrary subtrees.</span>
@@ -1607,29 +1607,29 @@
 <span id="L1545"><span class="lineNum">    1545</span>              :        │              │</span>
 <span id="L1546"><span class="lineNum">    1546</span>              :        B              B */</span>
 <span id="L1547"><span class="lineNum">    1547</span>              : static void</span>
-<span id="L1548"><span class="lineNum">    1548</span> <span class="tlaGNC">        5287 : rotate(</span></span>
+<span id="L1548"><span class="lineNum">    1548</span> <span class="tlaGNC">        5256 : rotate(</span></span>
 <span id="L1549"><span class="lineNum">    1549</span>              :     struct CCC_Array_tree_map *const map,</span>
 <span id="L1550"><span class="lineNum">    1550</span>              :     size_t const z,</span>
 <span id="L1551"><span class="lineNum">    1551</span>              :     size_t const x,</span>
 <span id="L1552"><span class="lineNum">    1552</span>              :     size_t const y,</span>
 <span id="L1553"><span class="lineNum">    1553</span>              :     enum Link const dir</span>
 <span id="L1554"><span class="lineNum">    1554</span>              : ) {</span>
-<span id="L1555"><span class="lineNum">    1555</span> <span class="tlaGNC">        5287 :     assert(z);</span></span>
-<span id="L1556"><span class="lineNum">    1556</span> <span class="tlaGNC">        5287 :     struct CCC_Array_tree_map_node *const z_r = node_at(map, z);</span></span>
-<span id="L1557"><span class="lineNum">    1557</span> <span class="tlaGNC">        5287 :     struct CCC_Array_tree_map_node *const x_r = node_at(map, x);</span></span>
-<span id="L1558"><span class="lineNum">    1558</span> <span class="tlaGNC">        5287 :     size_t const g = parent_index(map, z);</span></span>
-<span id="L1559"><span class="lineNum">    1559</span> <span class="tlaGNC">        5287 :     x_r-&gt;parent = g;</span></span>
-<span id="L1560"><span class="lineNum">    1560</span> <span class="tlaGNC">        5287 :     if (!g) {</span></span>
-<span id="L1561"><span class="lineNum">    1561</span> <span class="tlaGNC">         164 :         map-&gt;root = x;</span></span>
-<span id="L1562"><span class="lineNum">    1562</span> <span class="tlaGNC">         164 :     } else {</span></span>
-<span id="L1563"><span class="lineNum">    1563</span> <span class="tlaGNC">        5123 :         struct CCC_Array_tree_map_node *const g_r = node_at(map, g);</span></span>
-<span id="L1564"><span class="lineNum">    1564</span> <span class="tlaGNC">        5123 :         g_r-&gt;branch[g_r-&gt;branch[R] == z] = x;</span></span>
-<span id="L1565"><span class="lineNum">    1565</span> <span class="tlaGNC">        5123 :     }</span></span>
-<span id="L1566"><span class="lineNum">    1566</span> <span class="tlaGNC">        5287 :     x_r-&gt;branch[dir] = z;</span></span>
-<span id="L1567"><span class="lineNum">    1567</span> <span class="tlaGNC">        5287 :     z_r-&gt;parent = x;</span></span>
-<span id="L1568"><span class="lineNum">    1568</span> <span class="tlaGNC">        5287 :     z_r-&gt;branch[!dir] = y;</span></span>
-<span id="L1569"><span class="lineNum">    1569</span> <span class="tlaGNC">        5287 :     *parent_pointer(map, y) = z;</span></span>
-<span id="L1570"><span class="lineNum">    1570</span> <span class="tlaGNC">        5287 : }</span></span>
+<span id="L1555"><span class="lineNum">    1555</span> <span class="tlaGNC">        5256 :     assert(z);</span></span>
+<span id="L1556"><span class="lineNum">    1556</span> <span class="tlaGNC">        5256 :     struct CCC_Array_tree_map_node *const z_r = node_at(map, z);</span></span>
+<span id="L1557"><span class="lineNum">    1557</span> <span class="tlaGNC">        5256 :     struct CCC_Array_tree_map_node *const x_r = node_at(map, x);</span></span>
+<span id="L1558"><span class="lineNum">    1558</span> <span class="tlaGNC">        5256 :     size_t const g = parent_index(map, z);</span></span>
+<span id="L1559"><span class="lineNum">    1559</span> <span class="tlaGNC">        5256 :     x_r-&gt;parent = g;</span></span>
+<span id="L1560"><span class="lineNum">    1560</span> <span class="tlaGNC">        5256 :     if (!g) {</span></span>
+<span id="L1561"><span class="lineNum">    1561</span> <span class="tlaGNC">         168 :         map-&gt;root = x;</span></span>
+<span id="L1562"><span class="lineNum">    1562</span> <span class="tlaGNC">         168 :     } else {</span></span>
+<span id="L1563"><span class="lineNum">    1563</span> <span class="tlaGNC">        5088 :         struct CCC_Array_tree_map_node *const g_r = node_at(map, g);</span></span>
+<span id="L1564"><span class="lineNum">    1564</span> <span class="tlaGNC">        5088 :         g_r-&gt;branch[g_r-&gt;branch[R] == z] = x;</span></span>
+<span id="L1565"><span class="lineNum">    1565</span> <span class="tlaGNC">        5088 :     }</span></span>
+<span id="L1566"><span class="lineNum">    1566</span> <span class="tlaGNC">        5256 :     x_r-&gt;branch[dir] = z;</span></span>
+<span id="L1567"><span class="lineNum">    1567</span> <span class="tlaGNC">        5256 :     z_r-&gt;parent = x;</span></span>
+<span id="L1568"><span class="lineNum">    1568</span> <span class="tlaGNC">        5256 :     z_r-&gt;branch[!dir] = y;</span></span>
+<span id="L1569"><span class="lineNum">    1569</span> <span class="tlaGNC">        5256 :     *parent_pointer(map, y) = z;</span></span>
+<span id="L1570"><span class="lineNum">    1570</span> <span class="tlaGNC">        5256 : }</span></span>
 <span id="L1571"><span class="lineNum">    1571</span>              : </span>
 <span id="L1572"><span class="lineNum">    1572</span>              : /** A double rotation shouldn't actually be two calls to rotate because that</span>
 <span id="L1573"><span class="lineNum">    1573</span>              : would invoke pointless memory writes. Here is an example of double right.</span>
@@ -1645,45 +1645,45 @@
 <span id="L1583"><span class="lineNum">    1583</span>              : </span>
 <span id="L1584"><span class="lineNum">    1584</span>              : Taking a link as input allows us to code both symmetrical cases at once. */</span>
 <span id="L1585"><span class="lineNum">    1585</span>              : static void</span>
-<span id="L1586"><span class="lineNum">    1586</span> <span class="tlaGNC">        1131 : double_rotate(</span></span>
+<span id="L1586"><span class="lineNum">    1586</span> <span class="tlaGNC">        1133 : double_rotate(</span></span>
 <span id="L1587"><span class="lineNum">    1587</span>              :     struct CCC_Array_tree_map *const map,</span>
 <span id="L1588"><span class="lineNum">    1588</span>              :     size_t const z,</span>
 <span id="L1589"><span class="lineNum">    1589</span>              :     size_t const x,</span>
 <span id="L1590"><span class="lineNum">    1590</span>              :     size_t const y,</span>
 <span id="L1591"><span class="lineNum">    1591</span>              :     enum Link const dir</span>
 <span id="L1592"><span class="lineNum">    1592</span>              : ) {</span>
-<span id="L1593"><span class="lineNum">    1593</span> <span class="tlaGNC">        1131 :     assert(z &amp;&amp; x &amp;&amp; y);</span></span>
-<span id="L1594"><span class="lineNum">    1594</span> <span class="tlaGNC">        1131 :     struct CCC_Array_tree_map_node *const z_r = node_at(map, z);</span></span>
-<span id="L1595"><span class="lineNum">    1595</span> <span class="tlaGNC">        1131 :     struct CCC_Array_tree_map_node *const x_r = node_at(map, x);</span></span>
-<span id="L1596"><span class="lineNum">    1596</span> <span class="tlaGNC">        1131 :     struct CCC_Array_tree_map_node *const y_r = node_at(map, y);</span></span>
-<span id="L1597"><span class="lineNum">    1597</span> <span class="tlaGNC">        1131 :     size_t const g = z_r-&gt;parent;</span></span>
-<span id="L1598"><span class="lineNum">    1598</span> <span class="tlaGNC">        1131 :     y_r-&gt;parent = g;</span></span>
-<span id="L1599"><span class="lineNum">    1599</span> <span class="tlaGNC">        1131 :     if (!g) {</span></span>
-<span id="L1600"><span class="lineNum">    1600</span> <span class="tlaGNC">           5 :         map-&gt;root = y;</span></span>
-<span id="L1601"><span class="lineNum">    1601</span> <span class="tlaGNC">           5 :     } else {</span></span>
-<span id="L1602"><span class="lineNum">    1602</span> <span class="tlaGNC">        1126 :         struct CCC_Array_tree_map_node *const g_r = node_at(map, g);</span></span>
-<span id="L1603"><span class="lineNum">    1603</span> <span class="tlaGNC">        1126 :         g_r-&gt;branch[g_r-&gt;branch[R] == z] = y;</span></span>
-<span id="L1604"><span class="lineNum">    1604</span> <span class="tlaGNC">        1126 :     }</span></span>
-<span id="L1605"><span class="lineNum">    1605</span> <span class="tlaGNC">        1131 :     x_r-&gt;branch[!dir] = y_r-&gt;branch[dir];</span></span>
-<span id="L1606"><span class="lineNum">    1606</span> <span class="tlaGNC">        1131 :     *parent_pointer(map, y_r-&gt;branch[dir]) = x;</span></span>
-<span id="L1607"><span class="lineNum">    1607</span> <span class="tlaGNC">        1131 :     y_r-&gt;branch[dir] = x;</span></span>
-<span id="L1608"><span class="lineNum">    1608</span> <span class="tlaGNC">        1131 :     x_r-&gt;parent = y;</span></span>
+<span id="L1593"><span class="lineNum">    1593</span> <span class="tlaGNC">        1133 :     assert(z &amp;&amp; x &amp;&amp; y);</span></span>
+<span id="L1594"><span class="lineNum">    1594</span> <span class="tlaGNC">        1133 :     struct CCC_Array_tree_map_node *const z_r = node_at(map, z);</span></span>
+<span id="L1595"><span class="lineNum">    1595</span> <span class="tlaGNC">        1133 :     struct CCC_Array_tree_map_node *const x_r = node_at(map, x);</span></span>
+<span id="L1596"><span class="lineNum">    1596</span> <span class="tlaGNC">        1133 :     struct CCC_Array_tree_map_node *const y_r = node_at(map, y);</span></span>
+<span id="L1597"><span class="lineNum">    1597</span> <span class="tlaGNC">        1133 :     size_t const g = z_r-&gt;parent;</span></span>
+<span id="L1598"><span class="lineNum">    1598</span> <span class="tlaGNC">        1133 :     y_r-&gt;parent = g;</span></span>
+<span id="L1599"><span class="lineNum">    1599</span> <span class="tlaGNC">        1133 :     if (!g) {</span></span>
+<span id="L1600"><span class="lineNum">    1600</span> <span class="tlaGNC">           4 :         map-&gt;root = y;</span></span>
+<span id="L1601"><span class="lineNum">    1601</span> <span class="tlaGNC">           4 :     } else {</span></span>
+<span id="L1602"><span class="lineNum">    1602</span> <span class="tlaGNC">        1129 :         struct CCC_Array_tree_map_node *const g_r = node_at(map, g);</span></span>
+<span id="L1603"><span class="lineNum">    1603</span> <span class="tlaGNC">        1129 :         g_r-&gt;branch[g_r-&gt;branch[R] == z] = y;</span></span>
+<span id="L1604"><span class="lineNum">    1604</span> <span class="tlaGNC">        1129 :     }</span></span>
+<span id="L1605"><span class="lineNum">    1605</span> <span class="tlaGNC">        1133 :     x_r-&gt;branch[!dir] = y_r-&gt;branch[dir];</span></span>
+<span id="L1606"><span class="lineNum">    1606</span> <span class="tlaGNC">        1133 :     *parent_pointer(map, y_r-&gt;branch[dir]) = x;</span></span>
+<span id="L1607"><span class="lineNum">    1607</span> <span class="tlaGNC">        1133 :     y_r-&gt;branch[dir] = x;</span></span>
+<span id="L1608"><span class="lineNum">    1608</span> <span class="tlaGNC">        1133 :     x_r-&gt;parent = y;</span></span>
 <span id="L1609"><span class="lineNum">    1609</span>              : </span>
-<span id="L1610"><span class="lineNum">    1610</span> <span class="tlaGNC">        1131 :     z_r-&gt;branch[dir] = y_r-&gt;branch[!dir];</span></span>
-<span id="L1611"><span class="lineNum">    1611</span> <span class="tlaGNC">        1131 :     *parent_pointer(map, y_r-&gt;branch[!dir]) = z;</span></span>
-<span id="L1612"><span class="lineNum">    1612</span> <span class="tlaGNC">        1131 :     y_r-&gt;branch[!dir] = z;</span></span>
-<span id="L1613"><span class="lineNum">    1613</span> <span class="tlaGNC">        1131 :     z_r-&gt;parent = y;</span></span>
-<span id="L1614"><span class="lineNum">    1614</span> <span class="tlaGNC">        1131 : }</span></span>
+<span id="L1610"><span class="lineNum">    1610</span> <span class="tlaGNC">        1133 :     z_r-&gt;branch[dir] = y_r-&gt;branch[!dir];</span></span>
+<span id="L1611"><span class="lineNum">    1611</span> <span class="tlaGNC">        1133 :     *parent_pointer(map, y_r-&gt;branch[!dir]) = z;</span></span>
+<span id="L1612"><span class="lineNum">    1612</span> <span class="tlaGNC">        1133 :     y_r-&gt;branch[!dir] = z;</span></span>
+<span id="L1613"><span class="lineNum">    1613</span> <span class="tlaGNC">        1133 :     z_r-&gt;parent = y;</span></span>
+<span id="L1614"><span class="lineNum">    1614</span> <span class="tlaGNC">        1133 : }</span></span>
 <span id="L1615"><span class="lineNum">    1615</span>              : </span>
 <span id="L1616"><span class="lineNum">    1616</span>              : /* Returns true for rank difference 0 (rule break) between the parent and node.</span>
 <span id="L1617"><span class="lineNum">    1617</span>              :          p</span>
 <span id="L1618"><span class="lineNum">    1618</span>              :       0╭─╯</span>
 <span id="L1619"><span class="lineNum">    1619</span>              :        x */</span>
 <span id="L1620"><span class="lineNum">    1620</span>              : [[maybe_unused]] static inline CCC_Tribool</span>
-<span id="L1621"><span class="lineNum">    1621</span> <span class="tlaGNC">        5579 : is_0_child(</span></span>
+<span id="L1621"><span class="lineNum">    1621</span> <span class="tlaGNC">        5588 : is_0_child(</span></span>
 <span id="L1622"><span class="lineNum">    1622</span>              :     struct CCC_Array_tree_map const *const map, size_t const p, size_t const x</span>
 <span id="L1623"><span class="lineNum">    1623</span>              : ) {</span>
-<span id="L1624"><span class="lineNum">    1624</span> <span class="tlaGNC">        5579 :     return p &amp;&amp; parity(map, p) == parity(map, x);</span></span>
+<span id="L1624"><span class="lineNum">    1624</span> <span class="tlaGNC">        5588 :     return p &amp;&amp; parity(map, p) == parity(map, x);</span></span>
 <span id="L1625"><span class="lineNum">    1625</span>              : }</span>
 <span id="L1626"><span class="lineNum">    1626</span>              : </span>
 <span id="L1627"><span class="lineNum">    1627</span>              : /* Returns true for rank difference 1 between the parent and node.</span>
@@ -1691,10 +1691,10 @@
 <span id="L1629"><span class="lineNum">    1629</span>              :       1╭─╯</span>
 <span id="L1630"><span class="lineNum">    1630</span>              :        x */</span>
 <span id="L1631"><span class="lineNum">    1631</span>              : static inline CCC_Tribool</span>
-<span id="L1632"><span class="lineNum">    1632</span> <span class="tlaGNC">        2809 : is_1_child(</span></span>
+<span id="L1632"><span class="lineNum">    1632</span> <span class="tlaGNC">        2735 : is_1_child(</span></span>
 <span id="L1633"><span class="lineNum">    1633</span>              :     struct CCC_Array_tree_map const *const map, size_t const p, size_t const x</span>
 <span id="L1634"><span class="lineNum">    1634</span>              : ) {</span>
-<span id="L1635"><span class="lineNum">    1635</span> <span class="tlaGNC">        2809 :     return p &amp;&amp; parity(map, p) != parity(map, x);</span></span>
+<span id="L1635"><span class="lineNum">    1635</span> <span class="tlaGNC">        2735 :     return p &amp;&amp; parity(map, p) != parity(map, x);</span></span>
 <span id="L1636"><span class="lineNum">    1636</span>              : }</span>
 <span id="L1637"><span class="lineNum">    1637</span>              : </span>
 <span id="L1638"><span class="lineNum">    1638</span>              : /* Returns true for rank difference 2 between the parent and node.</span>
@@ -1702,10 +1702,10 @@
 <span id="L1640"><span class="lineNum">    1640</span>              :       2╭─╯</span>
 <span id="L1641"><span class="lineNum">    1641</span>              :        x */</span>
 <span id="L1642"><span class="lineNum">    1642</span>              : static inline CCC_Tribool</span>
-<span id="L1643"><span class="lineNum">    1643</span> <span class="tlaGNC">       10580 : is_2_child(</span></span>
+<span id="L1643"><span class="lineNum">    1643</span> <span class="tlaGNC">       10423 : is_2_child(</span></span>
 <span id="L1644"><span class="lineNum">    1644</span>              :     struct CCC_Array_tree_map const *const map, size_t const p, size_t const x</span>
 <span id="L1645"><span class="lineNum">    1645</span>              : ) {</span>
-<span id="L1646"><span class="lineNum">    1646</span> <span class="tlaGNC">       10580 :     return p &amp;&amp; parity(map, p) == parity(map, x);</span></span>
+<span id="L1646"><span class="lineNum">    1646</span> <span class="tlaGNC">       10423 :     return p &amp;&amp; parity(map, p) == parity(map, x);</span></span>
 <span id="L1647"><span class="lineNum">    1647</span>              : }</span>
 <span id="L1648"><span class="lineNum">    1648</span>              : </span>
 <span id="L1649"><span class="lineNum">    1649</span>              : /* Returns true for rank difference 3 between the parent and node.</span>
@@ -1713,10 +1713,10 @@
 <span id="L1651"><span class="lineNum">    1651</span>              :       3╭─╯</span>
 <span id="L1652"><span class="lineNum">    1652</span>              :        x */</span>
 <span id="L1653"><span class="lineNum">    1653</span>              : [[maybe_unused]] static inline CCC_Tribool</span>
-<span id="L1654"><span class="lineNum">    1654</span> <span class="tlaGNC">         839 : is_3_child(</span></span>
+<span id="L1654"><span class="lineNum">    1654</span> <span class="tlaGNC">         801 : is_3_child(</span></span>
 <span id="L1655"><span class="lineNum">    1655</span>              :     struct CCC_Array_tree_map const *const map, size_t const p, size_t const x</span>
 <span id="L1656"><span class="lineNum">    1656</span>              : ) {</span>
-<span id="L1657"><span class="lineNum">    1657</span> <span class="tlaGNC">         839 :     return p &amp;&amp; parity(map, p) != parity(map, x);</span></span>
+<span id="L1657"><span class="lineNum">    1657</span> <span class="tlaGNC">         801 :     return p &amp;&amp; parity(map, p) != parity(map, x);</span></span>
 <span id="L1658"><span class="lineNum">    1658</span>              : }</span>
 <span id="L1659"><span class="lineNum">    1659</span>              : </span>
 <span id="L1660"><span class="lineNum">    1660</span>              : /* Returns true if a parent is a 0,1 or 1,0 node, which is not allowed. Either</span>
@@ -1725,15 +1725,15 @@
 <span id="L1663"><span class="lineNum">    1663</span>              :       0╭─┴─╮1</span>
 <span id="L1664"><span class="lineNum">    1664</span>              :        x   y */</span>
 <span id="L1665"><span class="lineNum">    1665</span>              : static inline CCC_Tribool</span>
-<span id="L1666"><span class="lineNum">    1666</span> <span class="tlaGNC">       18363 : is_01_parent(</span></span>
+<span id="L1666"><span class="lineNum">    1666</span> <span class="tlaGNC">       18296 : is_01_parent(</span></span>
 <span id="L1667"><span class="lineNum">    1667</span>              :     struct CCC_Array_tree_map const *const map,</span>
 <span id="L1668"><span class="lineNum">    1668</span>              :     size_t const x,</span>
 <span id="L1669"><span class="lineNum">    1669</span>              :     size_t const p,</span>
 <span id="L1670"><span class="lineNum">    1670</span>              :     size_t const y</span>
 <span id="L1671"><span class="lineNum">    1671</span>              : ) {</span>
-<span id="L1672"><span class="lineNum">    1672</span> <span class="tlaGNC">       18363 :     assert(p);</span></span>
-<span id="L1673"><span class="lineNum">    1673</span> <span class="tlaGNC">       33618 :     return (!parity(map, x) &amp;&amp; !parity(map, p) &amp;&amp; parity(map, y))</span></span>
-<span id="L1674"><span class="lineNum">    1674</span> <span class="tlaGNC">       18363 :         || (parity(map, x) &amp;&amp; parity(map, p) &amp;&amp; !parity(map, y));</span></span>
+<span id="L1672"><span class="lineNum">    1672</span> <span class="tlaGNC">       18296 :     assert(p);</span></span>
+<span id="L1673"><span class="lineNum">    1673</span> <span class="tlaGNC">       33536 :     return (!parity(map, x) &amp;&amp; !parity(map, p) &amp;&amp; parity(map, y))</span></span>
+<span id="L1674"><span class="lineNum">    1674</span> <span class="tlaGNC">       18296 :         || (parity(map, x) &amp;&amp; parity(map, p) &amp;&amp; !parity(map, y));</span></span>
 <span id="L1675"><span class="lineNum">    1675</span>              : }</span>
 <span id="L1676"><span class="lineNum">    1676</span>              : </span>
 <span id="L1677"><span class="lineNum">    1677</span>              : /* Returns true if a parent is a 1,1 node. Either child may be the sentinel</span>
@@ -1742,15 +1742,15 @@
 <span id="L1680"><span class="lineNum">    1680</span>              :       1╭─┴─╮1</span>
 <span id="L1681"><span class="lineNum">    1681</span>              :        x   y */</span>
 <span id="L1682"><span class="lineNum">    1682</span>              : static inline CCC_Tribool</span>
-<span id="L1683"><span class="lineNum">    1683</span> <span class="tlaGNC">         178 : is_11_parent(</span></span>
+<span id="L1683"><span class="lineNum">    1683</span> <span class="tlaGNC">         132 : is_11_parent(</span></span>
 <span id="L1684"><span class="lineNum">    1684</span>              :     struct CCC_Array_tree_map const *const map,</span>
 <span id="L1685"><span class="lineNum">    1685</span>              :     size_t const x,</span>
 <span id="L1686"><span class="lineNum">    1686</span>              :     size_t const p,</span>
 <span id="L1687"><span class="lineNum">    1687</span>              :     size_t const y</span>
 <span id="L1688"><span class="lineNum">    1688</span>              : ) {</span>
-<span id="L1689"><span class="lineNum">    1689</span> <span class="tlaGNC">         178 :     assert(p);</span></span>
-<span id="L1690"><span class="lineNum">    1690</span> <span class="tlaGNC">         270 :     return (!parity(map, x) &amp;&amp; parity(map, p) &amp;&amp; !parity(map, y))</span></span>
-<span id="L1691"><span class="lineNum">    1691</span> <span class="tlaGNC">         178 :         || (parity(map, x) &amp;&amp; !parity(map, p) &amp;&amp; parity(map, y));</span></span>
+<span id="L1689"><span class="lineNum">    1689</span> <span class="tlaGNC">         132 :     assert(p);</span></span>
+<span id="L1690"><span class="lineNum">    1690</span> <span class="tlaGNC">         196 :     return (!parity(map, x) &amp;&amp; parity(map, p) &amp;&amp; !parity(map, y))</span></span>
+<span id="L1691"><span class="lineNum">    1691</span> <span class="tlaGNC">         132 :         || (parity(map, x) &amp;&amp; !parity(map, p) &amp;&amp; parity(map, y));</span></span>
 <span id="L1692"><span class="lineNum">    1692</span>              : }</span>
 <span id="L1693"><span class="lineNum">    1693</span>              : </span>
 <span id="L1694"><span class="lineNum">    1694</span>              : /* Returns true if a parent is a 0,2 or 2,0 node, which is not allowed. Either</span>
@@ -1759,15 +1759,15 @@
 <span id="L1697"><span class="lineNum">    1697</span>              :       0╭─┴─╮2</span>
 <span id="L1698"><span class="lineNum">    1698</span>              :        x   y */</span>
 <span id="L1699"><span class="lineNum">    1699</span>              : static inline CCC_Tribool</span>
-<span id="L1700"><span class="lineNum">    1700</span> <span class="tlaGNC">        9142 : is_02_parent(</span></span>
+<span id="L1700"><span class="lineNum">    1700</span> <span class="tlaGNC">        9172 : is_02_parent(</span></span>
 <span id="L1701"><span class="lineNum">    1701</span>              :     struct CCC_Array_tree_map const *const map,</span>
 <span id="L1702"><span class="lineNum">    1702</span>              :     size_t const x,</span>
 <span id="L1703"><span class="lineNum">    1703</span>              :     size_t const p,</span>
 <span id="L1704"><span class="lineNum">    1704</span>              :     size_t const y</span>
 <span id="L1705"><span class="lineNum">    1705</span>              : ) {</span>
-<span id="L1706"><span class="lineNum">    1706</span> <span class="tlaGNC">        9142 :     assert(p);</span></span>
-<span id="L1707"><span class="lineNum">    1707</span> <span class="tlaGNC">       14721 :     return (parity(map, x) == parity(map, p))</span></span>
-<span id="L1708"><span class="lineNum">    1708</span> <span class="tlaGNC">        9142 :         &amp;&amp; (parity(map, p) == parity(map, y));</span></span>
+<span id="L1706"><span class="lineNum">    1706</span> <span class="tlaGNC">        9172 :     assert(p);</span></span>
+<span id="L1707"><span class="lineNum">    1707</span> <span class="tlaGNC">       14760 :     return (parity(map, x) == parity(map, p))</span></span>
+<span id="L1708"><span class="lineNum">    1708</span> <span class="tlaGNC">        9172 :         &amp;&amp; (parity(map, p) == parity(map, y));</span></span>
 <span id="L1709"><span class="lineNum">    1709</span>              : }</span>
 <span id="L1710"><span class="lineNum">    1710</span>              : </span>
 <span id="L1711"><span class="lineNum">    1711</span>              : /* Returns true if a parent is a 2,2 or 2,2 node, which is allowed. 2,2 nodes</span>
@@ -1779,53 +1779,53 @@
 <span id="L1717"><span class="lineNum">    1717</span>              :       2╭─┴─╮2</span>
 <span id="L1718"><span class="lineNum">    1718</span>              :        x   y */</span>
 <span id="L1719"><span class="lineNum">    1719</span>              : static inline CCC_Tribool</span>
-<span id="L1720"><span class="lineNum">    1720</span> <span class="tlaGNC">        1859 : is_22_parent(</span></span>
+<span id="L1720"><span class="lineNum">    1720</span> <span class="tlaGNC">        1752 : is_22_parent(</span></span>
 <span id="L1721"><span class="lineNum">    1721</span>              :     struct CCC_Array_tree_map const *const map,</span>
 <span id="L1722"><span class="lineNum">    1722</span>              :     size_t const x,</span>
 <span id="L1723"><span class="lineNum">    1723</span>              :     size_t const p,</span>
 <span id="L1724"><span class="lineNum">    1724</span>              :     size_t const y</span>
 <span id="L1725"><span class="lineNum">    1725</span>              : ) {</span>
-<span id="L1726"><span class="lineNum">    1726</span> <span class="tlaGNC">        1859 :     assert(p);</span></span>
-<span id="L1727"><span class="lineNum">    1727</span> <span class="tlaGNC">        2614 :     return (parity(map, x) == parity(map, p))</span></span>
-<span id="L1728"><span class="lineNum">    1728</span> <span class="tlaGNC">        1859 :         &amp;&amp; (parity(map, p) == parity(map, y));</span></span>
+<span id="L1726"><span class="lineNum">    1726</span> <span class="tlaGNC">        1752 :     assert(p);</span></span>
+<span id="L1727"><span class="lineNum">    1727</span> <span class="tlaGNC">        2472 :     return (parity(map, x) == parity(map, p))</span></span>
+<span id="L1728"><span class="lineNum">    1728</span> <span class="tlaGNC">        1752 :         &amp;&amp; (parity(map, p) == parity(map, y));</span></span>
 <span id="L1729"><span class="lineNum">    1729</span>              : }</span>
 <span id="L1730"><span class="lineNum">    1730</span>              : </span>
 <span id="L1731"><span class="lineNum">    1731</span>              : static inline void</span>
-<span id="L1732"><span class="lineNum">    1732</span> <span class="tlaGNC">       29458 : promote(struct CCC_Array_tree_map const *const map, size_t const x) {</span></span>
-<span id="L1733"><span class="lineNum">    1733</span> <span class="tlaGNC">       29458 :     if (x) {</span></span>
-<span id="L1734"><span class="lineNum">    1734</span> <span class="tlaGNC">       29458 :         *block_at(map, x) ^= bit_on(x);</span></span>
-<span id="L1735"><span class="lineNum">    1735</span> <span class="tlaGNC">       29458 :     }</span></span>
-<span id="L1736"><span class="lineNum">    1736</span> <span class="tlaGNC">       29458 : }</span></span>
+<span id="L1732"><span class="lineNum">    1732</span> <span class="tlaGNC">       29314 : promote(struct CCC_Array_tree_map const *const map, size_t const x) {</span></span>
+<span id="L1733"><span class="lineNum">    1733</span> <span class="tlaGNC">       29314 :     if (x) {</span></span>
+<span id="L1734"><span class="lineNum">    1734</span> <span class="tlaGNC">       29314 :         *block_at(map, x) ^= bit_on(x);</span></span>
+<span id="L1735"><span class="lineNum">    1735</span> <span class="tlaGNC">       29314 :     }</span></span>
+<span id="L1736"><span class="lineNum">    1736</span> <span class="tlaGNC">       29314 : }</span></span>
 <span id="L1737"><span class="lineNum">    1737</span>              : </span>
 <span id="L1738"><span class="lineNum">    1738</span>              : static inline void</span>
-<span id="L1739"><span class="lineNum">    1739</span> <span class="tlaGNC">        9265 : demote(struct CCC_Array_tree_map const *const map, size_t const x) {</span></span>
-<span id="L1740"><span class="lineNum">    1740</span> <span class="tlaGNC">        9265 :     promote(map, x);</span></span>
-<span id="L1741"><span class="lineNum">    1741</span> <span class="tlaGNC">        9265 : }</span></span>
+<span id="L1739"><span class="lineNum">    1739</span> <span class="tlaGNC">        9231 : demote(struct CCC_Array_tree_map const *const map, size_t const x) {</span></span>
+<span id="L1740"><span class="lineNum">    1740</span> <span class="tlaGNC">        9231 :     promote(map, x);</span></span>
+<span id="L1741"><span class="lineNum">    1741</span> <span class="tlaGNC">        9231 : }</span></span>
 <span id="L1742"><span class="lineNum">    1742</span>              : </span>
 <span id="L1743"><span class="lineNum">    1743</span>              : /* Parity based ranks mean this is no-op but leave in case implementation ever</span>
 <span id="L1744"><span class="lineNum">    1744</span>              :    changes. Also, makes clear what sections of code are trying to do. */</span>
 <span id="L1745"><span class="lineNum">    1745</span>              : static inline void</span>
-<span id="L1746"><span class="lineNum">    1746</span> <span class="tlaGNC">         256 : double_promote(struct CCC_Array_tree_map const *const, size_t const) {</span></span>
-<span id="L1747"><span class="lineNum">    1747</span> <span class="tlaGNC">         256 : }</span></span>
+<span id="L1746"><span class="lineNum">    1746</span> <span class="tlaGNC">         250 : double_promote(struct CCC_Array_tree_map const *const, size_t const) {</span></span>
+<span id="L1747"><span class="lineNum">    1747</span> <span class="tlaGNC">         250 : }</span></span>
 <span id="L1748"><span class="lineNum">    1748</span>              : </span>
 <span id="L1749"><span class="lineNum">    1749</span>              : /* Parity based ranks mean this is no-op but leave in case implementation ever</span>
 <span id="L1750"><span class="lineNum">    1750</span>              :    changes. Also, makes clear what sections of code are trying to do. */</span>
 <span id="L1751"><span class="lineNum">    1751</span>              : static inline void</span>
-<span id="L1752"><span class="lineNum">    1752</span> <span class="tlaGNC">         256 : double_demote(struct CCC_Array_tree_map const *const, size_t const) {</span></span>
-<span id="L1753"><span class="lineNum">    1753</span> <span class="tlaGNC">         256 : }</span></span>
+<span id="L1752"><span class="lineNum">    1752</span> <span class="tlaGNC">         250 : double_demote(struct CCC_Array_tree_map const *const, size_t const) {</span></span>
+<span id="L1753"><span class="lineNum">    1753</span> <span class="tlaGNC">         250 : }</span></span>
 <span id="L1754"><span class="lineNum">    1754</span>              : </span>
 <span id="L1755"><span class="lineNum">    1755</span>              : static inline CCC_Tribool</span>
-<span id="L1756"><span class="lineNum">    1756</span> <span class="tlaGNC">        3356 : is_leaf(struct CCC_Array_tree_map const *const map, size_t const x) {</span></span>
-<span id="L1757"><span class="lineNum">    1757</span> <span class="tlaGNC">        3356 :     return !branch_index(map, x, L) &amp;&amp; !branch_index(map, x, R);</span></span>
+<span id="L1756"><span class="lineNum">    1756</span> <span class="tlaGNC">        3309 : is_leaf(struct CCC_Array_tree_map const *const map, size_t const x) {</span></span>
+<span id="L1757"><span class="lineNum">    1757</span> <span class="tlaGNC">        3309 :     return !branch_index(map, x, L) &amp;&amp; !branch_index(map, x, R);</span></span>
 <span id="L1758"><span class="lineNum">    1758</span>              : }</span>
 <span id="L1759"><span class="lineNum">    1759</span>              : </span>
 <span id="L1760"><span class="lineNum">    1760</span>              : static inline size_t</span>
-<span id="L1761"><span class="lineNum">    1761</span> <span class="tlaGNC">       27505 : sibling_of(struct CCC_Array_tree_map const *const map, size_t const x) {</span></span>
-<span id="L1762"><span class="lineNum">    1762</span> <span class="tlaGNC">       27505 :     size_t const p = parent_index(map, x);</span></span>
-<span id="L1763"><span class="lineNum">    1763</span> <span class="tlaGNC">       27505 :     assert(p);</span></span>
+<span id="L1761"><span class="lineNum">    1761</span> <span class="tlaGNC">       27468 : sibling_of(struct CCC_Array_tree_map const *const map, size_t const x) {</span></span>
+<span id="L1762"><span class="lineNum">    1762</span> <span class="tlaGNC">       27468 :     size_t const p = parent_index(map, x);</span></span>
+<span id="L1763"><span class="lineNum">    1763</span> <span class="tlaGNC">       27468 :     assert(p);</span></span>
 <span id="L1764"><span class="lineNum">    1764</span>              :     /* We want the sibling so we need the truthy value to be opposite of x. */</span>
-<span id="L1765"><span class="lineNum">    1765</span> <span class="tlaGNC">       55010 :     return node_at(map, p)-&gt;branch[branch_index(map, p, L) == x];</span></span>
-<span id="L1766"><span class="lineNum">    1766</span> <span class="tlaGNC">       27505 : }</span></span>
+<span id="L1765"><span class="lineNum">    1765</span> <span class="tlaGNC">       54936 :     return node_at(map, p)-&gt;branch[branch_index(map, p, L) == x];</span></span>
+<span id="L1766"><span class="lineNum">    1766</span> <span class="tlaGNC">       27468 : }</span></span>
 <span id="L1767"><span class="lineNum">    1767</span>              : </span>
 <span id="L1768"><span class="lineNum">    1768</span>              : static inline size_t</span>
 <span id="L1769"><span class="lineNum">    1769</span> <span class="tlaGNC">         112 : max(size_t const a, size_t const b) {</span></span>
@@ -1844,112 +1844,112 @@
 <span id="L1782"><span class="lineNum">    1782</span>              : };</span>
 <span id="L1783"><span class="lineNum">    1783</span>              : </span>
 <span id="L1784"><span class="lineNum">    1784</span>              : static size_t</span>
-<span id="L1785"><span class="lineNum">    1785</span> <span class="tlaGNC">     7024230 : recursive_count(struct CCC_Array_tree_map const *const map, size_t const r) {</span></span>
-<span id="L1786"><span class="lineNum">    1786</span> <span class="tlaGNC">     7024230 :     if (!r) {</span></span>
-<span id="L1787"><span class="lineNum">    1787</span> <span class="tlaGNC">     3517059 :         return 0;</span></span>
+<span id="L1785"><span class="lineNum">    1785</span> <span class="tlaGNC">     6998941 : recursive_count(struct CCC_Array_tree_map const *const map, size_t const r) {</span></span>
+<span id="L1786"><span class="lineNum">    1786</span> <span class="tlaGNC">     6998941 :     if (!r) {</span></span>
+<span id="L1787"><span class="lineNum">    1787</span> <span class="tlaGNC">     3504406 :         return 0;</span></span>
 <span id="L1788"><span class="lineNum">    1788</span>              :     }</span>
-<span id="L1789"><span class="lineNum">    1789</span> <span class="tlaGNC">     7014342 :     return 1 + recursive_count(map, branch_index(map, r, R))</span></span>
-<span id="L1790"><span class="lineNum">    1790</span> <span class="tlaGNC">     3507171 :          + recursive_count(map, branch_index(map, r, L));</span></span>
-<span id="L1791"><span class="lineNum">    1791</span> <span class="tlaGNC">     7024230 : }</span></span>
+<span id="L1789"><span class="lineNum">    1789</span> <span class="tlaGNC">     6989070 :     return 1 + recursive_count(map, branch_index(map, r, R))</span></span>
+<span id="L1790"><span class="lineNum">    1790</span> <span class="tlaGNC">     3494535 :          + recursive_count(map, branch_index(map, r, L));</span></span>
+<span id="L1791"><span class="lineNum">    1791</span> <span class="tlaGNC">     6998941 : }</span></span>
 <span id="L1792"><span class="lineNum">    1792</span>              : </span>
 <span id="L1793"><span class="lineNum">    1793</span>              : static CCC_Tribool</span>
-<span id="L1794"><span class="lineNum">    1794</span> <span class="tlaGNC">     7024230 : are_subtrees_valid(</span></span>
+<span id="L1794"><span class="lineNum">    1794</span> <span class="tlaGNC">     6998941 : are_subtrees_valid(</span></span>
 <span id="L1795"><span class="lineNum">    1795</span>              :     struct CCC_Array_tree_map const *t, struct Tree_range const r</span>
 <span id="L1796"><span class="lineNum">    1796</span>              : ) {</span>
-<span id="L1797"><span class="lineNum">    1797</span> <span class="tlaGNC">     7024230 :     if (!r.root) {</span></span>
-<span id="L1798"><span class="lineNum">    1798</span> <span class="tlaGNC">     3517059 :         return CCC_TRUE;</span></span>
+<span id="L1797"><span class="lineNum">    1797</span> <span class="tlaGNC">     6998941 :     if (!r.root) {</span></span>
+<span id="L1798"><span class="lineNum">    1798</span> <span class="tlaGNC">     3504406 :         return CCC_TRUE;</span></span>
 <span id="L1799"><span class="lineNum">    1799</span>              :     }</span>
-<span id="L1800"><span class="lineNum">    1800</span> <span class="tlaGNC">     3507171 :     if (r.low &amp;&amp; order_nodes(t, key_at(t, r.low), r.root) != CCC_ORDER_LESSER) {</span></span>
+<span id="L1800"><span class="lineNum">    1800</span> <span class="tlaGNC">     3494535 :     if (r.low &amp;&amp; order_nodes(t, key_at(t, r.low), r.root) != CCC_ORDER_LESSER) {</span></span>
 <span id="L1801"><span class="lineNum">    1801</span> <span class="tlaUNC">           0 :         return CCC_FALSE;</span></span>
 <span id="L1802"><span class="lineNum">    1802</span>              :     }</span>
-<span id="L1803"><span class="lineNum">    1803</span> <span class="tlaGNC">     3507171 :     if (r.high</span></span>
-<span id="L1804"><span class="lineNum">    1804</span> <span class="tlaGNC">     3507171 :         &amp;&amp; order_nodes(t, key_at(t, r.high), r.root) != CCC_ORDER_GREATER) {</span></span>
+<span id="L1803"><span class="lineNum">    1803</span> <span class="tlaGNC">     3494535 :     if (r.high</span></span>
+<span id="L1804"><span class="lineNum">    1804</span> <span class="tlaGNC">     3494535 :         &amp;&amp; order_nodes(t, key_at(t, r.high), r.root) != CCC_ORDER_GREATER) {</span></span>
 <span id="L1805"><span class="lineNum">    1805</span> <span class="tlaUNC">           0 :         return CCC_FALSE;</span></span>
 <span id="L1806"><span class="lineNum">    1806</span>              :     }</span>
-<span id="L1807"><span class="lineNum">    1807</span> <span class="tlaGNC">     7014342 :     return are_subtrees_valid(</span></span>
-<span id="L1808"><span class="lineNum">    1808</span> <span class="tlaGNC">     3507171 :                t,</span></span>
-<span id="L1809"><span class="lineNum">    1809</span> <span class="tlaGNC">    14028684 :                (struct Tree_range){</span></span>
-<span id="L1810"><span class="lineNum">    1810</span> <span class="tlaGNC">     3507171 :                    .low = r.low,</span></span>
-<span id="L1811"><span class="lineNum">    1811</span> <span class="tlaGNC">     3507171 :                    .root = branch_index(t, r.root, L),</span></span>
-<span id="L1812"><span class="lineNum">    1812</span> <span class="tlaGNC">     3507171 :                    .high = r.root,</span></span>
+<span id="L1807"><span class="lineNum">    1807</span> <span class="tlaGNC">     6989070 :     return are_subtrees_valid(</span></span>
+<span id="L1808"><span class="lineNum">    1808</span> <span class="tlaGNC">     3494535 :                t,</span></span>
+<span id="L1809"><span class="lineNum">    1809</span> <span class="tlaGNC">    13978140 :                (struct Tree_range){</span></span>
+<span id="L1810"><span class="lineNum">    1810</span> <span class="tlaGNC">     3494535 :                    .low = r.low,</span></span>
+<span id="L1811"><span class="lineNum">    1811</span> <span class="tlaGNC">     3494535 :                    .root = branch_index(t, r.root, L),</span></span>
+<span id="L1812"><span class="lineNum">    1812</span> <span class="tlaGNC">     3494535 :                    .high = r.root,</span></span>
 <span id="L1813"><span class="lineNum">    1813</span>              :                }</span>
 <span id="L1814"><span class="lineNum">    1814</span>              :            )</span>
-<span id="L1815"><span class="lineNum">    1815</span> <span class="tlaGNC">     3507171 :         &amp;&amp; are_subtrees_valid(</span></span>
-<span id="L1816"><span class="lineNum">    1816</span> <span class="tlaGNC">     3507171 :                t,</span></span>
-<span id="L1817"><span class="lineNum">    1817</span> <span class="tlaGNC">    14028684 :                (struct Tree_range){</span></span>
-<span id="L1818"><span class="lineNum">    1818</span> <span class="tlaGNC">     3507171 :                    .low = r.root,</span></span>
-<span id="L1819"><span class="lineNum">    1819</span> <span class="tlaGNC">     3507171 :                    .root = branch_index(t, r.root, R),</span></span>
-<span id="L1820"><span class="lineNum">    1820</span> <span class="tlaGNC">     3507171 :                    .high = r.high,</span></span>
+<span id="L1815"><span class="lineNum">    1815</span> <span class="tlaGNC">     3494535 :         &amp;&amp; are_subtrees_valid(</span></span>
+<span id="L1816"><span class="lineNum">    1816</span> <span class="tlaGNC">     3494535 :                t,</span></span>
+<span id="L1817"><span class="lineNum">    1817</span> <span class="tlaGNC">    13978140 :                (struct Tree_range){</span></span>
+<span id="L1818"><span class="lineNum">    1818</span> <span class="tlaGNC">     3494535 :                    .low = r.root,</span></span>
+<span id="L1819"><span class="lineNum">    1819</span> <span class="tlaGNC">     3494535 :                    .root = branch_index(t, r.root, R),</span></span>
+<span id="L1820"><span class="lineNum">    1820</span> <span class="tlaGNC">     3494535 :                    .high = r.high,</span></span>
 <span id="L1821"><span class="lineNum">    1821</span>              :                }</span>
 <span id="L1822"><span class="lineNum">    1822</span>              :         );</span>
-<span id="L1823"><span class="lineNum">    1823</span> <span class="tlaGNC">     7024230 : }</span></span>
+<span id="L1823"><span class="lineNum">    1823</span> <span class="tlaGNC">     6998941 : }</span></span>
 <span id="L1824"><span class="lineNum">    1824</span>              : </span>
 <span id="L1825"><span class="lineNum">    1825</span>              : static CCC_Tribool</span>
-<span id="L1826"><span class="lineNum">    1826</span> <span class="tlaGNC">     7024230 : is_storing_parent(</span></span>
+<span id="L1826"><span class="lineNum">    1826</span> <span class="tlaGNC">     6998941 : is_storing_parent(</span></span>
 <span id="L1827"><span class="lineNum">    1827</span>              :     struct CCC_Array_tree_map const *const map,</span>
 <span id="L1828"><span class="lineNum">    1828</span>              :     size_t const p,</span>
 <span id="L1829"><span class="lineNum">    1829</span>              :     size_t const root</span>
 <span id="L1830"><span class="lineNum">    1830</span>              : ) {</span>
-<span id="L1831"><span class="lineNum">    1831</span> <span class="tlaGNC">     7024230 :     if (!root) {</span></span>
-<span id="L1832"><span class="lineNum">    1832</span> <span class="tlaGNC">     3517059 :         return CCC_TRUE;</span></span>
+<span id="L1831"><span class="lineNum">    1831</span> <span class="tlaGNC">     6998941 :     if (!root) {</span></span>
+<span id="L1832"><span class="lineNum">    1832</span> <span class="tlaGNC">     3504406 :         return CCC_TRUE;</span></span>
 <span id="L1833"><span class="lineNum">    1833</span>              :     }</span>
-<span id="L1834"><span class="lineNum">    1834</span> <span class="tlaGNC">     3507171 :     if (parent_index(map, root) != p) {</span></span>
+<span id="L1834"><span class="lineNum">    1834</span> <span class="tlaGNC">     3494535 :     if (parent_index(map, root) != p) {</span></span>
 <span id="L1835"><span class="lineNum">    1835</span> <span class="tlaUNC">           0 :         return CCC_FALSE;</span></span>
 <span id="L1836"><span class="lineNum">    1836</span>              :     }</span>
-<span id="L1837"><span class="lineNum">    1837</span> <span class="tlaGNC">     7014342 :     return is_storing_parent(map, root, branch_index(map, root, L))</span></span>
-<span id="L1838"><span class="lineNum">    1838</span> <span class="tlaGNC">     3507171 :         &amp;&amp; is_storing_parent(map, root, branch_index(map, root, R));</span></span>
-<span id="L1839"><span class="lineNum">    1839</span> <span class="tlaGNC">     7024230 : }</span></span>
+<span id="L1837"><span class="lineNum">    1837</span> <span class="tlaGNC">     6989070 :     return is_storing_parent(map, root, branch_index(map, root, L))</span></span>
+<span id="L1838"><span class="lineNum">    1838</span> <span class="tlaGNC">     3494535 :         &amp;&amp; is_storing_parent(map, root, branch_index(map, root, R));</span></span>
+<span id="L1839"><span class="lineNum">    1839</span> <span class="tlaGNC">     6998941 : }</span></span>
 <span id="L1840"><span class="lineNum">    1840</span>              : </span>
 <span id="L1841"><span class="lineNum">    1841</span>              : static CCC_Tribool</span>
-<span id="L1842"><span class="lineNum">    1842</span> <span class="tlaGNC">        9888 : is_free_list_valid(struct CCC_Array_tree_map const *const map) {</span></span>
-<span id="L1843"><span class="lineNum">    1843</span> <span class="tlaGNC">        9888 :     if (!map-&gt;count) {</span></span>
+<span id="L1842"><span class="lineNum">    1842</span> <span class="tlaGNC">        9871 : is_free_list_valid(struct CCC_Array_tree_map const *const map) {</span></span>
+<span id="L1843"><span class="lineNum">    1843</span> <span class="tlaGNC">        9871 :     if (!map-&gt;count) {</span></span>
 <span id="L1844"><span class="lineNum">    1844</span> <span class="tlaUNC">           0 :         return CCC_TRUE;</span></span>
 <span id="L1845"><span class="lineNum">    1845</span>              :     }</span>
-<span id="L1846"><span class="lineNum">    1846</span> <span class="tlaGNC">        9888 :     size_t list_count = 0;</span></span>
-<span id="L1847"><span class="lineNum">    1847</span> <span class="tlaGNC">        9888 :     size_t cur_free_index = map-&gt;free_list;</span></span>
-<span id="L1848"><span class="lineNum">    1848</span> <span class="tlaGNC">     4424541 :     while (cur_free_index &amp;&amp; list_count &lt; map-&gt;capacity) {</span></span>
-<span id="L1849"><span class="lineNum">    1849</span> <span class="tlaGNC">     4414653 :         cur_free_index = node_at(map, cur_free_index)-&gt;next_free;</span></span>
-<span id="L1850"><span class="lineNum">    1850</span> <span class="tlaGNC">     4414653 :         ++list_count;</span></span>
+<span id="L1846"><span class="lineNum">    1846</span> <span class="tlaGNC">        9871 :     size_t list_count = 0;</span></span>
+<span id="L1847"><span class="lineNum">    1847</span> <span class="tlaGNC">        9871 :     size_t cur_free_index = map-&gt;free_list;</span></span>
+<span id="L1848"><span class="lineNum">    1848</span> <span class="tlaGNC">     4419769 :     while (cur_free_index &amp;&amp; list_count &lt; map-&gt;capacity) {</span></span>
+<span id="L1849"><span class="lineNum">    1849</span> <span class="tlaGNC">     4409898 :         cur_free_index = node_at(map, cur_free_index)-&gt;next_free;</span></span>
+<span id="L1850"><span class="lineNum">    1850</span> <span class="tlaGNC">     4409898 :         ++list_count;</span></span>
 <span id="L1851"><span class="lineNum">    1851</span>              :     }</span>
-<span id="L1852"><span class="lineNum">    1852</span> <span class="tlaGNC">        9888 :     if (cur_free_index) {</span></span>
+<span id="L1852"><span class="lineNum">    1852</span> <span class="tlaGNC">        9871 :     if (cur_free_index) {</span></span>
 <span id="L1853"><span class="lineNum">    1853</span> <span class="tlaUNC">           0 :         return CCC_FALSE;</span></span>
 <span id="L1854"><span class="lineNum">    1854</span>              :     }</span>
-<span id="L1855"><span class="lineNum">    1855</span> <span class="tlaGNC">        9888 :     if (list_count + map-&gt;count != map-&gt;capacity) {</span></span>
+<span id="L1855"><span class="lineNum">    1855</span> <span class="tlaGNC">        9871 :     if (list_count + map-&gt;count != map-&gt;capacity) {</span></span>
 <span id="L1856"><span class="lineNum">    1856</span> <span class="tlaUNC">           0 :         return CCC_FALSE;</span></span>
 <span id="L1857"><span class="lineNum">    1857</span>              :     }</span>
-<span id="L1858"><span class="lineNum">    1858</span> <span class="tlaGNC">        9888 :     return CCC_TRUE;</span></span>
-<span id="L1859"><span class="lineNum">    1859</span> <span class="tlaGNC">        9888 : }</span></span>
+<span id="L1858"><span class="lineNum">    1858</span> <span class="tlaGNC">        9871 :     return CCC_TRUE;</span></span>
+<span id="L1859"><span class="lineNum">    1859</span> <span class="tlaGNC">        9871 : }</span></span>
 <span id="L1860"><span class="lineNum">    1860</span>              : </span>
 <span id="L1861"><span class="lineNum">    1861</span>              : static inline CCC_Tribool</span>
-<span id="L1862"><span class="lineNum">    1862</span> <span class="tlaGNC">        9897 : validate(struct CCC_Array_tree_map const *const map) {</span></span>
-<span id="L1863"><span class="lineNum">    1863</span> <span class="tlaGNC">        9897 :     if (!map-&gt;capacity) {</span></span>
+<span id="L1862"><span class="lineNum">    1862</span> <span class="tlaGNC">        9880 : validate(struct CCC_Array_tree_map const *const map) {</span></span>
+<span id="L1863"><span class="lineNum">    1863</span> <span class="tlaGNC">        9880 :     if (!map-&gt;capacity) {</span></span>
 <span id="L1864"><span class="lineNum">    1864</span> <span class="tlaGNC">           6 :         return CCC_TRUE;</span></span>
 <span id="L1865"><span class="lineNum">    1865</span>              :     }</span>
 <span id="L1866"><span class="lineNum">    1866</span>              :     /* If we haven't lazily initialized we should not check anything. */</span>
-<span id="L1867"><span class="lineNum">    1867</span> <span class="tlaGNC">        9891 :     if (map-&gt;data &amp;&amp; (!map-&gt;nodes || !map-&gt;parity)) {</span></span>
+<span id="L1867"><span class="lineNum">    1867</span> <span class="tlaGNC">        9874 :     if (map-&gt;data &amp;&amp; (!map-&gt;nodes || !map-&gt;parity)) {</span></span>
 <span id="L1868"><span class="lineNum">    1868</span> <span class="tlaGNC">           3 :         return CCC_TRUE;</span></span>
 <span id="L1869"><span class="lineNum">    1869</span>              :     }</span>
-<span id="L1870"><span class="lineNum">    1870</span> <span class="tlaGNC">        9888 :     if (!map-&gt;data) {</span></span>
+<span id="L1870"><span class="lineNum">    1870</span> <span class="tlaGNC">        9871 :     if (!map-&gt;data) {</span></span>
 <span id="L1871"><span class="lineNum">    1871</span> <span class="tlaUNC">           0 :         return CCC_TRUE;</span></span>
 <span id="L1872"><span class="lineNum">    1872</span>              :     }</span>
-<span id="L1873"><span class="lineNum">    1873</span> <span class="tlaGNC">        9888 :     if (!map-&gt;count &amp;&amp; !parity(map, 0)) {</span></span>
+<span id="L1873"><span class="lineNum">    1873</span> <span class="tlaGNC">        9871 :     if (!map-&gt;count &amp;&amp; !parity(map, 0)) {</span></span>
 <span id="L1874"><span class="lineNum">    1874</span> <span class="tlaUNC">           0 :         return CCC_FALSE;</span></span>
 <span id="L1875"><span class="lineNum">    1875</span>              :     }</span>
-<span id="L1876"><span class="lineNum">    1876</span> <span class="tlaGNC">        9888 :     if (!are_subtrees_valid(map, (struct Tree_range){.root = map-&gt;root})) {</span></span>
+<span id="L1876"><span class="lineNum">    1876</span> <span class="tlaGNC">        9871 :     if (!are_subtrees_valid(map, (struct Tree_range){.root = map-&gt;root})) {</span></span>
 <span id="L1877"><span class="lineNum">    1877</span> <span class="tlaUNC">           0 :         return CCC_FALSE;</span></span>
 <span id="L1878"><span class="lineNum">    1878</span>              :     }</span>
-<span id="L1879"><span class="lineNum">    1879</span> <span class="tlaGNC">        9888 :     size_t const size = recursive_count(map, map-&gt;root);</span></span>
-<span id="L1880"><span class="lineNum">    1880</span> <span class="tlaGNC">        9888 :     if (size &amp;&amp; size != map-&gt;count - 1) {</span></span>
+<span id="L1879"><span class="lineNum">    1879</span> <span class="tlaGNC">        9871 :     size_t const size = recursive_count(map, map-&gt;root);</span></span>
+<span id="L1880"><span class="lineNum">    1880</span> <span class="tlaGNC">        9871 :     if (size &amp;&amp; size != map-&gt;count - 1) {</span></span>
 <span id="L1881"><span class="lineNum">    1881</span> <span class="tlaUNC">           0 :         return CCC_FALSE;</span></span>
 <span id="L1882"><span class="lineNum">    1882</span>              :     }</span>
-<span id="L1883"><span class="lineNum">    1883</span> <span class="tlaGNC">        9888 :     if (!is_storing_parent(map, 0, map-&gt;root)) {</span></span>
+<span id="L1883"><span class="lineNum">    1883</span> <span class="tlaGNC">        9871 :     if (!is_storing_parent(map, 0, map-&gt;root)) {</span></span>
 <span id="L1884"><span class="lineNum">    1884</span> <span class="tlaUNC">           0 :         return CCC_FALSE;</span></span>
 <span id="L1885"><span class="lineNum">    1885</span>              :     }</span>
-<span id="L1886"><span class="lineNum">    1886</span> <span class="tlaGNC">        9888 :     if (!is_free_list_valid(map)) {</span></span>
+<span id="L1886"><span class="lineNum">    1886</span> <span class="tlaGNC">        9871 :     if (!is_free_list_valid(map)) {</span></span>
 <span id="L1887"><span class="lineNum">    1887</span> <span class="tlaUNC">           0 :         return CCC_FALSE;</span></span>
 <span id="L1888"><span class="lineNum">    1888</span>              :     }</span>
-<span id="L1889"><span class="lineNum">    1889</span> <span class="tlaGNC">        9888 :     return CCC_TRUE;</span></span>
-<span id="L1890"><span class="lineNum">    1890</span> <span class="tlaGNC">        9897 : }</span></span>
+<span id="L1889"><span class="lineNum">    1889</span> <span class="tlaGNC">        9871 :     return CCC_TRUE;</span></span>
+<span id="L1890"><span class="lineNum">    1890</span> <span class="tlaGNC">        9880 : }</span></span>
 <span id="L1891"><span class="lineNum">    1891</span>              : </span>
 <span id="L1892"><span class="lineNum">    1892</span>              : /* NOLINTEND(*misc-no-recursion) */</span>
 <span id="L1893"><span class="lineNum">    1893</span>              : </span>
