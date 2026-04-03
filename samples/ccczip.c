@@ -18,7 +18,7 @@ algorithms use a wide range of data structures. */
 #endif
 #ifdef __APPLE__
 #    include <sys/syslimits.h>
-#    define FILESYS_MAX_PATH NAME_MAX
+#    define FILESYS_MAX_PATH PATH_MAX
 #endif
 
 #define FLAT_BITSET_USING_NAMESPACE_CCC
