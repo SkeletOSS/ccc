@@ -41,8 +41,8 @@ if (EXISTS "${PROJECT_SOURCE_DIR}/tests" OR EXISTS "${PROJECT_SOURCE_DIR}/sample
     include(FetchContent)
     FetchContent_Declare(
       str_view
-      URL https://github.com/skeletoss/str_view/releases/download/v0.7.5/str_view-v0.7.5.zip
-      URL_HASH SHA256=8a940592b20e67e70cf27d49e0b138f6b8d4b66808f430809e724ce7589c8fc5
+      URL https://github.com/skeletoss/str_view/releases/download/v0.7.6/str_view-v0.7.6.zip
+      URL_HASH SHA256=4ab4e21f1deb16b15f83542489ffc3b136a8e6cbe37d61686abc4dc1d103f3f0
       DOWNLOAD_EXTRACT_TIMESTAMP FALSE
     )
     FetchContent_MakeAvailable(str_view)
