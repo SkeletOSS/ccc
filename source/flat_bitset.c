@@ -1240,16 +1240,14 @@ first_trailing_bits_range(
         }
         if (!ones.index) {
             if (num_found + ones.count >= num_bits) {
-                /* Found solution crossing block boundary from
-                 * prefix blocks. */
+                /* Found solution crossing block boundary from prefix blocks. */
                 return (CCC_Count){.count = bits_start};
             }
             /* Found a full block so keep on trucking. */
             num_found += ones.count;
         } else {
-            /* Fail but we have largest skip possible to continue
-               our search from in order to save double checking
-               unnecessary prefixes. */
+            /* Fail but we have largest skip possible to continue our search
+               from in order to save double checking unnecessary prefixes. */
             bits_start = (cur_block * BIT_BLOCK_BITS) + ones.index;
             num_found = ones.count;
         }

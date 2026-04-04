@@ -354,14 +354,17 @@ check_static_begin(flat_bitset_test_first_trailing_one) {
 }
 
 check_static_begin(flat_bitset_test_first_trailing_ones_off_by_one) {
+    enum : size_t {
+        CAP = 128,
+    };
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[512]){}))[1]){}
+            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
-        allocator, 0, 40, '1', "11111111111111111111111111111111111111 1", 512
+        allocator, 0, 40, '1', "11111111111111111111111111111111111111 1", CAP
     );
     CCC_Count result
         = CCC_flat_bitset_first_trailing_ones_range(&bs, 0, 38, 38);
@@ -373,14 +376,17 @@ check_static_begin(flat_bitset_test_first_trailing_ones_off_by_one) {
 }
 
 check_static_begin(flat_bitset_test_first_trailing_ones_broken_runs) {
+    enum : size_t {
+        CAP = 128,
+    };
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[512]){}))[1]){}
+            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
-        allocator, 0, 40, '1', "1111 1111 1111 1111 1111 1111 1111 11111", 512
+        allocator, 0, 40, '1', "1111 1111 1111 1111 1111 1111 1111 11111", CAP
     );
     CCC_Count result = CCC_flat_bitset_first_trailing_ones_range(&bs, 0, 40, 5);
     check(result.count, 35);
@@ -749,14 +755,17 @@ check_static_begin(flat_bitset_test_first_leading_one) {
 }
 
 check_static_begin(flat_bitset_test_first_leading_ones_off_by_one) {
+    enum : size_t {
+        CAP = 128,
+    };
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[512]){}))[1]){}
+            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
-        allocator, 0, 40, '1', "1 11111111111111111111111111111111111111", 512
+        allocator, 0, 40, '1', "1 11111111111111111111111111111111111111", CAP
     );
     CCC_Count result = CCC_flat_bitset_first_leading_ones_range(&bs, 0, 40, 38);
     check(result.count, 39);
@@ -767,14 +776,17 @@ check_static_begin(flat_bitset_test_first_leading_ones_off_by_one) {
 }
 
 check_static_begin(flat_bitset_test_first_leading_ones_broken_runs) {
+    enum : size_t {
+        CAP = 128,
+    };
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[512]){}))[1]){}
+            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
-        allocator, 0, 40, '1', "11111 1111 1111 1111 1111 1111 1111 1111", 512
+        allocator, 0, 40, '1', "11111 1111 1111 1111 1111 1111 1111 1111", CAP
     );
     CCC_Count result = CCC_flat_bitset_first_leading_ones_range(&bs, 0, 40, 5);
     check(result.count, 4);
