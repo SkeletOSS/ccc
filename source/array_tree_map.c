@@ -208,11 +208,11 @@ static_assert(
 
 /*==============================  Prototypes   ==============================*/
 
-/* Returning the user struct type with stored offsets. */
 static void insert(struct CCC_Array_tree_map *, size_t, CCC_Order, size_t);
 static CCC_Result
 resize(struct CCC_Array_tree_map *, size_t, CCC_Allocator const *);
-static void copy_soa(struct CCC_Array_tree_map const *, void *, size_t);
+static void
+resize_struct_of_arrays(struct CCC_Array_tree_map const *, void *, size_t);
 static size_t data_bytes(size_t, size_t);
 static size_t nodes_bytes(size_t);
 static size_t parities_bytes(size_t);
@@ -229,26 +229,19 @@ static size_t maybe_allocate_insert(
 static size_t remove_fixup(struct CCC_Array_tree_map *, size_t);
 static size_t allocate_slot(struct CCC_Array_tree_map *, CCC_Allocator const *);
 static void delete_nodes(struct CCC_Array_tree_map *, CCC_Destructor const *);
-/* Returning the user key with stored offsets. */
 static void *key_at(struct CCC_Array_tree_map const *, size_t);
 static void *key_in_slot(struct CCC_Array_tree_map const *, void const *);
-/* Returning the internal elem type with stored offsets. */
 static struct CCC_Array_tree_map_node *
 node_at(struct CCC_Array_tree_map const *, size_t);
 static void *data_at(struct CCC_Array_tree_map const *, size_t);
-/* Returning the internal query helper to aid in handle handling. */
 static struct Query find(struct CCC_Array_tree_map const *, void const *);
-/* Returning the handle core to the Handle Interface. */
 static inline struct CCC_Array_tree_map_handle
 handle(struct CCC_Array_tree_map const *, void const *);
-/* Returning a generic range that can be use for range or range_reverse. */
 static CCC_Handle_range equal_range(
     struct CCC_Array_tree_map const *, void const *, void const *, enum Link
 );
-/* Returning threeway comparison with user callback. */
 static CCC_Order
 order_nodes(struct CCC_Array_tree_map const *, void const *, size_t);
-/* Returning read only indices for tree nodes. */
 static size_t sibling_of(struct CCC_Array_tree_map const *, size_t);
 static size_t next(struct CCC_Array_tree_map const *, size_t, enum Link);
 static size_t
@@ -256,11 +249,9 @@ min_max_from(struct CCC_Array_tree_map const *, size_t, enum Link);
 static size_t
 branch_index(struct CCC_Array_tree_map const *, size_t, enum Link);
 static size_t parent_index(struct CCC_Array_tree_map const *, size_t);
-/* Returning references to index fields for tree nodes. */
 static size_t *
 branch_pointer(struct CCC_Array_tree_map const *, size_t, enum Link);
 static size_t *parent_pointer(struct CCC_Array_tree_map const *, size_t);
-/* Returning WAVL tree status. */
 static CCC_Tribool
 is_0_child(struct CCC_Array_tree_map const *, size_t, size_t);
 static CCC_Tribool
@@ -283,7 +274,6 @@ static void set_parity(struct CCC_Array_tree_map const *, size_t, CCC_Tribool);
 static size_t total_bytes(size_t, size_t);
 static size_t block_count(size_t);
 static CCC_Tribool validate(struct CCC_Array_tree_map const *);
-/* Returning void and maintaining the WAVL tree. */
 static void init_node(struct CCC_Array_tree_map const *, size_t);
 static void insert_fixup(struct CCC_Array_tree_map *, size_t, size_t);
 static void rebalance_3_child(struct CCC_Array_tree_map *, size_t, size_t);
@@ -292,12 +282,10 @@ static void promote(struct CCC_Array_tree_map const *, size_t);
 static void demote(struct CCC_Array_tree_map const *, size_t);
 static void double_promote(struct CCC_Array_tree_map const *, size_t);
 static void double_demote(struct CCC_Array_tree_map const *, size_t);
-
 static void
 rotate(struct CCC_Array_tree_map *, size_t, size_t, size_t, enum Link);
 static void
 double_rotate(struct CCC_Array_tree_map *, size_t, size_t, size_t, enum Link);
-/* Returning void as miscellaneous helpers. */
 static void swap(void *, void *, void *, size_t);
 static size_t max(size_t, size_t);
 
@@ -753,7 +741,7 @@ CCC_array_tree_map_copy(
     if (!destination->data || !source->data) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    copy_soa(source, destination->data, destination->capacity);
+    resize_struct_of_arrays(source, destination->data, destination->capacity);
     destination->free_list = source->free_list;
     destination->root = source->root;
     destination->count = source->count;
@@ -929,7 +917,7 @@ resize(
     if (!new_data) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
-    copy_soa(map, new_data, new_capacity);
+    resize_struct_of_arrays(map, new_data, new_capacity);
     map->nodes = nodes_base_address(map->sizeof_type, new_data, new_capacity);
     map->parity
         = parities_base_address(map->sizeof_type, new_data, new_capacity);
@@ -1198,7 +1186,7 @@ points to the base of an allocation that has been allocated with sufficient
 bytes to support the user data, nodes, and parity arrays for the provided new
 capacity. */
 static inline void
-copy_soa(
+resize_struct_of_arrays(
     struct CCC_Array_tree_map const *const source,
     void *const destination_data_base,
     size_t const destination_capacity

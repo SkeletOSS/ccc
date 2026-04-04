@@ -29,6 +29,7 @@ block and searching for a 1 instead. This elimination of identical functions
 costs a single branch in the function and is worth it to avoid code duplication
 and bug doubling. */
 /** C23 provided headers. */
+#include <assert.h>
 #include <limits.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -188,12 +189,10 @@ static CCC_Count first_trailing_bits_range(
 static CCC_Count first_leading_bits_range(
     struct CCC_Flat_bitset const *, size_t, size_t, size_t, CCC_Tribool
 );
-static struct Group_count max_trailing_ones(Bit_block, Bit_count, size_t);
-static struct Group_signed_count
-max_leading_ones(Bit_block, Bit_signed_count, size_t);
 static CCC_Result
 maybe_resize(struct CCC_Flat_bitset *, size_t, CCC_Allocator const *);
 static size_t size_t_min(size_t, size_t);
+static inline CCC_Tribool is_mask_match(Bit_block, Bit_block);
 static void set_all(struct CCC_Flat_bitset *, CCC_Tribool);
 static Bit_count bit_count_index(size_t);
 static CCC_Tribool
@@ -1205,7 +1204,7 @@ linear time. The algorithm aims to efficiently skip as many bits as possible
 while searching for the desired group. This avoids both an O(N^2) runtime and
 the use of any unnecessary modulo or division operations in a hot loop. */
 static CCC_Count
-first_trailing_bits_range(
+first_trailing_bits_range( /* NOLINT (*cognitive-complexity) */
     struct CCC_Flat_bitset const *const bitset,
     size_t const i,
     size_t const count,
@@ -1220,121 +1219,100 @@ first_trailing_bits_range(
     size_t num_found = 0;
     size_t bits_start = i;
     Block_count cur_block = block_count_index(i);
-    size_t cur_end = (cur_block * BIT_BLOCK_BITS) + BIT_BLOCK_BITS;
+    size_t window_end = (cur_block * BIT_BLOCK_BITS) + BIT_BLOCK_BITS;
     Bit_count bit_i = bit_count_index(i);
-    for (;;) {
-        /* After the first iteration the bit index is always 0, so the
-           supplemental AND with the shifted expression returns the
-           original block. Makes code simpler to leave it. Test if this
-           is costly (I think probably not).*/
+    while (bits_start + num_bits <= range_end) {
         Bit_block bits
             = is_one ? bitset->blocks[cur_block] & (BIT_BLOCK_ON << bit_i)
                      : ~bitset->blocks[cur_block] & (BIT_BLOCK_ON << bit_i);
-        if (cur_end > range_end) {
+        if (window_end > range_end) {
             bits &= ~(BIT_BLOCK_ON << bit_count_index(range_end));
         }
-        struct Group_count const ones
-            = max_trailing_ones(bits, bit_i, num_bits - num_found);
-        if (ones.count >= num_bits) {
-            /* Found the solution all at once within a block. */
-            return (CCC_Count){
-                .count = (cur_block * BIT_BLOCK_BITS) + ones.index,
-            };
+        if (!bits) {
+            bit_i = 0;
+            bits_start = (cur_block + 1) * BIT_BLOCK_BITS;
+            num_found = 0;
+            ++cur_block;
+            window_end += BIT_BLOCK_BITS;
+            continue;
         }
-        if (!ones.index) {
-            if (num_found + ones.count >= num_bits) {
-                /* Found solution crossing block boundary from
-                 * prefix blocks. */
-                return (CCC_Count){.count = bits_start};
+        size_t ones_remain = num_bits - num_found;
+        /* We need to check if we are connecting a prefix from a prior
+           block and the search could conclude in this block. If the
+           prefix run is broken then we need to reset our search for the
+           total run of ones. */
+        if (ones_remain <= BIT_BLOCK_BITS && ones_remain < num_bits) {
+            Bit_block const shifted_block = bits >> bit_i;
+            Bit_block const required_mask
+                = BIT_BLOCK_ON >> (BIT_BLOCK_BITS - ones_remain);
+            if (is_mask_match(shifted_block, required_mask)) {
+                return (CCC_Count){
+                    .count = bits_start,
+                };
             }
-            /* Found a full block so keep on trucking. */
-            num_found += ones.count;
-        } else {
-            /* Fail but we have largest skip possible to continue
-               our search from in order to save double checking
-               unnecessary prefixes. */
-            bits_start = (cur_block * BIT_BLOCK_BITS) + ones.index;
-            num_found = ones.count;
+            ones_remain = num_bits;
+            bit_i += count_trailing_zeros(~shifted_block);
+            num_found = 0;
+            bits_start = (cur_block * BIT_BLOCK_BITS) + bit_i;
         }
-        if (bits_start + num_bits > range_end) {
-            return (CCC_Count){.error = CCC_RESULT_FAIL};
+        if (ones_remain <= BIT_BLOCK_BITS) {
+            assert(ones_remain);
+            assert(bit_i < BIT_BLOCK_BITS);
+            Bit_block shifted_block = bits >> bit_i;
+            Bit_block required_mask
+                = BIT_BLOCK_ON >> (BIT_BLOCK_BITS - ones_remain);
+            /* The loop continues only while our block is numerically greater
+               than the mask. Because unsigned integers are represented in base
+               2 we get two automatic early exits here.
+                   - If the block is missing a high-order bit in the required
+                     mask, it is numerically smaller than the mask and cannot
+                     match with further shifting.
+                   - If all high bits match but some lower required bits are
+                     zero, the block is numerically smaller than the mask and
+                     cannot match with further shifting.
+               If the block has high order bits not in the mask it is greater
+               than the mask and we continue checking, which is correct. This
+               strategy optimizes out some useless shifts. */
+            while (shifted_block >= required_mask) {
+                if (is_mask_match(shifted_block, required_mask)) {
+                    return (CCC_Count){
+                        .count = (cur_block * BIT_BLOCK_BITS) + bit_i,
+                    };
+                }
+                ++bit_i;
+                shifted_block >>= 1;
+            }
+            num_found = 0;
+        }
+        /* 2 cases covered: the ones remaining are greater than this
+           block could hold or we did not find a match by the masking we
+           just did. In either case we need the maximum contiguous ones
+           that run all the way to the MSB. The best we could have is a
+           full block of 1's. Otherwise we need to find where to start
+           our new search for contiguous 1's. This could be the next
+           block if there are not 1's that continue all the way to MSB. */
+        Bit_count const leading_ones = count_leading_zeros(~bits);
+        num_found += leading_ones;
+        if (leading_ones < BIT_BLOCK_BITS) {
+            bits_start = (cur_block * BIT_BLOCK_BITS)
+                       + (BIT_BLOCK_BITS - leading_ones);
+        }
+        if (num_found >= num_bits) {
+            return (CCC_Count){.count = bits_start};
         }
         bit_i = 0;
         ++cur_block;
-        cur_end += BIT_BLOCK_BITS;
+        window_end += BIT_BLOCK_BITS;
     }
+    return (CCC_Count){.error = CCC_RESULT_FAIL};
 }
 
-/** Returns the maximum group of consecutive ones in the bit block given. If the
-number of consecutive ones remaining cannot be found the function returns
-where the next search should start from, a critical step to a linear search;
-specifically, we seek any group of continuous ones that runs from some index
-in the block to the end of the block.
-
-If no continuous group of ones exist that runs to the end of the block, the
-BLOCK_BITS index is returned with a group size of 0 meaning the search for ones
-will need to continue in the next block. This is helpful for the main search
-loop adding to its start index and number of ones found so far. */
-static inline struct Group_count
-max_trailing_ones(
-    Bit_block const block, Bit_count bit_index, size_t const ones_remain
-) {
-    /* Easy exit skip to the next block. Helps with sparse sets. */
-    if (!block) {
-        return (struct Group_count){.index = BIT_BLOCK_BITS};
-    }
-    if (ones_remain <= BIT_BLOCK_BITS) {
-        assert(ones_remain);
-        assert(bit_index < BIT_BLOCK_BITS);
-        Bit_block block_bits = block >> bit_index;
-        Bit_block const required_mask
-            = BIT_BLOCK_ON >> (BIT_BLOCK_BITS - ones_remain);
-        /* The loop continues only while our block is numerically greater than
-           the mask. Because unsigned integers are represented in base 2 we get
-           two automatic early exits here.
-
-               - If the block is missing a high-order bit in the required mask,
-                 it is numerically smaller than the mask and cannot match with
-                 further shifting.
-
-               - If all high bits match but some lower required bits are zero,
-                 the block is numerically smaller than the mask and cannot match
-                 with further shifting.
-
-           If the block has high order bits not in the mask it is numerically
-           greater than the mask and we continue checking, which is correct.
-           This strategy optimizes out some useless shifts. */
-        while (block_bits >= required_mask) {
-            if ((required_mask & block_bits) == required_mask) {
-                return (struct Group_count){
-                    .index = bit_index,
-                    .count = (Bit_count)ones_remain,
-                };
-            }
-            ++bit_index;
-            block_bits >>= 1;
-        }
-    }
-    /* 2 cases covered: the ones remaining are greater than this block could
-       hold or we did not find a match by the masking we just did. In either
-       case we need the maximum contiguous ones that run all the way to the
-       MSB. The best we could have is a full block of 1's. Otherwise we need
-       to find where to start our new search for contiguous 1's. This could
-       be the next block if there are not 1's that continue all the way to
-       MSB. */
-    Bit_count const leading_ones = count_leading_zeros(~block);
-    return (struct Group_count){
-        .index = BIT_BLOCK_BITS - leading_ones,
-        .count = leading_ones,
-    };
-}
-
-/** A leading bit is the first bit in the range to be set to the indicated value
-within a block starting the search from the Most Significant Bit of each block.
-This means that if the range is larger than a single block we iterate in
-descending order through the set of blocks starting at `i + count - 1` for the
-range of `[i, i + count)`. The search within a given block proceeds from Most
-Significant Bit toward Least Significant Bit. */
+/** A leading bit is the first bit in the range to be set to the indicated
+value within a block starting the search from the Most Significant Bit of
+each block. This means that if the range is larger than a single block we
+iterate in descending order through the set of blocks starting at `i + count
+- 1` for the range of `[i, i + count)`. The search within a given block
+proceeds from Most Significant Bit toward Least Significant Bit. */
 static CCC_Count
 first_leading_bit_range(
     struct CCC_Flat_bitset const *const bitset,
@@ -1404,7 +1382,7 @@ way to do this unsigned. Signed simplifies the iteration and interaction with
 the helper function finding leading ones because the algorithm is complex
 enough as is. Candidate for refactor. */
 static CCC_Count
-first_leading_bits_range(
+first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
     struct CCC_Flat_bitset const *const bitset,
     size_t const i,
     size_t const count,
@@ -1428,26 +1406,21 @@ first_leading_bits_range(
        (i / block bits) for some block index must be less than i. */
     Block_signed_count cur_block
         = (Block_signed_count)block_count_index((size_t)bits_start);
-    ptrdiff_t cur_end = (ptrdiff_t)((cur_block * BIT_BLOCK_BITS) - 1);
+    Block_signed_count window_end = ((cur_block * BIT_BLOCK_BITS) - 1);
     Bit_signed_count bit_index = bit_count_index((size_t)bits_start);
-    for (;;) {
+    /* Cast was checked at entry to function for safety. */
+    while (bits_start >= range_end + (ptrdiff_t)num_bits) {
         assert(
             cur_block >= 0
             && "current block is safe as index protected by bits_start "
                "iterating toward the end of the range"
         );
-        /* After the first iteration the bit index is always the Most
-           Significant bit of the block, so the supplemental AND with
-           the shifted expression returns the original block. Makes code
-           simpler to leave it. Test if this is costly (I think probably
-           not).*/
         Bit_block bits
-            = is_one
-                ? bitset->blocks[cur_block]
-                      & (BIT_BLOCK_ON >> ((BIT_BLOCK_BITS - bit_index) - 1))
-                : ~bitset->blocks[cur_block]
-                      & (BIT_BLOCK_ON >> ((BIT_BLOCK_BITS - bit_index) - 1));
-        if (cur_end < range_end) {
+            = is_one ? bitset->blocks[cur_block]
+                           & (BIT_BLOCK_ON >> (BIT_BLOCK_BITS - bit_index - 1))
+                     : ~bitset->blocks[cur_block]
+                           & (BIT_BLOCK_ON >> (BIT_BLOCK_BITS - bit_index - 1));
+        if (window_end < range_end) {
             assert(
                 range_end + 1 >= 0
                 && "If range end is less than -1 it is caught at entry to "
@@ -1455,94 +1428,69 @@ first_leading_bits_range(
             );
             bits &= (BIT_BLOCK_ON << bit_count_index((size_t)(range_end + 1)));
         }
-        struct Group_signed_count const ones
-            = max_leading_ones(bits, bit_index, num_bits - num_found);
-        if ((size_t)ones.count >= num_bits) {
-            assert(
-                ones.index >= 0
-                && "The index cannot be negative if ones were found and num "
-                   "bits is positive non-zero."
-            );
-            return (CCC_Count){
-                .count
-                = ((size_t)cur_block * BIT_BLOCK_BITS) + (size_t)ones.index,
-            };
+        if (!bits) {
+            bits_start = (cur_block * BIT_BLOCK_BITS) - 1;
+            window_end -= BIT_BLOCK_BITS;
+            bit_index = BIT_BLOCK_BITS - 1;
+            num_found = 0;
+            --cur_block;
+            continue;
         }
-        if (ones.index == BIT_BLOCK_BITS - 1) {
-            num_found += (size_t)ones.count;
-            /* Continuation from prefix blocks has resulted in success. */
-            if (num_found >= num_bits) {
-                assert(
-                    bits_start >= 0
-                    && "Bits starting point cannot be less than end of range "
-                       "or end of range plus number of bits. Either guarantees "
-                       "positive."
-                );
-                return (CCC_Count){.count = (size_t)bits_start};
+        size_t ones_remain = num_bits - num_found;
+        /* We need to check if we are connecting a prefix from a prior block
+           and the search could conclude in this block. If the prefix run is
+           broken then we need to reset our search for the total run of
+           ones. */
+        if (ones_remain <= BIT_BLOCK_BITS && ones_remain < num_bits) {
+            Bit_block const shifted_block = bits
+                                         << (BIT_BLOCK_BITS - bit_index - 1);
+            Bit_block const required_mask = BIT_BLOCK_ON
+                                         << (BIT_BLOCK_BITS - ones_remain);
+            if (is_mask_match(shifted_block, required_mask)) {
+                return (CCC_Count){
+                    .count = (size_t)bits_start,
+                };
             }
-        } else {
-            /* If the new block start index is -1, then this addition bumps us
-               to the next block's Most Significant Bit .*/
-            bits_start
-                = (cur_block * (Bit_signed_count)BIT_BLOCK_BITS) + ones.index;
-            num_found = (size_t)ones.count;
+            ones_remain = num_bits;
+            bit_index
+                = (Bit_signed_count)(bit_index
+                                     - count_leading_zeros(~shifted_block));
+            bits_start = (cur_block * BIT_BLOCK_BITS) + bit_index;
         }
-        /* Cast was checked at entry to function for safety. */
-        if (bits_start < range_end + (ptrdiff_t)num_bits) {
-            return (CCC_Count){.error = CCC_RESULT_FAIL};
+        if (ones_remain <= BIT_BLOCK_BITS) {
+            assert(bit_index >= 0);
+            assert(bit_index < BIT_BLOCK_BITS);
+            Bit_block shifted_block = bits << (BIT_BLOCK_BITS - bit_index - 1);
+            Bit_block const required_mask = BIT_BLOCK_ON
+                                         << (BIT_BLOCK_BITS - ones_remain);
+            Bit_signed_count const end = (Bit_signed_count)ones_remain;
+            while (bit_index >= end) {
+                if (is_mask_match(shifted_block, required_mask)) {
+                    return (CCC_Count){
+                        .count
+                        = (size_t)((cur_block * BIT_BLOCK_BITS) + bit_index),
+                    };
+                }
+                --bit_index;
+                shifted_block <<= 1;
+            }
+            num_found = 0;
+        }
+        Bit_signed_count const trailing_ones
+            = (Bit_signed_count)count_trailing_zeros(~bits);
+        assert(trailing_ones >= 0);
+        num_found += (size_t)trailing_ones;
+        if (trailing_ones != BIT_BLOCK_BITS) {
+            bits_start = (cur_block * BIT_BLOCK_BITS) + (trailing_ones - 1);
+        }
+        if (num_found >= num_bits) {
+            return (CCC_Count){.count = (size_t)bits_start};
         }
         bit_index = BIT_BLOCK_BITS - 1;
         --cur_block;
-        cur_end -= BIT_BLOCK_BITS;
+        window_end -= BIT_BLOCK_BITS;
     }
-}
-
-/** Returns the maximum group of consecutive ones in the bit block given. If the
-number of consecutive ones remaining cannot be found the function returns
-where the next search should start from, a critical step to a linear search;
-specifically, we seek any group of continuous ones that runs from some index
-in the block to the start of the block (0th index).
-
-If no continuous group of ones exist that runs to the start of the block, a -1
-index is returned with a group size of 0 meaning the search for ones will need
-to continue in the next block lower block. This is helpful for the main search
-loop adding to its start index and number of ones found so far. Adding -1 is
-just subtraction so this will correctly drop us to the top bit of the next Least
-Significant Block to continue the search. */
-static struct Group_signed_count
-max_leading_ones(
-    Bit_block const block,
-    Bit_signed_count bit_index,
-    size_t const ones_remaining
-) {
-    if (!block) {
-        return (struct Group_signed_count){.index = -1};
-    }
-    if (ones_remaining <= BIT_BLOCK_BITS) {
-        assert(bit_index < BIT_BLOCK_BITS);
-        Bit_block block_bits = block << (BIT_BLOCK_BITS - bit_index - 1);
-        Bit_block const required_mask = BIT_BLOCK_ON
-                                     << (BIT_BLOCK_BITS - ones_remaining);
-        Bit_signed_count const end = (Bit_signed_count)ones_remaining;
-        while (bit_index >= end) {
-            if ((required_mask & block_bits) == required_mask) {
-                return (struct Group_signed_count){
-                    .index = bit_index,
-                    .count = end,
-                };
-            }
-            --bit_index;
-            block_bits <<= 1;
-        }
-    }
-    Bit_signed_count const trailing_ones
-        = (Bit_signed_count)count_trailing_zeros(~block);
-    assert(trailing_ones >= 0);
-    return (struct Group_signed_count){
-        /* May be -1 if no ones found. This make backward iteration easier. */
-        .index = (Bit_signed_count)(trailing_ones - 1),
-        .count = trailing_ones,
-    };
+    return (CCC_Count){.error = CCC_RESULT_FAIL};
 }
 
 /** Performs the any or none scan operation over the specified range. The only
@@ -1738,6 +1686,11 @@ block_count(size_t const bit_count) {
 static inline size_t
 size_t_min(size_t const a, size_t const b) {
     return a < b ? a : b;
+}
+
+static inline CCC_Tribool
+is_mask_match(Bit_block const block, Bit_block const on_mask) {
+    return (block & on_mask) == on_mask;
 }
 
 /** The following asserts assure that whether portable or built in bit

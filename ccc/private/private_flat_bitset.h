@@ -127,7 +127,8 @@ to inline function for bit set construction. */
                 (void)CCC_private_flat_bitset_set(                             \
                     &private_bitset,                                           \
                     private_index,                                             \
-                    private_string[private_index] == private_on_char           \
+                    (CCC_Tribool)(private_string[private_index]                \
+                                  == private_on_char)                          \
                 );                                                             \
                 ++private_index;                                               \
             }                                                                  \

@@ -350,7 +350,6 @@ static CCC_Tribool is_power_of_two(size_t);
 static size_t to_power_of_two(size_t);
 static CCC_Tribool is_uninitialized(struct CCC_Flat_hash_map const *);
 static void destory_each(struct CCC_Flat_hash_map *, CCC_Destructor const *);
-static size_t roundup(size_t);
 static CCC_Tribool check_replica_group(struct CCC_Flat_hash_map const *);
 
 /*===========================    Interface   ================================*/
@@ -1068,8 +1067,9 @@ find_key_or_slot(
 /** Finds key or fails when first empty slot is encountered after a group fails
 to match. If the search is successful the Count holds the index of the desired
 key, otherwise the Count holds the failure status flag and the index is
-undefined. This index would not be helpful if an insert slot is desired because
-we may have passed preferred deleted slots for insertion to find this empty one.
+default initialized. This index would not be helpful if an insert slot is
+desired because we may have passed preferred deleted slots for insertion to find
+this empty one.
 
 This function is better when a simple lookup is needed as a few branches and
 loads are omitted compared to the search with intention to insert or remove. */
@@ -1616,7 +1616,8 @@ static inline size_t
 mask_to_data_bytes(size_t const sizeof_type, size_t const mask) {
     /* Add two because there is always a bonus user data type at the last index
        of the data array for swapping purposes. */
-    return roundup(sizeof_type * (mask + 2));
+    return ((sizeof_type * (mask + 2)) + GROUP_COUNT - 1)
+         & (size_t)~(GROUP_COUNT - 1);
 }
 
 /** Returns the correct position of the start of the tag array given the base
@@ -1642,12 +1643,6 @@ max(size_t const a, size_t const b) {
 static inline CCC_Tribool
 is_uninitialized(struct CCC_Flat_hash_map const *const map) {
     return !map->data || !map->tag;
-}
-
-/** Rounds up the provided bytes to a valid alignment for group size. */
-static inline size_t
-roundup(size_t const bytes) {
-    return (bytes + GROUP_COUNT - 1) & (size_t)~(GROUP_COUNT - 1);
 }
 
 /*=====================   Intrinsics and Generics   =========================*/
