@@ -29,6 +29,7 @@ block and searching for a 1 instead. This elimination of identical functions
 costs a single branch in the function and is worth it to avoid code duplication
 and bug doubling. */
 /** C23 provided headers. */
+#include <assert.h>
 #include <limits.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -1286,21 +1287,22 @@ max_trailing_ones(
        the search could conclude in this block. If the prefix run is broken
        then we need to reset our search for the total run of ones. */
     if (ones_remain <= BIT_BLOCK_BITS && (ones_remain != ones_total)) {
-        Bit_block const block_bits = block >> bit_index;
+        Bit_block const shifted_block = block >> bit_index;
         Bit_block const required_mask
             = BIT_BLOCK_ON >> (BIT_BLOCK_BITS - ones_remain);
-        if ((required_mask & block_bits) == required_mask) {
+        if ((required_mask & shifted_block) == required_mask) {
             return (struct Group_count){
                 .index = bit_index,
                 .count = (Bit_count)ones_remain,
             };
         }
         ones_remain = ones_total;
+        bit_index += count_trailing_zeros(~shifted_block);
     }
     if (ones_remain <= BIT_BLOCK_BITS) {
         assert(ones_remain);
         assert(bit_index < BIT_BLOCK_BITS);
-        Bit_block block_bits = block >> bit_index;
+        Bit_block shifted_block = block >> bit_index;
         Bit_block required_mask
             = BIT_BLOCK_ON >> (BIT_BLOCK_BITS - ones_remain);
         /* The loop continues only while our block is numerically greater
@@ -1318,15 +1320,15 @@ max_trailing_ones(
            If the block has high order bits not in the mask it is
            numerically greater than the mask and we continue checking, which
            is correct. This strategy optimizes out some useless shifts. */
-        while (block_bits >= required_mask) {
-            if ((required_mask & block_bits) == required_mask) {
+        while (shifted_block >= required_mask) {
+            if ((required_mask & shifted_block) == required_mask) {
                 return (struct Group_count){
                     .index = bit_index,
                     .count = (Bit_count)ones_remain,
                 };
             }
             ++bit_index;
-            block_bits >>= 1;
+            shifted_block >>= 1;
         }
     }
     /* 2 cases covered: the ones remaining are greater than this block could
@@ -1532,32 +1534,36 @@ max_leading_ones(
        the search could conclude in this block. If the prefix run is broken
        then we need to reset our search for the total run of ones. */
     if (ones_remain <= BIT_BLOCK_BITS && (ones_remain != ones_total)) {
-        Bit_block const block_bits = block << (BIT_BLOCK_BITS - bit_index - 1);
+        Bit_block const shifted_block = block
+                                     << (BIT_BLOCK_BITS - bit_index - 1);
         Bit_block const required_mask = BIT_BLOCK_ON
                                      << (BIT_BLOCK_BITS - ones_remain);
-        if ((required_mask & block_bits) == required_mask) {
+        if ((required_mask & shifted_block) == required_mask) {
             return (struct Group_signed_count){
                 .index = bit_index,
                 .count = (Bit_signed_count)ones_remain,
             };
         }
         ones_remain = ones_total;
+        bit_index = (Bit_signed_count)(bit_index
+                                       - count_leading_zeros(~shifted_block));
     }
     if (ones_remain <= BIT_BLOCK_BITS) {
+        assert(bit_index >= -1);
         assert(bit_index < BIT_BLOCK_BITS);
-        Bit_block block_bits = block << (BIT_BLOCK_BITS - bit_index - 1);
+        Bit_block shifted_block = block << (BIT_BLOCK_BITS - bit_index - 1);
         Bit_block const required_mask = BIT_BLOCK_ON
                                      << (BIT_BLOCK_BITS - ones_remain);
         Bit_signed_count const end = (Bit_signed_count)ones_remain;
         while (bit_index >= end) {
-            if ((required_mask & block_bits) == required_mask) {
+            if ((required_mask & shifted_block) == required_mask) {
                 return (struct Group_signed_count){
                     .index = bit_index,
                     .count = end,
                 };
             }
             --bit_index;
-            block_bits <<= 1;
+            shifted_block <<= 1;
         }
     }
     Bit_signed_count const trailing_ones
