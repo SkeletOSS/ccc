@@ -1456,6 +1456,7 @@ first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
                 = (Bit_signed_count)(bit_index
                                      - count_leading_zeros(~shifted_block));
             bits_start = (cur_block * BIT_BLOCK_BITS) + bit_index;
+            num_found = 0;
         }
         if (ones_remain <= BIT_BLOCK_BITS) {
             assert(bit_index >= 0);
