@@ -1203,7 +1203,7 @@ first_trailing_bits_range( /* NOLINT (*cognitive-complexity) */
     size_t const i,
     size_t const count,
     size_t const num_bits,
-    CCC_Tribool const is_one
+    CCC_Tribool const ones
 ) {
     size_t const range_end = i + count;
     if (!bitset || !count || !num_bits || i >= bitset->count || num_bits > count
@@ -1215,7 +1215,7 @@ first_trailing_bits_range( /* NOLINT (*cognitive-complexity) */
     Block_count block_index = block_count_index(i);
     size_t window_end = (block_index * BLOCK_BITS) + BLOCK_BITS;
     Bit_count bit_index = bit_count_index(i);
-    Bit_block bits = is_one
+    Bit_block bits = ones
                        ? bitset->blocks[block_index] & (BLOCK_ON << bit_index)
                        : ~bitset->blocks[block_index] & (BLOCK_ON << bit_index);
     for (;;) {
@@ -1299,8 +1299,8 @@ first_trailing_bits_range( /* NOLINT (*cognitive-complexity) */
             block_index < block_count_index(bitset->capacity)
             && "only load bits within block array capacity"
         );
-        bits = is_one ? bitset->blocks[block_index]
-                      : ~bitset->blocks[block_index];
+        bits
+            = ones ? bitset->blocks[block_index] : ~bitset->blocks[block_index];
     }
 }
 
@@ -1383,7 +1383,7 @@ first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
     size_t const index,
     size_t const range_count,
     size_t const bits_required,
-    CCC_Tribool const is_one
+    CCC_Tribool const ones
 ) {
     /* The only risk is that i is out of range of `ptrdiff_t` which would mean
        that we cannot proceed with algorithm. However, this is unlikely on most
@@ -1404,10 +1404,10 @@ first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
         = (Block_signed_count)block_count_index((size_t)window_start);
     Block_signed_count window_end = ((block_index * BLOCK_BITS) - 1);
     Bit_signed_count bit_index = bit_count_index((size_t)window_start);
-    Bit_block bits = is_one ? bitset->blocks[block_index]
-                                  & (BLOCK_ON >> (BLOCK_BITS - bit_index - 1))
-                            : ~bitset->blocks[block_index]
-                                  & (BLOCK_ON >> (BLOCK_BITS - bit_index - 1));
+    Bit_block bits = ones ? bitset->blocks[block_index]
+                                & (BLOCK_ON >> (BLOCK_BITS - bit_index - 1))
+                          : ~bitset->blocks[block_index]
+                                & (BLOCK_ON >> (BLOCK_BITS - bit_index - 1));
     for (;;) {
         if (window_end < range_end) {
             assert(
@@ -1484,8 +1484,8 @@ first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
             && "current block is safe as index protected by bits_start "
                "iterating toward the end of the range"
         );
-        bits = is_one ? bitset->blocks[block_index]
-                      : ~bitset->blocks[block_index];
+        bits
+            = ones ? bitset->blocks[block_index] : ~bitset->blocks[block_index];
     }
 }
 
