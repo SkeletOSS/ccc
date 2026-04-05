@@ -1076,8 +1076,7 @@ is_subset_of(
 ) {
     assert(set->count >= subset->count);
     for (Block_count i = 0, end = block_count(subset->count); i < end; ++i) {
-        /* Invariant: the last N unused bits in a set are zero so this
-         * works. */
+        /* Invariant: the last N unused bits in a set zero so this works. */
         if ((set->blocks[i] & subset->blocks[i]) != subset->blocks[i]) {
             return CCC_FALSE;
         }
