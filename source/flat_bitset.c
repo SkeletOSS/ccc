@@ -1295,9 +1295,6 @@ first_trailing_bits_range( /* NOLINT (*cognitive-complexity) */
                     = (cur_block * BLOCK_BITS) + (BLOCK_BITS - leading_ones);
             }
         }
-        if (num_found >= num_bits) {
-            return (CCC_Count){.count = bits_start};
-        }
         if (bits_start + num_bits > range_end) {
             return (CCC_Count){.error = CCC_RESULT_FAIL};
         }
@@ -1413,11 +1410,6 @@ first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
                             : ~bitset->blocks[cur_block]
                                   & (BLOCK_ON >> (BLOCK_BITS - bit_index - 1));
     for (;;) {
-        assert(
-            cur_block >= 0
-            && "current block is safe as index protected by bits_start "
-               "iterating toward the end of the range"
-        );
         if (window_end < range_end) {
             assert(
                 range_end + 1 >= 0
@@ -1458,7 +1450,8 @@ first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
                 Bit_block shifted_block = bits << (BLOCK_BITS - bit_index - 1);
                 Bit_block const required_mask = BLOCK_ON
                                              << (BLOCK_BITS - ones_remain);
-                Bit_signed_count const end = (Bit_signed_count)ones_remain;
+                Bit_signed_count const end
+                    = (Bit_signed_count)(ones_remain - 1);
                 while (bit_index >= end) {
                     if (is_mask_match(shifted_block, required_mask)) {
                         return (CCC_Count){
@@ -1478,15 +1471,17 @@ first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
                 bits_start = (cur_block * BLOCK_BITS) + (trailing_ones - 1);
             }
         }
-        if (num_found >= num_bits) {
-            return (CCC_Count){.count = (size_t)bits_start};
-        }
         if (bits_start < range_end + (ptrdiff_t)num_bits) {
             return (CCC_Count){.error = CCC_RESULT_FAIL};
         }
         bit_index = BLOCK_BITS - 1;
         --cur_block;
         window_end -= BLOCK_BITS;
+        assert(
+            cur_block >= 0
+            && "current block is safe as index protected by bits_start "
+               "iterating toward the end of the range"
+        );
         bits = is_one ? bitset->blocks[cur_block] : ~bitset->blocks[cur_block];
     }
 }
