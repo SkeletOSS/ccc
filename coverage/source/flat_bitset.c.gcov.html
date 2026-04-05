@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntryHi">99.7&nbsp;%</td>
-            <td class="headerCovTableEntry">865</td>
-            <td class="headerCovTableEntry">862</td>
+            <td class="headerCovTableEntry">863</td>
+            <td class="headerCovTableEntry">860</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-04-05 21:07:24</td>
+            <td class="headerValue">2026-04-05 21:09:05</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -1265,7 +1265,7 @@
 <span id="L1203"><span class="lineNum">    1203</span>              :     size_t const i,</span>
 <span id="L1204"><span class="lineNum">    1204</span>              :     size_t const count,</span>
 <span id="L1205"><span class="lineNum">    1205</span>              :     size_t const num_bits,</span>
-<span id="L1206"><span class="lineNum">    1206</span>              :     CCC_Tribool const is_one</span>
+<span id="L1206"><span class="lineNum">    1206</span>              :     CCC_Tribool const ones</span>
 <span id="L1207"><span class="lineNum">    1207</span>              : ) {</span>
 <span id="L1208"><span class="lineNum">    1208</span> <span class="tlaGNC">       17217 :     size_t const range_end = i + count;</span></span>
 <span id="L1209"><span class="lineNum">    1209</span> <span class="tlaGNC">       17217 :     if (!bitset || !count || !num_bits || i &gt;= bitset-&gt;count || num_bits &gt; count</span></span>
@@ -1277,7 +1277,7 @@
 <span id="L1215"><span class="lineNum">    1215</span> <span class="tlaGNC">       17008 :     Block_count block_index = block_count_index(i);</span></span>
 <span id="L1216"><span class="lineNum">    1216</span> <span class="tlaGNC">       17008 :     size_t window_end = (block_index * BLOCK_BITS) + BLOCK_BITS;</span></span>
 <span id="L1217"><span class="lineNum">    1217</span> <span class="tlaGNC">       17008 :     Bit_count bit_index = bit_count_index(i);</span></span>
-<span id="L1218"><span class="lineNum">    1218</span> <span class="tlaGNC">       17008 :     Bit_block bits = is_one</span></span>
+<span id="L1218"><span class="lineNum">    1218</span> <span class="tlaGNC">       17008 :     Bit_block bits = ones</span></span>
 <span id="L1219"><span class="lineNum">    1219</span> <span class="tlaGNC">        8504 :                        ? bitset-&gt;blocks[block_index] &amp; (BLOCK_ON &lt;&lt; bit_index)</span></span>
 <span id="L1220"><span class="lineNum">    1220</span> <span class="tlaGNC">        8504 :                        : ~bitset-&gt;blocks[block_index] &amp; (BLOCK_ON &lt;&lt; bit_index);</span></span>
 <span id="L1221"><span class="lineNum">    1221</span> <span class="tlaGNC">      125962 :     for (;;) {</span></span>
@@ -1361,8 +1361,8 @@
 <span id="L1299"><span class="lineNum">    1299</span> <span class="tlaGNC">      108954 :             block_index &lt; block_count_index(bitset-&gt;capacity)</span></span>
 <span id="L1300"><span class="lineNum">    1300</span> <span class="tlaGNC">      108954 :             &amp;&amp; &quot;only load bits within block array capacity&quot;</span></span>
 <span id="L1301"><span class="lineNum">    1301</span>              :         );</span>
-<span id="L1302"><span class="lineNum">    1302</span> <span class="tlaGNC">      108954 :         bits = is_one ? bitset-&gt;blocks[block_index]</span></span>
-<span id="L1303"><span class="lineNum">    1303</span> <span class="tlaGNC">       54477 :                       : ~bitset-&gt;blocks[block_index];</span></span>
+<span id="L1302"><span class="lineNum">    1302</span>              :         bits</span>
+<span id="L1303"><span class="lineNum">    1303</span> <span class="tlaGNC">      108954 :             = ones ? bitset-&gt;blocks[block_index] : ~bitset-&gt;blocks[block_index];</span></span>
 <span id="L1304"><span class="lineNum">    1304</span>              :     }</span>
 <span id="L1305"><span class="lineNum">    1305</span> <span class="tlaGNC">       17217 : }</span></span>
 <span id="L1306"><span class="lineNum">    1306</span>              : </span>
@@ -1445,7 +1445,7 @@
 <span id="L1383"><span class="lineNum">    1383</span>              :     size_t const index,</span>
 <span id="L1384"><span class="lineNum">    1384</span>              :     size_t const range_count,</span>
 <span id="L1385"><span class="lineNum">    1385</span>              :     size_t const bits_required,</span>
-<span id="L1386"><span class="lineNum">    1386</span>              :     CCC_Tribool const is_one</span>
+<span id="L1386"><span class="lineNum">    1386</span>              :     CCC_Tribool const ones</span>
 <span id="L1387"><span class="lineNum">    1387</span>              : ) {</span>
 <span id="L1388"><span class="lineNum">    1388</span>              :     /* The only risk is that i is out of range of `ptrdiff_t` which would mean</span>
 <span id="L1389"><span class="lineNum">    1389</span>              :        that we cannot proceed with algorithm. However, this is unlikely on most</span>
@@ -1466,10 +1466,10 @@
 <span id="L1404"><span class="lineNum">    1404</span> <span class="tlaGNC">       17180 :         = (Block_signed_count)block_count_index((size_t)window_start);</span></span>
 <span id="L1405"><span class="lineNum">    1405</span> <span class="tlaGNC">       17180 :     Block_signed_count window_end = ((block_index * BLOCK_BITS) - 1);</span></span>
 <span id="L1406"><span class="lineNum">    1406</span> <span class="tlaGNC">       17180 :     Bit_signed_count bit_index = bit_count_index((size_t)window_start);</span></span>
-<span id="L1407"><span class="lineNum">    1407</span> <span class="tlaGNC">       17180 :     Bit_block bits = is_one ? bitset-&gt;blocks[block_index]</span></span>
-<span id="L1408"><span class="lineNum">    1408</span> <span class="tlaGNC">        8590 :                                   &amp; (BLOCK_ON &gt;&gt; (BLOCK_BITS - bit_index - 1))</span></span>
-<span id="L1409"><span class="lineNum">    1409</span> <span class="tlaGNC">        8590 :                             : ~bitset-&gt;blocks[block_index]</span></span>
-<span id="L1410"><span class="lineNum">    1410</span> <span class="tlaGNC">        8590 :                                   &amp; (BLOCK_ON &gt;&gt; (BLOCK_BITS - bit_index - 1));</span></span>
+<span id="L1407"><span class="lineNum">    1407</span> <span class="tlaGNC">       17180 :     Bit_block bits = ones ? bitset-&gt;blocks[block_index]</span></span>
+<span id="L1408"><span class="lineNum">    1408</span> <span class="tlaGNC">        8590 :                                 &amp; (BLOCK_ON &gt;&gt; (BLOCK_BITS - bit_index - 1))</span></span>
+<span id="L1409"><span class="lineNum">    1409</span> <span class="tlaGNC">        8590 :                           : ~bitset-&gt;blocks[block_index]</span></span>
+<span id="L1410"><span class="lineNum">    1410</span> <span class="tlaGNC">        8590 :                                 &amp; (BLOCK_ON &gt;&gt; (BLOCK_BITS - bit_index - 1));</span></span>
 <span id="L1411"><span class="lineNum">    1411</span> <span class="tlaGNC">      130729 :     for (;;) {</span></span>
 <span id="L1412"><span class="lineNum">    1412</span> <span class="tlaGNC">      130729 :         if (window_end &lt; range_end) {</span></span>
 <span id="L1413"><span class="lineNum">    1413</span> <span class="tlaUNC">           0 :             assert(</span></span>
@@ -1546,8 +1546,8 @@
 <span id="L1484"><span class="lineNum">    1484</span> <span class="tlaGNC">      113549 :             &amp;&amp; &quot;current block is safe as index protected by bits_start &quot;</span></span>
 <span id="L1485"><span class="lineNum">    1485</span>              :                &quot;iterating toward the end of the range&quot;</span>
 <span id="L1486"><span class="lineNum">    1486</span>              :         );</span>
-<span id="L1487"><span class="lineNum">    1487</span> <span class="tlaGNC">      113549 :         bits = is_one ? bitset-&gt;blocks[block_index]</span></span>
-<span id="L1488"><span class="lineNum">    1488</span> <span class="tlaGNC">       56774 :                       : ~bitset-&gt;blocks[block_index];</span></span>
+<span id="L1487"><span class="lineNum">    1487</span>              :         bits</span>
+<span id="L1488"><span class="lineNum">    1488</span> <span class="tlaGNC">      113549 :             = ones ? bitset-&gt;blocks[block_index] : ~bitset-&gt;blocks[block_index];</span></span>
 <span id="L1489"><span class="lineNum">    1489</span>              :     }</span>
 <span id="L1490"><span class="lineNum">    1490</span> <span class="tlaGNC">       17181 : }</span></span>
 <span id="L1491"><span class="lineNum">    1491</span>              : </span>
