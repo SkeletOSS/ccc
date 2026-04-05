@@ -1220,10 +1220,6 @@ first_trailing_bits_range( /* NOLINT (*cognitive-complexity) */
                        ? bitset->blocks[cur_block] & (BLOCK_ON << bit_index)
                        : ~bitset->blocks[cur_block] & (BLOCK_ON << bit_index);
     for (;;) {
-        assert(
-            cur_block < block_count_index(bitset->capacity)
-            && "only load bits within block array capacity"
-        );
         if (window_end > range_end) {
             bits &= ~(BLOCK_ON << bit_count_index(range_end));
         }
@@ -1301,6 +1297,10 @@ first_trailing_bits_range( /* NOLINT (*cognitive-complexity) */
         bit_index = 0;
         ++cur_block;
         window_end += BLOCK_BITS;
+        assert(
+            cur_block < block_count_index(bitset->capacity)
+            && "only load bits within block array capacity"
+        );
         bits = is_one ? bitset->blocks[cur_block] : ~bitset->blocks[cur_block];
     }
 }
@@ -1447,6 +1447,7 @@ first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
             if (ones_remain <= BLOCK_BITS) {
                 assert(bit_index >= 0 && "shifts are valid for block");
                 assert(bit_index < BLOCK_BITS && "shifts are valid for block");
+                assert(ones_remain > 0 && "end index position is in block");
                 Bit_block shifted_block = bits << (BLOCK_BITS - bit_index - 1);
                 Bit_block const required_mask = BLOCK_ON
                                              << (BLOCK_BITS - ones_remain);
