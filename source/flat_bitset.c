@@ -1217,7 +1217,10 @@ first_trailing_bits_range( /* NOLINT (*cognitive-complexity) */
     size_t window_end = (cur_block * BLOCK_BITS) + BLOCK_BITS;
     Bit_count bit_index = bit_count_index(i);
     while (bits_start + num_bits <= range_end) {
-        assert(cur_block < block_count_index(bitset->capacity));
+        assert(
+            cur_block < block_count_index(bitset->capacity)
+            && "only load bits within block array capacity"
+        );
         Bit_block bits
             = is_one ? bitset->blocks[cur_block] & (BLOCK_ON << bit_index)
                      : ~bitset->blocks[cur_block] & (BLOCK_ON << bit_index);
@@ -1251,8 +1254,8 @@ first_trailing_bits_range( /* NOLINT (*cognitive-complexity) */
             bits_start = (cur_block * BLOCK_BITS) + bit_index;
         }
         if (ones_remain <= BLOCK_BITS) {
-            assert(ones_remain);
-            assert(bit_index < BLOCK_BITS);
+            assert(ones_remain && "shifts are valid for mask");
+            assert(bit_index < BLOCK_BITS && "shifts are well valid for block");
             Bit_block shifted_block = bits >> bit_index;
             Bit_block required_mask = BLOCK_ON >> (BLOCK_BITS - ones_remain);
             /* The loop continues only while our block is numerically greater
@@ -1449,8 +1452,8 @@ first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
             num_found = 0;
         }
         if (ones_remain <= BLOCK_BITS) {
-            assert(bit_index >= 0);
-            assert(bit_index < BLOCK_BITS);
+            assert(bit_index >= 0 && "shifts are valid for block");
+            assert(bit_index < BLOCK_BITS && "shifts are valid for block");
             Bit_block shifted_block = bits << (BLOCK_BITS - bit_index - 1);
             Bit_block const required_mask = BLOCK_ON
                                          << (BLOCK_BITS - ones_remain);
@@ -1665,7 +1668,7 @@ block_count(size_t const bit_count) {
         "shifting to avoid division with power of 2 divisor is only "
         "defined for unsigned types"
     );
-    assert(bit_count);
+    assert(bit_count && "calculating block count for non-empty bitset");
     return (bit_count + (BLOCK_BITS - 1)) >> BLOCK_BITS_LOG2;
 }
 
@@ -1683,8 +1686,13 @@ is_mask_match(Bit_block const block, Bit_block const on_mask) {
 /** The following asserts assure that whether portable or built in bit
 operations are used in the coming section we are safe in our assumptions about
 widths and counts. */
-static_assert(BLOCK_MSB < BLOCK_ON);
-static_assert(SIZEOF_BLOCK == sizeof(unsigned));
+static_assert(
+    BLOCK_MSB < BLOCK_ON, "most significant bit is set for correct block width"
+);
+static_assert(
+    SIZEOF_BLOCK == sizeof(unsigned),
+    "builtins remain in sync with bitset block width"
+);
 
 /** Much of the code relies on the assumption that iterating over blocks at
 at a time is faster than using mathematical operations to conceptually iterate
@@ -1702,7 +1710,10 @@ static inline Bit_count
 popcount(Bit_block const b) {
     /* There are different pop counts for different integer widths. Be sure
        to catch the use of the wrong one by mistake here at compile time. */
-    static_assert(__builtin_popcount((Bit_block)~0) <= U8_BLOCK_MAX);
+    static_assert(
+        __builtin_popcount((Bit_block)~0) <= U8_BLOCK_MAX,
+        "builtins return counts that are valid for smaller width types we use"
+    );
     return (Bit_count)__builtin_popcount(b);
 }
 
@@ -1710,7 +1721,10 @@ popcount(Bit_block const b) {
 significant bit. */
 static inline Bit_count
 count_trailing_zeros(Bit_block const b) {
-    static_assert(__builtin_ctz(BLOCK_MSB) <= U8_BLOCK_MAX);
+    static_assert(
+        __builtin_ctz(BLOCK_MSB) <= U8_BLOCK_MAX,
+        "builtins return counts that are valid for smaller width types we use"
+    );
     return b ? (Bit_count)__builtin_ctz(b) : BLOCK_BITS;
 }
 
@@ -1718,7 +1732,10 @@ count_trailing_zeros(Bit_block const b) {
 bit. */
 static inline Bit_count
 count_leading_zeros(Bit_block const b) {
-    static_assert(__builtin_clz((Bit_block)1) <= U8_BLOCK_MAX);
+    static_assert(
+        __builtin_clz((Bit_block)1) <= U8_BLOCK_MAX,
+        "builtins return counts that are valid for smaller width types we use"
+    );
     return b ? (Bit_count)__builtin_clz(b) : BLOCK_BITS;
 }
 
