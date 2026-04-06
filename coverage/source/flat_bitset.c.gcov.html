@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-04-06 16:02:52</td>
+            <td class="headerValue">2026-04-06 16:04:46</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -1325,10 +1325,10 @@
 <span id="L1263"><span class="lineNum">    1263</span>              :                          and cannot match with further shifting.</span>
 <span id="L1264"><span class="lineNum">    1264</span>              :                        - If all high bits match but some lower required bits are</span>
 <span id="L1265"><span class="lineNum">    1265</span>              :                          zero, the block is numerically smaller than the mask</span>
-<span id="L1266"><span class="lineNum">    1266</span>              :                    and cannot match with further shifting. If the block has high</span>
-<span id="L1267"><span class="lineNum">    1267</span>              :                    order bits not in the mask it is greater than the mask and we</span>
-<span id="L1268"><span class="lineNum">    1268</span>              :                    continue checking, which is correct. This strategy optimizes</span>
-<span id="L1269"><span class="lineNum">    1269</span>              :                    out some useless shifts. */</span>
+<span id="L1266"><span class="lineNum">    1266</span>              :                          and cannot match with further shifting.</span>
+<span id="L1267"><span class="lineNum">    1267</span>              :                    If the block has high order bits not in the mask it is</span>
+<span id="L1268"><span class="lineNum">    1268</span>              :                    greater than the mask and we continue checking, which is</span>
+<span id="L1269"><span class="lineNum">    1269</span>              :                    correct. This strategy optimizes out some useless shifts. */</span>
 <span id="L1270"><span class="lineNum">    1270</span> <span class="tlaGNC">       54824 :                 while (shifted_bits &gt;= bits_remain_mask) {</span></span>
 <span id="L1271"><span class="lineNum">    1271</span> <span class="tlaGNC">       47104 :                     if (is_mask_match(shifted_bits, bits_remain_mask)) {</span></span>
 <span id="L1272"><span class="lineNum">    1272</span> <span class="tlaGNC">        5084 :                         return (CCC_Count){</span></span>
