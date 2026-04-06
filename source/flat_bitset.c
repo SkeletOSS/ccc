@@ -1239,7 +1239,6 @@ first_trailing_bits_range( /* NOLINT (*cognitive-complexity) */
             bit_count = 0;
         } else {
             size_t bits_remain = num_bits - bit_count;
-            assert(bits_remain && "shifts are valid for mask");
             /* We need to check if we are connecting a prefix from a prior block
                and the search could conclude in this block. If the prefix run is
                broken then we need to reset our search for the total run of
