@@ -1149,9 +1149,9 @@ first_trailing_bit_range(
     size_t const count,
     CCC_Tribool const is_one
 ) {
-    size_t const range_end = i + count;
-    if (!bitset || !count || i >= bitset->count || range_end < i
-        || range_end > bitset->count) {
+    size_t const exclusive_end = i + count;
+    if (!bitset || !count || i >= bitset->count || exclusive_end < i
+        || exclusive_end > bitset->count) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
     Block_count start_block = block_count_index(i);
@@ -1169,7 +1169,7 @@ first_trailing_bit_range(
             .count = (start_block * BLOCK_BITS) + trailing_zeros,
         };
     }
-    Block_count const end_block = block_count_index(range_end - 1);
+    Block_count const end_block = block_count_index(exclusive_end - 1);
     if (end_block == start_block) {
         return (CCC_Count){.error = CCC_RESULT_FAIL};
     }
@@ -1186,7 +1186,7 @@ first_trailing_bit_range(
     }
     /* Handle last block. */
     Bit_block const last_block_mask
-        = trailing_ones_mask(bit_count_index(range_end - 1) + 1);
+        = trailing_ones_mask(bit_count_index(exclusive_end - 1) + 1);
     trailing_zeros = count_trailing_zeros(
         last_block_mask
         & (is_one ? bitset->blocks[end_block] : ~bitset->blocks[end_block])
@@ -1211,9 +1211,9 @@ first_trailing_bits_range( /* NOLINT (*cognitive-complexity) */
     size_t const num_bits,
     CCC_Tribool const ones
 ) {
-    size_t const range_end = i + count;
+    size_t const exclusive_end = i + count;
     if (!bitset || !count || !num_bits || i >= bitset->count || num_bits > count
-        || range_end < i || range_end > bitset->count) {
+        || exclusive_end < i || exclusive_end > bitset->count) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
     size_t bit_count = 0;
@@ -1225,8 +1225,8 @@ first_trailing_bits_range( /* NOLINT (*cognitive-complexity) */
         = ones ? bitset->blocks[block_index] : ~bitset->blocks[block_index];
     bits &= leading_ones_mask(BLOCK_BITS - bit_index);
     for (;;) {
-        if (window_end > range_end) {
-            bits &= trailing_ones_mask(bit_count_index(range_end - 1) + 1);
+        if (window_end > exclusive_end) {
+            bits &= trailing_ones_mask(bit_count_index(exclusive_end - 1) + 1);
         }
         if (!bits) {
             window_start = (block_index + 1) * BLOCK_BITS;
@@ -1292,7 +1292,7 @@ first_trailing_bits_range( /* NOLINT (*cognitive-complexity) */
                     = (block_index * BLOCK_BITS) + (BLOCK_BITS - leading_ones);
             }
         }
-        if (window_start + num_bits > range_end) {
+        if (window_start + num_bits > exclusive_end) {
             return (CCC_Count){.error = CCC_RESULT_FAIL};
         }
         bit_index = 0;
@@ -1316,21 +1316,21 @@ proceeds from Most Significant Bit toward Least Significant Bit. */
 static CCC_Count
 first_leading_bit_range(
     struct CCC_Flat_bitset const *const bitset,
-    size_t const i,
+    size_t const start_index,
     size_t const count,
     CCC_Tribool const is_one
 ) {
-    if (!bitset || !count || i >= bitset->count || i + count <= i
-        || i + count > bitset->count) {
+    if (!bitset || !count || start_index >= bitset->count
+        || start_index + count <= start_index
+        || start_index + count > bitset->count) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
-    size_t const range_end = i;
-    size_t const start_i = i + count - 1;
-    Bit_count const start_bit = bit_count_index(start_i);
-    Bit_count const end_bit = bit_count_index(range_end);
-    Block_count start_block = block_count_index(start_i);
+    size_t const window_start = start_index + count - 1;
+    Bit_count const start_bit = bit_count_index(window_start);
+    Bit_count const end_bit = bit_count_index(start_index);
+    Block_count start_block = block_count_index(window_start);
     Bit_block first_block_mask = trailing_ones_mask(start_bit + 1);
-    if (start_i - range_end + 1 < BLOCK_BITS) {
+    if (start_index + count < BLOCK_BITS) {
         first_block_mask &= leading_ones_mask(BLOCK_BITS - end_bit);
     }
     Bit_count leading_zeros = count_leading_zeros(
@@ -1343,7 +1343,7 @@ first_leading_bit_range(
                    + (Block_count)(BLOCK_BITS - leading_zeros - 1),
         };
     }
-    Block_count const end_block = block_count_index(range_end);
+    Block_count const end_block = block_count_index(start_index);
     if (start_block == end_block) {
         return (CCC_Count){.error = CCC_RESULT_FAIL};
     }
@@ -1391,10 +1391,9 @@ first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
        platforms as they often bound object size by the max pointer difference
        possible, which this type provides. However, it is not required by the C
        standard so we are obligated to check. */
-    ptrdiff_t const range_end = (ptrdiff_t)(index - 1);
     if (!bitset || !range_count || !bits_required || bits_required > PTRDIFF_MAX
         || index > PTRDIFF_MAX || index >= bitset->count
-        || bits_required > range_count || range_end < -1) {
+        || bits_required > range_count) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
     size_t bit_count = 0;
@@ -1409,15 +1408,8 @@ first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
         = ones ? bitset->blocks[block_index] : ~bitset->blocks[block_index];
     bits &= trailing_ones_mask((Bit_count)bit_index + 1);
     for (;;) {
-        if (window_end < range_end) {
-            assert(
-                range_end + 1 >= 0
-                && "If range end is less than -1 it is caught at entry to "
-                   "function"
-            );
-            bits &= leading_ones_mask(
-                BLOCK_BITS - bit_count_index((size_t)(range_end + 1))
-            );
+        if (window_end < (ptrdiff_t)index) {
+            bits &= leading_ones_mask(BLOCK_BITS - bit_count_index(index));
         }
         if (!bits) {
             window_start = (block_index * BLOCK_BITS) - 1;
@@ -1471,7 +1463,7 @@ first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
                 window_start = (block_index * BLOCK_BITS) + (trailing_ones - 1);
             }
         }
-        if (window_start < range_end + (ptrdiff_t)bits_required) {
+        if (window_start < (ptrdiff_t)index + (ptrdiff_t)bits_required - 1) {
             return (CCC_Count){.error = CCC_RESULT_FAIL};
         }
         bit_index = BLOCK_BITS - 1;
