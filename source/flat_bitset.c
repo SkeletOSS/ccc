@@ -1416,7 +1416,7 @@ first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
                    "function"
             );
             bits &= leading_ones_mask(
-                bit_count_index(BLOCK_BITS - (size_t)(range_end + 1))
+                BLOCK_BITS - bit_count_index((size_t)(range_end + 1))
             );
         }
         if (!bits) {
