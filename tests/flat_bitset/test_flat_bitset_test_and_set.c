@@ -249,6 +249,118 @@ check_static_begin(flat_bitset_test_flip_range) {
     check_end();
 }
 
+check_static_begin(flat_bitset_test_any_range_in_one_block) {
+    enum : size_t {
+        CAP = 32,
+    };
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for(
+            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+        ),
+    };
+    Flat_bitset bs = CCC_flat_bitset_from(
+        allocator, 0, 32, '1', "00000000000000000000000000001001", CAP
+    );
+    CCC_Tribool result = CCC_flat_bitset_any_range(&bs, 0, 32);
+    check(result, CCC_TRUE);
+    result = CCC_flat_bitset_any_range(&bs, 0, 31);
+    check(result, CCC_TRUE);
+    result = CCC_flat_bitset_any_range(&bs, 28, 4);
+    check(result, CCC_TRUE);
+    result = CCC_flat_bitset_any_range(&bs, 29, 2);
+    check(result, CCC_FALSE);
+    result = CCC_flat_bitset_any_range(&bs, 29, 3);
+    check(result, CCC_TRUE);
+    check_end();
+}
+
+check_static_begin(flat_bitset_test_any_range_in_multiple_blocks) {
+    enum : size_t {
+        CAP = 96,
+    };
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for(
+            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+        ),
+    };
+    Flat_bitset bs = CCC_flat_bitset_from(
+        allocator,
+        0,
+        96,
+        '1',
+        "0000000000000000000000000000000000000000000000000000000000000000000000"
+        "00000000000000000000001001",
+        CAP
+    );
+    CCC_Tribool result = CCC_flat_bitset_any_range(&bs, 0, 96);
+    check(result, CCC_TRUE);
+    result = CCC_flat_bitset_any_range(&bs, 0, 95);
+    check(result, CCC_TRUE);
+    result = CCC_flat_bitset_any_range(&bs, 92, 4);
+    check(result, CCC_TRUE);
+    result = CCC_flat_bitset_any_range(&bs, 93, 2);
+    check(result, CCC_FALSE);
+    result = CCC_flat_bitset_any_range(&bs, 93, 3);
+    check(result, CCC_TRUE);
+    check_end();
+}
+
+check_static_begin(flat_bitset_test_all_range_in_one_block) {
+    enum : size_t {
+        CAP = 32,
+    };
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for(
+            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+        ),
+    };
+    Flat_bitset bs = CCC_flat_bitset_from(
+        allocator, 0, 32, '1', "11111111111111111111111111110110", CAP
+    );
+    CCC_Tribool result = CCC_flat_bitset_all_range(&bs, 0, 32);
+    check(result, CCC_FALSE);
+    result = CCC_flat_bitset_all_range(&bs, 0, 28);
+    check(result, CCC_TRUE);
+    result = CCC_flat_bitset_all_range(&bs, 29, 2);
+    check(result, CCC_TRUE);
+    result = CCC_flat_bitset_all_range(&bs, 29, 3);
+    check(result, CCC_FALSE);
+    check_end();
+}
+
+check_static_begin(flat_bitset_test_all_range_in_multiple_blocks) {
+    enum : size_t {
+        CAP = 96,
+    };
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for(
+            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+        ),
+    };
+    Flat_bitset bs = CCC_flat_bitset_from(
+        allocator,
+        0,
+        96,
+        '1',
+        "1111111111111111111111111111111111111111111111111111111111111111111111"
+        "11111111111111111111110110",
+        CAP
+    );
+    CCC_Tribool result = CCC_flat_bitset_all_range(&bs, 0, 96);
+    check(result, CCC_FALSE);
+    result = CCC_flat_bitset_all_range(&bs, 0, 92);
+    check(result, CCC_TRUE);
+    result = CCC_flat_bitset_all_range(&bs, 93, 2);
+    check(result, CCC_TRUE);
+    result = CCC_flat_bitset_all_range(&bs, 93, 3);
+    check(result, CCC_FALSE);
+    check_end();
+}
+
 check_static_begin(flat_bitset_test_any) {
     Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
     check(flat_bitset_any_range(&bs, 0, 0), CCC_TRIBOOL_ERROR);
@@ -350,6 +462,59 @@ check_static_begin(flat_bitset_test_first_trailing_one) {
             flat_bitset_first_trailing_one_range(&bs, i, end - i).count, i + 1
         );
     }
+    check_end();
+}
+
+check_static_begin(flat_bitset_test_first_trailing_one_range_within_block) {
+    enum : size_t {
+        CAP = 32,
+    };
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for(
+            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+        ),
+    };
+    Flat_bitset bs = CCC_flat_bitset_from(
+        allocator, 0, 32, '1', "00000000000000010000000000000001", CAP
+    );
+    CCC_Count result = CCC_flat_bitset_first_trailing_one_range(&bs, 0, 16);
+    check(result.count, 15);
+    check(result.error, CCC_RESULT_OK);
+    result = CCC_flat_bitset_first_trailing_one_range(&bs, 16, 7);
+    check(result.error, CCC_RESULT_FAIL);
+    result = CCC_flat_bitset_first_trailing_one_range(&bs, 16, 16);
+    check(result.count, 31);
+    check(result.error, CCC_RESULT_OK);
+    result = CCC_flat_bitset_first_trailing_one_range(&bs, 16, 15);
+    check(result.error, CCC_RESULT_FAIL);
+    check_end();
+}
+
+check_static_begin(flat_bitset_test_first_trailing_one_range_within_blocks) {
+    enum : size_t {
+        CAP = 96,
+    };
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for(
+            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+        ),
+    };
+    Flat_bitset bs = CCC_flat_bitset_from(
+        allocator,
+        0,
+        96,
+        '1',
+        "0000000000000000000000000000000000000000000000000000000000000000000000"
+        "00000000000000000000000001",
+        CAP
+    );
+    CCC_Count result = CCC_flat_bitset_first_trailing_one_range(&bs, 0, 96);
+    check(result.count, 95);
+    check(result.error, CCC_RESULT_OK);
+    result = CCC_flat_bitset_first_trailing_one_range(&bs, 0, 95);
+    check(result.error, CCC_RESULT_FAIL);
     check_end();
 }
 
@@ -1017,6 +1182,59 @@ check_static_begin(flat_bitset_test_first_leading_one) {
     }
     check(flat_bitset_first_leading_one(&bs).count, 0);
     check(flat_bitset_first_leading_one_range(&bs, 0, 1).count, 0);
+    check_end();
+}
+
+check_static_begin(flat_bitset_test_first_leading_one_range_within_block) {
+    enum : size_t {
+        CAP = 32,
+    };
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for(
+            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+        ),
+    };
+    Flat_bitset bs = CCC_flat_bitset_from(
+        allocator, 0, 32, '1', "10000000000000010000000000000000", CAP
+    );
+    CCC_Count result = CCC_flat_bitset_first_leading_one_range(&bs, 15, 7);
+    check(result.count, 15);
+    check(result.error, CCC_RESULT_OK);
+    result = CCC_flat_bitset_first_leading_one_range(&bs, 16, 7);
+    check(result.error, CCC_RESULT_FAIL);
+    result = CCC_flat_bitset_first_leading_one_range(&bs, 0, 7);
+    check(result.count, 0);
+    check(result.error, CCC_RESULT_OK);
+    result = CCC_flat_bitset_first_leading_one_range(&bs, 1, 7);
+    check(result.error, CCC_RESULT_FAIL);
+    check_end();
+}
+
+check_static_begin(flat_bitset_test_first_leading_one_range_within_blocks) {
+    enum : size_t {
+        CAP = 96,
+    };
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for(
+            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+        ),
+    };
+    Flat_bitset bs = CCC_flat_bitset_from(
+        allocator,
+        0,
+        96,
+        '1',
+        "1000000000000000000000000000000000000000000000000000000000000000000000"
+        "00000000000000000000000000",
+        CAP
+    );
+    CCC_Count result = CCC_flat_bitset_first_leading_one_range(&bs, 0, 96);
+    check(result.count, 0);
+    check(result.error, CCC_RESULT_OK);
+    result = CCC_flat_bitset_first_leading_one_range(&bs, 1, 95);
+    check(result.error, CCC_RESULT_FAIL);
     check_end();
 }
 
@@ -2225,11 +2443,17 @@ main(void) {
         flat_bitset_test_reset_all(),
         flat_bitset_test_reset_range(),
         flat_bitset_test_any(),
+        flat_bitset_test_any_range_in_one_block(),
+        flat_bitset_test_any_range_in_multiple_blocks(),
+        flat_bitset_test_all_range_in_one_block(),
+        flat_bitset_test_all_range_in_multiple_blocks(),
         flat_bitset_test_all_three_blocks(),
         flat_bitset_test_all(),
         flat_bitset_test_none(),
         flat_bitset_test_first_trailing_one(),
         flat_bitset_test_first_trailing_ones(),
+        flat_bitset_test_first_trailing_one_range_within_block(),
+        flat_bitset_test_first_trailing_one_range_within_blocks(),
         flat_bitset_test_first_trailing_ones_off_by_one(),
         flat_bitset_test_first_trailing_ones_match_at_capacity(),
         flat_bitset_test_first_trailing_zeros_match_at_capacity(),
@@ -2248,6 +2472,8 @@ main(void) {
         flat_bitset_test_first_trailing_zeros_fail(),
         flat_bitset_test_first_leading_one(),
         flat_bitset_test_first_leading_one_range(),
+        flat_bitset_test_first_leading_one_range_within_block(),
+        flat_bitset_test_first_leading_one_range_within_blocks(),
         flat_bitset_test_first_leading_ones(),
         flat_bitset_test_first_leading_ones_fail(),
         flat_bitset_test_first_leading_zero(),
