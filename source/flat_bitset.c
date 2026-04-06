@@ -1338,7 +1338,7 @@ first_leading_bit_range(
     Block_count start_block = block_count_index(start_i);
     Bit_block first_block_mask = trailing_ones_mask(start_bit + 1);
     if (start_i - range_end + 1 < BLOCK_BITS) {
-        first_block_mask &= ~trailing_ones_mask(end_bit);
+        first_block_mask &= leading_ones_mask(BLOCK_BITS - end_bit);
     }
     Bit_count leading_zeros
         = is_one ? count_leading_zeros(
@@ -1369,7 +1369,7 @@ first_leading_bit_range(
         }
     }
     /* Handle last block. */
-    Bit_block const last_block_on = ~trailing_ones_mask(end_bit);
+    Bit_block const last_block_on = leading_ones_mask(BLOCK_BITS - end_bit);
     leading_zeros
         = is_one
             ? count_leading_zeros(last_block_on & bitset->blocks[end_block])
@@ -1426,8 +1426,9 @@ first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
                 && "If range end is less than -1 it is caught at entry to "
                    "function"
             );
-            bits &= ~trailing_ones_mask(bit_count_index((size_t)(range_end
-                                                                 + 1)));
+            bits &= leading_ones_mask(
+                bit_count_index(BLOCK_BITS - (size_t)(range_end + 1))
+            );
         }
         if (!bits) {
             window_start = (block_index * BLOCK_BITS) - 1;
