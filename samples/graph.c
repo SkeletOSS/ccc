@@ -39,10 +39,10 @@ Enter 'q' to quit. */
 #include "ccc/traits.h"
 #include "ccc/types.h"
 #include "str_view/str_view.h"
-#include "utility/allocate.h"
 #include "utility/cli.h"
 #include "utility/defer.h"
 #include "utility/random.h"
+#include "utility/std_allocator.h"
 
 #define CYN "\033[38;5;14m"
 #define RED "\033[38;5;9m"

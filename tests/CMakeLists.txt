@@ -33,7 +33,7 @@ macro(add_flat_bitset_test TEST_NAME)
     PRIVATE
       ccc
       checkers
-      allocate
+      std_allocator
       str_view::str_view
       stack_allocator 
   )
@@ -68,7 +68,7 @@ macro(add_flat_buffer_test TEST_NAME)
       ccc
       flat_buffer_utility
       checkers
-      allocate
+      std_allocator
       stack_allocator
       random
   )
@@ -104,7 +104,7 @@ macro(add_flat_priority_queue_test TEST_NAME)
       flat_priority_queue_utility
       ccc
       checkers
-      allocate
+      std_allocator
       stack_allocator
   )
   set_target_properties(${TEST_NAME} 
@@ -138,7 +138,7 @@ macro(add_priority_queue_test TEST_NAME)
       priority_queue_utility
       ccc
       checkers
-      allocate
+      std_allocator
       stack_allocator
   )
   set_target_properties(${TEST_NAME} 
@@ -172,7 +172,7 @@ macro(add_adaptive_map_test TEST_NAME)
       adaptive_map_utility
       ccc
       checkers 
-      allocate
+      std_allocator
       stack_allocator
   )
   set_target_properties(${TEST_NAME} 
@@ -206,7 +206,7 @@ macro(add_array_adaptive_map_test TEST_NAME)
       array_adaptive_map_utility
       ccc
       checkers
-      allocate
+      std_allocator
       stack_allocator
   )
   set_target_properties(${TEST_NAME} 
@@ -240,7 +240,7 @@ macro(add_tree_map_test TEST_NAME)
       tree_map_utility
       checkers
       ccc
-      allocate
+      std_allocator
       stack_allocator
   )
   set_target_properties(${TEST_NAME} 
@@ -274,7 +274,7 @@ macro(add_array_tree_map_test TEST_NAME)
       array_tree_map_utility
       ccc
       checkers
-      allocate
+      std_allocator
       random
       stack_allocator
   )
@@ -309,7 +309,7 @@ macro(add_flat_hash_map_test TEST_NAME)
       flat_hash_map_utility
       random
       ccc
-      allocate
+      std_allocator
       stack_allocator
   )
   set_target_properties(${TEST_NAME} 
@@ -343,7 +343,7 @@ macro(add_doubly_linked_list_test TEST_NAME)
       ccc
       checkers
       doubly_linked_list_utility
-      allocate
+      std_allocator
       stack_allocator
   )
   set_target_properties(${TEST_NAME} 
@@ -374,7 +374,7 @@ macro(add_singly_linked_list_test TEST_NAME)
       ccc
       checkers 
       singly_linked_list_utility
-      allocate
+      std_allocator
       stack_allocator
   )
   set_target_properties(${TEST_NAME} 
@@ -405,7 +405,7 @@ macro(add_flat_double_ended_queue_test TEST_NAME)
       ccc
       checkers 
       flat_double_ended_queue_utility
-      allocate
+      std_allocator
       stack_allocator
   )
   set_target_properties(${TEST_NAME} 

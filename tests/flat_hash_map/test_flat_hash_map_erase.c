@@ -10,8 +10,8 @@
 #include "flat_hash_map_utility.h"
 #include "traits.h"
 #include "types.h"
-#include "utility/allocate.h"
 #include "utility/random.h"
+#include "utility/std_allocator.h"
 
 check_static_begin(flat_hash_map_test_erase) {
     CCC_Flat_hash_map fh = flat_hash_map_with_storage(

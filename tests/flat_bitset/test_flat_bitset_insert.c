@@ -9,8 +9,8 @@
 #include "ccc/traits.h"
 #include "ccc/types.h"
 #include "checkers.h"
-#include "utility/allocate.h"
 #include "utility/stack_allocator.h"
+#include "utility/std_allocator.h"
 
 check_static_begin(flat_bitset_test_push_back_no_reallocate) {
     check(CCC_flat_bitset_popcount(NULL).error, CCC_RESULT_ARGUMENT_ERROR);

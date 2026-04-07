@@ -11,9 +11,9 @@
 #include "ccc/types.h"
 #include "checkers.h"
 #include "flat_hash_map_utility.h"
-#include "utility/allocate.h"
 #include "utility/random.h"
 #include "utility/stack_allocator.h"
+#include "utility/std_allocator.h"
 
 struct Owner {
     int key;

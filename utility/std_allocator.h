@@ -1,5 +1,5 @@
-#ifndef CCC_ALLOC_H
-#define CCC_ALLOC_H
+#ifndef CCC_STD_ALLOCATOR_H
+#define CCC_STD_ALLOCATOR_H
 #include <stddef.h>
 #include <types.h>
 
@@ -23,4 +23,4 @@ void *std_allocate(CCC_Allocator_arguments arguments);
 be passed by reference anywhere CCC_Allocator is requested. */
 extern CCC_Allocator const std_allocator;
 
-#endif /* CCC_ALLOC_H */
+#endif /* CCC_STD_ALLOCATOR_H */

@@ -9,8 +9,8 @@
 #include "flat_priority_queue_utility.h"
 #include "traits.h"
 #include "types.h"
-#include "utility/allocate.h"
 #include "utility/stack_allocator.h"
+#include "utility/std_allocator.h"
 
 check_static_begin(flat_priority_queue_test_insert_one) {
     CCC_Allocator const allocator = {

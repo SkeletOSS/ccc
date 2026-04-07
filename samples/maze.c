@@ -32,10 +32,10 @@ Example:
 #include "ccc/traits.h"
 #include "ccc/types.h"
 #include "str_view/str_view.h"
-#include "utility/allocate.h"
 #include "utility/cli.h"
 #include "utility/defer.h"
 #include "utility/random.h"
+#include "utility/std_allocator.h"
 
 /*=======================   Maze Helper Types   =============================*/
 

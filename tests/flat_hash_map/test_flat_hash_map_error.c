@@ -2,8 +2,8 @@
 #include "ccc/types.h"
 #include "checkers.h"
 #include "flat_hash_map_utility.h"
-#include "utility/allocate.h"
 #include "utility/stack_allocator.h"
+#include "utility/std_allocator.h"
 
 check_static_begin(flat_hash_map_test_counting_null_input) {
     check(CCC_flat_hash_map_count(NULL).error, CCC_RESULT_ARGUMENT_ERROR);

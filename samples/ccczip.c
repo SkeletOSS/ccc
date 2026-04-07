@@ -34,8 +34,8 @@ algorithms use a wide range of data structures. */
 #include "ccc/traits.h"
 #include "ccc/types.h"
 #include "str_view/str_view.h"
-#include "utility/allocate.h"
 #include "utility/defer.h"
+#include "utility/std_allocator.h"
 #include "utility/string_arena.h"
 
 /*===========================   Type Declarations  ==========================*/

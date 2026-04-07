@@ -2,8 +2,8 @@
 #include "ccc/flat_buffer.h"
 #include "ccc/types.h"
 #include "checkers.h"
-#include "utility/allocate.h"
 #include "utility/stack_allocator.h"
+#include "utility/std_allocator.h"
 
 check_static_begin(flat_buffer_test_reserve_null_input) {
     Flat_buffer b = flat_buffer_default(int);

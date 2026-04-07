@@ -15,7 +15,7 @@ The leetcode lru problem in C. */
 #include "flat_hash_map/flat_hash_map_utility.h"
 #include "traits.h"
 #include "types.h"
-#include "utility/allocate.h"
+#include "utility/std_allocator.h"
 
 #define REQS 11
 

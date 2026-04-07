@@ -33,9 +33,9 @@ Please specify a command as follows:
 #include "ccc/traits.h"
 #include "ccc/types.h"
 #include "str_view/str_view.h"
-#include "utility/allocate.h"
 #include "utility/cli.h"
 #include "utility/defer.h"
+#include "utility/std_allocator.h"
 #include "utility/string_arena.h"
 
 enum Action_type {

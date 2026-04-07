@@ -10,8 +10,8 @@
 #include "ccc/types.h"
 #include "checkers.h"
 #include "flat_buffer_utility.h"
-#include "utility/allocate.h"
 #include "utility/random.h"
+#include "utility/std_allocator.h"
 
 static int
 std_order_ints(void const *const left, void const *const right) {

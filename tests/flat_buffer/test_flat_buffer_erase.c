@@ -10,9 +10,9 @@
 #include "ccc/types.h"
 #include "checkers.h"
 #include "flat_buffer_utility.h"
-#include "utility/allocate.h"
 #include "utility/random.h"
 #include "utility/stack_allocator.h"
+#include "utility/std_allocator.h"
 
 check_static_begin(flat_buffer_test_push_pop_fixed) {
     Flat_buffer b = flat_buffer_with_storage(0, (int[8]){});

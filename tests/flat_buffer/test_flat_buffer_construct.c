@@ -6,8 +6,8 @@
 #include "ccc/flat_buffer.h"
 #include "ccc/types.h"
 #include "checkers.h"
-#include "utility/allocate.h"
 #include "utility/stack_allocator.h"
+#include "utility/std_allocator.h"
 
 static Flat_buffer const rgb
     = flat_buffer_with_storage(3, (uint8_t[3]){0xFF, 0x00, 0xFF});

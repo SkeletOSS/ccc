@@ -14,7 +14,7 @@ target_link_libraries(maze
         random
         str_view::str_view
         ccc
-        allocate
+        std_allocator
         defer
 )
 add_dependencies(samples maze)
@@ -26,7 +26,7 @@ target_link_libraries(graph
         random
         str_view::str_view
         ccc
-        allocate
+        std_allocator
         defer
 )
 add_dependencies(samples graph)
@@ -37,7 +37,7 @@ target_link_libraries(words
         cli
         str_view::str_view
         ccc
-        allocate
+        std_allocator
         string_arena
         defer
 )
@@ -49,7 +49,7 @@ target_link_libraries(ccczip
         cli
         str_view::str_view
         ccc
-        allocate
+        std_allocator
         string_arena
         defer
 )

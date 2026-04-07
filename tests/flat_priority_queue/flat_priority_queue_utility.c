@@ -12,7 +12,7 @@
 #include "sort.h"
 #include "traits.h"
 #include "types.h"
-#include "utility/allocate.h"
+#include "utility/std_allocator.h"
 
 CCC_Order
 val_order(CCC_Comparator_arguments const order) {

@@ -9,7 +9,7 @@
 #include "ccc/types.h"
 #include "checkers.h"
 #include "flat_hash_map_utility.h"
-#include "utility/allocate.h"
+#include "utility/std_allocator.h"
 
 static void
 mod(CCC_Arguments const u) {

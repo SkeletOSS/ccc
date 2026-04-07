@@ -9,7 +9,7 @@
 #include "flat_double_ended_queue_utility.h"
 #include "traits.h"
 #include "types.h"
-#include "utility/allocate.h"
+#include "utility/std_allocator.h"
 
 check_static_begin(pop_front_n, Flat_double_ended_queue *const q, size_t n) {
     for (; n-- && !is_empty(q); (void)pop_front(q)) {

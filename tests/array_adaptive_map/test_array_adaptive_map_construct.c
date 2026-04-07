@@ -9,8 +9,8 @@
 #include "ccc/traits.h"
 #include "ccc/types.h"
 #include "checkers.h"
-#include "utility/allocate.h"
 #include "utility/stack_allocator.h"
+#include "utility/std_allocator.h"
 
 static Array_adaptive_map static_map = array_adaptive_map_with_storage(
     id,

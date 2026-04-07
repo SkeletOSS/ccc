@@ -13,8 +13,8 @@
 #include "ccc/types.h"
 #include "checkers.h"
 #include "priority_queue_utility.h"
-#include "utility/allocate.h"
 #include "utility/stack_allocator.h"
+#include "utility/std_allocator.h"
 
 enum : int {
     STANDARD_CAP = 50,

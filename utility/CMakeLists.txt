@@ -15,9 +15,9 @@ target_link_libraries(cli PUBLIC
 )
 add_dependencies(utility cli)
 
-add_library(allocate allocate.h allocate.c)
-target_link_libraries(allocate ccc)
-add_dependencies(utility allocate)
+add_library(std_allocator std_allocator.h std_allocator.c)
+target_link_libraries(std_allocator ccc)
+add_dependencies(utility std_allocator)
 
 add_library(stack_allocator stack_allocator.h stack_allocator.c)
 target_link_libraries(stack_allocator ccc)

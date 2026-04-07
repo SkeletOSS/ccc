@@ -9,7 +9,7 @@
 #include "ccc/types.h"
 #include "checkers.h"
 #include "flat_double_ended_queue_utility.h"
-#include "utility/allocate.h"
+#include "utility/std_allocator.h"
 
 check_static_begin(flat_double_ended_queue_test_insert_errors) {
     Flat_double_ended_queue q = flat_double_ended_queue_default(int);

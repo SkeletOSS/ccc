@@ -14,7 +14,7 @@
 #include "ccc/traits.h"
 #include "ccc/types.h"
 #include "checkers.h"
-#include "utility/allocate.h"
+#include "utility/std_allocator.h"
 
 check_static_begin(array_adaptive_map_test_insert_erase_shuffled) {
     CCC_Array_adaptive_map s = array_adaptive_map_with_storage(

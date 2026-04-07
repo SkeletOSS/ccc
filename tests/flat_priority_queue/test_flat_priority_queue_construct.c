@@ -15,8 +15,8 @@
 #include "sort.h"
 #include "traits.h"
 #include "types.h"
-#include "utility/allocate.h"
 #include "utility/stack_allocator.h"
+#include "utility/std_allocator.h"
 
 static Flat_priority_queue const static_priority_queue
     = flat_priority_queue_with_storage(

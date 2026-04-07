@@ -11,8 +11,8 @@
 #include "checkers.h"
 #include "traits.h"
 #include "types.h"
-#include "utility/allocate.h"
 #include "utility/stack_allocator.h"
+#include "utility/std_allocator.h"
 
 static inline struct Val
 array_adaptive_map_create(int const id, int const val) {
