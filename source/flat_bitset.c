@@ -1320,7 +1320,7 @@ first_leading_bit_range(
 /** Iterating backward from MSB to LSB requires more care to avoid unsigned
 integer wrapping. Therefore, this code is not identical to the trailing version
 due to a few more branches. This function previously used signed types to avoid
-this but that required making new signed types, copious casting, and
+this branching but that required making new signed types, copious casting, and
 verification of input to be within ptrdiff_t limits. For consistency and
 portability I think committing to unsigned is better for this function. */
 static CCC_Count
