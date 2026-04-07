@@ -1408,8 +1408,7 @@ first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
                                  : 0;
         assert(
             block_index < block_count_index(bitset->capacity)
-            && "current block is safe as index protected by bits_start "
-               "iterating toward the end of the range"
+            && "current block within range while iterating toward LSB"
         );
         bits
             = ones ? bitset->blocks[block_index] : ~bitset->blocks[block_index];
