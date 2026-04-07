@@ -1354,8 +1354,7 @@ first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
             size_t bits_remain = bits_required - bit_count;
             /* We need to check if we are connecting a prefix from a prior block
                and the search could conclude in this block. If the prefix run is
-               broken then we need to reset our search for the total run of
-               ones. */
+               broken we need to reset our search for the total run of ones. */
             if (bits_remain <= BLOCK_BITS && bits_remain < bits_required) {
                 assert(bit_index < BLOCK_BITS && "shifts are valid for block");
                 Bit_block const shifted_block = bits
