@@ -1381,8 +1381,7 @@ first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
                 while (bit_index >= end_index) {
                     if (is_mask_match(shifted_block, bits_remain_mask)) {
                         return (CCC_Count){
-                            .count
-                            = (size_t)((block_index * BLOCK_BITS) + bit_index),
+                            .count = (block_index * BLOCK_BITS) + bit_index,
                         };
                     }
                     --bit_index;
