@@ -623,6 +623,29 @@ check_static_begin(flat_bitset_test_first_trailing_ones_match_at_capacity) {
     check_end();
 }
 
+check_static_begin(
+    flat_bitset_test_first_trailing_ones_single_match_at_capacity
+) {
+    enum : size_t {
+        CAP = 32,
+    };
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for(
+            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+        ),
+    };
+    Flat_bitset bs = CCC_flat_bitset_from(
+        allocator, 0, 32, '1', "00000000000000000000000000000001", CAP
+    );
+    CCC_Count result = CCC_flat_bitset_first_trailing_ones_range(&bs, 0, 32, 1);
+    check(result.count, 31);
+    check(result.error, CCC_RESULT_OK);
+    result = CCC_flat_bitset_first_trailing_ones_range(&bs, 0, 31, 1);
+    check(result.error, CCC_RESULT_FAIL);
+    check_end();
+}
+
 check_static_begin(flat_bitset_test_first_trailing_zeros_match_at_capacity) {
     enum : size_t {
         CAP = 32,
@@ -1378,6 +1401,29 @@ check_static_begin(flat_bitset_test_first_leading_ones_off_by_one) {
     check(result.count, 39);
     check(result.error, CCC_RESULT_OK);
     result = CCC_flat_bitset_first_leading_ones_range(&bs, 0, 40, 40);
+    check(result.error, CCC_RESULT_FAIL);
+    check_end();
+}
+
+check_static_begin(
+    flat_bitset_test_first_leading_ones_single_match_at_capacity
+) {
+    enum : size_t {
+        CAP = 32,
+    };
+    CCC_Allocator const allocator = {
+        .allocate = stack_allocator_allocate,
+        .context = &stack_allocator_for(
+            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+        ),
+    };
+    Flat_bitset bs = CCC_flat_bitset_from(
+        allocator, 0, 32, '1', "10000000000000000000000000000000", CAP
+    );
+    CCC_Count result = CCC_flat_bitset_first_leading_ones_range(&bs, 0, 32, 1);
+    check(result.count, 0);
+    check(result.error, CCC_RESULT_OK);
+    result = CCC_flat_bitset_first_leading_ones_range(&bs, 1, 31, 1);
     check(result.error, CCC_RESULT_FAIL);
     check_end();
 }
@@ -2580,6 +2626,7 @@ main(void) {
         flat_bitset_test_first_trailing_ones_range_within_blocks(),
         flat_bitset_test_first_trailing_zeros_range_within_blocks(),
         flat_bitset_test_first_trailing_ones_off_by_one(),
+        flat_bitset_test_first_trailing_ones_single_match_at_capacity(),
         flat_bitset_test_first_trailing_ones_match_at_capacity(),
         flat_bitset_test_first_trailing_zeros_match_at_capacity(),
         flat_bitset_test_first_trailing_ones_straddle_blocks(),
@@ -2609,6 +2656,7 @@ main(void) {
         flat_bitset_test_first_leading_zeros_fail(),
         flat_bitset_test_first_leading_ones_off_by_one(),
         flat_bitset_test_first_leading_ones_match_at_capacity(),
+        flat_bitset_test_first_leading_ones_single_match_at_capacity(),
         flat_bitset_test_first_leading_zeros_match_at_capacity(),
         flat_bitset_test_first_leading_ones_straddle_blocks(),
         flat_bitset_test_first_leading_ones_broken_runs(),
