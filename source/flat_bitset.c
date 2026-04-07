@@ -77,20 +77,6 @@ to make it clear to the reader the index refers to a block not the given bit
 index the user has provided. */
 typedef size_t Block_count;
 
-/** @internal A signed index into the block array. The block array is built by
-the number of blocks required to support the current bit set capacity. Assume
-this index type has range [-1, count of blocks needed to hold all bits in set].
-This makes reverse iteration problems easier.
-
-Most platforms will allow for this signed type to index any bit block that the
-unsigned equivalent can index into. However, one should always check that the
-unsigned value can safely be cast to signed.
-
-User input is given as a `size_t` so distinguish from that input with this type
-to make it clear to the reader the index refers to a block not the given bit
-index the user has provided. */
-typedef ptrdiff_t Block_signed_count;
-
 /** @internal An index within a block. A block is set to some number of bits
 as determined by the type used for each block. This type is intended to count
 bits in a block and therefore cannot count up to arbitrary indices. Assume its
@@ -122,48 +108,6 @@ static_assert(
     (Bit_count) ~((Bit_count)0) >= (Bit_count)0, "Bit_count must be unsigned"
 );
 static_assert(UINT8_MAX >= BLOCK_BITS, "Bit_count counts all block bits.");
-
-/** @internal A signed index within a block. A block is set to some number
-of bits as determined by the type used for each block. This type is intended to
-count bits in a block and therefore cannot count up to arbitrary indices. Assume
-its range is `[-1, BIT_BLOCK_BITS]`, for ease of use and clarity.
-
-There are many types of indexing and counting that take place in a bit set so
-use this type specifically for counting bits in a block so the reader is clear
-on intent. It helps clean up algorithms for finding ranges of leading bits.
-It also a wider type to avoid warnings or dangers when taking the value of a
-`Bit_count` type. */
-typedef int16_t Bit_signed_count;
-static_assert(
-    sizeof(Bit_signed_count) > sizeof(Bit_count),
-    "Bit_signed_count x = (Bit_signed_count)x_bit_count; // is safe"
-);
-static_assert(
-    (Bit_signed_count) ~((Bit_signed_count)0) < (Bit_signed_count)0,
-    "Bit_signed_count must be signed"
-);
-static_assert(
-    INT16_MAX >= BLOCK_BITS, "Bit_signed_count counts all block bits"
-);
-
-/** @internal A helper to allow for an efficient linear scan for groups of 0's
-or 1's in the set. */
-struct Group_count {
-    /** A index [0, bit block bits] indicating the status of a search. */
-    Bit_count index;
-    /** The number of bits of same value found starting at block_start_i. */
-    Bit_count count;
-};
-
-/** @internal A signed helper to allow for an efficient linear scan for groups
-of 0's or 1's in the set. Created to support -1 index return values for cleaner
-group scanning in reverse. */
-struct Group_signed_count {
-    /** A index [-1, bit block bits] indicating the status of a search. */
-    Bit_signed_count index;
-    /** The number of bits of same value found starting at block_start_i. */
-    Bit_signed_count count;
-};
 
 /*=========================      Prototypes      ============================*/
 
@@ -1373,11 +1317,12 @@ first_leading_bit_range(
     return (CCC_Count){.error = CCC_RESULT_FAIL};
 }
 
-/* Overall I am not thrilled with the need for handling signed values and back
-wards iteration in this version. However, I am having trouble finding a clean
-way to do this unsigned. Signed simplifies the iteration and interaction with
-the helper function finding leading ones because the algorithm is complex
-enough as is. Candidate for refactor. */
+/** Iterating backward from MSB to LSB requires more care to avoid unsigned
+integer wrapping. Therefore, this code is not identical to the trailing version
+due to a few more branches. This function previously used signed types to avoid
+this branching but that required making new signed types, copious casting, and
+verification of input to be within ptrdiff_t limits. For consistency and
+portability I think committing to unsigned is better for this function. */
 static CCC_Count
 first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
     struct CCC_Flat_bitset const *const bitset,
@@ -1386,70 +1331,57 @@ first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
     size_t const bits_required,
     CCC_Tribool const ones
 ) {
-    /* The only risk is that i is out of range of `ptrdiff_t` which would mean
-       that we cannot proceed with algorithm. However, this is unlikely on most
-       platforms as they often bound object size by the max pointer difference
-       possible, which this type provides. However, it is not required by the C
-       standard so we are obligated to check. */
-    if (!bitset || !range_count || !bits_required || bits_required > PTRDIFF_MAX
-        || index > PTRDIFF_MAX || index >= bitset->count
+    if (!bitset || !range_count || !bits_required || index >= bitset->count
         || bits_required > range_count) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
     size_t bit_count = 0;
-    ptrdiff_t window_start = (ptrdiff_t)(index + range_count - 1);
-    /* If we passed the earlier signed range check this cast is safe because
-       (i / block bits) for some block index must be less than i. */
-    Block_signed_count block_index
-        = (Block_signed_count)block_count_index((size_t)window_start);
-    Block_signed_count window_end = ((block_index * BLOCK_BITS) - 1);
-    Bit_signed_count bit_index = bit_count_index((size_t)window_start);
+    size_t window_start = (index + range_count - 1);
+    Block_count block_index = block_count_index(window_start);
+    Block_count window_inclusive_end = ((block_index * BLOCK_BITS));
+    Bit_count bit_index = bit_count_index(window_start);
     Bit_block bits
         = ones ? bitset->blocks[block_index] : ~bitset->blocks[block_index];
-    bits &= trailing_ones_mask((Bit_count)bit_index + 1);
+    bits &= trailing_ones_mask(bit_index + 1);
     for (;;) {
-        if (window_end < (ptrdiff_t)index) {
+        if (window_inclusive_end < index) {
             bits &= leading_ones_mask(BLOCK_BITS - bit_count_index(index));
         }
         if (!bits) {
-            window_start = (block_index * BLOCK_BITS) - 1;
+            window_start = block_index ? (block_index * BLOCK_BITS) - 1 : 0;
             bit_count = 0;
         } else {
             size_t bits_remain = bits_required - bit_count;
             /* We need to check if we are connecting a prefix from a prior block
                and the search could conclude in this block. If the prefix run is
-               broken then we need to reset our search for the total run of
-               ones. */
+               broken we need to reset our search for the total run of ones. */
             if (bits_remain <= BLOCK_BITS && bits_remain < bits_required) {
-                assert(bit_index >= 0 && "shifts are valid for block");
                 assert(bit_index < BLOCK_BITS && "shifts are valid for block");
                 Bit_block const shifted_block = bits
                                              << (BLOCK_BITS - bit_index - 1);
                 if (is_mask_match(
                         shifted_block, leading_ones_mask((Bit_count)bits_remain)
                     )) {
-                    return (CCC_Count){.count = (size_t)window_start};
+                    return (CCC_Count){.count = window_start};
                 }
                 bits_remain = bits_required;
-                bit_index
-                    = (Bit_signed_count)(bit_index
-                                         - count_leading_zeros(~shifted_block));
+                Bit_count const leading_ones
+                    = count_leading_zeros(~shifted_block);
+                assert(bit_index >= leading_ones && "index cannot underflow");
+                bit_index -= leading_ones;
                 window_start = (block_index * BLOCK_BITS) + bit_index;
                 bit_count = 0;
             }
             if (bits_remain <= BLOCK_BITS) {
-                assert(bit_index >= 0 && "shifts are valid for block");
                 assert(bit_index < BLOCK_BITS && "shifts are valid for block");
                 Bit_block shifted_block = bits << (BLOCK_BITS - bit_index - 1);
                 Bit_block const bits_remain_mask
                     = leading_ones_mask((Bit_count)bits_remain);
-                Bit_signed_count const end_index
-                    = (Bit_signed_count)(bits_remain - 1);
+                Bit_count const end_index = (Bit_count)(bits_remain - 1);
                 while (bit_index >= end_index) {
                     if (is_mask_match(shifted_block, bits_remain_mask)) {
                         return (CCC_Count){
-                            .count
-                            = (size_t)((block_index * BLOCK_BITS) + bit_index),
+                            .count = (block_index * BLOCK_BITS) + bit_index,
                         };
                     }
                     --bit_index;
@@ -1460,19 +1392,23 @@ first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
             Bit_count const trailing_ones = count_trailing_zeros(~bits);
             bit_count += trailing_ones;
             if (trailing_ones < BLOCK_BITS) {
-                window_start = (block_index * BLOCK_BITS) + (trailing_ones - 1);
+                window_start = (block_index * BLOCK_BITS) + trailing_ones;
+                if (window_start) {
+                    --window_start;
+                }
             }
         }
-        if (window_start < (ptrdiff_t)index + (ptrdiff_t)bits_required - 1) {
+        if (window_start < index + bits_required - 1) {
             return (CCC_Count){.error = CCC_RESULT_FAIL};
         }
         bit_index = BLOCK_BITS - 1;
         --block_index;
-        window_end -= BLOCK_BITS;
+        window_inclusive_end = window_inclusive_end >= BLOCK_BITS
+                                 ? window_inclusive_end - BLOCK_BITS
+                                 : 0;
         assert(
-            block_index >= 0
-            && "current block is safe as index protected by bits_start "
-               "iterating toward the end of the range"
+            block_index < block_count_index(bitset->capacity)
+            && "current block within range while iterating toward LSB"
         );
         bits
             = ones ? bitset->blocks[block_index] : ~bitset->blocks[block_index];
