@@ -506,7 +506,7 @@ flat_hash_map_int_to_u64(CCC_Key_arguments const k) {
 static CCC_Order
 flat_hash_map_id_order(CCC_Key_comparator_arguments const cmp) {
     struct Key_val const *const right = cmp.type_right;
-    int const left = *((int *)cmp.key_left;
+    int const left = *((int *)cmp.key_left);
     return (left > right->key) - (left < right->key);
 }
 
