@@ -358,36 +358,6 @@ Using `assert` is only acceptable in this library code where internal invariants
 
 If an error can be checked and reported to the user in a meaningful way, there should be a direct if branch and return in the code rather than an assert. See the Entry Interface implementations in any of the associative containers for examples of this reporting style. There can still be improvements made to the current code in this regard.
 
-### Prefer Early Returns and Reduce Nesting
-
-Here is an examples from `buffer.h` (may not be in sync with current code).
-
-```c
-CCC_Result
-CCC_Flat_buffer_allocate(CCC_Flat_buffer *const buf, size_t const capacity,
-                    CCC_Allocator_interface *const allocate) {
-    if (!buf) {
-        return CCC_RESULT_ARGUMENT_ERROR;
-    }
-    if (!allocate) {
-        return CCC_RESULT_NO_ALLOCATION_FUNCTION;
-    }
-    void *const new_mem = allocate((CCC_Allocator_arguments){
-        .input = buf->data,
-        .bytes = buf->sizeof_type * capacity,
-        .context = buf->context,
-    });
-    if (capacity && !new_mem) {
-        return CCC_RESULT_ALLOCATOR_ERROR;
-    }
-    buf->data = new_mem;
-    buf->capacity = capacity;
-    return CCC_RESULT_OK;
-}
-```
-
-Early returns make it easier to find and reason about the happy path. The only exception is statement expressions in the `ccc/impl` folder headers. Early returns are not possible in statement expressions so the code structure becomes slightly more complex.
-
 ### Prohibited Dynamic Allocation
 
 Variable length arrays are strictly prohibited. All containers must be designed to accommodate a non-allocating mode. This means the user can initialize the container to have no allocation permissions. However, for some containers this poses a challenge.
