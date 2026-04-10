@@ -13,6 +13,7 @@ include(FetchContent)
 FetchContent_Declare(
   ccc
   URL https://github.com/agl-alexglopez/ccc/releases/download/v[MAJOR.MINOR.PATCH]/ccc-v[MAJOR.MINOR.PATCH].zip
+  SYSTEM # Optional flag to use ccc as a system library so that your tooling like clang-tidy ignores ccc.
   #DOWNLOAD_EXTRACT_TIMESTAMP FALSE # CMake may raise a warning to set this. If so, uncomment and set.
 )
 FetchContent_MakeAvailable(ccc)
@@ -35,16 +36,13 @@ FetchContent_Declare(
   ccc
   URL https://github.com/agl-alexglopez/ccc/releases/download/v0.72.0/ccc-v0.72.0.zip
   URL_HASH SHA256=9965d8ea2115a40ee7711b07f10ae15b1628825151b233b9cb95f5407425ab74
+  SYSTEM # Optional flag to use ccc as a system library so that your tooling like clang-tidy ignores ccc.
   #DOWNLOAD_EXTRACT_TIMESTAMP FALSE # CMake may raise a warning to set this. If so, uncomment and set.
 )
 FetchContent_MakeAvailable(ccc)
 # Include this line if you want to ignore compiler warnings from the ccc library when compiling your project.
 target_compile_options(ccc PRIVATE "-w")
-# Optionally use ccc as a system library so that your tooling like clang-tidy ignores ccc.
-get_target_property(ccc_SOURCE_DIR ccc SOURCE_DIR)
 add_executable(main main.c)
-# Optionally include ccc source directory as system so that your tooling like clang-tidy ignores ccc.
-target_include_directories(main SYSTEM PRIVATE ${ccc_SOURCE_DIR})
 target_link_libraries(main ccc::ccc)
 ```
 
@@ -91,13 +89,12 @@ FetchContent_Declare(
   ccc
   URL https://github.com/agl-alexglopez/ccc/releases/download/v0.72.0/ccc-v0.72.0.zip
   URL_HASH SHA256=9965d8ea2115a40ee7711b07f10ae15b1628825151b233b9cb95f5407425ab74
+  SYSTEM # Optional flag to use ccc as a system library so that your tooling like clang-tidy ignores ccc.
   #DOWNLOAD_EXTRACT_TIMESTAMP FALSE # CMake may raise a warning to set this. If so, uncomment and set.
 )
 FetchContent_MakeAvailable(ccc)
 # Include this line if you want to ignore compiler warnings from the ccc library when compiling your project.
 target_compile_options(ccc PRIVATE "-w")
-# Optionally use ccc as a system library so that your tooling like clang-tidy ignores ccc.
-get_target_property(ccc_SOURCE_DIR ccc SOURCE_DIR)
 
 # New step allowing CCC to find the configuration header.
 target_include_directories(ccc PRIVATE
@@ -110,8 +107,6 @@ target_compile_definitions(ccc PRIVATE
 )
 
 add_executable(freestanding freestanding.c)
-# Optionally include ccc source directory as system so that your tooling like clang-tidy ignores ccc.
-target_include_directories(freestanding SYSTEM PRIVATE ${ccc_SOURCE_DIR})
 target_link_libraries(freestanding ccc::ccc)
 ```
 
