@@ -1279,12 +1279,13 @@ If you are interested in contributing, tests that increase code coverage are a g
 
 ## Related
 
-If these containers do not fit your needs, here are some other data structure libraries I have found for C. If your project is at the application layer, where type safety and ergonomics are the primary concerns, these libraries are excellent choices and may be simpler to integrate than the C Container Collection. This collection is designed for projects where explicit memory control, allocation auditability, and separations between data structure and data memory management may be required.
+This collection is designed for projects where explicit memory control, allocation auditability, and separations between data structure and data memory management may be required. If these containers do not fit your needs, here are some other data structure libraries I have found for C. If your project is at the application layer, where type safety and ergonomics are the primary concerns, these libraries are excellent choices and may be simpler to integrate than the C Container Collection. They will also be highly performant.
 
-- [STC - Smart Template Containers](https://github.com/stclib/STC)
-- [C Template Library (CTL)](https://github.com/glouw/ctl)
 - [CC: Convenient Containers](https://github.com/JacksonAllan/CC)
+- [C Template Library (CTL)](https://github.com/glouw/ctl)
+- [mlib](https://github.com/P-p-H-d/mlib)
 - [STB](https://github.com/nothings/stb/tree/master)
+- [STC - Smart Template Containers](https://github.com/stclib/STC)
 
 ## Citations
 
