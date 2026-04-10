@@ -22,8 +22,8 @@ limitations under the License.
 #include <stdint.h>
 /** @endcond */
 
+#include "../configuration.h"
 #include "../types.h"
-#include "configuration.h"
 
 /** @internal A Flat_bitset is a contiguous array of fixed size integers. These
 aid in cache friendly storage and operations.
