@@ -45,6 +45,8 @@ static void
 heapsort(CCC_Flat_buffer *, void *, CCC_Order, CCC_Comparator const *);
 static void
 destroy_each(struct CCC_Flat_priority_queue *, CCC_Destructor const *);
+static void swap(CCC_Flat_buffer *, void *, void *, void *);
+static void *at(CCC_Flat_buffer const *buffer, size_t i);
 
 /*=====================       Interface      ================================*/
 
@@ -127,7 +129,7 @@ CCC_flat_priority_queue_push(
         &priority_queue->comparator
     );
     assert(i < priority_queue->buffer.count);
-    return CCC_flat_buffer_at(&priority_queue->buffer, i);
+    return at(&priority_queue->buffer, i);
 }
 
 CCC_Result
@@ -141,8 +143,11 @@ CCC_flat_priority_queue_pop(
     if (!priority_queue->buffer.count) {
         return CCC_RESULT_OK;
     }
-    CCC_flat_buffer_swap(
-        &priority_queue->buffer, temp, 0, priority_queue->buffer.count
+    swap(
+        &priority_queue->buffer,
+        temp,
+        at(&priority_queue->buffer, 0),
+        at(&priority_queue->buffer, priority_queue->buffer.count)
     );
     (void)bubble_down(
         &priority_queue->buffer,
@@ -168,15 +173,17 @@ CCC_flat_priority_queue_erase(
     if (i == priority_queue->buffer.count) {
         return CCC_RESULT_OK;
     }
-    (void)CCC_flat_buffer_swap(
-        &priority_queue->buffer, temp, i, priority_queue->buffer.count
+    swap(
+        &priority_queue->buffer,
+        temp,
+        at(&priority_queue->buffer, i),
+        at(&priority_queue->buffer, priority_queue->buffer.count)
     );
     CCC_Order const order_res
         = priority_queue->comparator.compare((CCC_Comparator_arguments){
-            .type_left = CCC_flat_buffer_at(&priority_queue->buffer, i),
-            .type_right = CCC_flat_buffer_at(
-                &priority_queue->buffer, priority_queue->buffer.count
-            ),
+            .type_left = at(&priority_queue->buffer, i),
+            .type_right
+            = at(&priority_queue->buffer, priority_queue->buffer.count),
             .context = priority_queue->comparator.context,
         });
     if (order_res == priority_queue->order) {
@@ -214,7 +221,7 @@ CCC_flat_priority_queue_update(
         .type = type,
         .context = modifier->context,
     });
-    return CCC_flat_buffer_at(
+    return at(
         &priority_queue->buffer, update_fixup(priority_queue, type, temp)
     );
 }
@@ -248,7 +255,7 @@ CCC_flat_priority_queue_front(
     if (!priority_queue || !priority_queue->buffer.count) {
         return NULL;
     }
-    return CCC_flat_buffer_at(&priority_queue->buffer, 0);
+    return at(&priority_queue->buffer, 0);
 }
 
 CCC_Tribool
@@ -392,15 +399,14 @@ CCC_flat_priority_queue_validate(
                 end = (count - 2) / 2;
          i <= end;
          ++i, left = (i * 2) + 1, right = (i * 2) + 2) {
-        void const *const this_pointer
-            = CCC_flat_buffer_at(&priority_queue->buffer, i);
+        void const *const this_pointer = at(&priority_queue->buffer, i);
         /* Putting the child in the comparison function first evaluates
            the child's three way comparison in relation to the parent. If
            the child beats the parent in total ordering (min/max) something
            has gone wrong. */
         if (left < count
             && wins(
-                CCC_flat_buffer_at(&priority_queue->buffer, left),
+                at(&priority_queue->buffer, left),
                 this_pointer,
                 priority_queue->order,
                 &priority_queue->comparator
@@ -409,7 +415,7 @@ CCC_flat_priority_queue_validate(
         }
         if (right < count
             && wins(
-                CCC_flat_buffer_at(&priority_queue->buffer, right),
+                at(&priority_queue->buffer, right),
                 this_pointer,
                 priority_queue->order,
                 &priority_queue->comparator
@@ -467,7 +473,7 @@ CCC_private_flat_priority_queue_update_fixup(
     void *const type,
     void *const temp
 ) {
-    return CCC_flat_buffer_at(
+    return at(
         &priority_queue->buffer, update_fixup(priority_queue, type, temp)
     );
 }
@@ -509,8 +515,9 @@ heapsort(
 ) {
     if (buffer->count > 1) {
         size_t const start = buffer->count;
+        void *const root = at(buffer, 0);
         while (--buffer->count) {
-            CCC_flat_buffer_swap(buffer, temp, 0, buffer->count);
+            swap(buffer, temp, root, at(buffer, buffer->count));
             (void)bubble_down(buffer, 0, temp, order, comparator);
         }
         buffer->count = start;
@@ -536,9 +543,8 @@ update_fixup(
     }
     CCC_Order const parent_order
         = priority_queue->comparator.compare((CCC_Comparator_arguments){
-            .type_left = CCC_flat_buffer_at(&priority_queue->buffer, index),
-            .type_right
-            = CCC_flat_buffer_at(&priority_queue->buffer, (index - 1) / 2),
+            .type_left = at(&priority_queue->buffer, index),
+            .type_right = at(&priority_queue->buffer, (index - 1) / 2),
             .context = priority_queue->comparator.context,
         });
     if (parent_order == priority_queue->order) {
@@ -573,13 +579,13 @@ bubble_up(
 ) {
     for (size_t parent = (index - 1) / 2; index;
          index = parent, parent = (parent - 1) / 2) {
-        void const *const parent_pointer = CCC_flat_buffer_at(buffer, parent);
-        void const *const this_pointer = CCC_flat_buffer_at(buffer, index);
+        void *const parent_pointer = at(buffer, parent);
+        void *const this_pointer = at(buffer, index);
         /* Not winning here means we are in correct order or equal. */
         if (!wins(this_pointer, parent_pointer, order, comparator)) {
             return index;
         }
-        (void)CCC_flat_buffer_swap(buffer, temp, index, parent);
+        swap(buffer, temp, this_pointer, parent_pointer);
     }
     return 0;
 }
@@ -596,21 +602,21 @@ bubble_down(
     for (size_t next = 0, left = (index * 2) + 1, right = left + 1;
          left < buffer->count;
          index = next, left = (index * 2) + 1, right = left + 1) {
-        void const *const left_pointer = CCC_flat_buffer_at(buffer, left);
+        void const *const left_pointer = at(buffer, left);
         next = left;
         if (right < buffer->count) {
-            void const *const right_pointer = CCC_flat_buffer_at(buffer, right);
+            void const *const right_pointer = at(buffer, right);
             if (wins(right_pointer, left_pointer, order, comparator)) {
                 next = right;
             }
         }
-        void const *const next_pointer = CCC_flat_buffer_at(buffer, next);
-        void const *const this_pointer = CCC_flat_buffer_at(buffer, index);
+        void *const next_pointer = at(buffer, next);
+        void *const this_pointer = at(buffer, index);
         /* If the child beats the parent we must swap. Equal is OK to break. */
         if (!wins(next_pointer, this_pointer, order, comparator)) {
             return index;
         }
-        (void)CCC_flat_buffer_swap(buffer, temp, index, next);
+        swap(buffer, temp, this_pointer, next_pointer);
     }
     return index;
 }
@@ -652,6 +658,32 @@ index_of(
     return i;
 }
 
+/** Swaps data in a and b according to buffer element size. Assumes a, b, and
+temp are non-null. */
+static inline void
+swap(
+    CCC_Flat_buffer *const buffer,
+    void *const temp,
+    void *const a,
+    void *const b
+) {
+    assert(temp);
+    assert(a);
+    assert(b);
+    (void)memcpy(temp, a, buffer->sizeof_type);
+    (void)memcpy(a, b, buffer->sizeof_type);
+    (void)memcpy(b, temp, buffer->sizeof_type);
+}
+
+/** Provides data at index. Assumes buffer is non-null and i is within
+capacity. */
+static inline void *
+at(CCC_Flat_buffer const *const buffer, size_t const i) {
+    assert(buffer);
+    assert(i < buffer->capacity);
+    return (char *)buffer->data + (i * buffer->sizeof_type);
+}
+
 static inline void
 destroy_each(
     struct CCC_Flat_priority_queue *const priority_queue,
@@ -660,7 +692,7 @@ destroy_each(
     size_t const count = priority_queue->buffer.count;
     for (size_t i = 0; i < count; ++i) {
         destructor->destroy((CCC_Arguments){
-            .type = CCC_flat_buffer_at(&priority_queue->buffer, i),
+            .type = at(&priority_queue->buffer, i),
             .context = destructor->context,
         });
     }
