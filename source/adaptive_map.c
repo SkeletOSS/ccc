@@ -58,7 +58,7 @@ static void init_node(struct CCC_Adaptive_map_node *);
 static void swap(void *, void *, void *, size_t);
 static void
 link(struct CCC_Adaptive_map_node *, enum Link, struct CCC_Adaptive_map_node *);
-static CCC_Tribool empty(struct CCC_Adaptive_map const *);
+static CCC_Tribool is_empty(struct CCC_Adaptive_map const *);
 static CCC_Tribool contains(struct CCC_Adaptive_map *, void const *);
 static CCC_Tribool validate(struct CCC_Adaptive_map const *);
 static void *struct_base(
@@ -106,7 +106,7 @@ CCC_adaptive_map_is_empty(CCC_Adaptive_map const *const map) {
     if (!map) {
         return CCC_TRIBOOL_ERROR;
     }
-    return empty(map);
+    return is_empty(map);
 }
 
 CCC_Count
@@ -606,8 +606,8 @@ init_node(struct CCC_Adaptive_map_node *const n) {
 }
 
 static inline CCC_Tribool
-empty(struct CCC_Adaptive_map const *const t) {
-    return !t->size || !t->root || t->root == NULL;
+is_empty(struct CCC_Adaptive_map const *const t) {
+    return !t->size || !t->root;
 }
 
 static void *
@@ -703,7 +703,7 @@ allocate_insert(
 ) {
     init_node(out_handle);
     CCC_Order root_order = CCC_ORDER_ERROR;
-    if (!empty(t)) {
+    if (!is_empty(t)) {
         void const *const key = key_from_node(t, out_handle);
         t->root = splay(t, t->root, key);
         root_order = order(t, key, t->root);
@@ -724,7 +724,7 @@ allocate_insert(
         out_handle = elem_in_slot(t, node);
         init_node(out_handle);
     }
-    if (empty(t)) {
+    if (is_empty(t)) {
         t->root = out_handle;
         t->size = 1;
         return struct_base(t, out_handle);
@@ -739,7 +739,7 @@ insert(
     struct CCC_Adaptive_map *const t, struct CCC_Adaptive_map_node *const n
 ) {
     init_node(n);
-    if (empty(t)) {
+    if (is_empty(t)) {
         t->root = n;
         t->size = 1;
         return struct_base(t, n);
@@ -772,7 +772,7 @@ connect_new_root(
 
 static void *
 erase(struct CCC_Adaptive_map *const t, void const *const key) {
-    if (empty(t)) {
+    if (is_empty(t)) {
         return NULL;
     }
     struct CCC_Adaptive_map_node *ret = splay(t, t->root, key);
