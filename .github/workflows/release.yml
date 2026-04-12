@@ -21,26 +21,24 @@ jobs:
           git archive --format=zip --output=ccc-${GITHUB_REF#refs/tags/}.zip HEAD
           echo "ZIP_FILE=ccc-${GITHUB_REF#refs/tags/}.zip" >> $GITHUB_ENV 
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
-          body: |
-            Release Notes:
-          draft: false
-          prerelease: false
-
-      - name: Upload Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1
+      - name: Create draft release
+        run: |
+          gh release create "${GITHUB_REF#refs/tags/}" \
+            --draft \
+            --title "${GITHUB_REF#refs/tags/}" \
+            --notes "Release Notes:"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: ${{ env.ZIP_FILE }}
-          asset_name: ${{ env.ZIP_FILE }}
-          asset_content_type: application/zip
+
+      - name: Upload asset to draft
+        run: |
+          gh release upload "${GITHUB_REF#refs/tags/}" "${ZIP_FILE}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish release
+        run: |
+          gh release edit "${GITHUB_REF#refs/tags/}" --draft=false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
