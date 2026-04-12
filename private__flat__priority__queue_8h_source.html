@@ -112,13 +112,13 @@ $(document).ready(function(){initNavTree('private__flat__priority__queue_8h_sour
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="comment">/*========================    Private Interface     =========================*/</span></div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keywordtype">size_t</span> CCC_private_flat_priority_queue_bubble_up(</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keyword">struct</span> <a class="code hl_struct" href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a> *, <span class="keywordtype">void</span> *, <span class="keywordtype">size_t</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keyword">struct</span> <a class="code hl_struct" href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a> <span class="keyword">const</span> *, <span class="keywordtype">void</span> *, <span class="keywordtype">size_t</span></div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>);</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="keywordtype">void</span> CCC_private_flat_priority_queue_heap_order(</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">struct</span> <a class="code hl_struct" href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a> *, <span class="keywordtype">void</span> *</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">struct</span> <a class="code hl_struct" href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a> <span class="keyword">const</span> *, <span class="keywordtype">void</span> *</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>);</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="keywordtype">void</span> *CCC_private_flat_priority_queue_update_fixup(</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keyword">struct</span> <a class="code hl_struct" href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a> *, <span class="keywordtype">void</span> *, <span class="keywordtype">void</span> *</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keyword">struct</span> <a class="code hl_struct" href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a> <span class="keyword">const</span> *, <span class="keywordtype">void</span> *, <span class="keywordtype">void</span> *</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>);</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment">/*======================    Macro Implementations    ========================*/</span></div>
@@ -282,8 +282,8 @@ $(document).ready(function(){initNavTree('private__flat__priority__queue_8h_sour
 <div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span><span class="preprocessor">    update_closure_over_closure_parameter...                                   \</span></div>
 <div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span><span class="preprocessor">)                                                                              \</span></div>
 <div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span><span class="preprocessor">    (__extension__({                                                           \</span></div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span><span class="preprocessor">        struct CCC_Flat_priority_queue *const private_flat_priority_queue      \</span></div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span><span class="preprocessor">            = (flat_priority_queue_pointer);                                   \</span></div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span><span class="preprocessor">        struct CCC_Flat_priority_queue const *const                            \</span></div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span><span class="preprocessor">            private_flat_priority_queue = (flat_priority_queue_pointer);       \</span></div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span><span class="preprocessor">        typeof(*closure_parameter) *                                           \</span></div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span><span class="preprocessor">            private_flat_priority_queue_updated_element = (closure_parameter); \</span></div>
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span><span class="preprocessor">        if (private_flat_priority_queue                                        \</span></div>

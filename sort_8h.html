@@ -127,9 +127,9 @@ Include dependency graph for sort.h:</div>
 <tr class="memitem:ab796817a7a3ff555d2a94085aebd4561"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sort_8h.html#ab796817a7a3ff555d2a94085aebd4561">CCC_sort_mergesort</a>(list_pointer,  order,  comparator_pointer)</td></tr>
 <tr class="memdesc:ab796817a7a3ff555d2a94085aebd4561"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sorts the list in user specified order as defined by the provided order and comparator. <code>O(N * log(N))</code> time, <code>O(1)</code> space.  <br /></td></tr>
 <tr class="separator:ab796817a7a3ff555d2a94085aebd4561"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a327565d8df1d2a87523ae020a6d37616"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sort_8h.html#a327565d8df1d2a87523ae020a6d37616">CCC_sort_heapsort</a> (<a class="el" href="structCCC__Flat__buffer.html">CCC_Flat_buffer</a> *buffer, void *temp, <a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a> order, <a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> const *comparator)</td></tr>
-<tr class="memdesc:a327565d8df1d2a87523ae020a6d37616"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sorts the input buffer in <code>O(N * log(N))</code> time and <code>O(1)</code> space according to the desired input order.  <br /></td></tr>
-<tr class="separator:a327565d8df1d2a87523ae020a6d37616"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67b9176ceac4ff044a98f35d788feac3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sort_8h.html#a67b9176ceac4ff044a98f35d788feac3">CCC_sort_heapsort</a> (<a class="el" href="structCCC__Flat__buffer.html">CCC_Flat_buffer</a> const *buffer, void *temp, <a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a> order, <a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> const *comparator)</td></tr>
+<tr class="memdesc:a67b9176ceac4ff044a98f35d788feac3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sorts the input buffer in <code>O(N * log(N))</code> time and <code>O(1)</code> space according to the desired input order.  <br /></td></tr>
+<tr class="separator:a67b9176ceac4ff044a98f35d788feac3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a531a13a9a3949fdc112c17bf0bd201a9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sort_8h.html#a531a13a9a3949fdc112c17bf0bd201a9">CCC_sort_doubly_linked_list_mergesort</a> (<a class="el" href="structCCC__Doubly__linked__list.html">CCC_Doubly_linked_list</a> *list, <a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a> order, <a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> const *comparator)</td></tr>
 <tr class="memdesc:a531a13a9a3949fdc112c17bf0bd201a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sorts the doubly linked list in user specified order as defined by the provided order and comparator. <code>O(N * log(N))</code> time, <code>O(1)</code> space.  <br /></td></tr>
 <tr class="separator:a531a13a9a3949fdc112c17bf0bd201a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -236,8 +236,8 @@ Include dependency graph for sort.h:</div>
 
 </div>
 </div>
-<a id="a327565d8df1d2a87523ae020a6d37616" name="a327565d8df1d2a87523ae020a6d37616"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a327565d8df1d2a87523ae020a6d37616">&#9670;&#160;</a></span>CCC_sort_heapsort()</h2>
+<a id="a67b9176ceac4ff044a98f35d788feac3" name="a67b9176ceac4ff044a98f35d788feac3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67b9176ceac4ff044a98f35d788feac3">&#9670;&#160;</a></span>CCC_sort_heapsort()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -245,7 +245,7 @@ Include dependency graph for sort.h:</div>
         <tr>
           <td class="memname"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> CCC_sort_heapsort </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structCCC__Flat__buffer.html">CCC_Flat_buffer</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structCCC__Flat__buffer.html">CCC_Flat_buffer</a> const *&#160;</td>
           <td class="paramname"><em>buffer</em>, </td>
         </tr>
         <tr>
@@ -277,7 +277,7 @@ Include dependency graph for sort.h:</div>
 <p>Sorts the input buffer in <code>O(N * log(N))</code> time and <code>O(1)</code> space according to the desired input order. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>the buffer to be modified and sorted in place. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>the buffer to be sorted. No fields of the buffer struct are modified, but the contiguous user data pointed to by the buffer is reorganized. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">temp</td><td>a pointer to a dummy user type that will be used for swapping. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">order</td><td>the desired order of the sorted buffer. CCC_ORDER_LESSER places elements in non-decreasing order starting from index <code>[0, N)</code>, where N is the count of the buffer. CCC_ORDER_GREATER places elements in non-increasing order starting from index <code>[0, N)</code>, where N is the count of the buffer. This is done to remain consistent with heap order, where CCC_ORDER_LESSER places the minimum element at index 0 and CCC_ORDER_GREATER places the maximum element at index 0 because 0 is the root of the tree in either heap ordering. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">comparator</td><td>the comparator context for comparing buffer elements. </td></tr>
