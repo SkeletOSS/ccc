@@ -481,7 +481,9 @@ CCC_Result CCC_flat_priority_queue_erase(
 
 /** @brief Update e that is a handle to the stored priority_queue element.
 O(lgN).
-@param[in] priority_queue a pointer to the flat priority queue.
+@param[in] priority_queue a pointer to the flat priority queue. No fields of the
+flat priority queue are modified but the contiguous user data pointed to by the
+priority queue may be reorganized.
 @param[in] type a pointer to the stored priority_queue element. Must be in
 the flat_priority_queue.
 @param[in] temp a pointer to a dummy user type that will be used for swapping.
@@ -501,7 +503,9 @@ void *CCC_flat_priority_queue_update(
 );
 
 /** @brief Update the held user type stored in the priority queue. O(lgN).
-@param[in] priority_queue_pointer a pointer to the flat priority queue.
+@param[in] priority_queue_pointer a pointer to the flat priority queue. No
+fields of the flat priority queue are modified but the contiguous user data
+pointed to by the priority queue may be reorganized.
 @param[in] closure_parameter a pointer variable to the user type being updated.
 @param[in] update_closure_over_closure_parameter the semicolon separated
 statements to execute on the user type provided (optionally wrapping {code here}
@@ -535,7 +539,9 @@ Note that whether the key increases or decreases does not affect runtime. */
 
 /** @brief Increase type that is a handle to the stored flat_priority_queue
 element. O(lgN).
-@param[in] priority_queue a pointer to the flat priority queue.
+@param[in] priority_queue a pointer to the flat priority queue. No fields of the
+flat priority queue are modified but the contiguous user data pointed to by the
+priority queue may be reorganized.
 @param[in] type a pointer to the stored priority_queue element. Must be in the
 flat_priority_queue.
 @param[in] temp a pointer to a dummy user type that will be used for swapping.
@@ -555,7 +561,9 @@ void *CCC_flat_priority_queue_increase(
 );
 
 /** @brief Increase the user type stored in the priority queue directly. O(lgN).
-@param[in] flat_priority_queue_pointer a pointer to the flat priority queue.
+@param[in] priority_queue_pointer a pointer to the flat priority queue. No
+fields of the flat priority queue are modified but the contiguous user data
+pointed to by the priority queue may be reorganized.
 @param[in] closure_parameter a pointer variable to user type being increased.
 @param[in] increase_closure_over_closure_parameter the semicolon separated
 statements to execute on the user type provided (optionally wrapping {code here}
@@ -575,19 +583,21 @@ int *e = get_rand_flat_priority_queue_node(&flat_priority_queue);
 
 Note that if this priority queue is min or max, the runtime is the same. */
 #define CCC_flat_priority_queue_increase_with(                                 \
-    flat_priority_queue_pointer,                                               \
+    priority_queue_pointer,                                                    \
     closure_parameter,                                                         \
     increase_closure_over_closure_parameter...                                 \
 )                                                                              \
     CCC_private_flat_priority_queue_increase_with(                             \
-        flat_priority_queue_pointer,                                           \
+        priority_queue_pointer,                                                \
         closure_parameter,                                                     \
         increase_closure_over_closure_parameter                                \
     )
 
 /** @brief Decrease e that is a handle to the stored flat_priority_queue
 element. O(lgN).
-@param[in] priority_queue a pointer to the flat priority queue.
+@param[in] priority_queue a pointer to the flat priority queue. No fields of the
+flat priority queue are modified but the contiguous user data pointed to by the
+priority queue may be reorganized.
 @param[in] type a pointer to the stored priority_queue element. Must be in
 the flat_priority_queue.
 @param[in] temp a pointer to a dummy user type that will be used for swapping.
@@ -607,7 +617,9 @@ void *CCC_flat_priority_queue_decrease(
 );
 
 /** @brief Increase the user type stored in the priority queue directly. O(lgN).
-@param[in] flat_priority_queue_pointer a pointer to the flat priority queue.
+@param[in] priority_queue_pointer a pointer to the flat priority queue. No
+fields of the flat priority queue are modified but the contiguous user data
+pointed to by the priority queue may be reorganized.
 @param[in] closure_parameter a pointer variable to user type being decreased.
 @param[in] decrease_closure_over_closure_parameter the semicolon separated
 statements to execute on the user type provided (optionally wrapping {code here}
@@ -626,12 +638,12 @@ int *e = get_rand_flat_priority_queue_node(&flat_priority_queue);
 
 Note that if this priority queue is min or max, the runtime is the same. */
 #define CCC_flat_priority_queue_decrease_with(                                 \
-    flat_priority_queue_pointer,                                               \
+    priority_queue_pointer,                                                    \
     closure_parameter,                                                         \
     decrease_closure_over_closure_parameter...                                 \
 )                                                                              \
     CCC_private_flat_priority_queue_decrease_with(                             \
-        flat_priority_queue_pointer,                                           \
+        priority_queue_pointer,                                                \
         closure_parameter,                                                     \
         decrease_closure_over_closure_parameter                                \
     )

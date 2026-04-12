@@ -38,7 +38,8 @@ Various sorting algorithms for different containers in the collection. */
 
 /** @brief Sorts the input buffer in `O(N * log(N))` time and `O(1)` space
 according to the desired input order.
-@param[in] buffer the buffer to be modified and sorted in place.
+@param[in] buffer the buffer to be sorted. No fields of the buffer struct are
+modified, but the contiguous user data pointed to by the buffer is reorganized.
 @param[in] temp a pointer to a dummy user type that will be used for swapping.
 @param[in] order the desired order of the sorted buffer. CCC_ORDER_LESSER places
 elements in non-decreasing order starting from index `[0, N)`, where N is the

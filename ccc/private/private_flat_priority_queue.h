@@ -233,8 +233,8 @@ to the user. GCC is not so forgiving. */
     update_closure_over_closure_parameter...                                   \
 )                                                                              \
     (__extension__({                                                           \
-        struct CCC_Flat_priority_queue *const private_flat_priority_queue      \
-            = (flat_priority_queue_pointer);                                   \
+        struct CCC_Flat_priority_queue const *const                            \
+            private_flat_priority_queue = (flat_priority_queue_pointer);       \
         typeof(*closure_parameter) *                                           \
             private_flat_priority_queue_updated_element = (closure_parameter); \
         if (private_flat_priority_queue                                        \
