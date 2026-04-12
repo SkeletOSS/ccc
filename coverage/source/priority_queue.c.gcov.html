@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-04-12 14:49:01</td>
+            <td class="headerValue">2026-04-12 14:49:56</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -236,25 +236,25 @@
 <span id="L174"><span class="lineNum">     174</span> <span class="tlaGNC">           3 :         return CCC_RESULT_ARGUMENT_ERROR;</span></span>
 <span id="L175"><span class="lineNum">     175</span>              :     }</span>
 <span id="L176"><span class="lineNum">     176</span> <span class="tlaGNC">           4 :     struct CCC_Priority_queue_node *node = priority_queue-&gt;root;</span></span>
-<span id="L177"><span class="lineNum">     177</span> <span class="tlaGNC">         163 :     while (node) {</span></span>
+<span id="L177"><span class="lineNum">     177</span> <span class="tlaGNC">         167 :     while (node) {</span></span>
 <span id="L178"><span class="lineNum">     178</span>              :         /* The child and its siblings cut to the front of the line and we</span>
 <span id="L179"><span class="lineNum">     179</span>              :            start again as if the child is the first in this sibling list. */</span>
-<span id="L180"><span class="lineNum">     180</span> <span class="tlaGNC">         159 :         if (node-&gt;child) {</span></span>
-<span id="L181"><span class="lineNum">     181</span> <span class="tlaGNC">           6 :             struct CCC_Priority_queue_node *const child = node-&gt;child;</span></span>
-<span id="L182"><span class="lineNum">     182</span> <span class="tlaGNC">           6 :             struct CCC_Priority_queue_node *const node_end = node-&gt;next;</span></span>
+<span id="L180"><span class="lineNum">     180</span> <span class="tlaGNC">         163 :         if (node-&gt;child) {</span></span>
+<span id="L181"><span class="lineNum">     181</span> <span class="tlaGNC">          10 :             struct CCC_Priority_queue_node *const child = node-&gt;child;</span></span>
+<span id="L182"><span class="lineNum">     182</span> <span class="tlaGNC">          10 :             struct CCC_Priority_queue_node *const node_end = node-&gt;next;</span></span>
 <span id="L183"><span class="lineNum">     183</span>              :             /* Final element of e child list pick up child as head */</span>
-<span id="L184"><span class="lineNum">     184</span> <span class="tlaGNC">           6 :             node_end-&gt;prev = child;</span></span>
+<span id="L184"><span class="lineNum">     184</span> <span class="tlaGNC">          10 :             node_end-&gt;prev = child;</span></span>
 <span id="L185"><span class="lineNum">     185</span>              :             /* Now e picks up the last (wrapping) element of child list. */</span>
-<span id="L186"><span class="lineNum">     186</span> <span class="tlaGNC">           6 :             node-&gt;next = child-&gt;next;</span></span>
+<span id="L186"><span class="lineNum">     186</span> <span class="tlaGNC">          10 :             node-&gt;next = child-&gt;next;</span></span>
 <span id="L187"><span class="lineNum">     187</span>              :             /* Child has a list so don't just set child's prev to e. */</span>
-<span id="L188"><span class="lineNum">     188</span> <span class="tlaGNC">           6 :             child-&gt;next-&gt;prev = node;</span></span>
+<span id="L188"><span class="lineNum">     188</span> <span class="tlaGNC">          10 :             child-&gt;next-&gt;prev = node;</span></span>
 <span id="L189"><span class="lineNum">     189</span>              :             /* Child list wrapping element is now end of e list. */</span>
-<span id="L190"><span class="lineNum">     190</span> <span class="tlaGNC">           6 :             child-&gt;next = node_end;</span></span>
+<span id="L190"><span class="lineNum">     190</span> <span class="tlaGNC">          10 :             child-&gt;next = node_end;</span></span>
 <span id="L191"><span class="lineNum">     191</span>              :             /* Our traversal now jumps to start of list we spliced in. */</span>
-<span id="L192"><span class="lineNum">     192</span> <span class="tlaGNC">           6 :             node-&gt;child = NULL;</span></span>
-<span id="L193"><span class="lineNum">     193</span> <span class="tlaGNC">           6 :             node = child;</span></span>
+<span id="L192"><span class="lineNum">     192</span> <span class="tlaGNC">          10 :             node-&gt;child = NULL;</span></span>
+<span id="L193"><span class="lineNum">     193</span> <span class="tlaGNC">          10 :             node = child;</span></span>
 <span id="L194"><span class="lineNum">     194</span>              :             continue;</span>
-<span id="L195"><span class="lineNum">     195</span> <span class="tlaGNC">           6 :         }</span></span>
+<span id="L195"><span class="lineNum">     195</span> <span class="tlaGNC">          10 :         }</span></span>
 <span id="L196"><span class="lineNum">     196</span>              :         /* No more child lists to splice in so this node is done.  */</span>
 <span id="L197"><span class="lineNum">     197</span> <span class="tlaGNC">         306 :         struct CCC_Priority_queue_node *const prev_node</span></span>
 <span id="L198"><span class="lineNum">     198</span> <span class="tlaGNC">         153 :             = node-&gt;prev == node ? NULL : node-&gt;prev;</span></span>
@@ -436,10 +436,10 @@
 <span id="L374"><span class="lineNum">     374</span>              :        know whether this is an increase or decrease and by how much. */</span>
 <span id="L375"><span class="lineNum">     375</span> <span class="tlaGNC">         157 :     if (node-&gt;parent</span></span>
 <span id="L376"><span class="lineNum">     376</span> <span class="tlaGNC">         157 :         &amp;&amp; order(priority_queue, node, node-&gt;parent) == priority_queue-&gt;order) {</span></span>
-<span id="L377"><span class="lineNum">     377</span> <span class="tlaGNC">           3 :         cut_child(node);</span></span>
-<span id="L378"><span class="lineNum">     378</span> <span class="tlaGNC">           3 :     } else {</span></span>
-<span id="L379"><span class="lineNum">     379</span> <span class="tlaGNC">         154 :         priority_queue-&gt;root = delete_node(priority_queue, node);</span></span>
-<span id="L380"><span class="lineNum">     380</span> <span class="tlaGNC">         154 :         init_node(node);</span></span>
+<span id="L377"><span class="lineNum">     377</span> <span class="tlaGNC">           7 :         cut_child(node);</span></span>
+<span id="L378"><span class="lineNum">     378</span> <span class="tlaGNC">           7 :     } else {</span></span>
+<span id="L379"><span class="lineNum">     379</span> <span class="tlaGNC">         150 :         priority_queue-&gt;root = delete_node(priority_queue, node);</span></span>
+<span id="L380"><span class="lineNum">     380</span> <span class="tlaGNC">         150 :         init_node(node);</span></span>
 <span id="L381"><span class="lineNum">     381</span>              :     }</span>
 <span id="L382"><span class="lineNum">     382</span> <span class="tlaGNC">         157 :     priority_queue-&gt;root = merge(priority_queue, priority_queue-&gt;root, node);</span></span>
 <span id="L383"><span class="lineNum">     383</span> <span class="tlaGNC">         157 : }</span></span>
@@ -485,31 +485,31 @@
 <span id="L423"><span class="lineNum">     423</span>              : own circular sibling list. The left child of this child, if one exists, is</span>
 <span id="L424"><span class="lineNum">     424</span>              : still pointed to and not modified by this function. */</span>
 <span id="L425"><span class="lineNum">     425</span>              : static void</span>
-<span id="L426"><span class="lineNum">     426</span> <span class="tlaGNC">        1759 : cut_child(struct CCC_Priority_queue_node *const child) {</span></span>
-<span id="L427"><span class="lineNum">     427</span> <span class="tlaGNC">        1759 :     child-&gt;next-&gt;prev = child-&gt;prev;</span></span>
-<span id="L428"><span class="lineNum">     428</span> <span class="tlaGNC">        1759 :     child-&gt;prev-&gt;next = child-&gt;next;</span></span>
-<span id="L429"><span class="lineNum">     429</span> <span class="tlaGNC">        1759 :     if (child-&gt;parent &amp;&amp; child == child-&gt;parent-&gt;child) {</span></span>
+<span id="L426"><span class="lineNum">     426</span> <span class="tlaGNC">        1750 : cut_child(struct CCC_Priority_queue_node *const child) {</span></span>
+<span id="L427"><span class="lineNum">     427</span> <span class="tlaGNC">        1750 :     child-&gt;next-&gt;prev = child-&gt;prev;</span></span>
+<span id="L428"><span class="lineNum">     428</span> <span class="tlaGNC">        1750 :     child-&gt;prev-&gt;next = child-&gt;next;</span></span>
+<span id="L429"><span class="lineNum">     429</span> <span class="tlaGNC">        1750 :     if (child-&gt;parent &amp;&amp; child == child-&gt;parent-&gt;child) {</span></span>
 <span id="L430"><span class="lineNum">     430</span>              :         /* To preserve the shuffle down properties the prev child should</span>
 <span id="L431"><span class="lineNum">     431</span>              :            become the new child as that is the next youngest node. */</span>
-<span id="L432"><span class="lineNum">     432</span> <span class="tlaGNC">        1048 :         child-&gt;parent-&gt;child = child-&gt;prev == child ? NULL : child-&gt;prev;</span></span>
-<span id="L433"><span class="lineNum">     433</span> <span class="tlaGNC">        1048 :     }</span></span>
-<span id="L434"><span class="lineNum">     434</span> <span class="tlaGNC">        1759 :     child-&gt;parent = NULL;</span></span>
-<span id="L435"><span class="lineNum">     435</span> <span class="tlaGNC">        1759 :     child-&gt;next = child-&gt;prev = child;</span></span>
-<span id="L436"><span class="lineNum">     436</span> <span class="tlaGNC">        1759 : }</span></span>
+<span id="L432"><span class="lineNum">     432</span> <span class="tlaGNC">        1032 :         child-&gt;parent-&gt;child = child-&gt;prev == child ? NULL : child-&gt;prev;</span></span>
+<span id="L433"><span class="lineNum">     433</span> <span class="tlaGNC">        1032 :     }</span></span>
+<span id="L434"><span class="lineNum">     434</span> <span class="tlaGNC">        1750 :     child-&gt;parent = NULL;</span></span>
+<span id="L435"><span class="lineNum">     435</span> <span class="tlaGNC">        1750 :     child-&gt;next = child-&gt;prev = child;</span></span>
+<span id="L436"><span class="lineNum">     436</span> <span class="tlaGNC">        1750 : }</span></span>
 <span id="L437"><span class="lineNum">     437</span>              : </span>
 <span id="L438"><span class="lineNum">     438</span>              : static struct CCC_Priority_queue_node *</span>
-<span id="L439"><span class="lineNum">     439</span> <span class="tlaGNC">        1570 : delete_node(</span></span>
+<span id="L439"><span class="lineNum">     439</span> <span class="tlaGNC">        1566 : delete_node(</span></span>
 <span id="L440"><span class="lineNum">     440</span>              :     struct CCC_Priority_queue *const priority_queue,</span>
 <span id="L441"><span class="lineNum">     441</span>              :     struct CCC_Priority_queue_node *const root</span>
 <span id="L442"><span class="lineNum">     442</span>              : ) {</span>
-<span id="L443"><span class="lineNum">     443</span> <span class="tlaGNC">        1570 :     if (priority_queue-&gt;root == root) {</span></span>
-<span id="L444"><span class="lineNum">     444</span> <span class="tlaGNC">         128 :         return delete_min(priority_queue, root);</span></span>
+<span id="L443"><span class="lineNum">     443</span> <span class="tlaGNC">        1566 :     if (priority_queue-&gt;root == root) {</span></span>
+<span id="L444"><span class="lineNum">     444</span> <span class="tlaGNC">         137 :         return delete_min(priority_queue, root);</span></span>
 <span id="L445"><span class="lineNum">     445</span>              :     }</span>
-<span id="L446"><span class="lineNum">     446</span> <span class="tlaGNC">        1442 :     cut_child(root);</span></span>
-<span id="L447"><span class="lineNum">     447</span> <span class="tlaGNC">        1442 :     return merge(</span></span>
-<span id="L448"><span class="lineNum">     448</span> <span class="tlaGNC">        1442 :         priority_queue, priority_queue-&gt;root, delete_min(priority_queue, root)</span></span>
+<span id="L446"><span class="lineNum">     446</span> <span class="tlaGNC">        1429 :     cut_child(root);</span></span>
+<span id="L447"><span class="lineNum">     447</span> <span class="tlaGNC">        1429 :     return merge(</span></span>
+<span id="L448"><span class="lineNum">     448</span> <span class="tlaGNC">        1429 :         priority_queue, priority_queue-&gt;root, delete_min(priority_queue, root)</span></span>
 <span id="L449"><span class="lineNum">     449</span>              :     );</span>
-<span id="L450"><span class="lineNum">     450</span> <span class="tlaGNC">        1570 : }</span></span>
+<span id="L450"><span class="lineNum">     450</span> <span class="tlaGNC">        1566 : }</span></span>
 <span id="L451"><span class="lineNum">     451</span>              : </span>
 <span id="L452"><span class="lineNum">     452</span>              : /* Uses Fredman et al. oldest to youngest pairing method mentioned on pg 124</span>
 <span id="L453"><span class="lineNum">     453</span>              : of the paper to pair nodes in one pass. Of all the variants for pairing given</span>
@@ -555,35 +555,35 @@
 <span id="L493"><span class="lineNum">     493</span>              : part contributes to the amortized `o(log(N))` runtime of the decrease key</span>
 <span id="L494"><span class="lineNum">     494</span>              : operation. */</span>
 <span id="L495"><span class="lineNum">     495</span>              : static struct CCC_Priority_queue_node *</span>
-<span id="L496"><span class="lineNum">     496</span> <span class="tlaGNC">        2274 : delete_min(</span></span>
+<span id="L496"><span class="lineNum">     496</span> <span class="tlaGNC">        2270 : delete_min(</span></span>
 <span id="L497"><span class="lineNum">     497</span>              :     struct CCC_Priority_queue *const priority_queue,</span>
 <span id="L498"><span class="lineNum">     498</span>              :     struct CCC_Priority_queue_node *root</span>
 <span id="L499"><span class="lineNum">     499</span>              : ) {</span>
-<span id="L500"><span class="lineNum">     500</span> <span class="tlaGNC">        2274 :     if (!root-&gt;child) {</span></span>
-<span id="L501"><span class="lineNum">     501</span> <span class="tlaGNC">         959 :         return NULL;</span></span>
+<span id="L500"><span class="lineNum">     500</span> <span class="tlaGNC">        2270 :     if (!root-&gt;child) {</span></span>
+<span id="L501"><span class="lineNum">     501</span> <span class="tlaGNC">         957 :         return NULL;</span></span>
 <span id="L502"><span class="lineNum">     502</span>              :     }</span>
-<span id="L503"><span class="lineNum">     503</span> <span class="tlaGNC">        1315 :     struct CCC_Priority_queue_node *const eldest = root-&gt;child-&gt;next;</span></span>
-<span id="L504"><span class="lineNum">     504</span> <span class="tlaGNC">        1315 :     struct CCC_Priority_queue_node *accumulator = root-&gt;child-&gt;next;</span></span>
-<span id="L505"><span class="lineNum">     505</span> <span class="tlaGNC">        1315 :     struct CCC_Priority_queue_node *cur = root-&gt;child-&gt;next-&gt;next;</span></span>
-<span id="L506"><span class="lineNum">     506</span> <span class="tlaGNC">        4156 :     while (cur != eldest &amp;&amp; cur-&gt;next != eldest) {</span></span>
-<span id="L507"><span class="lineNum">     507</span> <span class="tlaGNC">        2841 :         struct CCC_Priority_queue_node *const next = cur-&gt;next;</span></span>
-<span id="L508"><span class="lineNum">     508</span> <span class="tlaGNC">        2841 :         struct CCC_Priority_queue_node *const next_cur = cur-&gt;next-&gt;next;</span></span>
-<span id="L509"><span class="lineNum">     509</span> <span class="tlaGNC">        2841 :         next-&gt;next = next-&gt;prev = NULL;</span></span>
-<span id="L510"><span class="lineNum">     510</span> <span class="tlaGNC">        2841 :         cur-&gt;next = cur-&gt;prev = NULL;</span></span>
+<span id="L503"><span class="lineNum">     503</span> <span class="tlaGNC">        1313 :     struct CCC_Priority_queue_node *const eldest = root-&gt;child-&gt;next;</span></span>
+<span id="L504"><span class="lineNum">     504</span> <span class="tlaGNC">        1313 :     struct CCC_Priority_queue_node *accumulator = root-&gt;child-&gt;next;</span></span>
+<span id="L505"><span class="lineNum">     505</span> <span class="tlaGNC">        1313 :     struct CCC_Priority_queue_node *cur = root-&gt;child-&gt;next-&gt;next;</span></span>
+<span id="L506"><span class="lineNum">     506</span> <span class="tlaGNC">        4114 :     while (cur != eldest &amp;&amp; cur-&gt;next != eldest) {</span></span>
+<span id="L507"><span class="lineNum">     507</span> <span class="tlaGNC">        2801 :         struct CCC_Priority_queue_node *const next = cur-&gt;next;</span></span>
+<span id="L508"><span class="lineNum">     508</span> <span class="tlaGNC">        2801 :         struct CCC_Priority_queue_node *const next_cur = cur-&gt;next-&gt;next;</span></span>
+<span id="L509"><span class="lineNum">     509</span> <span class="tlaGNC">        2801 :         next-&gt;next = next-&gt;prev = NULL;</span></span>
+<span id="L510"><span class="lineNum">     510</span> <span class="tlaGNC">        2801 :         cur-&gt;next = cur-&gt;prev = NULL;</span></span>
 <span id="L511"><span class="lineNum">     511</span>              :         /* Double merge ensures `O(log(N))` steps rather than O(N). */</span>
-<span id="L512"><span class="lineNum">     512</span> <span class="tlaGNC">        2841 :         accumulator = merge(</span></span>
-<span id="L513"><span class="lineNum">     513</span> <span class="tlaGNC">        2841 :             priority_queue, accumulator, merge(priority_queue, cur, next)</span></span>
+<span id="L512"><span class="lineNum">     512</span> <span class="tlaGNC">        2801 :         accumulator = merge(</span></span>
+<span id="L513"><span class="lineNum">     513</span> <span class="tlaGNC">        2801 :             priority_queue, accumulator, merge(priority_queue, cur, next)</span></span>
 <span id="L514"><span class="lineNum">     514</span>              :         );</span>
-<span id="L515"><span class="lineNum">     515</span> <span class="tlaGNC">        2841 :         cur = next_cur;</span></span>
-<span id="L516"><span class="lineNum">     516</span> <span class="tlaGNC">        2841 :     }</span></span>
+<span id="L515"><span class="lineNum">     515</span> <span class="tlaGNC">        2801 :         cur = next_cur;</span></span>
+<span id="L516"><span class="lineNum">     516</span> <span class="tlaGNC">        2801 :     }</span></span>
 <span id="L517"><span class="lineNum">     517</span>              :     /* This covers the odd or even case for number of pairings. */</span>
 <span id="L518"><span class="lineNum">     518</span>              :     root</span>
-<span id="L519"><span class="lineNum">     519</span> <span class="tlaGNC">        1315 :         = cur == eldest ? accumulator : merge(priority_queue, accumulator, cur);</span></span>
+<span id="L519"><span class="lineNum">     519</span> <span class="tlaGNC">        1313 :         = cur == eldest ? accumulator : merge(priority_queue, accumulator, cur);</span></span>
 <span id="L520"><span class="lineNum">     520</span>              :     /* The root is always alone in its circular list at the end of merges. */</span>
-<span id="L521"><span class="lineNum">     521</span> <span class="tlaGNC">        1315 :     root-&gt;next = root-&gt;prev = root;</span></span>
-<span id="L522"><span class="lineNum">     522</span> <span class="tlaGNC">        1315 :     root-&gt;parent = NULL;</span></span>
-<span id="L523"><span class="lineNum">     523</span> <span class="tlaGNC">        1315 :     return root;</span></span>
-<span id="L524"><span class="lineNum">     524</span> <span class="tlaGNC">        2274 : }</span></span>
+<span id="L521"><span class="lineNum">     521</span> <span class="tlaGNC">        1313 :     root-&gt;next = root-&gt;prev = root;</span></span>
+<span id="L522"><span class="lineNum">     522</span> <span class="tlaGNC">        1313 :     root-&gt;parent = NULL;</span></span>
+<span id="L523"><span class="lineNum">     523</span> <span class="tlaGNC">        1313 :     return root;</span></span>
+<span id="L524"><span class="lineNum">     524</span> <span class="tlaGNC">        2270 : }</span></span>
 <span id="L525"><span class="lineNum">     525</span>              : </span>
 <span id="L526"><span class="lineNum">     526</span>              : /** Merges two priority queues, making the winner by ordering the root and</span>
 <span id="L527"><span class="lineNum">     527</span>              : pushing the loser to the left child ring. Old should be the element that has</span>
@@ -591,21 +591,21 @@
 <span id="L529"><span class="lineNum">     529</span>              : argument ordering is not respected and it does not change runtime, but it is how</span>
 <span id="L530"><span class="lineNum">     530</span>              : to comply with the strategy outlined in the Fredman et. al. paper. */</span>
 <span id="L531"><span class="lineNum">     531</span>              : static struct CCC_Priority_queue_node *</span>
-<span id="L532"><span class="lineNum">     532</span> <span class="tlaGNC">       11039 : merge(</span></span>
+<span id="L532"><span class="lineNum">     532</span> <span class="tlaGNC">       10969 : merge(</span></span>
 <span id="L533"><span class="lineNum">     533</span>              :     struct CCC_Priority_queue *const priority_queue,</span>
 <span id="L534"><span class="lineNum">     534</span>              :     struct CCC_Priority_queue_node *const old,</span>
 <span id="L535"><span class="lineNum">     535</span>              :     struct CCC_Priority_queue_node *const new</span>
 <span id="L536"><span class="lineNum">     536</span>              : ) {</span>
-<span id="L537"><span class="lineNum">     537</span> <span class="tlaGNC">       11039 :     if (!old || !new || old == new) {</span></span>
-<span id="L538"><span class="lineNum">     538</span> <span class="tlaGNC">         978 :         return old ? old : new;</span></span>
+<span id="L537"><span class="lineNum">     537</span> <span class="tlaGNC">       10969 :     if (!old || !new || old == new) {</span></span>
+<span id="L538"><span class="lineNum">     538</span> <span class="tlaGNC">         976 :         return old ? old : new;</span></span>
 <span id="L539"><span class="lineNum">     539</span>              :     }</span>
-<span id="L540"><span class="lineNum">     540</span> <span class="tlaGNC">       10061 :     if (order(priority_queue, new, old) == priority_queue-&gt;order) {</span></span>
-<span id="L541"><span class="lineNum">     541</span> <span class="tlaGNC">        1871 :         link_child(new, old);</span></span>
-<span id="L542"><span class="lineNum">     542</span> <span class="tlaGNC">        1871 :         return new;</span></span>
+<span id="L540"><span class="lineNum">     540</span> <span class="tlaGNC">        9993 :     if (order(priority_queue, new, old) == priority_queue-&gt;order) {</span></span>
+<span id="L541"><span class="lineNum">     541</span> <span class="tlaGNC">        1799 :         link_child(new, old);</span></span>
+<span id="L542"><span class="lineNum">     542</span> <span class="tlaGNC">        1799 :         return new;</span></span>
 <span id="L543"><span class="lineNum">     543</span>              :     }</span>
-<span id="L544"><span class="lineNum">     544</span> <span class="tlaGNC">        8190 :     link_child(old, new);</span></span>
-<span id="L545"><span class="lineNum">     545</span> <span class="tlaGNC">        8190 :     return old;</span></span>
-<span id="L546"><span class="lineNum">     546</span> <span class="tlaGNC">       11039 : }</span></span>
+<span id="L544"><span class="lineNum">     544</span> <span class="tlaGNC">        8194 :     link_child(old, new);</span></span>
+<span id="L545"><span class="lineNum">     545</span> <span class="tlaGNC">        8194 :     return old;</span></span>
+<span id="L546"><span class="lineNum">     546</span> <span class="tlaGNC">       10969 : }</span></span>
 <span id="L547"><span class="lineNum">     547</span>              : </span>
 <span id="L548"><span class="lineNum">     548</span>              : /* Oldest nodes shuffle down, new drops in to replace. This supports the</span>
 <span id="L549"><span class="lineNum">     549</span>              : ring representation from Fredman et al., pg 125, fig 14 where the left</span>
@@ -625,41 +625,41 @@
 <span id="L563"><span class="lineNum">     563</span>              : helps set up the one-pass back-to-front variant mentioned in the paper allowing</span>
 <span id="L564"><span class="lineNum">     564</span>              : the same runtime guarantees as the two pass standard pairing heap. */</span>
 <span id="L565"><span class="lineNum">     565</span>              : static void</span>
-<span id="L566"><span class="lineNum">     566</span> <span class="tlaGNC">       10061 : link_child(</span></span>
+<span id="L566"><span class="lineNum">     566</span> <span class="tlaGNC">        9993 : link_child(</span></span>
 <span id="L567"><span class="lineNum">     567</span>              :     struct CCC_Priority_queue_node *const parent,</span>
 <span id="L568"><span class="lineNum">     568</span>              :     struct CCC_Priority_queue_node *const child</span>
 <span id="L569"><span class="lineNum">     569</span>              : ) {</span>
-<span id="L570"><span class="lineNum">     570</span> <span class="tlaGNC">       10061 :     if (parent-&gt;child) {</span></span>
-<span id="L571"><span class="lineNum">     571</span> <span class="tlaGNC">        8200 :         child-&gt;next = parent-&gt;child-&gt;next;</span></span>
-<span id="L572"><span class="lineNum">     572</span> <span class="tlaGNC">        8200 :         child-&gt;prev = parent-&gt;child;</span></span>
-<span id="L573"><span class="lineNum">     573</span> <span class="tlaGNC">        8200 :         parent-&gt;child-&gt;next-&gt;prev = child;</span></span>
-<span id="L574"><span class="lineNum">     574</span> <span class="tlaGNC">        8200 :         parent-&gt;child-&gt;next = child;</span></span>
-<span id="L575"><span class="lineNum">     575</span> <span class="tlaGNC">        8200 :     } else {</span></span>
-<span id="L576"><span class="lineNum">     576</span> <span class="tlaGNC">        1861 :         child-&gt;next = child-&gt;prev = child;</span></span>
+<span id="L570"><span class="lineNum">     570</span> <span class="tlaGNC">        9993 :     if (parent-&gt;child) {</span></span>
+<span id="L571"><span class="lineNum">     571</span> <span class="tlaGNC">        8184 :         child-&gt;next = parent-&gt;child-&gt;next;</span></span>
+<span id="L572"><span class="lineNum">     572</span> <span class="tlaGNC">        8184 :         child-&gt;prev = parent-&gt;child;</span></span>
+<span id="L573"><span class="lineNum">     573</span> <span class="tlaGNC">        8184 :         parent-&gt;child-&gt;next-&gt;prev = child;</span></span>
+<span id="L574"><span class="lineNum">     574</span> <span class="tlaGNC">        8184 :         parent-&gt;child-&gt;next = child;</span></span>
+<span id="L575"><span class="lineNum">     575</span> <span class="tlaGNC">        8184 :     } else {</span></span>
+<span id="L576"><span class="lineNum">     576</span> <span class="tlaGNC">        1809 :         child-&gt;next = child-&gt;prev = child;</span></span>
 <span id="L577"><span class="lineNum">     577</span>              :     }</span>
-<span id="L578"><span class="lineNum">     578</span> <span class="tlaGNC">       10061 :     parent-&gt;child = child;</span></span>
-<span id="L579"><span class="lineNum">     579</span> <span class="tlaGNC">       10061 :     child-&gt;parent = parent;</span></span>
-<span id="L580"><span class="lineNum">     580</span> <span class="tlaGNC">       10061 : }</span></span>
+<span id="L578"><span class="lineNum">     578</span> <span class="tlaGNC">        9993 :     parent-&gt;child = child;</span></span>
+<span id="L579"><span class="lineNum">     579</span> <span class="tlaGNC">        9993 :     child-&gt;parent = parent;</span></span>
+<span id="L580"><span class="lineNum">     580</span> <span class="tlaGNC">        9993 : }</span></span>
 <span id="L581"><span class="lineNum">     581</span>              : </span>
 <span id="L582"><span class="lineNum">     582</span>              : static inline CCC_Order</span>
-<span id="L583"><span class="lineNum">     583</span> <span class="tlaGNC">     1161626 : order(</span></span>
+<span id="L583"><span class="lineNum">     583</span> <span class="tlaGNC">     1161558 : order(</span></span>
 <span id="L584"><span class="lineNum">     584</span>              :     struct CCC_Priority_queue const *const priority_queue,</span>
 <span id="L585"><span class="lineNum">     585</span>              :     struct CCC_Priority_queue_node const *const left,</span>
 <span id="L586"><span class="lineNum">     586</span>              :     struct CCC_Priority_queue_node const *const right</span>
 <span id="L587"><span class="lineNum">     587</span>              : ) {</span>
-<span id="L588"><span class="lineNum">     588</span> <span class="tlaGNC">     4646504 :     return priority_queue-&gt;comparator.compare((CCC_Comparator_arguments){</span></span>
-<span id="L589"><span class="lineNum">     589</span> <span class="tlaGNC">     1161626 :         .type_left = struct_base(priority_queue, left),</span></span>
-<span id="L590"><span class="lineNum">     590</span> <span class="tlaGNC">     1161626 :         .type_right = struct_base(priority_queue, right),</span></span>
-<span id="L591"><span class="lineNum">     591</span> <span class="tlaGNC">     1161626 :         .context = priority_queue-&gt;comparator.context,</span></span>
+<span id="L588"><span class="lineNum">     588</span> <span class="tlaGNC">     4646232 :     return priority_queue-&gt;comparator.compare((CCC_Comparator_arguments){</span></span>
+<span id="L589"><span class="lineNum">     589</span> <span class="tlaGNC">     1161558 :         .type_left = struct_base(priority_queue, left),</span></span>
+<span id="L590"><span class="lineNum">     590</span> <span class="tlaGNC">     1161558 :         .type_right = struct_base(priority_queue, right),</span></span>
+<span id="L591"><span class="lineNum">     591</span> <span class="tlaGNC">     1161558 :         .context = priority_queue-&gt;comparator.context,</span></span>
 <span id="L592"><span class="lineNum">     592</span>              :     });</span>
 <span id="L593"><span class="lineNum">     593</span>              : }</span>
 <span id="L594"><span class="lineNum">     594</span>              : </span>
 <span id="L595"><span class="lineNum">     595</span>              : static inline void *</span>
-<span id="L596"><span class="lineNum">     596</span> <span class="tlaGNC">     2329498 : struct_base(</span></span>
+<span id="L596"><span class="lineNum">     596</span> <span class="tlaGNC">     2329362 : struct_base(</span></span>
 <span id="L597"><span class="lineNum">     597</span>              :     struct CCC_Priority_queue const *const priority_queue,</span>
 <span id="L598"><span class="lineNum">     598</span>              :     struct CCC_Priority_queue_node const *const node</span>
 <span id="L599"><span class="lineNum">     599</span>              : ) {</span>
-<span id="L600"><span class="lineNum">     600</span> <span class="tlaGNC">     2329498 :     return ((char *)&amp;(node-&gt;child)) - priority_queue-&gt;type_intruder_offset;</span></span>
+<span id="L600"><span class="lineNum">     600</span> <span class="tlaGNC">     2329362 :     return ((char *)&amp;(node-&gt;child)) - priority_queue-&gt;type_intruder_offset;</span></span>
 <span id="L601"><span class="lineNum">     601</span>              : }</span>
 <span id="L602"><span class="lineNum">     602</span>              : </span>
 <span id="L603"><span class="lineNum">     603</span>              : static inline struct CCC_Priority_queue_node *</span>
@@ -672,10 +672,10 @@
 <span id="L610"><span class="lineNum">     610</span>              : }</span>
 <span id="L611"><span class="lineNum">     611</span>              : </span>
 <span id="L612"><span class="lineNum">     612</span>              : static inline void</span>
-<span id="L613"><span class="lineNum">     613</span> <span class="tlaGNC">        3126 : init_node(struct CCC_Priority_queue_node *const node) {</span></span>
-<span id="L614"><span class="lineNum">     614</span> <span class="tlaGNC">        3126 :     node-&gt;child = node-&gt;parent = NULL;</span></span>
-<span id="L615"><span class="lineNum">     615</span> <span class="tlaGNC">        3126 :     node-&gt;next = node-&gt;prev = node;</span></span>
-<span id="L616"><span class="lineNum">     616</span> <span class="tlaGNC">        3126 : }</span></span>
+<span id="L613"><span class="lineNum">     613</span> <span class="tlaGNC">        3122 : init_node(struct CCC_Priority_queue_node *const node) {</span></span>
+<span id="L614"><span class="lineNum">     614</span> <span class="tlaGNC">        3122 :     node-&gt;child = node-&gt;parent = NULL;</span></span>
+<span id="L615"><span class="lineNum">     615</span> <span class="tlaGNC">        3122 :     node-&gt;next = node-&gt;prev = node;</span></span>
+<span id="L616"><span class="lineNum">     616</span> <span class="tlaGNC">        3122 : }</span></span>
 <span id="L617"><span class="lineNum">     617</span>              : </span>
 <span id="L618"><span class="lineNum">     618</span>              : static inline void</span>
 <span id="L619"><span class="lineNum">     619</span> <span class="tlaGNC">        1931 : clear_node(struct CCC_Priority_queue_node *const node) {</span></span>
@@ -689,14 +689,14 @@
 <span id="L627"><span class="lineNum">     627</span>              : static size_t</span>
 <span id="L628"><span class="lineNum">     628</span> <span class="tlaGNC">     1162015 : traversal_count(struct CCC_Priority_queue_node const *const root) {</span></span>
 <span id="L629"><span class="lineNum">     629</span> <span class="tlaGNC">     1162015 :     if (!root) {</span></span>
-<span id="L630"><span class="lineNum">     630</span> <span class="tlaGNC">      972656 :         return 0;</span></span>
+<span id="L630"><span class="lineNum">     630</span> <span class="tlaGNC">     1025384 :         return 0;</span></span>
 <span id="L631"><span class="lineNum">     631</span>              :     }</span>
-<span id="L632"><span class="lineNum">     632</span> <span class="tlaGNC">      189359 :     size_t count = 0;</span></span>
-<span id="L633"><span class="lineNum">     633</span> <span class="tlaGNC">      189359 :     struct CCC_Priority_queue_node const *cur = root;</span></span>
-<span id="L634"><span class="lineNum">     634</span> <span class="tlaGNC">      189359 :     do {</span></span>
+<span id="L632"><span class="lineNum">     632</span> <span class="tlaGNC">      136631 :     size_t count = 0;</span></span>
+<span id="L633"><span class="lineNum">     633</span> <span class="tlaGNC">      136631 :     struct CCC_Priority_queue_node const *cur = root;</span></span>
+<span id="L634"><span class="lineNum">     634</span> <span class="tlaGNC">      136631 :     do {</span></span>
 <span id="L635"><span class="lineNum">     635</span> <span class="tlaGNC">     1156700 :         count += 1 + traversal_count(cur-&gt;child);</span></span>
 <span id="L636"><span class="lineNum">     636</span> <span class="tlaGNC">     1156700 :     } while ((cur = cur-&gt;next) != root);</span></span>
-<span id="L637"><span class="lineNum">     637</span> <span class="tlaGNC">      189359 :     return count;</span></span>
+<span id="L637"><span class="lineNum">     637</span> <span class="tlaGNC">      136631 :     return count;</span></span>
 <span id="L638"><span class="lineNum">     638</span> <span class="tlaGNC">     1162015 : }</span></span>
 <span id="L639"><span class="lineNum">     639</span>              : </span>
 <span id="L640"><span class="lineNum">     640</span>              : static CCC_Tribool</span>
@@ -706,13 +706,13 @@
 <span id="L644"><span class="lineNum">     644</span>              :     struct CCC_Priority_queue_node const *const child</span>
 <span id="L645"><span class="lineNum">     645</span>              : ) {</span>
 <span id="L646"><span class="lineNum">     646</span> <span class="tlaGNC">     1162015 :     if (!child) {</span></span>
-<span id="L647"><span class="lineNum">     647</span> <span class="tlaGNC">      972656 :         return CCC_TRUE;</span></span>
+<span id="L647"><span class="lineNum">     647</span> <span class="tlaGNC">     1025384 :         return CCC_TRUE;</span></span>
 <span id="L648"><span class="lineNum">     648</span>              :     }</span>
-<span id="L649"><span class="lineNum">     649</span> <span class="tlaGNC">      189359 :     struct CCC_Priority_queue_node const *current = child;</span></span>
-<span id="L650"><span class="lineNum">     650</span> <span class="tlaGNC">      189359 :     CCC_Order const wrong_order = priority_queue-&gt;order == CCC_ORDER_LESSER</span></span>
+<span id="L649"><span class="lineNum">     649</span> <span class="tlaGNC">      136631 :     struct CCC_Priority_queue_node const *current = child;</span></span>
+<span id="L650"><span class="lineNum">     650</span> <span class="tlaGNC">      136631 :     CCC_Order const wrong_order = priority_queue-&gt;order == CCC_ORDER_LESSER</span></span>
 <span id="L651"><span class="lineNum">     651</span>              :                                     ? CCC_ORDER_GREATER</span>
 <span id="L652"><span class="lineNum">     652</span>              :                                     : CCC_ORDER_LESSER;</span>
-<span id="L653"><span class="lineNum">     653</span> <span class="tlaGNC">      189359 :     do {</span></span>
+<span id="L653"><span class="lineNum">     653</span> <span class="tlaGNC">      136631 :     do {</span></span>
 <span id="L654"><span class="lineNum">     654</span>              :         /* Reminder: Don't combine these if checks into one. Separating them</span>
 <span id="L655"><span class="lineNum">     655</span>              :            makes it easier to find the problem when stepping through gdb. */</span>
 <span id="L656"><span class="lineNum">     656</span> <span class="tlaGNC">     1156700 :         if (!current) {</span></span>
@@ -735,7 +735,7 @@
 <span id="L673"><span class="lineNum">     673</span> <span class="tlaUNC">           0 :             return CCC_FALSE;</span></span>
 <span id="L674"><span class="lineNum">     674</span>              :         }</span>
 <span id="L675"><span class="lineNum">     675</span> <span class="tlaGNC">     1156700 :     } while ((current = current-&gt;next) != child);</span></span>
-<span id="L676"><span class="lineNum">     676</span> <span class="tlaGNC">      189359 :     return CCC_TRUE;</span></span>
+<span id="L676"><span class="lineNum">     676</span> <span class="tlaGNC">      136631 :     return CCC_TRUE;</span></span>
 <span id="L677"><span class="lineNum">     677</span> <span class="tlaGNC">     1162015 : }</span></span>
 <span id="L678"><span class="lineNum">     678</span>              : </span>
 <span id="L679"><span class="lineNum">     679</span>              : /* NOLINTEND(*misc-no-recursion) */</span>
