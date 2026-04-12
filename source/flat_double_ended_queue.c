@@ -42,12 +42,12 @@ static size_t
 distance(struct CCC_Flat_double_ended_queue const *, size_t, size_t);
 static size_t
 reverse_distance(struct CCC_Flat_double_ended_queue const *, size_t, size_t);
-static CCC_Result push_front_range(
+static void *push_front_range(
     struct CCC_Flat_double_ended_queue *,
     CCC_Flat_buffer const *,
     CCC_Allocator const *
 );
-static CCC_Result push_back_range(
+static void *push_back_range(
     struct CCC_Flat_double_ended_queue *,
     CCC_Flat_buffer const *,
     CCC_Allocator const *
@@ -113,7 +113,9 @@ CCC_flat_double_ended_queue_push_front_range(
         || !allocator) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    return push_front_range(queue, range, allocator);
+    return push_front_range(queue, range, allocator)
+             ? CCC_RESULT_OK
+             : CCC_RESULT_ALLOCATOR_ERROR;
 }
 
 CCC_Result
@@ -126,7 +128,9 @@ CCC_flat_double_ended_queue_push_back_range(
         || !allocator) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    return push_back_range(queue, range, allocator);
+    return push_back_range(queue, range, allocator)
+             ? CCC_RESULT_OK
+             : CCC_RESULT_ALLOCATOR_ERROR;
 }
 
 void *
@@ -144,14 +148,10 @@ CCC_flat_double_ended_queue_insert_range(
         return position;
     }
     if (position == CCC_flat_double_ended_queue_begin(queue)) {
-        return push_front_range(queue, range, allocator) != CCC_RESULT_OK
-                 ? NULL
-                 : wrapping_at(queue, range->count - 1);
+        return push_front_range(queue, range, allocator);
     }
     if (position == CCC_flat_double_ended_queue_end(queue)) {
-        return push_back_range(queue, range, allocator) != CCC_RESULT_OK
-                 ? NULL
-                 : wrapping_at(queue, queue->buffer.count - range->count);
+        return push_back_range(queue, range, allocator);
     }
     return push_range(queue, position, range, allocator);
 }
@@ -516,7 +516,7 @@ allocate_back(
     return new_slot;
 }
 
-static CCC_Result
+static void *
 push_back_range(
     struct CCC_Flat_double_ended_queue *const queue,
     CCC_Flat_buffer const *const range,
@@ -527,24 +527,24 @@ push_back_range(
         = maybe_resize(queue, range->count, allocator) != CCC_RESULT_OK;
     size_t const cap = queue->buffer.capacity;
     if ((full && !queue->buffer.capacity) || (allocator->allocate && full)) {
-        return CCC_RESULT_ALLOCATOR_ERROR;
+        return NULL;
     }
     if (range->count >= cap) {
         queue->front = 0;
-        (void)memcpy(
+        void *const return_this = memcpy(
             raw_at(&queue->buffer, 0),
             raw_at(range, range->count - cap),
             sizeof_type * cap
         );
         queue->buffer.count = cap;
-        return CCC_RESULT_OK;
+        return return_this;
     }
     size_t const new_size = queue->buffer.count + range->count;
     size_t const back_slot = back_free_slot(queue);
     size_t const chunk = min(range->count, cap - back_slot);
     size_t const remainder_back_slot = (back_slot + chunk) % cap;
     size_t const remainder = (range->count - chunk);
-    (void)memcpy(
+    void *const return_this = memcpy(
         raw_at(&queue->buffer, back_slot), range->data, chunk * sizeof_type
     );
     if (remainder) {
@@ -558,10 +558,10 @@ push_back_range(
         queue->front = (queue->front + (new_size - cap)) % cap;
     }
     queue->buffer.count = min(cap, new_size);
-    return CCC_RESULT_OK;
+    return return_this;
 }
 
-static CCC_Result
+static void *
 push_front_range(
     struct CCC_Flat_double_ended_queue *const queue,
     CCC_Flat_buffer const *const range,
@@ -572,24 +572,24 @@ push_front_range(
         = maybe_resize(queue, range->count, allocator) != CCC_RESULT_OK;
     size_t const cap = queue->buffer.capacity;
     if ((full && !queue->buffer.capacity) || (allocator->allocate && full)) {
-        return CCC_RESULT_ALLOCATOR_ERROR;
+        return NULL;
     }
     if (range->count >= cap) {
         queue->front = 0;
-        (void)memcpy(
+        void *const return_this = memcpy(
             raw_at(&queue->buffer, 0),
             raw_at(range, range->count - cap),
             sizeof_type * cap
         );
         queue->buffer.count = cap;
-        return CCC_RESULT_OK;
+        return return_this;
     }
     size_t const space_ahead = front_free_slot(queue->front, cap) + 1;
     size_t const i
         = range->count > space_ahead ? 0 : space_ahead - range->count;
     size_t const chunk = min(range->count, space_ahead);
     size_t const remainder = (range->count - chunk);
-    (void)memcpy(
+    void *const return_this = memcpy(
         raw_at(&queue->buffer, i),
         raw_at(range, range->count - chunk),
         chunk * sizeof_type
@@ -603,7 +603,7 @@ push_front_range(
     }
     queue->buffer.count = min(cap, queue->buffer.count + range->count);
     queue->front = remainder ? cap - remainder : i;
-    return CCC_RESULT_OK;
+    return return_this;
 }
 
 static void *
@@ -623,10 +623,13 @@ push_range(
     size_t const new_size = queue->buffer.count + range->count;
     if (range->count >= cap) {
         queue->front = 0;
-        void *const ret = raw_at(&queue->buffer, 0);
-        (void)memcpy(ret, raw_at(range, range->count - cap), sizeof_type * cap);
+        void *const return_this = memcpy(
+            raw_at(&queue->buffer, 0),
+            raw_at(range, range->count - cap),
+            sizeof_type * cap
+        );
         queue->buffer.count = cap;
-        return ret;
+        return return_this;
     }
     size_t const pos_i = index_of(queue, position);
     size_t const back = back_free_slot(queue);
@@ -652,7 +655,7 @@ push_range(
     }
     size_t const elements_chunk = min(range->count, cap - pos_i);
     size_t const elements_remain = range->count - elements_chunk;
-    (void)memcpy(
+    void *const return_this = memcpy(
         raw_at(&queue->buffer, pos_i), range->data, elements_chunk * sizeof_type
     );
     if (elements_remain) {
@@ -673,7 +676,7 @@ push_range(
         queue->front = (queue->front + min(excess, front_to_pos_dist)) % cap;
     }
     queue->buffer.count = min(cap, new_size);
-    return raw_at(&queue->buffer, pos_i);
+    return return_this;
 }
 
 static CCC_Result
@@ -803,6 +806,9 @@ static inline void *
 wrapping_at(
     CCC_Flat_double_ended_queue const *const queue, size_t const index
 ) {
+    assert(
+        index < queue->buffer.capacity && "wrap access to buffer is in bounds"
+    );
     return (char *)queue->buffer.data
          + (((queue->front + index) % queue->buffer.capacity)
             * queue->buffer.sizeof_type);
@@ -812,6 +818,7 @@ wrapping_at(
 within capacity.  */
 static inline void *
 raw_at(CCC_Flat_buffer const *const buffer, size_t const index) {
+    assert(index < buffer->capacity && "raw access to buffer is in bounds");
     return (char *)buffer->data + (buffer->sizeof_type * index);
 }
 
