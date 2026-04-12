@@ -34,7 +34,8 @@ static CCC_Result maybe_resize(
 );
 static size_t
 index_of(struct CCC_Flat_double_ended_queue const *, void const *);
-static void *at(struct CCC_Flat_double_ended_queue const *, size_t);
+static void *wrapping_at(struct CCC_Flat_double_ended_queue const *, size_t);
+static void *raw_at(CCC_Flat_buffer const *, size_t);
 static size_t increment(struct CCC_Flat_double_ended_queue const *, size_t);
 static size_t decrement(struct CCC_Flat_double_ended_queue const *, size_t);
 static size_t
@@ -145,12 +146,12 @@ CCC_flat_double_ended_queue_insert_range(
     if (position == CCC_flat_double_ended_queue_begin(queue)) {
         return push_front_range(queue, range, allocator) != CCC_RESULT_OK
                  ? NULL
-                 : at(queue, range->count - 1);
+                 : wrapping_at(queue, range->count - 1);
     }
     if (position == CCC_flat_double_ended_queue_end(queue)) {
         return push_back_range(queue, range, allocator) != CCC_RESULT_OK
                  ? NULL
-                 : at(queue, queue->buffer.count - range->count);
+                 : wrapping_at(queue, queue->buffer.count - range->count);
     }
     return push_range(queue, position, range, allocator);
 }
@@ -183,7 +184,7 @@ CCC_flat_double_ended_queue_front(
     if (!queue || !queue->buffer.count) {
         return NULL;
     }
-    return CCC_flat_buffer_at(&queue->buffer, queue->front);
+    return raw_at(&queue->buffer, queue->front);
 }
 
 void *
@@ -193,7 +194,7 @@ CCC_flat_double_ended_queue_back(
     if (!queue || !queue->buffer.count) {
         return NULL;
     }
-    return CCC_flat_buffer_at(&queue->buffer, last_index(queue));
+    return raw_at(&queue->buffer, last_index(queue));
 }
 
 CCC_Tribool
@@ -233,9 +234,7 @@ CCC_flat_double_ended_queue_at(
     if (!queue || i >= queue->buffer.capacity) {
         return NULL;
     }
-    return CCC_flat_buffer_at(
-        &queue->buffer, (queue->front + i) % queue->buffer.capacity
-    );
+    return wrapping_at(queue, i);
 }
 
 void *
@@ -245,7 +244,7 @@ CCC_flat_double_ended_queue_begin(
     if (!queue || !queue->buffer.count) {
         return NULL;
     }
-    return CCC_flat_buffer_at(&queue->buffer, queue->front);
+    return raw_at(&queue->buffer, queue->front);
 }
 
 void *
@@ -255,7 +254,7 @@ CCC_flat_double_ended_queue_reverse_begin(
     if (!queue || !queue->buffer.count) {
         return NULL;
     }
-    return CCC_flat_buffer_at(&queue->buffer, last_index(queue));
+    return raw_at(&queue->buffer, last_index(queue));
 }
 
 void *
@@ -271,7 +270,7 @@ CCC_flat_double_ended_queue_next(
         || distance(queue, next_i, queue->front) >= queue->buffer.count) {
         return NULL;
     }
-    return CCC_flat_buffer_at(&queue->buffer, next_i);
+    return raw_at(&queue->buffer, next_i);
 }
 
 void *
@@ -290,7 +289,7 @@ CCC_flat_double_ended_queue_reverse_next(
                >= queue->buffer.count) {
         return NULL;
     }
-    return CCC_flat_buffer_at(&queue->buffer, next_i);
+    return raw_at(&queue->buffer, next_i);
 }
 
 void *
@@ -347,7 +346,7 @@ CCC_flat_double_ended_queue_copy(
         );
         (void)memcpy(
             destination->buffer.data,
-            CCC_flat_buffer_at(&source->buffer, source->front),
+            raw_at(&source->buffer, source->front),
             source->buffer.sizeof_type * first_chunk
         );
         if (first_chunk < source->buffer.count) {
@@ -491,7 +490,7 @@ allocate_front(
         return NULL;
     }
     queue->front = front_free_slot(queue->front, queue->buffer.capacity);
-    void *const new_slot = CCC_flat_buffer_at(&queue->buffer, queue->front);
+    void *const new_slot = raw_at(&queue->buffer, queue->front);
     if (!full) {
         ++queue->buffer.count;
     }
@@ -507,8 +506,7 @@ allocate_back(
     if ((full && !queue->buffer.capacity) || (allocator->allocate && full)) {
         return NULL;
     }
-    void *const new_slot
-        = CCC_flat_buffer_at(&queue->buffer, back_free_slot(queue));
+    void *const new_slot = raw_at(&queue->buffer, back_free_slot(queue));
     /* If no reallocation policy is given we are a ring buffer. */
     if (full) {
         queue->front = increment(queue, queue->front);
@@ -534,8 +532,8 @@ push_back_range(
     if (range->count >= cap) {
         queue->front = 0;
         (void)memcpy(
-            CCC_flat_buffer_at(&queue->buffer, 0),
-            CCC_flat_buffer_at(range, range->count - cap),
+            raw_at(&queue->buffer, 0),
+            raw_at(range, range->count - cap),
             sizeof_type * cap
         );
         queue->buffer.count = cap;
@@ -547,14 +545,12 @@ push_back_range(
     size_t const remainder_back_slot = (back_slot + chunk) % cap;
     size_t const remainder = (range->count - chunk);
     (void)memcpy(
-        CCC_flat_buffer_at(&queue->buffer, back_slot),
-        range->data,
-        chunk * sizeof_type
+        raw_at(&queue->buffer, back_slot), range->data, chunk * sizeof_type
     );
     if (remainder) {
         (void)memcpy(
-            CCC_flat_buffer_at(&queue->buffer, remainder_back_slot),
-            CCC_flat_buffer_at(range, chunk),
+            raw_at(&queue->buffer, remainder_back_slot),
+            raw_at(range, chunk),
             remainder * sizeof_type
         );
     }
@@ -581,8 +577,8 @@ push_front_range(
     if (range->count >= cap) {
         queue->front = 0;
         (void)memcpy(
-            CCC_flat_buffer_at(&queue->buffer, 0),
-            CCC_flat_buffer_at(range, range->count - cap),
+            raw_at(&queue->buffer, 0),
+            raw_at(range, range->count - cap),
             sizeof_type * cap
         );
         queue->buffer.count = cap;
@@ -594,13 +590,13 @@ push_front_range(
     size_t const chunk = min(range->count, space_ahead);
     size_t const remainder = (range->count - chunk);
     (void)memcpy(
-        CCC_flat_buffer_at(&queue->buffer, i),
-        CCC_flat_buffer_at(range, range->count - chunk),
+        raw_at(&queue->buffer, i),
+        raw_at(range, range->count - chunk),
         chunk * sizeof_type
     );
     if (remainder) {
         (void)memcpy(
-            CCC_flat_buffer_at(&queue->buffer, cap - remainder),
+            raw_at(&queue->buffer, cap - remainder),
             range->data,
             remainder * sizeof_type
         );
@@ -627,12 +623,8 @@ push_range(
     size_t const new_size = queue->buffer.count + range->count;
     if (range->count >= cap) {
         queue->front = 0;
-        void *const ret = CCC_flat_buffer_at(&queue->buffer, 0);
-        (void)memcpy(
-            ret,
-            CCC_flat_buffer_at(range, range->count - cap),
-            sizeof_type * cap
-        );
+        void *const ret = raw_at(&queue->buffer, 0);
+        (void)memcpy(ret, raw_at(range, range->count - cap), sizeof_type * cap);
         queue->buffer.count = cap;
         return ret;
     }
@@ -645,31 +637,29 @@ push_range(
                               : min(back - pos_i, move_chunk);
     size_t const move_remain = to_move - move_chunk;
     (void)memmove(
-        CCC_flat_buffer_at(&queue->buffer, move_i),
-        CCC_flat_buffer_at(&queue->buffer, pos_i),
+        raw_at(&queue->buffer, move_i),
+        raw_at(&queue->buffer, pos_i),
         move_chunk * sizeof_type
     );
     if (move_remain) {
         size_t const move_remain_i = (move_i + move_chunk) % cap;
         size_t const remaining_start_i = (pos_i + move_chunk) % cap;
         (void)memmove(
-            CCC_flat_buffer_at(&queue->buffer, move_remain_i),
-            CCC_flat_buffer_at(&queue->buffer, remaining_start_i),
+            raw_at(&queue->buffer, move_remain_i),
+            raw_at(&queue->buffer, remaining_start_i),
             move_remain * sizeof_type
         );
     }
     size_t const elements_chunk = min(range->count, cap - pos_i);
     size_t const elements_remain = range->count - elements_chunk;
     (void)memcpy(
-        CCC_flat_buffer_at(&queue->buffer, pos_i),
-        range->data,
-        elements_chunk * sizeof_type
+        raw_at(&queue->buffer, pos_i), range->data, elements_chunk * sizeof_type
     );
     if (elements_remain) {
         size_t const second_chunk_i = (pos_i + elements_chunk) % cap;
         (void)memcpy(
-            CCC_flat_buffer_at(&queue->buffer, second_chunk_i),
-            CCC_flat_buffer_at(range, elements_chunk),
+            raw_at(&queue->buffer, second_chunk_i),
+            raw_at(range, elements_chunk),
             elements_remain * sizeof_type
         );
     }
@@ -683,7 +673,7 @@ push_range(
         queue->front = (queue->front + min(excess, front_to_pos_dist)) % cap;
     }
     queue->buffer.count = min(cap, new_size);
-    return CCC_flat_buffer_at(&queue->buffer, pos_i);
+    return raw_at(&queue->buffer, pos_i);
 }
 
 static CCC_Result
@@ -721,7 +711,7 @@ maybe_resize(
             = min(queue->buffer.count, queue->buffer.capacity - queue->front);
         (void)memcpy(
             new_data,
-            CCC_flat_buffer_at(&queue->buffer, queue->front),
+            raw_at(&queue->buffer, queue->front),
             sizeof_type * first_chunk
         );
         if (first_chunk < queue->buffer.count) {
@@ -753,7 +743,7 @@ destroy_all(
     size_t i = queue->front;
     do {
         destructor->destroy((CCC_Arguments){
-            .type = CCC_flat_buffer_at(&queue->buffer, i),
+            .type = raw_at(&queue->buffer, i),
             .context = destructor->context,
         });
         i = increment(queue, i);
@@ -806,11 +796,23 @@ index_of(
     );
 }
 
+/** Delivers the element at the requested index relative to the front of the
+double ended queue. This accounts for the wrapping that can occur of elements
+if the front of the double ended queue is not 0. */
 static inline void *
-at(struct CCC_Flat_double_ended_queue const *const queue, size_t const index) {
-    return CCC_flat_buffer_at(
-        &queue->buffer, (queue->front + index) % queue->buffer.capacity
-    );
+wrapping_at(
+    CCC_Flat_double_ended_queue const *const queue, size_t const index
+) {
+    return (char *)queue->buffer.data
+         + (((queue->front + index) % queue->buffer.capacity)
+            * queue->buffer.sizeof_type);
+}
+
+/** Delivers the slot at the requested index zero based. Assumes the index is
+within capacity.  */
+static inline void *
+raw_at(CCC_Flat_buffer const *const buffer, size_t const index) {
+    return (char *)buffer->data + (buffer->sizeof_type * index);
 }
 
 static inline size_t
