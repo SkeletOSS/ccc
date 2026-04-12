@@ -494,7 +494,7 @@ flat_priority_queue is empty.
 A simple way to provide a temp for swapping is with an inline compound literal
 reference provided directly to the function argument `&(name_of_type){}`. */
 void *CCC_flat_priority_queue_update(
-    CCC_Flat_priority_queue *priority_queue,
+    CCC_Flat_priority_queue const *priority_queue,
     void *type,
     void *temp,
     CCC_Modifier const *modifier
@@ -548,7 +548,7 @@ flat_priority_queue is empty.
 A simple way to provide a temp for swapping is with an inline compound literal
 reference provided directly to the function argument `&(name_of_type){}`. */
 void *CCC_flat_priority_queue_increase(
-    CCC_Flat_priority_queue *priority_queue,
+    CCC_Flat_priority_queue const *priority_queue,
     void *type,
     void *temp,
     CCC_Modifier const *modifier
@@ -600,7 +600,7 @@ flat_priority_queue is empty.
 A simple way to provide a temp for swapping is with an inline compound literal
 reference provided directly to the function argument `&(name_of_type){}`. */
 void *CCC_flat_priority_queue_decrease(
-    CCC_Flat_priority_queue *priority_queue,
+    CCC_Flat_priority_queue const *priority_queue,
     void *type,
     void *temp,
     CCC_Modifier const *modifier

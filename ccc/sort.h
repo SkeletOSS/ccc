@@ -61,7 +61,7 @@ as `&(My_type){}`, passed directly as an argument.
 The sort is not inherently stable and uses the provided comparison function to
 order the elements. */
 CCC_Result CCC_sort_heapsort(
-    CCC_Flat_buffer *buffer,
+    CCC_Flat_buffer const *buffer,
     void *temp,
     CCC_Order order,
     CCC_Comparator const *comparator
