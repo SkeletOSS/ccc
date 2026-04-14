@@ -371,7 +371,8 @@ CCC_flat_priority_queue_clear(
     if (destructor->destroy) {
         destroy_each(priority_queue, destructor);
     }
-    return CCC_flat_buffer_count_set(&priority_queue->buffer, 0);
+    priority_queue->buffer.count = 0;
+    return CCC_RESULT_OK;
 }
 
 CCC_Result

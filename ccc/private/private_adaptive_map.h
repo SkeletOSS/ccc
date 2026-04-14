@@ -57,7 +57,7 @@ struct CCC_Adaptive_map {
     /** @internal The root of the splay tree. The "hot" node after a query. */
     struct CCC_Adaptive_map_node *root;
     /** @internal The number of stored tree nodes. */
-    size_t size;
+    size_t count;
     /** @internal The size of the user type stored in the tree. */
     size_t sizeof_type;
     /** @internal The byte offset of the intrusive element. */
@@ -132,7 +132,7 @@ void *CCC_private_adaptive_map_insert(
     private_comparator...                                                      \
 )                                                                              \
     (struct CCC_Adaptive_map) {                                                \
-        .root = NULL, .size = 0, .sizeof_type = sizeof(private_struct_name),   \
+        .root = NULL, .count = 0, .sizeof_type = sizeof(private_struct_name),  \
         .type_intruder_offset                                                  \
             = offsetof(private_struct_name, private_node_node_field),          \
         .key_offset = offsetof(private_struct_name, private_key_node_field),   \
