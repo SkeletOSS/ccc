@@ -682,13 +682,13 @@ CCC_flat_hash_map_clear_and_free(
     map->remain = 0;
     map->mask = 0;
     map->count = 0;
-    map->tag = NULL;
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
         .context = allocator->context,
     });
     map->data = NULL;
+    map->tag = NULL;
     return CCC_RESULT_OK;
 }
 
