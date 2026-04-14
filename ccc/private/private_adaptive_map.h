@@ -132,7 +132,7 @@ void *CCC_private_adaptive_map_insert(
     private_comparator...                                                      \
 )                                                                              \
     (struct CCC_Adaptive_map) {                                                \
-        .root = NULL, .size = 0, .sizeof_type = sizeof(private_struct_name),   \
+        .root = NULL, .count = 0, .sizeof_type = sizeof(private_struct_name),  \
         .type_intruder_offset                                                  \
             = offsetof(private_struct_name, private_node_node_field),          \
         .key_offset = offsetof(private_struct_name, private_key_node_field),   \
