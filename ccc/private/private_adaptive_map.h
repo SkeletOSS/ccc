@@ -57,7 +57,7 @@ struct CCC_Adaptive_map {
     /** @internal The root of the splay tree. The "hot" node after a query. */
     struct CCC_Adaptive_map_node *root;
     /** @internal The number of stored tree nodes. */
-    size_t size;
+    size_t count;
     /** @internal The size of the user type stored in the tree. */
     size_t sizeof_type;
     /** @internal The byte offset of the intrusive element. */

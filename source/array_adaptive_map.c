@@ -62,8 +62,7 @@ correct regardless of backing storage as a fixed map or heap allocation.
 
 Use an int because that will force the nodes array to be wary of
 where to start. The nodes are 8 byte aligned but an int is 4. This means the
-nodes need to start after a 4 byte Flat_buffer of padding at end of data array.
-*/
+nodes need to start after a 4 byte buffer of padding at end of data array. */
 static __auto_type const static_data_nodes_layout_test
     = CCC_array_adaptive_map_storage_for((int const[TCAP]){});
 /** Some assumptions in the code assume that nodes array is last so ensure that
@@ -172,7 +171,7 @@ static void swap(void *, void *, void *, size_t);
 static void link(struct CCC_Array_adaptive_map *, size_t, enum Branch, size_t);
 static size_t max(size_t, size_t);
 static void
-delete_nodes(struct CCC_Array_adaptive_map *, CCC_Destructor const *);
+delete_nodes(struct CCC_Array_adaptive_map const *, CCC_Destructor const *);
 
 /*==============================  Interface    ==============================*/
 
@@ -1027,7 +1026,7 @@ simply calls the destructor on each node and removes the nodes references to
 other tree elements. */
 static void
 delete_nodes(
-    struct CCC_Array_adaptive_map *const map,
+    struct CCC_Array_adaptive_map const *const map,
     CCC_Destructor const *const destructor
 ) {
     size_t node = map->root;

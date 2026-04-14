@@ -114,7 +114,7 @@ CCC_adaptive_map_count(CCC_Adaptive_map const *const map) {
     if (!map) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
-    return (CCC_Count){.count = map->size};
+    return (CCC_Count){.count = map->count};
 }
 
 CCC_Tribool
@@ -514,6 +514,8 @@ CCC_adaptive_map_clear(
         }
         node = next;
     }
+    map->count = 0;
+    map->root = NULL;
     return CCC_RESULT_OK;
 }
 
@@ -607,12 +609,12 @@ init_node(struct CCC_Adaptive_map_node *const n) {
 
 static inline CCC_Tribool
 is_empty(struct CCC_Adaptive_map const *const t) {
-    return !t->size || !t->root;
+    return !t->count || !t->root;
 }
 
 static void *
 max(struct CCC_Adaptive_map const *const t) {
-    if (!t->size) {
+    if (!t->count) {
         return NULL;
     }
     struct CCC_Adaptive_map_node *m = t->root;
@@ -622,7 +624,7 @@ max(struct CCC_Adaptive_map const *const t) {
 
 static void *
 min(struct CCC_Adaptive_map const *t) {
-    if (!t->size) {
+    if (!t->count) {
         return NULL;
     }
     struct CCC_Adaptive_map_node *m = t->root;
@@ -656,7 +658,7 @@ equal_range(
     void const *const end_key,
     enum Link const traversal
 ) {
-    if (!t->size) {
+    if (!t->count) {
         return (CCC_Range){};
     }
     /* As with most BST code the cases are perfectly symmetrical. If we
@@ -726,11 +728,11 @@ allocate_insert(
     }
     if (is_empty(t)) {
         t->root = out_handle;
-        t->size = 1;
+        t->count = 1;
         return struct_base(t, out_handle);
     }
     assert(root_order != CCC_ORDER_ERROR);
-    t->size++;
+    t->count++;
     return connect_new_root(t, out_handle, root_order);
 }
 
@@ -741,7 +743,7 @@ insert(
     init_node(n);
     if (is_empty(t)) {
         t->root = n;
-        t->size = 1;
+        t->count = 1;
         return struct_base(t, n);
     }
     void const *const key = key_from_node(t, n);
@@ -750,7 +752,7 @@ insert(
     if (CCC_ORDER_EQUAL == root_order) {
         return NULL;
     }
-    t->size++;
+    t->count++;
     return connect_new_root(t, n, root_order);
 }
 
@@ -782,7 +784,7 @@ erase(struct CCC_Adaptive_map *const t, void const *const key) {
     }
     ret = remove_from_tree(t, ret);
     ret->branch[L] = ret->branch[R] = ret->parent = NULL;
-    t->size--;
+    t->count--;
     return struct_base(t, ret);
 }
 
@@ -1027,7 +1029,7 @@ validate(struct CCC_Adaptive_map const *const t) {
     if (!is_parent_correct(t, NULL, t->root)) {
         return CCC_FALSE;
     }
-    if (recursive_count(t, t->root) != t->size) {
+    if (recursive_count(t, t->root) != t->count) {
         return CCC_FALSE;
     }
     return CCC_TRUE;

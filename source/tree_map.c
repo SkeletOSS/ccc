@@ -628,6 +628,8 @@ CCC_tree_map_clear(
         }
         node = next;
     }
+    map->count = 0;
+    map->root = NULL;
     return CCC_RESULT_OK;
 }
 

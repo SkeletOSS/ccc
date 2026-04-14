@@ -88,7 +88,7 @@ a fixed map or heap allocation.
 
 Use an int because that will force the nodes array to be wary of
 where to start. The nodes are 8 byte aligned but an int is 4. This means the
-nodes need to start after 4 byte Flat_buffer of padding at end of data array. */
+nodes need to start after 4 byte buffer of padding at end of data array. */
 static __auto_type const static_data_nodes_parity_layout_test
     = CCC_private_array_tree_map_storage_for((int const[TCAP]){});
 /** Some assumptions in the code assume that parity array is last so ensure that
@@ -227,7 +227,8 @@ static size_t maybe_allocate_insert(
 );
 static size_t remove_fixup(struct CCC_Array_tree_map *, size_t);
 static size_t allocate_slot(struct CCC_Array_tree_map *, CCC_Allocator const *);
-static void delete_nodes(struct CCC_Array_tree_map *, CCC_Destructor const *);
+static void
+delete_nodes(struct CCC_Array_tree_map const *, CCC_Destructor const *);
 static void *key_at(struct CCC_Array_tree_map const *, size_t);
 static void *key_in_slot(struct CCC_Array_tree_map const *, void const *);
 static struct CCC_Array_tree_map_node *
@@ -776,6 +777,7 @@ CCC_array_tree_map_clear_and_free(
         delete_nodes(map, destructor);
     }
     map->root = 0;
+    map->count = 0;
     map->capacity = 0;
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
@@ -940,7 +942,7 @@ insert(
         return;
     }
     assert(last_order == CCC_ORDER_GREATER || last_order == CCC_ORDER_LESSER);
-    CCC_Tribool rank_rule_break = false;
+    CCC_Tribool rank_rule_break = CCC_FALSE;
     if (parent_i) {
         struct CCC_Array_tree_map_node *parent = node_at(map, parent_i);
         rank_rule_break = !parent->branch[L] && !parent->branch[R];
@@ -1061,7 +1063,8 @@ simply calls the destructor on each node and removes the nodes references to
 other tree elements. */
 static void
 delete_nodes(
-    struct CCC_Array_tree_map *const map, CCC_Destructor const *const destructor
+    struct CCC_Array_tree_map const *const map,
+    CCC_Destructor const *const destructor
 ) {
     size_t node = map->root;
     while (node) {
@@ -1126,7 +1129,7 @@ nodes_bytes(size_t const capacity) {
 rounding up or alignment concerns need apply because this is the last array
 in the allocation. */
 static inline size_t
-parities_bytes(size_t capacity) {
+parities_bytes(size_t const capacity) {
     return sizeof(Parity_block) * block_count(capacity);
 }
 
@@ -1140,7 +1143,7 @@ on an aligned byte boundary for its own type. This means that the bytes returned
 by this function may be greater than summing the (sizeof(type) * capacity) for
 each array in the conceptual struct. */
 static inline size_t
-total_bytes(size_t sizeof_type, size_t const capacity) {
+total_bytes(size_t const sizeof_type, size_t const capacity) {
     return data_bytes(sizeof_type, capacity) + nodes_bytes(capacity)
          + parities_bytes(capacity);
 }
@@ -1522,7 +1525,8 @@ and uppercase are arbitrary subtrees.
    ╭─┴─╮      ->      ╭─┴─╮
    A   y              y   C
        │              │
-       B              B */
+       B              B
+Using a link allows both cases to be coded at once. */
 static void
 rotate(
     struct CCC_Array_tree_map *const map,
@@ -1592,7 +1596,7 @@ double_rotate(
     z_r->parent = y;
 }
 
-/* Returns true for rank difference 0 (rule break) between the parent and node.
+/** Returns true for rank difference 0 (rule break) between the parent and node.
          p
       0╭─╯
        x */
@@ -1603,7 +1607,7 @@ is_0_child(
     return p && parity(map, p) == parity(map, x);
 }
 
-/* Returns true for rank difference 1 between the parent and node.
+/** Returns true for rank difference 1 between the parent and node.
          p
       1╭─╯
        x */
@@ -1614,7 +1618,7 @@ is_1_child(
     return p && parity(map, p) != parity(map, x);
 }
 
-/* Returns true for rank difference 2 between the parent and node.
+/** Returns true for rank difference 2 between the parent and node.
          p
       2╭─╯
        x */
@@ -1625,7 +1629,7 @@ is_2_child(
     return p && parity(map, p) == parity(map, x);
 }
 
-/* Returns true for rank difference 3 between the parent and node.
+/** Returns true for rank difference 3 between the parent and node.
          p
       3╭─╯
        x */
@@ -1636,8 +1640,8 @@ is_3_child(
     return p && parity(map, p) != parity(map, x);
 }
 
-/* Returns true if a parent is a 0,1 or 1,0 node, which is not allowed. Either
-   child may be the sentinel node which has a parity of 1 and rank -1.
+/** Returns true if a parent is a 0,1 or 1,0 node, which is not allowed. Either
+child may be the sentinel node which has a parity of 1 and rank -1.
          p
       0╭─┴─╮1
        x   y */
@@ -1653,8 +1657,8 @@ is_01_parent(
         || (parity(map, x) && parity(map, p) && !parity(map, y));
 }
 
-/* Returns true if a parent is a 1,1 node. Either child may be the sentinel
-   node which has a parity of 1 and rank -1.
+/** Returns true if a parent is a 1,1 node. Either child may be the sentinel
+node which has a parity of 1 and rank -1.
          p
       1╭─┴─╮1
        x   y */
@@ -1670,8 +1674,8 @@ is_11_parent(
         || (parity(map, x) && !parity(map, p) && parity(map, y));
 }
 
-/* Returns true if a parent is a 0,2 or 2,0 node, which is not allowed. Either
-   child may be the sentinel node which has a parity of 1 and rank -1.
+/** Returns true if a parent is a 0,2 or 2,0 node, which is not allowed. Either
+child may be the sentinel node which has a parity of 1 and rank -1.
          p
       0╭─┴─╮2
        x   y */
@@ -1687,11 +1691,10 @@ is_02_parent(
         && (parity(map, p) == parity(map, y));
 }
 
-/* Returns true if a parent is a 2,2 or 2,2 node, which is allowed. 2,2 nodes
-   are allowed in a WAVL tree but the absence of any 2,2 nodes is the exact
-   equivalent of a normal AVL tree which can occur if only insertions occur
-   for a WAVL tree. Either child may be the sentinel node which has a parity of
-   1 and rank -1.
+/* Returns true if a parent is a 2,2 node, which is allowed. 2,2 nodes are
+allowed in a WAVL tree but the absence of any 2,2 nodes is the exact equivalent
+of a normal AVL tree which can occur if only insertions occur for a WAVL tree.
+Either child may be the sentinel node which has a parity of 1 and rank -1.
          p
       2╭─┴─╮2
        x   y */
@@ -1719,14 +1722,14 @@ demote(struct CCC_Array_tree_map const *const map, size_t const x) {
     promote(map, x);
 }
 
-/* Parity based ranks mean this is no-op but leave in case implementation ever
-   changes. Also, makes clear what sections of code are trying to do. */
+/** Parity based ranks mean this is no-op but leave in case implementation ever
+changes. Also, makes clear what sections of code are trying to do. */
 static inline void
 double_promote(struct CCC_Array_tree_map const *const, size_t const) {
 }
 
-/* Parity based ranks mean this is no-op but leave in case implementation ever
-   changes. Also, makes clear what sections of code are trying to do. */
+/** Parity based ranks mean this is no-op but leave in case implementation ever
+changes. Also, makes clear what sections of code are trying to do. */
 static inline void
 double_demote(struct CCC_Array_tree_map const *const, size_t const) {
 }
