@@ -437,8 +437,7 @@ build_encoding_priority_queue(
         *allocator, tree->num_nodes + 1, (struct Huffman_node[]){{}}
     );
     check(count(&tree->tree_storage).count == 1);
-    /* Use a Flat_buffer to simply push back elements we will heapify at the
-     * end. */
+    /* Use a Flat_buffer to push back elements we will heapify at the end. */
     Flat_buffer flat_priority_queue_storage = flat_buffer_with_capacity(
         struct Pair_node, *allocator, flat_hash_map_count(&frequencies).count
     );
