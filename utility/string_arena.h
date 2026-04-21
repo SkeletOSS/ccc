@@ -65,7 +65,7 @@ recently allocated that region is simply zeroed out and the arena's next free
 position remains unchanged; in this case the last_str argument is then made
 invalid and will not be usable in further API functions. */
 enum String_arena_result
-string_arena_pop_str(struct String_arena *, struct String_offset *last_str);
+string_arena_pop_back(struct String_arena *, struct String_offset *last_str);
 
 /** Push a character back to the last string allocation. This is possible
 and useful when a string may be edited depending on other factors before it is

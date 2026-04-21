@@ -448,7 +448,7 @@ clean_word(
     }
     for (char const *c = SV_begin(wv); c != SV_end(wv); c = SV_next(c)) {
         if (!isalpha(*c) && *c != '-') {
-            string_arena_pop_str(a, &str);
+            string_arena_pop_back(a, &str);
             return (struct String_offset){.error = STRING_ARENA_INVALID};
         }
         enum String_arena_result const pushed_char
@@ -461,7 +461,7 @@ clean_word(
     char const *const w = string_arena_at(a, &str);
     check(w);
     if (!isalpha(*w) || !isalpha(*(w + (str.len - 1)))) {
-        enum String_arena_result const pop = string_arena_pop_str(a, &str);
+        enum String_arena_result const pop = string_arena_pop_back(a, &str);
         check(pop == STRING_ARENA_OK);
         return (struct String_offset){.error = STRING_ARENA_INVALID};
     }
