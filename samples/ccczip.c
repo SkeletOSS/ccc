@@ -200,9 +200,14 @@ static struct Huffman_tree build_encoding_tree(FILE *, CCC_Allocator const *);
 static struct Compressed_huffman_tree
 compress_tree(struct Huffman_tree *, CCC_Allocator const *);
 static void free_encode_tree(struct Huffman_tree *, CCC_Allocator const *);
-static void print_tree(struct Huffman_tree const *, size_t);
+static void
+print_tree(struct Huffman_tree const *, size_t, CCC_Allocator const *);
 static void print_inner_tree(
-    struct Huffman_tree const *, size_t, enum Print_branch, char const *
+    struct Huffman_tree const *,
+    size_t,
+    enum Print_branch,
+    char const *,
+    CCC_Allocator const *
 );
 static void print_node(struct Huffman_tree const *, size_t);
 static bool is_leaf(struct Huffman_tree const *, size_t);
@@ -1049,13 +1054,17 @@ file_size(FILE *f) {
 /* NOLINTBEGIN(*misc-no-recursion) */
 
 [[maybe_unused]] static void
-print_tree(struct Huffman_tree const *const tree, size_t const node) {
+print_tree(
+    struct Huffman_tree const *const tree,
+    size_t const node,
+    CCC_Allocator const *const allocator
+) {
     if (!tree) {
         return;
     }
     print_node(tree, node);
-    print_inner_tree(tree, branch_index(tree, node, 1), BRANCH, "");
-    print_inner_tree(tree, branch_index(tree, node, 0), LEAF, "");
+    print_inner_tree(tree, branch_index(tree, node, 1), BRANCH, "", allocator);
+    print_inner_tree(tree, branch_index(tree, node, 0), LEAF, "", allocator);
 }
 
 [[maybe_unused]] static void
@@ -1063,7 +1072,8 @@ print_inner_tree(
     struct Huffman_tree const *const tree,
     size_t const node,
     enum Print_branch const branch_type,
-    char const *const prefix
+    char const *const prefix,
+    CCC_Allocator const *const allocator
 ) {
     if (!node) {
         return;
@@ -1078,7 +1088,11 @@ print_inner_tree(
         NULL, 0, "%s%s", prefix, branch_type == LEAF ? "     " : " │   "
     );
     if (string_length > 0) {
-        str = malloc(string_length + 1);
+        str = allocator->allocate((CCC_Allocator_arguments){
+            .input = NULL,
+            .bytes = string_length + 1,
+            .context = allocator->context,
+        });
         (void)snprintf(
             str,
             string_length,
@@ -1090,14 +1104,18 @@ print_inner_tree(
     check(str);
     struct Huffman_node const *const root = node_at(tree, node);
     if (!root->link[1]) {
-        print_inner_tree(tree, root->link[0], LEAF, str);
+        print_inner_tree(tree, root->link[0], LEAF, str, allocator);
     } else if (!root->link[0]) {
-        print_inner_tree(tree, root->link[1], LEAF, str);
+        print_inner_tree(tree, root->link[1], LEAF, str, allocator);
     } else {
-        print_inner_tree(tree, root->link[1], BRANCH, str);
-        print_inner_tree(tree, root->link[0], LEAF, str);
+        print_inner_tree(tree, root->link[1], BRANCH, str, allocator);
+        print_inner_tree(tree, root->link[0], LEAF, str, allocator);
     }
-    free(str);
+    (void)allocator->allocate((CCC_Allocator_arguments){
+        .input = str,
+        .bytes = 0,
+        .context = allocator->context,
+    });
 }
 
 [[maybe_unused]] static void
