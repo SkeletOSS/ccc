@@ -66,9 +66,11 @@ Here is the layout in one contiguous array.
 
 (D = Data Array, N = Nodes Array, P = Parity Bit Array, C = Capacity - 1)
 
+```
 ┌──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┬──┐
 │D0│D1│..│DC│N0│N1│..│NC│P0│P1│..│PC│
 └──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┘
+```
 
 Consider how this layout saves space. Here is a more traditional approach.
 

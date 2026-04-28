@@ -64,9 +64,11 @@ of the x86 SIMD version but should still be fast. */
 Rust's Hashbrown table. The only value not represented by constants is
 the following:
 
-`DELETED  = 0b10000000`
-`EMPTY    = 0x11111111`
-`OCCUPIED = 0b0???????`
+```
+DELETED  = 0b10000000
+EMPTY    = 0x11111111
+OCCUPIED = 0b0???????
+```
 
 In this case `?` represents any 7 bits kept from the upper 7 bits of the
 original hash code to signify an occupied slot. We know this slot is taken
@@ -106,6 +108,7 @@ case the arrays are in one contiguous allocation but split as follows:
 
 N is capacity - 1, where capacity is a power of 2. G is group size - 1.
 
+```
 ┌──┬──┬──┬──┬────┬──┬──┬──┬──┬──┬──┬──┬──┐
 │D0│D1│..│DN│Swap│T0│T1│..│TN│R0│R1│..│RG│
 └──┴──┴──┴──┼────┼──┴──┴──┴──┼──┴──┴──┴──┘
@@ -116,6 +119,7 @@ N is capacity - 1, where capacity is a power of 2. G is group size - 1.
 │rehashing.   │ │Possible pad  │ │erase and inserts. This means R_G is never│
 │Size = 1 data│ │bytes between.│ │needed but duplicated for branchless ops. │
 └─────────────┘ └──────────────┘ └──────────────────────────────────────────┘
+```
 
 This is a different layout than Rust's Hashbrown table. Instead of a shared
 base address of the data and tag arrays with padding at the start of the data
