@@ -1109,7 +1109,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <div class="line">    <a class="code hl_struct" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a> map = <a class="code hl_define" href="array__adaptive__map_8h.html#aa084ec33c9432b1671f56f7587d2882b">CCC_array_adaptive_map_for</a>(</div>
 <div class="line">        <span class="keyword">struct</span> Val,</div>
 <div class="line">        key,</div>
-<div class="line">        val_key_comparator,</div>
+<div class="line">        (<a class="code hl_struct" href="structCCC__Key__comparator.html">CCC_Key_comparator</a>){.compare = order_vals},</div>
 <div class="line">        4096,</div>
 <div class="line">        map</div>
 <div class="line">    );</div>
@@ -1117,6 +1117,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <div class="ttc" id="aarray__adaptive__map_8h_html_aa084ec33c9432b1671f56f7587d2882b"><div class="ttname"><a href="array__adaptive__map_8h.html#aa084ec33c9432b1671f56f7587d2882b">CCC_array_adaptive_map_for</a></div><div class="ttdeci">#define CCC_array_adaptive_map_for( type_name, type_key_field, comparator, capacity, memory_pointer)</div><div class="ttdoc">Initializes the map at runtime or compile time.</div><div class="ttdef"><b>Definition:</b> array_adaptive_map.h:161</div></div>
 <div class="ttc" id="aarray__adaptive__map_8h_html_abff7c6b484028f65da64384591642561"><div class="ttname"><a href="array__adaptive__map_8h.html#abff7c6b484028f65da64384591642561">CCC_array_adaptive_map_storage_for</a></div><div class="ttdeci">#define CCC_array_adaptive_map_storage_for( user_type_compound_literal_array, optional_storage_specifier...)</div><div class="ttdoc">Create the underlying fixed size storage for a user declared compound literal array of the type the u...</div><div class="ttdef"><b>Definition:</b> array_adaptive_map.h:135</div></div>
 <div class="ttc" id="astructCCC__Array__adaptive__map_html"><div class="ttname"><a href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a></div><div class="ttdef"><b>Definition:</b> private_array_adaptive_map.h:68</div></div>
+<div class="ttc" id="astructCCC__Key__comparator_html"><div class="ttname"><a href="structCCC__Key__comparator.html">CCC_Key_comparator</a></div><div class="ttdoc">The type passed by reference to any container function that may need to compare keys....</div><div class="ttdef"><b>Definition:</b> types.h:505</div></div>
 </div><!-- fragment --><p>Usually, using a dynamic map and the reserve interface would be sufficient. However, the reserve interface only guarantees that at least the needed bytes are allocated. When the user must know the exact size of the backing object due to strict memory requirements, this is helpful. Such a use case may be rare, but must be supported by this container. </p>
 
 </div>
@@ -1794,7 +1795,7 @@ do not try to access data in the table manually with a handle. Always use this p
 <div class="line">);</div>
 <div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res</div>
 <div class="line">    = array_adaptive_map_copy(&amp;destination, &amp;source, &amp;(<a class="code hl_struct" href="structCCC__Allocator.html">CCC_Allocator</a>){});</div>
-<div class="ttc" id="astructCCC__Allocator_html"><div class="ttname"><a href="structCCC__Allocator.html">CCC_Allocator</a></div><div class="ttdoc">The type passed by reference to any container function that may need to allocate memory....</div><div class="ttdef"><b>Definition:</b> types.h:370</div></div>
+<div class="ttc" id="astructCCC__Allocator_html"><div class="ttname"><a href="structCCC__Allocator.html">CCC_Allocator</a></div><div class="ttdoc">The type passed by reference to any container function that may need to allocate memory....</div><div class="ttdef"><b>Definition:</b> types.h:369</div></div>
 <div class="ttc" id="atypes_8h_html_aa1ded61d294b114942f11e711b331dcf"><div class="ttname"><a href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a></div><div class="ttdeci">CCC_Result</div><div class="ttdoc">A result of actions on containers.</div><div class="ttdef"><b>Definition:</b> types.h:192</div></div>
 </div><!-- fragment --><p>The above requires destination capacity be greater than or equal to source capacity. Here is memory management handed over to the copy function.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define ARRAY_ADAPTIVE_MAP_USING_NAMESPACE_CCC</span></div>
