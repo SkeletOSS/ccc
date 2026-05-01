@@ -155,9 +155,8 @@ to the user. GCC is not so forgiving. */
     private_flat_buffer_pointer, index, private_type_compound_literal...       \
 )                                                                              \
     (__extension__({                                                           \
-        typeof(private_type_compound_literal) *private_flat_buffer_res = NULL; \
         __auto_type private_i = (index);                                       \
-        private_flat_buffer_res                                                \
+        typeof(private_type_compound_literal) *private_flat_buffer_res         \
             = CCC_flat_buffer_at((private_flat_buffer_pointer), private_i);    \
         if (private_flat_buffer_res) {                                         \
             *private_flat_buffer_res = private_type_compound_literal;          \
@@ -172,10 +171,10 @@ to the user. GCC is not so forgiving. */
     private_type_compound_literal...                                           \
 )                                                                              \
     (__extension__({                                                           \
-        typeof(private_type_compound_literal) *private_flat_buffer_res = NULL; \
-        private_flat_buffer_res = CCC_flat_buffer_allocate_back(               \
-            (private_flat_buffer_pointer), (private_allocator_pointer)         \
-        );                                                                     \
+        typeof(private_type_compound_literal) *private_flat_buffer_res         \
+            = CCC_flat_buffer_allocate_back(                                   \
+                (private_flat_buffer_pointer), (private_allocator_pointer)     \
+            );                                                                 \
         if (private_flat_buffer_res) {                                         \
             *private_flat_buffer_res = private_type_compound_literal;          \
         }                                                                      \
