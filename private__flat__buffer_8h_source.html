@@ -210,35 +210,34 @@ $(document).ready(function(){initNavTree('private__flat__buffer_8h_source.html',
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span><span class="preprocessor">    private_flat_buffer_pointer, index, private_type_compound_literal...       \</span></div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span><span class="preprocessor">)                                                                              \</span></div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span><span class="preprocessor">    (__extension__({                                                           \</span></div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span><span class="preprocessor">        typeof(private_type_compound_literal) *private_flat_buffer_res = NULL; \</span></div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span><span class="preprocessor">        __auto_type private_i = (index);                                       \</span></div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span><span class="preprocessor">        private_flat_buffer_res                                                \</span></div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span><span class="preprocessor">            = CCC_flat_buffer_at((private_flat_buffer_pointer), private_i);    \</span></div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span><span class="preprocessor">        if (private_flat_buffer_res) {                                         \</span></div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span><span class="preprocessor">            *private_flat_buffer_res = private_type_compound_literal;          \</span></div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span><span class="preprocessor">        }                                                                      \</span></div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span><span class="preprocessor">        private_flat_buffer_res;                                               \</span></div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span><span class="preprocessor">    }))</span></div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span><span class="preprocessor">#define CCC_private_flat_buffer_emplace_back(                                  \</span></div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span><span class="preprocessor">    private_flat_buffer_pointer,                                               \</span></div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span><span class="preprocessor">    private_allocator_pointer,                                                 \</span></div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span><span class="preprocessor">    private_type_compound_literal...                                           \</span></div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span><span class="preprocessor">)                                                                              \</span></div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span><span class="preprocessor">    (__extension__({                                                           \</span></div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span><span class="preprocessor">        typeof(private_type_compound_literal) *private_flat_buffer_res = NULL; \</span></div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span><span class="preprocessor">        private_flat_buffer_res = CCC_flat_buffer_allocate_back(               \</span></div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span><span class="preprocessor">            (private_flat_buffer_pointer), (private_allocator_pointer)         \</span></div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span><span class="preprocessor">        );                                                                     \</span></div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span><span class="preprocessor">        if (private_flat_buffer_res) {                                         \</span></div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span><span class="preprocessor">            *private_flat_buffer_res = private_type_compound_literal;          \</span></div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span><span class="preprocessor">        }                                                                      \</span></div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span><span class="preprocessor">        private_flat_buffer_res;                                               \</span></div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span><span class="preprocessor">    }))</span></div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span> </div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span><span class="comment">/* NOLINTEND(readability-identifier-naming) */</span></div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span> </div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span><span class="preprocessor">#endif </span><span class="comment">/* CCC_PRIVATE_FLAT_BUFFER_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span><span class="preprocessor">        __auto_type private_i = (index);                                       \</span></div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span><span class="preprocessor">        typeof(private_type_compound_literal) *private_flat_buffer_res         \</span></div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span><span class="preprocessor">            = CCC_flat_buffer_at((private_flat_buffer_pointer), private_i);    \</span></div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span><span class="preprocessor">        if (private_flat_buffer_res) {                                         \</span></div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span><span class="preprocessor">            *private_flat_buffer_res = private_type_compound_literal;          \</span></div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span><span class="preprocessor">        }                                                                      \</span></div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span><span class="preprocessor">        private_flat_buffer_res;                                               \</span></div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span><span class="preprocessor">    }))</span></div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span><span class="preprocessor">#define CCC_private_flat_buffer_emplace_back(                                  \</span></div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span><span class="preprocessor">    private_flat_buffer_pointer,                                               \</span></div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span><span class="preprocessor">    private_allocator_pointer,                                                 \</span></div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span><span class="preprocessor">    private_type_compound_literal...                                           \</span></div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span><span class="preprocessor">)                                                                              \</span></div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span><span class="preprocessor">    (__extension__({                                                           \</span></div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span><span class="preprocessor">        typeof(private_type_compound_literal) *private_flat_buffer_res         \</span></div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span><span class="preprocessor">            = CCC_flat_buffer_allocate_back(                                   \</span></div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span><span class="preprocessor">                (private_flat_buffer_pointer), (private_allocator_pointer)     \</span></div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span><span class="preprocessor">            );                                                                 \</span></div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span><span class="preprocessor">        if (private_flat_buffer_res) {                                         \</span></div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span><span class="preprocessor">            *private_flat_buffer_res = private_type_compound_literal;          \</span></div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span><span class="preprocessor">        }                                                                      \</span></div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span><span class="preprocessor">        private_flat_buffer_res;                                               \</span></div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span><span class="preprocessor">    }))</span></div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span> </div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span><span class="comment">/* NOLINTEND(readability-identifier-naming) */</span></div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span> </div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span><span class="preprocessor">#endif </span><span class="comment">/* CCC_PRIVATE_FLAT_BUFFER_H */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="astructCCC__Flat__buffer_html"><div class="ttname"><a href="structCCC__Flat__buffer.html">CCC_Flat_buffer</a></div><div class="ttdef"><b>Definition:</b> private_flat_buffer.h:32</div></div>
 <div class="ttc" id="astructCCC__Flat__buffer_html_a24e7baa985b8bab196c94a9c747f6f79"><div class="ttname"><a href="structCCC__Flat__buffer.html#a24e7baa985b8bab196c94a9c747f6f79">CCC_Flat_buffer::data</a></div><div class="ttdeci">void * data</div><div class="ttdef"><b>Definition:</b> private_flat_buffer.h:34</div></div>
 <div class="ttc" id="astructCCC__Flat__buffer_html_a42b621d342edb1b8a589657e709549e4"><div class="ttname"><a href="structCCC__Flat__buffer.html#a42b621d342edb1b8a589657e709549e4">CCC_Flat_buffer::capacity</a></div><div class="ttdeci">size_t capacity</div><div class="ttdef"><b>Definition:</b> private_flat_buffer.h:38</div></div>
