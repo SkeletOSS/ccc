@@ -120,7 +120,7 @@ main(void)
     CCC_Array_adaptive_map map = CCC_array_adaptive_map_for(
         struct Val,
         key,
-        val_key_comparator,
+        (CCC_Key_comparator){.compare = order_vals},
         4096,
         map
     );

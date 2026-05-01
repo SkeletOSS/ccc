@@ -158,10 +158,7 @@ main(void)
     CCC_Flat_hash_map hash_map = CCC_flat_hash_map_for(
         struct Val,
         key,
-        hash_key,
-        order_vals,
-        NULL,
-        NULL,
+        ((CCC_Hasher){.hash = hash_int, .compare = key_order}),
         4096,
         storage
     );
@@ -399,8 +396,8 @@ destination capacity is less than source, an allocation function must be
 provided with the allocate argument.
 
 Note that there are two ways to copy data from source to destination: provide
-sufficient memory and pass NULL as allocate, or allow the copy function to take
-care of allocation for the copy.
+sufficient memory and pass an empty allocator, or allow the copy function to
+take care of allocation for the copy.
 
 Manual memory management with no allocation function provided.
 
@@ -422,7 +419,7 @@ Flat_hash_map destination = flat_hash_map_with_storage(
     ((CCC_Hasher){.hash = hash_int, .compare = key_order}),
     (struct Val[64]){}
 );
-CCC_Result res = flat_hash_map_copy(&destination, &source, NULL);
+CCC_Result res = flat_hash_map_copy(&destination, &source, &(CCC_Allocator){});
 ```
 
 The above requires destination capacity be greater than or equal to source

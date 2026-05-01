@@ -127,9 +127,7 @@ main(void)
     CCC_Array_tree_map map = CCC_array_tree_map_for(
         struct Val,
         key,
-        order_vals,
-        NULL,
-        NULL,
+        (CCC_Key_comparator){.compare = order_vals},
         4096,
         map
     );

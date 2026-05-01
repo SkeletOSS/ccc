@@ -209,8 +209,7 @@ typedef enum : uint8_t {
 A C style three way comparison value (e.g. ((a > b) - (a < b))).
 CCC_ORDER_LESSER if left hand side is less than right hand side, CCC_ORDER_EQUAL
 if they are equal, and CCC_ORDER_GREATER if left hand side is greater than right
-hand side.
-*/
+hand side. */
 typedef enum : int8_t {
     /** The left hand side is less than the right hand side. */
     CCC_ORDER_LESSER = -1,
