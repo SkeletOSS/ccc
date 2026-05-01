@@ -344,8 +344,9 @@ map_to_buffer(
     for (CCC_Handle_index iter = begin(map); iter != end(map) && i < cap;
          iter = next(map, iter), ++i) {
         Word const *const w = array_adaptive_map_at(map, iter);
-        Word const *const pushed
-            = flat_buffer_push_back(&freqs, w, &(CCC_Allocator){});
+        Word const *const pushed = flat_buffer_emplace_back(
+            &freqs, &(CCC_Allocator){}, (Word){.ofs = w->ofs, .freq = w->freq}
+        );
         check(pushed);
     }
     return freqs;

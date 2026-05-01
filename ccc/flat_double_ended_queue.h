@@ -645,10 +645,14 @@ typedef CCC_Flat_double_ended_queue Flat_double_ended_queue;
         CCC_flat_double_ended_queue_emplace(arguments)
 #    define flat_double_ended_queue_push_back(arguments...)                    \
         CCC_flat_double_ended_queue_push_back(arguments)
+#    define flat_double_ended_queue_emplace_back(arguments...)                 \
+        CCC_flat_double_ended_queue_emplace_back(arguments)
 #    define flat_double_ended_queue_push_back_range(arguments...)              \
         CCC_flat_double_ended_queue_push_back_range(arguments)
 #    define flat_double_ended_queue_push_front(arguments...)                   \
         CCC_flat_double_ended_queue_push_front(arguments)
+#    define flat_double_ended_queue_emplace_front(arguments...)                \
+        CCC_flat_double_ended_queue_emplace_front(arguments)
 #    define flat_double_ended_queue_push_front_range(arguments...)             \
         CCC_flat_double_ended_queue_push_front_range(arguments)
 #    define flat_double_ended_queue_insert_range(arguments...)                 \

@@ -374,13 +374,14 @@ build_encoding_tree(FILE *const f, CCC_Allocator const *const allocator) {
         struct Pair_node const one = *(struct Pair_node *)front(&pairings);
         r = pop(&pairings, &(struct Pair_node){});
         check(r == CCC_RESULT_OK);
-        struct Huffman_node const *const internal_one = push_back(
-            &ret.tree_storage,
-            &(struct Huffman_node){
-                .link = {zero.node_index, one.node_index},
-            },
-            allocator
-        );
+        struct Huffman_node const *const internal_one
+            = flat_buffer_emplace_back(
+                &ret.tree_storage,
+                allocator,
+                (struct Huffman_node){
+                    .link = {zero.node_index, one.node_index},
+                }
+            );
         size_t const pair_root
             = flat_buffer_index(&ret.tree_storage, internal_one).count;
         check(internal_one);
@@ -450,21 +451,21 @@ build_encoding_priority_queue(
     for (struct Character_frequency const *i = begin(&frequencies);
          i != end(&frequencies);
          i = next(&frequencies, i)) {
-        struct Huffman_node const *const node = push_back(
+        struct Huffman_node const *const node = flat_buffer_emplace_back(
             &tree->tree_storage,
-            &(struct Huffman_node){.ch = i->ch},
-            &(CCC_Allocator){}
+            &(CCC_Allocator){},
+            (struct Huffman_node){.ch = i->ch}
         );
         check(node);
         CCC_Count index = flat_buffer_index(&tree->tree_storage, node);
         check(!index.error);
-        struct Pair_node const *const pushed = push_back(
+        struct Pair_node const *const pushed = flat_buffer_emplace_back(
             &flat_priority_queue_storage,
-            &(struct Pair_node){
+            &(CCC_Allocator){},
+            (struct Pair_node){
                 .frequency = i->freq,
                 .node_index = index.count,
-            },
-            &(CCC_Allocator){}
+            }
         );
         check(pushed);
     }
@@ -903,12 +904,12 @@ reconstruct_tree(
         CCC_Tribool is_internal_node = CCC_TRUE;
         if (!current) {
             is_internal_node = bitq_pop_front(&blueprint->tree_paths);
-            struct Huffman_node *const pushed = push_back(
+            struct Huffman_node *const pushed = flat_buffer_emplace_back(
                 &tree.tree_storage,
-                &(struct Huffman_node){
+                allocator,
+                (struct Huffman_node){
                     .parent = parent,
-                },
-                allocator
+                }
             );
             current = flat_buffer_index(&tree.tree_storage, pushed).count;
             /* Get the parent reference after the buffer push in case the

@@ -490,7 +490,10 @@ found_destination(
                 && !occupied(
                     flat_hash_map_try_insert_wrap(&parent_map, &push, allocator)
                 )) {
-                struct Point const *const n = push_back(&bfs, &next, allocator);
+                struct Point const *const n
+                    = flat_double_ended_queue_emplace_back(
+                        &bfs, allocator, (struct Point){next.r, next.c}
+                    );
                 check(n);
             }
         }
