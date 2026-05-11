@@ -588,8 +588,9 @@ append_tree_path_to_bitq(
         cur = node->link[node->child_index++];
     }
     /* Cleanup because we now have the correct path. */
-    for (; cur; cur = parent_index(tree, cur)) {
+    while (cur) {
         node_at(tree, cur)->child_index = 0;
+        cur = parent_index(tree, cur);
     }
     path.path_len = bitq_count(bq) - path.bitq_start_index;
     check(path.path_len);

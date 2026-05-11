@@ -812,13 +812,16 @@ paint_shortest_path(
     struct Cost const *u
 ) {
     int total = 0;
-    for (; u->from; u = priority_map_at(map_priority_queue, u->from)) {
+    while (u->from) {
         struct Node const *const edges = vertex_at(graph, u->name)->edges;
         int i = 0;
-        for (; i < MAX_DEGREE && edges[i].name != u->from; ++i) {}
+        while (i < MAX_DEGREE && edges[i].name != u->from) {
+            ++i;
+        }
         check(i < MAX_DEGREE && edges[i].name);
         total += edges[i].cost;
         paint_edge(graph, u->name, u->from, CYN);
+        u = priority_map_at(map_priority_queue, u->from);
         nanosleep(&graph->speed, NULL);
     }
     return total;
