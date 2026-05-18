@@ -103,6 +103,7 @@ CCC_singly_linked_list_push_front(
         void *const node = allocator->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = list->sizeof_type,
+            .alignment = list->alignof_type,
             .context = allocator->context,
         });
         if (!node) {
@@ -136,6 +137,7 @@ CCC_singly_linked_list_pop_front(
         (void)allocator->allocate((CCC_Allocator_arguments){
             .input = struct_base(list, remove),
             .bytes = 0,
+            .alignment = list->alignof_type,
             .context = allocator->context,
         });
     }
@@ -228,6 +230,7 @@ CCC_singly_linked_list_erase(
         (void)allocator->allocate((CCC_Allocator_arguments){
             .input = struct_base(list, type_intruder),
             .bytes = 0,
+            .alignment = list->alignof_type,
             .context = allocator->context,
         });
     }
@@ -352,6 +355,7 @@ CCC_singly_linked_list_clear(
             (void)allocator->allocate((CCC_Allocator_arguments){
                 .input = data,
                 .bytes = 0,
+                .alignment = list->alignof_type,
                 .context = allocator->context,
             });
         }
@@ -443,6 +447,7 @@ CCC_singly_linked_list_insert_sorted(
         void *const node = allocator->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = list->sizeof_type,
+            .alignment = list->alignof_type,
             .context = allocator->context,
         });
         if (!node) {
@@ -691,6 +696,7 @@ erase_range(
         (void)allocator->allocate((CCC_Allocator_arguments){
             .input = struct_base(list, begin),
             .bytes = 0,
+            .alignment = list->alignof_type,
             .context = allocator->context,
         });
         if (begin == end) {

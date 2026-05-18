@@ -279,6 +279,8 @@ typedef struct {
     void *const input;
     /** The bytes being requested from the allocator. 0 is a free request. */
     size_t bytes;
+    /** The alignment for the base address of the returned bytes. */
+    size_t alignment;
     /** Additional state to pass to the allocator to help manage memory. */
     void *const context;
 } CCC_Allocator_arguments;
@@ -289,15 +291,19 @@ The C Container Collection relies on the following behaviors when calling the
 user provided allocator function internally.
 
 - If input is NULL and bytes 0, NULL is returned.
-- If input is NULL with non-zero bytes, new memory is allocated and returned.
+- If input is NULL with non-zero bytes, new memory is allocated and returned
+  with the base address aligned to the alignment argument. If alignment is zero,
+  the default alignment of the allocator is used.
 - If input is non-NULL it has been previously allocated by the allocator.
 - If input is non-NULL with non-zero size, input is resized to at least bytes
   size. The pointer returned is NULL if resizing fails. Upon success, the
-  pointer returned might not be equal to the pointer provided.
+  pointer returned might not be equal to the pointer provided and is aligned to
+  the provided alignment argument. If alignment is zero, the default alignment
+  of the allocator is used.
 - If input is non-NULL and size is 0, input is freed and NULL is returned.
 
 For example, one allocation interface using the standard library allocator might
-be implemented as follows (context is not needed):
+be implemented as follows (alignment and context is not needed):
 
 ```
 void *

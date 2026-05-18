@@ -379,6 +379,7 @@ CCC_tree_map_remove_entry(
             allocator->allocate((CCC_Allocator_arguments){
                 .input = erased,
                 .bytes = 0,
+                .alignment = entry->map->alignof_type,
                 .context = allocator->context,
             });
             return (CCC_Entry){
@@ -420,6 +421,7 @@ CCC_tree_map_remove_key_value(
         allocator->allocate((CCC_Allocator_arguments){
             .input = removed,
             .bytes = 0,
+            .alignment = map->alignof_type,
             .context = allocator->context,
         });
         return (CCC_Entry){
@@ -623,6 +625,7 @@ CCC_tree_map_clear(
             (void)allocator->allocate((CCC_Allocator_arguments){
                 .input = type,
                 .bytes = 0,
+                .alignment = map->alignof_type,
                 .context = allocator->context,
             });
         }
@@ -712,6 +715,7 @@ maybe_allocate_insert(
         void *const new = allocator->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = map->sizeof_type,
+            .alignment = map->alignof_type,
             .context = allocator->context,
         });
         if (!new) {

@@ -314,6 +314,7 @@ CCC_adaptive_map_remove_key_value(
         allocator->allocate((CCC_Allocator_arguments){
             .input = n,
             .bytes = 0,
+            .alignment = map->alignof_type,
             .context = allocator->context,
         });
         return (CCC_Entry){
@@ -341,6 +342,7 @@ CCC_adaptive_map_remove_entry(
             allocator->allocate((CCC_Allocator_arguments){
                 .input = erased,
                 .bytes = 0,
+                .alignment = e->map->alignof_type,
                 .context = allocator->context,
             });
             return (CCC_Entry){
@@ -509,6 +511,7 @@ CCC_adaptive_map_clear(
             (void)allocator->allocate((CCC_Allocator_arguments){
                 .input = del,
                 .bytes = 0,
+                .alignment = map->alignof_type,
                 .context = allocator->context,
             });
         }
@@ -717,6 +720,7 @@ allocate_insert(
         void *const node = allocator->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = t->sizeof_type,
+            .alignment = t->alignof_type,
             .context = allocator->context,
         });
         if (!node) {

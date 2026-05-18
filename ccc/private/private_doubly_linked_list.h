@@ -70,6 +70,8 @@ struct CCC_Doubly_linked_list {
     struct CCC_Doubly_linked_list_node *tail;
     /** @internal The size in bytes of the type which wraps this handle. */
     size_t sizeof_type;
+    /** @internal The alignment of the type which wraps this handle. */
+    size_t alignof_type;
     /** @internal The offset in bytes of the intrusive element in user type. */
     size_t type_intruder_offset;
 };
@@ -99,6 +101,7 @@ name of the list being on the left hand side of the assignment operator. */
     (struct CCC_Doubly_linked_list) {                                          \
         .head = NULL, .tail = NULL,                                            \
         .sizeof_type = sizeof(private_struct_name),                            \
+        .alignof_type = alignof(private_struct_name),                          \
         .type_intruder_offset                                                  \
             = offsetof(private_struct_name, private_type_intruder_field),      \
     }
@@ -178,6 +181,7 @@ name of the list being on the left hand side of the assignment operator. */
                 ){                                                             \
                     .input = NULL,                                             \
                     .bytes = private_doubly_linked_list->sizeof_type,          \
+                    .alignment = private_doubly_linked_list->alignof_type,     \
                     .context = private_doubly_linked_list_allocator->context,  \
                 });                                                            \
             if (private_doubly_linked_list_res) {                              \
@@ -214,6 +218,7 @@ name of the list being on the left hand side of the assignment operator. */
                 ){                                                             \
                     .input = NULL,                                             \
                     .bytes = private_doubly_linked_list->sizeof_type,          \
+                    .alignment = private_doubly_linked_list->alignof_type,     \
                     .context = private_doubly_linked_list_allocator->context,  \
                 });                                                            \
             if (private_doubly_linked_list_res) {                              \

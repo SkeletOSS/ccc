@@ -55,11 +55,12 @@ struct CCC_Tree_map {
     size_t count;
     /** @internal The byte offset of the key in the user struct. */
     size_t key_offset;
-    /** @internal The byte offset of the intrusive element in the user struct.
-     */
+    /** @internal The byte offset of intrusive element in the user struct. */
     size_t type_intruder_offset;
     /** @internal The size of the user struct holding the intruder. */
     size_t sizeof_type;
+    /** @internal The alignment of the user struct holding the intruder. */
+    size_t alignof_type;
     /** @internal The comparator and context pointer. */
     CCC_Key_comparator comparator;
 };
@@ -113,6 +114,7 @@ void *CCC_private_tree_map_insert(
         .type_intruder_offset                                                  \
             = offsetof(private_struct_name, private_node_field),               \
         .sizeof_type = sizeof(private_struct_name),                            \
+        .alignof_type = alignof(private_struct_name),                          \
         .comparator = (private_comparator),                                    \
     }
 
@@ -171,6 +173,7 @@ void *CCC_private_tree_map_insert(
                         ){                                                     \
                             .input = NULL,                                     \
                             .bytes = private_map.sizeof_type,                  \
+                            .alignment = private_map.alignof_type,             \
                             .context = private_tree_map_allocator->context,    \
                         });                                                    \
                     if (!private_new_slot) {                                   \
@@ -224,6 +227,8 @@ void *CCC_private_tree_map_insert(
                       ->allocate((CCC_Allocator_arguments){                    \
                           .input = NULL,                                       \
                           .bytes = (private_tree_map_entry)->map->sizeof_type, \
+                          .alignment                                           \
+                          = (private_tree_map_entry)->map->alignof_type,       \
                           .context = (private_allocator_pointer)->context,     \
                       });                                                      \
         }                                                                      \

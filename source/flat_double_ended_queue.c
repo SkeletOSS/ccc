@@ -704,6 +704,7 @@ maybe_resize(
     void *const new_data = allocator->allocate((CCC_Allocator_arguments){
         .input = NULL,
         .bytes = sizeof_type * required,
+        .alignment = queue->buffer.alignof_type,
         .context = allocator->context,
     });
     if (!new_data) {

@@ -65,6 +65,8 @@ struct CCC_Singly_linked_list {
     struct CCC_Singly_linked_list_node *head;
     /** @internal The size in bytes of the type which wraps this handle. */
     size_t sizeof_type;
+    /** @internal The alignment of the type which wraps this handle. */
+    size_t alignof_type;
     /** @internal The offset in bytes of the intrusive element in user type. */
     size_t type_intruder_offset;
 };
@@ -88,6 +90,7 @@ struct CCC_Singly_linked_list_node *CCC_private_singly_linked_list_node_in(
 )                                                                              \
     (struct CCC_Singly_linked_list) {                                          \
         .head = NULL, .sizeof_type = sizeof(private_struct_name),              \
+        .alignof_type = alignof(private_struct_name),                          \
         .type_intruder_offset = offsetof(                                      \
             private_struct_name, private_singly_linked_list_node_field         \
         ),                                                                     \

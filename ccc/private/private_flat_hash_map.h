@@ -151,6 +151,8 @@ struct CCC_Flat_hash_map {
     size_t mask;
     /** @internal Size of each user data element being stored. */
     size_t sizeof_type;
+    /** @internal Alignment user data type being stored. */
+    size_t alignof_type;
     /** @internal The location of the key field in user type. */
     size_t key_offset;
     /** @internal The provided hash function, key comparator, and context. */
@@ -243,6 +245,7 @@ be exposed to the user if they wish to know the size in bytes of this object. */
 )                                                                              \
     (struct CCC_Flat_hash_map) {                                               \
         .sizeof_type = sizeof(private_type_name),                              \
+        .alignof_type = alignof(private_type_name),                            \
         .key_offset = offsetof(private_type_name, private_key_field),          \
         .hasher = private_hasher,                                              \
     }
@@ -279,6 +282,7 @@ allocation. */
                    ? ((private_capacity) - (size_t)1)                          \
                    : (size_t)0),                                               \
         .sizeof_type = sizeof(private_type_name),                              \
+        .alignof_type = alignof(private_type_name),                            \
         .key_offset = offsetof(private_type_name, private_key_field),          \
         .hasher = (private_hasher),                                            \
     }
@@ -377,6 +381,7 @@ allocation. */
                 )                                                              \
               - (size_t)1,                                                     \
         .sizeof_type = sizeof(*(private_compound_literal)),                    \
+        .alignof_type = alignof(*(private_compound_literal)),                  \
         .key_offset = offsetof(                                                \
             typeof(*(private_compound_literal)), private_key_field             \
         ),                                                                     \

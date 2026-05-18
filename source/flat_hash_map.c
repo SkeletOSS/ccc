@@ -685,6 +685,7 @@ CCC_flat_hash_map_clear_and_free(
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
+        .alignment = map->alignof_type,
         .context = allocator->context,
     });
     map->data = NULL;
@@ -741,6 +742,7 @@ CCC_flat_hash_map_copy(
         void *const new_data = allocator->allocate((CCC_Allocator_arguments){
             .input = destination->data,
             .bytes = source_bytes,
+            .alignment = destination->alignof_type,
             .context = allocator->context,
         });
         if (!new_data) {
@@ -1357,6 +1359,7 @@ rehash_resize(
     void *const new_buf = allocator->allocate((CCC_Allocator_arguments){
         .input = NULL,
         .bytes = total_bytes,
+        .alignment = map->alignof_type,
         .context = allocator->context,
     });
     if (!new_buf) {
@@ -1395,6 +1398,7 @@ rehash_resize(
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
+        .alignment = map->alignof_type,
         .context = allocator->context,
     });
     map->data = new_map.data;
@@ -1433,6 +1437,7 @@ lazy_initialize(
         map->data = allocator->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = total_bytes,
+            .alignment = map->alignof_type,
             .context = allocator->context,
         });
         if (!map->data) {

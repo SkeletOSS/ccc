@@ -85,6 +85,7 @@ CCC_priority_queue_push(
         void *const node = allocator->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = priority_queue->sizeof_type,
+            .alignment = priority_queue->alignof_type,
             .context = allocator->context,
         });
         if (!node) {
@@ -117,6 +118,7 @@ CCC_priority_queue_pop(
         (void)allocator->allocate((CCC_Allocator_arguments){
             .input = struct_base(priority_queue, popped),
             .bytes = 0,
+            .alignment = priority_queue->alignof_type,
             .context = allocator->context,
         });
     }
@@ -154,6 +156,7 @@ CCC_priority_queue_erase(
         (void)allocator->allocate((CCC_Allocator_arguments){
             .input = struct_base(priority_queue, type_intruder),
             .bytes = 0,
+            .alignment = priority_queue->alignof_type,
             .context = allocator->context,
         });
     }
@@ -210,6 +213,7 @@ CCC_priority_queue_clear(
             (void)allocator->allocate((CCC_Allocator_arguments){
                 .input = destroy_this,
                 .bytes = 0,
+                .alignment = priority_queue->alignof_type,
                 .context = allocator->context,
             });
         }

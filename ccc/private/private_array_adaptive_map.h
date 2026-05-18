@@ -80,6 +80,8 @@ struct CCC_Array_adaptive_map {
     size_t free_list;
     /** @internal The size of the type stored in the map. */
     size_t sizeof_type;
+    /** @internal The alignment of the type being stored. */
+    size_t alignof_type;
     /** @internal Where user key can be found in type. */
     size_t key_offset;
     /** @internal The provided key comparison function and context. */
@@ -136,6 +138,7 @@ size_t CCC_private_array_adaptive_map_allocate_slot(
 )                                                                              \
     (struct CCC_Array_adaptive_map) {                                          \
         .sizeof_type = sizeof(private_type_name),                              \
+        .alignof_type = alignof(private_type_name),                            \
         .key_offset = offsetof(private_type_name, private_key_node_field),     \
         .comparator = private_comparator,                                      \
     }
@@ -151,6 +154,7 @@ size_t CCC_private_array_adaptive_map_allocate_slot(
         .data = (private_memory_pointer), .nodes = NULL,                       \
         .capacity = (private_capacity), .count = 0, .root = 0, .free_list = 0, \
         .sizeof_type = sizeof(private_type_name),                              \
+        .alignof_type = alignof(private_type_name),                            \
         .key_offset = offsetof(private_type_name, private_key_node_field),     \
         .comparator = (private_comparator),                                    \
     }
@@ -283,6 +287,7 @@ metadata. */
             ),                                                                 \
         .count = 0, .root = 0, .free_list = 0,                                 \
         .sizeof_type = sizeof(*(private_compound_literal)),                    \
+        .alignof_type = alignof(*(private_compound_literal)),                  \
         .key_offset = offsetof(                                                \
             typeof(*(private_compound_literal)), private_key_node_field        \
         ),                                                                     \

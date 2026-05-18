@@ -91,6 +91,8 @@ struct CCC_Priority_queue {
     size_t type_intruder_offset;
     /** @internal The size of the type we are intruding upon. */
     size_t sizeof_type;
+    /** @internal The alignment of the type we are intruding upon. */
+    size_t alignof_type;
     /** @internal The order of this heap, `CCC_ORDER_LESSER` (min) or
      * `CCC_ORDER_GREATER` (max).*/
     CCC_Order order;
@@ -135,6 +137,7 @@ void CCC_private_priority_queue_decrease_fixup(
         .type_intruder_offset                                                  \
             = offsetof(private_struct_name, private_type_intruder_field),      \
         .sizeof_type = sizeof(private_struct_name),                            \
+        .alignof_type = alignof(private_struct_name),                          \
         .order = (private_priority_queue_order),                               \
         .comparator = (private_comparator),                                    \
     }
@@ -187,6 +190,7 @@ void CCC_private_priority_queue_decrease_fixup(
                     ){                                                         \
                         .input = NULL,                                         \
                         .bytes = private_priority_queue.sizeof_type,           \
+                        .alignment = private_priority_queue.alignof_type,      \
                         .context = private_priority_queue_allocator->context,  \
                     });                                                        \
                 if (!private_new_node) {                                       \
@@ -233,6 +237,7 @@ void CCC_private_priority_queue_decrease_fixup(
                     ){                                                         \
                         .input = NULL,                                         \
                         .bytes = private_priority_queue->sizeof_type,          \
+                        .alignment = private_priority_queue->alignof_type,     \
                         .context = private_priority_queue_allocator->context,  \
                     });                                                        \
                 if (private_priority_queue_res) {                              \

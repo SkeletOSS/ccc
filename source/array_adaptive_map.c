@@ -666,6 +666,7 @@ CCC_array_adaptive_map_clear_and_free(
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
+        .alignment = map->alignof_type,
         .context = allocator->context,
     });
     map->data = NULL;
@@ -831,6 +832,7 @@ resize(
     void *const new_data = allocator->allocate((CCC_Allocator_arguments){
         .input = NULL,
         .bytes = total_bytes(map->sizeof_type, new_capacity),
+        .alignment = map->alignof_type,
         .context = allocator->context,
     });
     if (!new_data) {
@@ -841,6 +843,7 @@ resize(
     allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
+        .alignment = map->alignof_type,
         .context = allocator->context,
     });
     map->data = new_data;
