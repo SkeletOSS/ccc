@@ -320,7 +320,7 @@ static void set_insert_tag(
     struct CCC_Flat_hash_map *, struct CCC_Flat_hash_map_tag, size_t
 );
 static size_t mask_to_capacity_with_load_factor(size_t);
-static size_t max(size_t, size_t);
+static size_t max_size_t(size_t, size_t);
 static void
 tag_set(struct CCC_Flat_hash_map *, struct CCC_Flat_hash_map_tag, size_t);
 static CCC_Tribool match_has_one(struct Match_mask);
@@ -685,7 +685,7 @@ CCC_flat_hash_map_clear_and_free(
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .alignment = map->alignof_type,
+        .alignment = max_size_t(GROUP_COUNT, map->alignof_type),
         .context = allocator->context,
     });
     map->data = NULL;
@@ -742,7 +742,7 @@ CCC_flat_hash_map_copy(
         void *const new_data = allocator->allocate((CCC_Allocator_arguments){
             .input = destination->data,
             .bytes = source_bytes,
-            .alignment = destination->alignof_type,
+            .alignment = max_size_t(GROUP_COUNT, destination->alignof_type),
             .context = allocator->context,
         });
         if (!new_data) {
@@ -1359,7 +1359,7 @@ rehash_resize(
     void *const new_buf = allocator->allocate((CCC_Allocator_arguments){
         .input = NULL,
         .bytes = total_bytes,
-        .alignment = map->alignof_type,
+        .alignment = max_size_t(GROUP_COUNT, map->alignof_type),
         .context = allocator->context,
     });
     if (!new_buf) {
@@ -1372,6 +1372,11 @@ rehash_resize(
     new_map.data = new_buf;
     /* Our static assertions at start of file guarantee this is correct. */
     new_map.tag = tags_base_address(new_map.sizeof_type, new_buf, new_map.mask);
+    assert(
+        (uintptr_t)new_map.tag % GROUP_COUNT == 0
+        && "Tag array is at correctly aligned offset from base address of "
+           "struct of arrays."
+    );
     (void)memset(new_map.tag, TAG_EMPTY, mask_to_tag_bytes(new_map.mask));
     {
         size_t group_start = 0;
@@ -1398,7 +1403,7 @@ rehash_resize(
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .alignment = map->alignof_type,
+        .alignment = max_size_t(GROUP_COUNT, map->alignof_type),
         .context = allocator->context,
     });
     map->data = new_map.data;
@@ -1431,13 +1436,13 @@ lazy_initialize(
         (void)memset(map->tag, TAG_EMPTY, mask_to_tag_bytes(map->mask));
     } else {
         /* A dynamic map we can re-size as needed. */
-        required_capacity = max(required_capacity, GROUP_COUNT);
+        required_capacity = max_size_t(required_capacity, GROUP_COUNT);
         size_t const total_bytes
             = mask_to_total_bytes(map->sizeof_type, required_capacity - 1);
         map->data = allocator->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = total_bytes,
-            .alignment = map->alignof_type,
+            .alignment = max_size_t(GROUP_COUNT, map->alignof_type),
             .context = allocator->context,
         });
         if (!map->data) {
@@ -1636,7 +1641,7 @@ tags_base_address(
 }
 
 static inline size_t
-max(size_t const a, size_t const b) {
+max_size_t(size_t const a, size_t const b) {
     return a > b ? a : b;
 }
 
