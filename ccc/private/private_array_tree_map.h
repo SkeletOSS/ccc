@@ -122,6 +122,15 @@ of the nodes array, a 24 byte sentinel node, a sentinel bit, and the unused bits
 at the end of the parity bit array. This also means it important to consider the
 alignment differences that may occur between the user type and the node type.
 
+The base allocation, the 0th user data element, is required to satisfy
+max(alignof(T), alignof(struct CCC_Array_tree_map_node)), where T is the user
+type. This ensures that both the user data array and the node array begin at
+valid alignment boundaries for their respective element types. Each subsequent
+region is derived via explicit byte-offset computation using aligned rounding,
+guaranteeing that the start of each array is aligned to at least its required
+element alignment. The parity array requires no additional alignment adjustment
+because the node alignment is greater than or equal to parity alignment.
+
 This layout comes at the cost of consulting multiple arrays for many operations.
 However, once user data has been inserted or removed the tree fix up operations
 only need to consult the nodes array and the bit array which means more bits
@@ -218,7 +227,12 @@ metadata. */
             ) > 1,                                                             \
             "fixed size map must have capacity greater than 1"                 \
         );                                                                     \
-        typeof(*(private_type_compound_literal_array))                         \
+        alignas(                                                               \
+            alignof(*(private_type_compound_literal_array))                    \
+                    > alignof(struct CCC_Array_tree_map_node)                  \
+                ? alignof(*(private_type_compound_literal_array))              \
+                : alignof(struct CCC_Array_tree_map_node)                      \
+        ) typeof(*(private_type_compound_literal_array))                       \
             data[CCC_private_array_tree_map_compound_literal_array_capacity(   \
                 private_type_compound_literal_array                            \
             )];                                                                \

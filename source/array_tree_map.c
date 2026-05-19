@@ -77,6 +77,8 @@ two alignments in C. */
 enum : size_t {
     /* @internal Test capacity. */
     TCAP = 3,
+    /* @internal Alignment of node type. */
+    NODE_ALIGNMENT = alignof(struct CCC_Array_tree_map_node),
 };
 /** @internal This is a static fixed size map exclusive to this translation unit
 used to ensure assumptions about data layout are correct. The following static
@@ -157,6 +159,11 @@ static_assert(
             )),
     "The start of the parity array must begin at the next aligned byte given "
     "alignment of both the data and nodes array."
+);
+static_assert(
+    NODE_ALIGNMENT >= alignof(*static_data_nodes_parity_layout_test.parity),
+    "Parity bit array is always aligned after node array without any special "
+    "alignment or padding considerations."
 );
 
 /*==========================  Type Declarations   ===========================*/
@@ -287,7 +294,7 @@ rotate(struct CCC_Array_tree_map *, size_t, size_t, size_t, enum Link);
 static void
 double_rotate(struct CCC_Array_tree_map *, size_t, size_t, size_t, enum Link);
 static void swap(void *, void *, void *, size_t);
-static size_t max(size_t, size_t);
+static size_t max_size_t(size_t, size_t);
 
 /*==============================  Interface    ==============================*/
 
@@ -782,7 +789,7 @@ CCC_array_tree_map_clear_and_free(
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .alignment = map->alignof_type,
+        .alignment = max_size_t(NODE_ALIGNMENT, map->alignof_type),
         .context = allocator->context,
     });
     map->data = NULL;
@@ -869,7 +876,9 @@ allocate_slot(
     if (!old_count || old_count == old_cap) {
         assert(!map->free_list);
         if (old_count == old_cap) {
-            if (resize(map, max(old_cap * 2, PARITY_BLOCK_BITS), allocator)
+            if (resize(
+                    map, max_size_t(old_cap * 2, PARITY_BLOCK_BITS), allocator
+                )
                 != CCC_RESULT_OK) {
                 return 0;
             }
@@ -888,7 +897,7 @@ allocate_slot(
             node_at(map, i)->next_free = prev;
         }
         map->free_list = prev;
-        map->count = max(old_count, 1);
+        map->count = max_size_t(old_count, 1);
         set_parity(map, 0, CCC_TRUE);
     }
     assert(map->free_list);
@@ -910,7 +919,7 @@ resize(
     void *const new_data = allocator->allocate((CCC_Allocator_arguments){
         .input = NULL,
         .bytes = total_bytes(map->sizeof_type, new_capacity),
-        .alignment = map->alignof_type,
+        .alignment = max_size_t(NODE_ALIGNMENT, map->alignof_type),
         .context = allocator->context,
     });
     if (!new_data) {
@@ -923,7 +932,7 @@ resize(
     allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .alignment = map->alignof_type,
+        .alignment = max_size_t(NODE_ALIGNMENT, map->alignof_type),
         .context = allocator->context,
     });
     map->data = new_data;
@@ -1751,7 +1760,7 @@ sibling_of(struct CCC_Array_tree_map const *const map, size_t const x) {
 }
 
 static inline size_t
-max(size_t const a, size_t const b) {
+max_size_t(size_t const a, size_t const b) {
     return a > b ? a : b;
 }
 

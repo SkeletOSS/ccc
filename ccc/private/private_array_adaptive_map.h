@@ -60,6 +60,14 @@ Here is the layout in one contiguous array.
 └───┴───┴───┴───┴───┴───┴───┴───┘
 ```
 
+The base allocation, the 0th user data element, is required to satisfy
+max(alignof(T), alignof(struct CCC_Array_adaptive_map_node)), where T is the
+user type. This ensures that both the user data array and the node array begin
+at valid alignment boundaries for their respective element types. Each
+subsequent region is derived via explicit byte-offset computation using aligned
+rounding, guaranteeing that the start of each array is aligned to at least its
+required element alignment.
+
 This layout costs us in consulting both the data and nodes array during the
 top down splay operation. However, the benefit of space saving and no wasted
 padding bytes between element fields or multiple elements in an array is the
@@ -258,7 +266,12 @@ metadata. */
             ) > 1,                                                             \
             "fixed size map must have capacity greater than 1"                 \
         );                                                                     \
-        typeof(*(private_type_compound_literal_array)) data                    \
+        alignas(                                                               \
+            alignof(*(private_type_compound_literal_array))                    \
+                    > alignof(struct CCC_Array_adaptive_map_node)              \
+                ? alignof(*(private_type_compound_literal_array))              \
+                : alignof(struct CCC_Array_adaptive_map_node)                  \
+        ) typeof(*(private_type_compound_literal_array)) data                  \
             [CCC_private_array_adaptive_map_compound_literal_array_capacity(   \
                 private_type_compound_literal_array                            \
             )];                                                                \
