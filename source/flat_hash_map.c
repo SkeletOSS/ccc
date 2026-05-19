@@ -185,7 +185,7 @@ and pointer arithmetic tests. One behavior we want to ensure is that our manual
 pointer arithmetic at runtime matches the group size aligned position of the tag
 metadata array. */
 static __auto_type const data_tag_layout_test = (struct {
-    int const data[2 + 1];
+    alignas(GROUP_COUNT) int const data[2 + 1];
     alignas(GROUP_COUNT) struct CCC_Flat_hash_map_tag const tag[2];
 }){};
 static_assert(
@@ -193,8 +193,8 @@ static_assert(
             - (char const *)&data_tag_layout_test.data[0]
         == (comptime_roundup((sizeof(data_tag_layout_test.data)))
             + (sizeof(struct CCC_Flat_hash_map_tag) * 2)),
-    "Calculating the size in bytes of the struct manually must match the bytes "
-    "added by a compiler alignas directive."
+    "The manually computed offset of the tag array from the start of the data "
+    "array must match the offset chosen by compiler alignment rules."
 );
 static_assert(
     (char const *)&data_tag_layout_test.data
