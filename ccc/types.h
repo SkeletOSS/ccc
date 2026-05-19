@@ -292,14 +292,15 @@ user provided allocator function internally.
 
 - If input is NULL and bytes 0, NULL is returned.
 - If input is NULL with non-zero bytes, new memory is allocated and returned
-  with the base address aligned to the alignment argument. If alignment is zero,
-  the default alignment of the allocator is used.
+  with the base address aligned to at least the alignment argument. If alignment
+  is zero, the default alignment of the allocator is used (usually
+  `max_align_t`).
 - If input is non-NULL it has been previously allocated by the allocator.
-- If input is non-NULL with non-zero size, input is resized to at least bytes
-  size. The pointer returned is NULL if resizing fails. Upon success, the
-  pointer returned might not be equal to the pointer provided and is aligned to
-  the provided alignment argument. If alignment is zero, the default alignment
-  of the allocator is used.
+- If input is non-NULL with non-zero bytes, input is resized to at least the
+  bytes argument's capacity. The pointer returned is NULL if resizing fails.
+  Upon success, the pointer returned might not be equal to the pointer provided
+  and is aligned to at least the provided alignment argument. If alignment is
+  zero, the default alignment of the allocator is used (usually `max_align_t`).
 - If input is non-NULL and size is 0, input is freed and NULL is returned.
 
 For example, one allocation interface using the standard library allocator might
@@ -326,7 +327,12 @@ However, the above example is only useful if the standard library allocator
 is used. Any allocator that implements the required behavior is sufficient.
 For example programs that utilize the context parameter, see the sample
 programs. Using custom arena allocators or container compositions are cases when
-context is needed. */
+context is needed.
+
+@warning Wrapping `malloc`, `realloc`, and `free` is sufficient if all CCC
+container requested alignments are less than or equal to `max_align_t`. If CCC
+requests alignments that exceed `max_align_t`, a custom alignment-aware
+allocator is required. */
 typedef void *CCC_Allocator_interface(CCC_Allocator_arguments);
 
 /** @brief The type passed by reference to any container function that may need

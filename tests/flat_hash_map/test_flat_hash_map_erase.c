@@ -48,7 +48,7 @@ my_aligned_alloc_no_realloc(CCC_Allocator_arguments const arguments) {
 }
 
 static CCC_Order
-flat_hash_map_aligned_int_order(CCC_Key_comparator_arguments const order) {
+flat_hash_map_aligned_type_order(CCC_Key_comparator_arguments const order) {
     struct Aligned_type const *const right = order.type_right;
     int const left = *((int *)order.key_left);
     return (left > right->i) - (left < right->i);
@@ -211,6 +211,82 @@ check_static_begin(flat_hash_map_test_shuffle_erase_fixed) {
                 ));
             check(old_val != NULL, true);
             check(old_val->key, to_insert[i]);
+        } else {
+            CCC_Entry removed = remove_entry(
+                flat_hash_map_entry_wrap(&h, &cur, &(CCC_Allocator){})
+            );
+            check(occupied(&removed), true);
+        }
+        --cur_size;
+        ++i;
+        check(count(&h).count, cur_size);
+        check(validate(&h), true);
+    }
+    check(count(&h).count, 0);
+    check_end();
+}
+
+check_static_begin(flat_hash_map_test_shuffle_erase_fixed_aligned) {
+    CCC_Flat_hash_map h = flat_hash_map_with_storage(
+        i,
+        ((CCC_Hasher){
+            .hash = flat_hash_map_int_to_u64,
+            .compare = flat_hash_map_aligned_type_order,
+        }),
+        (struct Aligned_type[STANDARD_FIXED_CAP]){}
+    );
+    int to_insert[STANDARD_FIXED_CAP];
+    iota(to_insert, STANDARD_FIXED_CAP, 0);
+    rand_shuffle(sizeof(int), to_insert, STANDARD_FIXED_CAP, &(int){});
+    int i = 0;
+    do {
+        int const cur = to_insert[i];
+        struct Aligned_type const *const v
+            = unwrap(flat_hash_map_insert_or_assign_with(
+                &h, cur, &(CCC_Allocator){}, (struct Aligned_type){.i = i}
+            ));
+        if (!v) {
+            break;
+        }
+        check(v->i, to_insert[i]);
+        check(validate(&h), true);
+        ++i;
+    } while (1);
+    size_t const full_size = count(&h).count;
+    size_t cur_size = count(&h).count;
+    i = 0;
+    for (; i < (int)(full_size / 2); ++i) {
+        int const cur = to_insert[i];
+        CCC_Tribool const check = contains(&h, &cur);
+        check(check, true);
+        CCC_Entry removed = remove_entry(
+            flat_hash_map_entry_wrap(&h, &cur, &(CCC_Allocator){})
+        );
+        check(occupied(&removed), true);
+        check(validate(&h), true);
+    }
+    i = 0;
+    for (; i < (int)(full_size / 2); ++i) {
+        int const cur = to_insert[i];
+        CCC_Entry const *const e = flat_hash_map_insert_or_assign_with(
+            &h, cur, &(CCC_Allocator){}, (struct Aligned_type){}
+        );
+        check(occupied(e), false);
+        check(validate(&h), true);
+    }
+    check(full_size, cur_size);
+    i = 0;
+    while (!is_empty(&h) && cur_size) {
+        int const cur = to_insert[i];
+        CCC_Tribool const check = contains(&h, &cur);
+        check(check, true);
+        if (i % 2) {
+            struct Aligned_type const *const old_val
+                = unwrap(flat_hash_map_remove_key_value_wrap(
+                    &h, &(struct Aligned_type){.i = cur}
+                ));
+            check(old_val != NULL, true);
+            check(old_val->i, to_insert[i]);
         } else {
             CCC_Entry removed = remove_entry(
                 flat_hash_map_entry_wrap(&h, &cur, &(CCC_Allocator){})
@@ -400,7 +476,7 @@ check_static_begin(flat_hash_map_test_shuffle_erase_reserved_aligned) {
         i,
         ((CCC_Hasher){
             .hash = flat_hash_map_int_to_u64,
-            .compare = flat_hash_map_aligned_int_order,
+            .compare = flat_hash_map_aligned_type_order,
         })
     );
     int const test_amount = 896;
@@ -563,6 +639,7 @@ main(void) {
         flat_hash_map_test_erase(),
         flat_hash_map_test_shuffle_insert_erase(),
         flat_hash_map_test_shuffle_erase_fixed(),
+        flat_hash_map_test_shuffle_erase_fixed_aligned(),
         flat_hash_map_test_shuffle_erase_fixed_collisions(),
         flat_hash_map_test_shuffle_erase_reserved(),
         flat_hash_map_test_shuffle_erase_reserved_aligned(),
