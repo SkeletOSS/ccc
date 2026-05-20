@@ -163,7 +163,7 @@ check_static_begin(flat_hash_map_test_shuffle_erase_fixed) {
     iota(to_insert, STANDARD_FIXED_CAP, 0);
     rand_shuffle(sizeof(int), to_insert, STANDARD_FIXED_CAP, &(int){});
     int i = 0;
-    do {
+    for (;;) {
         int const cur = to_insert[i];
         struct Val const *const v = unwrap(flat_hash_map_insert_or_assign_with(
             &h, cur, &(CCC_Allocator){}, (struct Val){.val = i}
@@ -175,7 +175,7 @@ check_static_begin(flat_hash_map_test_shuffle_erase_fixed) {
         check(v->val, i);
         check(validate(&h), true);
         ++i;
-    } while (1);
+    }
     size_t const full_size = count(&h).count;
     size_t cur_size = count(&h).count;
     i = 0;
@@ -239,7 +239,7 @@ check_static_begin(flat_hash_map_test_shuffle_erase_fixed_aligned) {
     iota(to_insert, STANDARD_FIXED_CAP, 0);
     rand_shuffle(sizeof(int), to_insert, STANDARD_FIXED_CAP, &(int){});
     int i = 0;
-    do {
+    for (;;) {
         int const cur = to_insert[i];
         struct Aligned_type const *const v
             = unwrap(flat_hash_map_insert_or_assign_with(
@@ -251,7 +251,12 @@ check_static_begin(flat_hash_map_test_shuffle_erase_fixed_aligned) {
         check(v->i, to_insert[i]);
         check(validate(&h), true);
         ++i;
-    } while (1);
+    }
+    for (struct Aligned_type const *iter = begin(&h); iter != end(&h);
+         iter = next(&h, iter)) {
+        check(iter != NULL, CCC_TRUE);
+        check(iter->i >= 0 && iter->i <= (int)STANDARD_FIXED_CAP, CCC_TRUE);
+    }
     size_t const full_size = count(&h).count;
     size_t cur_size = count(&h).count;
     i = 0;
@@ -317,7 +322,7 @@ check_static_begin(flat_hash_map_test_shuffle_erase_fixed_collisions) {
     iota(to_insert, STANDARD_FIXED_CAP, 0);
     rand_shuffle(sizeof(int), to_insert, STANDARD_FIXED_CAP, &(int){});
     int i = 0;
-    do {
+    for (;;) {
         int const cur = to_insert[i];
         struct Val const *const v = unwrap(flat_hash_map_insert_or_assign_with(
             &h, cur, &(CCC_Allocator){}, (struct Val){.val = i}
@@ -329,7 +334,7 @@ check_static_begin(flat_hash_map_test_shuffle_erase_fixed_collisions) {
         check(v->val, i);
         check(validate(&h), true);
         ++i;
-    } while (1);
+    }
     size_t const full_size = count(&h).count;
     size_t cur_size = count(&h).count;
     i = 0;
@@ -402,7 +407,7 @@ check_static_begin(flat_hash_map_test_shuffle_erase_reserved) {
     iota(to_insert, 1024, 0);
     rand_shuffle(sizeof(int), to_insert, 1024, &(int){});
     int i = 0;
-    do {
+    for (;;) {
         int const cur = to_insert[i];
         struct Val const *const v = unwrap(flat_hash_map_insert_or_assign_with(
             &h, cur, &(CCC_Allocator){}, (struct Val){.val = i}
@@ -414,7 +419,7 @@ check_static_begin(flat_hash_map_test_shuffle_erase_reserved) {
         check(v->val, i);
         check(validate(&h), true);
         ++i;
-    } while (1);
+    }
     size_t const full_size = count(&h).count;
     size_t cur_size = count(&h).count;
     i = 0;
@@ -492,7 +497,7 @@ check_static_begin(flat_hash_map_test_shuffle_erase_reserved_aligned) {
     iota(to_insert, 1024, 0);
     rand_shuffle(sizeof(int), to_insert, 1024, &(int){});
     int i = 0;
-    do {
+    for (;;) {
         int const cur = to_insert[i];
         struct Aligned_type const *const v
             = unwrap(flat_hash_map_insert_or_assign_with(
@@ -504,7 +509,12 @@ check_static_begin(flat_hash_map_test_shuffle_erase_reserved_aligned) {
         check(v->i, cur);
         check(validate(&h), true);
         ++i;
-    } while (1);
+    }
+    for (struct Aligned_type const *iter = begin(&h); iter != end(&h);
+         iter = next(&h, iter)) {
+        check(iter != NULL, CCC_TRUE);
+        check(iter->i >= 0 && iter->i <= 1024, CCC_TRUE);
+    }
     size_t const full_size = count(&h).count;
     size_t cur_size = count(&h).count;
     i = 0;
