@@ -101,9 +101,12 @@ compound literal array of the type the user intends to store.
 around which the map will be built.
 @param[in] optional_storage_specifier a storage specifier for the backing struct
 of array storage may be added on newer compilers such as static.
-@warning This should rarely be used. If a fixed size map is desired simply use
-the CCC_array_tree_map_with_storage() initializer. For dynamic maps,
-there are also many other options.
+@warning If using an allocation function that accepts an alignment argument,
+the following must be true for the provided alignment argument:
+`alignment >= alignof(struct CCC_Array_tree_map_node)`. This helper should
+rarely be used. If a fixed size map is desired simply use the
+CCC_array_tree_map_with_storage() initializer. For dynamic maps, there are
+also many other options.
 
 This macro is required to support the edge case for the user allocating a fixed
 size map dynamically from an allocator at runtime. In this case, the user needs
