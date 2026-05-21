@@ -407,6 +407,55 @@ allocation. */
         .hasher = (private_hasher),                                            \
     }
 
+/** @internal Helper for allocating a fixed size map dynamically. */
+#define CCC_private_flat_hash_map_with_allocator_storage(                      \
+    private_key_field,                                                         \
+    private_hasher,                                                            \
+    private_allocator,                                                         \
+    private_compound_literal                                                   \
+)                                                                              \
+    (__extension__({                                                           \
+        CCC_Allocator const *const private_allocator_pointer                   \
+            = &(private_allocator);                                            \
+        void *private_data_base = NULL;                                        \
+        if (private_allocator_pointer->allocate) {                             \
+            private_data_base = private_allocator_pointer->allocate(           \
+                (CCC_Allocator_arguments){                                     \
+                    .input = NULL,                                             \
+                    .bytes = sizeof(CCC_private_flat_hash_map_storage_for(     \
+                        private_compound_literal                               \
+                    )),                                                        \
+                    .alignment = CCC_FLAT_HASH_MAP_GROUP_COUNT                 \
+                                       > alignof(*(private_compound_literal))  \
+                                   ? CCC_FLAT_HASH_MAP_GROUP_COUNT             \
+                                   : alignof(*(private_compound_literal)),     \
+                    .context = private_allocator_pointer->context,             \
+                }                                                              \
+            );                                                                 \
+        }                                                                      \
+        struct CCC_Flat_hash_map private_flat_hash_map = {};                   \
+        if (private_data_base) {                                               \
+            private_flat_hash_map = CCC_private_flat_hash_map_for(             \
+                typeof(*(private_compound_literal)),                           \
+                private_key_field,                                             \
+                private_hasher,                                                \
+                CCC_private_flat_hash_map_compound_literal_array_capacity(     \
+                    private_compound_literal                                   \
+                ),                                                             \
+                private_data_base                                              \
+            );                                                                 \
+        } else {                                                               \
+            private_flat_hash_map = CCC_private_flat_hash_map_for(             \
+                typeof(*(private_compound_literal)),                           \
+                private_key_field,                                             \
+                private_hasher,                                                \
+                0,                                                             \
+                NULL                                                           \
+            );                                                                 \
+        }                                                                      \
+        private_flat_hash_map;                                                 \
+    }))
+
 /*========================    Construct In Place    =========================*/
 
 /** @internal A fairly good approximation of closures given C23 capabilities.

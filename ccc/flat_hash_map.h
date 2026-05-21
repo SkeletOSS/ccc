@@ -126,61 +126,24 @@ Subsequent functions that request an allocator can then be passed the empty
 allocator argument, `&(CCC_Allocator){}`. */
 /**@{*/
 
-/** @brief Create the underlying fixed size storage for a user declared compound
-literal array of the type the user intends to store.
+/** @brief Provides the fixed size type layout and underlying storage for a
+fixed size map. Helpful if the size in bytes of the underlying storage block is
+needed.
 @param[in] user_type_compound_literal_array a compound literal array of the type
 around which the map will be built. Must be a power of 2 capacity array.
-@param[in] optional_storage_specifier a storage specifier for the backing struct
-of array storage may be added on newer compilers such as static.
-@warning If using an allocation function that accepts an alignment argument,
-the following must be true for the provided alignment argument:
-`alignment >= CCC_FLAT_HASH_MAP_GROUP_COUNT`. If using regular malloc than the
-user should assert that `alignof(max_align_t) >= CCC_FLAT_HASH_MAP_GROUP_COUNT`.
-This helper should rarely be used. If a fixed size map is desired simply use the
-CCC_flat_hash_map_with_storage() initializer. For dynamic maps, there are
-also many other options.
+@note Size of the underlying storage can be obtained via the following macro
+`sizeof(CCC_flat_hash_map_storage_for(...))`, as needed.
+@warning See CCC_flat_hash_map_with_allocator_storage() if you wish to allocate
+a fixed size map dynamically at runtime due to strict memory requirements. A
+`CCC_Allocator` must be provided to that interface function to complete the
+allocation.
 
-This macro is required to support the edge case for the user allocating a fixed
-size map dynamically from an allocator at runtime. In this case, the user needs
-access to the underlying map storage object to know how many bytes to allocate.
-See the below example.
-
-```
-struct Val
-{
-    int key;
-    int val;
-};
-
-int
-main(void)
-{
-    void *const storage = malloc(
-        sizeof(CCC_flat_hash_map_storage_for((struct Val[4096]){}))
-    );
-    defer free(storage);
-    CCC_Flat_hash_map hash_map = CCC_flat_hash_map_for(
-        struct Val,
-        key,
-        ((CCC_Hasher){.hash = hash_int, .compare = key_order}),
-        4096,
-        storage
-    );
-    return 0;
-}
-```
-
-Usually, using a dynamic map and the reserve interface would be sufficient.
-However, the reserve interface only guarantees that at least the needed bytes
-are allocated. When the user must know the exact size of the backing object due
-to strict memory requirements, this is helpful. Such a use case may be rare, but
-must be supported by this container. */
-#define CCC_flat_hash_map_storage_for(                                         \
-    user_type_compound_literal_array, optional_storage_specifier...            \
-)                                                                              \
-    CCC_private_flat_hash_map_storage_for(                                     \
-        user_type_compound_literal_array, optional_storage_specifier           \
-    )
+If the user wishes to dynamically allocate a fixed size map at runtime this
+macro can be used to obtain the total bytes of the underlying storage as needed.
+See CCC_flat_hash_map_with_allocator_storage() for how to dynamically allocate
+a fixed size map. This is not a common use case. */
+#define CCC_flat_hash_map_storage_for(user_type_compound_literal_array)        \
+    CCC_private_flat_hash_map_storage_for(user_type_compound_literal_array)
 
 /** @brief Initialize a default empty map at compile time or runtime.
 @param[in] type_name the name of the user defined type stored in the map.
@@ -384,6 +347,23 @@ This saves on boilerplate compared to the raw initializer. */
 )                                                                              \
     CCC_private_flat_hash_map_with_storage(                                    \
         key_field, hasher, compound_literal, optional_storage_specifier        \
+    )
+
+/** Obtain a fixed size map dynamically at runtime from an allocator.
+@param[in] key_field the field of the struct used for key storage.
+@param[in] hasher a CCC_Hasher that configures the hash function, key comparator
+function, and context for both hashing and comparison.
+@param[in] compound_literal the compound literal array of a type provided by the
+user around which the struct of arrays backing storage for the map is built.
+@return the map initialized on the right hand side of equality operator. If
+dynamic allocation is successful the map is initialized with the specified
+capacity. If allocation fails the map will have a capacity of 0 and NULL
+internal pointers. */
+#define CCC_flat_hash_map_with_allocator_storage(                              \
+    key_field, hasher, allocator, compound_literal                             \
+)                                                                              \
+    CCC_private_flat_hash_map_with_allocator_storage(                          \
+        key_field, hasher, allocator, compound_literal                         \
     )
 
 /** @brief Copy the map at source to destination.
@@ -1024,6 +1004,8 @@ typedef CCC_Flat_hash_map_entry Flat_hash_map_entry;
         CCC_flat_hash_map_with_capacity(arguments)
 #    define flat_hash_map_with_storage(arguments...)                           \
         CCC_flat_hash_map_with_storage(arguments)
+#    define flat_hash_map_with_allocator_storage(arguments...)                 \
+        CCC_flat_hash_map_with_allocator_storage(arguments)
 #    define flat_hash_map_copy(arguments...) CCC_flat_hash_map_copy(arguments)
 #    define flat_hash_map_and_modify_with(arguments...)                        \
         CCC_flat_hash_map_and_modify_with(arguments)

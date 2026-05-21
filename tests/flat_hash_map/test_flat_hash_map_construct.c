@@ -51,6 +51,42 @@ check_static_begin(flat_hash_map_construct_empty) {
     check_end();
 }
 
+check_static_begin(flat_hash_map_construct_allocator_fixed) {
+    Flat_hash_map allocated = flat_hash_map_with_allocator_storage(
+        key,
+        ((CCC_Hasher){
+            .hash = flat_hash_map_int_to_u64,
+            .compare = flat_hash_map_id_order,
+        }),
+        std_allocator,
+        (struct Val[SMALL_FIXED_CAP]){}
+    );
+    check(is_empty(&allocated), CCC_TRUE);
+    check(validate(&allocated), CCC_TRUE);
+    check(capacity(&allocated).count > 0, CCC_TRUE);
+    check_end(flat_hash_map_clear_and_free(
+                  &allocated, &(CCC_Destructor){}, &std_allocator
+    ););
+}
+
+check_static_begin(flat_hash_map_construct_allocator_fixed_fail) {
+    Flat_hash_map allocated = flat_hash_map_with_allocator_storage(
+        key,
+        ((CCC_Hasher){
+            .hash = flat_hash_map_int_to_u64,
+            .compare = flat_hash_map_id_order,
+        }),
+        (CCC_Allocator){},
+        (struct Val[SMALL_FIXED_CAP]){}
+    );
+    check(is_empty(&allocated), CCC_TRUE);
+    check(validate(&allocated), CCC_TRUE);
+    check(capacity(&allocated).count, 0);
+    check_end(flat_hash_map_clear_and_free(
+                  &allocated, &(CCC_Destructor){}, &std_allocator
+    ););
+}
+
 check_static_begin(flat_hash_map_test_static_initialize) {
     check(flat_hash_map_capacity(&static_fh).count, SMALL_FIXED_CAP);
     check(flat_hash_map_count(&static_fh).count, 0);
@@ -552,6 +588,8 @@ int
 main(void) {
     return check_run(
         flat_hash_map_construct_empty(),
+        flat_hash_map_construct_allocator_fixed(),
+        flat_hash_map_construct_allocator_fixed_fail(),
         flat_hash_map_test_static_initialize(),
         flat_hash_map_test_with_literal(),
         flat_hash_map_test_copy_no_allocate(),
