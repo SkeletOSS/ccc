@@ -97,8 +97,8 @@ All types and functions can then be written without the `CCC_` prefix. */
 #include <stddef.h>
 /** @endcond */
 
-#include "private/private_flat_hash_map.h"
-#include "types.h"
+#include "private/private_flat_hash_map.h" /* IWYU pragma: export */
+#include "types.h"                         /* IWYU pragma: export */
 
 /** @name Container Types
 Types available in the container interface. */

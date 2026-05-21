@@ -62,7 +62,7 @@ All types and functions can then be written without the `CCC_` prefix. */
 /** @endcond */
 
 #include "private/private_array_adaptive_map.h"
-#include "types.h"
+#include "types.h" /* IWYU pragma: export */
 
 /** @name Container Types
 Types available in the container interface. */

@@ -30,7 +30,7 @@ if it is sorted or insert an element in a sorted position. */
 #include "doubly_linked_list.h"
 #include "flat_buffer.h"
 #include "singly_linked_list.h"
-#include "types.h"
+#include "types.h" /* IWYU pragma: export */
 
 /** @name Sorting Algorithms
 Various sorting algorithms for different containers in the collection. */
