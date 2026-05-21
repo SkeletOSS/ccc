@@ -398,6 +398,55 @@ runtime. */
         (array_tree_map_pointer), (handle)                                     \
     ))
 
+/** @internal Helper for allocating a fixed size map dynamically. */
+#define CCC_private_array_tree_map_with_allocator_storage(                     \
+    private_key_field,                                                         \
+    private_comparator,                                                        \
+    private_allocator,                                                         \
+    private_compound_literal                                                   \
+)                                                                              \
+    (__extension__({                                                           \
+        CCC_Allocator const *const private_allocator_pointer                   \
+            = &(private_allocator);                                            \
+        void *private_data_base = NULL;                                        \
+        if (private_allocator_pointer->allocate) {                             \
+            private_data_base = private_allocator_pointer->allocate(           \
+                (CCC_Allocator_arguments){                                     \
+                    .input = NULL,                                             \
+                    .bytes = sizeof(CCC_private_array_tree_map_storage_for(    \
+                        private_compound_literal                               \
+                    )),                                                        \
+                    .alignment = alignof(struct CCC_Array_tree_map_node)       \
+                                       > alignof(*(private_compound_literal))  \
+                                   ? alignof(struct CCC_Array_tree_map_node)   \
+                                   : alignof(*(private_compound_literal)),     \
+                    .context = private_allocator_pointer->context,             \
+                }                                                              \
+            );                                                                 \
+        }                                                                      \
+        struct CCC_Array_tree_map private_array_tree_map = {};                 \
+        if (private_data_base) {                                               \
+            private_array_tree_map = CCC_private_array_tree_map_for(           \
+                typeof(*(private_compound_literal)),                           \
+                private_key_field,                                             \
+                private_comparator,                                            \
+                CCC_private_array_tree_map_compound_literal_array_capacity(    \
+                    private_compound_literal                                   \
+                ),                                                             \
+                private_data_base                                              \
+            );                                                                 \
+        } else {                                                               \
+            private_array_tree_map = CCC_private_array_tree_map_for(           \
+                typeof(*(private_compound_literal)),                           \
+                private_key_field,                                             \
+                private_comparator,                                            \
+                0,                                                             \
+                NULL                                                           \
+            );                                                                 \
+        }                                                                      \
+        private_array_tree_map;                                                \
+    }))
+
 /*==================     Core Macro Implementations     =====================*/
 
 /** @internal */
