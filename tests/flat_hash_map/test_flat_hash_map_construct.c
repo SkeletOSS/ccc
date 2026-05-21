@@ -64,6 +64,11 @@ check_static_begin(flat_hash_map_construct_allocator_fixed) {
     check(is_empty(&allocated), CCC_TRUE);
     check(validate(&allocated), CCC_TRUE);
     check(capacity(&allocated).count > 0, CCC_TRUE);
+    CCC_Entry const e = insert_or_assign(
+        &allocated, &(struct Val){.key = 1, .val = 1}, &(CCC_Allocator){}
+    );
+    check(insert_error(&e), CCC_FALSE);
+    check(unwrap(&e) != NULL, CCC_TRUE);
     check_end(flat_hash_map_clear_and_free(
                   &allocated, &(CCC_Destructor){}, &std_allocator
     ););

@@ -81,6 +81,13 @@ check_static_begin(array_tree_map_construct_allocator_fixed) {
     check(is_empty(&allocated), CCC_TRUE);
     check(validate(&allocated), CCC_TRUE);
     check(capacity(&allocated).count > 0, CCC_TRUE);
+    CCC_Handle const inserted = array_tree_map_insert_or_assign(
+        &allocated, &(struct Val){.id = 1, .val = 1}, &(CCC_Allocator){}
+    );
+    struct Val const *const v
+        = array_tree_map_at(&allocated, unwrap(&inserted));
+    check(insert_error(&inserted), CCC_FALSE);
+    check(v != NULL, CCC_TRUE);
     check_end(array_tree_map_clear_and_free(
                   &allocated, &(CCC_Destructor){}, &std_allocator
     ););
