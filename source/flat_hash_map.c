@@ -672,11 +672,11 @@ CCC_flat_hash_map_clear_and_free(
 ) {
     if (unlikely(
             !map || !map->data || !destructor || !allocator
-            || !allocator->allocate || !map->mask || is_uninitialized(map)
+            || !allocator->allocate || !map->mask
         )) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    if (destructor->destroy) {
+    if (destructor->destroy && !is_uninitialized(map)) {
         destory_each(map, destructor);
     }
     map->remain = 0;
