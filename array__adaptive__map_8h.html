@@ -1089,6 +1089,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">user_type_compound_literal_array</td><td>a compound literal array of the type around which the map will be built. Must be a power of 2 capacity array. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">optional_storage_specifier</td><td>an optional storage duration specifier if different from the default for the map at the declared location. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1301,6 +1302,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">key_field</td><td>the field of the struct used for key storage. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">comparator</td><td>a <a class="el" href="structCCC__Key__comparator.html" title="The type passed by reference to any container function that may need to compare keys....">CCC_Key_comparator</a> that configures the key comparator function and context for comparison. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>a <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> to use in order to obtain memory. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal</td><td>the compound literal array of a type provided by the user around which the struct of arrays backing storage for the map is built. </td></tr>
   </table>
   </dd>

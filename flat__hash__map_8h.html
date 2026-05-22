@@ -149,9 +149,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Initialization Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Initialize the container with memory and callbacks. When a fixed size map is required, the user must declare the type name and size of the map they will use. Subsequent functions that request an allocator can then be passed the empty allocator argument, <code>&amp;(<a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a>){}</code>. </p>
 </td></tr>
-<tr class="memitem:a93ff4430e6d058a2dfaf1bdeec7ad271"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__hash__map_8h.html#a93ff4430e6d058a2dfaf1bdeec7ad271">CCC_flat_hash_map_storage_for</a>( user_type_compound_literal_array,  optional_storage_duration...)</td></tr>
-<tr class="memdesc:a93ff4430e6d058a2dfaf1bdeec7ad271"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides the fixed size type layout and underlying storage for a fixed size map. Helpful if the size in bytes of the underlying storage block is needed.  <br /></td></tr>
-<tr class="separator:a93ff4430e6d058a2dfaf1bdeec7ad271"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20afaa665ffa09d6d44b6faa6c3feccb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__hash__map_8h.html#a20afaa665ffa09d6d44b6faa6c3feccb">CCC_flat_hash_map_storage_for</a>( user_type_compound_literal_array,  optional_storage_specifier...)</td></tr>
+<tr class="memdesc:a20afaa665ffa09d6d44b6faa6c3feccb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides the fixed size type layout and underlying storage for a fixed size map. Helpful if the size in bytes of the underlying storage block is needed.  <br /></td></tr>
+<tr class="separator:a20afaa665ffa09d6d44b6faa6c3feccb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5096277396660a7f59866240b4b3c56b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__hash__map_8h.html#a5096277396660a7f59866240b4b3c56b">CCC_flat_hash_map_default</a>(type_name,  key_field,  hasher...)&#160;&#160;&#160;    <a class="el" href="private__flat__hash__map_8h.html#a6b80b7fd68651735d065c6f3ab7a26d8">CCC_private_flat_hash_map_default</a>(type_name, key_field, hasher)</td></tr>
 <tr class="memdesc:a5096277396660a7f59866240b4b3c56b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a default empty map at compile time or runtime.  <br /></td></tr>
 <tr class="separator:a5096277396660a7f59866240b4b3c56b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -923,8 +923,8 @@ If initialization fails, the map will be returned empty. All subsequent queries,
 
 </div>
 </div>
-<a id="a93ff4430e6d058a2dfaf1bdeec7ad271" name="a93ff4430e6d058a2dfaf1bdeec7ad271"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a93ff4430e6d058a2dfaf1bdeec7ad271">&#9670;&#160;</a></span>CCC_flat_hash_map_storage_for</h2>
+<a id="a20afaa665ffa09d6d44b6faa6c3feccb" name="a20afaa665ffa09d6d44b6faa6c3feccb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20afaa665ffa09d6d44b6faa6c3feccb">&#9670;&#160;</a></span>CCC_flat_hash_map_storage_for</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -939,7 +939,7 @@ If initialization fails, the map will be returned empty. All subsequent queries,
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">optional_storage_duration...&#160;</td>
+          <td class="paramname">optional_storage_specifier...&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -949,7 +949,7 @@ If initialization fails, the map will be returned empty. All subsequent queries,
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__hash__map_8h.html#a5d30075708daa8114ecdbc19b3e4ba12">CCC_private_flat_hash_map_storage_for</a>(                                     \</div>
-<div class="line">        user_type_compound_literal_array, optional_storage_duration            \</div>
+<div class="line">        user_type_compound_literal_array, optional_storage_specifier           \</div>
 <div class="line">    )</div>
 <div class="ttc" id="aprivate__flat__hash__map_8h_html_a5d30075708daa8114ecdbc19b3e4ba12"><div class="ttname"><a href="private__flat__hash__map_8h.html#a5d30075708daa8114ecdbc19b3e4ba12">CCC_private_flat_hash_map_storage_for</a></div><div class="ttdeci">#define CCC_private_flat_hash_map_storage_for( private_type_compound_literal_array, optional_storage_specifier...)</div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:219</div></div>
 </div><!-- fragment -->
@@ -1173,6 +1173,7 @@ If initialization fails, the map will be returned empty. All subsequent queries,
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">key_field</td><td>the field of the struct used for key storage. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">hasher</td><td>a <a class="el" href="structCCC__Hasher.html" title="The type passed by reference to a hash map that needs a hash function and key comparison function....">CCC_Hasher</a> that configures the hash function, key comparator function, and context for both hashing and comparison. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>a <a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a> to use in order to obtain memory. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal</td><td>the compound literal array of a type provided by the user around which the struct of arrays backing storage for the map is built. </td></tr>
   </table>
   </dd>
