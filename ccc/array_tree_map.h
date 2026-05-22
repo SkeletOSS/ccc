@@ -100,6 +100,8 @@ fixed size map. Helpful if the size in bytes of the underlying storage block is
 needed.
 @param[in] user_type_compound_literal_array a compound literal array of the type
 around which the map will be built. Must be a power of 2 capacity array.
+@param[in] optional_storage_specifier an optional storage duration specifier if
+different from the default for the map at the declared location.
 @note Size of the underlying storage can be obtained via the following macro
 `sizeof(CCC_array_tree_map_storage_for(...))`, as needed.
 @warning See CCC_array_tree_map_with_allocator_storage() if you wish to allocate
@@ -303,6 +305,7 @@ This can help eliminate boilerplate in initializers. */
 @param[in] key_field the field of the struct used for key storage.
 @param[in] comparator a CCC_Key_comparator that configures the key comparator
 function and context for comparison.
+@param[in] allocator a CCC_Allocator to use in order to obtain memory.
 @param[in] compound_literal the compound literal array of a type provided by the
 user around which the struct of arrays backing storage for the map is built.
 @return the map initialized on the right hand side of equality operator. If

@@ -145,10 +145,10 @@ macro can be used to obtain the total bytes of the underlying storage as needed.
 See CCC_flat_hash_map_with_allocator_storage() for how to dynamically allocate
 a fixed size map. This is not a common use case. */
 #define CCC_flat_hash_map_storage_for(                                         \
-    user_type_compound_literal_array, optional_storage_duration...             \
+    user_type_compound_literal_array, optional_storage_specifier...            \
 )                                                                              \
     CCC_private_flat_hash_map_storage_for(                                     \
-        user_type_compound_literal_array, optional_storage_duration            \
+        user_type_compound_literal_array, optional_storage_specifier           \
     )
 
 /** @brief Initialize a default empty map at compile time or runtime.
@@ -359,6 +359,7 @@ This saves on boilerplate compared to the raw initializer. */
 @param[in] key_field the field of the struct used for key storage.
 @param[in] hasher a CCC_Hasher that configures the hash function, key comparator
 function, and context for both hashing and comparison.
+@param[in] allocator a CCC_Allocator to use in order to obtain memory.
 @param[in] compound_literal the compound literal array of a type provided by the
 user around which the struct of arrays backing storage for the map is built.
 @return the map initialized on the right hand side of equality operator. If
