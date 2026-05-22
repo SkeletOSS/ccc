@@ -63,9 +63,10 @@ All types and functions can then be written without the `CCC_` prefix. */
 #include <stddef.h>
 /** @endcond */
 
-#include "flat_buffer.h"
 #include "private/private_flat_priority_queue.h"
-#include "types.h"
+
+#include "flat_buffer.h" /* IWYU pragma: export */
+#include "types.h"       /* IWYU pragma: export */
 
 /** @name Container Types
 Types available in the container interface. */

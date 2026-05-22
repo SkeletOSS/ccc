@@ -59,7 +59,7 @@ Then, the `CCC_` prefix can be dropped from all types and functions. */
 /** @endcond */
 
 #include "private/private_flat_buffer.h"
-#include "types.h"
+#include "types.h" /* IWYU pragma: export */
 
 /** @name Container Types
 Types available in the container interface. */

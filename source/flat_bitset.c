@@ -907,6 +907,7 @@ CCC_flat_bitset_clear_and_free(
         (void)allocator->allocate((CCC_Allocator_arguments){
             .input = bitset->blocks,
             .bytes = 0,
+            .alignment = alignof(*bitset->blocks),
             .context = allocator->context,
         });
     }
@@ -947,6 +948,7 @@ CCC_flat_bitset_copy(
             = allocator->allocate((CCC_Allocator_arguments){
                 .input = destination->blocks,
                 .bytes = block_count(source->capacity) * SIZEOF_BLOCK,
+                .alignment = alignof((*destination->blocks)),
                 .context = allocator->context,
             });
         if (!new_data) {
@@ -1067,6 +1069,7 @@ maybe_resize(
     Bit_block *const new_data = allocator->allocate((CCC_Allocator_arguments){
         .input = bitset->blocks,
         .bytes = block_count(new_capacity) * SIZEOF_BLOCK,
+        .alignment = alignof(*bitset->blocks),
         .context = allocator->context,
     });
     if (!new_data) {

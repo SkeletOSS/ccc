@@ -46,6 +46,7 @@ CCC_flat_buffer_allocate(
     void *const new_data = allocator->allocate((CCC_Allocator_arguments){
         .input = buffer->data,
         .bytes = buffer->sizeof_type * capacity,
+        .alignment = buffer->alignof_type,
         .context = allocator->context,
     });
     if (capacity && !new_data) {
@@ -75,6 +76,7 @@ CCC_flat_buffer_reserve(
     void *const new_data = allocator->allocate((CCC_Allocator_arguments){
         .input = buffer->data,
         .bytes = buffer->sizeof_type * needed,
+        .alignment = buffer->alignof_type,
         .context = allocator->context,
     });
     if (!new_data) {
@@ -130,6 +132,7 @@ CCC_flat_buffer_clear_and_free(
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = buffer->data,
         .bytes = 0,
+        .alignment = buffer->alignof_type,
         .context = allocator->context,
     });
     buffer->data = NULL;

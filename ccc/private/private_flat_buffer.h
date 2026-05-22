@@ -38,12 +38,15 @@ struct CCC_Flat_buffer {
     size_t capacity;
     /** @internal The size of the type the user stores in the buffer. */
     size_t sizeof_type;
+    /** @internal The alignment of the type the user stores in the buffer. */
+    size_t alignof_type;
 };
 
 /* @internal */
 #define CCC_private_flat_buffer_default(private_type_name)                     \
     (struct CCC_Flat_buffer) {                                                 \
         .sizeof_type = sizeof(private_type_name),                              \
+        .alignof_type = alignof(private_type_name),                            \
     }
 
 /** @internal Initializes the Flat_buffer with a default size of 0. However the
@@ -55,7 +58,8 @@ elements are contiguous. */
 )                                                                              \
     (struct CCC_Flat_buffer) {                                                 \
         .data = (private_data), .sizeof_type = sizeof(private_type_name),      \
-        .count = (private_count), .capacity = (private_capacity),              \
+        .alignof_type = alignof(private_type_name), .count = (private_count),  \
+        .capacity = (private_capacity),                                        \
     }
 
 /** @internal For dynamic containers to perform the allocation and
@@ -131,6 +135,7 @@ to the user. GCC is not so forgiving. */
         }){{                                                                   \
                .data = (private_compound_literal_array),                       \
                .sizeof_type = sizeof(*private_compound_literal_array),         \
+               .alignof_type = alignof(*private_compound_literal_array),       \
                .count = private_count,                                         \
                .capacity = sizeof(private_compound_literal_array)              \
                          / sizeof(*private_compound_literal_array),            \
@@ -144,6 +149,7 @@ to the user. GCC is not so forgiving. */
         (struct CCC_Flat_buffer) {                                             \
             .data = (private_compound_literal_array),                          \
             .sizeof_type = sizeof(*private_compound_literal_array),            \
+            .alignof_type = alignof(*private_compound_literal_array),          \
             .count = private_count,                                            \
             .capacity = sizeof(private_compound_literal_array)                 \
                       / sizeof(*private_compound_literal_array),               \

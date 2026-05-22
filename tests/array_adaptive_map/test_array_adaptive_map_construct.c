@@ -67,6 +67,43 @@ check_static_begin(array_adaptive_map_test_empty) {
     check_end();
 }
 
+check_static_begin(array_adaptive_map_construct_allocator_fixed) {
+    Array_adaptive_map allocated = array_adaptive_map_with_allocator_storage(
+        id,
+        (CCC_Key_comparator){.compare = id_order},
+        std_allocator,
+        (struct Val[SMALL_FIXED_CAP]){}
+    );
+    check(is_empty(&allocated), CCC_TRUE);
+    check(validate(&allocated), CCC_TRUE);
+    check(capacity(&allocated).count > 0, CCC_TRUE);
+    CCC_Handle const inserted = array_adaptive_map_insert_or_assign(
+        &allocated, &(struct Val){.id = 1, .val = 1}, &(CCC_Allocator){}
+    );
+    struct Val const *const v
+        = array_adaptive_map_at(&allocated, unwrap(&inserted));
+    check(insert_error(&inserted), CCC_FALSE);
+    check(v != NULL, CCC_TRUE);
+    check_end(array_adaptive_map_clear_and_free(
+                  &allocated, &(CCC_Destructor){}, &std_allocator
+    ););
+}
+
+check_static_begin(array_adaptive_map_construct_allocator_fixed_fail) {
+    Array_adaptive_map allocated = array_adaptive_map_with_allocator_storage(
+        id,
+        (CCC_Key_comparator){.compare = id_order},
+        (CCC_Allocator){},
+        (struct Val[SMALL_FIXED_CAP]){}
+    );
+    check(is_empty(&allocated), CCC_TRUE);
+    check(validate(&allocated), CCC_TRUE);
+    check(capacity(&allocated).count, 0);
+    check_end(array_adaptive_map_clear_and_free(
+                  &allocated, &(CCC_Destructor){}, &std_allocator
+    ););
+}
+
 check_static_begin(array_adaptive_map_test_with_literal) {
     Array_adaptive_map s = array_adaptive_map_with_storage(
         id,
@@ -501,6 +538,8 @@ main(void) {
         array_adaptive_map_construct_empty(),
         array_adaptive_map_test_static(),
         array_adaptive_map_test_empty(),
+        array_adaptive_map_construct_allocator_fixed(),
+        array_adaptive_map_construct_allocator_fixed_fail(),
         array_adaptive_map_test_with_literal(),
         array_adaptive_map_test_copy_no_allocate(),
         array_adaptive_map_test_copy_no_allocate_fail(),

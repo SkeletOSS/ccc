@@ -50,7 +50,7 @@ All types and functions can then be written without the `CCC_` prefix. */
 /** @endcond */
 
 #include "private/private_singly_linked_list.h"
-#include "types.h"
+#include "types.h" /* IWYU pragma: export */
 
 /** @name Container Types
 Types available in the container interface. */

@@ -132,6 +132,17 @@ a fixed or dynamic map, we must assume data starts at the base address and that
 there may be zero or more bytes of padding between the data and tag arrays for
 alignment.
 
+The base address of the struct of arrays, the 0th user data element, is aligned
+to `max(CCC_FLAT_HASH_MAP_GROUP_COUNT, alignof(T))`, where `T` is the user
+type. The tag array base address is then also aligned to
+`CCC_FLAT_HASH_MAP_GROUP_COUNT`. This is done to ensure that user alignment is
+respected and the tag array is always aligned such that aligned group loads are
+possible with SIMD instructions. For fixed size maps generated at compile time,
+this alignment requirement is enforced via the `alignas` compiler directive on
+the generated backing storage. For dynamically allocated maps, this alignment
+requirement is passed to the allocator when requesting the backing storage
+block.
+
 We may lose some of the assembly optimizations in indexing that Rust's table
 gets by adding and subtracting from a shared base address. However, this table
 still needs to use byte offset multiplication because the data is stored as
@@ -139,9 +150,12 @@ still needs to use byte offset multiplication because the data is stored as
 template generic system. Simple 0 based indexing makes the addition and
 multiplication we perform as simple as possible. */
 struct CCC_Flat_hash_map {
-    /** @internal User data type array. */
+    /** @internal User data type array. This address shall always be aligned to
+    the `max(CCC_FLAT_HASH_MAP_GROUP_COUNT, alignof(T))`, where `T` is the user
+    type.*/
     void *data;
-    /** @internal Tag array on byte following data. */
+    /** @internal Tag array following the user data array in a single block.
+    This address shall always be aligned to CCC_FLAT_HASH_MAP_GROUP_COUNT. */
     struct CCC_Flat_hash_map_tag *tag;
     /** @internal The number of user active slots. */
     size_t count;
@@ -151,6 +165,8 @@ struct CCC_Flat_hash_map {
     size_t mask;
     /** @internal Size of each user data element being stored. */
     size_t sizeof_type;
+    /** @internal Alignment user data type being stored. */
+    size_t alignof_type;
     /** @internal The location of the key field in user type. */
     size_t key_offset;
     /** @internal The provided hash function, key comparator, and context. */
@@ -224,7 +240,12 @@ be exposed to the user if they wish to know the size in bytes of this object. */
             "fixed size map must be a power of 2 capacity (32, 64, "           \
             "128, 256, etc.)"                                                  \
         );                                                                     \
-        typeof(*(private_type_compound_literal_array)) data                    \
+        alignas(                                                               \
+            CCC_FLAT_HASH_MAP_GROUP_COUNT                                      \
+                    > alignof(*(private_type_compound_literal_array))          \
+                ? CCC_FLAT_HASH_MAP_GROUP_COUNT                                \
+                : alignof(*(private_type_compound_literal_array))              \
+        ) typeof(*(private_type_compound_literal_array)) data                  \
             [CCC_private_flat_hash_map_compound_literal_array_capacity(        \
                  private_type_compound_literal_array                           \
              )                                                                 \
@@ -243,6 +264,7 @@ be exposed to the user if they wish to know the size in bytes of this object. */
 )                                                                              \
     (struct CCC_Flat_hash_map) {                                               \
         .sizeof_type = sizeof(private_type_name),                              \
+        .alignof_type = alignof(private_type_name),                            \
         .key_offset = offsetof(private_type_name, private_key_field),          \
         .hasher = private_hasher,                                              \
     }
@@ -279,6 +301,7 @@ allocation. */
                    ? ((private_capacity) - (size_t)1)                          \
                    : (size_t)0),                                               \
         .sizeof_type = sizeof(private_type_name),                              \
+        .alignof_type = alignof(private_type_name),                            \
         .key_offset = offsetof(private_type_name, private_key_field),          \
         .hasher = (private_hasher),                                            \
     }
@@ -377,11 +400,61 @@ allocation. */
                 )                                                              \
               - (size_t)1,                                                     \
         .sizeof_type = sizeof(*(private_compound_literal)),                    \
+        .alignof_type = alignof(*(private_compound_literal)),                  \
         .key_offset = offsetof(                                                \
             typeof(*(private_compound_literal)), private_key_field             \
         ),                                                                     \
         .hasher = (private_hasher),                                            \
     }
+
+/** @internal Helper for allocating a fixed size map dynamically. */
+#define CCC_private_flat_hash_map_with_allocator_storage(                      \
+    private_key_field,                                                         \
+    private_hasher,                                                            \
+    private_allocator,                                                         \
+    private_compound_literal                                                   \
+)                                                                              \
+    (__extension__({                                                           \
+        CCC_Allocator const *const private_allocator_pointer                   \
+            = &(private_allocator);                                            \
+        void *private_data_base = NULL;                                        \
+        if (private_allocator_pointer->allocate) {                             \
+            private_data_base = private_allocator_pointer->allocate(           \
+                (CCC_Allocator_arguments){                                     \
+                    .input = NULL,                                             \
+                    .bytes = sizeof(CCC_private_flat_hash_map_storage_for(     \
+                        private_compound_literal                               \
+                    )),                                                        \
+                    .alignment = CCC_FLAT_HASH_MAP_GROUP_COUNT                 \
+                                       > alignof(*(private_compound_literal))  \
+                                   ? CCC_FLAT_HASH_MAP_GROUP_COUNT             \
+                                   : alignof(*(private_compound_literal)),     \
+                    .context = private_allocator_pointer->context,             \
+                }                                                              \
+            );                                                                 \
+        }                                                                      \
+        struct CCC_Flat_hash_map private_flat_hash_map = {};                   \
+        if (private_data_base) {                                               \
+            private_flat_hash_map = CCC_private_flat_hash_map_for(             \
+                typeof(*(private_compound_literal)),                           \
+                private_key_field,                                             \
+                private_hasher,                                                \
+                CCC_private_flat_hash_map_compound_literal_array_capacity(     \
+                    private_compound_literal                                   \
+                ),                                                             \
+                private_data_base                                              \
+            );                                                                 \
+        } else {                                                               \
+            private_flat_hash_map = CCC_private_flat_hash_map_for(             \
+                typeof(*(private_compound_literal)),                           \
+                private_key_field,                                             \
+                private_hasher,                                                \
+                0,                                                             \
+                NULL                                                           \
+            );                                                                 \
+        }                                                                      \
+        private_flat_hash_map;                                                 \
+    }))
 
 /*========================    Construct In Place    =========================*/
 

@@ -122,6 +122,15 @@ of the nodes array, a 24 byte sentinel node, a sentinel bit, and the unused bits
 at the end of the parity bit array. This also means it important to consider the
 alignment differences that may occur between the user type and the node type.
 
+The base allocation, the 0th user data element, is required to satisfy
+max(alignof(T), alignof(struct CCC_Array_tree_map_node)), where T is the user
+type. This ensures that both the user data array and the node array begin at
+valid alignment boundaries for their respective element types. Each subsequent
+region is derived via explicit byte-offset computation using aligned rounding,
+guaranteeing that the start of each array is aligned to at least its required
+element alignment. The parity array requires no additional alignment adjustment
+because the node alignment is greater than or equal to parity alignment.
+
 This layout comes at the cost of consulting multiple arrays for many operations.
 However, once user data has been inserted or removed the tree fix up operations
 only need to consult the nodes array and the bit array which means more bits
@@ -147,6 +156,8 @@ struct CCC_Array_tree_map {
     size_t count;
     /** @internal The size of the type stored in the map. */
     size_t sizeof_type;
+    /** @internal The alignment of the type stored in the map. */
+    size_t alignof_type;
     /** @internal Where user key can be found in type. */
     size_t key_offset;
     /** @internal The provided key comparison function and context. */
@@ -216,7 +227,12 @@ metadata. */
             ) > 1,                                                             \
             "fixed size map must have capacity greater than 1"                 \
         );                                                                     \
-        typeof(*(private_type_compound_literal_array))                         \
+        alignas(                                                               \
+            alignof(*(private_type_compound_literal_array))                    \
+                    > alignof(struct CCC_Array_tree_map_node)                  \
+                ? alignof(*(private_type_compound_literal_array))              \
+                : alignof(struct CCC_Array_tree_map_node)                      \
+        ) typeof(*(private_type_compound_literal_array))                       \
             data[CCC_private_array_tree_map_compound_literal_array_capacity(   \
                 private_type_compound_literal_array                            \
             )];                                                                \
@@ -239,6 +255,7 @@ metadata. */
 )                                                                              \
     (struct CCC_Array_tree_map) {                                              \
         .sizeof_type = sizeof(private_type_name),                              \
+        .alignof_type = alignof(private_type_name),                            \
         .key_offset = offsetof(private_type_name, private_key_field),          \
         .comparator = (private_comparator),                                    \
     }
@@ -259,6 +276,7 @@ runtime. */
         .data = (private_memory_pointer), .nodes = NULL, .parity = NULL,       \
         .capacity = (private_capacity), .count = 0, .root = 0, .free_list = 0, \
         .sizeof_type = sizeof(private_type_name),                              \
+        .alignof_type = alignof(private_type_name),                            \
         .key_offset = offsetof(private_type_name, private_key_field),          \
         .comparator = (private_comparator),                                    \
     }
@@ -365,6 +383,7 @@ runtime. */
             ),                                                                 \
         .count = 0, .root = 0, .free_list = 0,                                 \
         .sizeof_type = sizeof(*(private_compound_literal)),                    \
+        .alignof_type = alignof(*(private_compound_literal)),                  \
         .key_offset = offsetof(                                                \
             typeof(*(private_compound_literal)), private_key_node_field        \
         ),                                                                     \
@@ -378,6 +397,55 @@ runtime. */
     ((type_name *)CCC_private_array_tree_map_data_at(                          \
         (array_tree_map_pointer), (handle)                                     \
     ))
+
+/** @internal Helper for allocating a fixed size map dynamically. */
+#define CCC_private_array_tree_map_with_allocator_storage(                     \
+    private_key_field,                                                         \
+    private_comparator,                                                        \
+    private_allocator,                                                         \
+    private_compound_literal                                                   \
+)                                                                              \
+    (__extension__({                                                           \
+        CCC_Allocator const *const private_allocator_pointer                   \
+            = &(private_allocator);                                            \
+        void *private_data_base = NULL;                                        \
+        if (private_allocator_pointer->allocate) {                             \
+            private_data_base = private_allocator_pointer->allocate(           \
+                (CCC_Allocator_arguments){                                     \
+                    .input = NULL,                                             \
+                    .bytes = sizeof(CCC_private_array_tree_map_storage_for(    \
+                        private_compound_literal                               \
+                    )),                                                        \
+                    .alignment = alignof(struct CCC_Array_tree_map_node)       \
+                                       > alignof(*(private_compound_literal))  \
+                                   ? alignof(struct CCC_Array_tree_map_node)   \
+                                   : alignof(*(private_compound_literal)),     \
+                    .context = private_allocator_pointer->context,             \
+                }                                                              \
+            );                                                                 \
+        }                                                                      \
+        struct CCC_Array_tree_map private_array_tree_map = {};                 \
+        if (private_data_base) {                                               \
+            private_array_tree_map = CCC_private_array_tree_map_for(           \
+                typeof(*(private_compound_literal)),                           \
+                private_key_field,                                             \
+                private_comparator,                                            \
+                CCC_private_array_tree_map_compound_literal_array_capacity(    \
+                    private_compound_literal                                   \
+                ),                                                             \
+                private_data_base                                              \
+            );                                                                 \
+        } else {                                                               \
+            private_array_tree_map = CCC_private_array_tree_map_for(           \
+                typeof(*(private_compound_literal)),                           \
+                private_key_field,                                             \
+                private_comparator,                                            \
+                0,                                                             \
+                NULL                                                           \
+            );                                                                 \
+        }                                                                      \
+        private_array_tree_map;                                                \
+    }))
 
 /*==================     Core Macro Implementations     =====================*/
 

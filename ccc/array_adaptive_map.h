@@ -62,7 +62,7 @@ All types and functions can then be written without the `CCC_` prefix. */
 /** @endcond */
 
 #include "private/private_array_adaptive_map.h"
-#include "types.h"
+#include "types.h" /* IWYU pragma: export */
 
 /** @name Container Types
 Types available in the container interface. */
@@ -88,50 +88,22 @@ typedef struct CCC_Array_adaptive_map_handle CCC_Array_adaptive_map_handle;
 Initialize the container with memory, callbacks, and permissions. */
 /**@{*/
 
-/** @brief Create the underlying fixed size storage for a user declared compound
-literal array of the type the user intends to store.
+/** @brief Provides the fixed size type layout and underlying storage for a
+fixed size map. Helpful if the size in bytes of the underlying storage block is
+needed.
 @param[in] user_type_compound_literal_array a compound literal array of the type
-around which the map will be built.
-@param[in] optional_storage_specifier a storage specifier for the backing struct
-of array storage may be added on newer compilers such as static.
-@warning This should rarely be used. If a fixed size map is desired simply use
-the CCC_array_adaptive_map_with_storage() initializer. For dynamic
-maps, there are also many other options.
+around which the map will be built. Must be a power of 2 capacity array.
+@note Size of the underlying storage can be obtained via the following macro
+`sizeof(CCC_array_adaptive_map_storage_for(...))`, as needed.
+@warning See CCC_array_adaptive_map_with_allocator_storage() if you wish to
+allocate a fixed size map dynamically at runtime due to strict memory
+requirements. A `CCC_Allocator` must be provided to that interface function to
+complete the allocation.
 
-This macro is required to support the edge case for the user allocating a fixed
-size map dynamically from an allocator at runtime. In this case, the user needs
-access to the compound literal struct of arrays map to know how many bytes to
-allocate. See the below example.
-
-```
-struct Val
-{
-    int key;
-    int val;
-};
-
-int
-main(void)
-{
-    void *const map = malloc(
-        sizeof(CCC_array_adaptive_map_storage_for((struct Val[4096]){}))
-    );
-    defer free(map);
-    CCC_Array_adaptive_map map = CCC_array_adaptive_map_for(
-        struct Val,
-        key,
-        (CCC_Key_comparator){.compare = order_vals},
-        4096,
-        map
-    );
-}
-```
-
-Usually, using a dynamic map and the reserve interface would be sufficient.
-However, the reserve interface only guarantees that at least the needed bytes
-are allocated. When the user must know the exact size of the backing object due
-to strict memory requirements, this is helpful. Such a use case may be rare, but
-must be supported by this container. */
+If the user wishes to dynamically allocate a fixed size map at runtime this
+macro can be used to obtain the total bytes of the underlying storage as needed.
+See CCC_array_adaptive_map_with_allocator_storage() for how to dynamically
+allocate a fixed size map. This is not a common use case. */
 #define CCC_array_adaptive_map_storage_for(                                    \
     user_type_compound_literal_array, optional_storage_specifier...            \
 )                                                                              \
@@ -321,6 +293,23 @@ This can help eliminate boilerplate in initializers. */
         comparator,                                                            \
         compound_literal,                                                      \
         optional_storage_specifier                                             \
+    )
+
+/** Obtain a fixed size map dynamically at runtime from an allocator.
+@param[in] key_field the field of the struct used for key storage.
+@param[in] comparator a CCC_Key_comparator that configures the key comparator
+function and context for comparison.
+@param[in] compound_literal the compound literal array of a type provided by the
+user around which the struct of arrays backing storage for the map is built.
+@return the map initialized on the right hand side of equality operator. If
+dynamic allocation is successful the map is initialized with the specified
+capacity. If allocation fails the map will have a capacity of 0 and NULL
+internal pointers. */
+#define CCC_array_adaptive_map_with_allocator_storage(                         \
+    key_field, comparator, allocator, compound_literal                         \
+)                                                                              \
+    CCC_private_array_adaptive_map_with_allocator_storage(                     \
+        key_field, comparator, allocator, compound_literal                     \
     )
 
 /** @brief Copy the map at source to destination.
@@ -1079,6 +1068,8 @@ typedef CCC_Array_adaptive_map_handle Array_adaptive_map_handle;
         CCC_array_adaptive_map_with_capacity(arguments)
 #    define array_adaptive_map_with_storage(arguments...)                      \
         CCC_array_adaptive_map_with_storage(arguments)
+#    define array_adaptive_map_with_allocator_storage(arguments...)            \
+        CCC_array_adaptive_map_with_allocator_storage(arguments)
 #    define array_adaptive_map_at(arguments...)                                \
         CCC_array_adaptive_map_at(arguments)
 #    define array_adaptive_map_as(arguments...)                                \

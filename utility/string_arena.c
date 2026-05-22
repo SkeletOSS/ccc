@@ -20,6 +20,7 @@ string_arena_create(size_t const cap, CCC_Allocator const *const allocator) {
     a.arena = allocator->allocate((CCC_Allocator_arguments){
         .input = NULL,
         .bytes = cap,
+        .alignment = alignof(char),
         .context = allocator->context,
     });
     if (!a.arena) {
@@ -103,6 +104,7 @@ string_arena_maybe_resize_pos(
         void *const moved_arena = allocator->allocate((CCC_Allocator_arguments){
             .input = a->arena,
             .bytes = new_cap,
+            .alignment = alignof(char),
             .context = allocator->context,
         });
         if (!moved_arena) {
@@ -158,6 +160,7 @@ string_arena_free(
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = a->arena,
         .bytes = 0,
+        .alignment = alignof(char),
         .context = allocator->context,
     });
     a->arena = NULL;

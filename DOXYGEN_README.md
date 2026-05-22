@@ -48,30 +48,49 @@ Follow the links to the C Container Collection headers.
 Traditionally, dynamic memory is obtained, resized, and freed through an OS or language provided interface such as `malloc`, `realloc`, and `free`; these three functions manage a global allocator. However, these three core functionalities of an allocator can be united into one function. This is the approach that the C Container Collection takes. This is the implementation of the standard library allocator through the `CCC_Allocator_interface` type function.
 
 ```c
+/** @brief A bundle of arguments to pass to the user-implemented
+Allocator_interface function interface. This ensures clarity in inputs and
+expected outputs to an allocator function the user wishes to use for managing
+containers. Additional context can be provided for more complex allocation
+schemes.
+
+The pointers are const to bind the input closely with its context, if context is
+provided. Because container code is providing the user a reference to a user
+type it currently stores, or data it manages, it is critical the user does not
+accidentally move or misuse the pointer to jeopardize container invariants. */
 typedef struct {
     /** The input to the allocation function. NULL or previously allocated. */
     void *const input;
     /** The bytes being requested from the allocator. 0 is a free request. */
     size_t bytes;
+    /** The alignment for the base address of the returned bytes. */
+    size_t alignment;
     /** Additional state to pass to the allocator to help manage memory. */
     void *const context;
 } CCC_Allocator_arguments;
 
-/** @brief An allocation function at the core of all containers.
+/** @brief The function interface for allocating, resizing, and freeing memory.
 
-An allocation function implements the following behavior, when it has been
-passed an allocator context. Context is passed to a container upon its
-initialization and the programmer may choose how to best utilize this reference.
+The C Container Collection relies on the following behaviors when calling the
+user provided allocator function internally.
 
 - If input is NULL and bytes 0, NULL is returned.
-- If input is NULL with non-zero bytes, new memory is allocated/returned.
+- If input is NULL with non-zero bytes, new memory is allocated and returned
+  with the base address aligned to the alignment argument. If alignment is zero,
+  the default alignment of the allocator is used (usually `max_align_t`).
 - If input is non-NULL it has been previously allocated by the allocator.
 - If input is non-NULL with non-zero size, input is resized to at least bytes
   size. The pointer returned is NULL if resizing fails. Upon success, the
-  pointer returned might not be equal to the pointer provided.
+  pointer returned might not be equal to the pointer provided and is aligned to
+  the provided alignment argument. If alignment is zero, the default alignment
+  of the allocator is used (usually `max_align_t`).
 - If input is non-NULL and size is 0, input is freed and NULL is returned.
 
-This allocator does not need context. */
+@warning Wrapping `malloc`, `realloc`, and `free` is sufficient for hosted
+environments where allocation alignment requirements do not exceed
+`max_align_t`. For fully portable C Container Collection code, regardless of
+user type alignment requirements, users are encouraged to use allocators that
+respect alignment for allocating and resizing. */
 typedef void *CCC_Allocator_interface(CCC_Allocator_arguments);
 
 void *

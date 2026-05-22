@@ -37,7 +37,7 @@ All types and functions can then be written without the `CCC_` prefix. */
 /** @endcond */
 
 #include "private/private_tree_map.h"
-#include "types.h"
+#include "types.h" /* IWYU pragma: export */
 
 /** @name Container Types
 Types available in the container interface. */

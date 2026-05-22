@@ -874,9 +874,31 @@ typedef struct {
 } CCC_Allocator;
 ```
 
-The `CCC_Allocator_interface` function type implements a unified interface for allocation, reallocation, and deallocation. See `types.h` for the full contract. A standard library backed allocator might look like this:
+The `CCC_Allocator_interface` function type implements a unified interface for allocation, reallocation, and deallocation. See `types.h` for the full contract.
 
 ```c
+/** @brief The function interface for allocating, resizing, and freeing memory.
+
+The C Container Collection relies on the following behaviors when calling the
+user provided allocator function internally.
+
+- If input is NULL and bytes 0, NULL is returned.
+- If input is NULL with non-zero bytes, new memory is allocated and returned
+  with the base address aligned to the alignment argument. If alignment is zero,
+  the default alignment of the allocator is used (usually `max_align_t`).
+- If input is non-NULL it has been previously allocated by the allocator.
+- If input is non-NULL with non-zero size, input is resized to at least bytes
+  size. The pointer returned is NULL if resizing fails. Upon success, the
+  pointer returned might not be equal to the pointer provided and is aligned to
+  the provided alignment argument. If alignment is zero, the default alignment
+  of the allocator is used (usually `max_align_t`).
+- If input is non-NULL and size is 0, input is freed and NULL is returned.
+
+@warning Wrapping `malloc`, `realloc`, and `free` is sufficient for hosted
+environments where allocation alignment requirements do not exceed
+`max_align_t`. For fully portable C Container Collection code, regardless of
+user type alignment requirements, users are encouraged to use allocators that
+respect alignment for allocating and resizing. */
 void *
 std_allocate(CCC_Allocator_arguments const arguments)
 {

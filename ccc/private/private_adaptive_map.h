@@ -60,6 +60,8 @@ struct CCC_Adaptive_map {
     size_t count;
     /** @internal The size of the user type stored in the tree. */
     size_t sizeof_type;
+    /** @internal The alignment of the stored type. */
+    size_t alignof_type;
     /** @internal The byte offset of the intrusive element. */
     size_t type_intruder_offset;
     /** @internal The byte offset of the user key in the user type. */
@@ -118,6 +120,7 @@ void *CCC_private_adaptive_map_insert(
 )                                                                              \
     (struct CCC_Adaptive_map) {                                                \
         .sizeof_type = sizeof(private_struct_name),                            \
+        .alignof_type = alignof(private_struct_name),                          \
         .type_intruder_offset                                                  \
             = offsetof(private_struct_name, private_node_node_field),          \
         .key_offset = offsetof(private_struct_name, private_key_node_field),   \
@@ -133,6 +136,7 @@ void *CCC_private_adaptive_map_insert(
 )                                                                              \
     (struct CCC_Adaptive_map) {                                                \
         .root = NULL, .count = 0, .sizeof_type = sizeof(private_struct_name),  \
+        .alignof_type = alignof(private_struct_name),                          \
         .type_intruder_offset                                                  \
             = offsetof(private_struct_name, private_node_node_field),          \
         .key_offset = offsetof(private_struct_name, private_key_node_field),   \
@@ -181,6 +185,7 @@ void *CCC_private_adaptive_map_insert(
                         ){                                                     \
                             .input = NULL,                                     \
                             .bytes = private_map.sizeof_type,                  \
+                            .alignment = private_map.alignof_type,             \
                             .context = private_adaptive_map_allocator.context, \
                         });                                                    \
                     if (!private_new_slot) {                                   \
@@ -227,6 +232,8 @@ void *CCC_private_adaptive_map_insert(
                       ->allocate((CCC_Allocator_arguments){                    \
                           .input = NULL,                                       \
                           .bytes = (adaptive_map_entry)->map->sizeof_type,     \
+                          .alignment                                           \
+                          = (adaptive_map_entry)->map->alignof_type,           \
                           .context = (private_allocator)->context,             \
                       });                                                      \
         }                                                                      \

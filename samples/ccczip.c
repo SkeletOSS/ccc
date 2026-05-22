@@ -1093,6 +1093,7 @@ print_inner_tree(
         str = allocator->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = string_length + 1,
+            .alignment = alignof(char),
             .context = allocator->context,
         });
         (void)snprintf(
@@ -1116,6 +1117,7 @@ print_inner_tree(
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = str,
         .bytes = 0,
+        .alignment = alignof(char),
         .context = allocator->context,
     });
 }
