@@ -329,13 +329,13 @@ For example programs that utilize the context parameter, see the sample
 programs. Using custom arena allocators or container compositions are cases when
 context is needed.
 
-@warning Wrapping `malloc`, `realloc`, and `free` is sufficient if all CCC
-container requested alignments are less than or equal to `max_align_t`. If CCC
-requests alignments that exceed `max_align_t`, a custom alignment-aware
-allocator is required. Some CCC code may request alignments greater than the
-alignment of the user type stored in the container when allocating;
-specifically, the flat hash hash map and array map containers may request
-alignments that are greater then the user type being stored. */
+@warning Alignments are assumed to be powers of 2. Wrapping `malloc`, `realloc`,
+and `free` is sufficient if all CCC container requested alignments are less than
+or equal to `max_align_t`. If CCC requests alignments that exceed `max_align_t`,
+a custom alignment-aware allocator is required. Some CCC code may request
+alignments greater than the alignment of the user type stored in the container
+when allocating; specifically, the flat hash hash map and array map containers
+may request alignments that are greater then the user type being stored. */
 typedef void *CCC_Allocator_interface(CCC_Allocator_arguments);
 
 /** @brief The type passed by reference to any container function that may need
