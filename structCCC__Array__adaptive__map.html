@@ -117,7 +117,8 @@ Collaboration diagram for CCC_Array_adaptive_map:</div>
 <div class="line">┌───┬───┬───┬───┬───┬───┬───┬───┐</div>
 <div class="line">│D_0│D_1│...│D_N│N_0│N_1│...│N_N│</div>
 <div class="line">└───┴───┴───┴───┴───┴───┴───┴───┘</div>
-</div><!-- fragment --><p>This layout costs us in consulting both the data and nodes array during the top down splay operation. However, the benefit of space saving and no wasted padding bytes between element fields or multiple elements in an array is the goal of this implementation. Speed is a secondary goal to space for these implementations as the space savings can be significant. </p>
+</div><!-- fragment --><p>The base allocation, the 0th user data element, is required to satisfy max(alignof(T), alignof(struct CCC_Array_adaptive_map_node)), where T is the user type. This ensures that both the user data array and the node array begin at valid alignment boundaries for their respective element types. Each subsequent region is derived via explicit byte-offset computation using aligned rounding, guaranteeing that the start of each array is aligned to at least its required element alignment.</p>
+<p>This layout costs us in consulting both the data and nodes array during the top down splay operation. However, the benefit of space saving and no wasted padding bytes between element fields or multiple elements in an array is the goal of this implementation. Speed is a secondary goal to space for these implementations as the space savings can be significant. </p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
@@ -135,12 +136,29 @@ Data Fields</h2></td></tr>
 <tr class="separator:a21fb2cb45a9e60f317f13868d31d37b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa39ea9333f77da568b370054d6f444df"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Array__adaptive__map.html#aa39ea9333f77da568b370054d6f444df">sizeof_type</a></td></tr>
 <tr class="separator:aa39ea9333f77da568b370054d6f444df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e28ca389cadc3b63767d217fc17da65"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Array__adaptive__map.html#a1e28ca389cadc3b63767d217fc17da65">alignof_type</a></td></tr>
+<tr class="separator:a1e28ca389cadc3b63767d217fc17da65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa0a98b1a439f26d4449faa79a935274"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Array__adaptive__map.html#afa0a98b1a439f26d4449faa79a935274">key_offset</a></td></tr>
 <tr class="separator:afa0a98b1a439f26d4449faa79a935274"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace09684ee096da5cf70e281b94243495"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Key__comparator.html">CCC_Key_comparator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Array__adaptive__map.html#ace09684ee096da5cf70e281b94243495">comparator</a></td></tr>
 <tr class="separator:ace09684ee096da5cf70e281b94243495"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
+<a id="a1e28ca389cadc3b63767d217fc17da65" name="a1e28ca389cadc3b63767d217fc17da65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e28ca389cadc3b63767d217fc17da65">&#9670;&#160;</a></span>alignof_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t CCC_Array_adaptive_map::alignof_type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The alignment of the type being stored. </p>
+
+</div>
+</div>
 <a id="af988785fceb55686197d691680c1a66f" name="af988785fceb55686197d691680c1a66f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af988785fceb55686197d691680c1a66f">&#9670;&#160;</a></span>capacity</h2>
 

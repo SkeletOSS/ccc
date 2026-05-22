@@ -13,6 +13,7 @@ var private__flat__hash__map_8h =
     [ "CCC_private_flat_hash_map_or_insert_with", "private__flat__hash__map_8h.html#a7312d6c2cd7dc3d2a53e5c8121806a32", null ],
     [ "CCC_private_flat_hash_map_storage_for", "private__flat__hash__map_8h.html#a5d30075708daa8114ecdbc19b3e4ba12", null ],
     [ "CCC_private_flat_hash_map_try_insert_with", "private__flat__hash__map_8h.html#aea96a217b83fe6613e5dada54058a382", null ],
+    [ "CCC_private_flat_hash_map_with_allocator_storage", "private__flat__hash__map_8h.html#a2fe81ead6410bdb95b19f4d020cbbde4", null ],
     [ "CCC_private_flat_hash_map_with_capacity", "private__flat__hash__map_8h.html#a6e57c0677b6702e98cafa3355f986d35", null ],
     [ "CCC_private_flat_hash_map_with_storage", "private__flat__hash__map_8h.html#a618d561b95d6f3874939e239804cc6e3", null ],
     [ "CCC_private_flat_hash_map_data_at", "private__flat__hash__map_8h.html#aad4a10c1784d6e91e8df547cf0479386", null ],

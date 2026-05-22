@@ -18,6 +18,7 @@ var array__tree__map_8h =
     [ "CCC_array_tree_map_swap_handle_wrap", "array__tree__map_8h.html#a585c23a99dc4f1f67efaa573f503ed0d", null ],
     [ "CCC_array_tree_map_try_insert_with", "array__tree__map_8h.html#a1f300b99cae79559d75c2e357d237ea5", null ],
     [ "CCC_array_tree_map_try_insert_wrap", "array__tree__map_8h.html#a920a98b66b02c8377e9111f297377825", null ],
+    [ "CCC_array_tree_map_with_allocator_storage", "array__tree__map_8h.html#a6d7c3face2b09c2a8b34ac304fc84f4c", null ],
     [ "CCC_array_tree_map_with_capacity", "array__tree__map_8h.html#a89a33540c2a2b6a08c26da7f76f569d1", null ],
     [ "CCC_array_tree_map_with_storage", "array__tree__map_8h.html#adc51c633a53c388dda9f3f4d3d677c6c", null ],
     [ "CCC_Array_tree_map", "array__tree__map_8h.html#a749127f5a0f7dece409b12023958b75a", null ],

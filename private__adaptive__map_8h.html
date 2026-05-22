@@ -220,8 +220,8 @@ Functions</h2></td></tr>
 <div class="line">        }                                                                      \</div>
 <div class="line">        private_adaptive_map_mod_ent;                                          \</div>
 <div class="line">    }))</div>
-<div class="ttc" id="astructCCC__Adaptive__map__entry_html"><div class="ttname"><a href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a></div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:85</div></div>
-<div class="ttc" id="astructCCC__Adaptive__map__entry_html_a2b0b0a9ce29ecd47addf7a7d846c2346"><div class="ttname"><a href="structCCC__Adaptive__map__entry.html#a2b0b0a9ce29ecd47addf7a7d846c2346">CCC_Adaptive_map_entry::entry</a></div><div class="ttdeci">CCC_Entry entry</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:89</div></div>
+<div class="ttc" id="astructCCC__Adaptive__map__entry_html"><div class="ttname"><a href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a></div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:87</div></div>
+<div class="ttc" id="astructCCC__Adaptive__map__entry_html_a2b0b0a9ce29ecd47addf7a7d846c2346"><div class="ttname"><a href="structCCC__Adaptive__map__entry.html#a2b0b0a9ce29ecd47addf7a7d846c2346">CCC_Adaptive_map_entry::entry</a></div><div class="ttdeci">CCC_Entry entry</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:91</div></div>
 <div class="ttc" id="astructCCC__Entry_html_a4a6fadeba22d89ee3e7f46edf38db2f4"><div class="ttname"><a href="structCCC__Entry.html#a4a6fadeba22d89ee3e7f46edf38db2f4">CCC_Entry::type</a></div><div class="ttdeci">void * type</div><div class="ttdef"><b>Definition:</b> types.h:137</div></div>
 <div class="ttc" id="astructCCC__Entry_html_aa9e3883d6e8e864022a62fe4c7282815"><div class="ttname"><a href="structCCC__Entry.html#aa9e3883d6e8e864022a62fe4c7282815">CCC_Entry::status</a></div><div class="ttdeci">CCC_Entry_status status</div><div class="ttdef"><b>Definition:</b> types.h:139</div></div>
 <div class="ttc" id="atypes_8h_html_a7d5cb1838ecf421fe5b336481344b0a8ab9629d06cb3314b4fa0e6b93b2e6bf45"><div class="ttname"><a href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8ab9629d06cb3314b4fa0e6b93b2e6bf45">CCC_ENTRY_ARGUMENT_ERROR</a></div><div class="ttdeci">@ CCC_ENTRY_ARGUMENT_ERROR</div><div class="ttdef"><b>Definition:</b> types.h:121</div></div>
@@ -268,13 +268,14 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    (<span class="keyword">struct </span><a class="code hl_struct" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a>) {                                                \</div>
 <div class="line">        .sizeof_type = <span class="keyword">sizeof</span>(private_struct_name),                            \</div>
-<div class="line">        .<a class="code hl_variable" href="structCCC__Adaptive__map.html#a2bb70bf3db3d5ace5e205ff4bd1b9816">type_intruder_offset</a>                                                  \</div>
+<div class="line">        .<a class="code hl_variable" href="structCCC__Adaptive__map.html#a969ff77bb691faaf69b299c2aceebc03">alignof_type</a> = <span class="keyword">alignof</span>(private_struct_name),                          \</div>
+<div class="line">        .type_intruder_offset                                                  \</div>
 <div class="line">            = offsetof(private_struct_name, private_node_node_field),          \</div>
 <div class="line">        .key_offset = offsetof(private_struct_name, private_key_node_field),   \</div>
 <div class="line">        .comparator = private_comparator,                                      \</div>
 <div class="line">    }</div>
 <div class="ttc" id="astructCCC__Adaptive__map_html"><div class="ttname"><a href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a></div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:56</div></div>
-<div class="ttc" id="astructCCC__Adaptive__map_html_a2bb70bf3db3d5ace5e205ff4bd1b9816"><div class="ttname"><a href="structCCC__Adaptive__map.html#a2bb70bf3db3d5ace5e205ff4bd1b9816">CCC_Adaptive_map::type_intruder_offset</a></div><div class="ttdeci">size_t type_intruder_offset</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:64</div></div>
+<div class="ttc" id="astructCCC__Adaptive__map_html_a969ff77bb691faaf69b299c2aceebc03"><div class="ttname"><a href="structCCC__Adaptive__map.html#a969ff77bb691faaf69b299c2aceebc03">CCC_Adaptive_map::alignof_type</a></div><div class="ttdeci">size_t alignof_type</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:64</div></div>
 </div><!-- fragment --><p>All other fields default to NULL or 0. </p>
 
 </div>
@@ -318,7 +319,8 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    (<span class="keyword">struct </span><a class="code hl_struct" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a>) {                                                \</div>
 <div class="line">        .root = NULL, .count = 0, .sizeof_type = <span class="keyword">sizeof</span>(private_struct_name),  \</div>
-<div class="line">        .<a class="code hl_variable" href="structCCC__Adaptive__map.html#a2bb70bf3db3d5ace5e205ff4bd1b9816">type_intruder_offset</a>                                                  \</div>
+<div class="line">        .<a class="code hl_variable" href="structCCC__Adaptive__map.html#a969ff77bb691faaf69b299c2aceebc03">alignof_type</a> = <span class="keyword">alignof</span>(private_struct_name),                          \</div>
+<div class="line">        .type_intruder_offset                                                  \</div>
 <div class="line">            = offsetof(private_struct_name, private_node_node_field),          \</div>
 <div class="line">        .key_offset = offsetof(private_struct_name, private_key_node_field),   \</div>
 <div class="line">        .comparator = private_comparator,                                      \</div>
@@ -445,7 +447,7 @@ Functions</h2></td></tr>
 <div class="line">            );                                                                 \</div>
 <div class="line">        }                                                                      \</div>
 <div class="line">    }))</div>
-<div class="ttc" id="aprivate__adaptive__map_8h_html_a446f71aff4b9d993b0ae0e4314c02eea"><div class="ttname"><a href="private__adaptive__map_8h.html#a446f71aff4b9d993b0ae0e4314c02eea">CCC_private_adaptive_map_new</a></div><div class="ttdeci">#define CCC_private_adaptive_map_new(adaptive_map_entry, private_allocator)</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:221</div></div>
+<div class="ttc" id="aprivate__adaptive__map_8h_html_a446f71aff4b9d993b0ae0e4314c02eea"><div class="ttname"><a href="private__adaptive__map_8h.html#a446f71aff4b9d993b0ae0e4314c02eea">CCC_private_adaptive_map_new</a></div><div class="ttdeci">#define CCC_private_adaptive_map_new(adaptive_map_entry, private_allocator)</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:226</div></div>
 <div class="ttc" id="aprivate__adaptive__map_8h_html_a7591c171cc0734ef8837b6284a96631a"><div class="ttname"><a href="private__adaptive__map_8h.html#a7591c171cc0734ef8837b6284a96631a">CCC_private_adaptive_map_insert</a></div><div class="ttdeci">void * CCC_private_adaptive_map_insert(struct CCC_Adaptive_map *, struct CCC_Adaptive_map_node *)</div></div>
 <div class="ttc" id="aprivate__adaptive__map_8h_html_a941a7bd43f42767fdd51c1c33d422926"><div class="ttname"><a href="private__adaptive__map_8h.html#a941a7bd43f42767fdd51c1c33d422926">CCC_private_adaptive_map_key_in_slot</a></div><div class="ttdeci">void * CCC_private_adaptive_map_key_in_slot(struct CCC_Adaptive_map const *, void const *)</div></div>
 <div class="ttc" id="aprivate__adaptive__map_8h_html_abcdf48400d9282e86637fd230b82e224"><div class="ttname"><a href="private__adaptive__map_8h.html#abcdf48400d9282e86637fd230b82e224">CCC_private_adaptive_map_node_in_slot</a></div><div class="ttdeci">struct CCC_Adaptive_map_node * CCC_private_adaptive_map_node_in_slot(struct CCC_Adaptive_map const *, void const *)</div></div>
@@ -607,6 +609,8 @@ Functions</h2></td></tr>
 <div class="line">                      -&gt;allocate((<a class="code hl_struct" href="structCCC__Allocator__arguments.html">CCC_Allocator_arguments</a>){                    \</div>
 <div class="line">                          .input = NULL,                                       \</div>
 <div class="line">                          .bytes = (adaptive_map_entry)-&gt;map-&gt;sizeof_type,     \</div>
+<div class="line">                          .alignment                                           \</div>
+<div class="line">                          = (adaptive_map_entry)-&gt;map-&gt;alignof_type,           \</div>
 <div class="line">                          .context = (private_allocator)-&gt;context,             \</div>
 <div class="line">                      });                                                      \</div>
 <div class="line">        }                                                                      \</div>
@@ -671,7 +675,7 @@ Functions</h2></td></tr>
 <div class="line">        }                                                                      \</div>
 <div class="line">        private_or_ins_ret;                                                    \</div>
 <div class="line">    }))</div>
-<div class="ttc" id="astructCCC__Allocator_html"><div class="ttname"><a href="structCCC__Allocator.html">CCC_Allocator</a></div><div class="ttdoc">The type passed by reference to any container function that may need to allocate memory....</div><div class="ttdef"><b>Definition:</b> types.h:369</div></div>
+<div class="ttc" id="astructCCC__Allocator_html"><div class="ttname"><a href="structCCC__Allocator.html">CCC_Allocator</a></div><div class="ttdoc">The type passed by reference to any container function that may need to allocate memory....</div><div class="ttdef"><b>Definition:</b> types.h:384</div></div>
 </div><!-- fragment -->
 </div>
 </div>

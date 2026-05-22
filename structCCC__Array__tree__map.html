@@ -144,8 +144,9 @@ Collaboration diagram for CCC_Array_tree_map:</div>
 <div class="line">+ (B padding bits in last word)</div>
 <div class="line">--------------------------------</div>
 <div class="line">= 1888 + (B + 1) padding bits in last word (in <span class="keyword">this</span> <span class="keywordflow">case</span> 1)</div>
-<div class="ttc" id="astructCCC__Array__tree__map_html_a63ea33a04096cccedeee7f8ff3e7fcb9"><div class="ttname"><a href="structCCC__Array__tree__map.html#a63ea33a04096cccedeee7f8ff3e7fcb9">CCC_Array_tree_map::nodes</a></div><div class="ttdeci">struct CCC_Array_tree_map_node * nodes</div><div class="ttdef"><b>Definition:</b> private_array_tree_map.h:137</div></div>
+<div class="ttc" id="astructCCC__Array__tree__map_html_a63ea33a04096cccedeee7f8ff3e7fcb9"><div class="ttname"><a href="structCCC__Array__tree__map.html#a63ea33a04096cccedeee7f8ff3e7fcb9">CCC_Array_tree_map::nodes</a></div><div class="ttdeci">struct CCC_Array_tree_map_node * nodes</div><div class="ttdef"><b>Definition:</b> private_array_tree_map.h:146</div></div>
 </div><!-- fragment --><p>That means there are only <code>32 bytes + (B + 1) bits</code> wasted, a 4 byte sentinel integer, 4 bytes of padding between the end of the user type array and the start of the nodes array, a 24 byte sentinel node, a sentinel bit, and the unused bits at the end of the parity bit array. This also means it important to consider the alignment differences that may occur between the user type and the node type.</p>
+<p>The base allocation, the 0th user data element, is required to satisfy max(alignof(T), alignof(struct CCC_Array_tree_map_node)), where T is the user type. This ensures that both the user data array and the node array begin at valid alignment boundaries for their respective element types. Each subsequent region is derived via explicit byte-offset computation using aligned rounding, guaranteeing that the start of each array is aligned to at least its required element alignment. The parity array requires no additional alignment adjustment because the node alignment is greater than or equal to parity alignment.</p>
 <p>This layout comes at the cost of consulting multiple arrays for many operations. However, once user data has been inserted or removed the tree fix up operations only need to consult the nodes array and the bit array which means more bits and nodes can be loaded on a cache line. We no longer need to consider arbitrarily sized or organized user data while we do operations on nodes and bits. Performance metrics still must be measured to say whether this is faster or slower than other approaches. However, the goal with this design is space efficiency first, speed second. </p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -166,12 +167,29 @@ Data Fields</h2></td></tr>
 <tr class="separator:a260771ed0124d74c1eba644669e07eea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23ab5d7c4b9a351dff64f8e8c5eca5bd"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Array__tree__map.html#a23ab5d7c4b9a351dff64f8e8c5eca5bd">sizeof_type</a></td></tr>
 <tr class="separator:a23ab5d7c4b9a351dff64f8e8c5eca5bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0d8e33661231a68cecf17708eb8b995"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Array__tree__map.html#ab0d8e33661231a68cecf17708eb8b995">alignof_type</a></td></tr>
+<tr class="separator:ab0d8e33661231a68cecf17708eb8b995"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae68de9bf0bf0fed7ff1b92592f58e346"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Array__tree__map.html#ae68de9bf0bf0fed7ff1b92592f58e346">key_offset</a></td></tr>
 <tr class="separator:ae68de9bf0bf0fed7ff1b92592f58e346"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0b698dabea50bda1c5b482f866232ea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Key__comparator.html">CCC_Key_comparator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Array__tree__map.html#ab0b698dabea50bda1c5b482f866232ea">comparator</a></td></tr>
 <tr class="separator:ab0b698dabea50bda1c5b482f866232ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
+<a id="ab0d8e33661231a68cecf17708eb8b995" name="ab0d8e33661231a68cecf17708eb8b995"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0d8e33661231a68cecf17708eb8b995">&#9670;&#160;</a></span>alignof_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t CCC_Array_tree_map::alignof_type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The alignment of the type stored in the map. </p>
+
+</div>
+</div>
 <a id="a2a7afb21dde4cff08c927cbe19b76f18" name="a2a7afb21dde4cff08c927cbe19b76f18"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2a7afb21dde4cff08c927cbe19b76f18">&#9670;&#160;</a></span>capacity</h2>
 

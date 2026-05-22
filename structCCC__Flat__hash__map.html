@@ -121,6 +121,7 @@ Collaboration diagram for CCC_Flat_hash_map:</div>
 <div class="line">│Size = 1 data│ │bytes between.│ │needed but duplicated <span class="keywordflow">for</span> branchless ops. │</div>
 <div class="line">└─────────────┘ └──────────────┘ └──────────────────────────────────────────┘</div>
 </div><!-- fragment --><p>This is a different layout than Rust's Hashbrown table. Instead of a shared base address of the data and tag arrays with padding at the start of the data array, we use a normal two array layout with padding between. This is because we must allow the user to allocate a hash table at compile time in the data segment or on the stack. The fixed size map defined at compile time is a struct and structs in the C standard are specified to have no padding at the start. Therefore, so that the code within the map does not care whether it deals with a fixed or dynamic map, we must assume data starts at the base address and that there may be zero or more bytes of padding between the data and tag arrays for alignment.</p>
+<p>The base address of the struct of arrays, the 0th user data element, is aligned to <code>max(CCC_FLAT_HASH_MAP_GROUP_COUNT, alignof(T))</code>, where <code>T</code> is the user type. The tag array base address is then also aligned to <code>CCC_FLAT_HASH_MAP_GROUP_COUNT</code>. This is done to ensure that user alignment is respected and the tag array is always aligned such that aligned group loads are possible with SIMD instructions. For fixed size maps generated at compile time, this alignment requirement is enforced via the <code>alignas</code> compiler directive on the generated backing storage. For dynamically allocated maps, this alignment requirement is passed to the allocator when requesting the backing storage block.</p>
 <p>We may lose some of the assembly optimizations in indexing that Rust's table gets by adding and subtracting from a shared base address. However, this table still needs to use byte offset multiplication because the data is stored as <code>void *</code> so we don't have the same optimizations available to us as Rust's template generic system. Simple 0 based indexing makes the addition and multiplication we perform as simple as possible. </p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -137,12 +138,29 @@ Data Fields</h2></td></tr>
 <tr class="separator:a8991b262fe4d2595bad16460bf4dc4e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ac5a0651f942b94821ea041257fd4aa"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Flat__hash__map.html#a7ac5a0651f942b94821ea041257fd4aa">sizeof_type</a></td></tr>
 <tr class="separator:a7ac5a0651f942b94821ea041257fd4aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71981492321ec6b5e9fd394919bcf9a3"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Flat__hash__map.html#a71981492321ec6b5e9fd394919bcf9a3">alignof_type</a></td></tr>
+<tr class="separator:a71981492321ec6b5e9fd394919bcf9a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87df703d579e68a09558dc1a9c773525"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Flat__hash__map.html#a87df703d579e68a09558dc1a9c773525">key_offset</a></td></tr>
 <tr class="separator:a87df703d579e68a09558dc1a9c773525"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afcb5101dd8c99a767765bc4da1edb66f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structCCC__Hasher.html">CCC_Hasher</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCC__Flat__hash__map.html#afcb5101dd8c99a767765bc4da1edb66f">hasher</a></td></tr>
 <tr class="separator:afcb5101dd8c99a767765bc4da1edb66f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
+<a id="a71981492321ec6b5e9fd394919bcf9a3" name="a71981492321ec6b5e9fd394919bcf9a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71981492321ec6b5e9fd394919bcf9a3">&#9670;&#160;</a></span>alignof_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t CCC_Flat_hash_map::alignof_type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Alignment user data type being stored. </p>
+
+</div>
+</div>
 <a id="aa1a7e81876c54d1b818b04743b2328ec" name="aa1a7e81876c54d1b818b04743b2328ec"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa1a7e81876c54d1b818b04743b2328ec">&#9670;&#160;</a></span>count</h2>
 
@@ -169,7 +187,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>User data type array. </p>
+<p>User data type array. This address shall always be aligned to the <code>max(CCC_FLAT_HASH_MAP_GROUP_COUNT, alignof(T))</code>, where <code>T</code> is the user type. </p>
 
 </div>
 </div>
@@ -259,7 +277,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Tag array on byte following data. </p>
+<p>Tag array following the user data array in a single block. This address shall always be aligned to CCC_FLAT_HASH_MAP_GROUP_COUNT. </p>
 
 </div>
 </div>

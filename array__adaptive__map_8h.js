@@ -18,6 +18,7 @@ var array__adaptive__map_8h =
     [ "CCC_array_adaptive_map_swap_handle_wrap", "array__adaptive__map_8h.html#a80c80aa95c4380a4c710c37c01aadc46", null ],
     [ "CCC_array_adaptive_map_try_insert_with", "array__adaptive__map_8h.html#a00e135ccf1dc8f7afa42a37faf73e024", null ],
     [ "CCC_array_adaptive_map_try_insert_wrap", "array__adaptive__map_8h.html#a83e85b77c5c19640c3a710ee4bb30509", null ],
+    [ "CCC_array_adaptive_map_with_allocator_storage", "array__adaptive__map_8h.html#af43f12a4ef0665b210ee33a716a40fdc", null ],
     [ "CCC_array_adaptive_map_with_capacity", "array__adaptive__map_8h.html#a58d5cf3ff6ef2104837671a910061d89", null ],
     [ "CCC_array_adaptive_map_with_storage", "array__adaptive__map_8h.html#a21ba76d3a7228d1cc7465ca982f63032", null ],
     [ "CCC_Array_adaptive_map", "array__adaptive__map_8h.html#a3383e02ece054e21edbc2a638d3567f9", null ],

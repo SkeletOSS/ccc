@@ -135,7 +135,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr><td class="ititle" colspan="2"><p>Initialize the container with memory, callbacks, and permissions. </p>
 </td></tr>
 <tr class="memitem:a691dd040b33e730ed6e9ac681afd4d3c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#a691dd040b33e730ed6e9ac681afd4d3c">CCC_array_tree_map_storage_for</a>( user_type_compound_literal_array,  optional_storage_specifier...)</td></tr>
-<tr class="memdesc:a691dd040b33e730ed6e9ac681afd4d3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create the underlying fixed size map storage from a user declared compound literal array of the type the user intends to store.  <br /></td></tr>
+<tr class="memdesc:a691dd040b33e730ed6e9ac681afd4d3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides the fixed size type layout and underlying storage for a fixed size map. Helpful if the size in bytes of the underlying storage block is needed.  <br /></td></tr>
 <tr class="separator:a691dd040b33e730ed6e9ac681afd4d3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5e65a6c675f53198cf527a51240aa0a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#af5e65a6c675f53198cf527a51240aa0a">CCC_array_tree_map_default</a>(type_name,  type_key_field,  comparator...)&#160;&#160;&#160;    CCC_private_array_tree_map_default(type_name, type_key_field, comparator)</td></tr>
 <tr class="memdesc:af5e65a6c675f53198cf527a51240aa0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a default empty map at runtime or compile time.  <br /></td></tr>
@@ -152,6 +152,8 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:adc51c633a53c388dda9f3f4d3d677c6c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#adc51c633a53c388dda9f3f4d3d677c6c">CCC_array_tree_map_with_storage</a>( type_key_field,  comparator,  compound_literal,  optional_storage_specifier...)</td></tr>
 <tr class="memdesc:adc51c633a53c388dda9f3f4d3d677c6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a fixed map at compile or runtime from any user chosen type with no allocation permission or context.  <br /></td></tr>
 <tr class="separator:adc51c633a53c388dda9f3f4d3d677c6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d7c3face2b09c2a8b34ac304fc84f4c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#a6d7c3face2b09c2a8b34ac304fc84f4c">CCC_array_tree_map_with_allocator_storage</a>( key_field,  comparator,  allocator,  compound_literal)</td></tr>
+<tr class="separator:a6d7c3face2b09c2a8b34ac304fc84f4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4c5431926466eb1a3eb084bc917688d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#af4c5431926466eb1a3eb084bc917688d">CCC_array_tree_map_copy</a> (<a class="el" href="structCCC__Array__tree__map.html">CCC_Array_tree_map</a> *destination, <a class="el" href="structCCC__Array__tree__map.html">CCC_Array_tree_map</a> const *source, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
 <tr class="memdesc:af4c5431926466eb1a3eb084bc917688d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the map at source to destination.  <br /></td></tr>
 <tr class="separator:af4c5431926466eb1a3eb084bc917688d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -359,7 +361,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="line">          map_array_pointer, closure_parameter, closure_over_closure_parameter \</div>
 <div class="line">      )}                                                                       \</div>
 <div class="line">         .private</div>
-<div class="ttc" id="astructCCC__Array__tree__map__handle_html"><div class="ttname"><a href="structCCC__Array__tree__map__handle.html">CCC_Array_tree_map_handle</a></div><div class="ttdef"><b>Definition:</b> private_array_tree_map.h:157</div></div>
+<div class="ttc" id="astructCCC__Array__tree__map__handle_html"><div class="ttname"><a href="structCCC__Array__tree__map__handle.html">CCC_Array_tree_map_handle</a></div><div class="ttdef"><b>Definition:</b> private_array_tree_map.h:168</div></div>
 </div><!-- fragment -->
 <p>Modify an Occupied handle with a closure over user type T. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1090,42 +1092,16 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <div class="line">        user_type_compound_literal_array, optional_storage_specifier           \</div>
 <div class="line">    )</div>
 </div><!-- fragment -->
-<p>Create the underlying fixed size map storage from a user declared compound literal array of the type the user intends to store. </p>
+<p>Provides the fixed size type layout and underlying storage for a fixed size map. Helpful if the size in bytes of the underlying storage block is needed. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">user_type_compound_literal_array</td><td>a compound literal array of the type around which the map will be built. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">optional_storage_specifier</td><td>a storage specifier for the backing struct of array storage may be added on newer compilers such as static. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">user_type_compound_literal_array</td><td>a compound literal array of the type around which the map will be built. Must be a power of 2 capacity array. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section warning"><dt>Warning</dt><dd>This should rarely be used. If a fixed size map is desired simply use the <a class="el" href="array__tree__map_8h.html#adc51c633a53c388dda9f3f4d3d677c6c" title="Initialize a fixed map at compile or runtime from any user chosen type with no allocation permission ...">CCC_array_tree_map_with_storage()</a> initializer. For dynamic maps, there are also many other options.</dd></dl>
-<p>This macro is required to support the edge case for the user allocating a fixed size map dynamically from an allocator at runtime. In this case, the user needs access to the compound literal struct of arrays map to know how many bytes to allocate. See the below example.</p>
-<div class="fragment"><div class="line"><span class="keyword">struct </span>Val</div>
-<div class="line">{</div>
-<div class="line">    <span class="keywordtype">int</span> key;</div>
-<div class="line">    <span class="keywordtype">int</span> val;</div>
-<div class="line">};</div>
-<div class="line"> </div>
-<div class="line"><span class="keywordtype">int</span></div>
-<div class="line">main(<span class="keywordtype">void</span>)</div>
-<div class="line">{</div>
-<div class="line">    <span class="keywordtype">void</span> *<span class="keyword">const</span> map = malloc(</div>
-<div class="line">        <span class="keyword">sizeof</span>(<a class="code hl_define" href="array__tree__map_8h.html#a691dd040b33e730ed6e9ac681afd4d3c">CCC_array_tree_map_storage_for</a>((<span class="keyword">struct</span> Val[4096]){}))</div>
-<div class="line">    );</div>
-<div class="line">    defer free(map);</div>
-<div class="line">    <a class="code hl_struct" href="structCCC__Array__tree__map.html">CCC_Array_tree_map</a> map = <a class="code hl_define" href="array__tree__map_8h.html#a5815ba36568a2006bc5987c2bdfecc52">CCC_array_tree_map_for</a>(</div>
-<div class="line">        <span class="keyword">struct</span> Val,</div>
-<div class="line">        key,</div>
-<div class="line">        (<a class="code hl_struct" href="structCCC__Key__comparator.html">CCC_Key_comparator</a>){.compare = order_vals},</div>
-<div class="line">        4096,</div>
-<div class="line">        map</div>
-<div class="line">    );</div>
-<div class="line">}</div>
-<div class="ttc" id="aarray__tree__map_8h_html_a5815ba36568a2006bc5987c2bdfecc52"><div class="ttname"><a href="array__tree__map_8h.html#a5815ba36568a2006bc5987c2bdfecc52">CCC_array_tree_map_for</a></div><div class="ttdeci">#define CCC_array_tree_map_for( type_name, type_key_field, comparator, capacity, memory_pointer)</div><div class="ttdoc">Initializes the map at runtime or compile time.</div><div class="ttdef"><b>Definition:</b> array_tree_map.h:165</div></div>
-<div class="ttc" id="aarray__tree__map_8h_html_a691dd040b33e730ed6e9ac681afd4d3c"><div class="ttname"><a href="array__tree__map_8h.html#a691dd040b33e730ed6e9ac681afd4d3c">CCC_array_tree_map_storage_for</a></div><div class="ttdeci">#define CCC_array_tree_map_storage_for( user_type_compound_literal_array, optional_storage_specifier...)</div><div class="ttdoc">Create the underlying fixed size map storage from a user declared compound literal array of the type ...</div><div class="ttdef"><b>Definition:</b> array_tree_map.h:142</div></div>
-<div class="ttc" id="astructCCC__Array__tree__map_html"><div class="ttname"><a href="structCCC__Array__tree__map.html">CCC_Array_tree_map</a></div><div class="ttdef"><b>Definition:</b> private_array_tree_map.h:133</div></div>
-<div class="ttc" id="astructCCC__Key__comparator_html"><div class="ttname"><a href="structCCC__Key__comparator.html">CCC_Key_comparator</a></div><div class="ttdoc">The type passed by reference to any container function that may need to compare keys....</div><div class="ttdef"><b>Definition:</b> types.h:505</div></div>
-</div><!-- fragment --><p>Usually, using a dynamic map and the reserve interface would be sufficient. However, the reserve interface only guarantees that at least the needed bytes are allocated. When the user must know the exact size of the backing object due to strict memory requirements, this is helpful. Such a use case may be rare, but must be supported by this container. </p>
+<dl class="section note"><dt>Note</dt><dd>Size of the underlying storage can be obtained via the following macro <code>sizeof(CCC_array_tree_map_storage_for(...))</code>, as needed. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>See <a class="el" href="array__tree__map_8h.html#a6d7c3face2b09c2a8b34ac304fc84f4c">CCC_array_tree_map_with_allocator_storage()</a> if you wish to allocate a fixed size map dynamically at runtime due to strict memory requirements. A <code><a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a></code> must be provided to that interface function to complete the allocation.</dd></dl>
+<p>If the user wishes to dynamically allocate a fixed size map at runtime this macro can be used to obtain the total bytes of the underlying storage as needed. See <a class="el" href="array__tree__map_8h.html#a6d7c3face2b09c2a8b34ac304fc84f4c">CCC_array_tree_map_with_allocator_storage()</a> for how to dynamically allocate a fixed size map. This is not a common use case. </p>
 
 </div>
 </div>
@@ -1288,6 +1264,58 @@ If initialization fails all subsequent queries, insertions, or removals will ind
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a compound literal reference to a handle. If Occupied, the handle contains a reference to the key value user type in the map and may be unwrapped. If Vacant the handle contains a reference to the newly inserted handle in the map. If more space is needed but allocation fails an insert error is set. </dd></dl>
+
+</div>
+</div>
+<a id="a6d7c3face2b09c2a8b34ac304fc84f4c" name="a6d7c3face2b09c2a8b34ac304fc84f4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d7c3face2b09c2a8b34ac304fc84f4c">&#9670;&#160;</a></span>CCC_array_tree_map_with_allocator_storage</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CCC_array_tree_map_with_allocator_storage</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">key_field, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">comparator, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">allocator, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">compound_literal&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_tree_map_with_allocator_storage(                         \</div>
+<div class="line">        key_field, comparator, allocator, compound_literal                     \</div>
+<div class="line">    )</div>
+</div><!-- fragment --><p>Obtain a fixed size map dynamically at runtime from an allocator. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">key_field</td><td>the field of the struct used for key storage. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">comparator</td><td>a <a class="el" href="structCCC__Key__comparator.html" title="The type passed by reference to any container function that may need to compare keys....">CCC_Key_comparator</a> that configures the key comparator function and context for comparison. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal</td><td>the compound literal array of a type provided by the user around which the struct of arrays backing storage for the map is built. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the map initialized on the right hand side of equality operator. If dynamic allocation is successful the map is initialized with the specified capacity. If allocation fails the map will have a capacity of 0 and NULL internal pointers. </dd></dl>
 
 </div>
 </div>
@@ -1806,7 +1834,7 @@ do not try to access data in the table manually with a handle. Always use this p
 <div class="line">);</div>
 <div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res</div>
 <div class="line">    = array_tree_map_copy(&amp;destination, &amp;source, &amp;(<a class="code hl_struct" href="structCCC__Allocator.html">CCC_Allocator</a>){});</div>
-<div class="ttc" id="astructCCC__Allocator_html"><div class="ttname"><a href="structCCC__Allocator.html">CCC_Allocator</a></div><div class="ttdoc">The type passed by reference to any container function that may need to allocate memory....</div><div class="ttdef"><b>Definition:</b> types.h:369</div></div>
+<div class="ttc" id="astructCCC__Allocator_html"><div class="ttname"><a href="structCCC__Allocator.html">CCC_Allocator</a></div><div class="ttdoc">The type passed by reference to any container function that may need to allocate memory....</div><div class="ttdef"><b>Definition:</b> types.h:384</div></div>
 <div class="ttc" id="atypes_8h_html_aa1ded61d294b114942f11e711b331dcf"><div class="ttname"><a href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a></div><div class="ttdeci">CCC_Result</div><div class="ttdoc">A result of actions on containers.</div><div class="ttdef"><b>Definition:</b> types.h:192</div></div>
 </div><!-- fragment --><p>The above requires destination capacity be greater than or equal to source capacity. Here is memory management handed over to the copy function.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define ARRAY_TREE_MAP_USING_NAMESPACE_CCC</span></div>
