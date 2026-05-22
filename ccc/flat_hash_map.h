@@ -131,6 +131,8 @@ fixed size map. Helpful if the size in bytes of the underlying storage block is
 needed.
 @param[in] user_type_compound_literal_array a compound literal array of the type
 around which the map will be built. Must be a power of 2 capacity array.
+@param[in] optional_storage_specifier an optional storage duration specifier if
+different from the default for the map at the declared location.
 @note Size of the underlying storage can be obtained via the following macro
 `sizeof(CCC_flat_hash_map_storage_for(...))`, as needed.
 @warning See CCC_flat_hash_map_with_allocator_storage() if you wish to allocate
@@ -142,8 +144,12 @@ If the user wishes to dynamically allocate a fixed size map at runtime this
 macro can be used to obtain the total bytes of the underlying storage as needed.
 See CCC_flat_hash_map_with_allocator_storage() for how to dynamically allocate
 a fixed size map. This is not a common use case. */
-#define CCC_flat_hash_map_storage_for(user_type_compound_literal_array)        \
-    CCC_private_flat_hash_map_storage_for(user_type_compound_literal_array)
+#define CCC_flat_hash_map_storage_for(                                         \
+    user_type_compound_literal_array, optional_storage_duration...             \
+)                                                                              \
+    CCC_private_flat_hash_map_storage_for(                                     \
+        user_type_compound_literal_array, optional_storage_duration            \
+    )
 
 /** @brief Initialize a default empty map at compile time or runtime.
 @param[in] type_name the name of the user defined type stored in the map.
