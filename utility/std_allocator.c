@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
 
@@ -19,6 +20,14 @@ CCC_Allocator const std_allocator = {
 
 void *
 std_allocate(CCC_Allocator_arguments const arguments) {
+    if (arguments.alignment && arguments.alignment > alignof(max_align_t)) {
+        assert(
+            arguments.alignment <= alignof(max_align_t)
+            && "Any type provided to this allocator has alignment less than or "
+               "equal to default malloc/realloc max alignment."
+        );
+        return NULL;
+    }
     if (!arguments.input && !arguments.bytes) {
         return NULL;
     }
