@@ -84,8 +84,22 @@ std_aligned_allocate(CCC_Allocator_arguments const arguments) {
 static inline void *
 record_aligned_alloc(size_t const alignment, size_t const bytes) {
     size_t const user_allocation_bytes = roundup(bytes, alignment);
+    if (user_allocation_bytes < bytes) {
+        assert(
+            user_allocation_bytes >= bytes
+            && "aligned byte request does not overflow"
+        );
+        return NULL;
+    }
     size_t const total_aligned_multiple_bytes
         = roundup(user_allocation_bytes + sizeof(struct Allocation), alignment);
+    if (total_aligned_multiple_bytes < bytes) {
+        assert(
+            total_aligned_multiple_bytes >= bytes
+            && "aligned byte request does not overflow"
+        );
+        return NULL;
+    }
     void *const aligned_base
         = aligned_alloc(alignment, total_aligned_multiple_bytes);
     if (!aligned_base) {
@@ -113,6 +127,10 @@ record_aligned_realloc(
         );
         return NULL;
     }
+    assert(
+        (old_allocation->alignment & (old_allocation->alignment - 1)) == 0
+        && "struct Allocation has probably not been corrupted."
+    );
     void *const aligned_location = record_aligned_alloc(alignment, new_bytes);
     if (!aligned_location) {
         return NULL;
@@ -141,8 +159,10 @@ min_size_t(size_t const a, size_t const b) {
 
 static inline struct Allocation *
 allocation_for(void const *const aligned_user_pointer) {
-    return (struct Allocation *)((char *)aligned_user_pointer
-                                 - sizeof(struct Allocation));
+    struct Allocation *const allocation
+        = (struct Allocation *)((char *)aligned_user_pointer
+                                - sizeof(struct Allocation));
+    return allocation;
 }
 
 static inline void *
