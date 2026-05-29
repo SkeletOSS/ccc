@@ -131,7 +131,7 @@ record_aligned_alloc(size_t const alignment, size_t const bytes) {
         );
     *allocation = user_allocation_bytes;
     *((Log_2_alignment *)aligned_user_start - 1)
-        = count_trailing_zeros(alignment) - 1;
+        = count_trailing_zeros(alignment);
     return aligned_user_start;
 }
 
@@ -142,8 +142,7 @@ record_aligned_realloc(
     Aligned_user_bytes const *const old_allocation = allocation_for(input);
     Log_2_alignment const *const old_log_2_alignment_minus_one
         = alignment_for(input);
-    size_t const old_alignment = (size_t)1
-                              << (*old_log_2_alignment_minus_one + 1);
+    size_t const old_alignment = (size_t)1 << (*old_log_2_alignment_minus_one);
     if (alignment < old_alignment) {
         assert(
             alignment >= old_alignment
@@ -183,9 +182,9 @@ min_size_t(size_t const a, size_t const b) {
 
 static inline Aligned_user_bytes *
 allocation_for(void const *const aligned_user_pointer) {
-    Log_2_alignment const *const log_2_alignment_minus_one
+    Log_2_alignment const *const log_2_alignment
         = alignment_for(aligned_user_pointer);
-    size_t const alignment = (size_t)1 << (*log_2_alignment_minus_one + 1);
+    size_t const alignment = (size_t)1 << (*log_2_alignment);
     Aligned_user_bytes *const allocation
         = (Aligned_user_bytes *)((char *)aligned_user_pointer
                                  - roundup(
