@@ -1,5 +1,7 @@
 #include <assert.h>
+#include <limits.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -16,27 +18,31 @@ is as follows:
 
 Increasing addresses -->
 
-| aligned base + padding | struct Allocation | aligned user base |
+| Aligned_user_bytes | pad | Log_2_alignment | aligned user base address |
 
-The padding between the base address returned by aligned_alloc and the actual
-struct Allocation will vary depending on the user requested alignment. That is
-why we place the struct allocation directly before the user block base address.
-We ensure the user block base address is also aligned by rounding up our
-allocation to accommodate the appropriate alignment for the addition of the
-struct Allocation.
+The padding between the aligned base address Aligned_user_bytes returned by
+aligned_alloc and the aligned user base address will vary depending on the user
+requested alignment. That is why we place the log2(alignment) byte directly
+before the user block base address. We ensure the user block base address is
+also aligned by rounding up our allocation to accommodate the appropriate
+alignment for the Aligned_user_bytes. The Log_2_alignment byte has an alignment
+of 1 so fits at any address directly preceding the aligned user base address.
 
 Overall, this allocator approach will lead to a less efficient allocator that
-is slower and creates worse fragmentation than if the standard library
-implemented aligned_realloc. That is why, in general, a custom allocator should
-be found or implemented that takes care of alignment for the user. We have no
-access to internal allocator headers or the ability to perform actions such as
-coalescing with this wrapper approach. */
-struct Allocation {
-    /** The user requested bytes rounded up to alignment. */
-    size_t aligned_user_bytes;
-    /** The previously requested alignment. Helps calculate the offset of this
-     struct and provides sanity checks for reallocation. */
-    size_t alignment;
+is slower, creates worse fragmentation, and uses more space than if the standard
+library implemented aligned_realloc. That is why, in general, a custom allocator
+should be found or implemented that takes care of alignment for the user. We
+have no access to internal allocator headers or the ability to perform actions
+such as coalescing with this wrapper approach. */
+typedef size_t Aligned_user_bytes;
+/** The log2(alignment) where alignment is a power of two alignment requested
+by the user. */
+typedef uint8_t Log_2_alignment;
+
+enum : Log_2_alignment {
+    LOG_2_ALIGNMENT_BITS = sizeof(Log_2_alignment) * CHAR_BIT,
+    LOG_2_ALIGNMENT_MSB = (Log_2_alignment)1 << (LOG_2_ALIGNMENT_BITS - 1),
+    LOG_2_MAX = UINT8_MAX
 };
 
 /** Defined extern in allocate.h */
@@ -49,8 +55,9 @@ static size_t max_size_t(size_t, size_t);
 static size_t min_size_t(size_t, size_t);
 static void *record_aligned_alloc(size_t, size_t);
 static void *record_aligned_realloc(size_t, void *, size_t);
-static struct Allocation *allocation_for(void const *);
-static void *base_for(void const *);
+static Aligned_user_bytes *allocation_for(void const *);
+static inline Log_2_alignment *alignment_for(void const *);
+static Log_2_alignment count_trailing_zeros(size_t);
 
 void *
 std_aligned_allocate(CCC_Allocator_arguments const arguments) {
@@ -68,12 +75,12 @@ std_aligned_allocate(CCC_Allocator_arguments const arguments) {
         return NULL;
     }
     size_t const max_alignment
-        = max_size_t(alignment, alignof(struct Allocation));
+        = max_size_t(alignment, alignof(Aligned_user_bytes));
     if (!arguments.input) {
         return record_aligned_alloc(max_alignment, arguments.bytes);
     }
     if (!arguments.bytes) {
-        free(base_for(arguments.input));
+        free(allocation_for(arguments.input));
         return NULL;
     }
     return record_aligned_realloc(
@@ -83,6 +90,7 @@ std_aligned_allocate(CCC_Allocator_arguments const arguments) {
 
 static inline void *
 record_aligned_alloc(size_t const alignment, size_t const bytes) {
+    assert(alignment && "alignment required for allocation metadata");
     size_t const user_allocation_bytes = roundup(bytes, alignment);
     if (user_allocation_bytes < bytes) {
         assert(
@@ -91,8 +99,11 @@ record_aligned_alloc(size_t const alignment, size_t const bytes) {
         );
         return NULL;
     }
-    size_t const total_aligned_multiple_bytes
-        = roundup(user_allocation_bytes + sizeof(struct Allocation), alignment);
+    size_t const total_aligned_multiple_bytes = roundup(
+        user_allocation_bytes + sizeof(Aligned_user_bytes)
+            + sizeof(Log_2_alignment),
+        alignment
+    );
     if (total_aligned_multiple_bytes < bytes) {
         assert(
             total_aligned_multiple_bytes >= bytes
@@ -100,17 +111,19 @@ record_aligned_alloc(size_t const alignment, size_t const bytes) {
         );
         return NULL;
     }
-    void *const aligned_base
+    Aligned_user_bytes *const allocation
         = aligned_alloc(alignment, total_aligned_multiple_bytes);
-    if (!aligned_base) {
+    if (!allocation) {
         return NULL;
     }
     void *const aligned_user_start
-        = (char *)aligned_base + roundup(sizeof(struct Allocation), alignment);
-    struct Allocation *const allocation_position
-        = allocation_for(aligned_user_start);
-    allocation_position->aligned_user_bytes = user_allocation_bytes;
-    allocation_position->alignment = alignment;
+        = (char *)allocation
+        + roundup(
+              sizeof(Aligned_user_bytes) + sizeof(Log_2_alignment), alignment
+        );
+    *allocation = user_allocation_bytes;
+    *((Log_2_alignment *)aligned_user_start - 1)
+        = count_trailing_zeros(alignment) - 1;
     return aligned_user_start;
 }
 
@@ -118,27 +131,30 @@ static void *
 record_aligned_realloc(
     size_t const alignment, void *const input, size_t const new_bytes
 ) {
-    struct Allocation const *const old_allocation = allocation_for(input);
-    if (alignment < old_allocation->alignment) {
+    Aligned_user_bytes const *const old_allocation = allocation_for(input);
+    Log_2_alignment const *const old_log_2_alignment_minus_one
+        = alignment_for(input);
+    size_t const old_alignment = (size_t)1
+                              << (*old_log_2_alignment_minus_one + 1);
+    if (alignment < old_alignment) {
         assert(
-            alignment >= old_allocation->alignment
+            alignment >= old_alignment
             && "aligned reallocation request must have valid alignment for "
                "previously allocated type"
         );
         return NULL;
     }
     assert(
-        (old_allocation->alignment & (old_allocation->alignment - 1)) == 0
-        && "struct Allocation has probably not been corrupted."
+        (old_alignment & (old_alignment - 1)) == 0
+        && "Aligned_user_bytes has probably not been corrupted."
     );
     void *const aligned_location = record_aligned_alloc(alignment, new_bytes);
     if (!aligned_location) {
         return NULL;
     }
-    size_t const bytes_to_copy
-        = min_size_t(old_allocation->aligned_user_bytes, new_bytes);
+    size_t const bytes_to_copy = min_size_t(*old_allocation, new_bytes);
     (void)memcpy(aligned_location, input, bytes_to_copy);
-    free(base_for(input));
+    free((void *)old_allocation);
     return aligned_location;
 }
 
@@ -157,19 +173,50 @@ min_size_t(size_t const a, size_t const b) {
     return a < b ? a : b;
 }
 
-static inline struct Allocation *
+static inline Aligned_user_bytes *
 allocation_for(void const *const aligned_user_pointer) {
-    struct Allocation *const allocation
-        = (struct Allocation *)((char *)aligned_user_pointer
-                                - sizeof(struct Allocation));
+    Log_2_alignment const *const log_2_alignment_minus_one
+        = alignment_for(aligned_user_pointer);
+    size_t const alignment = (size_t)1 << (*log_2_alignment_minus_one + 1);
+    Aligned_user_bytes *const allocation
+        = (Aligned_user_bytes *)((char *)aligned_user_pointer
+                                 - roundup(
+                                     sizeof(Aligned_user_bytes)
+                                         + sizeof(Log_2_alignment),
+                                     alignment
+                                 ));
     return allocation;
 }
 
-static inline void *
-base_for(void const *const aligned_user_pointer) {
-    struct Allocation const *const allocation
-        = (struct Allocation *)((char *)aligned_user_pointer
-                                - sizeof(struct Allocation));
-    return (char *)aligned_user_pointer
-         - roundup(sizeof(struct Allocation), allocation->alignment);
+static inline Log_2_alignment *
+alignment_for(void const *const aligned_user_pointer) {
+    return (Log_2_alignment *)aligned_user_pointer - 1;
 }
+
+#if defined(__has_builtin) && __has_builtin(__builtin_ctzl)
+/** Counts the number of trailing zeros in a bit block starting from least
+significant bit. */
+static inline Log_2_alignment
+count_trailing_zeros(size_t const b) {
+    static_assert(
+        __builtin_ctzl(LOG_2_ALIGNMENT_MSB) <= LOG_2_MAX,
+        "builtins return counts that are valid for smaller width types we use"
+    );
+    return b ? (Log_2_alignment)__builtin_ctzl(b) : LOG_2_ALIGNMENT_BITS;
+}
+
+#else /* !defined(__has_builtin) || !__has_builtin(__builtin_ctzl) */
+
+/** Counts the number of trailing zeros in a bit block starting from least
+significant bit. */
+static inline Log_2_alignment
+count_trailing_zeros(size_t b) {
+    if (!b) {
+        return LOG_2_ALIGNMENT_BITS;
+    }
+    Log_2_alignment cnt = 0;
+    for (; (b & 1U) == 0; ++cnt, b >>= 1U) {}
+    return cnt;
+}
+
+#endif /* defined(__has_builtin) && __has_builtin(__builtin_ctzl) */
