@@ -36,7 +36,15 @@ have no access to internal allocator headers or the ability to perform actions
 such as coalescing with this wrapper approach. */
 typedef size_t Aligned_user_bytes;
 /** The log2(alignment) where alignment is a power of two alignment requested
-by the user. */
+by the user. Because alignments are guaranteed to be powers of 2, tracking
+their logarithms is simple and allows us to store absurdly large alignment
+values (up to 2^256).
+
+This also removes any concern over alignment of this metadata as a byte can be
+aligned to any address and we place it directly before the user aligned base
+address. Storing alignment also allows for sanity checks on reallocation and
+helps locate the base address of the entire allocation where we store the size
+of the user allocation. */
 typedef uint8_t Log_2_alignment;
 
 enum : Log_2_alignment {
