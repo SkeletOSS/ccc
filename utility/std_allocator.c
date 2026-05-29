@@ -16,7 +16,7 @@ is as follows:
 
 Increasing addresses -->
 
-| aligned base | padding | struct Allocation | aligned user base |
+| aligned base + padding | struct Allocation | aligned user base |
 
 The padding between the base address returned by aligned_alloc and the actual
 struct Allocation will vary depending on the user requested alignment. That is
