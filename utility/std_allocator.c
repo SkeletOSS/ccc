@@ -140,9 +140,8 @@ record_aligned_realloc(
     size_t const alignment, void *const input, size_t const new_bytes
 ) {
     Aligned_user_bytes const *const old_allocation = allocation_for(input);
-    Log_2_alignment const *const old_log_2_alignment_minus_one
-        = alignment_for(input);
-    size_t const old_alignment = (size_t)1 << (*old_log_2_alignment_minus_one);
+    Log_2_alignment const *const old_log_2_alignment = alignment_for(input);
+    size_t const old_alignment = (size_t)1 << (*old_log_2_alignment);
     if (alignment < old_alignment) {
         assert(
             alignment >= old_alignment
