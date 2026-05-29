@@ -13,20 +13,26 @@
 is a proof of concept for how someone could wrap stdlib aligned_alloc and free
 to perform the basic functions of an alignment-aware allocator.
 
-This struct is written to the allocation returned by aligned_alloc. The layout
-is as follows:
+The helper types are written to the allocation returned by aligned_alloc. The
+layout is as follows:
 
 Increasing addresses -->
 
 | Aligned_user_bytes | pad | Log_2_alignment | aligned user base address |
 
-The padding between the aligned base address Aligned_user_bytes returned by
-aligned_alloc and the aligned user base address will vary depending on the user
-requested alignment. That is why we place the log2(alignment) byte directly
-before the user block base address. We ensure the user block base address is
-also aligned by rounding up our allocation to accommodate the appropriate
-alignment for the Aligned_user_bytes. The Log_2_alignment byte has an alignment
-of 1 so fits at any address directly preceding the aligned user base address.
+The Aligned_user_bytes are placed at the aligned address returned by
+aligned_alloc. The padding between the aligned base address Aligned_user_bytes
+returned by aligned_alloc and the aligned user base address will vary depending
+on the user requested alignment. That is why we place the Log_2_alignment byte
+directly before the user block base address. We ensure the user block base
+address is also aligned by rounding up our allocation to accommodate the
+appropriate alignment for the Aligned_user_bytes. The Log_2_alignment byte has
+an alignment of 1 so fits at any address directly preceding the aligned user
+base address.
+
+The Log_2_alignment is calculated by taking the log base 2 of whatever power of
+2 alignment the user requests. We can track an alignment range of 2^0 to 2^255
+in a single byte.
 
 Overall, this allocator approach will lead to a less efficient allocator that
 is slower, creates worse fragmentation, and uses more space than if the standard
@@ -35,10 +41,10 @@ should be found or implemented that takes care of alignment for the user. We
 have no access to internal allocator headers or the ability to perform actions
 such as coalescing with this wrapper approach. */
 typedef size_t Aligned_user_bytes;
-/** The log2(alignment) where alignment is a power of two alignment requested
-by the user. Because alignments are guaranteed to be powers of 2, tracking
-their logarithms is simple and allows us to store absurdly large alignment
-values (up to 2^256).
+/** The log base 2 of alignment where alignment is a power of two alignment
+requested by the user. Because alignments are guaranteed to be powers of 2,
+tracking their logarithms is simple and allows us to store absurdly large
+alignment values (up to 2^255).
 
 This also removes any concern over alignment of this metadata as a byte can be
 aligned to any address and we place it directly before the user aligned base
