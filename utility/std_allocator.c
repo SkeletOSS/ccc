@@ -64,15 +64,18 @@ CCC_Allocator const std_allocator = {
     .allocate = std_aligned_allocate,
 };
 
+/*============================  Prototypes   ================================*/
+
 static size_t roundup(size_t, size_t);
 static size_t max_size_t(size_t, size_t);
 static size_t min_size_t(size_t, size_t);
 static void *record_aligned_alloc(size_t, size_t);
 static void *record_aligned_realloc(size_t, void *, size_t);
 static Aligned_user_bytes *allocation_for(void const *);
-static inline Log_2_alignment *alignment_for(void const *);
+static Log_2_alignment *alignment_for(void const *);
 static Log_2_alignment count_trailing_zeros(size_t);
 
+/** See std_allocator.h */
 void *
 std_aligned_allocate(CCC_Allocator_arguments const arguments) {
     if (!arguments.input && !arguments.bytes) {
@@ -102,6 +105,9 @@ std_aligned_allocate(CCC_Allocator_arguments const arguments) {
     );
 }
 
+/** Requests an aligned allocation and records the necessary metadata for later
+resizing or freeing. Metadata is recorded directly in the heap block returned
+by the aligned allocation function from the standard library. */
 static inline void *
 record_aligned_alloc(size_t const alignment, size_t const bytes) {
     assert(alignment && "alignment required for allocation metadata");
@@ -141,7 +147,11 @@ record_aligned_alloc(size_t const alignment, size_t const bytes) {
     return aligned_user_start;
 }
 
-static void *
+/** Resizes the requested allocation while recording the new metadata to the
+new location. This function makes no attempt to remain in place. It always
+allocates and copies over the old data to the new location. This is a cost of
+wrapping the standard library rather than an allocator handling this for us. */
+static inline void *
 record_aligned_realloc(
     size_t const alignment, void *const input, size_t const new_bytes
 ) {
@@ -170,21 +180,9 @@ record_aligned_realloc(
     return aligned_location;
 }
 
-static inline size_t
-roundup(size_t const bytes, size_t const alignment) {
-    return (bytes + (alignment - 1)) & ~(alignment - 1);
-}
-
-static inline size_t
-max_size_t(size_t const a, size_t const b) {
-    return a > b ? a : b;
-}
-
-static inline size_t
-min_size_t(size_t const a, size_t const b) {
-    return a < b ? a : b;
-}
-
+/** Given the pointer provided to and returned by the user, locates the base
+address of this allocation that was originally provided by aligned_alloc. This
+address is also where we track the size of the user allocation in bytes. */
 static inline Aligned_user_bytes *
 allocation_for(void const *const aligned_user_pointer) {
     Log_2_alignment const *const log_2_alignment
@@ -200,14 +198,30 @@ allocation_for(void const *const aligned_user_pointer) {
     return allocation;
 }
 
+/** Given the pointer provided to and returned by the user, locates the
+alignment tracking byte preceding the user pointer. If the user underflows
+and writes to their allocation we are screwed. */
 static inline Log_2_alignment *
 alignment_for(void const *const aligned_user_pointer) {
     return (Log_2_alignment *)aligned_user_pointer - 1;
 }
 
+static inline size_t
+roundup(size_t const bytes, size_t const alignment) {
+    return (bytes + (alignment - 1)) & ~(alignment - 1);
+}
+
+static inline size_t
+max_size_t(size_t const a, size_t const b) {
+    return a > b ? a : b;
+}
+
+static inline size_t
+min_size_t(size_t const a, size_t const b) {
+    return a < b ? a : b;
+}
+
 #if defined(__has_builtin) && __has_builtin(__builtin_ctzl)
-/** Counts the number of trailing zeros in a bit block starting from least
-significant bit. */
 static inline Log_2_alignment
 count_trailing_zeros(size_t const b) {
     static_assert(
@@ -219,8 +233,6 @@ count_trailing_zeros(size_t const b) {
 
 #else /* !defined(__has_builtin) || !__has_builtin(__builtin_ctzl) */
 
-/** Counts the number of trailing zeros in a bit block starting from least
-significant bit. */
 static inline Log_2_alignment
 count_trailing_zeros(size_t b) {
     if (!b) {
