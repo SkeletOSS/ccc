@@ -22,10 +22,6 @@ jobs:
           folder: docs/doxygen
           config_file: Doxyfile
 
-      - name: Install sphinx-build
-        run: |
-          pip install sphinx
-
       - name: Setup LCOV
         uses: hrishikesh-kadam/setup-lcov@v1
         with:
