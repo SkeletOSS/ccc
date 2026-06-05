@@ -25,7 +25,7 @@ jobs:
       - name: Setup LCOV
         uses: hrishikesh-kadam/setup-lcov@v1
         with:
-          ref: HEAD
+          ref: v2.4
 
       - name: Cache LLVM
         id: cache-llvm
