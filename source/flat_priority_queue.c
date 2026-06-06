@@ -11,6 +11,16 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License. */
+/** A standard flat priority queue binary heap implementation. This is
+0-indexed so that there is no wasted space. The heap is fairly standard.
+However, due to CCC's use of callbacks for comparison it is valuable to limit
+the number of calls to this comparison callback with Bottom up heapify and
+heapsort implementations when possible.
+
+[1] The following paper was used to implement bottom-up heapsort.
+"BOTTOM-UP-HEAPSORT, a new variant of HEAPSORT beating, on an average, QUICKSORT
+(if n is not very small)" by Ingo Wegener, Theoretical Computer Science 118
+(1993) 81-98. */
 /** C23 provided headers. */
 #include <limits.h>
 #include <stddef.h>
@@ -48,6 +58,14 @@ static size_t
 update_fixup(struct CCC_Flat_priority_queue const *, void *, void *);
 static void
 heapify(CCC_Flat_buffer const *, void *, CCC_Order, CCC_Comparator const *);
+static void bottom_up_reheap(
+    CCC_Flat_buffer const *,
+    void *,
+    size_t,
+    size_t,
+    CCC_Order,
+    CCC_Comparator const *
+);
 static void
 destroy_each(struct CCC_Flat_priority_queue *, CCC_Destructor const *);
 static void swap(CCC_Flat_buffer const *, void *, void *, void *);
@@ -436,6 +454,14 @@ CCC_flat_priority_queue_validate(
 
 /*===================     Interface in sort.h   =============================*/
 
+/** Bottom-Up-Heapsort adapted from "BOTTOM-UP-HEAPSORT, a new variant of
+HEAPSORT beating, on an average, QUICKSORT (if n is not very small)" by Ingo
+Wegener, Theoretical Computer Science 118 (1993) 81-98.
+
+This implementation is valuable to the C Container Collection because we rely
+on comparison callback functions over generic data. Therefore, we want to limit
+the number of calls to this callback function. A bottom up heapify
+significantly*/
 CCC_Result
 CCC_sort_heapsort(
     CCC_Flat_buffer const *const buffer,
@@ -459,7 +485,7 @@ CCC_sort_heapsort(
         void *const root = at(buffer, 0);
         while (--count) {
             swap(buffer, temp, root, at(buffer, count));
-            (void)bubble_down(buffer, 0, count, temp, order, comparator);
+            bottom_up_reheap(buffer, temp, count, 0, order, comparator);
         }
     }
     return CCC_RESULT_OK;
@@ -515,9 +541,48 @@ heapify(
     CCC_Order const order,
     CCC_Comparator const *const comparator
 ) {
-    size_t i = ((buffer->count - 1) / 2) + 1;
+    size_t i = buffer->count / 2;
     while (i--) {
-        (void)bubble_down(buffer, i, buffer->count, temp, order, comparator);
+        bottom_up_reheap(buffer, temp, buffer->count, i, order, comparator);
+    }
+}
+
+/** The Bottom-Up-Heapsort procedures from the research paper but all in one
+function. No need to break out into tiny functions because they are only used
+here and this makes the logic easy to track in one short function. */
+static inline void
+bottom_up_reheap(
+
+    CCC_Flat_buffer const *const buffer,
+    void *const temp,
+    size_t const count,
+    size_t const root,
+    CCC_Order const order,
+    CCC_Comparator const *const comparator
+) {
+    /* Procedure leaf-search(count, root) */
+    size_t leaf = root;
+    while ((2 * leaf) + 2 < count) {
+        size_t const left = (2 * leaf) + 1;
+        size_t const right = left + 1;
+        if (wins(at(buffer, left), at(buffer, right), order, comparator)) {
+            leaf = left;
+        } else {
+            leaf = right;
+        }
+    }
+    if ((2 * leaf) + 1 < count) {
+        leaf = (2 * leaf) + 1;
+    }
+    /* Procedure bottom-up-search(root, leaf) */
+    void const *const node = at(buffer, root);
+    while (leaf > root && wins(node, at(buffer, leaf), order, comparator)) {
+        leaf = (leaf - 1) / 2;
+    }
+    /* Procedure interchange-2(root, leaf) */
+    while (leaf > root) {
+        swap(buffer, temp, at(buffer, leaf), at(buffer, root));
+        leaf = (leaf - 1) / 2;
     }
 }
 
