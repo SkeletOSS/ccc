@@ -46,19 +46,11 @@ wins(void const *, void const *, CCC_Order, CCC_Comparator const *);
 static size_t bubble_up(
     CCC_Flat_buffer const *, size_t, void *, CCC_Order, CCC_Comparator const *
 );
-static size_t bubble_down(
-    CCC_Flat_buffer const *,
-    size_t,
-    size_t,
-    void *,
-    CCC_Order,
-    CCC_Comparator const *
-);
 static size_t
 update_fixup(struct CCC_Flat_priority_queue const *, void *, void *);
 static void
 heapify(CCC_Flat_buffer const *, void *, CCC_Order, CCC_Comparator const *);
-static void bottom_up_reheap(
+static size_t bottom_up_reheap(
     CCC_Flat_buffer const *,
     void *,
     size_t,
@@ -172,11 +164,11 @@ CCC_flat_priority_queue_pop(
         at(&priority_queue->buffer, 0),
         at(&priority_queue->buffer, priority_queue->buffer.count)
     );
-    (void)bubble_down(
+    bottom_up_reheap(
         &priority_queue->buffer,
-        0,
-        priority_queue->buffer.count,
         temp,
+        priority_queue->buffer.count,
+        0,
         priority_queue->order,
         &priority_queue->comparator
     );
@@ -219,11 +211,11 @@ CCC_flat_priority_queue_erase(
             &priority_queue->comparator
         );
     } else if (order_res != CCC_ORDER_EQUAL) {
-        (void)bubble_down(
+        bottom_up_reheap(
             &priority_queue->buffer,
-            i,
-            priority_queue->buffer.count,
             temp,
+            priority_queue->buffer.count,
+            i,
             priority_queue->order,
             &priority_queue->comparator
         );
@@ -549,8 +541,13 @@ heapify(
 
 /** The Bottom-Up-Heapsort procedures from the research paper but all in one
 function. No need to break out into tiny functions because they are only used
-here and this makes the logic easy to track in one short function. */
-static inline void
+here and this makes the logic easy to track in one short function.
+
+This function also returns the final resting position of the root element for
+this reheap operation. This is helpful if the root element has been swapped to
+its special position on the special path and we want to report that back for
+operations such as update, increase, and decrease. */
+static size_t
 bottom_up_reheap(
 
     CCC_Flat_buffer const *const buffer,
@@ -579,11 +576,13 @@ bottom_up_reheap(
     while (leaf > root && wins(node, at(buffer, leaf), order, comparator)) {
         leaf = (leaf - 1) / 2;
     }
+    size_t const return_new_root_position = leaf;
     /* Procedure interchange-2(root, leaf) */
     while (leaf > root) {
         swap(buffer, temp, at(buffer, leaf), at(buffer, root));
         leaf = (leaf - 1) / 2;
     }
+    return return_new_root_position;
 }
 
 /* Fixes the position of element e after its key value has been changed. */
@@ -595,11 +594,11 @@ update_fixup(
 ) {
     size_t const index = index_of(priority_queue, type);
     if (!index) {
-        return bubble_down(
+        return bottom_up_reheap(
             &priority_queue->buffer,
-            0,
-            priority_queue->buffer.count,
             temp,
+            priority_queue->buffer.count,
+            0,
             priority_queue->order,
             &priority_queue->comparator
         );
@@ -620,11 +619,11 @@ update_fixup(
         );
     }
     if (parent_order != CCC_ORDER_EQUAL) {
-        return bubble_down(
+        return bottom_up_reheap(
             &priority_queue->buffer,
-            index,
-            priority_queue->buffer.count,
             temp,
+            priority_queue->buffer.count,
+            index,
             priority_queue->order,
             &priority_queue->comparator
         );
@@ -652,38 +651,6 @@ bubble_up(
         swap(buffer, temp, this_pointer, parent_pointer);
     }
     return 0;
-}
-
-/* Returns the sorted position of the element starting at position i. */
-static inline size_t
-bubble_down(
-    CCC_Flat_buffer const *const buffer,
-    size_t index,
-    size_t const count,
-    void *const temp,
-    CCC_Order const order,
-    CCC_Comparator const *const comparator
-) {
-    for (size_t next = 0, left = (index * 2) + 1, right = left + 1;
-         left < count;
-         index = next, left = (index * 2) + 1, right = left + 1) {
-        void const *const left_pointer = at(buffer, left);
-        next = left;
-        if (right < count) {
-            void const *const right_pointer = at(buffer, right);
-            if (wins(right_pointer, left_pointer, order, comparator)) {
-                next = right;
-            }
-        }
-        void *const next_pointer = at(buffer, next);
-        void *const this_pointer = at(buffer, index);
-        /* If the child beats the parent we must swap. Equal is OK to break. */
-        if (!wins(next_pointer, this_pointer, order, comparator)) {
-            return index;
-        }
-        swap(buffer, temp, this_pointer, next_pointer);
-    }
-    return index;
 }
 
 /* Returns true if the winner (the "left hand side") wins the comparison.
