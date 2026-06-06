@@ -11,6 +11,16 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License. */
+/** A standard flat priority queue binary heap implementation. This is
+0-indexed so that there is no wasted space. The heap is fairly standard.
+However, due to CCC's use of callbacks for comparison it is valuable to limit
+the number of calls to this comparison callback with Bottom up heapify and
+heapsort implementations when possible.
+
+[1] The following paper was used to implement bottom-up heapsort.
+"BOTTOM-UP-HEAPSORT, a new variant of HEAPSORT beating, on an average, QUICKSORT
+(if n is not very small)" by Ingo Wegener, Theoretical Computer Science 118
+(1993) 81-98. */
 /** C23 provided headers. */
 #include <limits.h>
 #include <stddef.h>
@@ -36,18 +46,18 @@ wins(void const *, void const *, CCC_Order, CCC_Comparator const *);
 static size_t bubble_up(
     CCC_Flat_buffer const *, size_t, void *, CCC_Order, CCC_Comparator const *
 );
-static size_t bubble_down(
-    CCC_Flat_buffer const *,
-    size_t,
-    size_t,
-    void *,
-    CCC_Order,
-    CCC_Comparator const *
-);
 static size_t
 update_fixup(struct CCC_Flat_priority_queue const *, void *, void *);
 static void
 heapify(CCC_Flat_buffer const *, void *, CCC_Order, CCC_Comparator const *);
+static size_t bottom_up_reheap(
+    CCC_Flat_buffer const *,
+    void *,
+    size_t,
+    size_t,
+    CCC_Order,
+    CCC_Comparator const *
+);
 static void
 destroy_each(struct CCC_Flat_priority_queue *, CCC_Destructor const *);
 static void swap(CCC_Flat_buffer const *, void *, void *, void *);
@@ -154,11 +164,11 @@ CCC_flat_priority_queue_pop(
         at(&priority_queue->buffer, 0),
         at(&priority_queue->buffer, priority_queue->buffer.count)
     );
-    (void)bubble_down(
+    bottom_up_reheap(
         &priority_queue->buffer,
-        0,
-        priority_queue->buffer.count,
         temp,
+        priority_queue->buffer.count,
+        0,
         priority_queue->order,
         &priority_queue->comparator
     );
@@ -201,11 +211,11 @@ CCC_flat_priority_queue_erase(
             &priority_queue->comparator
         );
     } else if (order_res != CCC_ORDER_EQUAL) {
-        (void)bubble_down(
+        bottom_up_reheap(
             &priority_queue->buffer,
-            i,
-            priority_queue->buffer.count,
             temp,
+            priority_queue->buffer.count,
+            i,
             priority_queue->order,
             &priority_queue->comparator
         );
@@ -436,6 +446,14 @@ CCC_flat_priority_queue_validate(
 
 /*===================     Interface in sort.h   =============================*/
 
+/** Bottom-Up-Heapsort adapted from "BOTTOM-UP-HEAPSORT, a new variant of
+HEAPSORT beating, on an average, QUICKSORT (if n is not very small)" by Ingo
+Wegener, Theoretical Computer Science 118 (1993) 81-98.
+
+This implementation is valuable to the C Container Collection because we rely
+on comparison callback functions over generic data. Therefore, we want to limit
+the number of calls to this callback function. A bottom up heapify
+significantly*/
 CCC_Result
 CCC_sort_heapsort(
     CCC_Flat_buffer const *const buffer,
@@ -459,7 +477,7 @@ CCC_sort_heapsort(
         void *const root = at(buffer, 0);
         while (--count) {
             swap(buffer, temp, root, at(buffer, count));
-            (void)bubble_down(buffer, 0, count, temp, order, comparator);
+            bottom_up_reheap(buffer, temp, count, 0, order, comparator);
         }
     }
     return CCC_RESULT_OK;
@@ -515,56 +533,61 @@ heapify(
     CCC_Order const order,
     CCC_Comparator const *const comparator
 ) {
-    size_t i = ((buffer->count - 1) / 2) + 1;
+    size_t i = buffer->count / 2;
     while (i--) {
-        (void)bubble_down(buffer, i, buffer->count, temp, order, comparator);
+        bottom_up_reheap(buffer, temp, buffer->count, i, order, comparator);
     }
 }
 
-/* Fixes the position of element e after its key value has been changed. */
+/** The Bottom-Up-Heapsort procedures from the research paper but all in one
+function. No need to break out into tiny functions because they are only used
+here and this makes the logic easy to track in one short function. Such an
+operation also replaces the traditional bubble-down of a standard heap. The
+bubble-up operation can still be helpful in certain cases and is therefore kept
+as a separate function.
+
+This function also returns the final resting position of the root element for
+this reheap operation. This is the location that the data previously at the root
+index has been swapped to such that heap order is maintained. This is helpful if
+the root element has been swapped to its special position on the special path
+and we want to report that back for operations such as update, increase, and
+decrease. */
 static size_t
-update_fixup(
-    struct CCC_Flat_priority_queue const *const priority_queue,
-    void *const type,
-    void *const temp
+bottom_up_reheap(
+
+    CCC_Flat_buffer const *const buffer,
+    void *const temp,
+    size_t const count,
+    size_t const root,
+    CCC_Order const order,
+    CCC_Comparator const *const comparator
 ) {
-    size_t const index = index_of(priority_queue, type);
-    if (!index) {
-        return bubble_down(
-            &priority_queue->buffer,
-            0,
-            priority_queue->buffer.count,
-            temp,
-            priority_queue->order,
-            &priority_queue->comparator
-        );
+    /* Procedure leaf-search(count, root) */
+    size_t leaf = root;
+    while ((2 * leaf) + 2 < count) {
+        size_t const left = (2 * leaf) + 1;
+        size_t const right = left + 1;
+        if (wins(at(buffer, left), at(buffer, right), order, comparator)) {
+            leaf = left;
+        } else {
+            leaf = right;
+        }
     }
-    CCC_Order const parent_order
-        = priority_queue->comparator.compare((CCC_Comparator_arguments){
-            .type_left = at(&priority_queue->buffer, index),
-            .type_right = at(&priority_queue->buffer, (index - 1) / 2),
-            .context = priority_queue->comparator.context,
-        });
-    if (parent_order == priority_queue->order) {
-        return bubble_up(
-            &priority_queue->buffer,
-            index,
-            temp,
-            priority_queue->order,
-            &priority_queue->comparator
-        );
+    if ((2 * leaf) + 1 < count) {
+        leaf = (2 * leaf) + 1;
     }
-    if (parent_order != CCC_ORDER_EQUAL) {
-        return bubble_down(
-            &priority_queue->buffer,
-            index,
-            priority_queue->buffer.count,
-            temp,
-            priority_queue->order,
-            &priority_queue->comparator
-        );
+    /* Procedure bottom-up-search(root, leaf) */
+    void const *const node = at(buffer, root);
+    while (leaf > root && wins(node, at(buffer, leaf), order, comparator)) {
+        leaf = (leaf - 1) / 2;
     }
-    return index;
+    /* Procedure interchange-2(root, leaf) */
+    size_t const reheaped_root_index = leaf;
+    while (leaf > root) {
+        swap(buffer, temp, at(buffer, leaf), at(buffer, root));
+        leaf = (leaf - 1) / 2;
+    }
+    return reheaped_root_index;
 }
 
 /* Returns the sorted position of the element starting at position i. */
@@ -589,34 +612,48 @@ bubble_up(
     return 0;
 }
 
-/* Returns the sorted position of the element starting at position i. */
-static inline size_t
-bubble_down(
-    CCC_Flat_buffer const *const buffer,
-    size_t index,
-    size_t const count,
-    void *const temp,
-    CCC_Order const order,
-    CCC_Comparator const *const comparator
+/* Fixes the position of element e after its key value has been changed. */
+static size_t
+update_fixup(
+    struct CCC_Flat_priority_queue const *const priority_queue,
+    void *const type,
+    void *const temp
 ) {
-    for (size_t next = 0, left = (index * 2) + 1, right = left + 1;
-         left < count;
-         index = next, left = (index * 2) + 1, right = left + 1) {
-        void const *const left_pointer = at(buffer, left);
-        next = left;
-        if (right < count) {
-            void const *const right_pointer = at(buffer, right);
-            if (wins(right_pointer, left_pointer, order, comparator)) {
-                next = right;
-            }
-        }
-        void *const next_pointer = at(buffer, next);
-        void *const this_pointer = at(buffer, index);
-        /* If the child beats the parent we must swap. Equal is OK to break. */
-        if (!wins(next_pointer, this_pointer, order, comparator)) {
-            return index;
-        }
-        swap(buffer, temp, this_pointer, next_pointer);
+    size_t const index = index_of(priority_queue, type);
+    if (!index) {
+        return bottom_up_reheap(
+            &priority_queue->buffer,
+            temp,
+            priority_queue->buffer.count,
+            0,
+            priority_queue->order,
+            &priority_queue->comparator
+        );
+    }
+    CCC_Order const parent_order
+        = priority_queue->comparator.compare((CCC_Comparator_arguments){
+            .type_left = at(&priority_queue->buffer, index),
+            .type_right = at(&priority_queue->buffer, (index - 1) / 2),
+            .context = priority_queue->comparator.context,
+        });
+    if (parent_order == priority_queue->order) {
+        return bubble_up(
+            &priority_queue->buffer,
+            index,
+            temp,
+            priority_queue->order,
+            &priority_queue->comparator
+        );
+    }
+    if (parent_order != CCC_ORDER_EQUAL) {
+        return bottom_up_reheap(
+            &priority_queue->buffer,
+            temp,
+            priority_queue->buffer.count,
+            index,
+            priority_queue->order,
+            &priority_queue->comparator
+        );
     }
     return index;
 }
