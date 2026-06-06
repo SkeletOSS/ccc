@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-06-06 22:48:30</td>
+            <td class="headerValue">2026-06-06 22:48:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -238,93 +238,93 @@
 <span id="L176"><span class="lineNum">     176</span> <span class="tlaGNC">         925 : }</span></span>
 <span id="L177"><span class="lineNum">     177</span>              : </span>
 <span id="L178"><span class="lineNum">     178</span>              : CCC_Result</span>
-<span id="L179"><span class="lineNum">     179</span> <span class="tlaGNC">         534 : CCC_flat_priority_queue_erase(</span></span>
+<span id="L179"><span class="lineNum">     179</span> <span class="tlaGNC">         537 : CCC_flat_priority_queue_erase(</span></span>
 <span id="L180"><span class="lineNum">     180</span>              :     CCC_Flat_priority_queue *const priority_queue,</span>
 <span id="L181"><span class="lineNum">     181</span>              :     void *const type,</span>
 <span id="L182"><span class="lineNum">     182</span>              :     void *const temp</span>
 <span id="L183"><span class="lineNum">     183</span>              : ) {</span>
-<span id="L184"><span class="lineNum">     184</span> <span class="tlaGNC">         534 :     if (!priority_queue || !type || !temp || !priority_queue-&gt;buffer.count) {</span></span>
+<span id="L184"><span class="lineNum">     184</span> <span class="tlaGNC">         537 :     if (!priority_queue || !type || !temp || !priority_queue-&gt;buffer.count) {</span></span>
 <span id="L185"><span class="lineNum">     185</span> <span class="tlaGNC">           1 :         return CCC_RESULT_ARGUMENT_ERROR;</span></span>
 <span id="L186"><span class="lineNum">     186</span>              :     }</span>
-<span id="L187"><span class="lineNum">     187</span> <span class="tlaGNC">         533 :     size_t const i = index_of(priority_queue, type);</span></span>
-<span id="L188"><span class="lineNum">     188</span> <span class="tlaGNC">         533 :     --priority_queue-&gt;buffer.count;</span></span>
-<span id="L189"><span class="lineNum">     189</span> <span class="tlaGNC">         533 :     if (i == priority_queue-&gt;buffer.count) {</span></span>
-<span id="L190"><span class="lineNum">     190</span> <span class="tlaGNC">          21 :         return CCC_RESULT_OK;</span></span>
+<span id="L187"><span class="lineNum">     187</span> <span class="tlaGNC">         536 :     size_t const i = index_of(priority_queue, type);</span></span>
+<span id="L188"><span class="lineNum">     188</span> <span class="tlaGNC">         536 :     --priority_queue-&gt;buffer.count;</span></span>
+<span id="L189"><span class="lineNum">     189</span> <span class="tlaGNC">         536 :     if (i == priority_queue-&gt;buffer.count) {</span></span>
+<span id="L190"><span class="lineNum">     190</span> <span class="tlaGNC">          30 :         return CCC_RESULT_OK;</span></span>
 <span id="L191"><span class="lineNum">     191</span>              :     }</span>
-<span id="L192"><span class="lineNum">     192</span> <span class="tlaGNC">         512 :     swap(</span></span>
-<span id="L193"><span class="lineNum">     193</span> <span class="tlaGNC">         512 :         &amp;priority_queue-&gt;buffer,</span></span>
-<span id="L194"><span class="lineNum">     194</span> <span class="tlaGNC">         512 :         temp,</span></span>
-<span id="L195"><span class="lineNum">     195</span> <span class="tlaGNC">         512 :         at(&amp;priority_queue-&gt;buffer, i),</span></span>
-<span id="L196"><span class="lineNum">     196</span> <span class="tlaGNC">         512 :         at(&amp;priority_queue-&gt;buffer, priority_queue-&gt;buffer.count)</span></span>
+<span id="L192"><span class="lineNum">     192</span> <span class="tlaGNC">         506 :     swap(</span></span>
+<span id="L193"><span class="lineNum">     193</span> <span class="tlaGNC">         506 :         &amp;priority_queue-&gt;buffer,</span></span>
+<span id="L194"><span class="lineNum">     194</span> <span class="tlaGNC">         506 :         temp,</span></span>
+<span id="L195"><span class="lineNum">     195</span> <span class="tlaGNC">         506 :         at(&amp;priority_queue-&gt;buffer, i),</span></span>
+<span id="L196"><span class="lineNum">     196</span> <span class="tlaGNC">         506 :         at(&amp;priority_queue-&gt;buffer, priority_queue-&gt;buffer.count)</span></span>
 <span id="L197"><span class="lineNum">     197</span>              :     );</span>
-<span id="L198"><span class="lineNum">     198</span> <span class="tlaGNC">        1024 :     CCC_Order const order_res</span></span>
-<span id="L199"><span class="lineNum">     199</span> <span class="tlaGNC">        2048 :         = priority_queue-&gt;comparator.compare((CCC_Comparator_arguments){</span></span>
-<span id="L200"><span class="lineNum">     200</span> <span class="tlaGNC">         512 :             .type_left = at(&amp;priority_queue-&gt;buffer, i),</span></span>
+<span id="L198"><span class="lineNum">     198</span> <span class="tlaGNC">        1012 :     CCC_Order const order_res</span></span>
+<span id="L199"><span class="lineNum">     199</span> <span class="tlaGNC">        2024 :         = priority_queue-&gt;comparator.compare((CCC_Comparator_arguments){</span></span>
+<span id="L200"><span class="lineNum">     200</span> <span class="tlaGNC">         506 :             .type_left = at(&amp;priority_queue-&gt;buffer, i),</span></span>
 <span id="L201"><span class="lineNum">     201</span>              :             .type_right</span>
-<span id="L202"><span class="lineNum">     202</span> <span class="tlaGNC">         512 :             = at(&amp;priority_queue-&gt;buffer, priority_queue-&gt;buffer.count),</span></span>
-<span id="L203"><span class="lineNum">     203</span> <span class="tlaGNC">         512 :             .context = priority_queue-&gt;comparator.context,</span></span>
+<span id="L202"><span class="lineNum">     202</span> <span class="tlaGNC">         506 :             = at(&amp;priority_queue-&gt;buffer, priority_queue-&gt;buffer.count),</span></span>
+<span id="L203"><span class="lineNum">     203</span> <span class="tlaGNC">         506 :             .context = priority_queue-&gt;comparator.context,</span></span>
 <span id="L204"><span class="lineNum">     204</span>              :         });</span>
-<span id="L205"><span class="lineNum">     205</span> <span class="tlaGNC">         512 :     if (order_res == priority_queue-&gt;order) {</span></span>
-<span id="L206"><span class="lineNum">     206</span> <span class="tlaGNC">         141 :         (void)bubble_up(</span></span>
-<span id="L207"><span class="lineNum">     207</span> <span class="tlaGNC">         141 :             &amp;priority_queue-&gt;buffer,</span></span>
-<span id="L208"><span class="lineNum">     208</span> <span class="tlaGNC">         141 :             i,</span></span>
-<span id="L209"><span class="lineNum">     209</span> <span class="tlaGNC">         141 :             temp,</span></span>
-<span id="L210"><span class="lineNum">     210</span> <span class="tlaGNC">         141 :             priority_queue-&gt;order,</span></span>
-<span id="L211"><span class="lineNum">     211</span> <span class="tlaGNC">         141 :             &amp;priority_queue-&gt;comparator</span></span>
+<span id="L205"><span class="lineNum">     205</span> <span class="tlaGNC">         506 :     if (order_res == priority_queue-&gt;order) {</span></span>
+<span id="L206"><span class="lineNum">     206</span> <span class="tlaGNC">         140 :         (void)bubble_up(</span></span>
+<span id="L207"><span class="lineNum">     207</span> <span class="tlaGNC">         140 :             &amp;priority_queue-&gt;buffer,</span></span>
+<span id="L208"><span class="lineNum">     208</span> <span class="tlaGNC">         140 :             i,</span></span>
+<span id="L209"><span class="lineNum">     209</span> <span class="tlaGNC">         140 :             temp,</span></span>
+<span id="L210"><span class="lineNum">     210</span> <span class="tlaGNC">         140 :             priority_queue-&gt;order,</span></span>
+<span id="L211"><span class="lineNum">     211</span> <span class="tlaGNC">         140 :             &amp;priority_queue-&gt;comparator</span></span>
 <span id="L212"><span class="lineNum">     212</span>              :         );</span>
-<span id="L213"><span class="lineNum">     213</span> <span class="tlaGNC">         512 :     } else if (order_res != CCC_ORDER_EQUAL) {</span></span>
-<span id="L214"><span class="lineNum">     214</span> <span class="tlaGNC">         368 :         bottom_up_reheap(</span></span>
-<span id="L215"><span class="lineNum">     215</span> <span class="tlaGNC">         368 :             &amp;priority_queue-&gt;buffer,</span></span>
-<span id="L216"><span class="lineNum">     216</span> <span class="tlaGNC">         368 :             temp,</span></span>
-<span id="L217"><span class="lineNum">     217</span> <span class="tlaGNC">         368 :             priority_queue-&gt;buffer.count,</span></span>
-<span id="L218"><span class="lineNum">     218</span> <span class="tlaGNC">         368 :             i,</span></span>
-<span id="L219"><span class="lineNum">     219</span> <span class="tlaGNC">         368 :             priority_queue-&gt;order,</span></span>
-<span id="L220"><span class="lineNum">     220</span> <span class="tlaGNC">         368 :             &amp;priority_queue-&gt;comparator</span></span>
+<span id="L213"><span class="lineNum">     213</span> <span class="tlaGNC">         506 :     } else if (order_res != CCC_ORDER_EQUAL) {</span></span>
+<span id="L214"><span class="lineNum">     214</span> <span class="tlaGNC">         358 :         bottom_up_reheap(</span></span>
+<span id="L215"><span class="lineNum">     215</span> <span class="tlaGNC">         358 :             &amp;priority_queue-&gt;buffer,</span></span>
+<span id="L216"><span class="lineNum">     216</span> <span class="tlaGNC">         358 :             temp,</span></span>
+<span id="L217"><span class="lineNum">     217</span> <span class="tlaGNC">         358 :             priority_queue-&gt;buffer.count,</span></span>
+<span id="L218"><span class="lineNum">     218</span> <span class="tlaGNC">         358 :             i,</span></span>
+<span id="L219"><span class="lineNum">     219</span> <span class="tlaGNC">         358 :             priority_queue-&gt;order,</span></span>
+<span id="L220"><span class="lineNum">     220</span> <span class="tlaGNC">         358 :             &amp;priority_queue-&gt;comparator</span></span>
 <span id="L221"><span class="lineNum">     221</span>              :         );</span>
-<span id="L222"><span class="lineNum">     222</span> <span class="tlaGNC">         368 :     }</span></span>
-<span id="L223"><span class="lineNum">     223</span> <span class="tlaGNC">         512 :     return CCC_RESULT_OK;</span></span>
-<span id="L224"><span class="lineNum">     224</span> <span class="tlaGNC">         534 : }</span></span>
+<span id="L222"><span class="lineNum">     222</span> <span class="tlaGNC">         358 :     }</span></span>
+<span id="L223"><span class="lineNum">     223</span> <span class="tlaGNC">         506 :     return CCC_RESULT_OK;</span></span>
+<span id="L224"><span class="lineNum">     224</span> <span class="tlaGNC">         537 : }</span></span>
 <span id="L225"><span class="lineNum">     225</span>              : </span>
 <span id="L226"><span class="lineNum">     226</span>              : void *</span>
-<span id="L227"><span class="lineNum">     227</span> <span class="tlaGNC">         700 : CCC_flat_priority_queue_update(</span></span>
+<span id="L227"><span class="lineNum">     227</span> <span class="tlaGNC">         716 : CCC_flat_priority_queue_update(</span></span>
 <span id="L228"><span class="lineNum">     228</span>              :     CCC_Flat_priority_queue const *const priority_queue,</span>
 <span id="L229"><span class="lineNum">     229</span>              :     void *const type,</span>
 <span id="L230"><span class="lineNum">     230</span>              :     void *const temp,</span>
 <span id="L231"><span class="lineNum">     231</span>              :     CCC_Modifier const *const modifier</span>
 <span id="L232"><span class="lineNum">     232</span>              : ) {</span>
-<span id="L233"><span class="lineNum">     233</span> <span class="tlaGNC">         700 :     if (!priority_queue || !type || !temp || !modifier || !modifier-&gt;modify</span></span>
-<span id="L234"><span class="lineNum">     234</span> <span class="tlaGNC">         698 :         || !priority_queue-&gt;buffer.count) {</span></span>
+<span id="L233"><span class="lineNum">     233</span> <span class="tlaGNC">         716 :     if (!priority_queue || !type || !temp || !modifier || !modifier-&gt;modify</span></span>
+<span id="L234"><span class="lineNum">     234</span> <span class="tlaGNC">         714 :         || !priority_queue-&gt;buffer.count) {</span></span>
 <span id="L235"><span class="lineNum">     235</span> <span class="tlaGNC">           3 :         return NULL;</span></span>
 <span id="L236"><span class="lineNum">     236</span>              :     }</span>
-<span id="L237"><span class="lineNum">     237</span> <span class="tlaGNC">        2091 :     modifier-&gt;modify((CCC_Arguments){</span></span>
-<span id="L238"><span class="lineNum">     238</span> <span class="tlaGNC">         697 :         .type = type,</span></span>
-<span id="L239"><span class="lineNum">     239</span> <span class="tlaGNC">         697 :         .context = modifier-&gt;context,</span></span>
+<span id="L237"><span class="lineNum">     237</span> <span class="tlaGNC">        2139 :     modifier-&gt;modify((CCC_Arguments){</span></span>
+<span id="L238"><span class="lineNum">     238</span> <span class="tlaGNC">         713 :         .type = type,</span></span>
+<span id="L239"><span class="lineNum">     239</span> <span class="tlaGNC">         713 :         .context = modifier-&gt;context,</span></span>
 <span id="L240"><span class="lineNum">     240</span>              :     });</span>
-<span id="L241"><span class="lineNum">     241</span> <span class="tlaGNC">         697 :     return at(</span></span>
-<span id="L242"><span class="lineNum">     242</span> <span class="tlaGNC">         697 :         &amp;priority_queue-&gt;buffer, update_fixup(priority_queue, type, temp)</span></span>
+<span id="L241"><span class="lineNum">     241</span> <span class="tlaGNC">         713 :     return at(</span></span>
+<span id="L242"><span class="lineNum">     242</span> <span class="tlaGNC">         713 :         &amp;priority_queue-&gt;buffer, update_fixup(priority_queue, type, temp)</span></span>
 <span id="L243"><span class="lineNum">     243</span>              :     );</span>
-<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">         700 : }</span></span>
+<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">         716 : }</span></span>
 <span id="L245"><span class="lineNum">     245</span>              : </span>
 <span id="L246"><span class="lineNum">     246</span>              : /* There are no efficiency benefits in knowing an increase will occur. */</span>
 <span id="L247"><span class="lineNum">     247</span>              : void *</span>
-<span id="L248"><span class="lineNum">     248</span> <span class="tlaGNC">         215 : CCC_flat_priority_queue_increase(</span></span>
+<span id="L248"><span class="lineNum">     248</span> <span class="tlaGNC">         219 : CCC_flat_priority_queue_increase(</span></span>
 <span id="L249"><span class="lineNum">     249</span>              :     CCC_Flat_priority_queue const *const priority_queue,</span>
 <span id="L250"><span class="lineNum">     250</span>              :     void *const type,</span>
 <span id="L251"><span class="lineNum">     251</span>              :     void *const temp,</span>
 <span id="L252"><span class="lineNum">     252</span>              :     CCC_Modifier const *const modifier</span>
 <span id="L253"><span class="lineNum">     253</span>              : ) {</span>
-<span id="L254"><span class="lineNum">     254</span> <span class="tlaGNC">         215 :     return CCC_flat_priority_queue_update(priority_queue, type, temp, modifier);</span></span>
+<span id="L254"><span class="lineNum">     254</span> <span class="tlaGNC">         219 :     return CCC_flat_priority_queue_update(priority_queue, type, temp, modifier);</span></span>
 <span id="L255"><span class="lineNum">     255</span>              : }</span>
 <span id="L256"><span class="lineNum">     256</span>              : </span>
 <span id="L257"><span class="lineNum">     257</span>              : /* There are no efficiency benefits in knowing an decrease will occur. */</span>
 <span id="L258"><span class="lineNum">     258</span>              : void *</span>
-<span id="L259"><span class="lineNum">     259</span> <span class="tlaGNC">         241 : CCC_flat_priority_queue_decrease(</span></span>
+<span id="L259"><span class="lineNum">     259</span> <span class="tlaGNC">         247 : CCC_flat_priority_queue_decrease(</span></span>
 <span id="L260"><span class="lineNum">     260</span>              :     CCC_Flat_priority_queue const *const priority_queue,</span>
 <span id="L261"><span class="lineNum">     261</span>              :     void *const type,</span>
 <span id="L262"><span class="lineNum">     262</span>              :     void *const temp,</span>
 <span id="L263"><span class="lineNum">     263</span>              :     CCC_Modifier const *const modifier</span>
 <span id="L264"><span class="lineNum">     264</span>              : ) {</span>
-<span id="L265"><span class="lineNum">     265</span> <span class="tlaGNC">         241 :     return CCC_flat_priority_queue_update(priority_queue, type, temp, modifier);</span></span>
+<span id="L265"><span class="lineNum">     265</span> <span class="tlaGNC">         247 :     return CCC_flat_priority_queue_update(priority_queue, type, temp, modifier);</span></span>
 <span id="L266"><span class="lineNum">     266</span>              : }</span>
 <span id="L267"><span class="lineNum">     267</span>              : </span>
 <span id="L268"><span class="lineNum">     268</span>              : void *</span>
@@ -463,48 +463,48 @@
 <span id="L401"><span class="lineNum">     401</span> <span class="tlaGNC">          13 : }</span></span>
 <span id="L402"><span class="lineNum">     402</span>              : </span>
 <span id="L403"><span class="lineNum">     403</span>              : CCC_Tribool</span>
-<span id="L404"><span class="lineNum">     404</span> <span class="tlaGNC">        7099 : CCC_flat_priority_queue_validate(</span></span>
+<span id="L404"><span class="lineNum">     404</span> <span class="tlaGNC">        7134 : CCC_flat_priority_queue_validate(</span></span>
 <span id="L405"><span class="lineNum">     405</span>              :     CCC_Flat_priority_queue const *const priority_queue</span>
 <span id="L406"><span class="lineNum">     406</span>              : ) {</span>
-<span id="L407"><span class="lineNum">     407</span> <span class="tlaGNC">        7099 :     if (!priority_queue) {</span></span>
+<span id="L407"><span class="lineNum">     407</span> <span class="tlaGNC">        7134 :     if (!priority_queue) {</span></span>
 <span id="L408"><span class="lineNum">     408</span> <span class="tlaUNC">           0 :         return CCC_TRIBOOL_ERROR;</span></span>
 <span id="L409"><span class="lineNum">     409</span>              :     }</span>
-<span id="L410"><span class="lineNum">     410</span> <span class="tlaGNC">        7099 :     size_t const count = priority_queue-&gt;buffer.count;</span></span>
-<span id="L411"><span class="lineNum">     411</span> <span class="tlaGNC">        7099 :     if (count &lt;= 1) {</span></span>
+<span id="L410"><span class="lineNum">     410</span> <span class="tlaGNC">        7134 :     size_t const count = priority_queue-&gt;buffer.count;</span></span>
+<span id="L411"><span class="lineNum">     411</span> <span class="tlaGNC">        7134 :     if (count &lt;= 1) {</span></span>
 <span id="L412"><span class="lineNum">     412</span> <span class="tlaGNC">          33 :         return CCC_TRUE;</span></span>
 <span id="L413"><span class="lineNum">     413</span>              :     }</span>
-<span id="L414"><span class="lineNum">     414</span> <span class="tlaGNC">      998136 :     for (size_t i = 0,</span></span>
-<span id="L415"><span class="lineNum">     415</span> <span class="tlaGNC">        7066 :                 left = (i * 2) + 1,</span></span>
-<span id="L416"><span class="lineNum">     416</span> <span class="tlaGNC">        7066 :                 right = (i * 2) + 2,</span></span>
-<span id="L417"><span class="lineNum">     417</span> <span class="tlaGNC">        7066 :                 end = (count - 2) / 2;</span></span>
-<span id="L418"><span class="lineNum">     418</span> <span class="tlaGNC">      976938 :          i &lt;= end;</span></span>
-<span id="L419"><span class="lineNum">     419</span> <span class="tlaGNC">      969872 :          ++i, left = (i * 2) + 1, right = (i * 2) + 2) {</span></span>
-<span id="L420"><span class="lineNum">     420</span> <span class="tlaGNC">      969872 :         void const *const this_pointer = at(&amp;priority_queue-&gt;buffer, i);</span></span>
+<span id="L414"><span class="lineNum">     414</span> <span class="tlaGNC">     1006823 :     for (size_t i = 0,</span></span>
+<span id="L415"><span class="lineNum">     415</span> <span class="tlaGNC">        7101 :                 left = (i * 2) + 1,</span></span>
+<span id="L416"><span class="lineNum">     416</span> <span class="tlaGNC">        7101 :                 right = (i * 2) + 2,</span></span>
+<span id="L417"><span class="lineNum">     417</span> <span class="tlaGNC">        7101 :                 end = (count - 2) / 2;</span></span>
+<span id="L418"><span class="lineNum">     418</span> <span class="tlaGNC">      985520 :          i &lt;= end;</span></span>
+<span id="L419"><span class="lineNum">     419</span> <span class="tlaGNC">      978419 :          ++i, left = (i * 2) + 1, right = (i * 2) + 2) {</span></span>
+<span id="L420"><span class="lineNum">     420</span> <span class="tlaGNC">      978419 :         void const *const this_pointer = at(&amp;priority_queue-&gt;buffer, i);</span></span>
 <span id="L421"><span class="lineNum">     421</span>              :         /* Putting the child in the comparison function first evaluates</span>
 <span id="L422"><span class="lineNum">     422</span>              :            the child's three way comparison in relation to the parent. If</span>
 <span id="L423"><span class="lineNum">     423</span>              :            the child beats the parent in total ordering (min/max) something</span>
 <span id="L424"><span class="lineNum">     424</span>              :            has gone wrong. */</span>
-<span id="L425"><span class="lineNum">     425</span> <span class="tlaGNC">      969872 :         if (left &lt; count</span></span>
-<span id="L426"><span class="lineNum">     426</span> <span class="tlaGNC">      969872 :             &amp;&amp; wins(</span></span>
-<span id="L427"><span class="lineNum">     427</span> <span class="tlaGNC">      969872 :                 at(&amp;priority_queue-&gt;buffer, left),</span></span>
-<span id="L428"><span class="lineNum">     428</span> <span class="tlaGNC">      969872 :                 this_pointer,</span></span>
-<span id="L429"><span class="lineNum">     429</span> <span class="tlaGNC">      969872 :                 priority_queue-&gt;order,</span></span>
-<span id="L430"><span class="lineNum">     430</span> <span class="tlaGNC">      969872 :                 &amp;priority_queue-&gt;comparator</span></span>
+<span id="L425"><span class="lineNum">     425</span> <span class="tlaGNC">      978419 :         if (left &lt; count</span></span>
+<span id="L426"><span class="lineNum">     426</span> <span class="tlaGNC">      978419 :             &amp;&amp; wins(</span></span>
+<span id="L427"><span class="lineNum">     427</span> <span class="tlaGNC">      978419 :                 at(&amp;priority_queue-&gt;buffer, left),</span></span>
+<span id="L428"><span class="lineNum">     428</span> <span class="tlaGNC">      978419 :                 this_pointer,</span></span>
+<span id="L429"><span class="lineNum">     429</span> <span class="tlaGNC">      978419 :                 priority_queue-&gt;order,</span></span>
+<span id="L430"><span class="lineNum">     430</span> <span class="tlaGNC">      978419 :                 &amp;priority_queue-&gt;comparator</span></span>
 <span id="L431"><span class="lineNum">     431</span>              :             )) {</span>
 <span id="L432"><span class="lineNum">     432</span> <span class="tlaUNC">           0 :             return CCC_FALSE;</span></span>
 <span id="L433"><span class="lineNum">     433</span>              :         }</span>
-<span id="L434"><span class="lineNum">     434</span> <span class="tlaGNC">      969872 :         if (right &lt; count</span></span>
-<span id="L435"><span class="lineNum">     435</span> <span class="tlaGNC">      969872 :             &amp;&amp; wins(</span></span>
-<span id="L436"><span class="lineNum">     436</span> <span class="tlaGNC">      965633 :                 at(&amp;priority_queue-&gt;buffer, right),</span></span>
-<span id="L437"><span class="lineNum">     437</span> <span class="tlaGNC">      965633 :                 this_pointer,</span></span>
-<span id="L438"><span class="lineNum">     438</span> <span class="tlaGNC">      965633 :                 priority_queue-&gt;order,</span></span>
-<span id="L439"><span class="lineNum">     439</span> <span class="tlaGNC">      965633 :                 &amp;priority_queue-&gt;comparator</span></span>
+<span id="L434"><span class="lineNum">     434</span> <span class="tlaGNC">      978419 :         if (right &lt; count</span></span>
+<span id="L435"><span class="lineNum">     435</span> <span class="tlaGNC">      978419 :             &amp;&amp; wins(</span></span>
+<span id="L436"><span class="lineNum">     436</span> <span class="tlaGNC">      974146 :                 at(&amp;priority_queue-&gt;buffer, right),</span></span>
+<span id="L437"><span class="lineNum">     437</span> <span class="tlaGNC">      974146 :                 this_pointer,</span></span>
+<span id="L438"><span class="lineNum">     438</span> <span class="tlaGNC">      974146 :                 priority_queue-&gt;order,</span></span>
+<span id="L439"><span class="lineNum">     439</span> <span class="tlaGNC">      974146 :                 &amp;priority_queue-&gt;comparator</span></span>
 <span id="L440"><span class="lineNum">     440</span>              :             )) {</span>
 <span id="L441"><span class="lineNum">     441</span> <span class="tlaUNC">           0 :             return CCC_FALSE;</span></span>
 <span id="L442"><span class="lineNum">     442</span>              :         }</span>
-<span id="L443"><span class="lineNum">     443</span> <span class="tlaGNC">      969872 :     }</span></span>
-<span id="L444"><span class="lineNum">     444</span> <span class="tlaGNC">        7066 :     return CCC_TRUE;</span></span>
-<span id="L445"><span class="lineNum">     445</span> <span class="tlaGNC">        7099 : }</span></span>
+<span id="L443"><span class="lineNum">     443</span> <span class="tlaGNC">      978419 :     }</span></span>
+<span id="L444"><span class="lineNum">     444</span> <span class="tlaGNC">        7101 :     return CCC_TRUE;</span></span>
+<span id="L445"><span class="lineNum">     445</span> <span class="tlaGNC">        7134 : }</span></span>
 <span id="L446"><span class="lineNum">     446</span>              : </span>
 <span id="L447"><span class="lineNum">     447</span>              : /*===================     Interface in sort.h   =============================*/</span>
 <span id="L448"><span class="lineNum">     448</span>              : </span>
@@ -563,13 +563,13 @@
 <span id="L501"><span class="lineNum">     501</span>              : }</span>
 <span id="L502"><span class="lineNum">     502</span>              : </span>
 <span id="L503"><span class="lineNum">     503</span>              : void *</span>
-<span id="L504"><span class="lineNum">     504</span> <span class="tlaGNC">         697 : CCC_private_flat_priority_queue_update_fixup(</span></span>
+<span id="L504"><span class="lineNum">     504</span> <span class="tlaGNC">         713 : CCC_private_flat_priority_queue_update_fixup(</span></span>
 <span id="L505"><span class="lineNum">     505</span>              :     struct CCC_Flat_priority_queue const *const priority_queue,</span>
 <span id="L506"><span class="lineNum">     506</span>              :     void *const type,</span>
 <span id="L507"><span class="lineNum">     507</span>              :     void *const temp</span>
 <span id="L508"><span class="lineNum">     508</span>              : ) {</span>
-<span id="L509"><span class="lineNum">     509</span> <span class="tlaGNC">         697 :     return at(</span></span>
-<span id="L510"><span class="lineNum">     510</span> <span class="tlaGNC">         697 :         &amp;priority_queue-&gt;buffer, update_fixup(priority_queue, type, temp)</span></span>
+<span id="L509"><span class="lineNum">     509</span> <span class="tlaGNC">         713 :     return at(</span></span>
+<span id="L510"><span class="lineNum">     510</span> <span class="tlaGNC">         713 :         &amp;priority_queue-&gt;buffer, update_fixup(priority_queue, type, temp)</span></span>
 <span id="L511"><span class="lineNum">     511</span>              :     );</span>
 <span id="L512"><span class="lineNum">     512</span>              : }</span>
 <span id="L513"><span class="lineNum">     513</span>              : </span>
@@ -615,7 +615,7 @@
 <span id="L553"><span class="lineNum">     553</span>              : and we want to report that back for operations such as update, increase, and</span>
 <span id="L554"><span class="lineNum">     554</span>              : decrease. */</span>
 <span id="L555"><span class="lineNum">     555</span>              : static size_t</span>
-<span id="L556"><span class="lineNum">     556</span> <span class="tlaGNC">        3153 : bottom_up_reheap(</span></span>
+<span id="L556"><span class="lineNum">     556</span> <span class="tlaGNC">        3183 : bottom_up_reheap(</span></span>
 <span id="L557"><span class="lineNum">     557</span>              : </span>
 <span id="L558"><span class="lineNum">     558</span>              :     CCC_Flat_buffer const *const buffer,</span>
 <span id="L559"><span class="lineNum">     559</span>              :     void *const temp,</span>
@@ -625,64 +625,64 @@
 <span id="L563"><span class="lineNum">     563</span>              :     CCC_Comparator const *const comparator</span>
 <span id="L564"><span class="lineNum">     564</span>              : ) {</span>
 <span id="L565"><span class="lineNum">     565</span>              :     /* Procedure leaf-search(count, root) */</span>
-<span id="L566"><span class="lineNum">     566</span> <span class="tlaGNC">        3153 :     size_t leaf = root;</span></span>
-<span id="L567"><span class="lineNum">     567</span> <span class="tlaGNC">       11336 :     while ((2 * leaf) + 2 &lt; count) {</span></span>
-<span id="L568"><span class="lineNum">     568</span> <span class="tlaGNC">        8183 :         size_t const left = (2 * leaf) + 1;</span></span>
-<span id="L569"><span class="lineNum">     569</span> <span class="tlaGNC">        8183 :         size_t const right = left + 1;</span></span>
-<span id="L570"><span class="lineNum">     570</span> <span class="tlaGNC">        8183 :         if (wins(at(buffer, left), at(buffer, right), order, comparator)) {</span></span>
-<span id="L571"><span class="lineNum">     571</span> <span class="tlaGNC">        4017 :             leaf = left;</span></span>
-<span id="L572"><span class="lineNum">     572</span> <span class="tlaGNC">        4017 :         } else {</span></span>
-<span id="L573"><span class="lineNum">     573</span> <span class="tlaGNC">        4166 :             leaf = right;</span></span>
+<span id="L566"><span class="lineNum">     566</span> <span class="tlaGNC">        3183 :     size_t leaf = root;</span></span>
+<span id="L567"><span class="lineNum">     567</span> <span class="tlaGNC">       11401 :     while ((2 * leaf) + 2 &lt; count) {</span></span>
+<span id="L568"><span class="lineNum">     568</span> <span class="tlaGNC">        8218 :         size_t const left = (2 * leaf) + 1;</span></span>
+<span id="L569"><span class="lineNum">     569</span> <span class="tlaGNC">        8218 :         size_t const right = left + 1;</span></span>
+<span id="L570"><span class="lineNum">     570</span> <span class="tlaGNC">        8218 :         if (wins(at(buffer, left), at(buffer, right), order, comparator)) {</span></span>
+<span id="L571"><span class="lineNum">     571</span> <span class="tlaGNC">        3999 :             leaf = left;</span></span>
+<span id="L572"><span class="lineNum">     572</span> <span class="tlaGNC">        3999 :         } else {</span></span>
+<span id="L573"><span class="lineNum">     573</span> <span class="tlaGNC">        4219 :             leaf = right;</span></span>
 <span id="L574"><span class="lineNum">     574</span>              :         }</span>
-<span id="L575"><span class="lineNum">     575</span> <span class="tlaGNC">        8183 :     }</span></span>
-<span id="L576"><span class="lineNum">     576</span> <span class="tlaGNC">        3153 :     if ((2 * leaf) + 1 &lt; count) {</span></span>
-<span id="L577"><span class="lineNum">     577</span> <span class="tlaGNC">          95 :         leaf = (2 * leaf) + 1;</span></span>
-<span id="L578"><span class="lineNum">     578</span> <span class="tlaGNC">          95 :     }</span></span>
+<span id="L575"><span class="lineNum">     575</span> <span class="tlaGNC">        8218 :     }</span></span>
+<span id="L576"><span class="lineNum">     576</span> <span class="tlaGNC">        3183 :     if ((2 * leaf) + 1 &lt; count) {</span></span>
+<span id="L577"><span class="lineNum">     577</span> <span class="tlaGNC">          99 :         leaf = (2 * leaf) + 1;</span></span>
+<span id="L578"><span class="lineNum">     578</span> <span class="tlaGNC">          99 :     }</span></span>
 <span id="L579"><span class="lineNum">     579</span>              :     /* Procedure bottom-up-search(root, leaf) */</span>
-<span id="L580"><span class="lineNum">     580</span> <span class="tlaGNC">        3153 :     void const *const node = at(buffer, root);</span></span>
-<span id="L581"><span class="lineNum">     581</span> <span class="tlaGNC">        4102 :     while (leaf &gt; root &amp;&amp; wins(node, at(buffer, leaf), order, comparator)) {</span></span>
-<span id="L582"><span class="lineNum">     582</span> <span class="tlaGNC">         949 :         leaf = (leaf - 1) / 2;</span></span>
+<span id="L580"><span class="lineNum">     580</span> <span class="tlaGNC">        3183 :     void const *const node = at(buffer, root);</span></span>
+<span id="L581"><span class="lineNum">     581</span> <span class="tlaGNC">        4081 :     while (leaf &gt; root &amp;&amp; wins(node, at(buffer, leaf), order, comparator)) {</span></span>
+<span id="L582"><span class="lineNum">     582</span> <span class="tlaGNC">         898 :         leaf = (leaf - 1) / 2;</span></span>
 <span id="L583"><span class="lineNum">     583</span>              :     }</span>
 <span id="L584"><span class="lineNum">     584</span>              :     /* Procedure interchange-2(root, leaf) */</span>
-<span id="L585"><span class="lineNum">     585</span> <span class="tlaGNC">        3153 :     size_t const reheaped_root_index = leaf;</span></span>
-<span id="L586"><span class="lineNum">     586</span> <span class="tlaGNC">       10482 :     while (leaf &gt; root) {</span></span>
-<span id="L587"><span class="lineNum">     587</span> <span class="tlaGNC">        7329 :         swap(buffer, temp, at(buffer, leaf), at(buffer, root));</span></span>
-<span id="L588"><span class="lineNum">     588</span> <span class="tlaGNC">        7329 :         leaf = (leaf - 1) / 2;</span></span>
+<span id="L585"><span class="lineNum">     585</span> <span class="tlaGNC">        3183 :     size_t const reheaped_root_index = leaf;</span></span>
+<span id="L586"><span class="lineNum">     586</span> <span class="tlaGNC">       10602 :     while (leaf &gt; root) {</span></span>
+<span id="L587"><span class="lineNum">     587</span> <span class="tlaGNC">        7419 :         swap(buffer, temp, at(buffer, leaf), at(buffer, root));</span></span>
+<span id="L588"><span class="lineNum">     588</span> <span class="tlaGNC">        7419 :         leaf = (leaf - 1) / 2;</span></span>
 <span id="L589"><span class="lineNum">     589</span>              :     }</span>
-<span id="L590"><span class="lineNum">     590</span> <span class="tlaGNC">        6306 :     return reheaped_root_index;</span></span>
-<span id="L591"><span class="lineNum">     591</span> <span class="tlaGNC">        3153 : }</span></span>
+<span id="L590"><span class="lineNum">     590</span> <span class="tlaGNC">        6366 :     return reheaped_root_index;</span></span>
+<span id="L591"><span class="lineNum">     591</span> <span class="tlaGNC">        3183 : }</span></span>
 <span id="L592"><span class="lineNum">     592</span>              : </span>
 <span id="L593"><span class="lineNum">     593</span>              : /* Returns the sorted position of the element starting at position i. */</span>
 <span id="L594"><span class="lineNum">     594</span>              : static inline size_t</span>
-<span id="L595"><span class="lineNum">     595</span> <span class="tlaGNC">        5121 : bubble_up(</span></span>
+<span id="L595"><span class="lineNum">     595</span> <span class="tlaGNC">        5108 : bubble_up(</span></span>
 <span id="L596"><span class="lineNum">     596</span>              :     CCC_Flat_buffer const *const buffer,</span>
 <span id="L597"><span class="lineNum">     597</span>              :     size_t index,</span>
 <span id="L598"><span class="lineNum">     598</span>              :     void *const temp,</span>
 <span id="L599"><span class="lineNum">     599</span>              :     CCC_Order const order,</span>
 <span id="L600"><span class="lineNum">     600</span>              :     CCC_Comparator const *const comparator</span>
 <span id="L601"><span class="lineNum">     601</span>              : ) {</span>
-<span id="L602"><span class="lineNum">     602</span> <span class="tlaGNC">       15781 :     for (size_t parent = (index - 1) / 2; index;</span></span>
-<span id="L603"><span class="lineNum">     603</span> <span class="tlaGNC">        5649 :          index = parent, parent = (parent - 1) / 2) {</span></span>
-<span id="L604"><span class="lineNum">     604</span> <span class="tlaGNC">       10660 :         void *const parent_pointer = at(buffer, parent);</span></span>
-<span id="L605"><span class="lineNum">     605</span> <span class="tlaGNC">       10660 :         void *const this_pointer = at(buffer, index);</span></span>
+<span id="L602"><span class="lineNum">     602</span> <span class="tlaGNC">       16273 :     for (size_t parent = (index - 1) / 2; index;</span></span>
+<span id="L603"><span class="lineNum">     603</span> <span class="tlaGNC">        6201 :          index = parent, parent = (parent - 1) / 2) {</span></span>
+<span id="L604"><span class="lineNum">     604</span> <span class="tlaGNC">       11165 :         void *const parent_pointer = at(buffer, parent);</span></span>
+<span id="L605"><span class="lineNum">     605</span> <span class="tlaGNC">       11165 :         void *const this_pointer = at(buffer, index);</span></span>
 <span id="L606"><span class="lineNum">     606</span>              :         /* Not winning here means we are in correct order or equal. */</span>
-<span id="L607"><span class="lineNum">     607</span> <span class="tlaGNC">       10660 :         if (!wins(this_pointer, parent_pointer, order, comparator)) {</span></span>
-<span id="L608"><span class="lineNum">     608</span> <span class="tlaGNC">        5011 :             return index;</span></span>
+<span id="L607"><span class="lineNum">     607</span> <span class="tlaGNC">       11165 :         if (!wins(this_pointer, parent_pointer, order, comparator)) {</span></span>
+<span id="L608"><span class="lineNum">     608</span> <span class="tlaGNC">        4964 :             return index;</span></span>
 <span id="L609"><span class="lineNum">     609</span>              :         }</span>
-<span id="L610"><span class="lineNum">     610</span> <span class="tlaGNC">        5649 :         swap(buffer, temp, this_pointer, parent_pointer);</span></span>
-<span id="L611"><span class="lineNum">     611</span> <span class="tlaGNC">       10660 :     }</span></span>
-<span id="L612"><span class="lineNum">     612</span> <span class="tlaGNC">         110 :     return 0;</span></span>
-<span id="L613"><span class="lineNum">     613</span> <span class="tlaGNC">        5121 : }</span></span>
+<span id="L610"><span class="lineNum">     610</span> <span class="tlaGNC">        6201 :         swap(buffer, temp, this_pointer, parent_pointer);</span></span>
+<span id="L611"><span class="lineNum">     611</span> <span class="tlaGNC">       11165 :     }</span></span>
+<span id="L612"><span class="lineNum">     612</span> <span class="tlaGNC">         144 :     return 0;</span></span>
+<span id="L613"><span class="lineNum">     613</span> <span class="tlaGNC">        5108 : }</span></span>
 <span id="L614"><span class="lineNum">     614</span>              : </span>
 <span id="L615"><span class="lineNum">     615</span>              : /* Fixes the position of element e after its key value has been changed. */</span>
 <span id="L616"><span class="lineNum">     616</span>              : static size_t</span>
-<span id="L617"><span class="lineNum">     617</span> <span class="tlaGNC">        1394 : update_fixup(</span></span>
+<span id="L617"><span class="lineNum">     617</span> <span class="tlaGNC">        1426 : update_fixup(</span></span>
 <span id="L618"><span class="lineNum">     618</span>              :     struct CCC_Flat_priority_queue const *const priority_queue,</span>
 <span id="L619"><span class="lineNum">     619</span>              :     void *const type,</span>
 <span id="L620"><span class="lineNum">     620</span>              :     void *const temp</span>
 <span id="L621"><span class="lineNum">     621</span>              : ) {</span>
-<span id="L622"><span class="lineNum">     622</span> <span class="tlaGNC">        1394 :     size_t const index = index_of(priority_queue, type);</span></span>
-<span id="L623"><span class="lineNum">     623</span> <span class="tlaGNC">        1394 :     if (!index) {</span></span>
+<span id="L622"><span class="lineNum">     622</span> <span class="tlaGNC">        1426 :     size_t const index = index_of(priority_queue, type);</span></span>
+<span id="L623"><span class="lineNum">     623</span> <span class="tlaGNC">        1426 :     if (!index) {</span></span>
 <span id="L624"><span class="lineNum">     624</span> <span class="tlaGNC">           2 :         return bottom_up_reheap(</span></span>
 <span id="L625"><span class="lineNum">     625</span> <span class="tlaGNC">           2 :             &amp;priority_queue-&gt;buffer,</span></span>
 <span id="L626"><span class="lineNum">     626</span> <span class="tlaGNC">           2 :             temp,</span></span>
@@ -692,33 +692,33 @@
 <span id="L630"><span class="lineNum">     630</span> <span class="tlaGNC">           2 :             &amp;priority_queue-&gt;comparator</span></span>
 <span id="L631"><span class="lineNum">     631</span>              :         );</span>
 <span id="L632"><span class="lineNum">     632</span>              :     }</span>
-<span id="L633"><span class="lineNum">     633</span> <span class="tlaGNC">        2784 :     CCC_Order const parent_order</span></span>
-<span id="L634"><span class="lineNum">     634</span> <span class="tlaGNC">        5568 :         = priority_queue-&gt;comparator.compare((CCC_Comparator_arguments){</span></span>
-<span id="L635"><span class="lineNum">     635</span> <span class="tlaGNC">        1392 :             .type_left = at(&amp;priority_queue-&gt;buffer, index),</span></span>
-<span id="L636"><span class="lineNum">     636</span> <span class="tlaGNC">        1392 :             .type_right = at(&amp;priority_queue-&gt;buffer, (index - 1) / 2),</span></span>
-<span id="L637"><span class="lineNum">     637</span> <span class="tlaGNC">        1392 :             .context = priority_queue-&gt;comparator.context,</span></span>
+<span id="L633"><span class="lineNum">     633</span> <span class="tlaGNC">        2848 :     CCC_Order const parent_order</span></span>
+<span id="L634"><span class="lineNum">     634</span> <span class="tlaGNC">        5696 :         = priority_queue-&gt;comparator.compare((CCC_Comparator_arguments){</span></span>
+<span id="L635"><span class="lineNum">     635</span> <span class="tlaGNC">        1424 :             .type_left = at(&amp;priority_queue-&gt;buffer, index),</span></span>
+<span id="L636"><span class="lineNum">     636</span> <span class="tlaGNC">        1424 :             .type_right = at(&amp;priority_queue-&gt;buffer, (index - 1) / 2),</span></span>
+<span id="L637"><span class="lineNum">     637</span> <span class="tlaGNC">        1424 :             .context = priority_queue-&gt;comparator.context,</span></span>
 <span id="L638"><span class="lineNum">     638</span>              :         });</span>
-<span id="L639"><span class="lineNum">     639</span> <span class="tlaGNC">        1392 :     if (parent_order == priority_queue-&gt;order) {</span></span>
-<span id="L640"><span class="lineNum">     640</span> <span class="tlaGNC">         264 :         return bubble_up(</span></span>
-<span id="L641"><span class="lineNum">     641</span> <span class="tlaGNC">         264 :             &amp;priority_queue-&gt;buffer,</span></span>
-<span id="L642"><span class="lineNum">     642</span> <span class="tlaGNC">         264 :             index,</span></span>
-<span id="L643"><span class="lineNum">     643</span> <span class="tlaGNC">         264 :             temp,</span></span>
-<span id="L644"><span class="lineNum">     644</span> <span class="tlaGNC">         264 :             priority_queue-&gt;order,</span></span>
-<span id="L645"><span class="lineNum">     645</span> <span class="tlaGNC">         264 :             &amp;priority_queue-&gt;comparator</span></span>
+<span id="L639"><span class="lineNum">     639</span> <span class="tlaGNC">        1424 :     if (parent_order == priority_queue-&gt;order) {</span></span>
+<span id="L640"><span class="lineNum">     640</span> <span class="tlaGNC">         252 :         return bubble_up(</span></span>
+<span id="L641"><span class="lineNum">     641</span> <span class="tlaGNC">         252 :             &amp;priority_queue-&gt;buffer,</span></span>
+<span id="L642"><span class="lineNum">     642</span> <span class="tlaGNC">         252 :             index,</span></span>
+<span id="L643"><span class="lineNum">     643</span> <span class="tlaGNC">         252 :             temp,</span></span>
+<span id="L644"><span class="lineNum">     644</span> <span class="tlaGNC">         252 :             priority_queue-&gt;order,</span></span>
+<span id="L645"><span class="lineNum">     645</span> <span class="tlaGNC">         252 :             &amp;priority_queue-&gt;comparator</span></span>
 <span id="L646"><span class="lineNum">     646</span>              :         );</span>
 <span id="L647"><span class="lineNum">     647</span>              :     }</span>
-<span id="L648"><span class="lineNum">     648</span> <span class="tlaGNC">        1128 :     if (parent_order != CCC_ORDER_EQUAL) {</span></span>
-<span id="L649"><span class="lineNum">     649</span> <span class="tlaGNC">        1126 :         return bottom_up_reheap(</span></span>
-<span id="L650"><span class="lineNum">     650</span> <span class="tlaGNC">        1126 :             &amp;priority_queue-&gt;buffer,</span></span>
-<span id="L651"><span class="lineNum">     651</span> <span class="tlaGNC">        1126 :             temp,</span></span>
-<span id="L652"><span class="lineNum">     652</span> <span class="tlaGNC">        1126 :             priority_queue-&gt;buffer.count,</span></span>
-<span id="L653"><span class="lineNum">     653</span> <span class="tlaGNC">        1126 :             index,</span></span>
-<span id="L654"><span class="lineNum">     654</span> <span class="tlaGNC">        1126 :             priority_queue-&gt;order,</span></span>
-<span id="L655"><span class="lineNum">     655</span> <span class="tlaGNC">        1126 :             &amp;priority_queue-&gt;comparator</span></span>
+<span id="L648"><span class="lineNum">     648</span> <span class="tlaGNC">        1172 :     if (parent_order != CCC_ORDER_EQUAL) {</span></span>
+<span id="L649"><span class="lineNum">     649</span> <span class="tlaGNC">        1166 :         return bottom_up_reheap(</span></span>
+<span id="L650"><span class="lineNum">     650</span> <span class="tlaGNC">        1166 :             &amp;priority_queue-&gt;buffer,</span></span>
+<span id="L651"><span class="lineNum">     651</span> <span class="tlaGNC">        1166 :             temp,</span></span>
+<span id="L652"><span class="lineNum">     652</span> <span class="tlaGNC">        1166 :             priority_queue-&gt;buffer.count,</span></span>
+<span id="L653"><span class="lineNum">     653</span> <span class="tlaGNC">        1166 :             index,</span></span>
+<span id="L654"><span class="lineNum">     654</span> <span class="tlaGNC">        1166 :             priority_queue-&gt;order,</span></span>
+<span id="L655"><span class="lineNum">     655</span> <span class="tlaGNC">        1166 :             &amp;priority_queue-&gt;comparator</span></span>
 <span id="L656"><span class="lineNum">     656</span>              :         );</span>
 <span id="L657"><span class="lineNum">     657</span>              :     }</span>
-<span id="L658"><span class="lineNum">     658</span> <span class="tlaGNC">           2 :     return index;</span></span>
-<span id="L659"><span class="lineNum">     659</span> <span class="tlaGNC">        1394 : }</span></span>
+<span id="L658"><span class="lineNum">     658</span> <span class="tlaGNC">           6 :     return index;</span></span>
+<span id="L659"><span class="lineNum">     659</span> <span class="tlaGNC">        1426 : }</span></span>
 <span id="L660"><span class="lineNum">     660</span>              : </span>
 <span id="L661"><span class="lineNum">     661</span>              : /* Returns true if the winner (the &quot;left hand side&quot;) wins the comparison.</span>
 <span id="L662"><span class="lineNum">     662</span>              :    Winning in a three-way comparison means satisfying the total order of the</span>
@@ -726,18 +726,18 @@
 <span id="L664"><span class="lineNum">     664</span>              :    function would return false. If the winner is in the wrong order, thus</span>
 <span id="L665"><span class="lineNum">     665</span>              :    losing the total order comparison, the function also returns false. */</span>
 <span id="L666"><span class="lineNum">     666</span>              : static inline CCC_Tribool</span>
-<span id="L667"><span class="lineNum">     667</span> <span class="tlaGNC">     1957380 : wins(</span></span>
+<span id="L667"><span class="lineNum">     667</span> <span class="tlaGNC">     1974935 : wins(</span></span>
 <span id="L668"><span class="lineNum">     668</span>              :     void const *const winner,</span>
 <span id="L669"><span class="lineNum">     669</span>              :     void const *const loser,</span>
 <span id="L670"><span class="lineNum">     670</span>              :     CCC_Order const order,</span>
 <span id="L671"><span class="lineNum">     671</span>              :     CCC_Comparator const *const comparator</span>
 <span id="L672"><span class="lineNum">     672</span>              : ) {</span>
-<span id="L673"><span class="lineNum">     673</span> <span class="tlaGNC">     9786900 :     return comparator-&gt;compare((CCC_Comparator_arguments){</span></span>
-<span id="L674"><span class="lineNum">     674</span> <span class="tlaGNC">     1957380 :                .type_left = winner,</span></span>
-<span id="L675"><span class="lineNum">     675</span> <span class="tlaGNC">     1957380 :                .type_right = loser,</span></span>
-<span id="L676"><span class="lineNum">     676</span> <span class="tlaGNC">     1957380 :                .context = comparator-&gt;context,</span></span>
+<span id="L673"><span class="lineNum">     673</span> <span class="tlaGNC">     9874675 :     return comparator-&gt;compare((CCC_Comparator_arguments){</span></span>
+<span id="L674"><span class="lineNum">     674</span> <span class="tlaGNC">     1974935 :                .type_left = winner,</span></span>
+<span id="L675"><span class="lineNum">     675</span> <span class="tlaGNC">     1974935 :                .type_right = loser,</span></span>
+<span id="L676"><span class="lineNum">     676</span> <span class="tlaGNC">     1974935 :                .context = comparator-&gt;context,</span></span>
 <span id="L677"><span class="lineNum">     677</span>              :            })</span>
-<span id="L678"><span class="lineNum">     678</span> <span class="tlaGNC">     1957380 :         == order;</span></span>
+<span id="L678"><span class="lineNum">     678</span> <span class="tlaGNC">     1974935 :         == order;</span></span>
 <span id="L679"><span class="lineNum">     679</span>              : }</span>
 <span id="L680"><span class="lineNum">     680</span>              : </span>
 <span id="L681"><span class="lineNum">     681</span>              : /* Flat priority queue code that uses indices of the underlying Flat_buffer</span>
@@ -745,42 +745,42 @@
 <span id="L683"><span class="lineNum">     683</span>              :    current size and start at or after the Flat_buffer base. Only checked in</span>
 <span id="L684"><span class="lineNum">     684</span>              :    debug. */</span>
 <span id="L685"><span class="lineNum">     685</span>              : static inline size_t</span>
-<span id="L686"><span class="lineNum">     686</span> <span class="tlaGNC">        1927 : index_of(</span></span>
+<span id="L686"><span class="lineNum">     686</span> <span class="tlaGNC">        1962 : index_of(</span></span>
 <span id="L687"><span class="lineNum">     687</span>              :     struct CCC_Flat_priority_queue const *const priority_queue,</span>
 <span id="L688"><span class="lineNum">     688</span>              :     void const *const slot</span>
 <span id="L689"><span class="lineNum">     689</span>              : ) {</span>
-<span id="L690"><span class="lineNum">     690</span> <span class="tlaGNC">        1927 :     assert(slot &gt;= priority_queue-&gt;buffer.data);</span></span>
-<span id="L691"><span class="lineNum">     691</span> <span class="tlaGNC">        3854 :     size_t const i</span></span>
-<span id="L692"><span class="lineNum">     692</span> <span class="tlaGNC">        1927 :         = (size_t)((char *)slot - (char *)priority_queue-&gt;buffer.data)</span></span>
-<span id="L693"><span class="lineNum">     693</span> <span class="tlaGNC">        1927 :         / priority_queue-&gt;buffer.sizeof_type;</span></span>
-<span id="L694"><span class="lineNum">     694</span> <span class="tlaGNC">        1927 :     assert(i &lt; priority_queue-&gt;buffer.count);</span></span>
-<span id="L695"><span class="lineNum">     695</span> <span class="tlaGNC">        3854 :     return i;</span></span>
-<span id="L696"><span class="lineNum">     696</span> <span class="tlaGNC">        1927 : }</span></span>
+<span id="L690"><span class="lineNum">     690</span> <span class="tlaGNC">        1962 :     assert(slot &gt;= priority_queue-&gt;buffer.data);</span></span>
+<span id="L691"><span class="lineNum">     691</span> <span class="tlaGNC">        3924 :     size_t const i</span></span>
+<span id="L692"><span class="lineNum">     692</span> <span class="tlaGNC">        1962 :         = (size_t)((char *)slot - (char *)priority_queue-&gt;buffer.data)</span></span>
+<span id="L693"><span class="lineNum">     693</span> <span class="tlaGNC">        1962 :         / priority_queue-&gt;buffer.sizeof_type;</span></span>
+<span id="L694"><span class="lineNum">     694</span> <span class="tlaGNC">        1962 :     assert(i &lt; priority_queue-&gt;buffer.count);</span></span>
+<span id="L695"><span class="lineNum">     695</span> <span class="tlaGNC">        3924 :     return i;</span></span>
+<span id="L696"><span class="lineNum">     696</span> <span class="tlaGNC">        1962 : }</span></span>
 <span id="L697"><span class="lineNum">     697</span>              : </span>
 <span id="L698"><span class="lineNum">     698</span>              : /** Swaps data in a and b according to buffer element size. Assumes a, b, and</span>
 <span id="L699"><span class="lineNum">     699</span>              : temp are non-null. */</span>
 <span id="L700"><span class="lineNum">     700</span>              : static inline void</span>
-<span id="L701"><span class="lineNum">     701</span> <span class="tlaGNC">       14794 : swap(</span></span>
+<span id="L701"><span class="lineNum">     701</span> <span class="tlaGNC">       15430 : swap(</span></span>
 <span id="L702"><span class="lineNum">     702</span>              :     CCC_Flat_buffer const *const buffer,</span>
 <span id="L703"><span class="lineNum">     703</span>              :     void *const temp,</span>
 <span id="L704"><span class="lineNum">     704</span>              :     void *const a,</span>
 <span id="L705"><span class="lineNum">     705</span>              :     void *const b</span>
 <span id="L706"><span class="lineNum">     706</span>              : ) {</span>
-<span id="L707"><span class="lineNum">     707</span> <span class="tlaGNC">       14794 :     assert(temp);</span></span>
-<span id="L708"><span class="lineNum">     708</span> <span class="tlaGNC">       14794 :     assert(a);</span></span>
-<span id="L709"><span class="lineNum">     709</span> <span class="tlaGNC">       14794 :     assert(b);</span></span>
-<span id="L710"><span class="lineNum">     710</span> <span class="tlaGNC">       14794 :     (void)memcpy(temp, a, buffer-&gt;sizeof_type);</span></span>
-<span id="L711"><span class="lineNum">     711</span> <span class="tlaGNC">       14794 :     (void)memcpy(a, b, buffer-&gt;sizeof_type);</span></span>
-<span id="L712"><span class="lineNum">     712</span> <span class="tlaGNC">       14794 :     (void)memcpy(b, temp, buffer-&gt;sizeof_type);</span></span>
-<span id="L713"><span class="lineNum">     713</span> <span class="tlaGNC">       14794 : }</span></span>
+<span id="L707"><span class="lineNum">     707</span> <span class="tlaGNC">       15430 :     assert(temp);</span></span>
+<span id="L708"><span class="lineNum">     708</span> <span class="tlaGNC">       15430 :     assert(a);</span></span>
+<span id="L709"><span class="lineNum">     709</span> <span class="tlaGNC">       15430 :     assert(b);</span></span>
+<span id="L710"><span class="lineNum">     710</span> <span class="tlaGNC">       15430 :     (void)memcpy(temp, a, buffer-&gt;sizeof_type);</span></span>
+<span id="L711"><span class="lineNum">     711</span> <span class="tlaGNC">       15430 :     (void)memcpy(a, b, buffer-&gt;sizeof_type);</span></span>
+<span id="L712"><span class="lineNum">     712</span> <span class="tlaGNC">       15430 :     (void)memcpy(b, temp, buffer-&gt;sizeof_type);</span></span>
+<span id="L713"><span class="lineNum">     713</span> <span class="tlaGNC">       15430 : }</span></span>
 <span id="L714"><span class="lineNum">     714</span>              : </span>
 <span id="L715"><span class="lineNum">     715</span>              : /** Provides data at index. Assumes buffer is non-null and i is within</span>
 <span id="L716"><span class="lineNum">     716</span>              : capacity. */</span>
 <span id="L717"><span class="lineNum">     717</span>              : static inline void *</span>
-<span id="L718"><span class="lineNum">     718</span> <span class="tlaGNC">     2974037 : at(CCC_Flat_buffer const *const buffer, size_t const i) {</span></span>
-<span id="L719"><span class="lineNum">     719</span> <span class="tlaGNC">     2974037 :     assert(buffer);</span></span>
-<span id="L720"><span class="lineNum">     720</span> <span class="tlaGNC">     2974037 :     assert(i &lt; buffer-&gt;capacity);</span></span>
-<span id="L721"><span class="lineNum">     721</span> <span class="tlaGNC">     2974037 :     return (char *)buffer-&gt;data + (i * buffer-&gt;sizeof_type);</span></span>
+<span id="L718"><span class="lineNum">     718</span> <span class="tlaGNC">     3000961 : at(CCC_Flat_buffer const *const buffer, size_t const i) {</span></span>
+<span id="L719"><span class="lineNum">     719</span> <span class="tlaGNC">     3000961 :     assert(buffer);</span></span>
+<span id="L720"><span class="lineNum">     720</span> <span class="tlaGNC">     3000961 :     assert(i &lt; buffer-&gt;capacity);</span></span>
+<span id="L721"><span class="lineNum">     721</span> <span class="tlaGNC">     3000961 :     return (char *)buffer-&gt;data + (i * buffer-&gt;sizeof_type);</span></span>
 <span id="L722"><span class="lineNum">     722</span>              : }</span>
 <span id="L723"><span class="lineNum">     723</span>              : </span>
 <span id="L724"><span class="lineNum">     724</span>              : static inline void</span>
