@@ -541,12 +541,17 @@ heapify(
 
 /** The Bottom-Up-Heapsort procedures from the research paper but all in one
 function. No need to break out into tiny functions because they are only used
-here and this makes the logic easy to track in one short function.
+here and this makes the logic easy to track in one short function. Such an
+operation also replaces the traditional bubble-down of a standard heap. The
+bubble-up operation can still be helpful in certain cases and is therefore kept
+as a separate function.
 
 This function also returns the final resting position of the root element for
-this reheap operation. This is helpful if the root element has been swapped to
-its special position on the special path and we want to report that back for
-operations such as update, increase, and decrease. */
+this reheap operation. This is the location that the data previously at the root
+index has been swapped to such that heap order is maintained. This is helpful if
+the root element has been swapped to its special position on the special path
+and we want to report that back for operations such as update, increase, and
+decrease. */
 static size_t
 bottom_up_reheap(
 
@@ -576,13 +581,35 @@ bottom_up_reheap(
     while (leaf > root && wins(node, at(buffer, leaf), order, comparator)) {
         leaf = (leaf - 1) / 2;
     }
-    size_t const return_new_root_position = leaf;
     /* Procedure interchange-2(root, leaf) */
+    size_t const reheaped_root_index = leaf;
     while (leaf > root) {
         swap(buffer, temp, at(buffer, leaf), at(buffer, root));
         leaf = (leaf - 1) / 2;
     }
-    return return_new_root_position;
+    return reheaped_root_index;
+}
+
+/* Returns the sorted position of the element starting at position i. */
+static inline size_t
+bubble_up(
+    CCC_Flat_buffer const *const buffer,
+    size_t index,
+    void *const temp,
+    CCC_Order const order,
+    CCC_Comparator const *const comparator
+) {
+    for (size_t parent = (index - 1) / 2; index;
+         index = parent, parent = (parent - 1) / 2) {
+        void *const parent_pointer = at(buffer, parent);
+        void *const this_pointer = at(buffer, index);
+        /* Not winning here means we are in correct order or equal. */
+        if (!wins(this_pointer, parent_pointer, order, comparator)) {
+            return index;
+        }
+        swap(buffer, temp, this_pointer, parent_pointer);
+    }
+    return 0;
 }
 
 /* Fixes the position of element e after its key value has been changed. */
@@ -629,28 +656,6 @@ update_fixup(
         );
     }
     return index;
-}
-
-/* Returns the sorted position of the element starting at position i. */
-static inline size_t
-bubble_up(
-    CCC_Flat_buffer const *const buffer,
-    size_t index,
-    void *const temp,
-    CCC_Order const order,
-    CCC_Comparator const *const comparator
-) {
-    for (size_t parent = (index - 1) / 2; index;
-         index = parent, parent = (parent - 1) / 2) {
-        void *const parent_pointer = at(buffer, parent);
-        void *const this_pointer = at(buffer, index);
-        /* Not winning here means we are in correct order or equal. */
-        if (!wins(this_pointer, parent_pointer, order, comparator)) {
-            return index;
-        }
-        swap(buffer, temp, this_pointer, parent_pointer);
-    }
-    return 0;
 }
 
 /* Returns true if the winner (the "left hand side") wins the comparison.
