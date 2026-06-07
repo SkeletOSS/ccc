@@ -10,8 +10,8 @@ file. */
 #define CHECKERS_H
 
 #include <stdint.h>
-#include <stdlib.h>
-#include <time.h>
+#include <stdlib.h> /* IWYU pragma: keep */
+#include <time.h>   /* IWYU pragma: keep */
 
 #define CHECK_RED "\033[38;5;9m"
 #define CHECK_GREEN "\033[38;5;10m"
@@ -42,8 +42,6 @@ union Check_bytes {
     uintmax_t as_bytes;
 };
 
-typedef enum Check_result (*Tester)(void);
-
 /** Internal printer to save on binary size and speed up compilation. We have
 one c file translation unit where all calls to printing functions exist and the
 necessary branch to check for the type of bytes we are printing. This way static
@@ -60,6 +58,8 @@ void check_print_fail_message(
     unsigned random_seed
 );
 
+/** The static variable seed for the entire test checker harness. This is
+seeded before any tests run in the check_run macro. */
 static unsigned check_static_random_seed;
 
 /** Provides the correct type to the union for a check expression while
@@ -377,6 +377,10 @@ will set the overall test state to fail and the user should examine the
 individual test that failed with CHECK_FAIL or CHECK_ERROR. */
 #define check_run(test_fn_list...)                                             \
     (__extension__({                                                           \
+        /* The compiler will maintain the order of calling these seeding       \
+           functions before the array initializer function calls because the   \
+           observable behavior must be maintained. Critical that seed occurs   \
+           first. */                                                           \
         check_static_random_seed = (unsigned)time(NULL); /* NOLINT */          \
         srand(check_static_random_seed);                 /* NOLINT */          \
         enum Check_result const check_private_all_checks[] = {test_fn_list};   \
