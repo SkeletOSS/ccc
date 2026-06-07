@@ -664,11 +664,15 @@ update_fixup(
     return index;
 }
 
-/* Returns true if the winner (the "left hand side") wins the comparison.
-   Winning in a three-way comparison means satisfying the total order of the
-   priority queue. So, there is no winner if the elements are equal and this
-   function would return false. If the winner is in the wrong order, thus
-   losing the total order comparison, the function also returns false. */
+/** Returns true if the winner, the first argument, wins the comparison.
+Winning in a three-way comparison means satisfying the total order of the
+priority queue. So, the comparison resulting in elements being equal means this
+function returns false. If the winner is in the wrong order, thus losing the
+total order comparison, the function also returns false. The function only
+returns true when the three-way comparison of the winner to the loser results in
+the winner matching the heap order specified upon container initialization. In
+terms of the heap tree structure this means the winner should be closer to the
+root. */
 static inline CCC_Tribool
 wins(
     void const *const winner,
