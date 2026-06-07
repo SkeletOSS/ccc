@@ -286,8 +286,6 @@ check_static_begin(flat_buffer_test_move) {
 
 int
 main(void) {
-    /* NOLINTNEXTLINE Random only needs to be seeded once. */
-    srand((unsigned)time(NULL));
     return check_run(
         flat_buffer_test_push_fixed(),
         flat_buffer_test_push_resize(),

@@ -225,9 +225,6 @@ check_static_begin(tree_map_test_iterate_removal) {
     Tree_map s = tree_map_for(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     size_t const num_nodes = 100;
     for (size_t i = 0; i < num_nodes; ++i) {
         /* Force duplicates. */
@@ -264,9 +261,6 @@ check_static_begin(tree_map_test_iterate_remove_key_value_reinsert) {
     Tree_map s = tree_map_for(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     size_t const num_nodes = 100;
     for (size_t i = 0; i < num_nodes; ++i) {
         /* Force duplicates. */

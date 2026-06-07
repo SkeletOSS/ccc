@@ -149,9 +149,6 @@ check_static_begin(tree_map_test_weak_srand) {
     CCC_Tree_map s = tree_map_for(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     enum : int {
         SRAND_CAP = 100,
     };
@@ -191,7 +188,6 @@ check_static_begin(tree_map_test_insert_erase_cycles) {
     CCC_Tree_map s = CCC_tree_map_for(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
-    srand((unsigned)time(NULL)); /* NOLINT */
     enum : int {
         CYCLES_TEST_CAP = 100,
     };

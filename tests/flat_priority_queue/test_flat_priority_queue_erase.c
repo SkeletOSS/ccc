@@ -115,9 +115,6 @@ check_static_begin(flat_priority_queue_test_insert_remove_key_value_four_dups) {
 }
 
 check_static_begin(flat_priority_queue_test_insert_erase_shuffled) {
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     size_t const size = 50;
     int const prime = 53;
     CCC_Allocator const allocator = {
@@ -223,9 +220,6 @@ check_static_begin(flat_priority_queue_test_pop_min) {
 }
 
 check_static_begin(flat_priority_queue_test_delete_prime_shuffle_duplicates) {
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     int const size = 99;
     int const prime = 101;
     /* Make the prime shuffle shorter than size for many duplicates. */
@@ -341,9 +335,6 @@ check_static_begin(flat_priority_queue_test_prime_shuffle) {
 }
 
 check_static_begin(flat_priority_queue_test_weak_srand) {
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     int const num_stack_nodes = 200;
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
