@@ -587,8 +587,8 @@ CCC_doubly_linked_list_is_sorted(
     return CCC_TRUE;
 }
 
-/** Inserts an element in non-decreasing order. This means an element will go
-to the end of a section of duplicate values which is good for round-robin style
+/** Inserts an element in the provided order. This means an element will go to
+the end of a section of duplicate values which is good for round-robin style
 list use. */
 void *
 CCC_doubly_linked_list_insert_sorted(
@@ -623,7 +623,7 @@ CCC_doubly_linked_list_insert_sorted(
     return struct_base(list, type_intruder);
 }
 
-/** Sorts the list into non-decreasing order according to the user comparison
+/** Sorts the list in the provided order according to the user comparison
 callback function in `O(N * log(N))` time and `O(1)` space.
 
 The following merging algorithm and associated helper functions are based on

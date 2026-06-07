@@ -399,9 +399,6 @@ CCC_singly_linked_list_is_empty(CCC_Singly_linked_list const *const list) {
 
 /*==========================     Sorting     ================================*/
 
-/** Returns true if the list is sorted in non-decreasing order. The user should
-flip the return values of their comparison function if they want a different
-order for elements.*/
 CCC_Tribool
 CCC_singly_linked_list_is_sorted(
     CCC_Singly_linked_list const *const list,
@@ -428,9 +425,8 @@ CCC_singly_linked_list_is_sorted(
     return CCC_TRUE;
 }
 
-/** Inserts an element in non-decreasing order. This means an element will go
-to the end of a section of duplicate values which is good for round-robin style
-list use. */
+/** Inserts an element in sorted order. The element will go to the end of a
+section of duplicate values which is good for round-robin style list use. */
 void *
 CCC_singly_linked_list_insert_sorted(
     CCC_Singly_linked_list *list,
@@ -457,15 +453,15 @@ CCC_singly_linked_list_insert_sorted(
         type_intruder = elem_in(list, node);
     }
     struct CCC_Singly_linked_list_node *prev = NULL;
-    struct CCC_Singly_linked_list_node *i = list->head;
-    for (; i != NULL && get_order(list, type_intruder, i, comparator) != order;
+    for (struct CCC_Singly_linked_list_node *i = list->head;
+         i != NULL && get_order(list, type_intruder, i, comparator) != order;
          prev = i, i = i->next) {}
     insert_node(list, prev, type_intruder);
     return struct_base(list, type_intruder);
 }
 
-/** Sorts the list in `O(N * log(N))` time with `O(1)` context space (no
-recursion). If the list is already sorted this algorithm only needs one pass.
+/** Sorts the list in `O(N * log(N))` time with `O(1)` space (no recursion). If
+the list is already sorted this algorithm only needs one pass.
 
 The following merging algorithm and associated helper functions are based on
 the iterative natural merge sort used in the list module of the pintOS project
