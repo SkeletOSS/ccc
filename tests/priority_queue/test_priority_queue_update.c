@@ -182,9 +182,6 @@ check_static_begin(priority_queue_test_insert_iterate_pop) {
         CCC_ORDER_LESSER,
         (CCC_Comparator){.compare = val_order}
     );
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     for (size_t i = 0; i < HEAP_CAP; ++i) {
         /* Force duplicates. */
         struct Val const *const pushed = push(
@@ -221,9 +218,6 @@ check_static_begin(priority_queue_test_priority_removal) {
         CCC_ORDER_LESSER,
         (CCC_Comparator){.compare = val_order}
     );
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     for (size_t i = 0; i < HEAP_CAP; ++i) {
         /* Force duplicates. */
         struct Val const *const pushed = push(
@@ -263,9 +257,6 @@ check_static_begin(priority_queue_test_priority_update_min_queue) {
         CCC_ORDER_LESSER,
         (CCC_Comparator){.compare = val_order}
     );
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     for (size_t i = 0; i < HEAP_CAP; ++i) {
         /* Force duplicates. */
         struct Val const *const pushed = push(
@@ -317,9 +308,6 @@ check_static_begin(priority_queue_test_priority_update_min_queue_with) {
         CCC_ORDER_LESSER,
         (CCC_Comparator){.compare = val_order}
     );
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     for (size_t i = 0; i < HEAP_CAP; ++i) {
         /* Force duplicates. */
         struct Val const *const pushed = push(
@@ -366,9 +354,6 @@ check_static_begin(priority_queue_test_priority_increase_min_queue) {
         CCC_ORDER_LESSER,
         (CCC_Comparator){.compare = val_order}
     );
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     for (size_t i = 0; i < HEAP_CAP; ++i) {
         /* Force duplicates. */
         struct Val const *const pushed = push(
@@ -434,9 +419,6 @@ check_static_begin(priority_queue_test_priority_increase_min_queue_with) {
         CCC_ORDER_LESSER,
         (CCC_Comparator){.compare = val_order}
     );
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     for (size_t i = 0; i < HEAP_CAP; ++i) {
         /* Force duplicates. */
         struct Val const *const pushed = push(
@@ -492,9 +474,6 @@ check_static_begin(priority_queue_test_priority_decrease_min_queue) {
         CCC_ORDER_LESSER,
         (CCC_Comparator){.compare = val_order}
     );
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     for (size_t i = 0; i < HEAP_CAP; ++i) {
         /* Force duplicates. */
         struct Val const *const pushed = push(
@@ -560,9 +539,6 @@ check_static_begin(priority_queue_test_priority_decrease_min_queue_with) {
         CCC_ORDER_LESSER,
         (CCC_Comparator){.compare = val_order}
     );
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     for (size_t i = 0; i < HEAP_CAP; ++i) {
         /* Force duplicates. */
         struct Val const *const pushed = push(

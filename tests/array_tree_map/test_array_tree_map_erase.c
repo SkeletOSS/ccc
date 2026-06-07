@@ -106,7 +106,6 @@ check_static_begin(array_tree_map_test_weak_srand) {
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[STANDARD_FIXED_CAP]){}
     );
-    srand((unsigned)time(NULL)); /* NOLINT */
     enum : int {
         SRAND_CAP = 100,
     };
@@ -155,7 +154,6 @@ check_static_begin(array_tree_map_test_insert_erase_cycles_no_allocate) {
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[STANDARD_FIXED_CAP]){}
     );
-    srand((unsigned)time(NULL)); /* NOLINT */
     int id_keys[CYCLES_TEST_CAP];
     Flat_bitset repeats = flat_bitset_with_storage(
         CYCLES_TEST_CAP, (CCC_Bit[CYCLES_TEST_CAP]){}
@@ -210,8 +208,6 @@ check_static_begin(array_tree_map_test_insert_erase_cycles_allocate) {
     CCC_Array_tree_map s = array_tree_map_default(
         struct Val, id, (CCC_Key_comparator){.compare = id_order}
     );
-    /* NOLINTNEXTLINE (cert-msc51-cpp) */
-    srand((unsigned)time(NULL));
     int id_keys[CYCLES_TEST_CAP];
     CCC_Flat_bitset repeats = CCC_flat_bitset_with_storage(
         CYCLES_TEST_CAP, (CCC_Bit[CYCLES_TEST_CAP]){}

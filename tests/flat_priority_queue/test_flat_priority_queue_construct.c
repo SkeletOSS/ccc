@@ -158,7 +158,6 @@ check_static_begin(flat_priority_queue_test_raw_type) {
 }
 
 check_static_begin(flat_priority_queue_test_heapify) {
-    srand((unsigned)time(NULL)); /* NOLINT */
     enum : size_t {
         HEAPIFY_CAP = 100,
     };
@@ -186,7 +185,6 @@ check_static_begin(flat_priority_queue_test_heapify) {
 }
 
 check_static_begin(flat_priority_queue_test_in_place_heapify) {
-    srand((unsigned)time(NULL)); /* NOLINT */
     enum : size_t {
         HEAPIFY_CAP = 100,
     };
@@ -223,7 +221,6 @@ check_static_begin(flat_priority_queue_test_in_place_heapify) {
 }
 
 check_static_begin(flat_priority_queue_test_heapify_copy) {
-    srand((unsigned)time(NULL)); /* NOLINT */
     enum : size_t {
         HEAPIFY_COPY_CAP = 100,
     };
@@ -286,7 +283,6 @@ check_static_begin(flat_priority_queue_test_heapsort) {
     enum : int {
         HPSORTCAP = 100,
     };
-    srand((unsigned)time(NULL)); /* NOLINT */
     Flat_buffer storage
         = flat_buffer_with_storage(HPSORTCAP, (int[HPSORTCAP]){});
     for (int *i = flat_buffer_begin(&storage); i != flat_buffer_end(&storage);

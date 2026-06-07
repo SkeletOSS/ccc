@@ -1,7 +1,17 @@
+/** @file The checkers test harness. Various macros are available to create
+test functions and check expected behavior.
+@note This test harness holds a global random seed used to seed `srand` on
+behalf of the user. This means the user can use functions from the standard
+library for randomness directly with out seeding as long as this file is
+included. This is important for immediately reproducible failures. The random
+seed is reported along with any failing check for a test program that uses this
+file. */
 #ifndef CHECKERS_H
 #define CHECKERS_H
 
 #include <stdint.h>
+#include <stdlib.h>
+#include <time.h>
 
 #define CHECK_RED "\033[38;5;9m"
 #define CHECK_GREEN "\033[38;5;10m"
@@ -46,8 +56,11 @@ void check_print_fail_message(
     char const *expected_expression_string,
     union Check_bytes result_output_bytes,
     union Check_bytes expected_output_bytes,
-    bool is_address
+    bool is_address,
+    unsigned random_seed
 );
+
+static unsigned check_static_random_seed;
 
 /** Provides the correct type to the union for a check expression while
 silencing compiler warnings for non-compiled generic branches. Substitution
@@ -124,7 +137,7 @@ additional parameters that one may wish to define a test function.
 @param[in] ... any additional parameters required for the function.
 @return see the end test macro. This will return a enum Check_result.
 
-It is possible to return early from a test before the end test macro, but it
+It is possible to return early froa test before the end test macro, but it
 is discouraged, especially if any memory allocations need to be cleaned up if
 a test fails. See begin static test for examples. */
 #define check_begin(test_name, ...)                                            \
@@ -136,6 +149,8 @@ a test fails. See begin static test for examples. */
 @param[in] test_expected the expection of what the result is equal to.
 @param[in] ... any additional function call that should execute on failure
 that cannot be performed by the end test macro.
+@note The check macro also reports the seed used for `srand` in case this test
+relies on randomness. This way the user can reproduce the failed result.
 
 test_result and test_expected should be comparable with ==/!=. If a test
 passes nothing happens. If a test fails output shows the failure. Upon
@@ -164,7 +179,8 @@ though the braces are not required. */
                 #test_expected,                                                \
                 check_to_bytes(check_private_result),                          \
                 check_to_bytes(check_private_expected),                        \
-                check_is_address(check_private_result)                         \
+                check_is_address(check_private_result),                        \
+                check_static_random_seed                                       \
             );                                                                 \
             check_private_macro_res = CHECK_FAIL;                              \
             __VA_OPT__((void)(__extension__({__VA_ARGS__}));)                  \
@@ -177,6 +193,8 @@ though the braces are not required. */
 @param[in] test_expected the expection of what the result is equal to.
 @param[in] ... any additional function call that should execute on failure
 that cannot be performed by the end test macro.
+@note The check macro also reports the seed used for `srand` in case this test
+relies on randomness. This way the user can reproduce the failed result.
 
 test_result and test_expected should be comparable with ==/!=. If a test
 passes nothing happens. If a test fails output shows the failure and sets the
@@ -208,7 +226,8 @@ though the braces are not required. */
                 #test_expected,                                                \
                 check_to_bytes(check_private_result),                          \
                 check_to_bytes(check_private_expected),                        \
-                check_is_address(check_private_result)                         \
+                check_is_address(check_private_result),                        \
+                check_static_random_seed                                       \
             );                                                                 \
             check_private_macro_res = CHECK_ERROR;                             \
             __VA_OPT__((void)(__extension__({__VA_ARGS__}));)                  \
@@ -345,25 +364,32 @@ please_use_at_least_one_check_and_a_check_end_macro:                           \
 @param[in] test_fn_list all test functions to run in main.
 @return a passing test result if all tests pass or failing result if any fail.
 All tests to completion even if the overall result is a failure.
+@note The check runner also seed the global random `srand` function with a
+global static seed that will be reported along with any failed check throughout
+the program. This allows for any test that relies on randomness to reproduce the
+failed result for debugging.
 
 Return this macro from the main function of the test program. All tests
 will run but the testing result for the entire program will be set to CHECK_FAIL
 upon the first failure. All functions must return an enum Check_result though
 their argument signatures may vary. If a test fails with an error, this runner
-will sprivatey set the overall test state to fail and the user should examine
-the individual test that failed with CHECK_FAIL or CHECK_ERROR. */
+will set the overall test state to fail and the user should examine the
+individual test that failed with CHECK_FAIL or CHECK_ERROR. */
 #define check_run(test_fn_list...)                                             \
-    ({                                                                         \
+    (__extension__({                                                           \
+        check_static_random_seed = (unsigned)time(NULL); /* NOLINT */          \
+        srand(check_static_random_seed);                 /* NOLINT */          \
         enum Check_result const check_private_all_checks[] = {test_fn_list};   \
         enum Check_result check_private_all_checks_res = CHECK_PASS;           \
-        for (unsigned long long i = 0;                                         \
-             i < sizeof(check_private_all_checks) / sizeof(enum Check_result); \
-             ++i) {                                                            \
-            if (check_private_all_checks[i] != CHECK_PASS) {                   \
+        for (unsigned long long check_run_index = 0;                           \
+             check_run_index                                                   \
+             < sizeof(check_private_all_checks) / sizeof(enum Check_result);   \
+             ++check_run_index) {                                              \
+            if (check_private_all_checks[check_run_index] != CHECK_PASS) {     \
                 check_private_all_checks_res = CHECK_FAIL;                     \
             }                                                                  \
         }                                                                      \
         check_private_all_checks_res;                                          \
-    })
+    }))
 
 #endif /* CHECKERS_H */

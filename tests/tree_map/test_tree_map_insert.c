@@ -491,7 +491,6 @@ check_static_begin(tree_map_test_insert_weak_srand) {
     CCC_Tree_map rom = tree_map_for(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
-    srand((unsigned)time(NULL)); /* NOLINT */
     for (int i = 0; i < NUM_NODES; ++i) {
         CCC_Entry const e = swap_entry(
             &rom,

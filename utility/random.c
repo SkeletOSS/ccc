@@ -4,11 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-void
-random_seed(unsigned int const seed) {
-    srand(seed);
-}
-
 int
 rand_range(int const min, int const max) {
     unsigned mn = (unsigned)min;

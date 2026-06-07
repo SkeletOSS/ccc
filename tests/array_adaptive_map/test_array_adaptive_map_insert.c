@@ -1109,7 +1109,6 @@ check_static_begin(array_adaptive_map_test_insert_weak_srand) {
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[STANDARD_FIXED_CAP]){}
     );
-    srand((unsigned)time(NULL)); /* NOLINT */
     for (int i = 0; i < num_nodes; ++i) {
         CCC_Handle const e = swap_handle(
             &array_adaptive_map,

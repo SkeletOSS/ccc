@@ -12,9 +12,6 @@
 #include "types.h"
 
 check_static_begin(flat_priority_queue_test_insert_iterate_pop) {
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand(1);
     enum : int {
         NUM_NODES = 500,
     };
@@ -49,9 +46,6 @@ check_static_begin(flat_priority_queue_test_insert_iterate_pop) {
 }
 
 check_static_begin(flat_priority_queue_test_priority_removal) {
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     enum : int {
         NUM_NODES = 500,
     };
@@ -90,9 +84,6 @@ check_static_begin(flat_priority_queue_test_priority_removal) {
 }
 
 check_static_begin(flat_priority_queue_test_priority_update) {
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     enum : int {
         NUM_NODES = 500,
     };
@@ -142,9 +133,6 @@ check_static_begin(flat_priority_queue_test_priority_update) {
 }
 
 check_static_begin(flat_priority_queue_test_priority_update_with) {
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     enum : int {
         NUM_NODES = 500,
     };
@@ -188,9 +176,6 @@ check_static_begin(flat_priority_queue_test_priority_update_with) {
 }
 
 check_static_begin(flat_priority_queue_test_priority_increase) {
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     enum : int {
         NUM_NODES = 500,
     };
@@ -240,9 +225,6 @@ check_static_begin(flat_priority_queue_test_priority_increase) {
 }
 
 check_static_begin(flat_priority_queue_test_priority_increase_with) {
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     enum : int {
         NUM_NODES = 500,
     };
@@ -286,9 +268,6 @@ check_static_begin(flat_priority_queue_test_priority_increase_with) {
 }
 
 check_static_begin(flat_priority_queue_test_priority_decrease) {
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     enum : int {
         NUM_NODES = 500,
     };
@@ -338,9 +317,6 @@ check_static_begin(flat_priority_queue_test_priority_decrease) {
 }
 
 check_static_begin(flat_priority_queue_test_priority_decrease_with) {
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     enum : int {
         NUM_NODES = 500,
     };

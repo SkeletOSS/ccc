@@ -272,9 +272,6 @@ check_static_begin(priority_queue_test_weak_srand) {
         CCC_ORDER_LESSER,
         (CCC_Comparator){.compare = val_order}
     );
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     for (int i = 0; i < WEAK_SRAND_HEAP_CAP; ++i) {
         struct Val const *const pushed = push(
             &queue,
@@ -305,9 +302,6 @@ check_static_begin(priority_queue_test_weak_srand_allocate) {
         CCC_ORDER_LESSER,
         (CCC_Comparator){.compare = val_order}
     );
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     int const num_heap_nodes = 100;
     for (int i = 0; i < num_heap_nodes; ++i) {
         check(

@@ -3,11 +3,8 @@
 
 #include <stddef.h>
 
-/** Initialize the random number generator for the library. Must be called
-before using other random generation functions in this library. */
-void random_seed(unsigned int seed);
-
-/** Provides an integer within range [min, max] */
+/** Provides an integer within range [min, max]. The user must seed the global
+random function from the standard library before calling. */
 int rand_range(int min, int max);
 
 /** Shuffles n elems of elem_sz randomly. User must provide a pointer to temp
