@@ -381,10 +381,11 @@ individual test that failed with CHECK_FAIL or CHECK_ERROR. */
         srand(check_static_random_seed);                 /* NOLINT */          \
         enum Check_result const check_private_all_checks[] = {test_fn_list};   \
         enum Check_result check_private_all_checks_res = CHECK_PASS;           \
-        for (unsigned long long i = 0;                                         \
-             i < sizeof(check_private_all_checks) / sizeof(enum Check_result); \
-             ++i) {                                                            \
-            if (check_private_all_checks[i] != CHECK_PASS) {                   \
+        for (unsigned long long check_run_index = 0;                           \
+             check_run_index                                                   \
+             < sizeof(check_private_all_checks) / sizeof(enum Check_result);   \
+             ++check_run_index) {                                              \
+            if (check_private_all_checks[check_run_index] != CHECK_PASS) {     \
                 check_private_all_checks_res = CHECK_FAIL;                     \
             }                                                                  \
         }                                                                      \
