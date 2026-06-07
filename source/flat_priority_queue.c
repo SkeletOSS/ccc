@@ -60,7 +60,7 @@ static size_t bottom_up_reheap(
 );
 static void
 destroy_each(struct CCC_Flat_priority_queue *, CCC_Destructor const *);
-static void swap(CCC_Flat_buffer const *, void *, void *, void *);
+static void swap(void *, size_t, void *, void *);
 static void *at(CCC_Flat_buffer const *buffer, size_t i);
 
 /*=====================       Interface      ================================*/
@@ -159,8 +159,8 @@ CCC_flat_priority_queue_pop(
         return CCC_RESULT_OK;
     }
     swap(
-        &priority_queue->buffer,
         temp,
+        priority_queue->buffer.sizeof_type,
         at(&priority_queue->buffer, 0),
         at(&priority_queue->buffer, priority_queue->buffer.count)
     );
@@ -190,8 +190,8 @@ CCC_flat_priority_queue_erase(
         return CCC_RESULT_OK;
     }
     swap(
-        &priority_queue->buffer,
         temp,
+        priority_queue->buffer.sizeof_type,
         at(&priority_queue->buffer, i),
         at(&priority_queue->buffer, priority_queue->buffer.count)
     );
@@ -480,7 +480,7 @@ CCC_sort_heapsort(
         size_t count = buffer->count;
         void *const root = at(buffer, 0);
         while (--count) {
-            swap(buffer, temp, root, at(buffer, count));
+            swap(temp, buffer->sizeof_type, root, at(buffer, count));
             bottom_up_reheap(buffer, count, 0, temp, order, comparator);
         }
     }
@@ -590,7 +590,7 @@ bottom_up_reheap(
        everything up to fill the vacated root slot. */
     size_t const reheaped_root_index = leaf;
     while (leaf > root) {
-        swap(buffer, temp, at(buffer, leaf), at(buffer, root));
+        swap(temp, buffer->sizeof_type, at(buffer, leaf), at(buffer, root));
         leaf = (leaf - 1) / 2;
     }
     return reheaped_root_index;
@@ -613,7 +613,7 @@ bubble_up(
         if (!wins(this_pointer, parent_pointer, order, comparator)) {
             return index;
         }
-        swap(buffer, temp, this_pointer, parent_pointer);
+        swap(temp, buffer->sizeof_type, this_pointer, parent_pointer);
     }
     return 0;
 }
@@ -704,18 +704,13 @@ index_of(
 /** Swaps data in a and b according to buffer element size. Assumes a, b, and
 temp are non-null. */
 static inline void
-swap(
-    CCC_Flat_buffer const *const buffer,
-    void *const temp,
-    void *const a,
-    void *const b
-) {
+swap(void *const temp, size_t const sizeof_type, void *const a, void *const b) {
     assert(temp);
     assert(a);
     assert(b);
-    (void)memcpy(temp, a, buffer->sizeof_type);
-    (void)memcpy(a, b, buffer->sizeof_type);
-    (void)memcpy(b, temp, buffer->sizeof_type);
+    (void)memcpy(temp, a, sizeof_type);
+    (void)memcpy(a, b, sizeof_type);
+    (void)memcpy(b, temp, sizeof_type);
 }
 
 /** Provides data at index. Assumes buffer is non-null and i is within
