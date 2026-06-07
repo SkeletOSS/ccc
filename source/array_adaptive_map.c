@@ -169,7 +169,7 @@ branch_pointer(struct CCC_Array_adaptive_map const *, size_t, enum Branch);
 static size_t *parent_pointer(struct CCC_Array_adaptive_map const *, size_t);
 static CCC_Tribool validate(struct CCC_Array_adaptive_map const *);
 static void init_node(struct CCC_Array_adaptive_map const *, size_t);
-static void swap(void *, void *, void *, size_t);
+static void swap(void *, size_t, void *, void *);
 static void link(struct CCC_Array_adaptive_map *, size_t, enum Branch, size_t);
 static size_t max_size_t(size_t, size_t);
 static void
@@ -285,7 +285,7 @@ CCC_array_adaptive_map_swap_handle(
         assert(map->root);
         void *const ret = data_at(map, map->root);
         void *const temp = data_at(map, 0);
-        swap(temp, type_output, ret, map->sizeof_type);
+        swap(temp, map->sizeof_type, type_output, ret);
         return (CCC_Handle){
             .index = found,
             .status = CCC_ENTRY_OCCUPIED,
@@ -1155,7 +1155,7 @@ resize_struct_of_arrays(
 }
 
 static inline void
-swap(void *const temp, void *const a, void *const b, size_t const sizeof_type) {
+swap(void *const temp, size_t const sizeof_type, void *const a, void *const b) {
     if (a == b) {
         return;
     }

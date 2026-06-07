@@ -293,7 +293,7 @@ static void
 rotate(struct CCC_Array_tree_map *, size_t, size_t, size_t, enum Link);
 static void
 double_rotate(struct CCC_Array_tree_map *, size_t, size_t, size_t, enum Link);
-static void swap(void *, void *, void *, size_t);
+static void swap(void *, size_t, void *, void *);
 static size_t max_size_t(size_t, size_t);
 
 /*==============================  Interface    ==============================*/
@@ -342,7 +342,7 @@ CCC_array_tree_map_swap_handle(
     if (CCC_ORDER_EQUAL == q.last_order) {
         void *const slot = data_at(map, q.found);
         void *const temp = data_at(map, 0);
-        swap(temp, type_output, slot, map->sizeof_type);
+        swap(temp, map->sizeof_type, type_output, slot);
         return (CCC_Handle){
             .index = q.found,
             .status = CCC_ENTRY_OCCUPIED,
@@ -1234,7 +1234,7 @@ init_node(struct CCC_Array_tree_map const *const map, size_t const node) {
 }
 
 static inline void
-swap(void *const temp, void *const a, void *const b, size_t const sizeof_type) {
+swap(void *const temp, size_t const sizeof_type, void *const a, void *const b) {
     if (a == b || !a || !b) {
         return;
     }

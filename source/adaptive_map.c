@@ -55,7 +55,7 @@ enum {
 static struct CCC_Adaptive_map_entry
 entry(struct CCC_Adaptive_map *, void const *);
 static void init_node(struct CCC_Adaptive_map_node *);
-static void swap(void *, void *, void *, size_t);
+static void swap(void *, size_t, void *, void *);
 static void
 link(struct CCC_Adaptive_map_node *, enum Link, struct CCC_Adaptive_map_node *);
 static CCC_Tribool is_empty(struct CCC_Adaptive_map const *);
@@ -207,7 +207,7 @@ CCC_adaptive_map_swap_entry(
         void *const any_struct = struct_base(map, type_intruder);
         void *const in_tree = struct_base(map, map->root);
         void *const old_val = struct_base(map, temp_intruder);
-        swap(old_val, in_tree, any_struct, map->sizeof_type);
+        swap(old_val, map->sizeof_type, in_tree, any_struct);
         type_intruder->branch[L] = type_intruder->branch[R]
             = type_intruder->parent = NULL;
         temp_intruder->branch[L] = temp_intruder->branch[R]
@@ -903,7 +903,7 @@ order(
 }
 
 static inline void
-swap(void *const temp, void *const a, void *const b, size_t sizeof_type) {
+swap(void *const temp, size_t const sizeof_type, void *const a, void *const b) {
     if (a == b || !a || !b) {
         return;
     }

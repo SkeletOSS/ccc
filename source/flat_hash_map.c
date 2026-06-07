@@ -276,7 +276,7 @@ struct Query {
 
 /*===========================   Prototypes   ================================*/
 
-static void swap(void *, void *, void *, size_t);
+static void swap(void *, size_t, void *, void *);
 static struct CCC_Flat_hash_map_entry maybe_rehash_find_entry(
     struct CCC_Flat_hash_map *, void const *, CCC_Allocator const *
 );
@@ -498,9 +498,9 @@ CCC_flat_hash_map_swap_entry(
     if (slot.status & CCC_ENTRY_OCCUPIED) {
         swap(
             swap_slot(map),
+            map->sizeof_type,
             data_at(map, slot.index),
-            type_output,
-            map->sizeof_type
+            type_output
         );
         return (CCC_Entry){
             .type = type_output,
@@ -1310,9 +1310,9 @@ rehash_in_place(struct CCC_Flat_hash_map *const map) {
                         assert(occupant.v == TAG_DELETED);
                         swap(
                             swap_slot(map),
+                            map->sizeof_type,
                             data_at(map, rehash),
-                            data_at(map, slot),
-                            map->sizeof_type
+                            data_at(map, slot)
                         );
                     }
                 }
@@ -1526,7 +1526,7 @@ swap_slot(struct CCC_Flat_hash_map const *map) {
 }
 
 static inline void
-swap(void *const temp, void *const a, void *const b, size_t const ab_size) {
+swap(void *const temp, size_t const ab_size, void *const a, void *const b) {
     if (unlikely(!a || !b || a == b)) {
         return;
     }
