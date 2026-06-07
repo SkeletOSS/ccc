@@ -558,7 +558,6 @@ and we want to report that back for operations such as update, increase, and
 decrease. */
 static size_t
 bottom_up_reheap(
-
     CCC_Flat_buffer const *const buffer,
     size_t const count,
     size_t const root,
