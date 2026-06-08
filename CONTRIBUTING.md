@@ -176,7 +176,7 @@ This is a critical rule that users should internalize immediately. The collectio
 );
 CCC_flat_priority_queue_push(&pq, &(int){4}, &(int){}, &allocator);
 CCC_flat_priority_queue_push(&pq, &(int){4}, &(int){}, &(CCC_Allocator){});
-CCC_flat_priority_queue_push(&pq, &(int){4}, &(int){}, /*  WRONG! */ NULL);
+CCC_flat_priority_queue_push(&pq, &(int){4}, &(int){}, NULL); /* <- !WRONG! */
 ```
 
 The first function call site tells us the following: in this queue, push the value 4, here is a swap slot, and here is an allocator to resize the underlying storage if needed. The second signature instead says in this queue, push the value 4, here is a swap slot, and this function may not allocate if resizing is required. The third example is wrong. An empty compound literal is much more readable at the call site. The reader can understand the general intent of the operation without needing to consult API documentation. The function would reject any NULL arguments and return either an error specifying a bad argument or NULL depending on the API contract.
