@@ -106,7 +106,6 @@ check_static_begin(array_adaptive_map_test_weak_srand) {
         (CCC_Key_comparator){.compare = id_order},
         (struct Val[STANDARD_FIXED_CAP]){}
     );
-    srand((unsigned)time(NULL)); /* NOLINT */
     enum : int {
         SRAND_CAP = 100,
     };

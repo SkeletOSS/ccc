@@ -503,7 +503,6 @@ check_static_begin(adaptive_map_test_insert_weak_srand) {
     Adaptive_map om = adaptive_map_default(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
-    srand((unsigned)time(NULL)); /* NOLINT */
     for (int i = 0; i < num_nodes; ++i) {
         CCC_Entry const e = swap_entry(
             &om,

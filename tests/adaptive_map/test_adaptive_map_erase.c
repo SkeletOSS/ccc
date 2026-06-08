@@ -166,9 +166,6 @@ check_static_begin(adaptive_map_test_weak_srand) {
     Adaptive_map s = adaptive_map_default(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     Flat_bitset repeats
         = flat_bitset_with_storage(SRAND_CAP, (CCC_Bit[SRAND_CAP]){});
     for (int i = 0; i < SRAND_CAP; ++i) {
@@ -209,7 +206,6 @@ check_static_begin(adaptive_map_test_insert_erase_cycles) {
     Adaptive_map s = adaptive_map_default(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
-    srand((unsigned)time(NULL)); /* NOLINT */
     enum : int {
         CYCLES_TEST_CAP = 100,
     };

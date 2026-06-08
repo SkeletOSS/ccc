@@ -216,9 +216,6 @@ check_static_begin(adaptive_map_test_iterate_removal) {
     Adaptive_map s = adaptive_map_default(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     size_t const num_nodes = 100;
     for (size_t i = 0; i < num_nodes; ++i) {
         /* NOLINTNEXTLINE */
@@ -254,9 +251,6 @@ check_static_begin(adaptive_map_test_iterate_remove_key_value_reinsert) {
     Adaptive_map s = adaptive_map_default(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
-    /* Seed the test with any integer for reproducible random test sequence
-       currently this will change every test. NOLINTNEXTLINE */
-    srand((unsigned)time(NULL));
     size_t const num_nodes = 100;
     for (size_t i = 0; i < num_nodes; ++i) {
         /* NOLINTNEXTLINE */
