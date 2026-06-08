@@ -1049,7 +1049,10 @@ find_key_or_slot(
                 empty_deleted.error = CCC_RESULT_OK;
             }
         }
-        if (likely(match_has_one(match_empty(group)))) {
+        /* We just did the work of checking for an empty or deleted slot. If we
+           didn't find one we should not force another pointless SIMD load and
+           match check. */
+        if (!empty_deleted.error && likely(match_has_one(match_empty(group)))) {
             return (struct Query){
                 .index = empty_deleted.count,
                 .status = CCC_ENTRY_VACANT,
