@@ -132,6 +132,12 @@ Add a `CMakeUserPresets.json` file so that you can run the sanitizer presets fou
 
 Now, I am able to run the GCC undefined behavior and address sanitizer builds as well as Clang's memory sanitizer builds. GCC 14+ provides the most robust `-fanalyzer` and UB/Adress sanitizer diagnostics. GCC has been improving these diagnostic tools rapidly since version 14.
 
+## AI Policy
+
+Do not use AI to contribute to any C Container Collection library code. I seek to maintain types, headers, and implementations that are provably correct through rigorous design, thorough control flow and asserts, and detailed tests. AI tools have not reached a level that allows them to write code that is compatible with these goals at this time. The AI tool does not care as much about code quality as you or I, so leave it behind. This collection is not under any time or productivity constraints. Enjoy the process of writing C Container Collection code yourself.
+
+You may use AI to help with supporting tooling and samples. For example, I used AI tools to help configure build tooling, generate the coverage report, or improve Github actions. These are necessary but uninteresting components of the project that must be completed. They do not need not be optimally designed. They also do not have a direct impact on the code that a user of the C Container Collection ultimately consumes, builds, and runs so it is safe to use for such supporting applications. The same logic applies to samples. These are fun excursions into C Container Collection use to help increase use case coverage. They are not consumed by users so feel free to use AI tools to generate sample programs.
+
 ## Workflow
 
 Now that tooling is set up, the workflow is roughly as follows.
