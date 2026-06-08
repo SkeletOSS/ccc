@@ -565,33 +565,46 @@ bottom_up_reheap(
     CCC_Order const order,
     CCC_Comparator const *const comparator
 ) {
-    /* Procedure leaf-search(count, root) */
     size_t leaf = root;
-    while ((2 * leaf) + 2 < count) {
-        size_t const left = (2 * leaf) + 1;
-        size_t const right = left + 1;
-        if (wins(at(buffer, left), at(buffer, right), order, comparator)) {
+    {
+        /* Procedure leaf-search(count, root) */
+        size_t left = (2 * leaf) + 1;
+        while (left + 1 < count) {
+            size_t const right = left + 1;
+            if (wins(at(buffer, left), at(buffer, right), order, comparator)) {
+                leaf = left;
+            } else {
+                leaf = right;
+            }
+            left = (2 * leaf) + 1;
+        }
+        if (left < count) {
             leaf = left;
-        } else {
-            leaf = right;
         }
     }
-    if ((2 * leaf) + 1 < count) {
-        leaf = (2 * leaf) + 1;
+    {
+        /* Procedure bottom-up-search(root, leaf). This is where we hope to
+           save on comparison callbacks in the best case. In the heapsort case,
+           we are constantly swapping the last element to the root and then
+           performing this operation so it is extremely likely that the root
+           element will find another home close to the leaf layer. In an
+           arbitrary bottom up reheap operation the likelihood is still good due
+           to 1/2 of all nodes being leaves. */
+        void const *const node = at(buffer, root);
+        while (leaf > root && wins(node, at(buffer, leaf), order, comparator)) {
+            leaf = (leaf - 1) / 2;
+        }
     }
-    /* Procedure bottom-up-search(root, leaf) */
-    void const *const node = at(buffer, root);
-    while (leaf > root && wins(node, at(buffer, leaf), order, comparator)) {
-        leaf = (leaf - 1) / 2;
-    }
-    /* Procedure interchange-2(root, leaf). We only have one available swap slot
-       in temp provided to us by the user. Therefore, we cannot save our root
-       element of interest on the stack. We will use a swap chain to slide
-       everything up to fill the vacated root slot. */
     size_t const reheaped_root_index = leaf;
-    while (leaf > root) {
-        swap(temp, buffer->sizeof_type, at(buffer, leaf), at(buffer, root));
-        leaf = (leaf - 1) / 2;
+    {
+        /* Procedure interchange-2(root, leaf). We only have one available swap
+           slot in temp provided to us by the user. Therefore, we cannot save
+           our root element of interest on the stack. We will use a swap chain
+           to slide everything up to fill the vacated root slot. */
+        while (leaf > root) {
+            swap(temp, buffer->sizeof_type, at(buffer, leaf), at(buffer, root));
+            leaf = (leaf - 1) / 2;
+        }
     }
     return reheaped_root_index;
 }
