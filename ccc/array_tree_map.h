@@ -411,7 +411,7 @@ Test membership or obtain references to stored user types directly. */
 /**@{*/
 
 /** @brief Returns a reference to the user data at the provided handle.
-@param[in] handle a pointer to the map.
+@param[in] map a pointer to the map.
 @param[in] index the stable handle obtained by the user.
 @return a pointer to the user type stored at the specified handle or NULL if
 an out of range handle or handle representing no data is provided.
@@ -421,7 +421,7 @@ one has been removed that new element data will be returned.
 @warning do not try to access data in the table manually with a handle. Always
 use this provided interface function when a reference to data is needed. */
 [[nodiscard]] void *
-CCC_array_tree_map_at(CCC_Array_tree_map const *handle, CCC_Handle_index index);
+CCC_array_tree_map_at(CCC_Array_tree_map const *map, CCC_Handle_index index);
 
 /** @brief Returns a reference to the user type in the table at the handle.
 @param[in] array_tree_map_pointer a pointer to the map.

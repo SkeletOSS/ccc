@@ -33,12 +33,34 @@ the dynamic resizing case. */
 /** C23 provided headers. */
 #include <stdalign.h>
 #include <stddef.h>
+#include <stdint.h>
 
 /** CCC provided headers. */
 #include "ccc/array_adaptive_map.h"
 #include "ccc/configuration.h"
 #include "ccc/private/private_array_adaptive_map.h"
 #include "ccc/types.h"
+
+/*==========================  Type Declarations   ===========================*/
+
+/** @internal */
+enum : uint8_t {
+    LR = 2,
+};
+
+/** @internal */
+enum Branch : uint8_t {
+    L = 0,
+    R,
+};
+
+#define INORDER R
+#define INORDER_REVERSE L
+
+enum : uint8_t {
+    /** 0th slot is sentinel. Count will be 2 when inserting new root. */
+    INSERT_ROOT_NODE_COUNT = 2,
+};
 
 /*========================   Data Alignment Test   ==========================*/
 
@@ -50,10 +72,12 @@ start at next aligned byte. */
     (((bytes_to_round) + (alignment) - 1) & ~((alignment) - 1))
 
 enum : size_t {
-    /* @internal Test capacity. */
+    /** @internal Test capacity. */
     TCAP = 3,
-    /* @internal Alignment of node type. */
-    NODE_ALIGNMENT = alignof(struct CCC_Array_adaptive_map_node),
+    /** @internal Alignment of node type. */
+    ALIGNOF_NODE = alignof(struct CCC_Array_adaptive_map_node),
+    /** @internal Size of node type. */
+    SIZEOF_NODE = sizeof(struct CCC_Array_adaptive_map_node),
 };
 /** @internal This is a static fixed size map exclusive to this translation unit
 used to ensure assumptions about data layout are correct. The following static
@@ -85,8 +109,8 @@ static_assert(
             - (char const *)&static_data_nodes_layout_test.data[0]
         == roundup(
                (sizeof(*static_data_nodes_layout_test.data) * TCAP),
-               alignof(*static_data_nodes_layout_test.nodes)
-           ) + (sizeof(*static_data_nodes_layout_test.nodes) * TCAP),
+               ALIGNOF_NODE
+           ) + (SIZEOF_NODE * TCAP),
     "The pointer difference in bytes between end of the nodes array and start "
     "of user data array must be the same as the total bytes we assume to be "
     "stored in that range. Alignment of user data must be considered."
@@ -95,33 +119,12 @@ static_assert(
     (char const *)&static_data_nodes_layout_test.data
             + roundup(
                 (sizeof(*static_data_nodes_layout_test.data) * TCAP),
-                alignof(*static_data_nodes_layout_test.nodes)
+                ALIGNOF_NODE
             )
         == (char const *)&static_data_nodes_layout_test.nodes,
     "The start of the nodes array must begin at the next aligned "
     "byte given alignment of a node."
 );
-
-/*==========================  Type Declarations   ===========================*/
-
-/** @internal */
-enum {
-    LR = 2,
-};
-
-/** @internal */
-enum Branch {
-    L = 0,
-    R,
-};
-
-#define INORDER R
-#define INORDER_REVERSE L
-
-enum {
-    /** 0th slot is sentinel. Count will be 2 when inserting new root. */
-    INSERT_ROOT_NODE_COUNT = 2,
-};
 
 /*==============================  Prototypes   ==============================*/
 
@@ -668,7 +671,7 @@ CCC_array_adaptive_map_clear_and_free(
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .alignment = max_size_t(NODE_ALIGNMENT, map->alignof_type),
+        .alignment = max_size_t(ALIGNOF_NODE, map->alignof_type),
         .context = allocator->context,
     });
     map->data = NULL;
@@ -835,7 +838,7 @@ resize(
     void *const new_data = allocator->allocate((CCC_Allocator_arguments){
         .input = NULL,
         .bytes = total_bytes(map->sizeof_type, new_capacity),
-        .alignment = max_size_t(NODE_ALIGNMENT, map->alignof_type),
+        .alignment = max_size_t(ALIGNOF_NODE, map->alignof_type),
         .context = allocator->context,
     });
     if (!new_data) {
@@ -846,7 +849,7 @@ resize(
     allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .alignment = max_size_t(NODE_ALIGNMENT, map->alignof_type),
+        .alignment = max_size_t(ALIGNOF_NODE, map->alignof_type),
         .context = allocator->context,
     });
     map->data = new_data;
@@ -1082,16 +1085,14 @@ means the value returned from this function may or may not be slightly larger
 then the raw size of just user elements if rounding up must occur. */
 static inline size_t
 data_bytes(size_t const sizeof_type, size_t const capacity) {
-    return ((sizeof_type * capacity)
-            + alignof(*(struct CCC_Array_adaptive_map){}.nodes) - 1)
-         & ~(alignof(*(struct CCC_Array_adaptive_map){}.nodes) - 1);
+    return ((sizeof_type * capacity) + ALIGNOF_NODE - 1) & ~(ALIGNOF_NODE - 1);
 }
 
 /** Calculates the number of bytes needed for the nodes array without any
 consideration for end padding as no arrays follow. */
 static inline size_t
 nodes_bytes(size_t const capacity) {
-    return sizeof(*(struct CCC_Array_adaptive_map){}.nodes) * capacity;
+    return SIZEOF_NODE * capacity;
 }
 
 /** Calculates the number of bytes needed for all arrays in the Struct of Arrays

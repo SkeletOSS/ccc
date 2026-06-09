@@ -62,6 +62,62 @@ to that section, in my opinion. */
 #include "ccc/private/private_array_tree_map.h"
 #include "ccc/types.h"
 
+/*==========================  Type Declarations   ===========================*/
+
+/** @internal */
+enum Link : uint8_t {
+    L = 0,
+    R,
+};
+
+/** @internal To make insertions and removals more efficient we can remember the
+last node encountered on the search for the requested node. It will either be
+the correct node or the parent of the missing node if it is not found. This
+means insertions will not need a second search of the tree and we can insert
+immediately by adding the child. */
+struct Query {
+    /** The last branch direction we took to the found or missing node. */
+    CCC_Order last_order;
+    union {
+        /** The node was found so here is its index in the array. */
+        size_t found;
+        /** The node was not found so here is its direct parent. */
+        size_t parent;
+    };
+};
+
+#define INORDER R
+#define INORDER_REVERSE L
+
+enum : uint8_t {
+    INSERT_ROOT_COUNT = 2,
+};
+
+/** @internal A block of parity bits. */
+typedef typeof(*(struct CCC_Array_tree_map){}.parity) Parity_block;
+
+enum : size_t {
+    /** @internal Test capacity. */
+    TCAP = 3,
+    /* @internal Alignment of node type. */
+    ALIGNOF_NODE = alignof(struct CCC_Array_tree_map_node),
+    /** @internal Size of node type. */
+    SIZEOF_NODE = sizeof(struct CCC_Array_tree_map_node),
+    /** @internal Alignment of parity block. */
+    ALIGNOF_PARITY = alignof(Parity_block),
+    /** @internal Size of parity block. */
+    SIZEOF_PARITY = sizeof(Parity_block),
+    /** @internal The number of bits in a block of parity bits. */
+    PARITY_BLOCK_BITS = SIZEOF_PARITY * CHAR_BIT,
+    /** @internal Hand calculated log2 of block bits for a fast shift rather
+        than division. No reasonable compile time calculation for this in C. */
+    PARITY_BLOCK_BITS_LOG2 = 5,
+};
+static_assert(
+    PARITY_BLOCK_BITS >> PARITY_BLOCK_BITS_LOG2 == 1,
+    "hand coded log2 of parity block bits is always correct"
+);
+
 /*========================   Data Alignment Test   ==========================*/
 
 /** @internal A macro version of the runtime alignment operations we perform
@@ -74,12 +130,6 @@ two alignments in C. */
 #define roundup(bytes_to_round, alignment)                                     \
     (((bytes_to_round) + (alignment) - 1) & ~((alignment) - 1))
 
-enum : size_t {
-    /* @internal Test capacity. */
-    TCAP = 3,
-    /* @internal Alignment of node type. */
-    NODE_ALIGNMENT = alignof(struct CCC_Array_tree_map_node),
-};
 /** @internal This is a static fixed size map exclusive to this translation unit
 used to ensure assumptions about data layout are correct. The following static
 asserts must be true in order to support the Struct of Array style layout we
@@ -124,14 +174,9 @@ static_assert(
             - (char const *)&static_data_nodes_parity_layout_test.data[0]
         == roundup(
                (sizeof(*static_data_nodes_parity_layout_test.data) * TCAP),
-               alignof(*static_data_nodes_parity_layout_test.nodes)
-           )
-               + roundup(
-                   (sizeof(*static_data_nodes_parity_layout_test.nodes) * TCAP),
-                   alignof(*static_data_nodes_parity_layout_test.parity)
-               )
-               + (sizeof(*static_data_nodes_parity_layout_test.parity)
-                  * CCC_private_array_tree_map_blocks(TCAP)),
+               ALIGNOF_NODE
+           ) + roundup((SIZEOF_NODE * TCAP), ALIGNOF_PARITY)
+               + (SIZEOF_PARITY * CCC_private_array_tree_map_blocks(TCAP)),
     "The pointer difference in bytes between end of parity bit array and start "
     "of user data array must be the same as the total bytes we assume to be "
     "stored in that range. Alignment of user data must be considered."
@@ -140,7 +185,7 @@ static_assert(
     (char const *)&static_data_nodes_parity_layout_test.data
             + roundup(
                 (sizeof(*static_data_nodes_parity_layout_test.data) * TCAP),
-                alignof(*static_data_nodes_parity_layout_test.nodes)
+                ALIGNOF_NODE
             )
         == (char const *)&static_data_nodes_parity_layout_test.nodes,
     "The start of the nodes array must begin at the next aligned "
@@ -151,65 +196,16 @@ static_assert(
         == ((char const *)&static_data_nodes_parity_layout_test.data
             + roundup(
                 (sizeof(*static_data_nodes_parity_layout_test.data) * TCAP),
-                alignof(*static_data_nodes_parity_layout_test.nodes)
+                ALIGNOF_NODE
             )
-            + roundup(
-                (sizeof(*static_data_nodes_parity_layout_test.nodes) * TCAP),
-                alignof(*static_data_nodes_parity_layout_test.parity)
-            )),
+            + roundup((SIZEOF_NODE * TCAP), ALIGNOF_PARITY)),
     "The start of the parity array must begin at the next aligned byte given "
     "alignment of both the data and nodes array."
 );
 static_assert(
-    NODE_ALIGNMENT >= alignof(*static_data_nodes_parity_layout_test.parity),
+    ALIGNOF_NODE >= ALIGNOF_PARITY,
     "Parity bit array is always aligned after node array without any special "
     "alignment or padding considerations."
-);
-
-/*==========================  Type Declarations   ===========================*/
-
-/** @internal */
-enum Link {
-    L = 0,
-    R,
-};
-
-/** @internal To make insertions and removals more efficient we can remember the
-last node encountered on the search for the requested node. It will either be
-the correct node or the parent of the missing node if it is not found. This
-means insertions will not need a second search of the tree and we can insert
-immediately by adding the child. */
-struct Query {
-    /** The last branch direction we took to the found or missing node. */
-    CCC_Order last_order;
-    union {
-        /** The node was found so here is its index in the array. */
-        size_t found;
-        /** The node was not found so here is its direct parent. */
-        size_t parent;
-    };
-};
-
-#define INORDER R
-#define INORDER_REVERSE L
-
-enum {
-    INSERT_ROOT_COUNT = 2,
-};
-
-/** @internal A block of parity bits. */
-typedef typeof(*(struct CCC_Array_tree_map){}.parity) Parity_block;
-
-enum : size_t {
-    /** @internal The number of bits in a block of parity bits. */
-    PARITY_BLOCK_BITS = sizeof(Parity_block) * CHAR_BIT,
-    /** @internal Hand calculated log2 of block bits for a fast shift rather
-        than division. No reasonable compile time calculation for this in C. */
-    PARITY_BLOCK_BITS_LOG2 = 5,
-};
-static_assert(
-    PARITY_BLOCK_BITS >> PARITY_BLOCK_BITS_LOG2 == 1,
-    "hand coded log2 of parity block bits is always correct"
 );
 
 /*==============================  Prototypes   ==============================*/
@@ -300,12 +296,12 @@ static size_t max_size_t(size_t, size_t);
 
 void *
 CCC_array_tree_map_at(
-    CCC_Array_tree_map const *const h, CCC_Handle_index const i
+    CCC_Array_tree_map const *const map, CCC_Handle_index const index
 ) {
-    if (!h || !i) {
+    if (!map || !index) {
         return NULL;
     }
-    return data_at(h, i);
+    return data_at(map, index);
 }
 
 CCC_Tribool
@@ -789,7 +785,7 @@ CCC_array_tree_map_clear_and_free(
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .alignment = max_size_t(NODE_ALIGNMENT, map->alignof_type),
+        .alignment = max_size_t(ALIGNOF_NODE, map->alignof_type),
         .context = allocator->context,
     });
     map->data = NULL;
@@ -919,7 +915,7 @@ resize(
     void *const new_data = allocator->allocate((CCC_Allocator_arguments){
         .input = NULL,
         .bytes = total_bytes(map->sizeof_type, new_capacity),
-        .alignment = max_size_t(NODE_ALIGNMENT, map->alignof_type),
+        .alignment = max_size_t(ALIGNOF_NODE, map->alignof_type),
         .context = allocator->context,
     });
     if (!new_data) {
@@ -932,7 +928,7 @@ resize(
     allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .alignment = max_size_t(NODE_ALIGNMENT, map->alignof_type),
+        .alignment = max_size_t(ALIGNOF_NODE, map->alignof_type),
         .context = allocator->context,
     });
     map->data = new_data;
@@ -1119,9 +1115,7 @@ means the value returned from this function may or may not be slightly larger
 then the raw size of just user elements if rounding up must occur. */
 static inline size_t
 data_bytes(size_t const sizeof_type, size_t const capacity) {
-    return ((sizeof_type * capacity)
-            + alignof(*(struct CCC_Array_tree_map){}.nodes) - 1)
-         & ~(alignof(*(struct CCC_Array_tree_map){}.nodes) - 1);
+    return ((sizeof_type * capacity) + ALIGNOF_NODE - 1) & ~(ALIGNOF_NODE - 1);
 }
 
 /** Calculates the number of bytes needed for the nodes array INCLUDING any
@@ -1132,9 +1126,8 @@ be slightly larger then the raw size of just the nodes array if rounding up must
 occur. */
 static inline size_t
 nodes_bytes(size_t const capacity) {
-    return ((sizeof(*(struct CCC_Array_tree_map){}.nodes) * capacity)
-            + alignof(*(struct CCC_Array_tree_map){}.parity) - 1)
-         & ~(alignof(*(struct CCC_Array_tree_map){}.parity) - 1);
+    return ((SIZEOF_NODE * capacity) + ALIGNOF_PARITY - 1)
+         & ~(ALIGNOF_PARITY - 1);
 }
 
 /** Calculates the number of bytes needed for the parity block bit array. No
@@ -1142,7 +1135,7 @@ rounding up or alignment concerns need apply because this is the last array
 in the allocation. */
 static inline size_t
 parities_bytes(size_t const capacity) {
-    return sizeof(Parity_block) * block_count(capacity);
+    return SIZEOF_PARITY * block_count(capacity);
 }
 
 /** Calculates the number of bytes needed for all arrays in the Struct of Arrays
