@@ -167,9 +167,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:a2edd1d5b4ef1a73c996cdc633e9ed60b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#a2edd1d5b4ef1a73c996cdc633e9ed60b">CCC_array_tree_map_as</a>( array_tree_map_pointer,  type_name,  array_index...)</td></tr>
 <tr class="memdesc:a2edd1d5b4ef1a73c996cdc633e9ed60b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a reference to the user type in the table at the handle.  <br /></td></tr>
 <tr class="separator:a2edd1d5b4ef1a73c996cdc633e9ed60b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89b2a3fa906972683255839415fae9eb"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#a89b2a3fa906972683255839415fae9eb">CCC_array_tree_map_at</a> (<a class="el" href="structCCC__Array__tree__map.html">CCC_Array_tree_map</a> const *handle, <a class="el" href="types_8h.html#a4043390f03f4ec5162e3782152360be9">CCC_Handle_index</a> index)</td></tr>
-<tr class="memdesc:a89b2a3fa906972683255839415fae9eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a reference to the user data at the provided handle.  <br /></td></tr>
-<tr class="separator:a89b2a3fa906972683255839415fae9eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfc170c77c19baccac5764a0fe375fa3"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#acfc170c77c19baccac5764a0fe375fa3">CCC_array_tree_map_at</a> (<a class="el" href="structCCC__Array__tree__map.html">CCC_Array_tree_map</a> const *map, <a class="el" href="types_8h.html#a4043390f03f4ec5162e3782152360be9">CCC_Handle_index</a> index)</td></tr>
+<tr class="memdesc:acfc170c77c19baccac5764a0fe375fa3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a reference to the user data at the provided handle.  <br /></td></tr>
+<tr class="separator:acfc170c77c19baccac5764a0fe375fa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae465655627d408f75e80903430878fe3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#a8dbb03cfc2070934832841f50f146bcd">CCC_Tribool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#ae465655627d408f75e80903430878fe3">CCC_array_tree_map_contains</a> (<a class="el" href="structCCC__Array__tree__map.html">CCC_Array_tree_map</a> const *map, void const *key)</td></tr>
 <tr class="memdesc:ae465655627d408f75e80903430878fe3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches the map for the presence of key.  <br /></td></tr>
 <tr class="separator:ae465655627d408f75e80903430878fe3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1553,8 +1553,8 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 
 </div>
 </div>
-<a id="a89b2a3fa906972683255839415fae9eb" name="a89b2a3fa906972683255839415fae9eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a89b2a3fa906972683255839415fae9eb">&#9670;&#160;</a></span>CCC_array_tree_map_at()</h2>
+<a id="acfc170c77c19baccac5764a0fe375fa3" name="acfc170c77c19baccac5764a0fe375fa3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acfc170c77c19baccac5764a0fe375fa3">&#9670;&#160;</a></span>CCC_array_tree_map_at()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1563,7 +1563,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
           <td class="memname">void * CCC_array_tree_map_at </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structCCC__Array__tree__map.html">CCC_Array_tree_map</a> const *&#160;</td>
-          <td class="paramname"><em>handle</em>, </td>
+          <td class="paramname"><em>map</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1582,7 +1582,7 @@ If initialization fails all subsequent queries, insertions, or removals will ind
 <p>Returns a reference to the user data at the provided handle. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">handle</td><td>a pointer to the map. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">map</td><td>a pointer to the map. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">index</td><td>the stable handle obtained by the user. </td></tr>
   </table>
   </dd>
