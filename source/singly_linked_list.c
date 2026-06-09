@@ -461,7 +461,8 @@ CCC_singly_linked_list_insert_sorted(
 }
 
 /** Sorts the list in `O(N * log(N))` time with `O(1)` space (no recursion). If
-the list is already sorted this algorithm only needs one pass.
+the list is already sorted this algorithm only needs one pass. This sort is
+stable.
 
 The following merging algorithm and associated helper functions are based on
 the iterative natural merge sort used in the list module of the pintOS project
@@ -500,23 +501,25 @@ CCC_sort_singly_linked_list_mergesort(
     do {
         merging = CCC_FALSE;
         /* 0th index of the A list. The start of one list to merge. */
-        struct Link a_first = {.previous = NULL, .current = list->head};
-        while (a_first.current != NULL) {
+        struct Link left_start = {.previous = NULL, .current = list->head};
+        while (left_start.current != NULL) {
             /* The Nth index of list A (its size) aka 0th index of B list. */
-            struct Link a_count_b_first
-                = first_out_of_order(list, a_first, order, comparator);
-            if (a_count_b_first.current == NULL) {
+            struct Link left_end_right_start
+                = first_out_of_order(list, left_start, order, comparator);
+            if (left_end_right_start.current == NULL) {
                 break;
             }
             /* A picks up the exclusive end of this merge, B, in order
                to progress the sorting algorithm with the next run that needs
                fixing. Merge returns the final B element to indicate it is the
                final sentinel that has not yet been examined. */
-            a_first = merge(
+            left_start = merge(
                 list,
-                a_first,
-                a_count_b_first,
-                first_out_of_order(list, a_count_b_first, order, comparator),
+                left_start,
+                left_end_right_start,
+                first_out_of_order(
+                    list, left_end_right_start, order, comparator
+                ),
                 order,
                 comparator
             );
@@ -526,62 +529,57 @@ CCC_sort_singly_linked_list_mergesort(
     return CCC_RESULT_OK;
 }
 
-/** Merges lists `[a_first, a_count_b_first)` with `[a_count_b_first, b_count)`
-to form `[a_first, b_count)`. Returns the exclusive end of the range, `b_count`,
-once the merge sort is complete.
+/** Merges lists `[left, right)` with `[right, right_end)`
+to form `[left, right_end)`. Returns the exclusive end of the range,
+`right_end`, once the merge sort is complete.
 
 Notice that all ranges treat the end of their range as an exclusive sentinel for
 consistency. This function assumes the provided lists are already sorted
-separately. A list link must be returned because the `b_count` previous field
+separately. A list link must be returned because the `right_end` previous field
 may be updated due to arbitrary splices during comparison sorting. */
 static inline struct Link
 merge(
     CCC_Singly_linked_list *const list,
-    struct Link a_first,
-    struct Link a_count_b_first,
-    struct Link b_count,
+    struct Link left,
+    struct Link right,
+    struct Link right_end,
     CCC_Order const order,
     CCC_Comparator const *const comparator
 ) {
-    while (a_first.current && a_first.current != a_count_b_first.current
-           && a_count_b_first.current
-           && a_count_b_first.current != b_count.current) {
-        if (get_order(
-                list, a_count_b_first.current, a_first.current, comparator
-            )
-            == order) {
+    while (left.current && left.current != right.current && right.current
+           && right.current != right_end.current) {
+        if (get_order(list, right.current, left.current, comparator) == order) {
             /* The current element is the lesser element that must be spliced
-               out. However, a_count_b_first.previous is not updated because
-               only current is spliced out. Algorithm will continue with new
-               current, but same previous. */
-            struct CCC_Singly_linked_list_node *const merged
-                = a_count_b_first.current;
-            a_count_b_first.current = merged->next;
+               out. However, right.previous is not updated because only current
+               is spliced out. Algorithm will continue with new current, but
+               same previous. */
+            struct CCC_Singly_linked_list_node *const to_merge = right.current;
+            right.current = to_merge->next;
             assert(
-                a_count_b_first.previous
+                right.previous
                 && "merged element must always have a previous pointer because "
                    "lists of size 1 or less are not merged and merging "
                    "iterates forward"
             );
-            a_count_b_first.previous->next = merged->next;
-            /* This is so we return an accurate b_count list link at the end. */
-            if (merged == b_count.previous) {
-                b_count.previous = a_count_b_first.previous;
+            right.previous->next = to_merge->next;
+            /* This is so we return an accurate right_end link at the end. */
+            if (to_merge == right_end.previous) {
+                right_end.previous = right.previous;
             }
-            if (a_first.previous) {
-                a_first.previous->next = merged;
+            if (left.previous) {
+                left.previous->next = to_merge;
             } else {
-                list->head = merged;
+                list->head = to_merge;
             }
-            merged->next = a_first.current;
+            to_merge->next = left.current;
             /* Another critical update reflected in our links, not the list. */
-            a_first.previous = merged;
+            left.previous = to_merge;
         } else {
-            a_first.previous = a_first.current;
-            a_first.current = a_first.current->next;
+            left.previous = left.current;
+            left.current = left.current->next;
         }
     }
-    return b_count;
+    return right_end;
 }
 
 /** Returns a pair of elements marking the first list elem that is smaller than

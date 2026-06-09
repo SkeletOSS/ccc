@@ -624,7 +624,7 @@ CCC_doubly_linked_list_insert_sorted(
 }
 
 /** Sorts the list in the provided order according to the user comparison
-callback function in `O(N * log(N))` time and `O(1)` space.
+callback function in `O(N * log(N))` time and `O(1)` space. This sort is stable.
 
 The following merging algorithm and associated helper functions are based on
 the iterative natural merge sort used in the list module of the pintOS project
@@ -662,23 +662,25 @@ CCC_sort_doubly_linked_list_mergesort(
     do {
         merging = CCC_FALSE;
         /* 0th index of the A list. The start of one list to merge. */
-        struct CCC_Doubly_linked_list_node *a_first = list->head;
-        while (a_first != NULL) {
+        struct CCC_Doubly_linked_list_node *left_start = list->head;
+        while (left_start != NULL) {
             /* The Nth index of list A (its size) aka 0th index of B list. */
-            struct CCC_Doubly_linked_list_node *const a_count_b_first
-                = first_out_of_order(list, a_first, order, comparator);
-            if (a_count_b_first == NULL) {
+            struct CCC_Doubly_linked_list_node *const left_end_right_start
+                = first_out_of_order(list, left_start, order, comparator);
+            if (left_end_right_start == NULL) {
                 break;
             }
-            /* A picks up the exclusive end of this merge, B, in order
-               to progress the sorting algorithm with the next run that needs
-               fixing. Merge returns the end of B to indicate it is the final
-               sentinel node yet to be examined. */
-            a_first = merge(
+            /* Left picks up the exclusive end of this merge, the start of
+               right, in order to progress the sorting algorithm with the next
+               run that needs fixing. Merge returns the end of right to indicate
+               it is the final sentinel node yet to be examined. */
+            left_start = merge(
                 list,
-                a_first,
-                a_count_b_first,
-                first_out_of_order(list, a_count_b_first, order, comparator),
+                left_start,
+                left_end_right_start,
+                first_out_of_order(
+                    list, left_end_right_start, order, comparator
+                ),
                 order,
                 comparator
             );
@@ -688,9 +690,9 @@ CCC_sort_doubly_linked_list_mergesort(
     return CCC_RESULT_OK;
 }
 
-/** Merges lists `[a_first, a_count_b_first)` with `[a_count_b_first, b_count)`
-to form `[a_first, b_count)`. Returns the exclusive end of the range, `b_count`,
-once the merge sort is complete.
+/** Merges lists `[left, right)` with `[right, right_end)`
+to form `[left, right_end)`. Returns the exclusive end of the range,
+`right_end`, once the merge sort is complete.
 
 Notice that all ranges treat the end of their range as an exclusive sentinel for
 consistency. This function assumes the provided lists are already sorted
@@ -698,42 +700,41 @@ separately. */
 static inline struct CCC_Doubly_linked_list_node *
 merge(
     struct CCC_Doubly_linked_list *const list,
-    struct CCC_Doubly_linked_list_node *a_first,
-    struct CCC_Doubly_linked_list_node *a_count_b_first,
-    struct CCC_Doubly_linked_list_node *const b_count,
+    struct CCC_Doubly_linked_list_node *left,
+    struct CCC_Doubly_linked_list_node *right,
+    struct CCC_Doubly_linked_list_node *const right_end,
     CCC_Order const order,
     CCC_Comparator const *const comparator
 ) {
-    while (a_first && a_first != a_count_b_first && a_count_b_first
-           && a_count_b_first != b_count) {
-        if (get_order(list, a_count_b_first, a_first, comparator) == order) {
-            struct CCC_Doubly_linked_list_node *const merged = a_count_b_first;
-            a_count_b_first = merged->next;
-            if (merged->next) {
-                merged->next->previous = merged->previous;
+    while (left && left != right && right && right != right_end) {
+        if (get_order(list, right, left, comparator) == order) {
+            struct CCC_Doubly_linked_list_node *const to_merge = right;
+            right = to_merge->next;
+            if (to_merge->next) {
+                to_merge->next->previous = to_merge->previous;
             } else {
-                list->tail = merged->previous;
+                list->tail = to_merge->previous;
             }
             assert(
-                merged->previous
+                to_merge->previous
                 && "merged element must always have a previous pointer because "
                    "lists of size 1 or less are not merged and merging "
                    "iterates forward"
             );
-            merged->previous->next = merged->next;
-            merged->previous = a_first->previous;
-            merged->next = a_first;
-            if (a_first->previous) {
-                a_first->previous->next = merged;
+            to_merge->previous->next = to_merge->next;
+            to_merge->previous = left->previous;
+            to_merge->next = left;
+            if (left->previous) {
+                left->previous->next = to_merge;
             } else {
-                list->head = merged;
+                list->head = to_merge;
             }
-            a_first->previous = merged;
+            left->previous = to_merge;
         } else {
-            a_first = a_first->next;
+            left = left->next;
         }
     }
-    return b_count;
+    return right_end;
 }
 
 /** Finds the first element lesser than it's previous element as defined by

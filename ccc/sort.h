@@ -69,7 +69,8 @@ CCC_Result CCC_sort_heapsort(
 );
 
 /** @brief Sorts the doubly linked list in user specified order as defined by
-the provided order and comparator. `O(N * log(N))` time, `O(1)` space.
+the provided order and comparator. `O(N * log(N))` time, `O(1)` space. This sort
+is stable.
 @param[in] list a pointer to the doubly linked list to sort.
 @param[in] order the desired order of the sorted list. CCC_ORDER_LESSER places
 elements in non-decreasing order starting from index `[0, N)`, where N is the
@@ -88,7 +89,8 @@ CCC_Result CCC_sort_doubly_linked_list_mergesort(
 );
 
 /** @brief Sorts the singly linked list in user specified order as defined by
-the provided order and comparator. `O(N * log(N))` time, `O(1)` space.
+the provided order and comparator. `O(N * log(N))` time, `O(1)` space. This sort
+is stable.
 @param[in] list a pointer to the singly linked list to sort.
 @param[in] order the desired order of the sorted list. CCC_ORDER_LESSER places
 elements in non-decreasing order starting from index `[0, N)`, where N is the
@@ -107,7 +109,7 @@ CCC_Result CCC_sort_singly_linked_list_mergesort(
 );
 
 /** @brief Sorts the list in user specified order as defined by the provided
-order and comparator. `O(N * log(N))` time, `O(1)` space.
+order and comparator. `O(N * log(N))` time, `O(1)` space. This sort is stable.
 @param[in] list_pointer a pointer to the list to sort.
 @param[in] order the desired order of the sorted list. CCC_ORDER_LESSER places
 elements in non-decreasing order starting from index `[0, N)`, where N is the
