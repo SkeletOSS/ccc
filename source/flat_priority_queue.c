@@ -617,7 +617,8 @@ bottom_up_reheap(
            special path we can just save the root in temp and shift all other
            nodes up the special path with overwrites. This is a 3x reduction
            in memcpy calls and thus reduces memory writes significantly in our
-           hot path for heapifying and sorting. */
+           hot path for heapifying and sorting. The traditional implementation
+           has us */
         (void)memcpy(temp, at(buffer, root), buffer->sizeof_type);
         size_t special_bit_path_index = 0;
         size_t node = root;
