@@ -597,13 +597,12 @@ bottom_up_reheap(
         }
     }
     {
-        /* Procedure interchange-2(root, leaf). Here we want to reduce the calls
-           to memcpy by not using a swap operation. Because we remember the
-           special path we can just save the root in temp and shift all other
-           nodes up the special path with overwrites. This is a 3x reduction
-           in memcpy calls and thus reduces memory writes significantly in our
-           hot path for heapifying and sorting. The traditional implementation
-           has us */
+        /* Procedure interchange-2(root, leaf). We can reduce the calls to
+           memcpy by avoiding the traditional swap with our temp position. We
+           can figure out the ancestry of the special path leaf position we have
+           found using bitwise checks. This cuts the calls to memcpy from `3 *
+           height` to `height + 2` which is significant for unknown data sizes
+           being copied with memcpy for this container. */
         (void)memcpy(temp, at(buffer, root), buffer->sizeof_type);
         size_t levels = count_leading_zeros_size_t(root + 1)
                       - count_leading_zeros_size_t(leaf + 1);
