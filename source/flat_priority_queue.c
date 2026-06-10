@@ -62,6 +62,7 @@ static void
 destroy_each(struct CCC_Flat_priority_queue *, CCC_Destructor const *);
 static void swap(void *, size_t, void *, void *);
 static void *at(CCC_Flat_buffer const *buffer, size_t i);
+static unsigned count_leading_zeros_size_t(size_t n);
 
 /*=====================       Interface      ================================*/
 
@@ -604,8 +605,8 @@ bottom_up_reheap(
            hot path for heapifying and sorting. The traditional implementation
            has us */
         (void)memcpy(temp, at(buffer, root), buffer->sizeof_type);
-        size_t levels = (size_t)__builtin_clzl(root + 1)
-                      - (size_t)__builtin_clzl(leaf + 1);
+        size_t levels = count_leading_zeros_size_t(root + 1)
+                      - count_leading_zeros_size_t(leaf + 1);
         while (levels--) {
             size_t const ancestor_of_leaf = ((leaf + 1) >> (levels + 1)) - 1;
             size_t const child_of_ancestor = ((leaf + 1) >> levels) - 1;
@@ -763,3 +764,33 @@ destroy_each(
         });
     }
 }
+
+#if defined(__has_builtin) && __has_builtin(__builtin_clzl)
+
+static inline unsigned
+count_leading_zeros_size_t(size_t const n) {
+    static_assert(
+        sizeof(size_t) == sizeof(unsigned long),
+        "Ensure the available builtin works for the platform defined "
+        "size of a size_t."
+    );
+    return n ? (unsigned)__builtin_clzl(n) : sizeof(size_t) * CHAR_BIT;
+}
+
+#else /* !defined(__has_builtin) || !__has_builtin(__builtin_clzl) */
+
+static inline unsigned
+count_leading_zeros_size_t(size_t n) {
+    enum : size_t {
+        /** @internal Most significant bit of size_t for bit counting. */
+        SIZE_T_MSB = 0x8000000000000000,
+    };
+    if (!n) {
+        return sizeof(size_t) * CHAR_BIT;
+    }
+    unsigned cnt = 0;
+    for (; !(n & SIZE_T_MSB); ++cnt, n <<= 1U) {}
+    return cnt;
+}
+
+#endif /* defined(__has_builtin) && __has_builtin(__builtin_clzl) */
