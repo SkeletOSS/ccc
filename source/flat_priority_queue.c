@@ -566,34 +566,20 @@ bottom_up_reheap(
     CCC_Comparator const *const comparator
 ) {
     size_t leaf = root;
-    /* We are adjusting the implementation to reduce calls to memcpy later in
-       the final loop from 3 * height of special path, which happens if we swap,
-       to just height of special path + 2. */
-    size_t special_bit_path = 0;
-    size_t special_bit_path_count = 0;
     {
         /* Procedure leaf-search(count, root) */
         size_t left = (2 * leaf) + 1;
-        size_t went_right = 1;
         while (left + 1 < count) {
             size_t const right = left + 1;
             if (wins(at(buffer, left), at(buffer, right), order, comparator)) {
                 leaf = left;
             } else {
                 leaf = right;
-                special_bit_path |= went_right;
             }
             left = (2 * leaf) + 1;
-            went_right <<= 1;
-            ++special_bit_path_count;
-            assert(
-                (special_bit_path_count < sizeof(size_t) * CHAR_BIT)
-                && "heap height remains indexible by size_t"
-            );
         }
         if (left < count) {
             leaf = left;
-            ++special_bit_path_count;
         }
     }
     {
@@ -607,10 +593,8 @@ bottom_up_reheap(
         void const *const node = at(buffer, root);
         while (leaf > root && wins(node, at(buffer, leaf), order, comparator)) {
             leaf = (leaf - 1) / 2;
-            --special_bit_path_count;
         }
     }
-    size_t const reheaped_root_index = leaf;
     {
         /* Procedure interchange-2(root, leaf). Here we want to reduce the calls
            to memcpy by not using a swap operation. Because we remember the
@@ -620,23 +604,20 @@ bottom_up_reheap(
            hot path for heapifying and sorting. The traditional implementation
            has us */
         (void)memcpy(temp, at(buffer, root), buffer->sizeof_type);
-        size_t special_bit_path_index = 0;
-        size_t node = root;
-        while (special_bit_path_index < special_bit_path_count) {
-            size_t const child
-                = (special_bit_path & 1) ? (node * 2) + 2 : (node * 2) + 1;
-            (void)memcpy(
-                at(buffer, node), at(buffer, child), buffer->sizeof_type
+        size_t levels = (size_t)__builtin_clzl(root + 1)
+                      - (size_t)__builtin_clzl(leaf + 1);
+        while (levels--) {
+            size_t const ancestor_of_leaf = ((leaf + 1) >> (levels + 1)) - 1;
+            size_t const child_of_ancestor = ((leaf + 1) >> levels) - 1;
+            memcpy(
+                at(buffer, ancestor_of_leaf),
+                at(buffer, child_of_ancestor),
+                buffer->sizeof_type
             );
-            node = child;
-            special_bit_path >>= 1;
-            ++special_bit_path_index;
         }
-        (void)memcpy(
-            at(buffer, reheaped_root_index), temp, buffer->sizeof_type
-        );
+        (void)memcpy(at(buffer, leaf), temp, buffer->sizeof_type);
     }
-    return reheaped_root_index;
+    return leaf;
 }
 
 /* Returns the sorted position of the element starting at position i. */
