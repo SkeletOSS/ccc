@@ -543,7 +543,7 @@ heapify(
     }
 }
 
-/** The Bottom-Up-Heapsort procedures from the research paper but all in one
+/** The Bottom-Up-Reheap procedures from the research paper but all in one
 function. No need to break out into tiny functions because they are only used
 here and this makes the logic easy to track in one short function. Such an
 operation also replaces the traditional bubble-down of a standard heap. The
@@ -566,20 +566,34 @@ bottom_up_reheap(
     CCC_Comparator const *const comparator
 ) {
     size_t leaf = root;
+    /* We are adjusting the implementation to reduce calls to memcpy later in
+       the final loop from 3 * height of special path, which happens if we swap,
+       to just height of special path + 2. */
+    size_t special_bit_path = 0;
+    size_t special_bit_path_count = 0;
     {
         /* Procedure leaf-search(count, root) */
         size_t left = (2 * leaf) + 1;
+        size_t went_right = 1;
         while (left + 1 < count) {
             size_t const right = left + 1;
             if (wins(at(buffer, left), at(buffer, right), order, comparator)) {
                 leaf = left;
             } else {
                 leaf = right;
+                special_bit_path |= went_right;
             }
             left = (2 * leaf) + 1;
+            went_right <<= 1;
+            ++special_bit_path_count;
+            assert(
+                (special_bit_path_count < sizeof(size_t) * CHAR_BIT)
+                && "heap height remains indexible by size_t"
+            );
         }
         if (left < count) {
             leaf = left;
+            ++special_bit_path_count;
         }
     }
     {
@@ -593,18 +607,33 @@ bottom_up_reheap(
         void const *const node = at(buffer, root);
         while (leaf > root && wins(node, at(buffer, leaf), order, comparator)) {
             leaf = (leaf - 1) / 2;
+            --special_bit_path_count;
         }
     }
     size_t const reheaped_root_index = leaf;
     {
-        /* Procedure interchange-2(root, leaf). We only have one available swap
-           slot in temp provided to us by the user. Therefore, we cannot save
-           our root element of interest on the stack. We will use a swap chain
-           to slide everything up to fill the vacated root slot. */
-        while (leaf > root) {
-            swap(temp, buffer->sizeof_type, at(buffer, leaf), at(buffer, root));
-            leaf = (leaf - 1) / 2;
+        /* Procedure interchange-2(root, leaf). Here we want to reduce the calls
+           to memcpy by not using a swap operation. Because we remember the
+           special path we can just save the root in temp and shift all other
+           nodes up the special path with overwrites. This is a 3x reduction
+           in memcpy calls and thus reduces memory writes significantly in our
+           hot path for heapifying and sorting. */
+        (void)memcpy(temp, at(buffer, root), buffer->sizeof_type);
+        size_t special_bit_path_index = 0;
+        size_t node = root;
+        while (special_bit_path_index < special_bit_path_count) {
+            size_t const child
+                = (special_bit_path & 1) ? (node * 2) + 2 : (node * 2) + 1;
+            (void)memcpy(
+                at(buffer, node), at(buffer, child), buffer->sizeof_type
+            );
+            node = child;
+            special_bit_path >>= 1;
+            ++special_bit_path_index;
         }
+        (void)memcpy(
+            at(buffer, reheaped_root_index), temp, buffer->sizeof_type
+        );
     }
     return reheaped_root_index;
 }
