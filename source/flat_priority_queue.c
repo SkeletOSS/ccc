@@ -597,7 +597,7 @@ bottom_up_reheap(
         }
     }
     {
-        /* Procedure interchange-2(root, leaf). We can reduce the calls to
+        /* Procedure interchange-1(root, leaf). We can reduce the calls to
            memcpy by avoiding the traditional swap with our temp position. We
            can figure out the ancestry of the special path leaf position we have
            found using bitwise checks. This cuts the calls to memcpy from `3 *
