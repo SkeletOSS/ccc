@@ -373,6 +373,26 @@ check_static_begin(flat_priority_queue_test_heapsort_one) {
     check_end();
 }
 
+check_static_begin(flat_priority_queue_test_heapsort_two) {
+    Flat_buffer storage = flat_buffer_with_storage(2, (int[2]){1, 2});
+    check(
+        CCC_sort_heapsort(
+            &storage,
+            &(int){},
+            CCC_ORDER_GREATER,
+            &(CCC_Comparator){.compare = int_order}
+        ),
+        CCC_RESULT_OK
+    );
+    check(
+        flat_int_buffers_are_equal(
+            &storage, &flat_buffer_with_storage(2, (int[2]){2, 1})
+        ),
+        CCC_TRUE
+    );
+    check_end();
+}
+
 check_static_begin(flat_priority_queue_test_heapsort_reversed_lesser) {
     enum : int {
         CAP = 10,
@@ -725,6 +745,7 @@ main(void) {
         flat_priority_queue_test_copy_allocate_fail(),
         flat_priority_queue_test_heapsort_empty(),
         flat_priority_queue_test_heapsort_one(),
+        flat_priority_queue_test_heapsort_two(),
         flat_priority_queue_test_heapsort_reversed_lesser(),
         flat_priority_queue_test_heapsort_reversed_greater(),
         flat_priority_queue_test_heapsort_merge(),
