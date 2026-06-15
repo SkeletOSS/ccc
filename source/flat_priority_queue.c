@@ -609,11 +609,11 @@ bottom_up_reheap(
         while (lineage--) {
             size_t const vacant_ancestor_index
                 = ((leaf + 1) >> (lineage + 1)) - 1;
-            size_t const occupied_child_of_ancestor_index
+            size_t const occupied_ancestor_child_index
                 = ((leaf + 1) >> lineage) - 1;
             memcpy(
                 at(buffer, vacant_ancestor_index),
-                at(buffer, occupied_child_of_ancestor_index),
+                at(buffer, occupied_ancestor_child_index),
                 buffer->sizeof_type
             );
         }
