@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 #define TRAITS_USING_NAMESPACE_CCC
@@ -22,6 +23,49 @@ static Flat_priority_queue const static_priority_queue
     = flat_priority_queue_with_storage(
         CCC_ORDER_LESSER, (CCC_Comparator){.compare = val_order}, (int[16]){}
     );
+
+static inline CCC_Tribool
+ints_are_sorted(Flat_buffer const *const ints, CCC_Order const order) {
+    int const *prev = begin(ints);
+    if (prev == end(ints)) {
+        return CCC_TRUE;
+    }
+    for (int const *current = next(ints, prev); current != end(ints);
+         current = next(ints, current)) {
+        if (*current > *prev && order == CCC_ORDER_GREATER) {
+            return CCC_FALSE;
+        }
+        if (*current < *prev && order == CCC_ORDER_LESSER) {
+            return CCC_FALSE;
+        }
+    }
+    return CCC_TRUE;
+}
+
+static inline CCC_Tribool
+flat_int_buffers_are_equal(
+    Flat_buffer const *const a, Flat_buffer const *const b
+) {
+    if (count(a).count != count(b).count) {
+        return CCC_FALSE;
+    }
+    if (flat_buffer_sizeof_type(a).count != flat_buffer_sizeof_type(b).count) {
+        return CCC_FALSE;
+    }
+    for (int const *iter_a = begin(a), *iter_b = begin(b);
+         iter_a != end(a) && iter_b != end(b);
+         iter_a = next(a, iter_a), iter_b = next(b, iter_b)) {
+        if (*iter_a != *iter_b) {
+            return CCC_FALSE;
+        }
+    }
+    return memcmp(
+               flat_buffer_data(a),
+               flat_buffer_data(b),
+               flat_buffer_sizeof_type(a).count * flat_buffer_count(a).count
+           )
+        == 0;
+}
 
 check_static_begin(flat_priority_queue_test_static_const) {
     check(is_empty(&static_priority_queue), true);
@@ -279,19 +323,10 @@ check_static_begin(flat_priority_queue_test_heapify_copy_fail) {
     check_end();
 }
 
-check_static_begin(flat_priority_queue_test_heapsort) {
-    enum : int {
-        HPSORTCAP = 100,
-    };
-    Flat_buffer storage
-        = flat_buffer_with_storage(HPSORTCAP, (int[HPSORTCAP]){});
-    for (int *i = flat_buffer_begin(&storage); i != flat_buffer_end(&storage);
-         i = flat_buffer_next(&storage, i)) {
-        *i = (int)rand_range(0, HPSORTCAP);
-    }
+check_static_begin(flat_priority_queue_test_heapsort_empty) {
     check(
         CCC_sort_heapsort(
-            &storage,
+            &flat_buffer_default(int),
             NULL,
             CCC_ORDER_GREATER,
             &(CCC_Comparator){.compare = int_order}
@@ -299,17 +334,97 @@ check_static_begin(flat_priority_queue_test_heapsort) {
         CCC_RESULT_ARGUMENT_ERROR
     );
     check(
-        CCC_sort_heapsort(&storage, &(int){}, CCC_ORDER_GREATER, NULL),
+        CCC_sort_heapsort(
+            &flat_buffer_default(int), &(int){}, CCC_ORDER_GREATER, NULL
+        ),
         CCC_RESULT_ARGUMENT_ERROR
     );
     check(
         CCC_sort_heapsort(
-            &storage,
+            &flat_buffer_default(int),
             &(int){},
             CCC_ORDER_EQUAL,
             &(CCC_Comparator){.compare = int_order}
         ),
         CCC_RESULT_ARGUMENT_ERROR
+    );
+    check(
+        CCC_sort_heapsort(
+            &flat_buffer_default(int),
+            &(int){},
+            CCC_ORDER_GREATER,
+            &(CCC_Comparator){.compare = int_order}
+        ),
+        CCC_RESULT_OK
+    );
+    check_end();
+}
+
+check_static_begin(flat_priority_queue_test_heapsort_one) {
+    check(
+        CCC_sort_heapsort(
+            &flat_buffer_with_storage(1, (int[1]){1}),
+            &(int){},
+            CCC_ORDER_GREATER,
+            &(CCC_Comparator){.compare = int_order}
+        ),
+        CCC_RESULT_OK
+    );
+    check_end();
+}
+
+check_static_begin(flat_priority_queue_test_heapsort_two) {
+    Flat_buffer storage = flat_buffer_with_storage(2, (int[2]){1, 2});
+    check(
+        CCC_sort_heapsort(
+            &storage,
+            &(int){},
+            CCC_ORDER_GREATER,
+            &(CCC_Comparator){.compare = int_order}
+        ),
+        CCC_RESULT_OK
+    );
+    check(
+        flat_int_buffers_are_equal(
+            &storage, &flat_buffer_with_storage(2, (int[2]){2, 1})
+        ),
+        CCC_TRUE
+    );
+    check_end();
+}
+
+check_static_begin(flat_priority_queue_test_heapsort_reversed_lesser) {
+    enum : int {
+        CAP = 10,
+    };
+    Flat_buffer storage = flat_buffer_with_storage(
+        CAP, (int[CAP]){9, 8, 7, 6, 5, 4, 3, 2, 1, 0}
+    );
+    CCC_Result const result = CCC_sort_heapsort(
+        &storage,
+        &(int){},
+        CCC_ORDER_LESSER,
+        &(CCC_Comparator){.compare = int_order}
+    );
+    check(result, CCC_RESULT_OK);
+    check(
+        flat_int_buffers_are_equal(
+            &storage,
+            &flat_buffer_with_storage(
+                CAP, (int[CAP]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+            )
+        ),
+        CCC_TRUE
+    );
+    check_end();
+}
+
+check_static_begin(flat_priority_queue_test_heapsort_reversed_greater) {
+    enum : int {
+        CAP = 10,
+    };
+    Flat_buffer storage = flat_buffer_with_storage(
+        CAP, (int[CAP]){9, 8, 7, 6, 5, 4, 3, 2, 1, 0}
     );
     CCC_Result const result = CCC_sort_heapsort(
         &storage,
@@ -318,17 +433,61 @@ check_static_begin(flat_priority_queue_test_heapsort) {
         &(CCC_Comparator){.compare = int_order}
     );
     check(result, CCC_RESULT_OK);
-    int const *prev = begin(&storage);
-    check(prev != NULL, true);
-    check(CCC_flat_buffer_count(&storage).count, HPSORTCAP);
-    size_t count = 1;
-    for (int const *cur = next(&storage, prev); cur != end(&storage);
-         cur = next(&storage, cur)) {
-        check(*prev >= *cur, true);
-        prev = cur;
-        ++count;
+    check(
+        flat_int_buffers_are_equal(
+            &storage,
+            &flat_buffer_with_storage(
+                CAP, (int[CAP]){9, 8, 7, 6, 5, 4, 3, 2, 1, 0}
+            )
+        ),
+        CCC_TRUE
+    );
+    check_end();
+}
+
+check_static_begin(flat_priority_queue_test_heapsort_merge) {
+    enum : int {
+        CAP = 10,
+    };
+    Flat_buffer storage = flat_buffer_with_storage(
+        CAP, (int[CAP]){1, 3, 5, 7, 9, 0, 2, 4, 6, 8}
+    );
+    CCC_Result const result = CCC_sort_heapsort(
+        &storage,
+        &(int){},
+        CCC_ORDER_LESSER,
+        &(CCC_Comparator){.compare = int_order}
+    );
+    check(result, CCC_RESULT_OK);
+    check(
+        flat_int_buffers_are_equal(
+            &storage,
+            &flat_buffer_with_storage(
+                CAP, (int[CAP]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+            )
+        ),
+        CCC_TRUE
+    );
+    check_end();
+}
+
+check_static_begin(flat_priority_queue_test_heapsort) {
+    enum : int {
+        CAP = 100,
+    };
+    Flat_buffer storage = flat_buffer_with_storage(CAP, (int[CAP]){});
+    for (int *i = flat_buffer_begin(&storage); i != flat_buffer_end(&storage);
+         i = flat_buffer_next(&storage, i)) {
+        *i = (int)rand_range(0, CAP);
     }
-    check(count, HPSORTCAP);
+    CCC_Result const result = CCC_sort_heapsort(
+        &storage,
+        &(int){},
+        CCC_ORDER_GREATER,
+        &(CCC_Comparator){.compare = int_order}
+    );
+    check(result, CCC_RESULT_OK);
+    check(ints_are_sorted(&storage, CCC_ORDER_GREATER), CCC_TRUE);
     check_end();
 }
 
@@ -584,6 +743,12 @@ main(void) {
         flat_priority_queue_test_copy_no_allocate_fail(),
         flat_priority_queue_test_copy_allocate(),
         flat_priority_queue_test_copy_allocate_fail(),
+        flat_priority_queue_test_heapsort_empty(),
+        flat_priority_queue_test_heapsort_one(),
+        flat_priority_queue_test_heapsort_two(),
+        flat_priority_queue_test_heapsort_reversed_lesser(),
+        flat_priority_queue_test_heapsort_reversed_greater(),
+        flat_priority_queue_test_heapsort_merge(),
         flat_priority_queue_test_heapsort(),
         flat_priority_queue_test_init_from(),
         flat_priority_queue_test_init_from_fail(),

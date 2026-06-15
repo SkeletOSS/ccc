@@ -62,6 +62,7 @@ static void
 destroy_each(struct CCC_Flat_priority_queue *, CCC_Destructor const *);
 static void swap(void *, size_t, void *, void *);
 static void *at(CCC_Flat_buffer const *buffer, size_t i);
+static unsigned count_leading_zeros_size_t(size_t n);
 
 /*=====================       Interface      ================================*/
 
@@ -543,7 +544,7 @@ heapify(
     }
 }
 
-/** The Bottom-Up-Heapsort procedures from the research paper but all in one
+/** The Bottom-Up-Reheap procedures from the research paper but all in one
 function. No need to break out into tiny functions because they are only used
 here and this makes the logic easy to track in one short function. Such an
 operation also replaces the traditional bubble-down of a standard heap. The
@@ -595,18 +596,30 @@ bottom_up_reheap(
             leaf = (leaf - 1) / 2;
         }
     }
-    size_t const reheaped_root_index = leaf;
     {
-        /* Procedure interchange-2(root, leaf). We only have one available swap
-           slot in temp provided to us by the user. Therefore, we cannot save
-           our root element of interest on the stack. We will use a swap chain
-           to slide everything up to fill the vacated root slot. */
-        while (leaf > root) {
-            swap(temp, buffer->sizeof_type, at(buffer, leaf), at(buffer, root));
-            leaf = (leaf - 1) / 2;
+        /* Procedure interchange-1(root, leaf). We can reduce the calls to
+           memcpy by avoiding the traditional swap with our temp position. We
+           can figure out the ancestry of the special path leaf position we have
+           found using bitwise checks. This cuts the calls to memcpy from `3 *
+           height` to `height + 2` which is significant for data sizes that can
+           vary significantly in this type of generic container. */
+        (void)memcpy(temp, at(buffer, root), buffer->sizeof_type);
+        size_t tree_levels = count_leading_zeros_size_t(root + 1)
+                           - count_leading_zeros_size_t(leaf + 1);
+        while (tree_levels--) {
+            size_t const vacant_ancestor_index
+                = ((leaf + 1) >> (tree_levels + 1)) - 1;
+            size_t const occupied_ancestor_child_index
+                = ((leaf + 1) >> tree_levels) - 1;
+            memcpy(
+                at(buffer, vacant_ancestor_index),
+                at(buffer, occupied_ancestor_child_index),
+                buffer->sizeof_type
+            );
         }
+        (void)memcpy(at(buffer, leaf), temp, buffer->sizeof_type);
     }
-    return reheaped_root_index;
+    return leaf;
 }
 
 /* Returns the sorted position of the element starting at position i. */
@@ -752,3 +765,33 @@ destroy_each(
         });
     }
 }
+
+#if defined(__has_builtin) && __has_builtin(__builtin_clzl)
+
+static inline unsigned
+count_leading_zeros_size_t(size_t const n) {
+    static_assert(
+        sizeof(size_t) == sizeof(unsigned long),
+        "Ensure the available builtin works for the platform defined "
+        "size of a size_t."
+    );
+    return n ? (unsigned)__builtin_clzl(n) : sizeof(size_t) * CHAR_BIT;
+}
+
+#else /* !defined(__has_builtin) || !__has_builtin(__builtin_clzl) */
+
+static inline unsigned
+count_leading_zeros_size_t(size_t n) {
+    enum : size_t {
+        /** @internal Most significant bit of size_t for bit counting. */
+        SIZE_T_MSB = 0x8000000000000000,
+    };
+    if (!n) {
+        return sizeof(size_t) * CHAR_BIT;
+    }
+    unsigned cnt = 0;
+    for (; !(n & SIZE_T_MSB); ++cnt, n <<= 1U) {}
+    return cnt;
+}
+
+#endif /* defined(__has_builtin) && __has_builtin(__builtin_clzl) */
