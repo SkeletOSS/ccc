@@ -604,13 +604,13 @@ bottom_up_reheap(
            height` to `height + 2` which is significant for data sizes that can
            vary significantly in this type of generic container. */
         (void)memcpy(temp, at(buffer, root), buffer->sizeof_type);
-        size_t lineage = count_leading_zeros_size_t(root + 1)
-                       - count_leading_zeros_size_t(leaf + 1);
-        while (lineage--) {
+        size_t tree_levels = count_leading_zeros_size_t(root + 1)
+                           - count_leading_zeros_size_t(leaf + 1);
+        while (tree_levels--) {
             size_t const vacant_ancestor_index
-                = ((leaf + 1) >> (lineage + 1)) - 1;
+                = ((leaf + 1) >> (tree_levels + 1)) - 1;
             size_t const occupied_ancestor_child_index
-                = ((leaf + 1) >> lineage) - 1;
+                = ((leaf + 1) >> tree_levels) - 1;
             memcpy(
                 at(buffer, vacant_ancestor_index),
                 at(buffer, occupied_ancestor_child_index),
