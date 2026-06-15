@@ -601,17 +601,19 @@ bottom_up_reheap(
            memcpy by avoiding the traditional swap with our temp position. We
            can figure out the ancestry of the special path leaf position we have
            found using bitwise checks. This cuts the calls to memcpy from `3 *
-           height` to `height + 2` which is significant for unknown data sizes
-           being copied with memcpy for this container. */
+           height` to `height + 2` which is significant for data sizes that can
+           vary significantly in this type of generic container. */
         (void)memcpy(temp, at(buffer, root), buffer->sizeof_type);
-        size_t levels = count_leading_zeros_size_t(root + 1)
-                      - count_leading_zeros_size_t(leaf + 1);
-        while (levels--) {
-            size_t const ancestor_of_leaf = ((leaf + 1) >> (levels + 1)) - 1;
-            size_t const child_of_ancestor = ((leaf + 1) >> levels) - 1;
+        size_t lineage = count_leading_zeros_size_t(root + 1)
+                       - count_leading_zeros_size_t(leaf + 1);
+        while (lineage--) {
+            size_t const vacant_ancestor_index
+                = ((leaf + 1) >> (lineage + 1)) - 1;
+            size_t const occupied_child_of_ancestor_index
+                = ((leaf + 1) >> lineage) - 1;
             memcpy(
-                at(buffer, ancestor_of_leaf),
-                at(buffer, child_of_ancestor),
+                at(buffer, vacant_ancestor_index),
+                at(buffer, occupied_child_of_ancestor_index),
                 buffer->sizeof_type
             );
         }
