@@ -622,7 +622,8 @@ bottom_up_reheap(
     return leaf;
 }
 
-/* Returns the sorted position of the element starting at position i. */
+/** Returns the sorted position of the index element that may be out of heap
+order. This element may move closer to the root index of 0. */
 static inline size_t
 bubble_up(
     CCC_Flat_buffer const *const buffer,
@@ -631,17 +632,30 @@ bubble_up(
     CCC_Order const order,
     CCC_Comparator const *const comparator
 ) {
-    for (size_t parent = (index - 1) / 2; index;
-         index = parent, parent = (parent - 1) / 2) {
-        void *const parent_pointer = at(buffer, parent);
-        void *const this_pointer = at(buffer, index);
-        /* Not winning here means we are in correct order or equal. */
-        if (!wins(this_pointer, parent_pointer, order, comparator)) {
-            return index;
-        }
-        swap(temp, buffer->sizeof_type, this_pointer, parent_pointer);
+    if (!index) {
+        return 0;
     }
-    return 0;
+    size_t node = index;
+    /* We can make the same optimization in terms of comparisons and calls
+       to memcpy that we make in the bottom-up reheap function. This is better
+       than calling swap making the calls to memcpy equivalent to the height of
+       the path plus the two additional calls to save the element and write it
+       to its new home in the tree. */
+    void const *const bubble
+        = memcpy(temp, at(buffer, index), buffer->sizeof_type);
+    while (node) {
+        size_t const parent_index = (node - 1) / 2;
+        void const *const parent_node = at(buffer, parent_index);
+        if (!wins(bubble, parent_node, order, comparator)) {
+            break;
+        }
+        (void)memcpy(at(buffer, node), parent_node, buffer->sizeof_type);
+        node = parent_index;
+    }
+    if (node != index) {
+        (void)memcpy(at(buffer, node), bubble, buffer->sizeof_type);
+    }
+    return node;
 }
 
 /* Fixes the position of element e after its key value has been changed. */
