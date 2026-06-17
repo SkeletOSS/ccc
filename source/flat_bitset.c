@@ -62,9 +62,9 @@ enum : size_t {
 /** @internal Various constants to support bit block size bit ops. */
 enum : Bit_block {
     /** @internal A mask of a bit block with all bits on. */
-    BLOCK_ON = ((Bit_block)~0),
+    BLOCK_ON = (Bit_block)~0,
     /** @internal The Most Significant Bit of a bit block turned on to 1. */
-    BLOCK_MSB = (((Bit_block)1) << (((SIZEOF_BLOCK * CHAR_BIT)) - 1)),
+    BLOCK_MSB = (Bit_block)1 << ((SIZEOF_BLOCK * CHAR_BIT) - 1),
 };
 
 /** @internal An index into the block array or count of bit blocks. The block
@@ -89,7 +89,7 @@ typedef uint8_t Bit_count;
 
 enum : Bit_count {
     /** @internal How many total bits that fit in a bit block. */
-    BLOCK_BITS = (SIZEOF_BLOCK * CHAR_BIT),
+    BLOCK_BITS = SIZEOF_BLOCK * CHAR_BIT,
     /** @internal Used for static assert clarity. */
     U8_BLOCK_MAX = UINT8_MAX,
     /** @internal Hand coded log2 of block bits to avoid division. */

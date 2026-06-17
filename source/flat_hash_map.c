@@ -2329,7 +2329,7 @@ count_leading_zeros_size_t(size_t const n) {
 
 enum : size_t {
     /** @internal Most significant bit of size_t for bit counting. */
-    SIZE_T_MSB = 0x8000000000000000,
+    SIZE_T_MSB = (size_t)1 << ((sizeof(size_t) * CHAR_BIT) - 1),
 };
 
 static inline unsigned
@@ -2411,7 +2411,7 @@ count_leading_zeros_size_t(size_t const n) {
 
 enum : size_t {
     /** @internal Most significant bit of size_t for bit counting. */
-    SIZE_T_MSB = 0x8000000000000000,
+    SIZE_T_MSB = (size_t)1 << ((sizeof(size_t) * CHAR_BIT) - 1),
 };
 
 static inline unsigned
