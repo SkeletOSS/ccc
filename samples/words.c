@@ -51,6 +51,18 @@ typedef struct {
     int freq;
 } Word;
 
+typedef struct {
+    Handle handle;
+} Word_handle;
+
+typedef struct {
+    Array_adaptive_map map;
+} Word_map;
+
+typedef struct {
+    Flat_buffer buffer;
+} Word_buffer;
+
 struct Action_pack {
     SV_Str_view file;
     enum Action_type type;
@@ -112,29 +124,70 @@ static SV_Str_view const directions = SV_from(
         }                                                                      \
     } while (0)
 
+#define foreach_map_word(                                                      \
+    word_map_pointer, word_iterator_type_declaration, code_block...            \
+)                                                                              \
+    for (Handle_index word_map_handle_index = begin(&(word_map_pointer)->map); \
+         word_map_handle_index != end(&(word_map_pointer)->map);               \
+         word_map_handle_index                                                 \
+         = next(&(word_map_pointer)->map, word_map_handle_index)) {            \
+        word_iterator_type_declaration = array_adaptive_map_at(                \
+            &(word_map_pointer)->map, word_map_handle_index                    \
+        );                                                                     \
+        code_block                                                             \
+    }
+
+#define foreach_map_word_reverse(                                              \
+    word_map_pointer, word_iterator_type_declaration, code_block...            \
+)                                                                              \
+    for (Handle_index word_map_handle_index                                    \
+         = reverse_begin(&(word_map_pointer)->map);                            \
+         word_map_handle_index != reverse_end(&(word_map_pointer)->map);       \
+         word_map_handle_index                                                 \
+         = reverse_next(&(word_map_pointer)->map, word_map_handle_index)) {    \
+        word_iterator_type_declaration = array_adaptive_map_at(                \
+            &(word_map_pointer)->map, word_map_handle_index                    \
+        );                                                                     \
+        code_block                                                             \
+    }
+
+#define foreach_buffer_word(                                                   \
+    word_buffer_pointer, word_iterator_type_declaration, code_block...         \
+)                                                                              \
+    for (Word *foreach_buffer_word_iterator                                    \
+         = begin(&(word_buffer_pointer)->buffer);                              \
+         foreach_buffer_word_iterator != end(&(word_buffer_pointer)->buffer);  \
+         foreach_buffer_word_iterator = next(                                  \
+             &(word_buffer_pointer)->buffer, foreach_buffer_word_iterator      \
+         )) {                                                                  \
+        word_iterator_type_declaration = foreach_buffer_word_iterator;         \
+        code_block                                                             \
+    }
+
 static void print_found(FILE *, SV_Str_view, CCC_Allocator const *);
 static void print_top_n(FILE *, size_t, CCC_Allocator const *);
 static void print_last_n(FILE *, size_t, CCC_Allocator const *);
 static void print_alpha_n(FILE *, size_t, CCC_Allocator const *);
 static void print_ralpha_n(FILE *, size_t, CCC_Allocator const *);
-static Flat_buffer
-map_to_buffer(Array_adaptive_map const *, CCC_Allocator const *);
+static Word_buffer map_to_buffer(Word_map const *, CCC_Allocator const *);
 static void print_n(
-    Array_adaptive_map *,
-    CCC_Order,
-    struct String_arena *,
-    size_t,
-    CCC_Allocator const *
+    Word_map *, CCC_Order, struct String_arena *, size_t, CCC_Allocator const *
 );
 static struct Int_conversion parse_n_ranks(SV_Str_view);
 static struct String_offset
 clean_word(struct String_arena *, SV_Str_view, CCC_Allocator const *);
-static Array_adaptive_map
+static Word_map
 create_frequency_map(struct String_arena *, FILE *, CCC_Allocator const *);
 static Order order_string_keys(Key_comparator_arguments);
 static Order order_words(Comparator_arguments);
 static FILE *open_file(SV_Str_view);
 static void print_str_view(FILE *, SV_Str_view);
+static Word_handle
+word_try_insert(Word_map *, Word const *, CCC_Allocator const *);
+static Word *word_at(Word_map const *, Word_handle const *);
+static Word *word_get_key_value(Word_map *, struct String_offset const *);
+static CCC_Result
+word_buffer_sort(Word_buffer const *, CCC_Order, struct String_arena *);
 
 /*=======================     Main         ==================================*/
 
@@ -240,19 +293,18 @@ print_found(
     FILE *const f, SV_Str_view w, CCC_Allocator const *const allocator
 ) {
     struct String_arena a = string_arena_create(ARENA_START_CAP, allocator);
-    Array_adaptive_map map = create_frequency_map(&a, f, allocator);
+    Word_map map = create_frequency_map(&a, f, allocator);
     defer {
         string_arena_free(&a, allocator);
         (void)array_adaptive_map_clear_and_free(
-            &map, &(CCC_Destructor){}, allocator
+            &map.map, &(CCC_Destructor){}, allocator
         );
     }
     check(a.arena);
-    check(!is_empty(&map));
+    check(!is_empty(&map.map));
     struct String_offset wc = clean_word(&a, w, allocator);
     if (!wc.error) {
-        Word const *const found_w
-            = array_adaptive_map_at(&map, get_key_value(&map, &wc));
+        Word const *const found_w = word_get_key_value(&map, &wc);
         if (found_w) {
             printf(
                 "%s %d\n", string_arena_at(&a, &found_w->ofs), found_w->freq
@@ -264,85 +316,82 @@ print_found(
 static void
 print_top_n(FILE *const f, size_t n, CCC_Allocator const *const allocator) {
     struct String_arena a = string_arena_create(ARENA_START_CAP, allocator);
-    Array_adaptive_map map = create_frequency_map(&a, f, allocator);
+    Word_map map = create_frequency_map(&a, f, allocator);
     defer {
-        (void)clear_and_free(&map, &(CCC_Destructor){}, allocator);
+        (void)clear_and_free(&map.map, &(CCC_Destructor){}, allocator);
         string_arena_free(&a, allocator);
     }
     check(a.arena);
-    check(!is_empty(&map));
+    check(!is_empty(&map.map));
     print_n(&map, CCC_ORDER_GREATER, &a, n, allocator);
 }
 
 static void
 print_last_n(FILE *const f, size_t n, CCC_Allocator const *const allocator) {
     struct String_arena a = string_arena_create(ARENA_START_CAP, allocator);
-    Array_adaptive_map map = create_frequency_map(&a, f, allocator);
+    Word_map map = create_frequency_map(&a, f, allocator);
     defer {
-        (void)clear_and_free(&map, &(CCC_Destructor){}, allocator);
+        (void)clear_and_free(&map.map, &(CCC_Destructor){}, allocator);
         string_arena_free(&a, allocator);
     }
     check(a.arena);
-    check(!is_empty(&map));
+    check(!is_empty(&map.map));
     print_n(&map, CCC_ORDER_LESSER, &a, n, allocator);
 }
 
 static void
 print_alpha_n(FILE *const f, size_t n, CCC_Allocator const *const allocator) {
     struct String_arena a = string_arena_create(ARENA_START_CAP, allocator);
-    Array_adaptive_map map = create_frequency_map(&a, f, allocator);
+    Word_map map = create_frequency_map(&a, f, allocator);
     defer {
-        (void)clear_and_free(&map, &(CCC_Destructor){}, allocator);
+        (void)clear_and_free(&map.map, &(CCC_Destructor){}, allocator);
         string_arena_free(&a, allocator);
     }
     check(a.arena);
-    check(!is_empty(&map));
+    check(!is_empty(&map.map));
     if (!n) {
-        n = count(&map).count;
+        n = count(&map.map).count;
     }
     /* The ordered nature of the map comes in handy for alpha printing. */
-    for (CCC_Handle_index iter = begin(&map), i = 0; iter != end(&map) && i < n;
-         iter = next(&map, iter), ++i) {
-        Word const *const w = array_adaptive_map_at(&map, iter);
+    foreach_map_word(&map, Word const *const w, {
         printf("%s %d\n", string_arena_at(&a, &w->ofs), w->freq);
-    }
+    });
 }
 
 static void
 print_ralpha_n(FILE *const f, size_t n, CCC_Allocator const *const allocator) {
     struct String_arena a = string_arena_create(ARENA_START_CAP, allocator);
-    Array_adaptive_map map = create_frequency_map(&a, f, allocator);
+    Word_map map = create_frequency_map(&a, f, allocator);
     defer {
-        (void)clear_and_free(&map, &(CCC_Destructor){}, allocator);
+        (void)clear_and_free(&map.map, &(CCC_Destructor){}, allocator);
         string_arena_free(&a, allocator);
     }
     check(a.arena);
-    check(!is_empty(&map));
+    check(!is_empty(&map.map));
     if (!n) {
-        n = count(&map).count;
+        n = count(&map.map).count;
     }
     /* The ordered nature of the map comes in handy for reverse iteration. */
-    for (CCC_Handle_index iter = reverse_begin(&map), i = 0;
-         iter != reverse_end(&map) && i < n;
-         iter = reverse_next(&map, iter), ++i) {
-        Word const *const w = array_adaptive_map_at(&map, iter);
+    foreach_map_word_reverse(&map, Word const *const w, {
         printf("%s %d\n", string_arena_at(&a, &w->ofs), w->freq);
-    }
+    });
 }
 
-static Flat_buffer
-map_to_buffer(
-    Array_adaptive_map const *const map, CCC_Allocator const *const allocator
-) {
-    check(!is_empty(map));
-    Flat_buffer freqs
-        = CCC_flat_buffer_with_capacity(Word, *allocator, count(map).count);
-    size_t const cap = capacity(&freqs).count;
-    for (CCC_Handle_index iter = begin(map), i = 0; iter != end(map) && i < cap;
-         iter = next(map, iter), ++i) {
-        Word const *const w = array_adaptive_map_at(map, iter);
+static Word_buffer
+map_to_buffer(Word_map const *const map, CCC_Allocator const *const allocator) {
+    check(!is_empty(&map->map));
+    Word_buffer freqs = {CCC_flat_buffer_with_capacity(
+        Word, *allocator, count(&map->map).count
+    )};
+    size_t const cap = capacity(&freqs.buffer).count;
+    for (CCC_Handle_index iter = begin(&map->map), i = 0;
+         iter != end(&map->map) && i < cap;
+         iter = next(&map->map, iter), ++i) {
+        Word const *const w = array_adaptive_map_at(&map->map, iter);
         Word const *const pushed = flat_buffer_emplace_back(
-            &freqs, &(CCC_Allocator){}, (Word){.ofs = w->ofs, .freq = w->freq}
+            &freqs.buffer,
+            &(CCC_Allocator){},
+            (Word){.ofs = w->ofs, .freq = w->freq}
         );
         check(pushed);
     }
@@ -351,43 +400,38 @@ map_to_buffer(
 
 static void
 print_n(
-    CCC_Array_adaptive_map *const map,
+    Word_map *const map,
     CCC_Order const order,
     struct String_arena *const arena,
     size_t n,
     CCC_Allocator const *const allocator
 ) {
-    Flat_buffer freqs = map_to_buffer(map, allocator);
+    Word_buffer freqs = map_to_buffer(map, allocator);
     defer {
-        (void)clear_and_free(&freqs, &(CCC_Destructor){}, allocator);
+        (void)clear_and_free(&freqs.buffer, &(CCC_Destructor){}, allocator);
     }
-    check(!flat_buffer_is_empty(&freqs));
+    check(!flat_buffer_is_empty(&freqs.buffer));
     if (!n) {
-        n = count(&freqs).count;
+        n = count(&freqs.buffer).count;
     }
-    CCC_Result const result = CCC_sort_heapsort(
-        &freqs,
-        &(Word){},
-        order,
-        &(CCC_Comparator){
-            .compare = order_words,
-            .context = arena,
-        }
-    );
+    CCC_Result const result = word_buffer_sort(&freqs, order, arena);
     check(result == CCC_RESULT_OK);
     size_t w = 0;
-    for (Word const *i = begin(&freqs); i != end(&freqs) && w < n;
-         i = next(&freqs, i), ++w) {
+    foreach_buffer_word(&freqs, Word const *const i, {
         char const *const arena_str = string_arena_at(arena, &i->ofs);
         if (arena_str) {
             printf("%zu. %s %d\n", w + 1, arena_str, i->freq);
         }
-    }
+        ++w;
+        if (w >= n) {
+            return;
+        }
+    });
 }
 
 /*=====================    Container Construction     =======================*/
 
-static Array_adaptive_map
+static Word_map
 create_frequency_map(
     struct String_arena *const arena,
     FILE *const f,
@@ -399,14 +443,14 @@ create_frequency_map(
     }
     size_t len = 0;
     ptrdiff_t read = 0;
-    Array_adaptive_map array_adaptive_map = array_adaptive_map_default(
+    Word_map map = {array_adaptive_map_default(
         Word,
         ofs,
         (CCC_Key_comparator){
             .compare = order_string_keys,
             .context = arena,
         }
-    );
+    )};
     while ((read = getline(&linepointer, &len, f)) > 0) {
         SV_Str_view const line = {.str = linepointer, .len = (size_t)read - 1};
         for (SV_Str_view word_view = SV_token_begin(line, space);
@@ -417,19 +461,15 @@ create_frequency_map(
             if (cw.error) {
                 continue;
             }
-            CCC_Handle_index const i = array_adaptive_map_or_insert_with(
-                array_adaptive_map_and_modify_with(
-                    array_adaptive_map_handle_wrap(&array_adaptive_map, &cw),
-                    Word * e,
-                    { e->freq++; }
-                ),
-                allocator,
-                (Word){.ofs = cw, .freq = 1}
+            Word_handle const handle = word_try_insert(
+                &map, &(Word){.ofs = cw, .freq = 1}, allocator
             );
-            check(i);
+            if (occupied(&handle.handle)) {
+                word_at(&map, &handle)->freq++;
+            }
         }
     }
-    return array_adaptive_map;
+    return map;
 }
 
 static struct String_offset
@@ -467,6 +507,48 @@ clean_word(
 }
 
 /*=======================   Container Helpers    ============================*/
+
+static inline Word *
+word_get_key_value(Word_map *const map, struct String_offset const *const key) {
+    return array_adaptive_map_at(
+        &map->map, array_adaptive_map_get_key_value(&map->map, key)
+    );
+}
+
+static inline Word_handle
+word_try_insert(
+    Word_map *const map,
+    Word const *const word,
+    CCC_Allocator const *const allocator
+) {
+    return (Word_handle){
+        array_adaptive_map_try_insert(&map->map, word, allocator)};
+}
+
+static inline Word *
+word_at(Word_map const *const map, Word_handle const *const handle) {
+    Word *const word
+        = array_adaptive_map_at(&map->map, unwrap(&handle->handle));
+    check(word);
+    return word;
+}
+
+static inline CCC_Result
+word_buffer_sort(
+    Word_buffer const *const words,
+    CCC_Order const order,
+    struct String_arena *const arena
+) {
+    return CCC_sort_heapsort(
+        &words->buffer,
+        &(Word){},
+        order,
+        &(CCC_Comparator){
+            .compare = order_words,
+            .context = arena,
+        }
+    );
+}
 
 static Order
 order_string_keys(Key_comparator_arguments const c) {
