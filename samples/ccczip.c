@@ -63,6 +63,11 @@ struct Character_frequency {
     size_t freq;
 };
 
+/** Type safe wrapper for mapping character frequencies. */
+struct Character_frequency_map {
+    CCC_Flat_hash_map map;
+};
+
 enum : uint8_t {
     /** Caching for iterative traversals uses this position as end sentinel. */
     MAX_CHILD_COUNT = 2,
@@ -86,6 +91,11 @@ struct Huffman_node {
     uint8_t child_index;
 };
 
+/** Type safe wrapper for buffering Huffman nodes. */
+struct Huffman_node_buffer {
+    CCC_Flat_buffer buffer;
+};
+
 /** Element intended for the flat priority queue during the tree building phase.
 Pair nodes are paired in twos as they are popped from the priority queue and
 pushed back as the sum of their frequencies. This is how the tree is built.
@@ -97,10 +107,15 @@ struct Pair_node {
     size_t node_index;
 };
 
+/** Type safe wrapper for tracking Pair nodes in a queue. */
+struct Pair_node_priority_queue {
+    CCC_Flat_priority_queue priority_queue;
+};
+
 /** It is helpful to know how many leaves and total nodes there are for
 reserving the appropriate space for helper data structures. */
 struct Huffman_tree {
-    CCC_Flat_buffer tree_storage;
+    struct Huffman_node_buffer tree_storage;
     size_t root;
     size_t num_nodes;
     size_t num_leaves;
@@ -118,6 +133,11 @@ struct Path_memo {
     size_t bitq_start_index;
     /** The length of the known path we have already pushed to the queue. */
     size_t path_len;
+};
+
+/** Type safe wrapper for mapping paths. */
+struct Path_memo_map {
+    CCC_Flat_hash_map map;
 };
 
 enum : size_t {
@@ -173,7 +193,7 @@ static SV_Str_view const cccz_suffix = SV_from(".cccz");
 /*===========================      Prototypes      ==========================*/
 
 static void zip_file(SV_Str_view, CCC_Allocator const *);
-static Flat_priority_queue build_encoding_priority_queue(
+static struct Pair_node_priority_queue build_encoding_priority_queue(
     FILE *, struct Huffman_tree *, CCC_Allocator const *
 );
 static CCC_Tribool bitq_is_empty(struct Bit_queue const *);
@@ -232,6 +252,17 @@ static void
 fill_bitq(FILE *, struct Bit_queue *, size_t, CCC_Allocator const *);
 static size_t file_size(FILE *);
 static size_t min(size_t, size_t);
+static size_t huffman_node_buffer_index(
+    struct Huffman_node_buffer const *, struct Huffman_node const *
+);
+static struct Pair_node *pair_priority_queue_push(
+    struct Pair_node_priority_queue *,
+    struct Pair_node const *,
+    CCC_Allocator const *
+);
+static CCC_Result pair_priority_queue_pop(struct Pair_node_priority_queue *);
+static struct Pair_node *
+pair_priority_queue_front(struct Pair_node_priority_queue const *);
 
 /** Asserts even in release mode. Run code in the second argument if needed. */
 #define check(cond, ...)                                                       \
@@ -272,6 +303,78 @@ formatting, though not required. */
             }                                                                  \
         }                                                                      \
     } while (0)
+
+#define huffman_node_buffer_emplace_back(                                      \
+    huffman_node_buffer_pointer, allocator, compound_literal...                \
+)                                                                              \
+    (__extension__({                                                           \
+        struct Huffman_node_buffer *const                                      \
+            huffman_node_buffer_emplace_back_buffer                            \
+            = (huffman_node_buffer_pointer);                                   \
+        CCC_flat_buffer_emplace_back(                                          \
+            &huffman_node_buffer_emplace_back_buffer->buffer,                  \
+            (allocator),                                                       \
+            compound_literal                                                   \
+        );                                                                     \
+    }))
+
+#define character_frequency_map_increment_entry_or_insert_with(                \
+    character_frequency_map_pointer,                                           \
+    key_pointer,                                                               \
+    allocator,                                                                 \
+    lazy_evaluated_key_value_default_insertion...                              \
+)                                                                              \
+    (__extension__({                                                           \
+        struct Character_frequency_map *const                                  \
+            character_frequency_map_evaluated_pointer                          \
+            = (character_frequency_map_pointer);                               \
+        typeof(*key_pointer) const *const character_frequency_map_key_pointer  \
+            = (key_pointer);                                                   \
+        flat_hash_map_or_insert_with(                                          \
+            flat_hash_map_and_modify_with(                                     \
+                flat_hash_map_entry_wrap(                                      \
+                    &character_frequency_map_evaluated_pointer->map,           \
+                    character_frequency_map_key_pointer,                       \
+                    (allocator)                                                \
+                ),                                                             \
+                struct Character_frequency                                     \
+                    * character_frequency_map_increment_element,               \
+                { ++character_frequency_map_increment_element->freq; }         \
+            ),                                                                 \
+            lazy_evaluated_key_value_default_insertion                         \
+        );                                                                     \
+    }))
+
+#define path_memo_map_entry_and_modify_with(                                   \
+    map_pointer,                                                               \
+    character_key_pointer,                                                     \
+    allocator,                                                                 \
+    occupied_path_memo_entry_declaration,                                      \
+    modification_closure_over_occupied_path_memo_entry...                      \
+)                                                                              \
+    &(struct { CCC_Flat_hash_map_entry private; }){(__extension__({            \
+         struct Path_memo_map *const path_memo_map_pointer = (map_pointer);    \
+         char const *const path_memo_map_character_key                         \
+             = (character_key_pointer);                                        \
+         CCC_Flat_hash_map_entry path_memo_map_entry                           \
+             = *flat_hash_map_and_modify_with(                                 \
+                 flat_hash_map_entry_wrap(                                     \
+                     &path_memo_map_pointer->map,                              \
+                     path_memo_map_character_key,                              \
+                     (allocator)                                               \
+                 ),                                                            \
+                 occupied_path_memo_entry_declaration,                         \
+                 modification_closure_over_occupied_path_memo_entry            \
+             );                                                                \
+         path_memo_map_entry;                                                  \
+     }))}.private
+
+#define path_memo_map_or_insert_with(                                          \
+    entry_pointer, lazy_evaluated_insertion...                                 \
+)                                                                              \
+    (__extension__({                                                           \
+        flat_hash_map_or_insert_with(entry_pointer, lazy_evaluated_insertion); \
+    }))
 
 /*===========================   Argument Handling  ==========================*/
 
@@ -361,21 +464,23 @@ the encoding tree. */
 static struct Huffman_tree
 build_encoding_tree(FILE *const f, CCC_Allocator const *const allocator) {
     struct Huffman_tree ret = {};
-    Flat_priority_queue pairings
+    struct Pair_node_priority_queue pairings
         = build_encoding_priority_queue(f, &ret, allocator);
     defer {
-        (void)clear_and_free(&pairings, &(CCC_Destructor){}, allocator);
+        (void)clear_and_free(
+            &pairings.priority_queue, &(CCC_Destructor){}, allocator
+        );
     }
-    while (count(&pairings).count >= 2) {
+    while (count(&pairings.priority_queue).count >= 2) {
         /* Small elements and we need the pair so we can't hold references. */
-        struct Pair_node const zero = *(struct Pair_node *)front(&pairings);
-        CCC_Result r = pop(&pairings, &(struct Pair_node){});
+        struct Pair_node const zero = *pair_priority_queue_front(&pairings);
+        CCC_Result r = pair_priority_queue_pop(&pairings);
         check(r == CCC_RESULT_OK);
-        struct Pair_node const one = *(struct Pair_node *)front(&pairings);
-        r = pop(&pairings, &(struct Pair_node){});
+        struct Pair_node const one = *pair_priority_queue_front(&pairings);
+        r = pair_priority_queue_pop(&pairings);
         check(r == CCC_RESULT_OK);
         struct Huffman_node const *const internal_one
-            = flat_buffer_emplace_back(
+            = huffman_node_buffer_emplace_back(
                 &ret.tree_storage,
                 allocator,
                 (struct Huffman_node){
@@ -383,17 +488,16 @@ build_encoding_tree(FILE *const f, CCC_Allocator const *const allocator) {
                 }
             );
         size_t const pair_root
-            = flat_buffer_index(&ret.tree_storage, internal_one).count;
+            = huffman_node_buffer_index(&ret.tree_storage, internal_one);
         check(internal_one);
         node_at(&ret, zero.node_index)->parent = pair_root;
         node_at(&ret, one.node_index)->parent = pair_root;
-        struct Pair_node const *const pushed = push(
+        struct Pair_node const *const pushed = pair_priority_queue_push(
             &pairings,
             &(struct Pair_node){
                 .frequency = zero.frequency + one.frequency,
                 .node_index = pair_root,
             },
-            &(struct Pair_node){},
             allocator
         );
         check(pushed);
@@ -405,80 +509,82 @@ build_encoding_tree(FILE *const f, CCC_Allocator const *const allocator) {
 /** Returns a min priority queue sorted by frequency meaning the least frequent
 character will be the root. The priority queue is built in O(N) time. It is
 the caller's responsibility to free the priority queue memory when ready. */
-static Flat_priority_queue
+static struct Pair_node_priority_queue
 build_encoding_priority_queue(
     FILE *const f,
     struct Huffman_tree *const tree,
     CCC_Allocator const *const allocator
 ) {
-    Flat_hash_map frequencies = flat_hash_map_default(
+    struct Character_frequency_map frequencies = {flat_hash_map_default(
         struct Character_frequency,
         ch,
         (CCC_Hasher){.hash = hash_char, .compare = char_order}
-    );
+    )};
     defer {
-        (void)clear_and_free(&frequencies, &(CCC_Destructor){}, allocator);
+        (void)clear_and_free(&frequencies.map, &(CCC_Destructor){}, allocator);
     }
     foreach_filechar(f, c, {
-        struct Character_frequency *const ins = flat_hash_map_or_insert_with(
-            flat_hash_map_and_modify_with(
-                flat_hash_map_entry_wrap(&frequencies, c, allocator),
-                struct Character_frequency * e,
-                { ++e->freq; }
-            ),
-            (struct Character_frequency){
-                .ch = *c,
-                .freq = 1,
-            }
-        );
+        struct Character_frequency *const ins
+            = character_frequency_map_increment_entry_or_insert_with(
+                &frequencies,
+                c,
+                allocator,
+                (struct Character_frequency){
+                    .ch = *c,
+                    .freq = 1,
+                }
+            );
         check(ins);
     });
-    size_t const leaves = count(&frequencies).count;
+    size_t const leaves = count(&frequencies.map).count;
     check(leaves >= 2);
     tree->num_leaves = leaves;
     tree->num_nodes = (2 * leaves) - 1;
     /* For a Flat_buffer based tree 0 is the NULL node so we can't have actual
        data we want at that index in the tree. */
-    tree->tree_storage = flat_buffer_from(
+    tree->tree_storage = (struct Huffman_node_buffer){flat_buffer_from(
         *allocator, tree->num_nodes + 1, (struct Huffman_node[]){{}}
-    );
-    check(count(&tree->tree_storage).count == 1);
+    )};
+    check(count(&tree->tree_storage.buffer).count == 1);
     /* Use a Flat_buffer to push back elements we will heapify at the end. */
     Flat_buffer flat_priority_queue_storage = flat_buffer_with_capacity(
-        struct Pair_node, *allocator, flat_hash_map_count(&frequencies).count
+        struct Pair_node,
+        *allocator,
+        flat_hash_map_count(&frequencies.map).count
     );
     check(flat_buffer_capacity(&flat_priority_queue_storage).count);
-    for (struct Character_frequency const *i = begin(&frequencies);
-         i != end(&frequencies);
-         i = next(&frequencies, i)) {
-        struct Huffman_node const *const node = flat_buffer_emplace_back(
-            &tree->tree_storage,
-            &(CCC_Allocator){},
-            (struct Huffman_node){.ch = i->ch}
-        );
+    for (struct Character_frequency const *i = begin(&frequencies.map);
+         i != end(&frequencies.map);
+         i = next(&frequencies.map, i)) {
+        struct Huffman_node const *const node
+            = huffman_node_buffer_emplace_back(
+                &tree->tree_storage,
+                &(CCC_Allocator){},
+                (struct Huffman_node){.ch = i->ch}
+            );
         check(node);
-        CCC_Count index = flat_buffer_index(&tree->tree_storage, node);
-        check(!index.error);
+        size_t const index
+            = huffman_node_buffer_index(&tree->tree_storage, node);
         struct Pair_node const *const pushed = flat_buffer_emplace_back(
             &flat_priority_queue_storage,
             &(CCC_Allocator){},
             (struct Pair_node){
                 .frequency = i->freq,
-                .node_index = index.count,
+                .node_index = index,
             }
         );
         check(pushed);
     }
     /* Now we steal the buffer's memory and heapify the data in O(N) time rather
        than pushing each element. */
-    return flat_priority_queue_heapify(
+    return (struct Pair_node_priority_queue){flat_priority_queue_heapify(
         struct Pair_node,
         CCC_ORDER_LESSER,
         (CCC_Comparator){.compare = order_freqs},
         capacity(&flat_priority_queue_storage).count,
         count(&flat_priority_queue_storage).count,
         begin(&flat_priority_queue_storage)
-    );
+    )};
 }
 
 /** Returns the bit queue representing the bit path to every character in the
@@ -498,7 +604,7 @@ build_encoding_bitq(
        alphabets aka trees with many leaves. An array of 0-256 elements as a map
        could achieve the same result faster but it would waste much more space.
        It is rare to have a file use all 256 possible character values. */
-    Flat_hash_map path_memos = CCC_flat_hash_map_with_capacity(
+    struct Path_memo_map path_memos = {CCC_flat_hash_map_with_capacity(
         struct Path_memo,
         ch,
         ((CCC_Hasher){
@@ -507,11 +613,11 @@ build_encoding_bitq(
         }),
         *allocator,
         tree->num_leaves
-    );
+    )};
     defer {
-        (void)clear_and_free(&path_memos, &(CCC_Destructor){}, allocator);
+        (void)clear_and_free(&path_memos.map, &(CCC_Destructor){}, allocator);
     }
-    check(capacity(&path_memos).count >= tree->num_leaves);
+    check(capacity(&path_memos.map).count >= tree->num_leaves);
     foreach_filechar(f, c, {
         /* The entry interface allows us to express the complete memoization
            technique with a single query into our hash map. We either find the
@@ -523,19 +629,20 @@ build_encoding_bitq(
            is vacant. This means that logic or expensive function calls execute
            conditionally. For or_insert_with this is important because appending
            the bit queue is a side-effect. */
-        struct Path_memo const *const p = flat_hash_map_or_insert_with(
-            flat_hash_map_and_modify_with(
-                flat_hash_map_entry_wrap(&path_memos, c, allocator),
+        struct Path_memo const *const p = path_memo_map_or_insert_with(
+            path_memo_map_entry_and_modify_with(
+                &path_memos,
+                c,
+                allocator,
                 struct Path_memo const *const memo,
                 {
                     size_t const end = memo->bitq_start_index + memo->path_len;
                     for (size_t i = memo->bitq_start_index; i < end; ++i) {
-                        CCC_Result const pushed = bitq_push_back(
+                        (void)bitq_push_back(
                             &character_paths,
                             bitq_test(&character_paths, i),
                             allocator
                         );
-                        check(pushed == CCC_RESULT_OK);
                     }
                 }
             ),
@@ -881,21 +988,21 @@ reconstruct_tree(
     size_t const bq_count = bitq_count(&blueprint->tree_paths);
     struct Huffman_tree tree = {
         /* 0 index is NULL so real data can't be there. */
-        .tree_storage = CCC_flat_buffer_from(
+        .tree_storage = {CCC_flat_buffer_from(
             *allocator,
             bq_count,
             (struct Huffman_node[]){
                 {}, /* nil */
                 {}, /* root */
             }
-        ),
+        )},
         /* By creating the root outside of the main loop we can be sure we
            always have valid prev node. Don't need to check on every loop
            iteration. */
         .root = 1,
         .num_nodes = bq_count,
     };
-    check(!flat_buffer_is_empty(&tree.tree_storage));
+    check(!flat_buffer_is_empty(&tree.tree_storage.buffer));
     (void)bitq_pop_front(&blueprint->tree_paths);
     size_t parent = tree.root;
     size_t current = 0;
@@ -905,14 +1012,15 @@ reconstruct_tree(
         CCC_Tribool is_internal_node = CCC_TRUE;
         if (!current) {
             is_internal_node = bitq_pop_front(&blueprint->tree_paths);
-            struct Huffman_node *const pushed = flat_buffer_emplace_back(
-                &tree.tree_storage,
-                allocator,
-                (struct Huffman_node){
-                    .parent = parent,
-                }
-            );
-            current = flat_buffer_index(&tree.tree_storage, pushed).count;
+            struct Huffman_node *const pushed
+                = huffman_node_buffer_emplace_back(
+                    &tree.tree_storage,
+                    allocator,
+                    (struct Huffman_node){
+                        .parent = parent,
+                    }
+                );
+            current = huffman_node_buffer_index(&tree.tree_storage, pushed);
             /* Get the parent reference after the buffer push in case the
                buffer resized to accommodate push. */
             struct Huffman_node *const parent_r = node_at(&tree, parent);
@@ -1010,28 +1118,61 @@ readbytes(FILE *const f, void *const destination, size_t const to_read) {
 
 /*=========================      Huffman Helpers    =========================*/
 
+static inline size_t
+huffman_node_buffer_index(
+    struct Huffman_node_buffer const *const buffer,
+    struct Huffman_node const *const node
+) {
+    return CCC_flat_buffer_index(&buffer->buffer, node).count;
+}
+
+static inline struct Pair_node *
+pair_priority_queue_push(
+    struct Pair_node_priority_queue *const queue,
+    struct Pair_node const *const pair,
+    CCC_Allocator const *const allocator
+) {
+    return push(&queue->priority_queue, pair, &(struct Pair_node){}, allocator);
+}
+
+static inline CCC_Result
+pair_priority_queue_pop(struct Pair_node_priority_queue *const queue) {
+    return pop(&queue->priority_queue, &(struct Pair_node){});
+}
+
+static inline struct Pair_node *
+pair_priority_queue_front(struct Pair_node_priority_queue const *const queue) {
+    return front(&queue->priority_queue);
+}
+
 static struct Huffman_node *
 node_at(struct Huffman_tree const *const t, size_t const node) {
-    return ((struct Huffman_node *)flat_buffer_at(&t->tree_storage, node));
+    return (
+        (struct Huffman_node *)flat_buffer_at(&t->tree_storage.buffer, node)
+    );
 }
 
 static size_t
 branch_index(
     struct Huffman_tree const *const t, size_t const node, uint8_t const dir
 ) {
-    return ((struct Huffman_node *)flat_buffer_at(&t->tree_storage, node))
+    return ((struct Huffman_node *)
+                flat_buffer_at(&t->tree_storage.buffer, node))
         ->link[dir];
 }
 
 static size_t
 parent_index(struct Huffman_tree const *const t, size_t node) {
-    return ((struct Huffman_node *)flat_buffer_at(&t->tree_storage, node))
+    return ((struct Huffman_node *)
+                flat_buffer_at(&t->tree_storage.buffer, node))
         ->parent;
 }
 
 static char
 char_index(struct Huffman_tree const *const t, size_t const node) {
-    return ((struct Huffman_node *)flat_buffer_at(&t->tree_storage, node))->ch;
+    return ((struct Huffman_node *)
+                flat_buffer_at(&t->tree_storage.buffer, node))
+        ->ch;
 }
 
 /** Frees all encoding nodes from the tree provided. */
@@ -1039,8 +1180,9 @@ static void
 free_encode_tree(
     struct Huffman_tree *tree, CCC_Allocator const *const allocator
 ) {
-    CCC_Result const r
-        = clear_and_free(&tree->tree_storage, &(CCC_Destructor){}, allocator);
+    CCC_Result const r = clear_and_free(
+        &tree->tree_storage.buffer, &(CCC_Destructor){}, allocator
+    );
     check(r == CCC_RESULT_OK);
     *tree = (struct Huffman_tree){};
 }

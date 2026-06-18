@@ -104,9 +104,21 @@ struct Point {
     int c;
 };
 
+struct Point_double_ended_queue {
+    CCC_Flat_double_ended_queue flat_double_ended_queue;
+};
+
 struct Path_backtrack_cell {
     struct Point current;
     struct Point parent;
+};
+
+struct Path_backtrack_cell_entry {
+    CCC_Entry entry;
+};
+
+struct Path_backtrack_cell_map {
+    CCC_Flat_hash_map map;
 };
 
 /** A cost optimizes the problem so that we can store the path
@@ -119,6 +131,10 @@ struct Cost {
     int cost;
     char name;
     char from;
+};
+
+struct Cost_priority_queue {
+    CCC_Priority_queue priority_queue;
 };
 
 struct Path_request {
@@ -274,7 +290,10 @@ static void find_shortest_paths(struct Graph *);
 static bool
 found_destination(struct Graph *, struct Vertex *, CCC_Allocator const *);
 static void edge_construct(
-    struct Graph *, Flat_hash_map *, struct Vertex *, struct Vertex *
+    struct Graph *,
+    struct Path_backtrack_cell_map const *,
+    struct Vertex *,
+    struct Vertex *
 );
 static int dijkstra_shortest_path(struct Graph *, char, char);
 static void paint_edge(struct Graph *, char, char, char const *);
@@ -316,6 +335,55 @@ static uint64_t hash_parent_cells(Key_arguments);
 static uint64_t hash_64_bits(uint64_t);
 static unsigned count_digits(uintmax_t);
 static void print_str_view(FILE *, SV_Str_view);
+static struct Path_backtrack_cell_entry
+path_backtrack_cell_map_insert_or_assign(
+    struct Path_backtrack_cell_map *,
+    struct Path_backtrack_cell const *,
+    CCC_Allocator const *
+);
+static struct Path_backtrack_cell_entry path_backtrack_cell_map_try_insert(
+    struct Path_backtrack_cell_map *,
+    struct Path_backtrack_cell const *,
+    CCC_Allocator const *
+);
+static struct Path_backtrack_cell *path_backtrack_cell_map_get_key_value(
+    struct Path_backtrack_cell_map const *, struct Point const *
+);
+static struct Point *
+point_double_ended_queue_front(struct Point_double_ended_queue const *);
+static struct Cost *
+cost_priority_queue_front(struct Cost_priority_queue const *);
+static struct Cost *cost_priority_queue_push(
+    struct Cost_priority_queue *, struct Cost *, CCC_Allocator const *
+);
+
+#define cost_priority_queue_decrease_with(                                     \
+    priority_queue_pointer,                                                    \
+    priority_queue_element_name,                                               \
+    closure_over_priority_queue_element...                                     \
+)                                                                              \
+    (__extension__({                                                           \
+        struct Cost_priority_queue *const cost_priority_queue_pointer          \
+            = (priority_queue_pointer);                                        \
+        CCC_priority_queue_decrease_with(                                      \
+            &cost_priority_queue_pointer->priority_queue,                      \
+            priority_queue_element_name,                                       \
+            closure_over_priority_queue_element                                \
+        );                                                                     \
+    }))
+
+#define point_double_ended_queue_emplace_back(                                 \
+    double_ended_queue_pointer, allocator, compound_literal...                 \
+)                                                                              \
+    (__extension__({                                                           \
+        struct Point_double_ended_queue *const                                 \
+            point_double_ended_queue_pointer = (double_ended_queue_pointer);   \
+        CCC_flat_double_ended_queue_emplace_back(                              \
+            &point_double_ended_queue_pointer->flat_double_ended_queue,        \
+            allocator,                                                         \
+            compound_literal                                                   \
+        );                                                                     \
+    }))
 
 /*======================  Main Arg Handling  ===============================*/
 
@@ -442,7 +510,7 @@ found_destination(
     struct Vertex *const source,
     CCC_Allocator const *const allocator
 ) {
-    Flat_hash_map parent_map = flat_hash_map_from(
+    struct Path_backtrack_cell_map parent_map = {flat_hash_map_from(
         current,
         ((CCC_Hasher){
             .hash = hash_parent_cells,
@@ -453,17 +521,19 @@ found_destination(
         (struct Path_backtrack_cell[]){
             {.current = source->pos, .parent = (struct Point){-1, -1}},
         }
-    );
-    Flat_double_ended_queue bfs = flat_double_ended_queue_from(
+    )};
+    struct Point_double_ended_queue bfs = {flat_double_ended_queue_from(
         *allocator, 0, (struct Point[]){source->pos}
-    );
+    )};
     defer {
-        (void)clear_and_free(&bfs, &(CCC_Destructor){}, allocator);
-        (void)clear_and_free(&parent_map, &(CCC_Destructor){}, allocator);
+        (void)clear_and_free(
+            &bfs.flat_double_ended_queue, &(CCC_Destructor){}, allocator
+        );
+        (void)clear_and_free(&parent_map.map, &(CCC_Destructor){}, allocator);
     }
-    while (!is_empty(&bfs)) {
-        struct Point const cur = *((struct Point *)front(&bfs));
-        (void)pop_front(&bfs);
+    while (!is_empty(&bfs.flat_double_ended_queue)) {
+        struct Point const cur = *point_double_ended_queue_front(&bfs);
+        (void)flat_double_ended_queue_pop_front(&bfs.flat_double_ended_queue);
         for (size_t i = 0; i < DIRS_SIZE; ++i) {
             struct Point const next = {
                 .r = cur.r + dirs[i].r,
@@ -479,22 +549,27 @@ found_destination(
                     = vertex_at(graph, get_cell_vertex_title(next_cell));
                 if (source->name != nv->name && vertex_degree(nv) < MAX_DEGREE
                     && !has_edge_with(source, nv->name)) {
-                    Entry const in
-                        = insert_or_assign(&parent_map, &push, allocator);
-                    check(!insert_error(&in));
+                    struct Path_backtrack_cell_entry const in
+                        = path_backtrack_cell_map_insert_or_assign(
+                            &parent_map, &push, allocator
+                        );
+                    check(!insert_error(&in.entry));
                     edge_construct(graph, &parent_map, source, nv);
                     return true;
                 }
             }
-            if (!is_path_cell(next_cell)
-                && !occupied(
-                    flat_hash_map_try_insert_wrap(&parent_map, &push, allocator)
-                )) {
-                struct Point const *const n
-                    = flat_double_ended_queue_emplace_back(
-                        &bfs, allocator, (struct Point){next.r, next.c}
+            if (!is_path_cell(next_cell)) {
+                struct Path_backtrack_cell_entry const entry
+                    = path_backtrack_cell_map_try_insert(
+                        &parent_map, &push, allocator
                     );
-                check(n);
+                if (!occupied(&entry.entry)) {
+                    struct Point const *const n
+                        = point_double_ended_queue_emplace_back(
+                            &bfs, allocator, (struct Point){next.r, next.c}
+                        );
+                    check(n);
+                }
             }
         }
     }
@@ -507,13 +582,14 @@ found_destination(
 static void
 edge_construct(
     struct Graph *const g,
-    Flat_hash_map *const parent_map,
+    struct Path_backtrack_cell_map const *const parent_map,
     struct Vertex *const source,
     struct Vertex *const destination
 ) {
     Cell const edge_id = make_edge(source->name, destination->name);
     struct Point cur = destination->pos;
-    struct Path_backtrack_cell const *c = get_key_value(parent_map, &cur);
+    struct Path_backtrack_cell const *c
+        = path_backtrack_cell_map_get_key_value(parent_map, &cur);
     check(c);
     struct Edge edge = {
         .n = {
@@ -523,7 +599,7 @@ edge_construct(
         .pos = destination->pos,
     };
     while (c->parent.r > 0) {
-        c = get_key_value(parent_map, &c->parent);
+        c = path_backtrack_cell_map_get_key_value(parent_map, &c->parent);
         check(c, printf("Cannot find cell parent to rebuild path.\n"););
         ++edge.n.cost;
         *grid_at_mut(g, c->current.r, c->current.c) |= edge_id;
@@ -759,12 +835,12 @@ dijkstra_shortest_path(
        of all, maximum priority_queue/map size is known to be small [A-Z] so
        provide memory on the stack for speed and safety. */
     struct Cost priority_map[MAX_VERTICES] = {};
-    Priority_queue costs = priority_queue_default(
+    struct Cost_priority_queue costs = {priority_queue_default(
         struct Cost,
         node,
         CCC_ORDER_LESSER,
         (CCC_Comparator){.compare = order_priority_queue_costs}
-    );
+    )};
     for (int i = 0, vx = BEGIN_VERTICES; i < graph->vertices; ++i, ++vx) {
         struct Cost *const v = priority_map_at(priority_map, (char)vx);
         *v = (struct Cost){
@@ -772,12 +848,13 @@ dijkstra_shortest_path(
             .from = '\0',
             .cost = (char)vx == source ? 0 : INT_MAX,
         };
-        struct Cost const *const c = push(&costs, &v->node, &(CCC_Allocator){});
+        struct Cost const *const c
+            = cost_priority_queue_push(&costs, v, &(CCC_Allocator){});
         check(c);
     }
-    while (!is_empty(&costs)) {
-        struct Cost const *const u = front(&costs);
-        (void)pop(&costs, &(CCC_Allocator){});
+    while (!is_empty(&costs.priority_queue)) {
+        struct Cost const *const u = cost_priority_queue_front(&costs);
+        (void)priority_queue_pop(&costs.priority_queue, &(CCC_Allocator){});
         if (u->cost == INT_MAX) {
             return INT_MAX;
         }
@@ -790,7 +867,7 @@ dijkstra_shortest_path(
             int const alt = u->cost + edges[i].cost;
             if (alt < v->cost) {
                 /* Build the map with the appropriate best candidate parent. */
-                (void)priority_queue_decrease_with(&costs, v, {
+                (void)cost_priority_queue_decrease_with(&costs, v, {
                     v->cost = alt;
                     v->from = u->name;
                 });
@@ -1076,6 +1153,59 @@ build_path_outline(struct Graph *const graph) {
 }
 
 /*====================    Data Structure Helpers    =========================*/
+
+static inline struct Path_backtrack_cell_entry
+path_backtrack_cell_map_insert_or_assign(
+    struct Path_backtrack_cell_map *const map,
+    struct Path_backtrack_cell const *const cell,
+    CCC_Allocator const *const allocator
+) {
+    return (struct Path_backtrack_cell_entry){
+        CCC_flat_hash_map_insert_or_assign(&map->map, cell, allocator)};
+}
+
+static inline struct Path_backtrack_cell_entry
+path_backtrack_cell_map_try_insert(
+    struct Path_backtrack_cell_map *const map,
+    struct Path_backtrack_cell const *const cell,
+    CCC_Allocator const *const allocator
+) {
+    return (struct Path_backtrack_cell_entry){
+        CCC_flat_hash_map_try_insert(&map->map, cell, allocator)};
+}
+
+static inline struct Path_backtrack_cell *
+path_backtrack_cell_map_get_key_value(
+    struct Path_backtrack_cell_map const *const map,
+    struct Point const *const point
+) {
+    return CCC_flat_hash_map_get_key_value(&map->map, point);
+}
+
+static inline struct Point *
+point_double_ended_queue_front(
+    struct Point_double_ended_queue const *const queue
+) {
+    return CCC_flat_double_ended_queue_front(&queue->flat_double_ended_queue);
+}
+
+static inline struct Cost *
+cost_priority_queue_front(
+    struct Cost_priority_queue const *const priority_queue
+) {
+    return CCC_priority_queue_front(&priority_queue->priority_queue);
+}
+
+static inline struct Cost *
+cost_priority_queue_push(
+    struct Cost_priority_queue *const priority_queue,
+    struct Cost *const cost,
+    CCC_Allocator const *const allocator
+) {
+    return CCC_priority_queue_push(
+        &priority_queue->priority_queue, &cost->node, allocator
+    );
+}
 
 static CCC_Order
 order_parent_cells(Key_comparator_arguments const c) {

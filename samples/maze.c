@@ -69,6 +69,18 @@ struct Prim_cell {
     int cost;
 };
 
+struct Prim_map {
+    CCC_Flat_hash_map map;
+};
+
+struct Prim_map_entry {
+    Entry entry;
+};
+
+struct Prim_priority_queue {
+    CCC_Flat_priority_queue priority_queue;
+};
+
 /*======================   Maze Constants   =================================*/
 
 /** Using these half Unicode squares for now because they create symmetrical
@@ -149,6 +161,22 @@ static SV_Str_view const help_flag = SV_from("-h");
         }                                                                      \
     } while (0)
 
+#define prim_map_entry_or_insert_with(                                         \
+    map_pointer, key_pointer, allocator, lazy_evaluated_key_value_insertion... \
+)                                                                              \
+    (__extension__({                                                           \
+        struct Prim_map *const prim_map_entry_or_insert_pointer                \
+            = (map_pointer);                                                   \
+        flat_hash_map_or_insert_with(                                          \
+            flat_hash_map_entry_wrap(                                          \
+                &prim_map_entry_or_insert_pointer->map,                        \
+                (key_pointer),                                                 \
+                (allocator)                                                    \
+            ),                                                                 \
+            lazy_evaluated_key_value_insertion                                 \
+        );                                                                     \
+    }))
+
 static void animate_maze(struct Maze *, CCC_Allocator const *);
 static void fill_maze_with_walls(struct Maze *);
 static void build_wall(struct Maze *, int, int);
@@ -168,6 +196,14 @@ static struct Int_conversion parse_digits(SV_Str_view);
 static CCC_Order prim_cell_key_order(Key_comparator_arguments);
 static uint64_t prim_cell_hash_fn(Key_arguments);
 static uint64_t hash_64_bits(uint64_t);
+static struct Prim_cell *
+prim_priority_queue_front(struct Prim_priority_queue const *);
+static struct Prim_cell *prim_priority_queue_push(
+    struct Prim_priority_queue *,
+    struct Prim_cell const *,
+    CCC_Allocator const *
+);
+static CCC_Result prim_priority_queue_pop(struct Prim_priority_queue *);
 
 /*======================  Main Arg Handling  ===============================*/
 
@@ -257,7 +293,7 @@ animate_maze(struct Maze *maze, CCC_Allocator const *const allocator) {
         .cell = rand_point(maze),
         .cost = rand_range(0, 100),
     };
-    Flat_hash_map cost_map = flat_hash_map_from(
+    struct Prim_map cost_map = {flat_hash_map_from(
         cell,
         ((CCC_Hasher){
             .hash = prim_cell_hash_fn,
@@ -266,22 +302,23 @@ animate_maze(struct Maze *maze, CCC_Allocator const *const allocator) {
         *allocator,
         capacity,
         (struct Prim_cell[]){start}
-    );
-    Flat_priority_queue cell_priority_queue = flat_priority_queue_from(
+    )};
+    struct Prim_priority_queue cell_priority_queue = {flat_priority_queue_from(
         CCC_ORDER_LESSER,
         (CCC_Comparator){.compare = prim_cell_element_order},
         *allocator,
         capacity,
         (struct Prim_cell[]){start}
-    );
+    )};
     defer {
-        (void)clear_and_free(&cost_map, &(CCC_Destructor){}, allocator);
+        (void)clear_and_free(&cost_map.map, &(CCC_Destructor){}, allocator);
         (void)clear_and_free(
-            &cell_priority_queue, &(CCC_Destructor){}, allocator
+            &cell_priority_queue.priority_queue, &(CCC_Destructor){}, allocator
         );
     }
-    while (!is_empty(&cell_priority_queue)) {
-        struct Prim_cell const *const c = front(&cell_priority_queue);
+    while (!is_empty(&cell_priority_queue.priority_queue)) {
+        struct Prim_cell const *const c
+            = prim_priority_queue_front(&cell_priority_queue);
         *maze_at_wrap(maze, c->cell.r, c->cell.c) |= CACHE_BIT;
         /* 0 is an invalid row and column in any maze. */
         struct Prim_cell min_cell = {};
@@ -293,8 +330,10 @@ animate_maze(struct Maze *maze, CCC_Allocator const *const allocator) {
             };
             if (can_build_new_square(maze, n.r, n.c)) {
                 struct Prim_cell const *const cell
-                    = flat_hash_map_or_insert_with(
-                        flat_hash_map_entry_wrap(&cost_map, &n, allocator),
+                    = prim_map_entry_or_insert_with(
+                        &cost_map,
+                        &n,
+                        allocator,
                         (struct Prim_cell){
                             .cell = n,
                             .cost = rand_range(0, 100),
@@ -309,19 +348,35 @@ animate_maze(struct Maze *maze, CCC_Allocator const *const allocator) {
         }
         if (min != INT_MAX) {
             join_squares_animated(maze, c->cell, min_cell.cell, speed);
-            (void)push(
-                &cell_priority_queue,
-                &min_cell,
-                &(struct Prim_cell){},
-                allocator
+            (void)prim_priority_queue_push(
+                &cell_priority_queue, &min_cell, allocator
             );
         } else {
-            (void)pop(&cell_priority_queue, &(struct Prim_cell){});
+            (void)prim_priority_queue_pop(&cell_priority_queue);
         }
     }
 }
 
 /*===================     Container Support Code     ========================*/
+
+static inline struct Prim_cell *
+prim_priority_queue_front(struct Prim_priority_queue const *const queue) {
+    return front(&queue->priority_queue);
+}
+
+static inline struct Prim_cell *
+prim_priority_queue_push(
+    struct Prim_priority_queue *const queue,
+    struct Prim_cell const *const cell,
+    CCC_Allocator const *const allocator
+) {
+    return push(&queue->priority_queue, cell, &(struct Prim_cell){}, allocator);
+}
+
+static inline CCC_Result
+prim_priority_queue_pop(struct Prim_priority_queue *const queue) {
+    return pop(&queue->priority_queue, &(struct Prim_cell){});
+}
 
 static CCC_Order
 prim_cell_key_order(Key_comparator_arguments const c) {
