@@ -1,6 +1,6 @@
 # Contributing
 
-Not sure if this library will be used but might as well add this just in case. People can also ask questions in issues or the Discussions page.
+Welcome to the C Container Collection contributor document. Here you will find information on how the project is structured, its tools, and how to start working on useful additions. You will also find rationale for the style of code present in the library and auxiliary tests and samples. This will help guide your thinking if you choose to contribute container code to the core library.
 
 ## Organization
 
