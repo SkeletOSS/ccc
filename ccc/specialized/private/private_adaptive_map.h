@@ -32,7 +32,7 @@ best not to tie the naming to any one type of tree or data structure. */
 #include <stddef.h>
 /** @endcond */
 
-#include "../types.h"
+#include "../../types.h"
 
 /* NOLINTBEGIN(readability-identifier-naming) */
 

@@ -156,74 +156,6 @@ add_priority_queue_test(test_priority_queue_erase)
 add_priority_queue_test(test_priority_queue_update)
 add_priority_queue_test(test_priority_queue_error)
 
-#############  Map  ##########################
-add_library(adaptive_map_utility adaptive_map/adaptive_map_utility.h adaptive_map/adaptive_map_utility.c)
-target_link_libraries(adaptive_map_utility
-  PRIVATE
-    ccc
-    checkers
-)
-add_dependencies(tests adaptive_map_utility)
-
-macro(add_adaptive_map_test TEST_NAME)
-  add_executable(${TEST_NAME} adaptive_map/${TEST_NAME}.c)
-  target_link_libraries(${TEST_NAME}
-    PRIVATE
-      adaptive_map_utility
-      ccc
-      checkers 
-      std_allocator
-      stack_allocator
-  )
-  set_target_properties(${TEST_NAME} 
-    PROPERTIES 
-      RUNTIME_OUTPUT_DIRECTORY 
-        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/tests
-  )
-  add_dependencies(tests ${TEST_NAME})
-endmacro()
-
-add_adaptive_map_test(test_adaptive_map_construct)
-add_adaptive_map_test(test_adaptive_map_insert)
-add_adaptive_map_test(test_adaptive_map_erase)
-add_adaptive_map_test(test_adaptive_map_iterator)
-add_adaptive_map_test(test_adaptive_map_entry)
-add_adaptive_map_test(test_adaptive_map_lru)
-
-#############  Handle Map  ##########################
-add_library(array_adaptive_map_utility array_adaptive_map/array_adaptive_map_utility.h array_adaptive_map/array_adaptive_map_utility.c)
-target_link_libraries(array_adaptive_map_utility
-  PRIVATE
-    ccc
-    checkers
-)
-add_dependencies(tests array_adaptive_map_utility)
-
-macro(add_array_adaptive_map_test TEST_NAME)
-  add_executable(${TEST_NAME} array_adaptive_map/${TEST_NAME}.c)
-  target_link_libraries(${TEST_NAME}
-    PRIVATE
-      array_adaptive_map_utility
-      ccc
-      checkers
-      std_allocator
-      stack_allocator
-  )
-  set_target_properties(${TEST_NAME} 
-    PROPERTIES 
-      RUNTIME_OUTPUT_DIRECTORY 
-        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/tests
-  )
-  add_dependencies(tests ${TEST_NAME})
-endmacro()
-
-add_array_adaptive_map_test(test_array_adaptive_map_construct)
-add_array_adaptive_map_test(test_array_adaptive_map_insert)
-add_array_adaptive_map_test(test_array_adaptive_map_erase)
-add_array_adaptive_map_test(test_array_adaptive_map_iterator)
-add_array_adaptive_map_test(test_array_adaptive_map_handle)
-add_array_adaptive_map_test(test_array_adaptive_map_lru)
-
 #############  Realtime Map  ##########################
 add_library(tree_map_utility tree_map/tree_map_utility.h tree_map/tree_map_utility.c)
 target_link_libraries(tree_map_utility
@@ -421,3 +353,73 @@ add_flat_double_ended_queue_test(test_flat_double_ended_queue_insert)
 add_flat_double_ended_queue_test(test_flat_double_ended_queue_iterate)
 add_flat_double_ended_queue_test(test_flat_double_ended_queue_erase)
 
+if (CCC_BUILD_SPECIALIZED)
+    #############  Map  ##########################
+    add_library(adaptive_map_utility specialized/adaptive_map/adaptive_map_utility.h specialized/adaptive_map/adaptive_map_utility.c)
+    target_link_libraries(adaptive_map_utility
+      PRIVATE
+        ccc
+        checkers
+    )
+    add_dependencies(tests adaptive_map_utility)
+
+    macro(add_adaptive_map_test TEST_NAME)
+      add_executable(${TEST_NAME} specialized/adaptive_map/${TEST_NAME}.c)
+      target_link_libraries(${TEST_NAME}
+        PRIVATE
+          adaptive_map_utility
+          ccc
+          checkers 
+          std_allocator
+          stack_allocator
+      )
+      set_target_properties(${TEST_NAME} 
+        PROPERTIES 
+          RUNTIME_OUTPUT_DIRECTORY 
+            ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/tests
+      )
+      add_dependencies(tests ${TEST_NAME})
+    endmacro()
+
+    add_adaptive_map_test(test_adaptive_map_construct)
+    add_adaptive_map_test(test_adaptive_map_insert)
+    add_adaptive_map_test(test_adaptive_map_erase)
+    add_adaptive_map_test(test_adaptive_map_iterator)
+    add_adaptive_map_test(test_adaptive_map_entry)
+    add_adaptive_map_test(test_adaptive_map_lru)
+
+#############  Handle Map  ##########################
+    add_library(array_adaptive_map_utility specialized/array_adaptive_map/array_adaptive_map_utility.h specialized/array_adaptive_map/array_adaptive_map_utility.c)
+    target_link_libraries(array_adaptive_map_utility
+      PRIVATE
+        ccc
+        checkers
+    )
+    add_dependencies(tests array_adaptive_map_utility)
+
+    macro(add_array_adaptive_map_test TEST_NAME)
+      add_executable(${TEST_NAME} specialized/array_adaptive_map/${TEST_NAME}.c)
+      target_link_libraries(${TEST_NAME}
+        PRIVATE
+          array_adaptive_map_utility
+          ccc
+          checkers
+          std_allocator
+          stack_allocator
+      )
+      set_target_properties(${TEST_NAME} 
+        PROPERTIES 
+          RUNTIME_OUTPUT_DIRECTORY 
+            ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/tests
+      )
+      add_dependencies(tests ${TEST_NAME})
+    endmacro()
+
+    add_array_adaptive_map_test(test_array_adaptive_map_construct)
+    add_array_adaptive_map_test(test_array_adaptive_map_insert)
+    add_array_adaptive_map_test(test_array_adaptive_map_erase)
+    add_array_adaptive_map_test(test_array_adaptive_map_iterator)
+    add_array_adaptive_map_test(test_array_adaptive_map_handle)
+    add_array_adaptive_map_test(test_array_adaptive_map_lru)
+
+endif()

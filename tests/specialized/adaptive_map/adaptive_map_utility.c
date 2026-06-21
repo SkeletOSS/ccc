@@ -4,11 +4,11 @@
 
 #define TRAITS_USING_NAMESPACE_CCC
 
-#include "adaptive_map.h"
 #include "adaptive_map_utility.h"
+#include "ccc/specialized/adaptive_map.h"
+#include "ccc/traits.h"
+#include "ccc/types.h"
 #include "checkers.h"
-#include "traits.h"
-#include "types.h"
 
 CCC_Order
 id_order(CCC_Key_comparator_arguments const order) {

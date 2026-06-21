@@ -36,9 +36,9 @@ the dynamic resizing case. */
 #include <stdint.h>
 
 /** CCC provided headers. */
-#include "ccc/array_adaptive_map.h"
 #include "ccc/configuration.h"
-#include "ccc/private/private_array_adaptive_map.h"
+#include "ccc/specialized/array_adaptive_map.h"
+#include "ccc/specialized/private/private_array_adaptive_map.h"
 #include "ccc/types.h"
 
 /*==========================  Type Declarations   ===========================*/

@@ -8,11 +8,11 @@ The leetcode lru problem in C. */
 #define DOUBLY_LINKED_LIST_USING_NAMESPACE_CCC
 #define TRAITS_USING_NAMESPACE_CCC
 
-#include "array_adaptive_map.h"
+#include "ccc/doubly_linked_list.h"
+#include "ccc/specialized/array_adaptive_map.h"
+#include "ccc/traits.h"
+#include "ccc/types.h"
 #include "checkers.h"
-#include "doubly_linked_list.h"
-#include "traits.h"
-#include "types.h"
 
 enum : size_t {
     LRU_CAP = 32,

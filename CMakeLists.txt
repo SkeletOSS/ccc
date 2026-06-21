@@ -16,6 +16,9 @@ set(namespace "ccc")
 # For releases we only produce this and the source. No test or sample bloat.
 include_directories("${PROJECT_SOURCE_DIR}/${PROJECT_NAME}")
 add_subdirectory("${PROJECT_SOURCE_DIR}/${PROJECT_NAME}")
+if (CCC_BUILD_SPECIALIZED)
+    add_compile_definitions(CCC_SPECIALIZED_ENABLED=1)
+endif()
 
 # Excluding from all simplifies cmake presets until cmake figures out how
 # to tame the combinatorial explosion of buildPresets

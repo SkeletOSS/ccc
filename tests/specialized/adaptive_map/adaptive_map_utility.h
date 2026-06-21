@@ -3,9 +3,9 @@
 
 #include <stddef.h>
 
-#include "adaptive_map.h"
+#include "ccc/specialized/adaptive_map.h"
+#include "ccc/types.h"
 #include "checkers.h"
-#include "types.h"
 
 struct Val {
     int key;

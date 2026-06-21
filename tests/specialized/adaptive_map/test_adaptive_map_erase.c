@@ -9,8 +9,8 @@
 #define FLAT_BITSET_USING_NAMESPACE_CCC
 
 #include "adaptive_map_utility.h"
-#include "ccc/adaptive_map.h"
 #include "ccc/flat_bitset.h"
+#include "ccc/specialized/adaptive_map.h"
 #include "ccc/traits.h"
 #include "ccc/types.h"
 #include "checkers.h"

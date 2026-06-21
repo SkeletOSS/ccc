@@ -17,8 +17,6 @@ limitations under the License.
 #define CCC_PRIVATE_TRAITS_H
 
 /* NOLINTBEGIN */
-#include "../adaptive_map.h"            /* IWYU pragma: keep */
-#include "../array_adaptive_map.h"      /* IWYU pragma: keep */
 #include "../array_tree_map.h"          /* IWYU pragma: keep */
 #include "../doubly_linked_list.h"      /* IWYU pragma: keep */
 #include "../flat_bitset.h"             /* IWYU pragma: keep */
@@ -30,6 +28,10 @@ limitations under the License.
 #include "../singly_linked_list.h"      /* IWYU pragma: keep */
 #include "../tree_map.h"                /* IWYU pragma: keep */
 #include "../types.h"                   /* IWYU pragma: keep */
+#ifdef CCC_SPECIALIZED_ENABLED
+#    include "../specialized/adaptive_map.h"       /* IWYU pragma: keep */
+#    include "../specialized/array_adaptive_map.h" /* IWYU pragma: keep */
+#endif                                             /* CCC_SPECIALIZED_ENABLED */
 /* NOLINTEND */
 
 // clang-format off

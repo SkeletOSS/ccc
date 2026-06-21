@@ -20,7 +20,7 @@ limitations under the License.
 #include <stddef.h>
 /** @endcond */
 
-#include "../types.h"
+#include "../../types.h"
 
 /* NOLINTBEGIN(readability-identifier-naming) */
 

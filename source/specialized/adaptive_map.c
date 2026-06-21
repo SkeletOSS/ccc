@@ -30,9 +30,9 @@ constant time queries for frequently accessed elements. */
 #include <stddef.h>
 
 /** CCC provided headers. */
-#include "ccc/adaptive_map.h"
 #include "ccc/configuration.h"
-#include "ccc/private/private_adaptive_map.h"
+#include "ccc/specialized/adaptive_map.h"
+#include "ccc/specialized/private/private_adaptive_map.h"
 #include "ccc/types.h"
 
 /** @internal Instead of thinking about left and right consider only links

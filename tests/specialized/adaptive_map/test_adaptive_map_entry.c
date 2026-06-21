@@ -8,11 +8,11 @@ the entry functions. */
 #define ADAPTIVE_MAP_USING_NAMESPACE_CCC
 #define TRAITS_USING_NAMESPACE_CCC
 
-#include "adaptive_map.h"
 #include "adaptive_map_utility.h"
+#include "ccc/specialized/adaptive_map.h"
+#include "ccc/traits.h"
+#include "ccc/types.h"
 #include "checkers.h"
-#include "traits.h"
-#include "types.h"
 #include "utility/stack_allocator.h"
 
 static inline struct Val

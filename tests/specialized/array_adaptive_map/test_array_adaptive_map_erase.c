@@ -9,8 +9,8 @@
 #define TRAITS_USING_NAMESPACE_CCC
 
 #include "array_adaptive_map_utility.h"
-#include "ccc/array_adaptive_map.h"
 #include "ccc/flat_bitset.h"
+#include "ccc/specialized/array_adaptive_map.h"
 #include "ccc/traits.h"
 #include "ccc/types.h"
 #include "checkers.h"

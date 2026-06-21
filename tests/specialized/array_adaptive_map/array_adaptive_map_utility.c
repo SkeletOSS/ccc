@@ -2,11 +2,11 @@
 
 #define TRAITS_USING_NAMESPACE_CCC
 
-#include "array_adaptive_map.h"
 #include "array_adaptive_map_utility.h"
+#include "ccc/specialized/array_adaptive_map.h"
+#include "ccc/traits.h"
+#include "ccc/types.h"
 #include "checkers.h"
-#include "traits.h"
-#include "types.h"
 
 CCC_Order
 id_order(CCC_Key_comparator_arguments const order) {
