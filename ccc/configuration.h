@@ -14,8 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 @endcond */
 /** @file
-@brief The C Container Collection Configuration Header. For full download and
-install instructions using a user configuration see INSTALL.md.
+@brief The C Container Collection Configuration Header.
+
+For full download and install instructions using a user configuration see
+INSTALL.md.
 
 The C Container Collection uses the following functions or macros that must be
 supported by the user on freestanding targets.
