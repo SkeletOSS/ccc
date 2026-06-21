@@ -1,4 +1,4 @@
-#include "ccc/priority_queue.h"
+#include "ccc/specialized/priority_queue.h"
 #include "ccc/types.h"
 #include "checkers.h"
 #include "priority_queue_utility.h"

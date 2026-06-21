@@ -16,8 +16,8 @@ limitations under the License. */
 
 /** CCC provided headers. */
 #include "ccc/configuration.h"
-#include "ccc/priority_queue.h"
-#include "ccc/private/private_priority_queue.h"
+#include "ccc/specialized/priority_queue.h"
+#include "ccc/specialized/private/private_priority_queue.h"
 #include "ccc/types.h"
 
 /*=========================  Function Prototypes   ==========================*/

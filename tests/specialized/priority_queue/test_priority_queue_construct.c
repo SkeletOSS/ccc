@@ -1,10 +1,10 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#include "ccc/specialized/priority_queue.h"
+#include "ccc/types.h"
 #include "checkers.h"
-#include "priority_queue.h"
 #include "priority_queue_utility.h"
-#include "types.h"
 #include "utility/stack_allocator.h"
 
 static CCC_Priority_queue

@@ -121,41 +121,6 @@ add_flat_priority_queue_test(test_flat_priority_queue_insert)
 add_flat_priority_queue_test(test_flat_priority_queue_erase)
 add_flat_priority_queue_test(test_flat_priority_queue_update)
 
-#############  Pair Priority Queue  ##########################
-add_library(priority_queue_utility priority_queue/priority_queue_utility.h priority_queue/priority_queue_utility.c)
-target_link_libraries(priority_queue_utility
-  PRIVATE
-    ccc
-    checkers
-    stack_allocator
-)
-add_dependencies(tests priority_queue_utility)
-
-macro(add_priority_queue_test TEST_NAME)
-  add_executable(${TEST_NAME} priority_queue/${TEST_NAME}.c)
-  target_link_libraries(${TEST_NAME}
-    PRIVATE
-      priority_queue_utility
-      ccc
-      checkers
-      std_allocator
-      stack_allocator
-  )
-  set_target_properties(${TEST_NAME} 
-    PROPERTIES 
-      RUNTIME_OUTPUT_DIRECTORY 
-        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/tests
-  )
-  add_dependencies(tests ${TEST_NAME})
-endmacro()
-
-# Add tests below here by the name of the c file without the .c suffix
-add_priority_queue_test(test_priority_queue_construct)
-add_priority_queue_test(test_priority_queue_insert)
-add_priority_queue_test(test_priority_queue_erase)
-add_priority_queue_test(test_priority_queue_update)
-add_priority_queue_test(test_priority_queue_error)
-
 #############  Realtime Map  ##########################
 add_library(tree_map_utility tree_map/tree_map_utility.h tree_map/tree_map_utility.c)
 target_link_libraries(tree_map_utility
@@ -388,7 +353,7 @@ if (CCC_BUILD_SPECIALIZED)
     add_adaptive_map_test(test_adaptive_map_entry)
     add_adaptive_map_test(test_adaptive_map_lru)
 
-#############  Handle Map  ##########################
+    #############  Handle Map  ##########################
     add_library(array_adaptive_map_utility specialized/array_adaptive_map/array_adaptive_map_utility.h specialized/array_adaptive_map/array_adaptive_map_utility.c)
     target_link_libraries(array_adaptive_map_utility
       PRIVATE
@@ -421,5 +386,41 @@ if (CCC_BUILD_SPECIALIZED)
     add_array_adaptive_map_test(test_array_adaptive_map_iterator)
     add_array_adaptive_map_test(test_array_adaptive_map_handle)
     add_array_adaptive_map_test(test_array_adaptive_map_lru)
+
+    #############  Pair Priority Queue  ##########################
+    add_library(priority_queue_utility specialized/priority_queue/priority_queue_utility.h specialized/priority_queue/priority_queue_utility.c)
+    target_link_libraries(priority_queue_utility
+      PRIVATE
+        ccc
+        checkers
+        stack_allocator
+    )
+    add_dependencies(tests priority_queue_utility)
+
+    macro(add_priority_queue_test TEST_NAME)
+      add_executable(${TEST_NAME} specialized/priority_queue/${TEST_NAME}.c)
+      target_link_libraries(${TEST_NAME}
+        PRIVATE
+          priority_queue_utility
+          ccc
+          checkers
+          std_allocator
+          stack_allocator
+      )
+      set_target_properties(${TEST_NAME} 
+        PROPERTIES 
+          RUNTIME_OUTPUT_DIRECTORY 
+            ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/tests
+      )
+      add_dependencies(tests ${TEST_NAME})
+    endmacro()
+
+    # Add tests below here by the name of the c file without the .c suffix
+    add_priority_queue_test(test_priority_queue_construct)
+    add_priority_queue_test(test_priority_queue_insert)
+    add_priority_queue_test(test_priority_queue_erase)
+    add_priority_queue_test(test_priority_queue_update)
+    add_priority_queue_test(test_priority_queue_error)
+
 
 endif()

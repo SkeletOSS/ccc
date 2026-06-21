@@ -6,11 +6,11 @@
 #define TRAITS_USING_NAMESPACE_CCC
 #define PRIORITY_QUEUE_USING_NAMESPACE_CCC
 
+#include "ccc/specialized/priority_queue.h"
+#include "ccc/traits.h"
+#include "ccc/types.h"
 #include "checkers.h"
-#include "priority_queue.h"
 #include "priority_queue_utility.h"
-#include "traits.h"
-#include "types.h"
 #include "utility/stack_allocator.h"
 
 enum : int {

@@ -2,102 +2,64 @@ add_library(${PROJECT_NAME})
 add_library(${namespace}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 # File sets simplify install and allow isolation of only container files.
+target_sources(${PROJECT_NAME}
+    PRIVATE
+        ${PROJECT_SOURCE_DIR}/source/types.c
+        ${PROJECT_SOURCE_DIR}/source/flat_bitset.c
+        ${PROJECT_SOURCE_DIR}/source/flat_buffer.c
+        ${PROJECT_SOURCE_DIR}/source/flat_hash_map.c
+        ${PROJECT_SOURCE_DIR}/source/flat_double_ended_queue.c
+        ${PROJECT_SOURCE_DIR}/source/flat_priority_queue.c
+        ${PROJECT_SOURCE_DIR}/source/singly_linked_list.c
+        ${PROJECT_SOURCE_DIR}/source/doubly_linked_list.c
+        ${PROJECT_SOURCE_DIR}/source/tree_map.c
+        ${PROJECT_SOURCE_DIR}/source/array_tree_map.c
+    PUBLIC 
+        FILE_SET public_headers
+            TYPE HEADERS
+            BASE_DIRS ${PROJECT_SOURCE_DIR}
+            FILES 
+              private/private_flat_priority_queue.h
+              private/private_singly_linked_list.h
+              private/private_doubly_linked_list.h
+              private/private_tree_map.h
+              private/private_array_tree_map.h
+              private/private_traits.h
+              private/private_flat_bitset.h
+              private/private_flat_buffer.h
+              private/private_flat_double_ended_queue.h
+              private/private_flat_hash_map.h
+              configuration.h
+              types.h
+              flat_buffer.h
+              flat_bitset.h
+              flat_hash_map.h
+              flat_double_ended_queue.h
+              flat_priority_queue.h
+              tree_map.h
+              array_tree_map.h
+              singly_linked_list.h
+              doubly_linked_list.h
+              traits.h
+              sort.h
+)
+
 if (CCC_BUILD_SPECIALIZED)
     message(STATUS "CCC Building with specialized modules enabled.")
     target_sources(${PROJECT_NAME}
         PRIVATE
-            ${PROJECT_SOURCE_DIR}/source/types.c
-            ${PROJECT_SOURCE_DIR}/source/flat_bitset.c
-            ${PROJECT_SOURCE_DIR}/source/flat_buffer.c
-            ${PROJECT_SOURCE_DIR}/source/flat_hash_map.c
-            ${PROJECT_SOURCE_DIR}/source/flat_double_ended_queue.c
-            ${PROJECT_SOURCE_DIR}/source/flat_priority_queue.c
-            ${PROJECT_SOURCE_DIR}/source/priority_queue.c
-            ${PROJECT_SOURCE_DIR}/source/singly_linked_list.c
-            ${PROJECT_SOURCE_DIR}/source/doubly_linked_list.c
-            ${PROJECT_SOURCE_DIR}/source/tree_map.c
-            ${PROJECT_SOURCE_DIR}/source/array_tree_map.c
             ${PROJECT_SOURCE_DIR}/source/specialized/adaptive_map.c
             ${PROJECT_SOURCE_DIR}/source/specialized/array_adaptive_map.c
+            ${PROJECT_SOURCE_DIR}/source/specialized/priority_queue.c
         PUBLIC 
             FILE_SET public_headers
-                TYPE HEADERS
-                BASE_DIRS ${PROJECT_SOURCE_DIR}
                 FILES 
-                  private/private_flat_priority_queue.h
-                  private/private_priority_queue.h
-                  private/private_singly_linked_list.h
-                  private/private_doubly_linked_list.h
-                  private/private_tree_map.h
-                  private/private_array_tree_map.h
-                  private/private_traits.h
-                  private/private_flat_bitset.h
-                  private/private_flat_buffer.h
-                  private/private_flat_double_ended_queue.h
-                  private/private_flat_hash_map.h
                   specialized/private/private_adaptive_map.h
                   specialized/private/private_array_adaptive_map.h
-                  configuration.h
-                  types.h
-                  flat_buffer.h
-                  flat_bitset.h
-                  flat_hash_map.h
-                  flat_double_ended_queue.h
-                  flat_priority_queue.h
-                  tree_map.h
-                  array_tree_map.h
-                  priority_queue.h
-                  singly_linked_list.h
-                  doubly_linked_list.h
-                  traits.h
-                  sort.h
+                  specialized/private/private_priority_queue.h
                   specialized/adaptive_map.h
                   specialized/array_adaptive_map.h
-    )
-else()
-    target_sources(${PROJECT_NAME}
-        PRIVATE
-            ${PROJECT_SOURCE_DIR}/source/types.c
-            ${PROJECT_SOURCE_DIR}/source/flat_bitset.c
-            ${PROJECT_SOURCE_DIR}/source/flat_buffer.c
-            ${PROJECT_SOURCE_DIR}/source/flat_hash_map.c
-            ${PROJECT_SOURCE_DIR}/source/flat_double_ended_queue.c
-            ${PROJECT_SOURCE_DIR}/source/flat_priority_queue.c
-            ${PROJECT_SOURCE_DIR}/source/priority_queue.c
-            ${PROJECT_SOURCE_DIR}/source/singly_linked_list.c
-            ${PROJECT_SOURCE_DIR}/source/doubly_linked_list.c
-            ${PROJECT_SOURCE_DIR}/source/tree_map.c
-            ${PROJECT_SOURCE_DIR}/source/array_tree_map.c
-        PUBLIC 
-            FILE_SET public_headers
-                TYPE HEADERS
-                BASE_DIRS ${PROJECT_SOURCE_DIR}
-                FILES 
-                  private/private_flat_priority_queue.h
-                  private/private_priority_queue.h
-                  private/private_singly_linked_list.h
-                  private/private_doubly_linked_list.h
-                  private/private_tree_map.h
-                  private/private_array_tree_map.h
-                  private/private_traits.h
-                  private/private_flat_bitset.h
-                  private/private_flat_buffer.h
-                  private/private_flat_double_ended_queue.h
-                  private/private_flat_hash_map.h
-                  configuration.h
-                  types.h
-                  flat_buffer.h
-                  flat_bitset.h
-                  flat_hash_map.h
-                  flat_double_ended_queue.h
-                  flat_priority_queue.h
-                  tree_map.h
-                  array_tree_map.h
-                  priority_queue.h
-                  singly_linked_list.h
-                  doubly_linked_list.h
-                  traits.h
-                  sort.h
+                  specialized/priority_queue.h
     )
 endif()
 

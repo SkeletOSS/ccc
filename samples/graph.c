@@ -35,7 +35,7 @@ Enter 'q' to quit. */
 
 #include "ccc/flat_double_ended_queue.h"
 #include "ccc/flat_hash_map.h"
-#include "ccc/priority_queue.h"
+#include "ccc/specialized/priority_queue.h"
 #include "ccc/traits.h"
 #include "ccc/types.h"
 #include "str_view/str_view.h"
