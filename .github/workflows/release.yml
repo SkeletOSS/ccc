@@ -18,8 +18,15 @@ jobs:
 
       - name: Create Release Zip
         run: |
-          git archive --format=zip --output=ccc-${GITHUB_REF#refs/tags/}.zip HEAD
-          echo "ZIP_FILE=ccc-${GITHUB_REF#refs/tags/}.zip" >> $GITHUB_ENV 
+          TAG="${GITHUB_REF#refs/tags/}"
+
+          # Core Release with attributes to exclude specialized/ directories
+          git archive --format=zip --output=ccc-${TAG}.zip HEAD
+          echo "ZIP_FILE=ccc-${TAG}.zip" >> $GITHUB_ENV 
+
+          # Specialized Release with attributes to include specialized/ directories
+          git -c core.attributesFile=.gitattributes_specialized archive --format=zip --output=ccc-specialized-${TAG}.zip HEAD
+          echo "SPECIALIZED_ZIP_FILE=ccc-specialized-${TAG}.zip" >> $GITHUB_ENV
 
       - name: Create draft release
         run: |
@@ -32,7 +39,7 @@ jobs:
 
       - name: Upload asset to draft
         run: |
-          gh release upload "${GITHUB_REF#refs/tags/}" "${ZIP_FILE}"
+          gh release upload "${GITHUB_REF#refs/tags/}" "${ZIP_FILE}" "${SPECIALIZED_ZIP_FILE}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

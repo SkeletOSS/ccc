@@ -16,6 +16,19 @@ set(namespace "ccc")
 # For releases we only produce this and the source. No test or sample bloat.
 include_directories("${PROJECT_SOURCE_DIR}/${PROJECT_NAME}")
 add_subdirectory("${PROJECT_SOURCE_DIR}/${PROJECT_NAME}")
+# Autodetect the specialized headers directory
+if(EXISTS "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/specialized" AND EXISTS "${PROJECT_SOURCE_DIR}/source/specialized")
+    set(CCC_HAS_SPECIALIZED_SOURCE TRUE)
+else()
+    set(CCC_HAS_SPECIALIZED_SOURCE FALSE)
+endif()
+
+option(CCC_BUILD_SPECIALIZED "Enable specialized containers" ${CCC_HAS_SPECIALIZED_SOURCE})
+# If a user manually forces specialized verify the files exist
+if(CCC_BUILD_SPECIALIZED AND NOT CCC_HAS_SPECIALIZED_SOURCE)
+    message(FATAL_ERROR "CCC_BUILD_SPECIALIZED is set to ON, but the 'specialized/' directory is not found. Users should obtain a specialized release from the releases page. Developers may obtain a specialized containers from the releases page or project repository.")
+endif()
+
 if (CCC_BUILD_SPECIALIZED)
     add_compile_definitions(CCC_SPECIALIZED_ENABLED=1)
 endif()
