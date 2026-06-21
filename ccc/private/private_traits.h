@@ -28,6 +28,7 @@ limitations under the License.
 #include "../singly_linked_list.h"      /* IWYU pragma: keep */
 #include "../tree_map.h"                /* IWYU pragma: keep */
 #include "../types.h"                   /* IWYU pragma: keep */
+/* This directive will need to be detected throughout all trait macros. */
 #ifdef CCC_SPECIALIZED_ENABLED
 #    include "../specialized/adaptive_map.h"       /* IWYU pragma: keep */
 #    include "../specialized/array_adaptive_map.h" /* IWYU pragma: keep */
