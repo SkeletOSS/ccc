@@ -16,6 +16,7 @@ limitations under the License.
 /** @file
 @brief The C Container Collection Configuration Header.
 
+This file supports the collection's ability to operate on freestanding targets.
 For full download and install instructions using a user configuration see
 INSTALL.md.
 
