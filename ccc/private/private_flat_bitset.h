@@ -39,11 +39,11 @@ By default a bit set is initialized with size equal to capacity but the user may
 select to initialize a 0 sized bit set with non-zero capacity for pushing bits
 back dynamically. */
 struct CCC_Flat_bitset {
-    /** The array of bit blocks, a platform defined standard bit width. */
+    /** @internal The array of bit blocks. */
     unsigned *blocks;
-    /** The number of active bits in the set available for reads and writes. */
+    /** @internal The number of active bits in the set. */
     size_t count;
-    /** The number of bits capable of being tracked in the bit block array. */
+    /** @internal The number of bits capable of being tracked in set. */
     size_t capacity;
 };
 
@@ -55,9 +55,11 @@ enum : size_t {
 
 /*=========================     Private Interface   =========================*/
 
+/** @internal */
 CCC_Result CCC_private_flat_bitset_reserve(
     struct CCC_Flat_bitset *, size_t, CCC_Allocator const *
 );
+/** @internal */
 CCC_Tribool
 CCC_private_flat_bitset_set(struct CCC_Flat_bitset *, size_t, CCC_Tribool);
 

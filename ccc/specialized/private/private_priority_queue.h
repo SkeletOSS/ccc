@@ -155,6 +155,7 @@ void CCC_private_priority_queue_decrease_fixup(
         .comparator = (private_comparator),                                    \
     }
 
+/** @internal */
 #define CCC_private_priority_queue_default(                                    \
     private_struct_name,                                                       \
     private_type_intruder_field,                                               \

@@ -50,7 +50,7 @@ struct CCC_Flat_buffer {
     size_t alignof_type;
 };
 
-/* @internal */
+/** @internal */
 #define CCC_private_flat_buffer_default(private_type_name)                     \
     (struct CCC_Flat_buffer) {                                                 \
         .sizeof_type = sizeof(private_type_name),                              \
