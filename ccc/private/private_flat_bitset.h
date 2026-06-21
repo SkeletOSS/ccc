@@ -13,8 +13,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 @endcond */
-#ifndef CCC_PRIVATE_BITSET
-#define CCC_PRIVATE_BITSET
+/** @internal
+@file
+@brief The Private Flat Bitset Types and Interface
+
+The bitset is meant for simple contiguous bit operations. Highlights of
+this implementation include the care given to range based operations in linear
+time. */
+#ifndef CCC_PRIVATE_FLAT_BITSET
+#define CCC_PRIVATE_FLAT_BITSET
 
 /** @cond */
 #include <limits.h>
@@ -249,4 +256,4 @@ specifiers which is a feature of C23. Not all compilers support this yet. */
                   * sizeof(*(struct CCC_Flat_bitset){}.blocks) * CHAR_BIT,     \
     }
 
-#endif /* CCC_PRIVATE_BITSET */
+#endif /* CCC_PRIVATE_FLAT_BITSET */

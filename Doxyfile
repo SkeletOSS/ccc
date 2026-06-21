@@ -866,6 +866,8 @@ WARN_LOGFILE           =
 
 INPUT                  = ccc \
                          ccc/private \
+                         ccc/specialized \
+                         ccc/specialized/private \
                          DOXYGEN_README.md \
                          INSTALL.md
 

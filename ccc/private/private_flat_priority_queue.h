@@ -13,6 +13,17 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 @endcond */
+/** @internal
+@file
+@brief The Private Flat Priority Queue Types and Interface
+
+The private flat priority queue interface manages the types and macros
+for the flat priority queue. The implementation attempts to be as efficient
+as possible by using bottom-up reheap operations to avoid extensive use of
+comparison callbacks. We also try to avoid swapping elements whenever possible.
+Instead, we use our temp slot to hold an element and then shift everything down
+or up tree levels depending on the operations. This saves 2 calls to memcpy per
+tree level. */
 #ifndef CCC_PRIVATE_FLAT_PRIORITY_QUEUE_H
 #define CCC_PRIVATE_FLAT_PRIORITY_QUEUE_H
 

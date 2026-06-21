@@ -13,6 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 @endcond */
+/** @internal
+@file
+@brief The Private Array Adaptive Map Types and Interface
+
+The array adaptive map offers a struct-of-arrays layout for slightly
+better alignment and memory utilization. This also allows for index handle
+stability in contrast to pointer stability that the intrusive variant offers. */
 #ifndef CCC_PRIVATE_ARRAY_ADAPTIVE_MAP_H
 #define CCC_PRIVATE_ARRAY_ADAPTIVE_MAP_H
 

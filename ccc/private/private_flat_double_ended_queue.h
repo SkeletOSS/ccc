@@ -13,6 +13,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 @endcond */
+/** @internal
+@file
+@brief The Private Flat Double Ended Queue Types and Interface
+
+The flat double ended queue is unique in that it is the only container
+that is intended for continued use upon capacity exhaustion. Any time the Flat
+double ended queue capacity is full and a push occurs without an allocator, it
+will behave as a ring buffer. This has interesting use case implications. */
 #ifndef CCC_PRIVATE_FLAT_DOUBLE_ENDED_QUEUE_H
 #define CCC_PRIVATE_FLAT_DOUBLE_ENDED_QUEUE_H
 

@@ -13,6 +13,19 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 @endcond */
+/** @internal
+@file
+@brief The Private Priority Queue Types and Interface
+
+The intrusive priority queue is relegated to the specialized directory
+because it is a niche data structure with interesting space and runtime
+characteristics. It is not very space efficient as an intruder. However, in
+exchange we get O(1) push and decrease/increase operations when the decreasing
+on a min heap and increasing on a max heap. This costs us in later slower pop
+operations, resulting in an amortized little o(log(N)) runtime for
+decrease/increase, but the operation itself will always take O(1) time. This can
+have interesting implications for realtime systems with strict runtime
+requirements.*/
 #ifndef CCC_PRIVATE_PRIORITY_QUEUE_H
 #define CCC_PRIVATE_PRIORITY_QUEUE_H
 

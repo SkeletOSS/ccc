@@ -13,6 +13,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 @endcond */
+/** @internal
+@file
+@brief The Private Singly Linked List Types and Interface
+
+The private singly linked list interface and type management. The singly
+linked list aims to be a simple and efficient push to and pop from front
+alternative to the doubly linked list. Notably, it can be sorted with the same
+space and runtime guarantees as the doubly linked list variant with some
+additional implementation efforts. */
 #ifndef CCC_PRIVATE_SINGLY_LINKED_LIST_H
 #define CCC_PRIVATE_SINGLY_LINKED_LIST_H
 

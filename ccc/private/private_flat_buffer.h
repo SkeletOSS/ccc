@@ -13,6 +13,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 @endcond */
+/** @internal
+@file
+@brief The Private Flat Buffer Types and Interface
+
+The standard contiguous flat buffer is the foundation for many other
+containers. It is the standard, reliable, dynamic buffer. It points to
+externally managed memory so that the metadata struct is separate from the
+memory it manages. */
 #ifndef CCC_PRIVATE_FLAT_BUFFER_H
 #define CCC_PRIVATE_FLAT_BUFFER_H
 

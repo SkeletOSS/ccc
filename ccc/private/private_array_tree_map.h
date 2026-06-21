@@ -13,6 +13,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 @endcond */
+/** @internal
+@file
+@brief The Private Array Tree Map Types and Interface
+
+The private struct-of-array based WAVL tree. The goal of this
+implementation is to optimize space while providing stable indices for the
+lifetime of user allocations of elements in the buffer. The intrusive variant
+offers pointer stability and is significantly less space efficient. */
 #ifndef CCC_PRIVATE_ARRAY_TREE_MAP_H
 #define CCC_PRIVATE_ARRAY_TREE_MAP_H
 

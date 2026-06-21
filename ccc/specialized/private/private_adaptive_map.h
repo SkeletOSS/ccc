@@ -15,10 +15,10 @@ limitations under the License.
 @endcond */
 /** @internal
 @file
-@brief The Adaptive Map Private Interface
+@brief The Private Adaptive Map Types and Interface
 
-The adaptive map is currently implemented as a Splay Tree. A Splay Tree is a
-self-optimizing data structure that "adapts" the usage pattern of the user
+The adaptive map is currently implemented as a Splay Tree. A Splay Tree
+is a self-optimizing data structure that "adapts" the usage pattern of the user
 by moving frequently accessed elements to the root. In the process, the trees
 height is also reduced through rotations.
 

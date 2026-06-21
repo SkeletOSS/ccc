@@ -15,7 +15,7 @@ limitations under the License.
 @endcond */
 /** @internal
 @file
-@brief Private Flat Hash Map Interface
+@brief Private Flat Hash Map Types and Interface
 
 This flat hash map is a C Container Collection friendly interpretation of the
 Rust Hashbrown hash table. This in turn is based on the Abseil flat hash table

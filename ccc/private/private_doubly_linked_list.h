@@ -13,6 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 @endcond */
+/** @internal
+@file
+@brief The Private Doubly Linked List Types and Interface
+
+The doubly linked list variant of linked lists. This is good for when
+push and pop to front and back are needed as well as arbitrary O(1) node
+removal. */
 #ifndef CCC_PRIVATE_DOUBLY_LINKED_LIST_H
 #define CCC_PRIVATE_DOUBLY_LINKED_LIST_H
 

@@ -13,6 +13,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 @endcond */
+/** @internal
+@file
+@brief The Private Tree Map Types and Interface
+
+The private intrusive WAVL tree map interface and type header. This
+intrusive map is still a fast viable option for users. However, one should
+seriously consider if the `Array_tree_map` as well. Due to the struct of array
+layout, the `Array_tree_map` variant can use significantly less space than this
+intrusive variant with almost identical runtime guarantees. However, it relies
+on indexes in a buffer remaining stable rather than pointers provided by an
+allocator interface function. These concepts are similar but not identical, so a
+user may require this intrusive implementation.  */
 #ifndef CCC_PRIVATE_TREE_MAP_H
 #define CCC_PRIVATE_TREE_MAP_H
 

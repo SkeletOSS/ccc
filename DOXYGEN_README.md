@@ -19,22 +19,25 @@
 
 Follow the links to the C Container Collection headers.
 
-- [ccc/adaptive_map.h](https://skeletoss.github.io/ccc/adaptive__map_8h.html)
-- [ccc/array_adaptive_map.h](https://skeletoss.github.io/ccc/array__adaptive__map_8h.html)
-- [ccc/array_tree_map.h](https://skeletoss.github.io/ccc/array__tree__map_8h.html)
-- [ccc/configuration.h](https://skeletoss.github.io/ccc/configuration_8h.html)
-- [ccc/doubly_linked_list.h](https://skeletoss.github.io/ccc/doubly__linked__list_8h.html)
-- [ccc/flat_bitset.h](https://skeletoss.github.io/ccc/flat__bitset_8h.html)
-- [ccc/flat_buffer.h](https://skeletoss.github.io/ccc/flat__buffer_8h.html)
-- [ccc/flat_double_ended_queue.h](https://skeletoss.github.io/ccc/flat__double__ended__queue_8h.html)
-- [ccc/flat_hash_map.h](https://skeletoss.github.io/ccc/flat__hash__map_8h.html)
-- [ccc/flat_priority_queue.h](https://skeletoss.github.io/ccc/flat__priority__queue_8h.html)
-- [ccc/priority_queue.h](https://skeletoss.github.io/ccc/priority__queue_8h.html)
-- [ccc/singly_linked_list.h](https://skeletoss.github.io/ccc/singly__linked__list_8h.html)
-- [ccc/sort.h](https://skeletoss.github.io/ccc/sort_8h.html)
-- [ccc/traits.h](https://skeletoss.github.io/ccc/traits_8h.html)
-- [ccc/tree_map.h](https://skeletoss.github.io/ccc/tree__map_8h.html)
-- [ccc/types.h](https://skeletoss.github.io/ccc/types_8h.html)
+- array_tree_map.h
+- configuration.h
+- doubly_linked_list.h
+- flat_bitset.h
+- flat_buffer.h
+- flat_double_ended_queue.h
+- flat_hash_map.h
+- flat_priority_queue.h
+- singly_linked_list.h
+- sort.h
+- traits.h
+- tree_map.h
+- types.h
+
+Specialized containers not included in the default core collection.
+
+- adaptive_map.h
+- array_adaptive_map.h
+- priority_queue.h
 
 ## CCC Cardinal Rules {#ccc-cardinal-rules}
 

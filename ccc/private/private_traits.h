@@ -13,6 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 @endcond */
+/** @internal
+@file
+@brief The Private Traits `_Generic` Interface
+
+The private trait `_Generic` manager. This code must also be aware of
+whether it is allowed to select on the specialized containers or not, depending
+on compile options. */
 #ifndef CCC_PRIVATE_TRAITS_H
 #define CCC_PRIVATE_TRAITS_H
 
