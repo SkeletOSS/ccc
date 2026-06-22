@@ -25,6 +25,9 @@ option(CCC_BUILD_SPECIALIZED "Enable specialized containers" ${CCC_HAS_SPECIALIZ
 if(CCC_BUILD_SPECIALIZED AND NOT CCC_HAS_SPECIALIZED_SOURCE)
     message(FATAL_ERROR "CCC_BUILD_SPECIALIZED is set to ON, but the 'specialized/' directory is not found. Users should obtain a specialized release from the releases page. Developers may obtain a specialized containers from the releases page or project repository.")
 endif()
+if (CCC_BUILD_SPECIALIZED)
+    add_compile_definitions(CCC_SPECIALIZED_ENABLED=1)
+endif()
 
 # For releases we only produce this and the source. No test or sample bloat.
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}")
