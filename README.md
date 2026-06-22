@@ -598,7 +598,7 @@ main(void) {
 
 ## Specialized Containers
 
-The following are specialized containers with unique characteristics that should be carefully considered before use. There is either an alternative containers of the same type in core, or these containers have space and runtime characteristics that are intended for more niche use cases.
+The following are specialized containers with unique characteristics that should be carefully considered before use. There is either an alternative container of the same type in core, or these containers have space and runtime characteristics that are intended for more niche use cases.
 
 <details>
 <summary>adaptive_map.h (dropdown)</summary>
