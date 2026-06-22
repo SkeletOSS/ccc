@@ -113,7 +113,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </li>
 </ul>
 </li>
-<li>Specialized Containers</li>
+<li><a class="el" href="index.html#specialized-containers">Specialized Containers</a></li>
 <li><a class="el" href="index.html#installation">Installation</a></li>
 <li><a class="el" href="index.html#coverage-report">Coverage Report</a></li>
 <li><a href="https://github.com/SkeletOSS/ccc">Back to Repository</a></li>
@@ -480,7 +480,7 @@ Stable Handles</h3>
 <div class="ttc" id="aarray__tree__map_8h_html_a7ebc89ac0823dd6276c466c943e0150f"><div class="ttname"><a href="array__tree__map_8h.html#a7ebc89ac0823dd6276c466c943e0150f">CCC_array_tree_map_or_insert</a></div><div class="ttdeci">CCC_Handle_index CCC_array_tree_map_or_insert(CCC_Array_tree_map_handle const *handle, void const *type, CCC_Allocator const *allocator)</div><div class="ttdoc">Inserts the provided user type if the handle is Vacant.</div></div>
 <div class="ttc" id="atypes_8h_html_a4043390f03f4ec5162e3782152360be9"><div class="ttname"><a href="types_8h.html#a4043390f03f4ec5162e3782152360be9">CCC_Handle_index</a></div><div class="ttdeci">size_t CCC_Handle_index</div><div class="ttdoc">A stable index to user data in a container that uses a flat array as the underlying storage method.</div><div class="ttdef"><b>Definition:</b> types.h:72</div></div>
 </div><!-- fragment --><p>After the second element is inserted, <code>a</code> remains valid and can be provided to the container API to obtain a pointer to the user element. The underlying storage may have been resized or moved, but the location in the array remains stable. Therefore, it is important to remember that only the handle index remains stable, never the pointer obtained with that index.</p>
-<h1><a class="anchor" id="autotoc_md1"></a>
+<h1><a class="anchor" id="specialized-containers"></a>
 Specialized Containers</h1>
 <p>Some containers in the collection have interesting or niche space and runtime characteristics. For example, the <code><a class="el" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a></code> and <code><a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a></code> have identical interfaces to the <code><a class="el" href="structCCC__Tree__map.html">CCC_Tree_map</a></code> and <code><a class="el" href="structCCC__Array__tree__map.html">CCC_Array_tree_map</a></code> but they are implemented with a self-optimizing splay tree. This means that searching is not a read-only operation because every query modifies the underlying data structure. This has interesting implications for runtime over certain usage patterns, but also is not what users might expect from a search operation. Therefore, this container is relegated to the <code>specialized/</code> directories.</p>
 <p>Explore the <code>specialized/</code> containers to see if the containers stored there offer any space or runtime guarantees that are appealing. By default, these are not included in the standard release. They can be obtained from the releases page or by consuming the bleeding edge <code>main.zip</code> from the repository. See the <a class="el" href="md_INSTALL.html">INSTALL.md</a> file for more information.</p>
@@ -493,7 +493,7 @@ Installation</h1>
 Coverage Report</h1>
 <p>If you are looking to contribute, tests that increase coverage are a great start. View the <a href="https://skeletoss.github.io/ccc/coverage">coverage report here</a>.</p>
 <p>The report is generating by running the test suite. See the tests folder for more.</p>
-<h1><a class="anchor" id="autotoc_md2"></a>
+<h1><a class="anchor" id="autotoc_md1"></a>
 Back to Repository</h1>
 <p><a href="https://github.com/SkeletOSS/ccc">Return to repository</a>. </p>
 </div></div><!-- PageDoc -->
