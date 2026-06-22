@@ -1,3 +1,5 @@
+# Don't build the specialized modules in the standard release.
+specialized/ export-ignore
 tests/ export-ignore
 samples/ export-ignore
 utility/ export-ignore

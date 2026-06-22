@@ -21,11 +21,11 @@ jobs:
           TAG="${GITHUB_REF#refs/tags/}"
 
           # Core Release with attributes to exclude specialized/ directories
-          git archive --format=zip --output=ccc-${TAG}.zip HEAD
+          git -c core.attributesFile=.gitattributes_core archive --format=zip --output=ccc-${TAG}.zip HEAD
           echo "ZIP_FILE=ccc-${TAG}.zip" >> $GITHUB_ENV 
 
           # Specialized Release with attributes to include specialized/ directories
-          git -c core.attributesFile=.gitattributes_specialized archive --format=zip --output=ccc-specialized-${TAG}.zip HEAD
+          git archive --format=zip --output=ccc-specialized-${TAG}.zip HEAD
           echo "SPECIALIZED_ZIP_FILE=ccc-specialized-${TAG}.zip" >> $GITHUB_ENV
 
       - name: Create draft release

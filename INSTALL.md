@@ -83,6 +83,7 @@ FetchContent_Declare(
 
 Keep in mind a few points about what you are opting in to if you take this approach.
 
+- The main edge includes all specialized containers.
 - Updating the URL is never required. Every time you rebuild your project you get the latest version of the library.
 - The API may break. You are exposed to naming and interface changes before a release finalizes such changes.
 - The main branch is continuously validated by CI with tests, sanitizers, and static analysis. All tests and checks must pass before merging into main so this URL should provide code that can always build and run.
