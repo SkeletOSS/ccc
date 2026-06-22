@@ -1,7 +1,7 @@
 # This version gives us file sets which are great for library install.
 cmake_minimum_required(VERSION 3.23)
 project("ccc" 
-  VERSION 0.80.0
+  VERSION 0.80.1
   LANGUAGES C
   DESCRIPTION "The C Container Collection (ccc). A collection of containers written in C."
 )
@@ -27,10 +27,6 @@ option(CCC_BUILD_SPECIALIZED "Enable specialized containers" ${CCC_HAS_SPECIALIZ
 # If a user manually forces specialized verify the files exist
 if(CCC_BUILD_SPECIALIZED AND NOT CCC_HAS_SPECIALIZED_SOURCE)
     message(FATAL_ERROR "CCC_BUILD_SPECIALIZED is set to ON, but the 'specialized/' directory is not found. Users should obtain a specialized release from the releases page. Developers may obtain a specialized containers from the releases page or project repository.")
-endif()
-
-if (CCC_BUILD_SPECIALIZED)
-    add_compile_definitions(CCC_SPECIALIZED_ENABLED=1)
 endif()
 
 # Excluding from all simplifies cmake presets until cmake figures out how
