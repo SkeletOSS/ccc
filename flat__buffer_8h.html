@@ -96,7 +96,7 @@ $(document).ready(function(){initNavTree('flat__buffer_8h.html',''); initResizab
 
 <p>The Flat_buffer Interface.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;private/private_flat_buffer.h&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="private__flat__buffer_8h_source.html">private/private_flat_buffer.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for flat_buffer.h:</div>
@@ -104,7 +104,7 @@ Include dependency graph for flat_buffer.h:</div>
 <div class="center"><img src="flat__buffer_8h__incl.png" border="0" usemap="#accc_2flat__buffer_8h" alt=""/></div>
 <map name="accc_2flat__buffer_8h" id="accc_2flat__buffer_8h">
 <area shape="rect" title="The Flat_buffer Interface." alt="" coords="71,5,195,31"/>
-<area shape="rect" href="private__flat__buffer_8h_source.html" title=" " alt="" coords="5,79,152,119"/>
+<area shape="rect" href="private__flat__buffer_8h.html" title="The Private Flat Buffer Types and Interface." alt="" coords="5,79,152,119"/>
 <area shape="rect" href="types_8h.html" title="The C Container Collection Fundamental Types." alt="" coords="92,167,175,192"/>
 </map>
 </div>
@@ -115,10 +115,10 @@ This graph shows which files directly or indirectly include this file:</div>
 <map name="accc_2flat__buffer_8hdep" id="accc_2flat__buffer_8hdep">
 <area shape="rect" title="The Flat_buffer Interface." alt="" coords="234,5,358,31"/>
 <area shape="rect" href="flat__double__ended__queue_8h.html" title="The Flat Double Ended Queue Interface." alt="" coords="46,167,213,207"/>
-<area shape="rect" href="private__traits_8h_source.html" title=" " alt="" coords="199,255,342,295"/>
+<area shape="rect" href="private__traits_8h.html" title="The Private Traits _Generic Interface." alt="" coords="199,255,342,295"/>
 <area shape="rect" href="flat__priority__queue_8h.html" title="The Flat Priority Queue Interface." alt="" coords="308,174,489,199"/>
-<area shape="rect" href="private__flat__double__ended__queue_8h_source.html" title=" " alt="" coords="26,79,233,119"/>
-<area shape="rect" href="private__flat__priority__queue_8h_source.html" title=" " alt="" coords="359,79,521,119"/>
+<area shape="rect" href="private__flat__double__ended__queue_8h.html" title="The Private Flat Double Ended Queue Types and Interface." alt="" coords="26,79,233,119"/>
+<area shape="rect" href="private__flat__priority__queue_8h.html" title="The Private Flat Priority Queue Types and Interface." alt="" coords="359,79,521,119"/>
 <area shape="rect" href="sort_8h.html" title="The C Container Collection Sorting Interface." alt="" coords="546,86,630,111"/>
 <area shape="rect" href="traits_8h.html" title="The C Container Collection Traits Interface." alt="" coords="224,343,317,368"/>
 </map>
@@ -139,19 +139,19 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Initialization Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Initialize the container with memory, callbacks, and permissions. </p>
 </td></tr>
-<tr class="memitem:a3652ded849fcbaa8c6d790feaf145673"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__buffer_8h.html#a3652ded849fcbaa8c6d790feaf145673">CCC_flat_buffer_default</a>(type_name)&#160;&#160;&#160;    CCC_private_flat_buffer_default(type_name)</td></tr>
+<tr class="memitem:a3652ded849fcbaa8c6d790feaf145673"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__buffer_8h.html#a3652ded849fcbaa8c6d790feaf145673">CCC_flat_buffer_default</a>(type_name)&#160;&#160;&#160;    <a class="el" href="private__flat__buffer_8h.html#adfba5edf95a60b24647bdbd607fbc452">CCC_private_flat_buffer_default</a>(type_name)</td></tr>
 <tr class="memdesc:a3652ded849fcbaa8c6d790feaf145673"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a contiguous empty buffer of a type.  <br /></td></tr>
 <tr class="separator:a3652ded849fcbaa8c6d790feaf145673"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1bdb970610b5289ae2ac09a44018295"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__buffer_8h.html#af1bdb970610b5289ae2ac09a44018295">CCC_flat_buffer_for</a>(type_name,  capacity,  count,  data_pointer...)&#160;&#160;&#160;    CCC_private_flat_buffer_for(type_name, capacity, count, data_pointer)</td></tr>
+<tr class="memitem:af1bdb970610b5289ae2ac09a44018295"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__buffer_8h.html#af1bdb970610b5289ae2ac09a44018295">CCC_flat_buffer_for</a>(type_name,  capacity,  count,  data_pointer...)&#160;&#160;&#160;    <a class="el" href="private__flat__buffer_8h.html#a68dddb2253c474c71706dbdd78f1e3f1">CCC_private_flat_buffer_for</a>(type_name, capacity, count, data_pointer)</td></tr>
 <tr class="memdesc:af1bdb970610b5289ae2ac09a44018295"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a contiguous Flat_buffer of user a specified type, capacity, and optional starting size.  <br /></td></tr>
 <tr class="separator:af1bdb970610b5289ae2ac09a44018295"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8159089e04f1544b65161f44a6955cb1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__buffer_8h.html#a8159089e04f1544b65161f44a6955cb1">CCC_flat_buffer_from</a>( allocator,  optional_capacity,  compound_literal_array...)</td></tr>
 <tr class="memdesc:a8159089e04f1544b65161f44a6955cb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a Flat_buffer from a compound literal array initializer.  <br /></td></tr>
 <tr class="separator:a8159089e04f1544b65161f44a6955cb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a683f6e6ac7b5419b8a7347add172ebc0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__buffer_8h.html#a683f6e6ac7b5419b8a7347add172ebc0">CCC_flat_buffer_with_capacity</a>(type_name,  allocator,  capacity)&#160;&#160;&#160;    CCC_private_flat_buffer_with_capacity(type_name, allocator, capacity)</td></tr>
+<tr class="memitem:a683f6e6ac7b5419b8a7347add172ebc0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__buffer_8h.html#a683f6e6ac7b5419b8a7347add172ebc0">CCC_flat_buffer_with_capacity</a>(type_name,  allocator,  capacity)&#160;&#160;&#160;    <a class="el" href="private__flat__buffer_8h.html#a5d152884898f3065d8de71e228bc5f3e">CCC_private_flat_buffer_with_capacity</a>(type_name, allocator, capacity)</td></tr>
 <tr class="memdesc:a683f6e6ac7b5419b8a7347add172ebc0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a Flat_buffer with a capacity.  <br /></td></tr>
 <tr class="separator:a683f6e6ac7b5419b8a7347add172ebc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af772f3d963fadee149e90e56b212a103"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__buffer_8h.html#af772f3d963fadee149e90e56b212a103">CCC_flat_buffer_with_storage</a>(count,  compound_literal_array...)&#160;&#160;&#160;    CCC_private_flat_buffer_with_storage(count, compound_literal_array)</td></tr>
+<tr class="memitem:af772f3d963fadee149e90e56b212a103"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__buffer_8h.html#af772f3d963fadee149e90e56b212a103">CCC_flat_buffer_with_storage</a>(count,  compound_literal_array...)&#160;&#160;&#160;    <a class="el" href="private__flat__buffer_8h.html#abf72e3b4be28d7dd12d4243882f961ea">CCC_private_flat_buffer_with_storage</a>(count, compound_literal_array)</td></tr>
 <tr class="memdesc:af772f3d963fadee149e90e56b212a103"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a contiguous Flat_buffer of user a specified type of fixed capacity with no allocation permission or context.  <br /></td></tr>
 <tr class="separator:af772f3d963fadee149e90e56b212a103"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a22e530e30ecb434c972beb706319a413"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__buffer_8h.html#a22e530e30ecb434c972beb706319a413">CCC_flat_buffer_reserve</a> (<a class="el" href="structCCC__Flat__buffer.html">CCC_Flat_buffer</a> *buffer, size_t to_add, <a class="el" href="structCCC__Allocator.html">CCC_Allocator</a> const *allocator)</td></tr>
@@ -398,7 +398,7 @@ This graph shows which files directly or indirectly include this file:</div>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">type_name</td><td>)</td>
-          <td>&#160;&#160;&#160;    CCC_private_flat_buffer_default(type_name)</td>
+          <td>&#160;&#160;&#160;    <a class="el" href="private__flat__buffer_8h.html#adfba5edf95a60b24647bdbd607fbc452">CCC_private_flat_buffer_default</a>(type_name)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -414,7 +414,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <p>Initialization of a Flat_buffer can occur at compile time or run time.</p>
 <div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code hl_struct" href="structCCC__Flat__buffer.html">CCC_Flat_buffer</a> stack = <a class="code hl_define" href="flat__buffer_8h.html#a3652ded849fcbaa8c6d790feaf145673">CCC_flat_buffer_default</a>(<span class="keywordtype">int</span>);</div>
 <div class="ttc" id="aflat__buffer_8h_html_a3652ded849fcbaa8c6d790feaf145673"><div class="ttname"><a href="flat__buffer_8h.html#a3652ded849fcbaa8c6d790feaf145673">CCC_flat_buffer_default</a></div><div class="ttdeci">#define CCC_flat_buffer_default(type_name)</div><div class="ttdoc">Initialize a contiguous empty buffer of a type.</div><div class="ttdef"><b>Definition:</b> flat_buffer.h:93</div></div>
-<div class="ttc" id="astructCCC__Flat__buffer_html"><div class="ttname"><a href="structCCC__Flat__buffer.html">CCC_Flat_buffer</a></div><div class="ttdef"><b>Definition:</b> private_flat_buffer.h:32</div></div>
+<div class="ttc" id="astructCCC__Flat__buffer_html"><div class="ttname"><a href="structCCC__Flat__buffer.html">CCC_Flat_buffer</a></div><div class="ttdef"><b>Definition:</b> private_flat_buffer.h:40</div></div>
 </div><!-- fragment --><p>The buffer will be empty with a count and capacity of 0. </p>
 
 </div>
@@ -450,9 +450,10 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_flat_buffer_emplace(                                           \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__buffer_8h.html#a0bc2bd58d91c2fda4d74e5de652cdf8b">CCC_private_flat_buffer_emplace</a>(                                           \</div>
 <div class="line">        flat_buffer_pointer, index, type_compound_literal                      \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__flat__buffer_8h_html_a0bc2bd58d91c2fda4d74e5de652cdf8b"><div class="ttname"><a href="private__flat__buffer_8h.html#a0bc2bd58d91c2fda4d74e5de652cdf8b">CCC_private_flat_buffer_emplace</a></div><div class="ttdeci">#define CCC_private_flat_buffer_emplace( private_flat_buffer_pointer, index, private_type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_flat_buffer.h:168</div></div>
 </div><!-- fragment -->
 <p>Writes a user provided compound literal directly to a Flat_buffer slot. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -500,9 +501,10 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_flat_buffer_emplace_back(                                      \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__buffer_8h.html#a47e15eebcb3a44585464876b3b533805">CCC_private_flat_buffer_emplace_back</a>(                                      \</div>
 <div class="line">        flat_buffer_pointer, allocator_pointer, type_compound_literal          \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__flat__buffer_8h_html_a47e15eebcb3a44585464876b3b533805"><div class="ttname"><a href="private__flat__buffer_8h.html#a47e15eebcb3a44585464876b3b533805">CCC_private_flat_buffer_emplace_back</a></div><div class="ttdeci">#define CCC_private_flat_buffer_emplace_back( private_flat_buffer_pointer, private_allocator_pointer, private_type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_flat_buffer.h:182</div></div>
 </div><!-- fragment -->
 <p>Pushes the user provided compound literal directly to back of buffer and increments the size to reflect the newly added element. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -551,7 +553,7 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;    CCC_private_flat_buffer_for(type_name, capacity, count, data_pointer)</td>
+          <td></td><td>&#160;&#160;&#160;    <a class="el" href="private__flat__buffer_8h.html#a68dddb2253c474c71706dbdd78f1e3f1">CCC_private_flat_buffer_for</a>(type_name, capacity, count, data_pointer)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -612,9 +614,10 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_flat_buffer_from(                                              \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__buffer_8h.html#ae489a8d44f2306384b85d8410e19dc98">CCC_private_flat_buffer_from</a>(                                              \</div>
 <div class="line">        allocator, optional_capacity, compound_literal_array                   \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__flat__buffer_8h_html_ae489a8d44f2306384b85d8410e19dc98"><div class="ttname"><a href="private__flat__buffer_8h.html#ae489a8d44f2306384b85d8410e19dc98">CCC_private_flat_buffer_from</a></div><div class="ttdeci">#define CCC_private_flat_buffer_from( private_allocator, private_optional_capacity, private_compound_literal_array...)</div><div class="ttdef"><b>Definition:</b> private_flat_buffer.h:75</div></div>
 </div><!-- fragment -->
 <p>Initialize a Flat_buffer from a compound literal array initializer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -723,7 +726,7 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;    CCC_private_flat_buffer_with_capacity(type_name, allocator, capacity)</td>
+          <td></td><td>&#160;&#160;&#160;    <a class="el" href="private__flat__buffer_8h.html#a5d152884898f3065d8de71e228bc5f3e">CCC_private_flat_buffer_with_capacity</a>(type_name, allocator, capacity)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -775,7 +778,7 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;    CCC_private_flat_buffer_with_storage(count, compound_literal_array)</td>
+          <td></td><td>&#160;&#160;&#160;    <a class="el" href="private__flat__buffer_8h.html#abf72e3b4be28d7dd12d4243882f961ea">CCC_private_flat_buffer_with_storage</a>(count, compound_literal_array)</td>
         </tr>
       </table>
 </div><div class="memdoc">

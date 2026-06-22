@@ -113,6 +113,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </li>
 </ul>
 </li>
+<li>Specialized Containers</li>
 <li><a class="el" href="index.html#installation">Installation</a></li>
 <li><a class="el" href="index.html#coverage-report">Coverage Report</a></li>
 <li><a href="https://github.com/SkeletOSS/ccc">Back to Repository</a></li>
@@ -121,22 +122,25 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 Header Navigation</h1>
 <p>Follow the links to the C Container Collection headers.</p>
 <ul>
-<li><a href="https://skeletoss.github.io/ccc/adaptive__map_8h.html">ccc/adaptive_map.h</a></li>
-<li><a href="https://skeletoss.github.io/ccc/array__adaptive__map_8h.html">ccc/array_adaptive_map.h</a></li>
-<li><a href="https://skeletoss.github.io/ccc/array__tree__map_8h.html">ccc/array_tree_map.h</a></li>
-<li><a href="https://skeletoss.github.io/ccc/configuration_8h.html">ccc/configuration.h</a></li>
-<li><a href="https://skeletoss.github.io/ccc/doubly__linked__list_8h.html">ccc/doubly_linked_list.h</a></li>
-<li><a href="https://skeletoss.github.io/ccc/flat__bitset_8h.html">ccc/flat_bitset.h</a></li>
-<li><a href="https://skeletoss.github.io/ccc/flat__buffer_8h.html">ccc/flat_buffer.h</a></li>
-<li><a href="https://skeletoss.github.io/ccc/flat__double__ended__queue_8h.html">ccc/flat_double_ended_queue.h</a></li>
-<li><a href="https://skeletoss.github.io/ccc/flat__hash__map_8h.html">ccc/flat_hash_map.h</a></li>
-<li><a href="https://skeletoss.github.io/ccc/flat__priority__queue_8h.html">ccc/flat_priority_queue.h</a></li>
-<li><a href="https://skeletoss.github.io/ccc/priority__queue_8h.html">ccc/priority_queue.h</a></li>
-<li><a href="https://skeletoss.github.io/ccc/singly__linked__list_8h.html">ccc/singly_linked_list.h</a></li>
-<li><a href="https://skeletoss.github.io/ccc/sort_8h.html">ccc/sort.h</a></li>
-<li><a href="https://skeletoss.github.io/ccc/traits_8h.html">ccc/traits.h</a></li>
-<li><a href="https://skeletoss.github.io/ccc/tree__map_8h.html">ccc/tree_map.h</a></li>
-<li><a href="https://skeletoss.github.io/ccc/types_8h.html">ccc/types.h</a></li>
+<li><a class="el" href="array__tree__map_8h.html" title="The Array Tree Map Interface.">array_tree_map.h</a></li>
+<li><a class="el" href="configuration_8h.html" title="The C Container Collection Configuration Header.">configuration.h</a></li>
+<li><a class="el" href="doubly__linked__list_8h.html" title="The Doubly Linked List Interface.">doubly_linked_list.h</a></li>
+<li><a class="el" href="flat__bitset_8h.html" title="The Bit Set Interface.">flat_bitset.h</a></li>
+<li><a class="el" href="flat__buffer_8h.html" title="The Flat_buffer Interface.">flat_buffer.h</a></li>
+<li><a class="el" href="flat__double__ended__queue_8h.html" title="The Flat Double Ended Queue Interface.">flat_double_ended_queue.h</a></li>
+<li><a class="el" href="flat__hash__map_8h.html" title="The Flat Hash Map Interface.">flat_hash_map.h</a></li>
+<li><a class="el" href="flat__priority__queue_8h.html" title="The Flat Priority Queue Interface.">flat_priority_queue.h</a></li>
+<li><a class="el" href="singly__linked__list_8h.html" title="The Singly Linked List Interface.">singly_linked_list.h</a></li>
+<li><a class="el" href="sort_8h.html" title="The C Container Collection Sorting Interface.">sort.h</a></li>
+<li><a class="el" href="traits_8h.html" title="The C Container Collection Traits Interface.">traits.h</a></li>
+<li><a class="el" href="tree__map_8h.html" title="The Tree Map Interface.">tree_map.h</a></li>
+<li><a class="el" href="types_8h.html" title="The C Container Collection Fundamental Types.">types.h</a></li>
+</ul>
+<p>Specialized containers not included in the default core collection.</p>
+<ul>
+<li><a class="el" href="adaptive__map_8h.html" title="The Adaptive Map Interface.">adaptive_map.h</a></li>
+<li><a class="el" href="array__adaptive__map_8h.html" title="The Array Adaptive Map Interface.">array_adaptive_map.h</a></li>
+<li><a class="el" href="priority__queue_8h.html" title="The Priority Queue Interface.">priority_queue.h</a></li>
 </ul>
 <h1><a class="anchor" id="ccc-cardinal-rules"></a>
 CCC Cardinal Rules</h1>
@@ -245,8 +249,8 @@ Understand Allocators</h2>
 <div class="ttc" id="apriority__queue_8h_html_a9e8274ed9bdc17dedf7abff36ea3d9d8"><div class="ttname"><a href="priority__queue_8h.html#a9e8274ed9bdc17dedf7abff36ea3d9d8">CCC_priority_queue_push</a></div><div class="ttdeci">void * CCC_priority_queue_push(CCC_Priority_queue *priority_queue, CCC_Priority_queue_node *type_intruder, CCC_Allocator const *allocator)</div><div class="ttdoc">Adds an element to the priority queue in correct total order. O(1).</div></div>
 <div class="ttc" id="apriority__queue_8h_html_ad47007b5b4a31081f53ec72ec39e37c5"><div class="ttname"><a href="priority__queue_8h.html#ad47007b5b4a31081f53ec72ec39e37c5">CCC_priority_queue_default</a></div><div class="ttdeci">#define CCC_priority_queue_default( type_name, type_intruder_field, order, comparator)</div><div class="ttdoc">Initialize a default priority queue at runtime or compile time.</div><div class="ttdef"><b>Definition:</b> priority_queue.h:83</div></div>
 <div class="ttc" id="astructCCC__Comparator_html"><div class="ttname"><a href="structCCC__Comparator.html">CCC_Comparator</a></div><div class="ttdoc">The type passed by reference to any container function that may need to compare elements....</div><div class="ttdef"><b>Definition:</b> types.h:424</div></div>
-<div class="ttc" id="astructCCC__Priority__queue__node_html"><div class="ttname"><a href="structCCC__Priority__queue__node.html">CCC_Priority_queue_node</a></div><div class="ttdef"><b>Definition:</b> private_priority_queue.h:33</div></div>
-<div class="ttc" id="astructCCC__Priority__queue_html"><div class="ttname"><a href="structCCC__Priority__queue.html">CCC_Priority_queue</a></div><div class="ttdef"><b>Definition:</b> private_priority_queue.h:85</div></div>
+<div class="ttc" id="astructCCC__Priority__queue__node_html"><div class="ttname"><a href="structCCC__Priority__queue__node.html">CCC_Priority_queue_node</a></div><div class="ttdef"><b>Definition:</b> private_priority_queue.h:46</div></div>
+<div class="ttc" id="astructCCC__Priority__queue_html"><div class="ttname"><a href="structCCC__Priority__queue.html">CCC_Priority_queue</a></div><div class="ttdef"><b>Definition:</b> private_priority_queue.h:98</div></div>
 <div class="ttc" id="atypes_8h_html_a5e471ae63519e1044855e361826fc355a7d1c8b7831377b5625db94ca6eb5c323"><div class="ttname"><a href="types_8h.html#a5e471ae63519e1044855e361826fc355a7d1c8b7831377b5625db94ca6eb5c323">CCC_ORDER_LESSER</a></div><div class="ttdeci">@ CCC_ORDER_LESSER</div><div class="ttdef"><b>Definition:</b> types.h:215</div></div>
 </div><!-- fragment --><p>Full knowledge of the stack allocator is not required to understand the gist of this code block. There is an allocation function and a structure that manages the requested block of types the user plans to use. Context is a powerful concept for allocators that can provide fine-grained control and flexibility.</p>
 <p>Passing allocators at call sites also ensures that the reader knows where in the code memory allocation may occur. Different types of allocators with various levels of debugging or safety features can also be swapped in at runtime or compile time easily. Finally, no boiler plate is required if the user plans on using only fixed size containers or managing their own memory.</p>
@@ -329,7 +333,7 @@ Use the Correct Initializer</h2>
 <div class="line">    NULL <span class="comment">/* &lt;-ERROR HERE! */</span></div>
 <div class="line">);</div>
 <div class="ttc" id="aflat__bitset_8h_html_a7726e99d17bc9e180ffed768966bcc9f"><div class="ttname"><a href="flat__bitset_8h.html#a7726e99d17bc9e180ffed768966bcc9f">CCC_flat_bitset_for</a></div><div class="ttdeci">#define CCC_flat_bitset_for(cap, count, bitblock_pointer...)</div><div class="ttdoc">Initialize a bit set from any memory source at runtime.</div><div class="ttdef"><b>Definition:</b> flat_bitset.h:317</div></div>
-<div class="ttc" id="astructCCC__Flat__bitset_html"><div class="ttname"><a href="structCCC__Flat__bitset.html">CCC_Flat_bitset</a></div><div class="ttdef"><b>Definition:</b> private_flat_bitset.h:34</div></div>
+<div class="ttc" id="astructCCC__Flat__bitset_html"><div class="ttname"><a href="structCCC__Flat__bitset.html">CCC_Flat_bitset</a></div><div class="ttdef"><b>Definition:</b> private_flat_bitset.h:41</div></div>
 </div><!-- fragment --><p>This misuse breaks rule 2, and it is difficult to understand what the two zeros and <code>NULL</code> mean just from reading the code. Use the correct initializer.</p>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structCCC__Flat__bitset.html">CCC_Flat_bitset</a> b = <a class="code hl_define" href="flat__bitset_8h.html#a81384ece3d79edf30a208bcb7d31e9d5">CCC_flat_bitset_default</a>();</div>
 <div class="ttc" id="aflat__bitset_8h_html_a81384ece3d79edf30a208bcb7d31e9d5"><div class="ttname"><a href="flat__bitset_8h.html#a81384ece3d79edf30a208bcb7d31e9d5">CCC_flat_bitset_default</a></div><div class="ttdeci">#define CCC_flat_bitset_default()</div><div class="ttdoc">Initialize an empty default bit set.</div><div class="ttdef"><b>Definition:</b> flat_bitset.h:117</div></div>
@@ -385,12 +389,12 @@ Use the Correct Initializer</h2>
 <div class="ttc" id="aflat__double__ended__queue_8h_html_a2dc5c19aee7eb246ba208f664c34db52"><div class="ttname"><a href="flat__double__ended__queue_8h.html#a2dc5c19aee7eb246ba208f664c34db52">CCC_flat_double_ended_queue_with_storage</a></div><div class="ttdeci">#define CCC_flat_double_ended_queue_with_storage( count, compound_literal_array...)</div><div class="ttdoc">Initialize the queue from a compound literal array with no allocation permissions or context data.</div><div class="ttdef"><b>Definition:</b> flat_double_ended_queue.h:198</div></div>
 <div class="ttc" id="aflat__hash__map_8h_html_a7fe5b8e18cbb12ce7f4cd52038959c90"><div class="ttname"><a href="flat__hash__map_8h.html#a7fe5b8e18cbb12ce7f4cd52038959c90">CCC_flat_hash_map_with_storage</a></div><div class="ttdeci">#define CCC_flat_hash_map_with_storage( key_field, hasher, compound_literal, optional_storage_specifier...)</div><div class="ttdoc">Initialize a fixed map at compile time or runtime from its previously declared type using a compound ...</div><div class="ttdef"><b>Definition:</b> flat_hash_map.h:351</div></div>
 <div class="ttc" id="aflat__priority__queue_8h_html_ae3596c8477e20e42beb42328fbc40423"><div class="ttname"><a href="flat__priority__queue_8h.html#ae3596c8477e20e42beb42328fbc40423">CCC_flat_priority_queue_with_storage</a></div><div class="ttdeci">#define CCC_flat_priority_queue_with_storage( order, comparator, compound_literal_array)</div><div class="ttdoc">Initialize a priority_queue as a min or max heap with no allocation permission, no context data,...</div><div class="ttdef"><b>Definition:</b> flat_priority_queue.h:253</div></div>
-<div class="ttc" id="astructCCC__Array__adaptive__map_html"><div class="ttname"><a href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a></div><div class="ttdef"><b>Definition:</b> private_array_adaptive_map.h:76</div></div>
-<div class="ttc" id="astructCCC__Array__tree__map_html"><div class="ttname"><a href="structCCC__Array__tree__map.html">CCC_Array_tree_map</a></div><div class="ttdef"><b>Definition:</b> private_array_tree_map.h:140</div></div>
-<div class="ttc" id="astructCCC__Flat__buffer_html"><div class="ttname"><a href="structCCC__Flat__buffer.html">CCC_Flat_buffer</a></div><div class="ttdef"><b>Definition:</b> private_flat_buffer.h:32</div></div>
-<div class="ttc" id="astructCCC__Flat__double__ended__queue_html"><div class="ttname"><a href="structCCC__Flat__double__ended__queue.html">CCC_Flat_double_ended_queue</a></div><div class="ttdef"><b>Definition:</b> private_flat_double_ended_queue.h:35</div></div>
+<div class="ttc" id="astructCCC__Array__adaptive__map_html"><div class="ttname"><a href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a></div><div class="ttdef"><b>Definition:</b> private_array_adaptive_map.h:83</div></div>
+<div class="ttc" id="astructCCC__Array__tree__map_html"><div class="ttname"><a href="structCCC__Array__tree__map.html">CCC_Array_tree_map</a></div><div class="ttdef"><b>Definition:</b> private_array_tree_map.h:148</div></div>
+<div class="ttc" id="astructCCC__Flat__buffer_html"><div class="ttname"><a href="structCCC__Flat__buffer.html">CCC_Flat_buffer</a></div><div class="ttdef"><b>Definition:</b> private_flat_buffer.h:40</div></div>
+<div class="ttc" id="astructCCC__Flat__double__ended__queue_html"><div class="ttname"><a href="structCCC__Flat__double__ended__queue.html">CCC_Flat_double_ended_queue</a></div><div class="ttdef"><b>Definition:</b> private_flat_double_ended_queue.h:43</div></div>
 <div class="ttc" id="astructCCC__Flat__hash__map_html"><div class="ttname"><a href="structCCC__Flat__hash__map.html">CCC_Flat_hash_map</a></div><div class="ttdef"><b>Definition:</b> private_flat_hash_map.h:152</div></div>
-<div class="ttc" id="astructCCC__Flat__priority__queue_html"><div class="ttname"><a href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a></div><div class="ttdef"><b>Definition:</b> private_flat_priority_queue.h:34</div></div>
+<div class="ttc" id="astructCCC__Flat__priority__queue_html"><div class="ttname"><a href="structCCC__Flat__priority__queue.html">CCC_Flat_priority_queue</a></div><div class="ttdef"><b>Definition:</b> private_flat_priority_queue.h:45</div></div>
 <div class="ttc" id="astructCCC__Hasher_html"><div class="ttname"><a href="structCCC__Hasher.html">CCC_Hasher</a></div><div class="ttdoc">The type passed by reference to a hash map that needs a hash function and key comparison function....</div><div class="ttdef"><b>Definition:</b> types.h:558</div></div>
 <div class="ttc" id="astructCCC__Key__comparator_html"><div class="ttname"><a href="structCCC__Key__comparator.html">CCC_Key_comparator</a></div><div class="ttdoc">The type passed by reference to any container function that may need to compare keys....</div><div class="ttdef"><b>Definition:</b> types.h:520</div></div>
 </div><!-- fragment --><p>The <code>_default()</code> initializers can be used at compile or runtime as well. The correct initializer will always present the more readable and expressive code. More complex initializers such as the <code>_for()</code> family of initializers are in place to support well-documented but rare corner cases of user memory management strategies. Always read the container initialization section of the container documentation to pick the right initializer for the job.</p>
@@ -451,7 +455,7 @@ Stable Pointers</h3>
 <div class="line">    &amp;allocator</div>
 <div class="line">);</div>
 <div class="line"><span class="comment">/* a is still valid */</span></div>
-<div class="ttc" id="astructCCC__Tree__map__node_html"><div class="ttname"><a href="structCCC__Tree__map__node.html">CCC_Tree_map_node</a></div><div class="ttdef"><b>Definition:</b> private_tree_map.h:30</div></div>
+<div class="ttc" id="astructCCC__Tree__map__node_html"><div class="ttname"><a href="structCCC__Tree__map__node.html">CCC_Tree_map_node</a></div><div class="ttdef"><b>Definition:</b> private_tree_map.h:42</div></div>
 <div class="ttc" id="atree__map_8h_html_a57860254596ebc4c51e4f9d48671578a"><div class="ttname"><a href="tree__map_8h.html#a57860254596ebc4c51e4f9d48671578a">CCC_tree_map_or_insert</a></div><div class="ttdeci">void * CCC_tree_map_or_insert(CCC_Tree_map_entry const *entry, CCC_Tree_map_node *type_intruder, CCC_Allocator const *allocator)</div><div class="ttdoc">Inserts the struct with handle type_intruder if the entry is Vacant.</div></div>
 <div class="ttc" id="atree__map_8h_html_a97a2aa2ff988d3632b332f56cb47d243"><div class="ttname"><a href="tree__map_8h.html#a97a2aa2ff988d3632b332f56cb47d243">CCC_tree_map_entry_wrap</a></div><div class="ttdeci">#define CCC_tree_map_entry_wrap(map_pointer, key_pointer...)</div><div class="ttdoc">Obtains an entry for the provided key in the map for future use.</div><div class="ttdef"><b>Definition:</b> tree_map.h:412</div></div>
 </div><!-- fragment --><p>The map assumes the pointer <code>*a</code> is still valid after the insertion of <code>*b</code>. The container assumption is the same whether an allocator has been provided or the user is managing memory and has passed an empty <code>&amp;(<a class="el" href="structCCC__Allocator.html" title="The type passed by reference to any container function that may need to allocate memory....">CCC_Allocator</a>){}</code>.</p>
@@ -476,6 +480,10 @@ Stable Handles</h3>
 <div class="ttc" id="aarray__tree__map_8h_html_a7ebc89ac0823dd6276c466c943e0150f"><div class="ttname"><a href="array__tree__map_8h.html#a7ebc89ac0823dd6276c466c943e0150f">CCC_array_tree_map_or_insert</a></div><div class="ttdeci">CCC_Handle_index CCC_array_tree_map_or_insert(CCC_Array_tree_map_handle const *handle, void const *type, CCC_Allocator const *allocator)</div><div class="ttdoc">Inserts the provided user type if the handle is Vacant.</div></div>
 <div class="ttc" id="atypes_8h_html_a4043390f03f4ec5162e3782152360be9"><div class="ttname"><a href="types_8h.html#a4043390f03f4ec5162e3782152360be9">CCC_Handle_index</a></div><div class="ttdeci">size_t CCC_Handle_index</div><div class="ttdoc">A stable index to user data in a container that uses a flat array as the underlying storage method.</div><div class="ttdef"><b>Definition:</b> types.h:72</div></div>
 </div><!-- fragment --><p>After the second element is inserted, <code>a</code> remains valid and can be provided to the container API to obtain a pointer to the user element. The underlying storage may have been resized or moved, but the location in the array remains stable. Therefore, it is important to remember that only the handle index remains stable, never the pointer obtained with that index.</p>
+<h1><a class="anchor" id="autotoc_md1"></a>
+Specialized Containers</h1>
+<p>Some containers in the collection have interesting or niche space and runtime characteristics. For example, the <code><a class="el" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a></code> and <code><a class="el" href="structCCC__Array__adaptive__map.html">CCC_Array_adaptive_map</a></code> have identical interfaces to the <code><a class="el" href="structCCC__Tree__map.html">CCC_Tree_map</a></code> and <code><a class="el" href="structCCC__Array__tree__map.html">CCC_Array_tree_map</a></code> but they are implemented with a self-optimizing splay tree. This means that searching is not a read-only operation because every query modifies the underlying data structure. This has interesting implications for runtime over certain usage patterns, but also is not what users might expect from a search operation. Therefore, this container is relegated to the <code>specialized/</code> directories.</p>
+<p>Explore the <code>specialized/</code> containers to see if the containers stored there offer any space or runtime guarantees that are appealing. By default, these are not included in the standard release. They can be obtained from the releases page or by consuming the bleeding edge <code>main.zip</code> from the repository. See the <a class="el" href="md_INSTALL.html">INSTALL.md</a> file for more information.</p>
 <h1><a class="anchor" id="installation"></a>
 Installation</h1>
 <ul>
@@ -485,7 +493,7 @@ Installation</h1>
 Coverage Report</h1>
 <p>If you are looking to contribute, tests that increase coverage are a great start. View the <a href="https://skeletoss.github.io/ccc/coverage">coverage report here</a>.</p>
 <p>The report is generating by running the test suite. See the tests folder for more.</p>
-<h1><a class="anchor" id="autotoc_md1"></a>
+<h1><a class="anchor" id="autotoc_md2"></a>
 Back to Repository</h1>
 <p><a href="https://github.com/SkeletOSS/ccc">Return to repository</a>. </p>
 </div></div><!-- PageDoc -->

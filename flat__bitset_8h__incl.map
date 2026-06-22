@@ -1,8 +1,8 @@
 <map id="ccc/flat_bitset.h" name="ccc/flat_bitset.h">
 <area shape="rect" id="node1" title="The Bit Set Interface." alt="" coords="103,5,227,31"/>
-<area shape="rect" id="node2" href="$private__flat__bitset_8h_source.html" title=" " alt="" coords="37,79,184,119"/>
+<area shape="rect" id="node2" href="$private__flat__bitset_8h.html" title="The Private Flat Bitset Types and Interface." alt="" coords="37,79,184,119"/>
 <area shape="rect" id="node6" href="$types_8h.html" title="The C Container Collection Fundamental Types." alt="" coords="180,167,263,192"/>
-<area shape="rect" id="node3" href="$configuration_8h.html" title="The C Container Collection Configuration Header. For full download and install instructions using a u..." alt="" coords="25,167,156,192"/>
+<area shape="rect" id="node3" href="$configuration_8h.html" title="The C Container Collection Configuration Header." alt="" coords="25,167,156,192"/>
 <area shape="rect" id="node4" title=" " alt="" coords="5,240,80,265"/>
 <area shape="rect" id="node5" title=" " alt="" coords="105,240,175,265"/>
 </map>

@@ -96,7 +96,7 @@ $(document).ready(function(){initNavTree('array__tree__map_8h.html',''); initRes
 
 <p>The Array Tree Map Interface.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;private/private_array_tree_map.h&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="private__array__tree__map_8h_source.html">private/private_array_tree_map.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for array_tree_map.h:</div>
@@ -104,7 +104,7 @@ Include dependency graph for array_tree_map.h:</div>
 <div class="center"><img src="array__tree__map_8h__incl.png" border="0" usemap="#accc_2array__tree__map_8h" alt=""/></div>
 <map name="accc_2array__tree__map_8h" id="accc_2array__tree__map_8h">
 <area shape="rect" title="The Array Tree Map Interface." alt="" coords="62,5,225,31"/>
-<area shape="rect" href="private__array__tree__map_8h_source.html" title=" " alt="" coords="5,79,164,119"/>
+<area shape="rect" href="private__array__tree__map_8h.html" title="The Private Array Tree Map Types and Interface." alt="" coords="5,79,164,119"/>
 <area shape="rect" href="types_8h.html" title="The C Container Collection Fundamental Types." alt="" coords="102,167,185,192"/>
 </map>
 </div>
@@ -114,7 +114,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="center"><img src="array__tree__map_8h__dep__incl.png" border="0" usemap="#accc_2array__tree__map_8hdep" alt=""/></div>
 <map name="accc_2array__tree__map_8hdep" id="accc_2array__tree__map_8hdep">
 <area shape="rect" title="The Array Tree Map Interface." alt="" coords="5,5,168,31"/>
-<area shape="rect" href="private__traits_8h_source.html" title=" " alt="" coords="15,79,158,119"/>
+<area shape="rect" href="private__traits_8h.html" title="The Private Traits _Generic Interface." alt="" coords="15,79,158,119"/>
 <area shape="rect" href="traits_8h.html" title="The C Container Collection Traits Interface." alt="" coords="40,167,133,192"/>
 </map>
 </div>
@@ -137,7 +137,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="memitem:a691dd040b33e730ed6e9ac681afd4d3c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#a691dd040b33e730ed6e9ac681afd4d3c">CCC_array_tree_map_storage_for</a>( user_type_compound_literal_array,  optional_storage_specifier...)</td></tr>
 <tr class="memdesc:a691dd040b33e730ed6e9ac681afd4d3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides the fixed size type layout and underlying storage for a fixed size map. Helpful if the size in bytes of the underlying storage block is needed.  <br /></td></tr>
 <tr class="separator:a691dd040b33e730ed6e9ac681afd4d3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af5e65a6c675f53198cf527a51240aa0a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#af5e65a6c675f53198cf527a51240aa0a">CCC_array_tree_map_default</a>(type_name,  type_key_field,  comparator...)&#160;&#160;&#160;    CCC_private_array_tree_map_default(type_name, type_key_field, comparator)</td></tr>
+<tr class="memitem:af5e65a6c675f53198cf527a51240aa0a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#af5e65a6c675f53198cf527a51240aa0a">CCC_array_tree_map_default</a>(type_name,  type_key_field,  comparator...)&#160;&#160;&#160;    <a class="el" href="private__array__tree__map_8h.html#a1b848255d1762830915deb2667115164">CCC_private_array_tree_map_default</a>(type_name, type_key_field, comparator)</td></tr>
 <tr class="memdesc:af5e65a6c675f53198cf527a51240aa0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a default empty map at runtime or compile time.  <br /></td></tr>
 <tr class="separator:af5e65a6c675f53198cf527a51240aa0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5815ba36568a2006bc5987c2bdfecc52"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="array__tree__map_8h.html#a5815ba36568a2006bc5987c2bdfecc52">CCC_array_tree_map_for</a>( type_name,  type_key_field,  comparator,  capacity,  memory_pointer)</td></tr>
@@ -357,11 +357,12 @@ This graph shows which files directly or indirectly include this file:</div>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    &amp;(                                                                         \</div>
 <div class="line">         <span class="keyword">struct </span>{ <a class="code hl_struct" href="structCCC__Array__tree__map__handle.html">CCC_Array_tree_map_handle</a> <span class="keyword">private</span>; }                         \</div>
-<div class="line">    ){CCC_private_array_tree_map_and_modify_with(                              \</div>
+<div class="line">    ){<a class="code hl_define" href="private__array__tree__map_8h.html#a346bc1c5095a767dcb5468b525435a13">CCC_private_array_tree_map_and_modify_with</a>(                              \</div>
 <div class="line">          map_array_pointer, closure_parameter, closure_over_closure_parameter \</div>
 <div class="line">      )}                                                                       \</div>
 <div class="line">         .private</div>
-<div class="ttc" id="astructCCC__Array__tree__map__handle_html"><div class="ttname"><a href="structCCC__Array__tree__map__handle.html">CCC_Array_tree_map_handle</a></div><div class="ttdef"><b>Definition:</b> private_array_tree_map.h:166</div></div>
+<div class="ttc" id="aprivate__array__tree__map_8h_html_a346bc1c5095a767dcb5468b525435a13"><div class="ttname"><a href="private__array__tree__map_8h.html#a346bc1c5095a767dcb5468b525435a13">CCC_private_array_tree_map_and_modify_with</a></div><div class="ttdeci">#define CCC_private_array_tree_map_and_modify_with( array_tree_map_handle_pointer, closure_parameter, closure_over_closure_parameter...)</div><div class="ttdef"><b>Definition:</b> private_array_tree_map.h:459</div></div>
+<div class="ttc" id="astructCCC__Array__tree__map__handle_html"><div class="ttname"><a href="structCCC__Array__tree__map__handle.html">CCC_Array_tree_map_handle</a></div><div class="ttdef"><b>Definition:</b> private_array_tree_map.h:174</div></div>
 </div><!-- fragment -->
 <p>Modify an Occupied handle with a closure over user type T. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -426,9 +427,10 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_tree_map_as(                                             \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__array__tree__map_8h.html#aeee7e300f95936d848022a563c8aac16">CCC_private_array_tree_map_as</a>(                                             \</div>
 <div class="line">        array_tree_map_pointer, type_name, array_index                         \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__array__tree__map_8h_html_aeee7e300f95936d848022a563c8aac16"><div class="ttname"><a href="private__array__tree__map_8h.html#aeee7e300f95936d848022a563c8aac16">CCC_private_array_tree_map_as</a></div><div class="ttdeci">#define CCC_private_array_tree_map_as( array_tree_map_pointer, type_name, handle...)</div><div class="ttdef"><b>Definition:</b> private_array_tree_map.h:400</div></div>
 </div><!-- fragment -->
 <p>Returns a reference to the user type in the table at the handle. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -470,7 +472,7 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;    CCC_private_array_tree_map_default(type_name, type_key_field, comparator)</td>
+          <td></td><td>&#160;&#160;&#160;    <a class="el" href="private__array__tree__map_8h.html#a1b848255d1762830915deb2667115164">CCC_private_array_tree_map_default</a>(type_name, type_key_field, comparator)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -621,9 +623,10 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_tree_map_for(                                            \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__array__tree__map_8h.html#af931a4c3d477bc96e044d75becc4019e">CCC_private_array_tree_map_for</a>(                                            \</div>
 <div class="line">        type_name, type_key_field, comparator, capacity, memory_pointer        \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__array__tree__map_8h_html_af931a4c3d477bc96e044d75becc4019e"><div class="ttname"><a href="private__array__tree__map_8h.html#af931a4c3d477bc96e044d75becc4019e">CCC_private_array_tree_map_for</a></div><div class="ttdeci">#define CCC_private_array_tree_map_for( private_type_name, private_key_field, private_comparator, private_capacity, private_memory_pointer)</div><div class="ttdef"><b>Definition:</b> private_array_tree_map.h:274</div></div>
 </div><!-- fragment -->
 <p>Initializes the map at runtime or compile time. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -683,13 +686,14 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_tree_map_from(                                           \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__array__tree__map_8h.html#a115e26d0f1ecdb0ef3c89ea0777620a4">CCC_private_array_tree_map_from</a>(                                           \</div>
 <div class="line">        type_key_field,                                                        \</div>
 <div class="line">        comparator,                                                            \</div>
 <div class="line">        allocator,                                                             \</div>
 <div class="line">        optional_capacity,                                                     \</div>
 <div class="line">        type_compound_literal_array                                            \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__array__tree__map_8h_html_a115e26d0f1ecdb0ef3c89ea0777620a4"><div class="ttname"><a href="private__array__tree__map_8h.html#a115e26d0f1ecdb0ef3c89ea0777620a4">CCC_private_array_tree_map_from</a></div><div class="ttdeci">#define CCC_private_array_tree_map_from( private_key_field, private_comparator, private_allocator, private_optional_cap, private_array_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_array_tree_map.h:291</div></div>
 </div><!-- fragment -->
 <p>Initialize a dynamic map at runtime from an initializer list. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -809,9 +813,10 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_tree_map_insert_handle_with(                             \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__array__tree__map_8h.html#a314a5accfb6636b433015c3a6e710750">CCC_private_array_tree_map_insert_handle_with</a>(                             \</div>
 <div class="line">        map_array_pointer, allocator_pointer, type_compound_literal            \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__array__tree__map_8h_html_a314a5accfb6636b433015c3a6e710750"><div class="ttname"><a href="private__array__tree__map_8h.html#a314a5accfb6636b433015c3a6e710750">CCC_private_array_tree_map_insert_handle_with</a></div><div class="ttdeci">#define CCC_private_array_tree_map_insert_handle_with( array_tree_map_handle_pointer, private_allocator_pointer, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_array_tree_map.h:526</div></div>
 </div><!-- fragment -->
 <p>Write the contents of the compound literal type_compound_literal to a node. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -970,9 +975,10 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_tree_map_or_insert_with(                                 \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__array__tree__map_8h.html#a6bb55f451007cd55f5c0d8f6ced06b3e">CCC_private_array_tree_map_or_insert_with</a>(                                 \</div>
 <div class="line">        map_array_pointer, allocator_pointer, type_compound_literal            \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__array__tree__map_8h_html_a6bb55f451007cd55f5c0d8f6ced06b3e"><div class="ttname"><a href="private__array__tree__map_8h.html#a6bb55f451007cd55f5c0d8f6ced06b3e">CCC_private_array_tree_map_or_insert_with</a></div><div class="ttdeci">#define CCC_private_array_tree_map_or_insert_with( array_tree_map_handle_pointer, private_allocator_pointer, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_array_tree_map.h:485</div></div>
 </div><!-- fragment -->
 <p>Lazily insert the desired key value into the handle if it is Vacant. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1088,9 +1094,10 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_tree_map_storage_for(                                    \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__array__tree__map_8h.html#ab7cf6abd26a290c4177e966a435832c0">CCC_private_array_tree_map_storage_for</a>(                                    \</div>
 <div class="line">        user_type_compound_literal_array, optional_storage_specifier           \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__array__tree__map_8h_html_ab7cf6abd26a290c4177e966a435832c0"><div class="ttname"><a href="private__array__tree__map_8h.html#ab7cf6abd26a290c4177e966a435832c0">CCC_private_array_tree_map_storage_for</a></div><div class="ttdeci">#define CCC_private_array_tree_map_storage_for( private_type_compound_literal_array, optional_storage_specifier...)</div><div class="ttdef"><b>Definition:</b> private_array_tree_map.h:226</div></div>
 </div><!-- fragment -->
 <p>Provides the fixed size type layout and underlying storage for a fixed size map. Helpful if the size in bytes of the underlying storage block is needed. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1305,9 +1312,10 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_tree_map_with_allocator_storage(                         \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__array__tree__map_8h.html#aed10fea181cbe981eec5b332280c20d1">CCC_private_array_tree_map_with_allocator_storage</a>(                         \</div>
 <div class="line">        key_field, comparator, allocator, compound_literal                     \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__array__tree__map_8h_html_aed10fea181cbe981eec5b332280c20d1"><div class="ttname"><a href="private__array__tree__map_8h.html#aed10fea181cbe981eec5b332280c20d1">CCC_private_array_tree_map_with_allocator_storage</a></div><div class="ttdeci">#define CCC_private_array_tree_map_with_allocator_storage( private_key_field, private_comparator, private_allocator, private_compound_literal)</div><div class="ttdef"><b>Definition:</b> private_array_tree_map.h:408</div></div>
 </div><!-- fragment --><p>Obtain a fixed size map dynamically at runtime from an allocator. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">key_field</td><td>the field of the struct used for key storage. </td></tr>
@@ -1364,9 +1372,10 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_tree_map_with_capacity(                                  \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__array__tree__map_8h.html#a010f6176c1106214263404ecbaac2427">CCC_private_array_tree_map_with_capacity</a>(                                  \</div>
 <div class="line">        type_name, type_key_field, comparator, allocator, capacity             \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__array__tree__map_8h_html_a010f6176c1106214263404ecbaac2427"><div class="ttname"><a href="private__array__tree__map_8h.html#a010f6176c1106214263404ecbaac2427">CCC_private_array_tree_map_with_capacity</a></div><div class="ttdeci">#define CCC_private_array_tree_map_with_capacity( private_type_name, private_key_field, private_comparator, private_allocator, private_cap)</div><div class="ttdef"><b>Definition:</b> private_array_tree_map.h:356</div></div>
 </div><!-- fragment -->
 <p>Initialize a dynamic map at runtime with at least the specified capacity. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1443,12 +1452,13 @@ If initialization fails all subsequent queries, insertions, or removals will ind
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_array_tree_map_with_storage(                                   \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__array__tree__map_8h.html#a5e2b39e4b909dde34c7e65b4b0950097">CCC_private_array_tree_map_with_storage</a>(                                   \</div>
 <div class="line">        type_key_field,                                                        \</div>
 <div class="line">        comparator,                                                            \</div>
 <div class="line">        compound_literal,                                                      \</div>
 <div class="line">        optional_storage_specifier                                             \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__array__tree__map_8h_html_a5e2b39e4b909dde34c7e65b4b0950097"><div class="ttname"><a href="private__array__tree__map_8h.html#a5e2b39e4b909dde34c7e65b4b0950097">CCC_private_array_tree_map_with_storage</a></div><div class="ttdeci">#define CCC_private_array_tree_map_with_storage( private_key_node_field, private_comparator, private_compound_literal, private_optional_storage_specifier...)</div><div class="ttdef"><b>Definition:</b> private_array_tree_map.h:375</div></div>
 </div><!-- fragment -->
 <p>Initialize a fixed map at compile or runtime from any user chosen type with no allocation permission or context. </p>
 <dl class="params"><dt>Parameters</dt><dd>

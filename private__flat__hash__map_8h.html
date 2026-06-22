@@ -100,7 +100,7 @@ $(document).ready(function(){initNavTree('private__flat__hash__map_8h.html','');
 </div><!--header-->
 <div class="contents">
 
-<p>Private Flat Hash Map Interface.  
+<p>The Private Flat Hash Map Types and Interface.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="types_8h_source.html">../types.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -108,7 +108,7 @@ Include dependency graph for private_flat_hash_map.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="private__flat__hash__map_8h__incl.png" border="0" usemap="#accc_2private_2private__flat__hash__map_8h" alt=""/></div>
 <map name="accc_2private_2private__flat__hash__map_8h" id="accc_2private_2private__flat__hash__map_8h">
-<area shape="rect" title="Private Flat Hash Map Interface." alt="" coords="5,5,148,45"/>
+<area shape="rect" title="The Private Flat Hash Map Types and Interface." alt="" coords="5,5,148,45"/>
 <area shape="rect" href="types_8h.html" title="The C Container Collection Fundamental Types." alt="" coords="35,93,118,119"/>
 </map>
 </div>
@@ -117,16 +117,16 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="private__flat__hash__map_8h__dep__incl.png" border="0" usemap="#accc_2private_2private__flat__hash__map_8hdep" alt=""/></div>
 <map name="accc_2private_2private__flat__hash__map_8hdep" id="accc_2private_2private__flat__hash__map_8hdep">
-<area shape="rect" title="Private Flat Hash Map Interface." alt="" coords="11,5,154,45"/>
+<area shape="rect" title="The Private Flat Hash Map Types and Interface." alt="" coords="11,5,154,45"/>
 <area shape="rect" href="flat__hash__map_8h.html" title="The Flat Hash Map Interface." alt="" coords="5,93,160,119"/>
-<area shape="rect" href="private__traits_8h_source.html" title=" " alt="" coords="11,167,154,207"/>
+<area shape="rect" href="private__traits_8h.html" title="The Private Traits _Generic Interface." alt="" coords="11,167,154,207"/>
 <area shape="rect" href="traits_8h.html" title="The C Container Collection Traits Interface." alt="" coords="36,255,129,280"/>
 </map>
 </div>
 </div>
 <p><a href="private__flat__hash__map_8h_source.html">Go to the source code of this file.</a></p>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Private Flat Hash Map Interface. </p>
+<div class="textblock"><p>The Private Flat Hash Map Types and Interface. </p>
 <p>This flat hash map is a C Container Collection friendly interpretation of the Rust Hashbrown hash table. This in turn is based on the Abseil flat hash table from Google in C++. I simplified and modified the implementation for maximum readability in one header and one file. Tracking how to manage different platform implementations of groups and metadata fingerprint masks should be much easier this way, rather than jumping across countless small implementation files.</p>
 <p>One key feature that is rigorously tested via static asserts is the ability to create a static data segment or stack based map. This is a key feature of the implementation but it requires significant set up ahead of time and lazy initialization support. The lazy initialization presents the map with the most complexity in the implementation. </p>
 </div><table class="memberdecls">
@@ -170,8 +170,8 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a7896f889fcae9a565fd28b00cc87c5ff"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">: typeof((struct CCC_Flat_hash_map_tag) </td></tr>
-<tr class="separator:a7896f889fcae9a565fd28b00cc87c5ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafb62c6932545e8bea25bdccf3489fd6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">: typeof((struct CCC_Flat_hash_map_tag) </td></tr>
+<tr class="separator:aafb62c6932545e8bea25bdccf3489fd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -186,8 +186,8 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ad75883004f3959ffc98ae1b4ff009199"><td class="memItemLeft" align="right" valign="top">enum  { ... } &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__flat__hash__map_8h.html#ad75883004f3959ffc98ae1b4ff009199">CCC_FLAT_HASH_MAP_GROUP_COUNT</a> = 8</td></tr>
-<tr class="separator:ad75883004f3959ffc98ae1b4ff009199"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6dbbd88f69ae3f7c14f39122e5e26cc0"><td class="memItemLeft" align="right" valign="top">enum  { ... } &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="private__flat__hash__map_8h.html#a6dbbd88f69ae3f7c14f39122e5e26cc0">CCC_FLAT_HASH_MAP_GROUP_COUNT</a> = 8</td></tr>
+<tr class="separator:a6dbbd88f69ae3f7c14f39122e5e26cc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="ab12024a6d025ecc4d6a0ee67a2e7a1cb" name="ab12024a6d025ecc4d6a0ee67a2e7a1cb"></a>
@@ -818,8 +818,8 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="a7896f889fcae9a565fd28b00cc87c5ff" name="a7896f889fcae9a565fd28b00cc87c5ff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7896f889fcae9a565fd28b00cc87c5ff">&#9670;&#160;</a></span>anonymous enum</h2>
+<a id="aafb62c6932545e8bea25bdccf3489fd6" name="aafb62c6932545e8bea25bdccf3489fd6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aafb62c6932545e8bea25bdccf3489fd6">&#9670;&#160;</a></span>anonymous enum</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -943,8 +943,8 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
-<a id="ad75883004f3959ffc98ae1b4ff009199" name="ad75883004f3959ffc98ae1b4ff009199"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad75883004f3959ffc98ae1b4ff009199">&#9670;&#160;</a></span></h2>
+<a id="a6dbbd88f69ae3f7c14f39122e5e26cc0" name="a6dbbd88f69ae3f7c14f39122e5e26cc0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6dbbd88f69ae3f7c14f39122e5e26cc0">&#9670;&#160;</a></span></h2>
 
 <div class="memitem">
 <div class="memproto">

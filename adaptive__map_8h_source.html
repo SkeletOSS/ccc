@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>C Container Collection (CCC): ccc/adaptive_map.h Source File</title>
+<title>C Container Collection (CCC): ccc/specialized/adaptive_map.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -98,8 +98,8 @@ $(document).ready(function(){initNavTree('adaptive__map_8h_source.html',''); ini
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#define CCC_ADAPTIVE_MAP_H</span></div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">#include &lt;stddef.h&gt;</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">#include &quot;<a class="code" href="private__adaptive__map_8h.html">private/private_adaptive_map.h</a>&quot;</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#include &quot;<a class="code" href="types_8h.html">types.h</a>&quot;</span> <span class="comment">/* IWYU pragma: export */</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">#include &quot;../types.h&quot;</span> <span class="comment">/* IWYU pragma: export */</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#include &quot;<a class="code" href="private__adaptive__map_8h.html">private/private_adaptive_map.h</a>&quot;</span></div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="adaptive__map_8h.html#a3f0d3fec74866606bc401195872efdf3">   59</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a> <a class="code hl_struct" href="structCCC__Adaptive__map.html">CCC_Adaptive_map</a>;</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
@@ -473,7 +473,7 @@ $(document).ready(function(){initNavTree('adaptive__map_8h_source.html',''); ini
 <div class="ttc" id="aadaptive__map_8h_html_ae2c78546439edc27f4ad51e9a561adff"><div class="ttname"><a href="adaptive__map_8h.html#ae2c78546439edc27f4ad51e9a561adff">CCC_adaptive_map_unwrap</a></div><div class="ttdeci">void * CCC_adaptive_map_unwrap(CCC_Adaptive_map_entry const *entry)</div><div class="ttdoc">Unwraps the provided entry to obtain a view into the map element.</div></div>
 <div class="ttc" id="aadaptive__map_8h_html_aedabb96a996b904e61bb57bce6251227"><div class="ttname"><a href="adaptive__map_8h.html#aedabb96a996b904e61bb57bce6251227">CCC_adaptive_map_equal_range_reverse</a></div><div class="ttdeci">CCC_Range_reverse CCC_adaptive_map_equal_range_reverse(CCC_Adaptive_map *map, void const *reverse_begin_key, void const *reverse_end_key)</div><div class="ttdoc">Return an iterable range_reverse of values from [begin_key, end_key). Amortized O(lg N).</div></div>
 <div class="ttc" id="aadaptive__map_8h_html_af55d16b66a2bebbad25b45849c53a920"><div class="ttname"><a href="adaptive__map_8h.html#af55d16b66a2bebbad25b45849c53a920">CCC_adaptive_map_count</a></div><div class="ttdeci">CCC_Count CCC_adaptive_map_count(CCC_Adaptive_map const *map)</div><div class="ttdoc">Returns the count of occupied map nodes.</div></div>
-<div class="ttc" id="aprivate__adaptive__map_8h_html"><div class="ttname"><a href="private__adaptive__map_8h.html">private_adaptive_map.h</a></div><div class="ttdoc">The Adaptive Map Private Interface.</div></div>
+<div class="ttc" id="aprivate__adaptive__map_8h_html"><div class="ttname"><a href="private__adaptive__map_8h.html">private_adaptive_map.h</a></div><div class="ttdoc">The Private Adaptive Map Types and Interface.</div></div>
 <div class="ttc" id="astructCCC__Adaptive__map__entry_html"><div class="ttname"><a href="structCCC__Adaptive__map__entry.html">CCC_Adaptive_map_entry</a></div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:87</div></div>
 <div class="ttc" id="astructCCC__Adaptive__map__entry_html_a2b0b0a9ce29ecd47addf7a7d846c2346"><div class="ttname"><a href="structCCC__Adaptive__map__entry.html#a2b0b0a9ce29ecd47addf7a7d846c2346">CCC_Adaptive_map_entry::entry</a></div><div class="ttdeci">CCC_Entry entry</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:91</div></div>
 <div class="ttc" id="astructCCC__Adaptive__map__entry_html_aab2a3f6b00909bccac9bbbb12e91cd03"><div class="ttname"><a href="structCCC__Adaptive__map__entry.html#aab2a3f6b00909bccac9bbbb12e91cd03">CCC_Adaptive_map_entry::map</a></div><div class="ttdeci">struct CCC_Adaptive_map * map</div><div class="ttdef"><b>Definition:</b> private_adaptive_map.h:89</div></div>
@@ -486,7 +486,6 @@ $(document).ready(function(){initNavTree('adaptive__map_8h_source.html',''); ini
 <div class="ttc" id="astructCCC__Modifier_html"><div class="ttname"><a href="structCCC__Modifier.html">CCC_Modifier</a></div><div class="ttdoc">The type passed by reference to any container function that may need to modify elements....</div><div class="ttdef"><b>Definition:</b> types.h:444</div></div>
 <div class="ttc" id="astructCCC__Range__reverse_html"><div class="ttname"><a href="structCCC__Range__reverse.html">CCC_Range_reverse</a></div><div class="ttdoc">The result of a range_reverse query on iterable containers.</div><div class="ttdef"><b>Definition:</b> types.h:55</div></div>
 <div class="ttc" id="astructCCC__Range_html"><div class="ttname"><a href="structCCC__Range.html">CCC_Range</a></div><div class="ttdoc">The result of a range query on iterable containers.</div><div class="ttdef"><b>Definition:</b> types.h:42</div></div>
-<div class="ttc" id="atypes_8h_html"><div class="ttname"><a href="types_8h.html">types.h</a></div><div class="ttdoc">The C Container Collection Fundamental Types.</div></div>
 <div class="ttc" id="atypes_8h_html_a7d5cb1838ecf421fe5b336481344b0a8"><div class="ttname"><a href="types_8h.html#a7d5cb1838ecf421fe5b336481344b0a8">CCC_Entry_status</a></div><div class="ttdeci">CCC_Entry_status</div><div class="ttdoc">The status monitoring and entry state once it is obtained.</div><div class="ttdef"><b>Definition:</b> types.h:112</div></div>
 <div class="ttc" id="atypes_8h_html_a8dbb03cfc2070934832841f50f146bcd"><div class="ttname"><a href="types_8h.html#a8dbb03cfc2070934832841f50f146bcd">CCC_Tribool</a></div><div class="ttdeci">CCC_Tribool</div><div class="ttdoc">A three state boolean to allow for an error state. Error is -1, False is 0, and True is 1.</div><div class="ttdef"><b>Definition:</b> types.h:178</div></div>
 <div class="ttc" id="atypes_8h_html_aa1ded61d294b114942f11e711b331dcf"><div class="ttname"><a href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a></div><div class="ttdeci">CCC_Result</div><div class="ttdoc">A result of actions on containers.</div><div class="ttdef"><b>Definition:</b> types.h:192</div></div>
@@ -495,7 +494,7 @@ $(document).ready(function(){initNavTree('adaptive__map_8h_source.html',''); ini
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5d984c6d55e750c7f944f580303daf53.html">ccc</a></li><li class="navelem"><a class="el" href="adaptive__map_8h.html">adaptive_map.h</a></li>
+    <li class="navelem"><a class="el" href="dir_5d984c6d55e750c7f944f580303daf53.html">ccc</a></li><li class="navelem"><a class="el" href="dir_60483fd5ddce09820aa7d6c5bd994cbd.html">specialized</a></li><li class="navelem"><a class="el" href="adaptive__map_8h.html">adaptive_map.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.6 </li>
   </ul>
 </div>

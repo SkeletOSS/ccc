@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>C Container Collection (CCC): ccc/priority_queue.h File Reference</title>
+<title>C Container Collection (CCC): ccc/specialized/priority_queue.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -96,26 +96,16 @@ $(document).ready(function(){initNavTree('priority__queue_8h.html',''); initResi
 
 <p>The Priority Queue Interface.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;private/private_priority_queue.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="types_8h_source.html">../types.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="private__priority__queue_8h_source.html">private/private_priority_queue.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for priority_queue.h:</div>
 <div class="dyncontent">
-<div class="center"><img src="priority__queue_8h__incl.png" border="0" usemap="#accc_2priority__queue_8h" alt=""/></div>
-<map name="accc_2priority__queue_8h" id="accc_2priority__queue_8h">
-<area shape="rect" title="The Priority Queue Interface." alt="" coords="76,5,229,31"/>
-<area shape="rect" href="private__priority__queue_8h_source.html" title=" " alt="" coords="5,79,177,119"/>
-<area shape="rect" href="types_8h.html" title="The C Container Collection Fundamental Types." alt="" coords="111,167,194,192"/>
-</map>
-</div>
-</div><div class="textblock"><div class="dynheader">
-This graph shows which files directly or indirectly include this file:</div>
-<div class="dyncontent">
-<div class="center"><img src="priority__queue_8h__dep__incl.png" border="0" usemap="#accc_2priority__queue_8hdep" alt=""/></div>
-<map name="accc_2priority__queue_8hdep" id="accc_2priority__queue_8hdep">
-<area shape="rect" title="The Priority Queue Interface." alt="" coords="5,5,159,31"/>
-<area shape="rect" href="private__traits_8h_source.html" title=" " alt="" coords="11,79,153,119"/>
-<area shape="rect" href="traits_8h.html" title="The C Container Collection Traits Interface." alt="" coords="35,167,129,192"/>
+<div class="center"><img src="priority__queue_8h__incl.png" border="0" usemap="#accc_2specialized_2priority__queue_8h" alt=""/></div>
+<map name="accc_2specialized_2priority__queue_8h" id="accc_2specialized_2priority__queue_8h">
+<area shape="rect" title="The Priority Queue Interface." alt="" coords="5,5,176,45"/>
+<area shape="rect" href="types_8h.html" title="The C Container Collection Fundamental Types." alt="" coords="49,181,132,207"/>
+<area shape="rect" href="private__priority__queue_8h.html" title="The Private Priority Queue Types and Interface." alt="" coords="67,93,239,133"/>
 </map>
 </div>
 </div>
@@ -245,11 +235,12 @@ N) increase/decrease key.  <br /></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_priority_queue_decrease_with(                                  \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__priority__queue_8h.html#ab42adc81fe66cb0639a37d25ffee9bd8">CCC_private_priority_queue_decrease_with</a>(                                  \</div>
 <div class="line">        priority_queue_pointer,                                                \</div>
 <div class="line">        closure_parameter,                                                     \</div>
 <div class="line">        decrease_closure_over_closure_parameter                                \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__priority__queue_8h_html_ab42adc81fe66cb0639a37d25ffee9bd8"><div class="ttname"><a href="private__priority__queue_8h.html#ab42adc81fe66cb0639a37d25ffee9bd8">CCC_private_priority_queue_decrease_with</a></div><div class="ttdeci">#define CCC_private_priority_queue_decrease_with( priority_queue_pointer, private_closure_parameter, private_decrease_closure_over_closure_parameter...)</div><div class="ttdef"><b>Definition:</b> private_priority_queue.h:328</div></div>
 </div><!-- fragment -->
 <p>Decreases the priority of the user type_intruder stored in the container. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -313,9 +304,10 @@ N) increase/decrease key.  <br /></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_priority_queue_for(                                            \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__priority__queue_8h.html#a44219f6ad4fc7467dc930a712f2fb7a7">CCC_private_priority_queue_for</a>(                                            \</div>
 <div class="line">        type_name, type_intruder_field, order, comparator                      \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__priority__queue_8h_html_a44219f6ad4fc7467dc930a712f2fb7a7"><div class="ttname"><a href="private__priority__queue_8h.html#a44219f6ad4fc7467dc930a712f2fb7a7">CCC_private_priority_queue_for</a></div><div class="ttdeci">#define CCC_private_priority_queue_for( private_struct_name, private_type_intruder_field, private_priority_queue_order, private_comparator...)</div><div class="ttdef"><b>Definition:</b> private_priority_queue.h:142</div></div>
 </div><!-- fragment -->
 <p>Initialize a default priority queue at runtime or compile time. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -362,9 +354,10 @@ N) increase/decrease key.  <br /></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_priority_queue_emplace(                                        \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__priority__queue_8h.html#a0ee3e930a5932d7c8ed3439bdd93f171">CCC_private_priority_queue_emplace</a>(                                        \</div>
 <div class="line">        priority_queue_pointer, allocator_pointer, type_compound_literal       \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__priority__queue_8h_html_a0ee3e930a5932d7c8ed3439bdd93f171"><div class="ttname"><a href="private__priority__queue_8h.html#a0ee3e930a5932d7c8ed3439bdd93f171">CCC_private_priority_queue_emplace</a></div><div class="ttdeci">#define CCC_private_priority_queue_emplace( priority_queue_pointer, private_allocator_pointer, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_priority_queue.h:232</div></div>
 </div><!-- fragment -->
 <p>Write user type_intruder directly to a newly allocated priority queue elem. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -417,7 +410,7 @@ N) increase/decrease key.  <br /></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_priority_queue_for(                                            \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__priority__queue_8h.html#a44219f6ad4fc7467dc930a712f2fb7a7">CCC_private_priority_queue_for</a>(                                            \</div>
 <div class="line">        type_name, type_intruder_field, order, comparator                      \</div>
 <div class="line">    )</div>
 </div><!-- fragment -->
@@ -484,7 +477,7 @@ N) increase/decrease key.  <br /></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_priority_queue_from(                                           \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__priority__queue_8h.html#a1814caf71a2d607e99c9aa74951c4cd1">CCC_private_priority_queue_from</a>(                                           \</div>
 <div class="line">        type_intruder_field,                                                   \</div>
 <div class="line">        order,                                                                 \</div>
 <div class="line">        comparator,                                                            \</div>
@@ -492,6 +485,7 @@ N) increase/decrease key.  <br /></td></tr>
 <div class="line">        destructor,                                                            \</div>
 <div class="line">        compound_literal_array                                                 \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__priority__queue_8h_html_a1814caf71a2d607e99c9aa74951c4cd1"><div class="ttname"><a href="private__priority__queue_8h.html#a1814caf71a2d607e99c9aa74951c4cd1">CCC_private_priority_queue_from</a></div><div class="ttdeci">#define CCC_private_priority_queue_from( private_type_intruder_field, private_priority_queue_order, private_comparator, private_allocator, private_destructor, private_compound_literal_array...)</div><div class="ttdef"><b>Definition:</b> private_priority_queue.h:173</div></div>
 </div><!-- fragment -->
 <p>Initialize a priority queue at runtime from a compound literal array. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -540,11 +534,12 @@ N) increase/decrease key.  <br /></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_priority_queue_increase_with(                                  \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__priority__queue_8h.html#adff3db8e3caee17b4d1841c55a9c47c1">CCC_private_priority_queue_increase_with</a>(                                  \</div>
 <div class="line">        priority_queue_pointer,                                                \</div>
 <div class="line">        closure_parameter,                                                     \</div>
 <div class="line">        increase_closure_over_closure_parameter                                \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__priority__queue_8h_html_adff3db8e3caee17b4d1841c55a9c47c1"><div class="ttname"><a href="private__priority__queue_8h.html#adff3db8e3caee17b4d1841c55a9c47c1">CCC_private_priority_queue_increase_with</a></div><div class="ttdeci">#define CCC_private_priority_queue_increase_with( priority_queue_pointer, private_closure_parameter, private_increase_closure_over_closure_parameter...)</div><div class="ttdef"><b>Definition:</b> private_priority_queue.h:300</div></div>
 </div><!-- fragment -->
 <p>Increases the priority of the user type stored in the container. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -602,11 +597,12 @@ N) increase/decrease key.  <br /></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_priority_queue_update_with(                                    \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__priority__queue_8h.html#a2dd0d9047373abbf5d67ce0500667786">CCC_private_priority_queue_update_with</a>(                                    \</div>
 <div class="line">        priority_queue_pointer,                                                \</div>
 <div class="line">        closure_parameter,                                                     \</div>
 <div class="line">        update_closure_over_closure_parameter                                  \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__priority__queue_8h_html_a2dd0d9047373abbf5d67ce0500667786"><div class="ttname"><a href="private__priority__queue_8h.html#a2dd0d9047373abbf5d67ce0500667786">CCC_private_priority_queue_update_with</a></div><div class="ttdeci">#define CCC_private_priority_queue_update_with( priority_queue_pointer, private_closure_parameter, private_update_closure_over_closure_parameter...)</div><div class="ttdef"><b>Definition:</b> private_priority_queue.h:272</div></div>
 </div><!-- fragment -->
 <p>Update the priority in the user type stored in the container. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1165,7 +1161,7 @@ N) increase/decrease key. </p>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5d984c6d55e750c7f944f580303daf53.html">ccc</a></li><li class="navelem"><a class="el" href="priority__queue_8h.html">priority_queue.h</a></li>
+    <li class="navelem"><a class="el" href="dir_5d984c6d55e750c7f944f580303daf53.html">ccc</a></li><li class="navelem"><a class="el" href="dir_60483fd5ddce09820aa7d6c5bd994cbd.html">specialized</a></li><li class="navelem"><a class="el" href="priority__queue_8h.html">priority_queue.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.6 </li>
   </ul>
 </div>

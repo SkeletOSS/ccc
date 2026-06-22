@@ -1,6 +1,6 @@
 <map id="ccc/singly_linked_list.h" name="ccc/singly_linked_list.h">
 <area shape="rect" id="node1" title="The Singly Linked List Interface." alt="" coords="59,5,230,31"/>
-<area shape="rect" id="node2" href="$private__traits_8h_source.html" title=" " alt="" coords="5,79,148,119"/>
+<area shape="rect" id="node2" href="$private__traits_8h.html" title="The Private Traits _Generic Interface." alt="" coords="5,79,148,119"/>
 <area shape="rect" id="node4" href="$sort_8h.html" title="The C Container Collection Sorting Interface." alt="" coords="172,86,256,111"/>
 <area shape="rect" id="node3" href="$traits_8h.html" title="The C Container Collection Traits Interface." alt="" coords="30,167,123,192"/>
 </map>

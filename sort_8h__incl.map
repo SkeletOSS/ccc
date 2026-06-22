@@ -4,7 +4,7 @@
 <area shape="rect" id="node4" href="$types_8h.html" title="The C Container Collection Fundamental Types." alt="" coords="273,240,355,265"/>
 <area shape="rect" id="node5" href="$flat__buffer_8h.html" title="The Flat_buffer Interface." alt="" coords="301,79,399,104"/>
 <area shape="rect" id="node7" href="$singly__linked__list_8h.html" title="The Singly Linked List Interface." alt="" coords="462,79,609,104"/>
-<area shape="rect" id="node3" href="$private__doubly__linked__list_8h_source.html" title=" " alt="" coords="5,152,175,192"/>
-<area shape="rect" id="node6" href="$private__flat__buffer_8h_source.html" title=" " alt="" coords="351,152,498,192"/>
-<area shape="rect" id="node8" href="$private__singly__linked__list_8h_source.html" title=" " alt="" coords="573,152,737,192"/>
+<area shape="rect" id="node3" href="$private__doubly__linked__list_8h.html" title="The Private Doubly Linked List Types and Interface." alt="" coords="5,152,175,192"/>
+<area shape="rect" id="node6" href="$private__flat__buffer_8h.html" title="The Private Flat Buffer Types and Interface." alt="" coords="351,152,498,192"/>
+<area shape="rect" id="node8" href="$private__singly__linked__list_8h.html" title="The Private Singly Linked List Types and Interface." alt="" coords="573,152,737,192"/>
 </map>

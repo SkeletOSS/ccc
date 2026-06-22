@@ -96,7 +96,7 @@ $(document).ready(function(){initNavTree('flat__priority__queue_8h.html',''); in
 
 <p>The Flat Priority Queue Interface.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;private/private_flat_priority_queue.h&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="private__flat__priority__queue_8h_source.html">private/private_flat_priority_queue.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="flat__buffer_8h_source.html">flat_buffer.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -105,10 +105,10 @@ Include dependency graph for flat_priority_queue.h:</div>
 <div class="center"><img src="flat__priority__queue_8h__incl.png" border="0" usemap="#accc_2flat__priority__queue_8h" alt=""/></div>
 <map name="accc_2flat__priority__queue_8h" id="accc_2flat__priority__queue_8h">
 <area shape="rect" title="The Flat Priority Queue Interface." alt="" coords="111,5,292,31"/>
-<area shape="rect" href="private__flat__priority__queue_8h_source.html" title=" " alt="" coords="128,79,275,119"/>
+<area shape="rect" href="private__flat__priority__queue_8h.html" title="The Private Flat Priority Queue Types and Interface." alt="" coords="128,79,275,119"/>
 <area shape="rect" href="flat__buffer_8h.html" title="The Flat_buffer Interface." alt="" coords="57,167,167,192"/>
 <area shape="rect" href="types_8h.html" title="The C Container Collection Fundamental Types." alt="" coords="173,328,256,353"/>
-<area shape="rect" href="private__flat__buffer_8h_source.html" title=" " alt="" coords="5,240,152,280"/>
+<area shape="rect" href="private__flat__buffer_8h.html" title="The Private Flat Buffer Types and Interface." alt="" coords="5,240,152,280"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -117,7 +117,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="center"><img src="flat__priority__queue_8h__dep__incl.png" border="0" usemap="#accc_2flat__priority__queue_8hdep" alt=""/></div>
 <map name="accc_2flat__priority__queue_8hdep" id="accc_2flat__priority__queue_8hdep">
 <area shape="rect" title="The Flat Priority Queue Interface." alt="" coords="5,5,187,31"/>
-<area shape="rect" href="private__traits_8h_source.html" title=" " alt="" coords="25,79,167,119"/>
+<area shape="rect" href="private__traits_8h.html" title="The Private Traits _Generic Interface." alt="" coords="25,79,167,119"/>
 <area shape="rect" href="traits_8h.html" title="The C Container Collection Traits Interface." alt="" coords="49,167,143,192"/>
 </map>
 </div>
@@ -140,7 +140,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Initialization Interface</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Initialize the container with memory, callbacks, and permissions. </p>
 </td></tr>
-<tr class="memitem:a85125e5dbe3f64d269bccbbf145f33ee"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__priority__queue_8h.html#a85125e5dbe3f64d269bccbbf145f33ee">CCC_flat_priority_queue_default</a>(type_name,  order,  comparator...)&#160;&#160;&#160;    CCC_private_flat_priority_queue_default(type_name, order, comparator)</td></tr>
+<tr class="memitem:a85125e5dbe3f64d269bccbbf145f33ee"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__priority__queue_8h.html#a85125e5dbe3f64d269bccbbf145f33ee">CCC_flat_priority_queue_default</a>(type_name,  order,  comparator...)&#160;&#160;&#160;    <a class="el" href="private__flat__priority__queue_8h.html#ac101bcf58b757295192f6bc3086c5b72">CCC_private_flat_priority_queue_default</a>(type_name, order, comparator)</td></tr>
 <tr class="memdesc:a85125e5dbe3f64d269bccbbf145f33ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an empty priority queue.  <br /></td></tr>
 <tr class="separator:a85125e5dbe3f64d269bccbbf145f33ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac10029c3d9b01777424cf02df017424b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__priority__queue_8h.html#ac10029c3d9b01777424cf02df017424b">CCC_flat_priority_queue_for</a>( type_name,  order,  comparator,  capacity,  data_pointer)</td></tr>
@@ -279,11 +279,12 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_flat_priority_queue_decrease_with(                             \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__priority__queue_8h.html#a2428478e9024fd1e5617d63ccf3926c6">CCC_private_flat_priority_queue_decrease_with</a>(                             \</div>
 <div class="line">        priority_queue_pointer,                                                \</div>
 <div class="line">        closure_parameter,                                                     \</div>
 <div class="line">        decrease_closure_over_closure_parameter                                \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__flat__priority__queue_8h_html_a2428478e9024fd1e5617d63ccf3926c6"><div class="ttname"><a href="private__flat__priority__queue_8h.html#a2428478e9024fd1e5617d63ccf3926c6">CCC_private_flat_priority_queue_decrease_with</a></div><div class="ttdeci">#define CCC_private_flat_priority_queue_decrease_with( flat_priority_queue_pointer, closure_parameter, decrease_closure_over_closure_parameter...)</div><div class="ttdef"><b>Definition:</b> private_flat_priority_queue.h:279</div></div>
 </div><!-- fragment -->
 <p>Increase the user type stored in the priority queue directly. O(lgN). </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -331,7 +332,7 @@ This graph shows which files directly or indirectly include this file:</div>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;    CCC_private_flat_priority_queue_default(type_name, order, comparator)</td>
+          <td></td><td>&#160;&#160;&#160;    <a class="el" href="private__flat__priority__queue_8h.html#ac101bcf58b757295192f6bc3086c5b72">CCC_private_flat_priority_queue_default</a>(type_name, order, comparator)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -380,9 +381,10 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_flat_priority_queue_emplace(                                   \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__priority__queue_8h.html#a11482bd03d25ba54d8e4b6693ca7d711">CCC_private_flat_priority_queue_emplace</a>(                                   \</div>
 <div class="line">        priority_queue_pointer, allocator_pointer, type_compound_literal       \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__flat__priority__queue_8h_html_a11482bd03d25ba54d8e4b6693ca7d711"><div class="ttname"><a href="private__flat__priority__queue_8h.html#a11482bd03d25ba54d8e4b6693ca7d711">CCC_private_flat_priority_queue_emplace</a></div><div class="ttdeci">#define CCC_private_flat_priority_queue_emplace( flat_priority_queue, private_allocator_pointer, type_compound_literal...)</div><div class="ttdef"><b>Definition:</b> private_flat_priority_queue.h:208</div></div>
 </div><!-- fragment -->
 <p>Write a type directly to a priority queue slot. O(lgN). </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -440,9 +442,10 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_flat_priority_queue_for(                                       \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__priority__queue_8h.html#addd0e3c29e8b99ece930a7d6f7ca8e05">CCC_private_flat_priority_queue_for</a>(                                       \</div>
 <div class="line">        type_name, order, comparator, capacity, data_pointer                   \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__flat__priority__queue_8h_html_addd0e3c29e8b99ece930a7d6f7ca8e05"><div class="ttname"><a href="private__flat__priority__queue_8h.html#addd0e3c29e8b99ece930a7d6f7ca8e05">CCC_private_flat_priority_queue_for</a></div><div class="ttdeci">#define CCC_private_flat_priority_queue_for( private_type_name, private_order, private_comparator, private_capacity, private_data_pointer)</div><div class="ttdef"><b>Definition:</b> private_flat_priority_queue.h:83</div></div>
 </div><!-- fragment -->
 <p>Initialize a priority_queue as a min or max heap. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -502,13 +505,14 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_flat_priority_queue_from(                                      \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__priority__queue_8h.html#ab94cec6ac378da99daf7f71d4d0bc19c">CCC_private_flat_priority_queue_from</a>(                                      \</div>
 <div class="line">        order,                                                                 \</div>
 <div class="line">        comparator,                                                            \</div>
 <div class="line">        allocator,                                                             \</div>
 <div class="line">        optional_capacity,                                                     \</div>
 <div class="line">        compound_literal_array                                                 \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__flat__priority__queue_8h_html_ab94cec6ac378da99daf7f71d4d0bc19c"><div class="ttname"><a href="private__flat__priority__queue_8h.html#ab94cec6ac378da99daf7f71d4d0bc19c">CCC_private_flat_priority_queue_from</a></div><div class="ttdeci">#define CCC_private_flat_priority_queue_from( private_order, private_comparator, private_allocator, private_optional_capacity, private_compound_literal_array...)</div><div class="ttdef"><b>Definition:</b> private_flat_priority_queue.h:126</div></div>
 </div><!-- fragment -->
 <p>Partial order a compound literal array of elements as a min or max heap. O(N). </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -605,9 +609,10 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_flat_priority_queue_heapify(                                   \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__priority__queue_8h.html#a4867bdd802f816a25b8a1b041442e655">CCC_private_flat_priority_queue_heapify</a>(                                   \</div>
 <div class="line">        type_name, order, comparator, capacity, count, data_pointer            \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__flat__priority__queue_8h_html_a4867bdd802f816a25b8a1b041442e655"><div class="ttname"><a href="private__flat__priority__queue_8h.html#a4867bdd802f816a25b8a1b041442e655">CCC_private_flat_priority_queue_heapify</a></div><div class="ttdeci">#define CCC_private_flat_priority_queue_heapify( private_type_name, private_order, private_comparator, private_capacity, private_size, private_data_pointer...)</div><div class="ttdef"><b>Definition:</b> private_flat_priority_queue.h:98</div></div>
 </div><!-- fragment -->
 <p>Partial order an array of elements as a min or max heap at runtime in O(N) time and space equal to the provided data capacity. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -657,11 +662,12 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_flat_priority_queue_increase_with(                             \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__priority__queue_8h.html#a90fd00df682cef1d61a1931b0426ad29">CCC_private_flat_priority_queue_increase_with</a>(                             \</div>
 <div class="line">        priority_queue_pointer,                                                \</div>
 <div class="line">        closure_parameter,                                                     \</div>
 <div class="line">        increase_closure_over_closure_parameter                                \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__flat__priority__queue_8h_html_a90fd00df682cef1d61a1931b0426ad29"><div class="ttname"><a href="private__flat__priority__queue_8h.html#a90fd00df682cef1d61a1931b0426ad29">CCC_private_flat_priority_queue_increase_with</a></div><div class="ttdeci">#define CCC_private_flat_priority_queue_increase_with( flat_priority_queue_pointer, closure_parameter, increase_closure_over_closure_parameter...)</div><div class="ttdef"><b>Definition:</b> private_flat_priority_queue.h:267</div></div>
 </div><!-- fragment -->
 <p>Increase the user type stored in the priority queue directly. O(lgN). </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -713,11 +719,12 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_flat_priority_queue_update_with(                               \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__priority__queue_8h.html#a1a1f813566c2a9db3e779054b2383340">CCC_private_flat_priority_queue_update_with</a>(                               \</div>
 <div class="line">        priority_queue_pointer,                                                \</div>
 <div class="line">        closure_parameter,                                                     \</div>
 <div class="line">        update_closure_over_closure_parameter                                  \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__flat__priority__queue_8h_html_a1a1f813566c2a9db3e779054b2383340"><div class="ttname"><a href="private__flat__priority__queue_8h.html#a1a1f813566c2a9db3e779054b2383340">CCC_private_flat_priority_queue_update_with</a></div><div class="ttdeci">#define CCC_private_flat_priority_queue_update_with( flat_priority_queue_pointer, closure_parameter, update_closure_over_closure_parameter...)</div><div class="ttdef"><b>Definition:</b> private_flat_priority_queue.h:241</div></div>
 </div><!-- fragment -->
 <p>Update the held user type stored in the priority queue. O(lgN). </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -783,9 +790,10 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_flat_priority_queue_with_capacity(                             \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__priority__queue_8h.html#a46f28738402f5181c7bb3dee987204b9">CCC_private_flat_priority_queue_with_capacity</a>(                             \</div>
 <div class="line">        type_name, order, comparator, allocator, capacity                      \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__flat__priority__queue_8h_html_a46f28738402f5181c7bb3dee987204b9"><div class="ttname"><a href="private__flat__priority__queue_8h.html#a46f28738402f5181c7bb3dee987204b9">CCC_private_flat_priority_queue_with_capacity</a></div><div class="ttdeci">#define CCC_private_flat_priority_queue_with_capacity( private_type_name, private_order, private_comparator, private_allocator, private_capacity)</div><div class="ttdef"><b>Definition:</b> private_flat_priority_queue.h:153</div></div>
 </div><!-- fragment -->
 <p>Initialize a Flat_priority_queue with a capacity. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -848,9 +856,10 @@ This graph shows which files directly or indirectly include this file:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    CCC_private_flat_priority_queue_with_storage(                              \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__priority__queue_8h.html#af9a4dcb669c3a874fc94a091d05563cc">CCC_private_flat_priority_queue_with_storage</a>(                              \</div>
 <div class="line">        order, comparator, compound_literal_array                              \</div>
 <div class="line">    )</div>
+<div class="ttc" id="aprivate__flat__priority__queue_8h_html_af9a4dcb669c3a874fc94a091d05563cc"><div class="ttname"><a href="private__flat__priority__queue_8h.html#af9a4dcb669c3a874fc94a091d05563cc">CCC_private_flat_priority_queue_with_storage</a></div><div class="ttdeci">#define CCC_private_flat_priority_queue_with_storage( private_order, private_comparator, private_compound_literal)</div><div class="ttdef"><b>Definition:</b> private_flat_priority_queue.h:195</div></div>
 </div><!-- fragment -->
 <p>Initialize a priority_queue as a min or max heap with no allocation permission, no context data, and a compound literal as backing storage. </p>
 <dl class="params"><dt>Parameters</dt><dd>
