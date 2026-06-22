@@ -136,7 +136,9 @@ exec \"${LLVM_COV_EXECUTABLE}\" gcov \"$@\"
         COMMAND lcov --ignore-errors inconsistent
                      --extract ${CMAKE_SOURCE_DIR}/docs/coverage.info 
                      '${CMAKE_SOURCE_DIR}/tests/*' 
+                     '${CMAKE_SOURCE_DIR}/tests/specialized/*' 
                      '${CMAKE_SOURCE_DIR}/source/*'
+                     '${CMAKE_SOURCE_DIR}/source/specialized/*'
                      --output-file ${CMAKE_SOURCE_DIR}/docs/coverage.info
 
         COMMAND lcov --remove ${CMAKE_SOURCE_DIR}/docs/coverage.info 
@@ -164,6 +166,7 @@ exec \"${LLVM_COV_EXECUTABLE}\" gcov \"$@\"
         COMMAND lcov --ignore-errors inconsistent
                      --extract ${CMAKE_SOURCE_DIR}/docs/coverage.info 
                      '${CMAKE_SOURCE_DIR}/source/*'
+                     '${CMAKE_SOURCE_DIR}/source/specialized/*'
                      --output-file ${CMAKE_SOURCE_DIR}/docs/coverage.info
 
         COMMAND genhtml ${CMAKE_SOURCE_DIR}/docs/coverage.info
