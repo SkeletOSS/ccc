@@ -14,7 +14,7 @@ option(BUILD_SHARED_LIBS "Building ccc as a shared library is available, but OFF
 set(namespace "ccc")
 
 # Autodetect the specialized headers directory
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}/specialized" AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/source/specialized")
+if(EXISTS "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/specialized" AND EXISTS "${PROJECT_SOURCE_DIR}/source/specialized")
     set(CCC_HAS_SPECIALIZED_SOURCE TRUE)
 else()
     set(CCC_HAS_SPECIALIZED_SOURCE FALSE)
@@ -25,35 +25,32 @@ option(CCC_BUILD_SPECIALIZED "Enable specialized containers" ${CCC_HAS_SPECIALIZ
 if(CCC_BUILD_SPECIALIZED AND NOT CCC_HAS_SPECIALIZED_SOURCE)
     message(FATAL_ERROR "CCC_BUILD_SPECIALIZED is set to ON, but the 'specialized/' directory is not found. Users should obtain a specialized release from the releases page. Developers may obtain a specialized containers from the releases page or project repository.")
 endif()
-if (CCC_BUILD_SPECIALIZED)
-    add_compile_definitions(CCC_SPECIALIZED_ENABLED=1)
-endif()
 
 # For releases we only produce this and the source. No test or sample bloat.
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}")
+include_directories("${PROJECT_SOURCE_DIR}/${PROJECT_NAME}")
+add_subdirectory("${PROJECT_SOURCE_DIR}/${PROJECT_NAME}")
 
 # Excluding from all simplifies cmake presets until cmake figures out how
 # to tame the combinatorial explosion of buildPresets
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/samples")
-    include_directories("${CMAKE_CURRENT_SOURCE_DIR}/samples")
-    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/samples" EXCLUDE_FROM_ALL)
+if (EXISTS "${PROJECT_SOURCE_DIR}/samples")
+    include_directories("${PROJECT_SOURCE_DIR}/samples")
+    add_subdirectory("${PROJECT_SOURCE_DIR}/samples" EXCLUDE_FROM_ALL)
 endif()
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests")
-    include_directories("${CMAKE_CURRENT_SOURCE_DIR}/tests")
-    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/tests" EXCLUDE_FROM_ALL)
+if (EXISTS "${PROJECT_SOURCE_DIR}/tests")
+    include_directories("${PROJECT_SOURCE_DIR}/tests")
+    add_subdirectory("${PROJECT_SOURCE_DIR}/tests" EXCLUDE_FROM_ALL)
 endif()
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/utility")
-    include_directories("${CMAKE_CURRENT_SOURCE_DIR}/utility")
-    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/utility" EXCLUDE_FROM_ALL)
+if (EXISTS "${PROJECT_SOURCE_DIR}/utility")
+    include_directories("${PROJECT_SOURCE_DIR}/utility")
+    add_subdirectory("${PROJECT_SOURCE_DIR}/utility" EXCLUDE_FROM_ALL)
 endif()
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests" AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/samples" AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/utility")
+if (EXISTS "${PROJECT_SOURCE_DIR}/tests" AND EXISTS "${PROJECT_SOURCE_DIR}/samples" AND EXISTS "${PROJECT_SOURCE_DIR}/utility")
     include(tools/scanners.cmake)
 endif()
 
 # If we are in our own repository build environment, not a release, then we
 # will bring in the str_view dependency for our samples and testing.
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests" OR EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/samples" OR EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/utility")
+if (EXISTS "${PROJECT_SOURCE_DIR}/tests" OR EXISTS "${PROJECT_SOURCE_DIR}/samples" OR EXISTS "${PROJECT_SOURCE_DIR}/utility")
     include(FetchContent)
     FetchContent_Declare(
       str_view
