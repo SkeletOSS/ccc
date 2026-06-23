@@ -31,22 +31,32 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/${PROJECT_NAME}")
 # will bring in the str_view dependency for our samples and testing.
 if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     message(STATUS "This project is a top-level one")
-    include(FetchContent)
-    FetchContent_Declare(
-      str_view
-      URL https://github.com/skeletoss/str_view/releases/download/v0.7.6/str_view-v0.7.6.zip
-      URL_HASH SHA256=4ab4e21f1deb16b15f83542489ffc3b136a8e6cbe37d61686abc4dc1d103f3f0
-      DOWNLOAD_EXTRACT_TIMESTAMP FALSE
-    )
-    FetchContent_MakeAvailable(str_view)
-    target_compile_options(str_view PRIVATE 
-        $<$<C_COMPILER_ID:MSVC>:/W0>
-        $<$<OR:$<C_COMPILER_ID:GNU>,$<C_COMPILER_ID:Clang>,$<C_COMPILER_ID:AppleClang>>:-w>
-    )
-    add_subdirectory("${PROJECT_SOURCE_DIR}/samples" EXCLUDE_FROM_ALL)
-    add_subdirectory("${PROJECT_SOURCE_DIR}/tests" EXCLUDE_FROM_ALL)
-    add_subdirectory("${PROJECT_SOURCE_DIR}/utility" EXCLUDE_FROM_ALL)
-    include(tools/scanners.cmake)
+    if (EXISTS "${PROJECT_SOURCE_DIR}/samples")
+        add_subdirectory("${PROJECT_SOURCE_DIR}/samples" EXCLUDE_FROM_ALL)
+    endif()
+    if (EXISTS "${PROJECT_SOURCE_DIR}/tests")
+        add_subdirectory("${PROJECT_SOURCE_DIR}/tests" EXCLUDE_FROM_ALL)
+    endif()
+    if (EXISTS "${PROJECT_SOURCE_DIR}/utility")
+        add_subdirectory("${PROJECT_SOURCE_DIR}/utility" EXCLUDE_FROM_ALL)
+    endif()
+    if (EXISTS "${PROJECT_SOURCE_DIR}/samples" AND EXISTS "${PROJECT_SOURCE_DIR}/tests" AND EXISTS "${PROJECT_SOURCE_DIR}/utility")
+        include(tools/scanners.cmake)
+    endif()
+    if (EXISTS "${PROJECT_SOURCE_DIR}/tests" OR EXISTS "${PROJECT_SOURCE_DIR}/samples" OR EXISTS "${PROJECT_SOURCE_DIR}/utility")
+        include(FetchContent)
+        FetchContent_Declare(
+          str_view
+          URL https://github.com/skeletoss/str_view/releases/download/v0.7.6/str_view-v0.7.6.zip
+          URL_HASH SHA256=4ab4e21f1deb16b15f83542489ffc3b136a8e6cbe37d61686abc4dc1d103f3f0
+          DOWNLOAD_EXTRACT_TIMESTAMP FALSE
+        )
+        FetchContent_MakeAvailable(str_view)
+        target_compile_options(str_view PRIVATE 
+            $<$<C_COMPILER_ID:MSVC>:/W0>
+            $<$<OR:$<C_COMPILER_ID:GNU>,$<C_COMPILER_ID:Clang>,$<C_COMPILER_ID:AppleClang>>:-w>
+        )
+    endif()
 else()
     message(STATUS "This project has a top-level one called [${CMAKE_PROJECT_NAME}]")
 endif()
