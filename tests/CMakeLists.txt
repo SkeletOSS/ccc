@@ -21,11 +21,11 @@ function(ccc_add_test CATEGORY TEST_NAME)
     # Apply standard required testing link matrix + any extra optional args (${ARGN})
     target_link_libraries(${TEST_NAME}
         PRIVATE
-            ccc::ccc
-            checkers
+            ${ARGN}  # Captures extra variations like 'random' or custom utilities
             std_allocator
             stack_allocator
-            ${ARGN}  # Captures extra variations like 'random' or custom utilities
+            checkers
+            ccc::ccc
     )
 
     # Isolate test binary binaries into the designated test directory
@@ -59,7 +59,7 @@ ccc_add_test(flat_buffer test_flat_buffer_error flat_buffer_utility random)
 
 # Flat Priority Queue 
 add_library(flat_priority_queue_utility STATIC flat_priority_queue/flat_priority_queue_utility.h flat_priority_queue/flat_priority_queue_utility.c)
-target_link_libraries(flat_priority_queue_utility PRIVATE ccc checkers)
+target_link_libraries(flat_priority_queue_utility PRIVATE ccc std_allocator checkers)
 add_dependencies(tests flat_priority_queue_utility)
 
 ccc_add_test(flat_priority_queue test_flat_priority_queue_construct flat_priority_queue_utility)
