@@ -6,6 +6,7 @@ project("ccc"
   DESCRIPTION "The C Container Collection (ccc). A collection of containers written in C."
 )
 # We will set standard on a per target basis for CCC in the ccc/CMakeLists.txt file.
+set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 option(BUILD_SHARED_LIBS "Building ccc as a shared library is available, but OFF by default." OFF)
 
