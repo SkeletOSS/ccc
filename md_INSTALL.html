@@ -187,11 +187,11 @@ Freestanding Environments</h1>
 <div class="line">target_compile_options(ccc PRIVATE &quot;-w&quot;)</div>
 <div class="line"> </div>
 <div class="line"># New step allowing CCC to find the configuration header.</div>
-<div class="line">target_include_directories(ccc PRIVATE</div>
-<div class="line">  ${CMAKE_SOURCE_DIR}/my_ccc_configuration</div>
+<div class="line">target_include_directories(ccc PUBLIC</div>
+<div class="line">  $&lt;BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/my_ccc_configuration&gt;</div>
 <div class="line">)</div>
 <div class="line"># New step here or in CMakePresets.json to define preprocessor directives</div>
-<div class="line">target_compile_definitions(ccc PRIVATE</div>
+<div class="line">target_compile_definitions(ccc PUBLIC</div>
 <div class="line">  CCC_USER_CONFIGURATION=&quot;my_ccc_configuration.h&quot;</div>
 <div class="line">  CCC_FLAT_HASH_MAP_PORTABLE</div>
 <div class="line">)</div>
