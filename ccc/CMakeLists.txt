@@ -70,14 +70,12 @@ if (CCC_USER_CONFIGURATION)
         PUBLIC 
             CCC_USER_CONFIGURATION="${CCC_USER_CONFIGURATION}"
     )
-    message(STATUS "CCC: Using environment with user provided configuration file: ${CCC_USER_CONFIGURATION}")
 endif()
 if (CCC_FLAT_HASH_MAP_PORTABLE)
     target_compile_definitions(${PROJECT_NAME} 
         PUBLIC 
             CCC_FLAT_HASH_MAP_PORTABLE
     )
-    message(STATUS "CCC: Using portable SRMD flat hash map fallback implementation")
 endif()
 if (CCC_BUILD_SPECIALIZED)
     target_compile_definitions(${PROJECT_NAME} PUBLIC CCC_SPECIALIZED_ENABLED)
