@@ -41,7 +41,7 @@ static CCC_Tribool has_valid_links(
 static struct CCC_Priority_queue_node *
 delete_node(struct CCC_Priority_queue *, struct CCC_Priority_queue_node *);
 static struct CCC_Priority_queue_node *
-delete_min(struct CCC_Priority_queue *, struct CCC_Priority_queue_node *);
+delete_root(struct CCC_Priority_queue *, struct CCC_Priority_queue_node *);
 static void clear_node(struct CCC_Priority_queue_node *);
 static void cut_child(struct CCC_Priority_queue_node *);
 static void *struct_base(
@@ -111,7 +111,7 @@ CCC_priority_queue_pop(
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     struct CCC_Priority_queue_node *const popped = priority_queue->root;
-    priority_queue->root = delete_min(priority_queue, priority_queue->root);
+    priority_queue->root = delete_root(priority_queue, priority_queue->root);
     priority_queue->count--;
     clear_node(popped);
     if (allocator->allocate) {
@@ -445,11 +445,11 @@ delete_node(
     struct CCC_Priority_queue_node *const root
 ) {
     if (priority_queue->root == root) {
-        return delete_min(priority_queue, root);
+        return delete_root(priority_queue, root);
     }
     cut_child(root);
     return merge(
-        priority_queue, priority_queue->root, delete_min(priority_queue, root)
+        priority_queue, priority_queue->root, delete_root(priority_queue, root)
     );
 }
 
@@ -457,7 +457,7 @@ delete_node(
 of the paper to pair nodes in one pass. Of all the variants for pairing given
 in the paper this one is the back-to-front variant and the only one for which
 the runtime analysis holds identically to the two-pass standard variant. A
-non-trivial example for min heap.
+non-trivial example for a heap.
 
 < = next_sibling
 > = prev_sibling
@@ -493,11 +493,11 @@ non-trivial example for min heap.
 ┌<8>─<9>┐
 └───────┘
 
-Delete min is the slowest operation offered by the priority queue and in
+Delete root is the slowest operation offered by the priority queue and in
 part contributes to the amortized `o(log(N))` runtime of the decrease key
 operation. */
 static struct CCC_Priority_queue_node *
-delete_min(
+delete_root(
     struct CCC_Priority_queue *const priority_queue,
     struct CCC_Priority_queue_node *root
 ) {
