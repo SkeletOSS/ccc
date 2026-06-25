@@ -190,15 +190,10 @@ Freestanding Environments</h1>
 <div class="line">target_include_directories(ccc PUBLIC</div>
 <div class="line">  $&lt;BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/my_ccc_configuration&gt;</div>
 <div class="line">)</div>
-<div class="line"># New step here or in CMakePresets.json to define preprocessor directives</div>
-<div class="line">target_compile_definitions(ccc PUBLIC</div>
-<div class="line">  CCC_USER_CONFIGURATION=&quot;my_ccc_configuration.h&quot;</div>
-<div class="line">  CCC_FLAT_HASH_MAP_PORTABLE</div>
-<div class="line">)</div>
 <div class="line"> </div>
 <div class="line">add_executable(freestanding freestanding.c)</div>
 <div class="line">target_link_libraries(freestanding ccc::ccc)</div>
-</div><!-- fragment --><p>Instead of <code>target_compile_definitions</code>, the necessary definitions can be placed in the <code>CMakePresets.json</code> or <code>CMakeUserPresets.json</code> file, if the user prefers.</p>
+</div><!-- fragment --><p>Now pass the flag to CMake at configure time via <code>CMakePresets.json</code>, <code>CMakeUserPresets.json</code>, or the command line.</p>
 <div class="fragment"><div class="line">&quot;cacheVariables&quot;: {</div>
 <div class="line">    &quot;CCC_USER_CONFIGURATION&quot;: &quot;my_ccc_configuration.h&quot;,</div>
 <div class="line">    &quot;CCC_FLAT_HASH_MAP_PORTABLE&quot;: &quot;OFF&quot;</div>
@@ -208,7 +203,8 @@ Freestanding Environments</h1>
 <div class="line"> -DCCC_USER_CONFIGURATION=&quot;my_ccc_configuration.h&quot;\</div>
 <div class="line"> -DCCC_FLAT_HASH_MAP_PORTABLE=ON</div>
 </div><!-- fragment --><p>Now the C Container Collection is fully configured to be built as part of the user project in a freestanding environment.</p>
-<p>Any other headers such as <code>&lt;stdint.h&gt;</code>, <code>&lt;stddef.h&gt;</code>, etc. that are included directly in source code now, or will be in the future, are those provided by the C23 standard on freestanding targets. See the flat hash map documentation for how to select the optimal Single Instruction Multiple Data or Single Register Multiple Data implementation. Even on freestanding targets, the compiler intrinsics used on x86-64 and ARM NEON platforms should be available. However, <code>CCC_FLAT_HASH_MAP_PORTABLE</code> is an available directive for users that need to force a portable fallback implementation when such compiler platform intrinsics are not available. See <code><a class="el" href="flat__hash__map_8h.html" title="The Flat Hash Map Interface.">ccc/flat_hash_map.h</a></code> for more.</p>
+<p>Any other C headers that the collection uses internally, such as <code>&lt;stdint.h&gt;</code>, <code>&lt;stddef.h&gt;</code>, and <code>&lt;stdalign.h&gt;</code>, are those provided by the C23 standard on freestanding targets and do not require a user implementation.</p>
+<p>See the flat hash map documentation for how to select the optimal Single Instruction Multiple Data or Single Register Multiple Data implementation. Even on freestanding targets, the compiler intrinsics used on x86-64 and ARM NEON platforms should be available. However, <code>CCC_FLAT_HASH_MAP_PORTABLE</code> is an available directive for users that need to force a portable fallback implementation when such compiler platform intrinsics are not available. See <code><a class="el" href="flat__hash__map_8h.html" title="The Flat Hash Map Interface.">ccc/flat_hash_map.h</a></code> for more.</p>
 <h1><a class="anchor" id="autotoc_md7"></a>
 Manual Install Quick Start</h1>
 <ol type="1">
