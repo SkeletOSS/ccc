@@ -15,7 +15,7 @@ target_sources(${PROJECT_NAME}
         ${CMAKE_CURRENT_SOURCE_DIR}/../source/tree_map.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../source/array_tree_map.c
     PUBLIC 
-        FILE_SET public_headers
+        FILE_SET ${PROJECT_NAME}_public_headers
             TYPE HEADERS
             BASE_DIRS ${PROJECT_SOURCE_DIR}
             FILES 
@@ -51,7 +51,7 @@ if (CCC_BUILD_SPECIALIZED)
             ${CMAKE_CURRENT_SOURCE_DIR}/../source/specialized/array_adaptive_map.c
             ${CMAKE_CURRENT_SOURCE_DIR}/../source/specialized/priority_queue.c
         PUBLIC 
-            FILE_SET public_headers
+            FILE_SET ${PROJECT_NAME}_public_headers
                 FILES 
                   specialized/private/private_adaptive_map.h
                   specialized/private/private_array_adaptive_map.h
@@ -102,7 +102,6 @@ feature_summary(WHAT ALL
 # set properties for the target. VERSION set the library version to the project
 # version * SOVERSION set the compatibility  version for the library to the
 # major number of the version
-# note that ${public_headers} should be in quotes
 set_target_properties(${PROJECT_NAME} 
     PROPERTIES 
         RELEASE_POSTFIX "_release"

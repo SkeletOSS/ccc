@@ -9,7 +9,7 @@ set(INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
 # Default destinations from GNUInstallDirs are only changed for debug config.
 install(TARGETS ${PROJECT_NAME}
     EXPORT "${PROJECT_NAME}Targets"
-    FILE_SET public_headers
+    FILE_SET "${PROJECT_NAME}_public_headers"
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} # bin
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} # lib
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # lib
