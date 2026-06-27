@@ -173,7 +173,7 @@ Freestanding Environments</h1>
 <div class="line"><span class="preprocessor">#define MY_CCC_CONFIGURATION_H</span></div>
 <div class="line"><span class="preprocessor">#include &quot;lib/assert.h&quot;</span> <span class="comment">/* IWYU pragma: export */</span></div>
 <div class="line"><span class="preprocessor">#include &quot;lib/string.h&quot;</span> <span class="comment">/* IWYU pragma: export */</span></div>
-<div class="line"><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="preprocessor">#endif </span><span class="comment">/* MY_CCC_CONFIGURATION_H */</span><span class="preprocessor"></span></div>
 </div><!-- fragment --><p>The Include What You Use (IWYU) comment is helpful if you want to avoid tooling warnings in CCC code and have not marked CCC code as a system library to silence such warnings. If you are providing functions directly, this is not applicable. Then, ensure the C Container Collection can find that header.</p>
 <div class="fragment"><div class="line">include(FetchContent)</div>
 <div class="line">FetchContent_Declare(</div>

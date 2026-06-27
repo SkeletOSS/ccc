@@ -105,12 +105,12 @@ $(document).ready(function(){initNavTree('private__flat__hash__map_8h_source.htm
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="comment">/* NOLINTBEGIN(readability-identifier-naming) */</span></div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="preprocessor">#if defined(__x86_64) &amp;&amp; defined(__SSE2__)                                     \</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="preprocessor">    &amp;&amp; !defined(CCC_FLAT_HASH_MAP_PORTABLE)</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="preprocessor">    &amp;&amp; !defined(CCC_FLAT_HASH_MAP_PORTABLE_ENABLED)</span></div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="preprocessor">#    define CCC_HAS_X86_SIMD</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">#elif defined(__ARM_NEON__) &amp;&amp; !defined(CCC_FLAT_HASH_MAP_PORTABLE)</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">#elif defined(__ARM_NEON__) &amp;&amp; !defined(CCC_FLAT_HASH_MAP_PORTABLE_ENABLED)</span></div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#    define CCC_HAS_ARM_SIMD</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="preprocessor">#endif </span><span class="comment">/* defined(__x86_64)&amp;&amp;defined(__SSE2__)&amp;&amp;!defined(CCC_FLAT_HASH_MAP_PORTABLE) \</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment">        */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="preprocessor">#endif </span><span class="comment">/* defined(__x86_64) &amp;&amp; defined(__SSE2__) &amp;&amp;                            \</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment">          !defined(CCC_FLAT_HASH_MAP_PORTABLE_ENABLED) */</span><span class="preprocessor"></span></div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno"><a class="line" href="structCCC__Flat__hash__map__tag.html">   80</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structCCC__Flat__hash__map__tag.html">CCC_Flat_hash_map_tag</a> {</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="structCCC__Flat__hash__map__tag.html#a58b7c89017a383b3b1922544c6788073">   82</a></span>    uint8_t <a class="code hl_variable" href="structCCC__Flat__hash__map__tag.html#a58b7c89017a383b3b1922544c6788073">v</a>;</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>};</div>
