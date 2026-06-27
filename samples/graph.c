@@ -19,6 +19,7 @@ Enter 'q' to quit. */
 #include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
+#include <stdckdint.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -448,7 +449,15 @@ main(int argc, char **argv) {
         quit("graph rows or cols is 0.\n", 1);
         return 1;
     }
-    graph.grid = calloc((size_t)graph.rows * (size_t)graph.cols, sizeof(Cell));
+    int flat_row_col_buffer = 0;
+    if (ckd_mul(&flat_row_col_buffer, graph.rows, graph.cols)) {
+        quit(
+            "multiplication of graph rows x cols for buffer allocation "
+            "overflows\n",
+            1
+        );
+    }
+    graph.grid = calloc((size_t)flat_row_col_buffer, sizeof(Cell));
     defer {
         free(graph.grid);
     }

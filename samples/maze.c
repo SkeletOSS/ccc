@@ -16,6 +16,7 @@ Example:
 #include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
+#include <stdckdint.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -257,7 +258,15 @@ main(int argc, char **argv) {
     /* This type of maze generation requires odd rows and cols. */
     maze.rows = maze.rows + (maze.rows % 2 == 0);
     maze.cols = maze.cols + (maze.cols % 2 == 0);
-    maze.maze = calloc((size_t)maze.rows * (size_t)maze.cols, sizeof(uint16_t));
+    int flat_row_col_buffer = 0;
+    if (ckd_mul(&flat_row_col_buffer, maze.rows, maze.cols)) {
+        quit(
+            "multiplication of graph rows x cols for buffer allocation "
+            "overflows\n",
+            1
+        );
+    }
+    maze.maze = calloc((size_t)flat_row_col_buffer, sizeof(uint16_t));
     defer {
         free(maze.maze);
     }
