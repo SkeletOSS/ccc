@@ -1375,13 +1375,16 @@ rehash_resize(
     new_map.remain = mask_to_capacity_with_load_factor(new_map.mask);
     new_map.data = new_buf;
     /* Our static assertions at start of file guarantee this is correct. */
-    new_map.tag = tags_base_address(new_map.sizeof_type, new_buf, new_map.mask);
+    new_map.tag = memset(
+        tags_base_address(new_map.sizeof_type, new_buf, new_map.mask),
+        TAG_EMPTY,
+        mask_to_tag_bytes(new_map.mask)
+    );
     assert(
         (uintptr_t)new_map.tag % GROUP_COUNT == 0
         && "Tag array is at correctly aligned offset from base address of "
            "struct of arrays."
     );
-    (void)memset(new_map.tag, TAG_EMPTY, mask_to_tag_bytes(new_map.mask));
     {
         size_t group_start = 0;
         struct Match_mask full = {};
