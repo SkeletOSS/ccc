@@ -1,4 +1,4 @@
-# This version gives us file sets which are great for library install.
+# This version ensures we have access to file sets.
 cmake_minimum_required(VERSION 3.23)
 project("ccc" 
     VERSION 0.80.4
