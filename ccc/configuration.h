@@ -56,14 +56,14 @@ platforms should be available. However, `CCC_FLAT_HASH_MAP_PORTABLE` is an
 available directive for users that need to force a portable fallback
 implementation when such compiler platform intrinsics are not available. See
 `ccc/flat_hash_map.h` for more. */
-#ifndef CCC_PRIVATE_HOSTED_VS_FREESTANDING_CONFIGURATION_H
-#define CCC_PRIVATE_HOSTED_VS_FREESTANDING_CONFIGURATION_H
+#ifndef CCC_HOSTED_VS_FREESTANDING_CONFIGURATION_H
+#define CCC_HOSTED_VS_FREESTANDING_CONFIGURATION_H
 
-#ifdef CCC_USER_CONFIGURATION
-#    include CCC_USER_CONFIGURATION /* IWYU pragma: export */
+#ifdef CCC_USER_CONFIGURATION_HEADER
+#    include CCC_USER_CONFIGURATION_HEADER /* IWYU pragma: export */
 #else
 #    include <assert.h> /* IWYU pragma: export */
 #    include <string.h> /* IWYU pragma: export */
 #endif
 
-#endif /* CCC_PRIVATE_HOSTED_VS_FREESTANDING_CONFIGURATION_H */
+#endif /* CCC_HOSTED_VS_FREESTANDING_CONFIGURATION_H */

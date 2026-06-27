@@ -117,7 +117,7 @@ In this header the user has two options: provide the listed functions directly o
 #define MY_CCC_CONFIGURATION_H
 #include "lib/assert.h" /* IWYU pragma: export */
 #include "lib/string.h" /* IWYU pragma: export */
-#endif
+#endif /* MY_CCC_CONFIGURATION_H */
 ```
 
 The Include What You Use (IWYU) comment is helpful if you want to avoid tooling warnings in CCC code and have not marked CCC code as a system library to silence such warnings. If you are providing functions directly, this is not applicable. Then, ensure the C Container Collection can find that header.

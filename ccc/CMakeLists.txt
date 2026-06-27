@@ -67,13 +67,13 @@ set(CCC_USER_CONFIGURATION ""  CACHE STRING "Freestanding environment with user 
 if (CCC_USER_CONFIGURATION)
     target_compile_definitions(${PROJECT_NAME} 
         PUBLIC 
-            CCC_USER_CONFIGURATION="${CCC_USER_CONFIGURATION}"
+        CCC_USER_CONFIGURATION_HEADER="${CCC_USER_CONFIGURATION}"
     )
 endif()
 if (CCC_FLAT_HASH_MAP_PORTABLE)
     target_compile_definitions(${PROJECT_NAME} 
         PUBLIC 
-            CCC_FLAT_HASH_MAP_PORTABLE
+            CCC_FLAT_HASH_MAP_PORTABLE_ENABLED
     )
 endif()
 if (CCC_BUILD_SPECIALIZED)

@@ -46,18 +46,18 @@ most complexity in the implementation. */
 /** @internal If we only make these complex checks once, it is easier to read
 and used the source code during all the platform based implementations. */
 #if defined(__x86_64) && defined(__SSE2__)                                     \
-    && !defined(CCC_FLAT_HASH_MAP_PORTABLE)
+    && !defined(CCC_FLAT_HASH_MAP_PORTABLE_ENABLED)
 /** @internal Internal container collection detection for SIMD instructions on
 the x86 architectures. This will be the most efficient version possible
 offering the widest group matching. */
 #    define CCC_HAS_X86_SIMD
-#elif defined(__ARM_NEON__) && !defined(CCC_FLAT_HASH_MAP_PORTABLE)
+#elif defined(__ARM_NEON__) && !defined(CCC_FLAT_HASH_MAP_PORTABLE_ENABLED)
 /** @internal Internal container collection detection for SIMD instructions on
 the NEON architecture. This implementation currently lacks some of the features
 of the x86 SIMD version but should still be fast. */
 #    define CCC_HAS_ARM_SIMD
-#endif /* defined(__x86_64)&&defined(__SSE2__)&&!defined(CCC_FLAT_HASH_MAP_PORTABLE) \
-        */
+#endif /* defined(__x86_64) && defined(__SSE2__) &&                            \
+          !defined(CCC_FLAT_HASH_MAP_PORTABLE_ENABLED) */
 /** else we define nothing and the portable fallback will take effect. */
 
 /** @internal An array of this byte will be in the tag array. Same idea as

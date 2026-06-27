@@ -70,13 +70,6 @@ Or, add the flag to your `CMakePresets.json`.
 }
 ```
 
-Or, enable it in your `CMakeLists.txt` after including the C Container
-Collection via CMake's FetchContent mechanism (see INSTALL.md).
-
-```
-target_compile_definitions(ccc PRIVATE CCC_FLAT_HASH_MAP_PORTABLE)
-```
-
 See the INSTALL.md file for more ways to configure the map for hosted and
 freestanding environments.
 
