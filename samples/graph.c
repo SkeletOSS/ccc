@@ -448,7 +448,7 @@ main(int argc, char **argv) {
         quit("graph rows or cols is 0.\n", 1);
         return 1;
     }
-    graph.grid = calloc((size_t)graph.rows * (size_t)graph.cols, sizeof(Cell));
+    graph.grid = calloc((size_t)graph.rows, sizeof(Cell) * (size_t)graph.cols);
     defer {
         free(graph.grid);
     }
