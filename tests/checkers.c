@@ -2,6 +2,8 @@
 
 #include "checkers.h"
 
+unsigned check_random_seed = 0;
+
 void
 check_print_fail_message(
     char const *const function_string,
