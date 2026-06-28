@@ -1,8 +1,10 @@
+#include <stdbool.h>
 #include <stdio.h>
 
 #include "checkers.h"
 
 unsigned check_random_seed = 0;
+enum Check_result check_process_result = CHECK_PASS;
 
 void
 check_print_fail_message(
@@ -15,6 +17,7 @@ check_print_fail_message(
     bool const is_address,
     unsigned const random_seed
 ) {
+    check_process_result = CHECK_FAIL;
     if (is_address) {
         (void)fprintf(
             stderr,
