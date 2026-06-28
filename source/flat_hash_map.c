@@ -34,6 +34,7 @@ better capabilities for 128 bit group operations. */
 /** C23 provided headers. */
 #include <limits.h>
 #include <stdalign.h>
+#include <stdckdint.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -315,6 +316,7 @@ static void *key_in_index(struct CCC_Flat_hash_map const *, void const *);
 static void *swap_index(struct CCC_Flat_hash_map const *);
 static CCC_Count data_index(struct CCC_Flat_hash_map const *, void const *);
 static size_t mask_to_total_bytes(size_t, size_t);
+static CCC_Tribool checked_mask_to_total_bytes(size_t *, size_t, size_t);
 static size_t mask_to_tag_bytes(size_t);
 static size_t mask_to_data_bytes(size_t, size_t);
 static void set_insert_tag(
@@ -1212,11 +1214,12 @@ maybe_rehash(
     if (unlikely(!map->mask && !allocator->allocate)) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
-    size_t const required_total_cap
-        = to_power_of_two(((map->count + to_add) * 8) / 7);
-    if (!required_total_cap) {
+    size_t required_total_cap = 0;
+    if (ckd_add(&required_total_cap, map->count, to_add)
+        || ckd_mul(&required_total_cap, required_total_cap, 8)) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
+    required_total_cap = to_power_of_two(required_total_cap / 7);
     CCC_Result const init = lazy_initialize(map, required_total_cap, allocator);
     if (init != CCC_RESULT_OK) {
         return init;
@@ -1349,15 +1352,19 @@ rehash_resize(
     CCC_Allocator const *const allocator
 ) {
     assert(((map->mask + 1) & map->mask) == 0);
-    size_t const new_pow2_cap
-        = next_power_of_two((map->mask + 1 + to_add) << 1);
+    size_t new_pow2_cap = 0;
+    if (ckd_add(&new_pow2_cap, (map->mask + 1), to_add)
+        || ckd_mul(&new_pow2_cap, new_pow2_cap, 2)) {
+        return CCC_RESULT_ALLOCATOR_ERROR;
+    }
+    new_pow2_cap = next_power_of_two(new_pow2_cap);
     if (new_pow2_cap < (map->mask + 1)) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
-    size_t const prev_bytes = mask_to_total_bytes(map->sizeof_type, map->mask);
-    size_t const total_bytes
-        = mask_to_total_bytes(map->sizeof_type, new_pow2_cap - 1);
-    if (total_bytes < prev_bytes) {
+    size_t total_bytes = 0;
+    if (checked_mask_to_total_bytes(
+            &total_bytes, map->sizeof_type, new_pow2_cap - 1
+        )) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
     void *const new_buf = allocator->allocate((CCC_Allocator_arguments){
@@ -1444,8 +1451,12 @@ lazy_initialize(
     } else {
         /* A dynamic map we can re-size as needed. */
         required_capacity = max_size_t(required_capacity, GROUP_COUNT);
-        size_t const total_bytes
-            = mask_to_total_bytes(map->sizeof_type, required_capacity - 1);
+        size_t total_bytes = 0;
+        if (checked_mask_to_total_bytes(
+                &total_bytes, map->sizeof_type, required_capacity - 1
+            )) {
+            return CCC_RESULT_ALLOCATOR_ERROR;
+        }
         map->data = allocator->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = total_bytes,
@@ -1594,26 +1605,48 @@ mask_to_total_bytes(size_t const sizeof_type, size_t const mask) {
     return mask_to_data_bytes(sizeof_type, mask) + mask_to_tag_bytes(mask);
 }
 
-/** Returns the bytes needed for the tag metadata array. This includes the
-bytes for the duplicate group that is at the end of the tag array.
+/** Returns true if overflow occurred during necessary arithmetic to determine
+total bytes. This means that `size_t` can no longer index the needed bytes for
+the provided mask capacity. If no overflow occurs the function returns false
+and the result of the arithmetic is stored in result. Use this version when
+requesting a new allocation from un-trusted user input. Use the unchecked
+version when a valid allocation has already been established.
 
-Assumes the mask is non-zero. */
-static inline size_t
-mask_to_tag_bytes(size_t const mask) {
-    static_assert(sizeof(struct CCC_Flat_hash_map_tag) == sizeof(uint8_t));
-    return mask + 1 + GROUP_COUNT;
-}
+This calculation includes the bytes for the user data array (swap index
+included) and the tag array. The tag array also has an duplicate group at the
+end that must be counted.
 
-/** Returns the capacity count that is available with a current load factor of
-87.5% percent. The returned count is the maximum allowable capacity that can
-store user tags and data before the load factor is reached. The total capacity
-of the table is (mask + 1) which is not the capacity that this function
-calculates. For example, if (mask + 1 = 64), then this function returns 56.
+This calculation includes any unusable padding bytes added to the end of the
+user data array. Padding may be required if the alignment of the user type is
+less than that of a group size. This will allow aligned group loads.
 
-Assumes the mask is non-zero. */
-static inline size_t
-mask_to_capacity_with_load_factor(size_t const mask) {
-    return ((mask + 1) / 8) * 7;
+This number of bytes should be consistently correct whether the map we are
+dealing with is fixed size or dynamic. A fixed size map could technically have
+more bytes as padding after the tag array but we never need or access those
+bytes so we are only interested in contiguous bytes from start of user data to
+last byte of tag array. */
+static inline CCC_Tribool
+checked_mask_to_total_bytes(
+    size_t *const result, size_t const sizeof_type, size_t const mask
+) {
+    assert(
+        mask + 2 + GROUP_COUNT > mask
+        && "mask is a valid power of 2 meaning adding GROUP_COUNT + 2 will not "
+           "overflow"
+    );
+    *result = 0;
+    if (unlikely(!mask)) {
+        return CCC_FALSE;
+    }
+    if (ckd_mul(result, sizeof_type, (mask + 2))
+        || ckd_add(result, *result, (GROUP_COUNT - 1))) {
+        return CCC_TRUE;
+    }
+    *result &= ~(GROUP_COUNT - 1U);
+    if (ckd_add(result, *result, (mask + 1U + GROUP_COUNT))) {
+        return CCC_TRUE;
+    }
+    return CCC_FALSE;
 }
 
 /** Returns the number of bytes taken by the user data array. This includes the
@@ -1630,8 +1663,30 @@ static inline size_t
 mask_to_data_bytes(size_t const sizeof_type, size_t const mask) {
     /* Add two because there is always a bonus user data type at the last index
        of the data array for swapping purposes. */
-    return ((sizeof_type * (mask + 2)) + GROUP_COUNT - 1)
-         & (size_t)~(GROUP_COUNT - 1);
+    return ((sizeof_type * (mask + 2)) + GROUP_COUNT - 1U)
+         & ~(GROUP_COUNT - 1U);
+}
+
+/** Returns the bytes needed for the tag metadata array. This includes the
+bytes for the duplicate group that is at the end of the tag array.
+
+Assumes the mask is non-zero. */
+static inline size_t
+mask_to_tag_bytes(size_t const mask) {
+    static_assert(sizeof(struct CCC_Flat_hash_map_tag) == sizeof(uint8_t));
+    return mask + 1U + GROUP_COUNT;
+}
+
+/** Returns the capacity count that is available with a current load factor of
+87.5% percent. The returned count is the maximum allowable capacity that can
+store user tags and data before the load factor is reached. The total capacity
+of the table is (mask + 1) which is not the capacity that this function
+calculates. For example, if (mask + 1 = 64), then this function returns 56.
+
+Assumes the mask is non-zero. */
+static inline size_t
+mask_to_capacity_with_load_factor(size_t const mask) {
+    return ((mask + 1) / 8) * 7;
 }
 
 /** Returns the correct position of the start of the tag array given the base
