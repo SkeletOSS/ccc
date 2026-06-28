@@ -1245,8 +1245,8 @@ for insertion. Rehashing in place repeatedly can be expensive so the user
 should ensure to select an appropriate capacity for fixed size tables. */
 static void
 rehash_in_place(struct CCC_Flat_hash_map *const map) {
-    assert((map->mask + 1) % GROUP_COUNT == 0);
-    assert(map->tag && map->data);
+    assert((map->mask + 1) % GROUP_COUNT == 0 && "Capacity is group aligned.");
+    assert(map->tag && map->data && "Map is initialized.");
     size_t const mask = map->mask;
     for (size_t i = 0; i < mask + 1; i += GROUP_COUNT) {
         group_store_aligned(
