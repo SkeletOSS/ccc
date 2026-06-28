@@ -18,6 +18,8 @@ jobs:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           fetch-depth: 2
 
+
+
       # The goal is to force this to pass if it does not need to run.
       - name: Check the diff
         id: check
@@ -37,13 +39,19 @@ jobs:
     name: GCC Sanitize ${{ matrix.build == 'debug' && 'Debug' || 'Release' }} - ${{ matrix.portable == 'ON' && 'Portable SRMD Flat Hash Map' || 'Platform SIMD Flat Hash Map' }}
     needs: check-diff
     if: ${{ needs.check-diff.outputs.handle == 'true' }}
+
     strategy:
       matrix:
         build: [debug, release]
         portable: [OFF, ON]
 
     steps:
-
+    - name: Set up GCC
+      uses: egor-tensin/setup-gcc@v2
+      with:
+        version: latest
+        platform: x64
+        
     - name: Checkout code
       uses: actions/checkout@v4
 
