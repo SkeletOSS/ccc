@@ -1204,7 +1204,8 @@ may be needed. While containers normally remember their own allocation
 permissions, this function may be called in a variety of scenarios; one of which
 is when the user wants to reserve the necessary space dynamically at runtime
 but only once and for a container that is not given permission to resize
-arbitrarily. */
+arbitrarily. If overflow of addition or multiplication occurs an allocator error
+is returned. */
 static CCC_Result
 maybe_rehash(
     struct CCC_Flat_hash_map *const map,
