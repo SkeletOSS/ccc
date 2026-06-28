@@ -1613,7 +1613,8 @@ total bytes. This means that `size_t` can no longer index the needed bytes for
 the provided mask capacity. If no overflow occurs the function returns false
 and the result of the arithmetic is stored in result. Use this version when
 requesting a new allocation from un-trusted user input. Use the unchecked
-version when a valid allocation has already been established.
+version when a valid allocation has already been established on a valid hash
+map.
 
 This calculation includes the bytes for the user data array (swap index
 included) and the tag array. The tag array also has an duplicate group at the
