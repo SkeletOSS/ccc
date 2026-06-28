@@ -39,6 +39,8 @@ jobs:
     name: GCC Sanitize ${{ matrix.build == 'debug' && 'Debug' || 'Release' }} - ${{ matrix.portable == 'ON' && 'Portable SRMD Flat Hash Map' || 'Platform SIMD Flat Hash Map' }}
     needs: check-diff
     if: ${{ needs.check-diff.outputs.handle == 'true' }}
+    env:
+      GCC_VERSION: 15
 
     strategy:
       matrix:
@@ -49,7 +51,7 @@ jobs:
     - name: Set up GCC
       uses: egor-tensin/setup-gcc@v2
       with:
-        version: latest
+        version: ${{ env.GCC_VERSION }}
         platform: x64
         
     - name: Checkout code
@@ -60,5 +62,5 @@ jobs:
     - name: Build Address and UB Sanitizers with GCC
       run: |
         make clean
-        cmake --preset=gcc-sanitize-${{ matrix.build }} -DCCC_BUILD_SPECIALIZED=ON -DCCC_FLAT_HASH_MAP_PORTABLE=${{ matrix.portable }} && cmake --build build -j$(nproc) --target ccc tests
+        cmake --preset=gcc-sanitize-${{ matrix.build }} -DCMAKE_C_COMPILER=gcc-${{ env.GCC_VERSION }} -DCCC_BUILD_SPECIALIZED=ON -DCCC_FLAT_HASH_MAP_PORTABLE=${{ matrix.portable }} && cmake --build build -j$(nproc) --target ccc tests
         make test

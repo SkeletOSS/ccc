@@ -9,9 +9,10 @@ file. */
 #ifndef CHECKERS_H
 #define CHECKERS_H
 
-#include <stdint.h>
-#include <stdlib.h> /* IWYU pragma: keep */
-#include <time.h>   /* IWYU pragma: keep */
+#include <stdbool.h> /* IWYU pragma: keep */
+#include <stdint.h>  /* IWYU pragma: keep */
+#include <stdlib.h>  /* IWYU pragma: keep */
+#include <time.h>    /* IWYU pragma: keep */
 
 #define CHECK_RED "\033[38;5;9m"
 #define CHECK_GREEN "\033[38;5;10m"
@@ -58,9 +59,17 @@ void check_print_fail_message(
     unsigned random_seed
 );
 
-/** The static variable seed for the entire test checker harness. This is
+/** The global variable seed for the entire test checker harness. This is
 seeded before any tests run in the check_run macro. */
-static unsigned check_static_random_seed;
+extern unsigned check_random_seed;
+
+/** The global failure state for this test process. We run tests in
+deterministic order via C expressions within parenthesis. This ensures random
+seed reporting is meaningful across the failure that occurred given the user
+provided test function list. We cannot capture individual return values via the
+user provided variadic test function list when we place them within parentheses
+(test0(), test1()). So we will set the failure state globally, sadly. */
+extern enum Check_result check_process_result;
 
 /** Provides the correct type to the union for a check expression while
 silencing compiler warnings for non-compiled generic branches. Substitution
@@ -180,7 +189,7 @@ though the braces are not required. */
                 check_to_bytes(check_private_result),                          \
                 check_to_bytes(check_private_expected),                        \
                 check_is_address(check_private_result),                        \
-                check_static_random_seed                                       \
+                check_random_seed                                              \
             );                                                                 \
             check_private_macro_res = CHECK_FAIL;                              \
             __VA_OPT__((void)(__extension__({__VA_ARGS__}));)                  \
@@ -227,7 +236,7 @@ though the braces are not required. */
                 check_to_bytes(check_private_result),                          \
                 check_to_bytes(check_private_expected),                        \
                 check_is_address(check_private_result),                        \
-                check_static_random_seed                                       \
+                check_random_seed                                              \
             );                                                                 \
             check_private_macro_res = CHECK_ERROR;                             \
             __VA_OPT__((void)(__extension__({__VA_ARGS__}));)                  \
@@ -381,19 +390,10 @@ individual test that failed with CHECK_FAIL or CHECK_ERROR. */
            functions before the array initializer function calls because the   \
            observable behavior must be maintained. Critical that seed occurs   \
            first. */                                                           \
-        check_static_random_seed = (unsigned)time(NULL); /* NOLINT */          \
-        srand(check_static_random_seed);                 /* NOLINT */          \
-        enum Check_result const check_private_all_checks[] = {test_fn_list};   \
-        enum Check_result check_private_all_checks_res = CHECK_PASS;           \
-        for (unsigned long long check_run_index = 0;                           \
-             check_run_index                                                   \
-             < sizeof(check_private_all_checks) / sizeof(enum Check_result);   \
-             ++check_run_index) {                                              \
-            if (check_private_all_checks[check_run_index] != CHECK_PASS) {     \
-                check_private_all_checks_res = CHECK_FAIL;                     \
-            }                                                                  \
-        }                                                                      \
-        check_private_all_checks_res;                                          \
+        check_random_seed = (unsigned)time(NULL); /* NOLINT */                 \
+        srand(check_random_seed);                 /* NOLINT */                 \
+        (void)(test_fn_list + 0);                                              \
+        check_process_result;                                                  \
     }))
 
 #endif /* CHECKERS_H */
