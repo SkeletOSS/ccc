@@ -1346,6 +1346,8 @@ is_same_group(
         == (((new_index - (hash & mask)) & mask) / GROUP_COUNT);
 }
 
+/** Handles resizing and rehashing of a hash table to allow for to_add elements.
+If overflow occurs and allocator error is returned. */
 static CCC_Result
 rehash_resize(
     struct CCC_Flat_hash_map *const map,
