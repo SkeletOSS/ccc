@@ -1645,16 +1645,15 @@ static_assert(
     SIZEOF_BLOCK == sizeof(unsigned),
     "builtins remain in sync with bitset block width"
 );
+static_assert(
+    sizeof(Bit_block) * CHAR_BIT <= U8_BLOCK_MAX,
+    "bit counts are valid for smaller width types a bit set uses"
+);
 
 /** Counts the number of trailing zeros in a bit block starting from least
 significant bit. */
 static inline Bit_count
 count_trailing_zeros(Bit_block const b) {
-    assert(
-        ccc_count_trailing_zeros((Bit_block)BLOCK_MSB) <= U8_BLOCK_MAX
-        && "builtins return counts that are valid for smaller width types we "
-           "use"
-    );
     return (Bit_count)ccc_count_trailing_zeros(b);
 }
 
@@ -1662,11 +1661,6 @@ count_trailing_zeros(Bit_block const b) {
 bit. */
 static inline Bit_count
 count_leading_zeros(Bit_block const b) {
-    assert(
-        ccc_count_leading_zeros((Bit_block)1) <= U8_BLOCK_MAX
-        && "builtins return counts that are valid for smaller width types we "
-           "use"
-    );
     return (Bit_count)ccc_count_leading_zeros(b);
 }
 
