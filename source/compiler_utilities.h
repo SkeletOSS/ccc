@@ -1,6 +1,7 @@
 #ifndef CCC_COMPILER_UTILITIES_H
 #define CCC_COMPILER_UTILITIES_H
 
+/* C23 provided headers. */
 #include <limits.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -58,6 +59,8 @@
             ccc_private_x == 0 ? (int)(sizeof(ccc_private_x) * 8)              \
                                : (int)_Generic(                                \
                                      (ccc_private_x),                          \
+                    unsigned char: __builtin_clz(ccc_private_x),               \
+                    unsigned short: __builtin_clz(ccc_private_x),              \
                     unsigned int: __builtin_clz(ccc_private_x),                \
                     unsigned long: __builtin_clzl(ccc_private_x),              \
                     unsigned long long: __builtin_clzll(ccc_private_x)         \
