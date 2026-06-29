@@ -65,10 +65,10 @@
                                      (ccc_private_x),                          \
                     unsigned char: __builtin_clz(ccc_private_x)                \
                         - (int)((sizeof(unsigned int) - sizeof(unsigned char)) \
-                                * 8),                                          \
+                                * CHAR_BIT),                                   \
                     unsigned short: __builtin_clz(ccc_private_x)               \
                         - (int)((sizeof(unsigned int) - sizeof(unsigned char)) \
-                                * 8),                                          \
+                                * CHAR_BIT),                                   \
                     unsigned int: __builtin_clz(ccc_private_x),                \
                     unsigned long: __builtin_clzl(ccc_private_x),              \
                     unsigned long long: __builtin_clzll(ccc_private_x)         \
@@ -140,9 +140,11 @@ ccc_count_leading_zeros_u64(uint64_t x) {
         _Generic(                                                              \
             (x),                                                               \
             unsigned char: ccc_count_leading_zeros_u32(x)                      \
-                - (int)((sizeof(unsigned int) - sizeof(unsigned char)) * 8),   \
+                - (int)((sizeof(unsigned int) - sizeof(unsigned char))         \
+                        * CHAR_BIT),                                           \
             unsigned short: ccc_count_leading_zeros_u32(x)                     \
-                - (int)((sizeof(unsigned int) - sizeof(unsigned short)) * 8),  \
+                - (int)((sizeof(unsigned int) - sizeof(unsigned short))        \
+                        * CHAR_BIT),                                           \
             unsigned int: sizeof(int) == 8 ? ccc_count_leading_zeros_u64(x)    \
                                            : ccc_count_leading_zeros_u32(x),   \
             unsigned long: sizeof(long) == 8 ? ccc_count_leading_zeros_u64(x)  \
@@ -156,7 +158,7 @@ ccc_count_leading_zeros_u64(uint64_t x) {
         (__extension__({                                                       \
             typeof(x) ccc_private_x = (x);                                     \
             ccc_private_x == 0                                                 \
-                ? (int)(sizeof(ccc_private_x) * 8)                             \
+                ? (int)(sizeof(ccc_private_x) * CHAR_BIT)                      \
                 : (int)__builtin_stdc_trailing_zeros(ccc_private_x);           \
         }))
 #elif __has_builtin(__builtin_ctzg)
@@ -167,7 +169,7 @@ ccc_count_leading_zeros_u64(uint64_t x) {
 #    define ccc_count_trailing_zeros(x)                                        \
         (__extension__({                                                       \
             typeof(x) ccc_private_x = (x);                                     \
-            ccc_private_x == 0 ? (int)(sizeof(ccc_private_x) * 8)              \
+            ccc_private_x == 0 ? (int)(sizeof(ccc_private_x) * CHAR_BIT)       \
                                : (int)_Generic(                                \
                                      (ccc_private_x),                          \
                     unsigned char: __builtin_ctz(ccc_private_x),               \
@@ -241,7 +243,7 @@ ccc_count_trailing_zeros_u64(uint64_t x) {
 #    define ccc_count_trailing_zeros(x)                                        \
         (__extension__({                                                       \
             typeof(x) ccc_private_x = (x);                                     \
-            ccc_private_x == 0 ? (int)(sizeof(ccc_private_x) * 8)              \
+            ccc_private_x == 0 ? (int)(sizeof(ccc_private_x) * CHAR_BIT)       \
                                : (int)_Generic(                                \
                                      (ccc_private_x),                          \
                     unsigned char: ccc_count_trailing_zeros_u32(               \
