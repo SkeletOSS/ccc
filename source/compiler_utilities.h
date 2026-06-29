@@ -30,8 +30,12 @@
     __extension__({                                                            \
         typeof(a) ccc_private_a = (a);                                         \
         typeof(b) ccc_private_b = (b);                                         \
+        [[maybe_unused]] constexpr int ccc_argument_a_is_signed                \
+            = ccc_is_signed(ccc_private_a);                                    \
+        [[maybe_unused]] constexpr int ccc_argument_b_is_signed                \
+            = ccc_is_signed(ccc_private_b);                                    \
         static_assert(                                                         \
-            ccc_is_signed(ccc_private_a) == ccc_is_signed(ccc_private_b),      \
+            ccc_argument_a_is_signed == ccc_argument_b_is_signed,              \
             "ccc_min: Mixed signed/unsigned comparison is unsafe. Cast "       \
             "explicitly."                                                      \
         );                                                                     \
@@ -42,8 +46,12 @@
     (__extension__({                                                           \
         typeof(a) ccc_private_a = (a);                                         \
         typeof(b) ccc_private_b = (b);                                         \
+        [[maybe_unused]] constexpr int ccc_argument_a_is_signed                \
+            = ccc_is_signed(ccc_private_a);                                    \
+        [[maybe_unused]] constexpr int ccc_argument_b_is_signed                \
+            = ccc_is_signed(ccc_private_b);                                    \
         static_assert(                                                         \
-            ccc_is_signed(ccc_private_a) == ccc_is_signed(ccc_private_b),      \
+            ccc_argument_a_is_signed == ccc_argument_b_is_signed,              \
             "ccc_max: Mixed signed/unsigned comparison is unsafe. Cast "       \
             "explicitly."                                                      \
         );                                                                     \
