@@ -61,7 +61,7 @@ to that section, in my opinion. */
 #include "ccc/configuration.h" /* IWYU pragma: keep */
 #include "ccc/private/private_array_tree_map.h"
 #include "ccc/types.h"
-#include "compiler_utilities.h"
+#include "source/compiler_utilities.h"
 
 /*==========================  Type Declarations   ===========================*/
 

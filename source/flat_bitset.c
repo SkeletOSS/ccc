@@ -39,7 +39,7 @@ and bug doubling. */
 #include "ccc/flat_bitset.h"
 #include "ccc/private/private_flat_bitset.h"
 #include "ccc/types.h"
-#include "compiler_utilities.h"
+#include "source/compiler_utilities.h"
 
 /*=========================   Type Declarations  ============================*/
 

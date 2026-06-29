@@ -37,11 +37,10 @@ the dynamic resizing case. */
 
 /** CCC provided headers. */
 #include "ccc/configuration.h" /* IWYU pragma: keep */
-/** CCC provided headers. */
-#include "../compiler_utilities.h"
 #include "ccc/specialized/array_adaptive_map.h"
 #include "ccc/specialized/private/private_array_adaptive_map.h"
 #include "ccc/types.h"
+#include "source/compiler_utilities.h"
 
 /*==========================  Type Declarations   ===========================*/
 

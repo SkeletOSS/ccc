@@ -43,7 +43,7 @@ better capabilities for 128 bit group operations. */
 #include "ccc/flat_hash_map.h"
 #include "ccc/private/private_flat_hash_map.h"
 #include "ccc/types.h"
-#include "compiler_utilities.h"
+#include "source/compiler_utilities.h"
 
 /*=========================   Platform Selection  ===========================*/
 
