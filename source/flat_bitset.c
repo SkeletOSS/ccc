@@ -186,7 +186,7 @@ CCC_flat_bitset_or(
         return CCC_RESULT_OK;
     }
     Block_count const end_block
-        = block_count(ccc_min(destination->count, source->count));
+        = block_count(CCC_min(destination->count, source->count));
     for (size_t b = 0; b < end_block; ++b) {
         destination->blocks[b] |= source->blocks[b];
     }
@@ -205,7 +205,7 @@ CCC_flat_bitset_xor(
         return CCC_RESULT_OK;
     }
     Block_count const end_block
-        = block_count(ccc_min(destination->count, source->count));
+        = block_count(CCC_min(destination->count, source->count));
     for (Block_count b = 0; b < end_block; ++b) {
         destination->blocks[b] ^= source->blocks[b];
     }
@@ -228,7 +228,7 @@ CCC_flat_bitset_and(
         return CCC_RESULT_OK;
     }
     Block_count const end_block
-        = block_count(ccc_min(destination->count, source->count));
+        = block_count(CCC_min(destination->count, source->count));
     for (Block_count b = 0; b < end_block; ++b) {
         destination->blocks[b] &= source->blocks[b];
     }
@@ -1654,18 +1654,18 @@ static_assert(
 significant bit. */
 static inline Bit_count
 count_trailing_zeros(Bit_block const b) {
-    return (Bit_count)ccc_count_trailing_zeros(b);
+    return (Bit_count)CCC_count_trailing_zeros(b);
 }
 
 /** Counts the leading zeros in a bit block starting from the most significant
 bit. */
 static inline Bit_count
 count_leading_zeros(Bit_block const b) {
-    return (Bit_count)ccc_count_leading_zeros(b);
+    return (Bit_count)CCC_count_leading_zeros(b);
 }
 
 /** Counts the on bits in a bit block. */
 static inline Bit_count
 popcount(Bit_block const b) {
-    return (Bit_count)ccc_popcount(b);
+    return (Bit_count)CCC_popcount(b);
 }

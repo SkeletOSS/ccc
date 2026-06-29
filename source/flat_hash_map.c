@@ -347,7 +347,6 @@ static struct Group
     group_convert_constant_to_empty_and_full_to_deleted(struct Group);
 static unsigned count_trailing_zeros(struct Match_mask);
 static unsigned count_leading_zeros(struct Match_mask);
-static size_t next_power_of_two(size_t);
 static CCC_Tribool is_power_of_two(size_t);
 static size_t to_power_of_two(size_t);
 static CCC_Tribool is_uninitialized(struct CCC_Flat_hash_map const *);
@@ -687,7 +686,7 @@ CCC_flat_hash_map_clear_and_free(
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .alignment = ccc_max(GROUP_COUNT, map->alignof_type),
+        .alignment = CCC_max(GROUP_COUNT, map->alignof_type),
         .context = allocator->context,
     });
     map->data = NULL;
@@ -744,7 +743,7 @@ CCC_flat_hash_map_copy(
         void *const new_data = allocator->allocate((CCC_Allocator_arguments){
             .input = destination->data,
             .bytes = source_bytes,
-            .alignment = ccc_max(GROUP_COUNT, destination->alignof_type),
+            .alignment = CCC_max(GROUP_COUNT, destination->alignof_type),
             .context = allocator->context,
         });
         if (!new_data) {
@@ -1359,7 +1358,7 @@ rehash_resize(
         || ckd_mul(&new_pow2_cap, new_pow2_cap, 2)) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
-    new_pow2_cap = next_power_of_two(new_pow2_cap);
+    new_pow2_cap = to_power_of_two(new_pow2_cap);
     if (new_pow2_cap < (map->mask + 1)) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
@@ -1372,7 +1371,7 @@ rehash_resize(
     void *const new_buf = allocator->allocate((CCC_Allocator_arguments){
         .input = NULL,
         .bytes = total_bytes,
-        .alignment = ccc_max(GROUP_COUNT, map->alignof_type),
+        .alignment = CCC_max(GROUP_COUNT, map->alignof_type),
         .context = allocator->context,
     });
     if (!new_buf) {
@@ -1419,7 +1418,7 @@ rehash_resize(
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .alignment = ccc_max(GROUP_COUNT, map->alignof_type),
+        .alignment = CCC_max(GROUP_COUNT, map->alignof_type),
         .context = allocator->context,
     });
     map->data = new_map.data;
@@ -1452,7 +1451,7 @@ lazy_initialize(
         (void)memset(map->tag, TAG_EMPTY, mask_to_tag_bytes(map->mask));
     } else {
         /* A dynamic map we can re-size as needed. */
-        required_capacity = ccc_max(required_capacity, GROUP_COUNT);
+        required_capacity = CCC_max(required_capacity, GROUP_COUNT);
         size_t total_bytes = 0;
         if (checked_mask_to_total_bytes(
                 &total_bytes, map->sizeof_type, required_capacity - 1
@@ -1462,7 +1461,7 @@ lazy_initialize(
         map->data = allocator->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = total_bytes,
-            .alignment = ccc_max(GROUP_COUNT, map->alignof_type),
+            .alignment = CCC_max(GROUP_COUNT, map->alignof_type),
             .context = allocator->context,
         });
         if (!map->data) {
@@ -1566,17 +1565,7 @@ key_in_index(
 returned if overflow will occur. */
 static inline size_t
 to_power_of_two(size_t const n) {
-    if (is_power_of_two(n)) {
-        return n;
-    }
-    return next_power_of_two(n);
-}
-
-/** Returns next power of 2 greater than n or 0 if no greater can be found. */
-static inline size_t
-next_power_of_two(size_t const n) {
-    unsigned const shifts = (unsigned)ccc_count_leading_zeros(n - 1U);
-    return shifts >= sizeof(size_t) * CHAR_BIT ? 0 : (SIZE_MAX >> shifts) + 1;
+    return CCC_bit_ceiling(n);
 }
 
 /** Returns true if n is a power of two. 0 is not considered a power of 2. */
@@ -2351,12 +2340,12 @@ static_assert(
 
 static inline unsigned
 count_trailing_zeros(struct Match_mask const mask) {
-    return (unsigned)ccc_count_trailing_zeros(mask.v);
+    return (unsigned)CCC_count_trailing_zeros(mask.v);
 }
 
 static inline unsigned
 count_leading_zeros(struct Match_mask const mask) {
-    return (unsigned)ccc_count_leading_zeros(mask.v);
+    return (unsigned)CCC_count_leading_zeros(mask.v);
 }
 
 #else /* NEON and PORTABLE implementation count bits the same way. */

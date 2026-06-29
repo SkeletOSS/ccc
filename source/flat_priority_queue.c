@@ -604,8 +604,8 @@ bottom_up_reheap(
            height` to `height + 2` which is significant for data sizes that can
            vary significantly in this type of generic container. */
         (void)memcpy(temp, at(buffer, root), buffer->sizeof_type);
-        size_t tree_levels = (size_t)ccc_count_leading_zeros(root + 1)
-                           - (size_t)ccc_count_leading_zeros(leaf + 1);
+        size_t tree_levels = (size_t)CCC_count_leading_zeros(root + 1)
+                           - (size_t)CCC_count_leading_zeros(leaf + 1);
         while (tree_levels--) {
             size_t const vacant_ancestor_index
                 = ((leaf + 1) >> (tree_levels + 1)) - 1;

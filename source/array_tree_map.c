@@ -785,7 +785,7 @@ CCC_array_tree_map_clear_and_free(
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .alignment = ccc_max(ALIGNOF_NODE, map->alignof_type),
+        .alignment = CCC_max(ALIGNOF_NODE, map->alignof_type),
         .context = allocator->context,
     });
     map->data = NULL;
@@ -872,7 +872,7 @@ allocate_slot(
     if (!old_count || old_count == old_cap) {
         assert(!map->free_list);
         if (old_count == old_cap) {
-            if (resize(map, ccc_max(old_cap * 2, PARITY_BLOCK_BITS), allocator)
+            if (resize(map, CCC_max(old_cap * 2, PARITY_BLOCK_BITS), allocator)
                 != CCC_RESULT_OK) {
                 return 0;
             }
@@ -891,7 +891,7 @@ allocate_slot(
             node_at(map, i)->next_free = prev;
         }
         map->free_list = prev;
-        map->count = ccc_max(old_count, 1U);
+        map->count = CCC_max(old_count, 1U);
         set_parity(map, 0, CCC_TRUE);
     }
     assert(map->free_list);
@@ -913,7 +913,7 @@ resize(
     void *const new_data = allocator->allocate((CCC_Allocator_arguments){
         .input = NULL,
         .bytes = total_bytes(map->sizeof_type, new_capacity),
-        .alignment = ccc_max(ALIGNOF_NODE, map->alignof_type),
+        .alignment = CCC_max(ALIGNOF_NODE, map->alignof_type),
         .context = allocator->context,
     });
     if (!new_data) {
@@ -926,7 +926,7 @@ resize(
     allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .alignment = ccc_max(ALIGNOF_NODE, map->alignof_type),
+        .alignment = CCC_max(ALIGNOF_NODE, map->alignof_type),
         .context = allocator->context,
     });
     map->data = new_data;

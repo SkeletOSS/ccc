@@ -168,7 +168,7 @@ CCC_flat_buffer_allocate_back(
     }
     if (buffer->count == buffer->capacity) {
         CCC_Result const resize_res = CCC_flat_buffer_allocate(
-            buffer, ccc_max(buffer->capacity * 2, START_CAPACITY), allocator
+            buffer, CCC_max(buffer->capacity * 2, START_CAPACITY), allocator
         );
         if (resize_res != CCC_RESULT_OK) {
             return NULL;
@@ -285,7 +285,7 @@ CCC_flat_buffer_insert(
     }
     if (buffer->count == buffer->capacity) {
         CCC_Result const r = CCC_flat_buffer_allocate(
-            buffer, ccc_max(buffer->count * 2, START_CAPACITY), allocator
+            buffer, CCC_max(buffer->count * 2, START_CAPACITY), allocator
         );
         if (r != CCC_RESULT_OK) {
             return NULL;
