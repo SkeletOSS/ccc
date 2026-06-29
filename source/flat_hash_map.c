@@ -2334,128 +2334,48 @@ group_convert_constant_to_empty_and_full_to_deleted(struct Group group) {
 /** How we count bits can vary depending on the implementation, group size,
 and struct Match_mask width. Keep the bit counting logic separate here so the
 above implementations can simply rely on counting zeros that yields correct
-results for their implementation. Each implementation attempts to use the
-built-ins first and then falls back to manual bit counting. */
+results for their implementation. */
 
 #ifdef CCC_HAS_X86_SIMD
-
-#    if defined(__has_builtin) && __has_builtin(__builtin_ctz)                 \
-        && __has_builtin(__builtin_clz) && __has_builtin(__builtin_clzl)
 
 static_assert(
     sizeof((struct Match_mask){}.v) <= sizeof(unsigned),
     "a struct Match_mask is expected to be smaller than an unsigned due to "
     "available builtins on the given platform."
 );
-
-static inline unsigned
-count_trailing_zeros(struct Match_mask const mask) {
-    static_assert(
-        __builtin_ctz(0x8000) == GROUP_COUNT - 1,
-        "Counting trailing zeros will always result in a valid mask "
-        "based on struct Match_mask width if the mask is not 0, even though "
-        "m is implicitly widened to an int."
-    );
-    return mask.v ? (unsigned)__builtin_ctz(mask.v) : GROUP_COUNT;
-}
-
-static inline unsigned
-count_leading_zeros(struct Match_mask const mask) {
-    static_assert(
-        sizeof((struct Match_mask){}.v) * 2UL == sizeof(unsigned),
-        "a struct Match_mask will be implicitly widened to exactly twice "
-        "its width if non-zero due to builtin functions available."
-    );
-    return mask.v ? (unsigned)__builtin_clz(((unsigned)mask.v) << GROUP_COUNT)
-                  : GROUP_COUNT;
-}
-
-#    else /* !defined(__has_builtin) || !__has_builtin(__builtin_ctz)          \
-        || !__has_builtin(__builtin_clz) || !__has_builtin(__builtin_clzl) */
-
-static inline unsigned
-count_trailing_zeros(struct Match_mask m) {
-    if (!m.v) {
-        return GROUP_COUNT;
-    }
-    unsigned cnt = 0;
-    for (; m.v; cnt += ((m.v & 1U) == 0), m.v >>= 1U) {}
-    return cnt;
-}
-
-static inline unsigned
-count_leading_zeros(struct Match_mask m) {
-    if (!m.v) {
-        return GROUP_COUNT;
-    }
-    unsigned mv = (unsigned)m.v << GROUP_COUNT;
-    unsigned cnt = 0;
-    for (; (mv & (MATCH_MASK_MSB << GROUP_COUNT)) == 0; ++cnt, mv <<= 1U) {}
-    return cnt;
-}
-
-#    endif /* defined(__has_builtin) && __has_builtin(__builtin_ctz)           \
-        && __has_builtin(__builtin_clz) && __has_builtin(__builtin_clzl) */
-
-#else /* NEON and PORTABLE implementation count bits the same way. */
-
-#    if defined(__has_builtin) && __has_builtin(__builtin_ctzl)                \
-        && __has_builtin(__builtin_clzl)
-
 static_assert(
-    sizeof((struct Match_mask){}.v) == sizeof(long),
-    "builtin assumes an integer width that must be compatible with "
-    "struct Match_mask"
+    ((sizeof(typeof((struct Match_mask){}.v)) * CHAR_BIT) - 1)
+        == GROUP_COUNT - 1,
+    "trailing and leading zeros produces number of bits we expect for mask"
 );
 
 static inline unsigned
 count_trailing_zeros(struct Match_mask const mask) {
-    static_assert(
-        __builtin_ctzl(MATCH_MASK_MSB) / GROUP_COUNT == GROUP_COUNT - 1,
-        "builtin trailing zeros must produce number of bits we "
-        "expect for mask"
-    );
-    return mask.v ? ((unsigned)__builtin_ctzl(mask.v)) / GROUP_COUNT
-                  : GROUP_COUNT;
+    return (unsigned)ccc_count_trailing_zeros(mask.v);
 }
 
 static inline unsigned
 count_leading_zeros(struct Match_mask const mask) {
-    static_assert(
-        __builtin_clzl((typeof((struct Match_mask){}.v))0x1) / GROUP_COUNT
-            == GROUP_COUNT - 1,
-        "builtin trailing zeros must produce number of bits we "
-        "expect for mask"
-    );
-    return mask.v ? ((unsigned)__builtin_clzl(mask.v)) / GROUP_COUNT
-                  : GROUP_COUNT;
+    return (unsigned)ccc_count_leading_zeros(mask.v);
 }
 
-#    else /* defined(__has_builtin) && __has_builtin(__builtin_ctzl) &&        \
-             __has_builtin(__builtin_clzl) */
+#else /* NEON and PORTABLE implementation count bits the same way. */
+
+static_assert(
+    ((sizeof(typeof((struct Match_mask){}.v)) * CHAR_BIT) - 1) / GROUP_COUNT
+        == GROUP_COUNT - 1,
+    "trailing and leading zeros produces number of bits we expect for mask"
+);
 
 static inline unsigned
-count_trailing_zeros(struct Match_mask m) {
-    if (!m.v) {
-        return GROUP_COUNT;
-    }
-    unsigned cnt = 0;
-    for (; m.v; cnt += ((m.v & 1U) == 0), m.v >>= 1U) {}
-    return cnt / GROUP_COUNT;
+count_trailing_zeros(struct Match_mask const mask) {
+    return (unsigned)ccc_count_trailing_zeros(mask.v) / GROUP_COUNT;
 }
 
 static inline unsigned
-count_leading_zeros(struct Match_mask m) {
-    if (!m.v) {
-        return GROUP_COUNT;
-    }
-    unsigned cnt = 0;
-    for (; (m.v & MATCH_MASK_MSB) == 0; ++cnt, m.v <<= 1U) {}
-    return cnt / GROUP_COUNT;
+count_leading_zeros(struct Match_mask const mask) {
+    return (unsigned)ccc_count_leading_zeros(mask.v) / GROUP_COUNT;
 }
-
-#    endif /* !defined(__has_builtin) || !__has_builtin(__builtin_ctzl) ||     \
-              !__has_builtin(__builtin_clzl) */
 
 #endif /* defined(CCC_HAS_X86_SIMD) */
 
