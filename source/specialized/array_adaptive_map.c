@@ -37,6 +37,8 @@ the dynamic resizing case. */
 
 /** CCC provided headers. */
 #include "ccc/configuration.h" /* IWYU pragma: keep */
+/** CCC provided headers. */
+#include "../compiler_utilities.h"
 #include "ccc/specialized/array_adaptive_map.h"
 #include "ccc/specialized/private/private_array_adaptive_map.h"
 #include "ccc/types.h"
@@ -174,7 +176,6 @@ static CCC_Tribool validate(struct CCC_Array_adaptive_map const *);
 static void init_node(struct CCC_Array_adaptive_map const *, size_t);
 static void swap(void *, size_t, void *, void *);
 static void link(struct CCC_Array_adaptive_map *, size_t, enum Branch, size_t);
-static size_t max_size_t(size_t, size_t);
 static void
 delete_nodes(struct CCC_Array_adaptive_map const *, CCC_Destructor const *);
 
@@ -671,7 +672,7 @@ CCC_array_adaptive_map_clear_and_free(
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .alignment = max_size_t(ALIGNOF_NODE, map->alignof_type),
+        .alignment = ccc_max(ALIGNOF_NODE, map->alignof_type),
         .context = allocator->context,
     });
     map->data = NULL;
@@ -801,7 +802,7 @@ allocate_slot(
     if (!old_count || old_count == old_cap) {
         assert(!map->free_list);
         if (old_count == old_cap) {
-            if (resize(map, max_size_t(old_cap * 2, 8), allocator)
+            if (resize(map, ccc_max(old_cap * 2, 8U), allocator)
                 != CCC_RESULT_OK) {
                 return 0;
             }
@@ -817,7 +818,7 @@ allocate_slot(
             node_at(map, i)->next_free = prev;
         }
         map->free_list = prev;
-        map->count = max_size_t(old_count, 1);
+        map->count = ccc_max(old_count, 1U);
     }
     assert(map->free_list);
     ++map->count;
@@ -838,7 +839,7 @@ resize(
     void *const new_data = allocator->allocate((CCC_Allocator_arguments){
         .input = NULL,
         .bytes = total_bytes(map->sizeof_type, new_capacity),
-        .alignment = max_size_t(ALIGNOF_NODE, map->alignof_type),
+        .alignment = ccc_max(ALIGNOF_NODE, map->alignof_type),
         .context = allocator->context,
     });
     if (!new_data) {
@@ -849,7 +850,7 @@ resize(
     allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .alignment = max_size_t(ALIGNOF_NODE, map->alignof_type),
+        .alignment = ccc_max(ALIGNOF_NODE, map->alignof_type),
         .context = allocator->context,
     });
     map->data = new_data;
@@ -1217,11 +1218,6 @@ key_in_slot(
     struct CCC_Array_adaptive_map const *map, void const *const user_struct
 ) {
     return (char *)user_struct + map->key_offset;
-}
-
-static inline size_t
-max_size_t(size_t const a, size_t const b) {
-    return a > b ? a : b;
 }
 
 /*===========================   Validation   ===============================*/

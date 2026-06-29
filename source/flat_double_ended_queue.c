@@ -81,10 +81,10 @@ CCC_flat_double_ended_queue_push_back(
         return NULL;
     }
     void *const slot = allocate_back(queue, allocator);
-    if (slot && slot != type) {
-        (void)memcpy(slot, type, queue->buffer.sizeof_type);
+    if (!slot || slot == type) {
+        return NULL;
     }
-    return slot;
+    return memcpy(slot, type, queue->buffer.sizeof_type);
 }
 
 void *

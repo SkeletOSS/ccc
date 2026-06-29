@@ -43,6 +43,7 @@ better capabilities for 128 bit group operations. */
 #include "ccc/flat_hash_map.h"
 #include "ccc/private/private_flat_hash_map.h"
 #include "ccc/types.h"
+#include "compiler_utilities.h"
 
 /*=========================   Platform Selection  ===========================*/
 
@@ -323,7 +324,6 @@ static void set_insert_tag(
     struct CCC_Flat_hash_map *, struct CCC_Flat_hash_map_tag, size_t
 );
 static size_t mask_to_capacity_with_load_factor(size_t);
-static size_t max_size_t(size_t, size_t);
 static void
 tag_set(struct CCC_Flat_hash_map *, struct CCC_Flat_hash_map_tag, size_t);
 static CCC_Tribool match_has_one(struct Match_mask);
@@ -347,7 +347,6 @@ static struct Group
     group_convert_constant_to_empty_and_full_to_deleted(struct Group);
 static unsigned count_trailing_zeros(struct Match_mask);
 static unsigned count_leading_zeros(struct Match_mask);
-static unsigned count_leading_zeros_size_t(size_t);
 static size_t next_power_of_two(size_t);
 static CCC_Tribool is_power_of_two(size_t);
 static size_t to_power_of_two(size_t);
@@ -688,7 +687,7 @@ CCC_flat_hash_map_clear_and_free(
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .alignment = max_size_t(GROUP_COUNT, map->alignof_type),
+        .alignment = ccc_max(GROUP_COUNT, map->alignof_type),
         .context = allocator->context,
     });
     map->data = NULL;
@@ -745,7 +744,7 @@ CCC_flat_hash_map_copy(
         void *const new_data = allocator->allocate((CCC_Allocator_arguments){
             .input = destination->data,
             .bytes = source_bytes,
-            .alignment = max_size_t(GROUP_COUNT, destination->alignof_type),
+            .alignment = ccc_max(GROUP_COUNT, destination->alignof_type),
             .context = allocator->context,
         });
         if (!new_data) {
@@ -1373,7 +1372,7 @@ rehash_resize(
     void *const new_buf = allocator->allocate((CCC_Allocator_arguments){
         .input = NULL,
         .bytes = total_bytes,
-        .alignment = max_size_t(GROUP_COUNT, map->alignof_type),
+        .alignment = ccc_max(GROUP_COUNT, map->alignof_type),
         .context = allocator->context,
     });
     if (!new_buf) {
@@ -1420,7 +1419,7 @@ rehash_resize(
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .alignment = max_size_t(GROUP_COUNT, map->alignof_type),
+        .alignment = ccc_max(GROUP_COUNT, map->alignof_type),
         .context = allocator->context,
     });
     map->data = new_map.data;
@@ -1453,7 +1452,7 @@ lazy_initialize(
         (void)memset(map->tag, TAG_EMPTY, mask_to_tag_bytes(map->mask));
     } else {
         /* A dynamic map we can re-size as needed. */
-        required_capacity = max_size_t(required_capacity, GROUP_COUNT);
+        required_capacity = ccc_max(required_capacity, GROUP_COUNT);
         size_t total_bytes = 0;
         if (checked_mask_to_total_bytes(
                 &total_bytes, map->sizeof_type, required_capacity - 1
@@ -1463,7 +1462,7 @@ lazy_initialize(
         map->data = allocator->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = total_bytes,
-            .alignment = max_size_t(GROUP_COUNT, map->alignof_type),
+            .alignment = ccc_max(GROUP_COUNT, map->alignof_type),
             .context = allocator->context,
         });
         if (!map->data) {
@@ -1576,7 +1575,7 @@ to_power_of_two(size_t const n) {
 /** Returns next power of 2 greater than n or 0 if no greater can be found. */
 static inline size_t
 next_power_of_two(size_t const n) {
-    unsigned const shifts = count_leading_zeros_size_t(n - 1);
+    unsigned const shifts = (unsigned)ccc_count_leading_zeros(n - 1U);
     return shifts >= sizeof(size_t) * CHAR_BIT ? 0 : (SIZE_MAX >> shifts) + 1;
 }
 
@@ -1706,11 +1705,6 @@ tags_base_address(
                                             + mask_to_data_bytes(
                                                 sizeof_type, mask
                                             ));
-}
-
-static inline size_t
-max_size_t(size_t const a, size_t const b) {
-    return a > b ? a : b;
 }
 
 static inline CCC_Tribool
@@ -2376,23 +2370,8 @@ count_leading_zeros(struct Match_mask const mask) {
                   : GROUP_COUNT;
 }
 
-static inline unsigned
-count_leading_zeros_size_t(size_t const n) {
-    static_assert(
-        sizeof(size_t) == sizeof(unsigned long),
-        "Ensure the available builtin works for the platform defined "
-        "size of a size_t."
-    );
-    return n ? (unsigned)__builtin_clzl(n) : sizeof(size_t) * CHAR_BIT;
-}
-
 #    else /* !defined(__has_builtin) || !__has_builtin(__builtin_ctz)          \
         || !__has_builtin(__builtin_clz) || !__has_builtin(__builtin_clzl) */
-
-enum : size_t {
-    /** @internal Most significant bit of size_t for bit counting. */
-    SIZE_T_MSB = (size_t)1 << ((sizeof(size_t) * CHAR_BIT) - 1),
-};
 
 static inline unsigned
 count_trailing_zeros(struct Match_mask m) {
@@ -2412,16 +2391,6 @@ count_leading_zeros(struct Match_mask m) {
     unsigned mv = (unsigned)m.v << GROUP_COUNT;
     unsigned cnt = 0;
     for (; (mv & (MATCH_MASK_MSB << GROUP_COUNT)) == 0; ++cnt, mv <<= 1U) {}
-    return cnt;
-}
-
-static inline unsigned
-count_leading_zeros_size_t(size_t n) {
-    if (!n) {
-        return sizeof(size_t) * CHAR_BIT;
-    }
-    unsigned cnt = 0;
-    for (; !(n & SIZE_T_MSB); ++cnt, n <<= 1U) {}
     return cnt;
 }
 
@@ -2462,19 +2431,8 @@ count_leading_zeros(struct Match_mask const mask) {
                   : GROUP_COUNT;
 }
 
-static inline unsigned
-count_leading_zeros_size_t(size_t const n) {
-    static_assert(sizeof(size_t) == sizeof(unsigned long));
-    return n ? ((unsigned)__builtin_clzl(n)) : sizeof(size_t) * CHAR_BIT;
-}
-
 #    else /* defined(__has_builtin) && __has_builtin(__builtin_ctzl) &&        \
              __has_builtin(__builtin_clzl) */
-
-enum : size_t {
-    /** @internal Most significant bit of size_t for bit counting. */
-    SIZE_T_MSB = (size_t)1 << ((sizeof(size_t) * CHAR_BIT) - 1),
-};
 
 static inline unsigned
 count_trailing_zeros(struct Match_mask m) {
@@ -2494,16 +2452,6 @@ count_leading_zeros(struct Match_mask m) {
     unsigned cnt = 0;
     for (; (m.v & MATCH_MASK_MSB) == 0; ++cnt, m.v <<= 1U) {}
     return cnt / GROUP_COUNT;
-}
-
-static inline unsigned
-count_leading_zeros_size_t(size_t n) {
-    if (!n) {
-        return sizeof(size_t) * CHAR_BIT;
-    }
-    unsigned cnt = 0;
-    for (; (n & SIZE_T_MSB) == 0; ++cnt, n <<= 1U) {}
-    return cnt;
 }
 
 #    endif /* !defined(__has_builtin) || !__has_builtin(__builtin_ctzl) ||     \
