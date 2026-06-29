@@ -2358,12 +2358,12 @@ static_assert(
 
 static inline unsigned
 count_trailing_zeros(struct Match_mask const mask) {
-    return (unsigned)ccc_count_trailing_zeros(mask.v) / GROUP_COUNT;
+    return (unsigned)CCC_count_trailing_zeros(mask.v) / GROUP_COUNT;
 }
 
 static inline unsigned
 count_leading_zeros(struct Match_mask const mask) {
-    return (unsigned)ccc_count_leading_zeros(mask.v) / GROUP_COUNT;
+    return (unsigned)CCC_count_leading_zeros(mask.v) / GROUP_COUNT;
 }
 
 #endif /* defined(CCC_HAS_X86_SIMD) */
