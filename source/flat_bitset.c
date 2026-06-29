@@ -1651,7 +1651,7 @@ significant bit. */
 static inline Bit_count
 count_trailing_zeros(Bit_block const b) {
     assert(
-        ccc_count_trailing_zeros(BLOCK_MSB) <= U8_BLOCK_MAX
+        ccc_count_trailing_zeros((Bit_block)BLOCK_MSB) <= U8_BLOCK_MAX
         && "builtins return counts that are valid for smaller width types we "
            "use"
     );
