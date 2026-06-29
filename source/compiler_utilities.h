@@ -15,16 +15,6 @@
 #    define ccc_inline static inline
 #endif /* defined(__GNUC__) || defined(__clang__) */
 
-ccc_inline size_t
-ccc_min_size_t(size_t const a, size_t const b) {
-    return a < b ? a : b;
-}
-
-ccc_inline size_t
-ccc_max_size_t(size_t const a, size_t const b) {
-    return a > b ? a : b;
-}
-
 #define ccc_is_signed(x)                                                       \
     _Generic(                                                                  \
         (x),                                                                   \
@@ -45,9 +35,7 @@ ccc_max_size_t(size_t const a, size_t const b) {
             "ccc_min: Mixed signed/unsigned comparison is unsafe. Cast "       \
             "explicitly."                                                      \
         );                                                                     \
-        _Generic((ccc_private_a) + (ccc_private_b), size_t: ccc_min_size_t)(   \
-            ccc_private_a, ccc_private_b                                       \
-        );                                                                     \
+        ccc_private_a < ccc_private_b ? ccc_private_a : ccc_private_b;         \
     })
 
 #define ccc_max(a, b)                                                          \
@@ -59,9 +47,7 @@ ccc_max_size_t(size_t const a, size_t const b) {
             "ccc_max: Mixed signed/unsigned comparison is unsafe. Cast "       \
             "explicitly."                                                      \
         );                                                                     \
-        _Generic((ccc_private_a) + (ccc_private_b), size_t: ccc_max_size_t)(   \
-            ccc_private_a, ccc_private_b                                       \
-        );                                                                     \
+        ccc_private_a > ccc_private_b ? ccc_private_a : ccc_private_b;         \
     }))
 
 #if __has_builtin(__builtin_stdc_leading_zeros)
