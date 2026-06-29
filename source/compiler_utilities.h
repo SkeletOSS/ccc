@@ -34,7 +34,7 @@
         typeof(b) ccc_private_b = (b);                                         \
         static_assert(                                                         \
             ((typeof(a))-1 < 0) == ((typeof(b))-1 < 0),                        \
-            "ccc_min: Mixed signed/unsigned comparison is unsafe. Cast "       \
+            "ccc_max: Mixed signed/unsigned comparison is unsafe. Cast "       \
             "explicitly."                                                      \
         );                                                                     \
         ccc_private_a > ccc_private_b ? ccc_private_a : ccc_private_b;         \
@@ -57,6 +57,7 @@
 
 #elif __has_builtin(__builtin_clz) && __has_builtin(__builtin_clzl)            \
     && __has_builtin(__builtin_clzll)
+
 #    define ccc_count_leading_zeros(x)                                         \
         (__extension__({                                                       \
             typeof(x) ccc_private_x = (x);                                     \
@@ -67,7 +68,8 @@
                         - (int)((sizeof(unsigned int) - sizeof(unsigned char)) \
                                 * CHAR_BIT),                                   \
                     unsigned short: __builtin_clz(ccc_private_x)               \
-                        - (int)((sizeof(unsigned int) - sizeof(unsigned char)) \
+                        - (int)((sizeof(unsigned int)                          \
+                                 - sizeof(unsigned short))                     \
                                 * CHAR_BIT),                                   \
                     unsigned int: __builtin_clz(ccc_private_x),                \
                     unsigned long: __builtin_clzl(ccc_private_x),              \
@@ -136,14 +138,15 @@ ccc_count_leading_zeros_u64(uint64_t x) {
     }
     return n;
 }
+
 #    define ccc_count_leading_zeros(x)                                         \
         _Generic(                                                              \
             (x),                                                               \
             unsigned char: ccc_count_leading_zeros_u32(x)                      \
-                - (int)((sizeof(unsigned int) - sizeof(unsigned char))         \
+                - (int)((sizeof(uint32_t) - sizeof(unsigned char))             \
                         * CHAR_BIT),                                           \
             unsigned short: ccc_count_leading_zeros_u32(x)                     \
-                - (int)((sizeof(unsigned int) - sizeof(unsigned short))        \
+                - (int)((sizeof(uint32_t) - sizeof(unsigned short))            \
                         * CHAR_BIT),                                           \
             unsigned int: sizeof(int) == 8 ? ccc_count_leading_zeros_u64(x)    \
                                            : ccc_count_leading_zeros_u32(x),   \
@@ -151,9 +154,11 @@ ccc_count_leading_zeros_u64(uint64_t x) {
                                              : ccc_count_leading_zeros_u32(x), \
             unsigned long long: ccc_count_leading_zeros_u64(x)                 \
         )
+
 #endif /* __has_builtin(__builtin_stdc_leading_zeros) */
 
 #if __has_builtin(__builtin_stdc_trailing_zeros)
+
 #    define ccc_count_trailing_zeros(x)                                        \
         (__extension__({                                                       \
             typeof(x) ccc_private_x = (x);                                     \
@@ -161,11 +166,15 @@ ccc_count_leading_zeros_u64(uint64_t x) {
                 ? (int)(sizeof(ccc_private_x) * CHAR_BIT)                      \
                 : (int)__builtin_stdc_trailing_zeros(ccc_private_x);           \
         }))
+
 #elif __has_builtin(__builtin_ctzg)
+
 #    define ccc_count_trailing_zeros(x)                                        \
         __builtin_ctzg(x, (int)(sizeof(x) * CHAR_BIT))
+
 #elif __has_builtin(__builtin_ctz) && __has_builtin(__builtin_ctzl)            \
     && __has_builtin(__builtin_ctzll)
+
 #    define ccc_count_trailing_zeros(x)                                        \
         (__extension__({                                                       \
             typeof(x) ccc_private_x = (x);                                     \
@@ -179,6 +188,7 @@ ccc_count_leading_zeros_u64(uint64_t x) {
                     unsigned long long: __builtin_ctzll(ccc_private_x)         \
                                  );                                            \
         }))
+
 #else /* PORTABLE FALLBACK COUNTING */
 
 ccc_inline int
@@ -240,6 +250,7 @@ ccc_count_trailing_zeros_u64(uint64_t x) {
     }
     return n;
 }
+
 #    define ccc_count_trailing_zeros(x)                                        \
         (__extension__({                                                       \
             typeof(x) ccc_private_x = (x);                                     \
@@ -263,12 +274,17 @@ ccc_count_trailing_zeros_u64(uint64_t x) {
                     )                                                          \
                                  );                                            \
         }))
+
 #endif /* __has_builtin(__builtin_stdc_trailing_zeros) */
 
 #if __has_builtin(__builtin_stdc_count_ones)
+
 #    define ccc_popcount(x) ((int)__builtin_stdc_count_ones(x))
+
 #elif __has_builtin(__builtin_popcountg)
+
 #    define ccc_popcount(x) ((int)__builtin_popcountg(x))
+
 #elif __has_builtin(__builtin_popcount) && __has_builtin(__builtin_popcountl)  \
     && __has_builtin(__builtin_popcountll)
 
