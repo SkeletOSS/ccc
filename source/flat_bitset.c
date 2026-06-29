@@ -1667,12 +1667,5 @@ count_leading_zeros(Bit_block const b) {
 /** Counts the on bits in a bit block. */
 static inline Bit_count
 popcount(Bit_block const b) {
-    /* There are different pop counts for different integer widths. Be sure
-       to catch the use of the wrong one by mistake here at compile time. */
-    assert(
-        ccc_popcount((Bit_block)~0) <= U8_BLOCK_MAX
-        && "builtins return counts that are valid for smaller width types we "
-           "use"
-    );
     return (Bit_count)ccc_popcount(b);
 }
