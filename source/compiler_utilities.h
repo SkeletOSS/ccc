@@ -5,15 +5,15 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#ifndef __has_builtin
+#    define __has_builtin(x) 0
+#endif /* __has_builtin */
+
 #if defined(__GNUC__) || defined(__clang__)
 #    define ccc_inline [[gnu::always_inline]] static inline
 #else
 #    define ccc_inline static inline
 #endif /* defined(__GNUC__) || defined(__clang__) */
-
-#ifndef __has_builtin
-#    define __has_builtin(x) 0
-#endif /* __has_builtin */
 
 ccc_inline size_t
 ccc_min_size_t(size_t const a, size_t const b) {
