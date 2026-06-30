@@ -183,27 +183,26 @@ match in signedness. Each argument is evaluated once to avoid side-effects.
                                        & ~((typeof((integer) + (alignment)))(alignment) \
                                            - 1)))
 
-#define CCC_private_checked_roundup(result_pointer, integer, alignment)                \
-    (__extension__({                                                                   \
-        /*NOLINTBEGIN(bugprone-assignment-in-if-condition)*/                           \
-        typedef typeof(sizeof(integer) >= sizeof(alignment) ? (integer) : (alignment)) \
-            ccc_private_max_width_type;                                                \
-        ccc_private_max_width_type ccc_private_integer = (integer);                    \
-        ccc_private_max_width_type ccc_private_alignment                               \
-            = (ccc_private_max_width_type)(alignment);                                 \
-        typeof(result_pointer) ccc_private_result_pointer = (result_pointer);          \
-        bool ccc_private_has_overflow = false;                                         \
-        if (ckd_add(                                                                   \
-                ccc_private_result_pointer,                                            \
-                ccc_private_integer,                                                   \
-                ccc_private_alignment - 1                                              \
-            )) {                                                                       \
-            ccc_private_has_overflow = true;                                           \
-        } else {                                                                       \
-            *ccc_private_result_pointer &= ~(ccc_private_alignment - 1);               \
-        }                                                                              \
-        ccc_private_has_overflow;                                                      \
-        /*NOLINTEND(bugprone-assignment-in-if-condition)*/                             \
+#define CCC_private_checked_roundup(result_pointer, integer, alignment)        \
+    (__extension__({                                                           \
+        /*NOLINTBEGIN(bugprone-assignment-in-if-condition)*/                   \
+        typedef typeof((integer) + (alignment)) ccc_private_max_width_type;    \
+        ccc_private_max_width_type ccc_private_integer = (integer);            \
+        ccc_private_max_width_type ccc_private_alignment                       \
+            = (ccc_private_max_width_type)(alignment);                         \
+        typeof(result_pointer) ccc_private_result_pointer = (result_pointer);  \
+        bool ccc_private_has_overflow = false;                                 \
+        if (ckd_add(                                                           \
+                ccc_private_result_pointer,                                    \
+                ccc_private_integer,                                           \
+                ccc_private_alignment - 1                                      \
+            )) {                                                               \
+            ccc_private_has_overflow = true;                                   \
+        } else {                                                               \
+            *ccc_private_result_pointer &= ~(ccc_private_alignment - 1);       \
+        }                                                                      \
+        ccc_private_has_overflow;                                              \
+        /*NOLINTEND(bugprone-assignment-in-if-condition)*/                     \
     }))
 
 #define CCC_private_min(a, b)                                                  \
