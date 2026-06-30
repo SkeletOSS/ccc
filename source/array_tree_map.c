@@ -163,10 +163,10 @@ static_assert(
     (char const *)&static_data_nodes_parity_layout_test
                 .parity[CCC_private_array_tree_map_blocks(TCAP)]
             - (char const *)&static_data_nodes_parity_layout_test.data[0]
-        == CCC_comptime_roundup(
+        == CCC_roundup(
                (sizeof(*static_data_nodes_parity_layout_test.data) * TCAP),
                ALIGNOF_NODE
-           ) + CCC_comptime_roundup((SIZEOF_NODE * TCAP), ALIGNOF_PARITY)
+           ) + CCC_roundup((SIZEOF_NODE * TCAP), ALIGNOF_PARITY)
                + (SIZEOF_PARITY * CCC_private_array_tree_map_blocks(TCAP)),
     "The pointer difference in bytes between end of parity bit array and start "
     "of user data array must be the same as the total bytes we assume to be "
@@ -174,7 +174,7 @@ static_assert(
 );
 static_assert(
     (char const *)&static_data_nodes_parity_layout_test.data
-            + CCC_comptime_roundup(
+            + CCC_roundup(
                 (sizeof(*static_data_nodes_parity_layout_test.data) * TCAP),
                 ALIGNOF_NODE
             )
@@ -185,11 +185,11 @@ static_assert(
 static_assert(
     (char const *)&static_data_nodes_parity_layout_test.parity
         == ((char const *)&static_data_nodes_parity_layout_test.data
-            + CCC_comptime_roundup(
+            + CCC_roundup(
                 (sizeof(*static_data_nodes_parity_layout_test.data) * TCAP),
                 ALIGNOF_NODE
             )
-            + CCC_comptime_roundup((SIZEOF_NODE * TCAP), ALIGNOF_PARITY)),
+            + CCC_roundup((SIZEOF_NODE * TCAP), ALIGNOF_PARITY)),
     "The start of the parity array must begin at the next aligned byte given "
     "alignment of both the data and nodes array."
 );

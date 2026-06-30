@@ -178,16 +178,14 @@ static __auto_type const data_tag_layout_test = (struct {
 static_assert(
     (char const *)&data_tag_layout_test.tag[2]
             - (char const *)&data_tag_layout_test.data[0]
-        == (CCC_comptime_roundup(sizeof(data_tag_layout_test.data), GROUP_COUNT)
+        == (CCC_roundup(sizeof(data_tag_layout_test.data), GROUP_COUNT)
             + (sizeof(struct CCC_Flat_hash_map_tag) * 2)),
     "The manually computed offset of the tag array from the start of the data "
     "array must match the offset chosen by compiler alignment rules."
 );
 static_assert(
     (char const *)&data_tag_layout_test.data
-            + CCC_comptime_roundup(
-                sizeof(data_tag_layout_test.data), GROUP_COUNT
-            )
+            + CCC_roundup(sizeof(data_tag_layout_test.data), GROUP_COUNT)
         == (char const *)&data_tag_layout_test.tag,
     "We calculate the correct position of the tag array considering it may get "
     "extra padding at start for alignment by group size."

@@ -63,27 +63,18 @@ Type safe arithmetic functions. */
 /**@{*/
 
 /** @internal
-@brief Round an integer up to a specified alignment boundary at compile time.
-@param[in] integer the integer value to round up.
-@param[in] alignment the alignment boundary that must be a power of two.
-@return The unchecked rounded up value.
-@warning Prefer CCC_roundup(integer, alignment), if possible. This version is
-intended to be used at compile time but lacks the safety and widening guarantees
-of the other versions.
-
-This is intended for use in compile time definitions and static asserts. */
-#define CCC_comptime_roundup(integer, alignment)                               \
-    CCC_private_comptime_roundup(integer, alignment)
-
-/** @internal
 @brief Round an integer up to a specified alignment boundary safely
-evaluating arguments once.
+evaluating the integer argument once. This function-style macro can be used at
+compile time or runtime.
 @param[in] integer the integer value to round up.
 @param[in] alignment the alignment boundary that must be a power of two.
 @return The rounded-up value, evaluated in the wider type of the two input
 arguments.
 @note Argument promotion to the wider type ensures that smaller integer types
-are not accidentally truncated during alignment arithmetic. */
+are not accidentally truncated during alignment arithmetic.
+@warning The alignment argument is evaluated twice. Ensure the alignment
+expression does not have side-effects. This should be easy as it is uncommon to
+determine alignment from an expression with side-effects. */
 #define CCC_roundup(integer, alignment) CCC_private_roundup(integer, alignment)
 
 /** @internal
@@ -94,7 +85,8 @@ be stored.
 @param[in] integer the integer value to round up.
 @param[in] alignment the alignment boundary (must be a power of two).
 @return true if an overflow occurred during rounding or if the result cannot
-fit into the type pointed to by result_pointer; false otherwise. */
+fit into the type pointed to by result_pointer; false otherwise.
+@note This variant is only available at runtime. */
 #define CCC_checked_roundup(result_pointer, integer, alignment)                \
     CCC_private_checked_roundup(result_pointer, integer, alignment)
 
@@ -184,23 +176,12 @@ match in signedness. Each argument is evaluated once to avoid side-effects.
 #    define CCC_private_likely(expr) expr
 #endif /* __has_builtin(__builtin_expect) */
 
-#define CCC_private_comptime_roundup(integer, alignment)                       \
-    ((typeof(integer))(((typeof(integer))(integer)                             \
-                        + ((typeof(integer))(alignment) - 1))                  \
-                       & ~((typeof(integer))(alignment) - 1)))
-
-#define CCC_private_roundup(integer, alignment)                                        \
-    (__extension__({                                                                   \
-        typedef typeof(sizeof(integer) >= sizeof(alignment) ? (integer) : (alignment)) \
-            ccc_private_max_width_type;                                                \
-        ccc_private_max_width_type ccc_private_integer = (integer);                    \
-        ccc_private_max_width_type ccc_private_alignment                               \
-            = (ccc_private_max_width_type)(alignment);                                 \
-        (ccc_private_max_width_type)(                                                  \
-            (ccc_private_integer + (ccc_private_alignment - 1))                        \
-            & ~(ccc_private_alignment - 1)                                             \
-        );                                                                             \
-    }))
+#define CCC_private_roundup(integer, alignment)                                         \
+    ((typeof((integer) + (alignment)))(((typeof((integer) + (alignment)))(integer)      \
+                                        + ((typeof((integer) + (alignment)))(alignment) \
+                                           - 1))                                        \
+                                       & ~((typeof((integer) + (alignment)))(alignment) \
+                                           - 1)))
 
 #define CCC_private_checked_roundup(result_pointer, integer, alignment)                \
     (__extension__({                                                                   \
@@ -273,16 +254,20 @@ match in signedness. Each argument is evaluated once to avoid side-effects.
             ccc_private_x == 0 ? (int)(sizeof(ccc_private_x) * CHAR_BIT)       \
                                : (int)_Generic(                                \
                                      (ccc_private_x),                          \
-                    unsigned char: __builtin_clz(ccc_private_x)                \
+                    unsigned char: __builtin_clz((unsigned int)ccc_private_x)  \
                         - (int)((sizeof(unsigned int) - sizeof(unsigned char)) \
                                 * CHAR_BIT),                                   \
-                    unsigned short: __builtin_clz(ccc_private_x)               \
+                    unsigned short: __builtin_clz((unsigned int)ccc_private_x) \
                         - (int)((sizeof(unsigned int)                          \
                                  - sizeof(unsigned short))                     \
                                 * CHAR_BIT),                                   \
-                    unsigned int: __builtin_clz(ccc_private_x),                \
-                    unsigned long: __builtin_clzl(ccc_private_x),              \
-                    unsigned long long: __builtin_clzll(ccc_private_x)         \
+                    unsigned int: __builtin_clz((unsigned int)ccc_private_x),  \
+                    unsigned long: __builtin_clzl(                             \
+                                         (unsigned long)ccc_private_x          \
+                    ),                                                         \
+                    unsigned long long: __builtin_clzll(                       \
+                                         (unsigned long long)ccc_private_x     \
+                    )                                                          \
                                  );                                            \
         }))
 
@@ -392,11 +377,17 @@ CCC_private_count_leading_zeros_u64(uint64_t x) {
             ccc_private_x == 0 ? (int)(sizeof(ccc_private_x) * CHAR_BIT)       \
                                : (int)_Generic(                                \
                                      (ccc_private_x),                          \
-                    unsigned char: __builtin_ctz(ccc_private_x),               \
-                    unsigned short: __builtin_ctz(ccc_private_x),              \
-                    unsigned int: __builtin_ctz(ccc_private_x),                \
-                    unsigned long: __builtin_ctzl(ccc_private_x),              \
-                    unsigned long long: __builtin_ctzll(ccc_private_x)         \
+                    unsigned char: __builtin_ctz((unsigned int)ccc_private_x), \
+                    unsigned short: __builtin_ctz(                             \
+                                         (unsigned int)ccc_private_x           \
+                    ),                                                         \
+                    unsigned int: __builtin_ctz((unsigned int)ccc_private_x),  \
+                    unsigned long: __builtin_ctzl(                             \
+                                         (unsigned long)ccc_private_x          \
+                    ),                                                         \
+                    unsigned long long: __builtin_ctzll(                       \
+                                         (unsigned long long)ccc_private_x     \
+                    )                                                          \
                                  );                                            \
         }))
 

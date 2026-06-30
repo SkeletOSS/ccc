@@ -101,7 +101,7 @@ and not a fixed type. */
 static_assert(
     (char const *)&static_data_nodes_layout_test.nodes[TCAP]
             - (char const *)&static_data_nodes_layout_test.data[0]
-        == CCC_comptime_roundup(
+        == CCC_roundup(
                (sizeof(*static_data_nodes_layout_test.data) * TCAP),
                ALIGNOF_NODE
            ) + (SIZEOF_NODE * TCAP),
@@ -111,7 +111,7 @@ static_assert(
 );
 static_assert(
     (char const *)&static_data_nodes_layout_test.data
-            + CCC_comptime_roundup(
+            + CCC_roundup(
                 (sizeof(*static_data_nodes_layout_test.data) * TCAP),
                 ALIGNOF_NODE
             )
