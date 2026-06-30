@@ -558,9 +558,7 @@ CCC_private_popcount_u64(uint64_t x) {
             ccc_private_ceiling_x                                              \
                     > ((typeof(x))1 << ((sizeof(x) * CHAR_BIT) - 1))           \
                 ? (typeof(x))0                                                 \
-                : (typeof(x))__builtin_stdc_bit_ceiling(                       \
-                      ccc_private_ceiling_x                                    \
-                  );                                                           \
+                : (typeof(x))__builtin_stdc_bit_ceil(ccc_private_ceiling_x);   \
         }))
 
 #else
