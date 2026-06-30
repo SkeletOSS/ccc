@@ -1057,8 +1057,7 @@ maybe_resize(
         (BLOCK_BITS & (BLOCK_BITS - 1)) == 0,
         "rounding trick only works for powers of 2"
     );
-    size_t const new_capacity
-        = (bits_needed + (BLOCK_BITS - 1)) & ~((size_t)BLOCK_BITS - 1);
+    size_t const new_capacity = CCC_roundup(bits_needed, BLOCK_BITS);
     if (new_capacity <= bitset->capacity) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }

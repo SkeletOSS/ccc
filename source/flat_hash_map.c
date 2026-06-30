@@ -56,15 +56,6 @@ vector instructions we can try. */
 #    include <arm_neon.h>
 #endif /* defined(CCC_HAS_X86_SIMD) */
 
-/** Maybe the compiler can give us better performance in key paths. */
-#if defined(__has_builtin) && __has_builtin(__builtin_expect)
-#    define unlikely(expr) __builtin_expect(!!(expr), 0)
-#    define likely(expr) __builtin_expect(!!(expr), 1)
-#else /* !defined(__has_builtin) || !__has_builtin(__builtin_expect) */
-#    define unlikely(expr) expr
-#    define likely(expr) expr
-#endif /* defined(__has_builtin) && __has_builtin(__builtin_expect) */
-
 /* Can we vectorize instructions? Also it is possible to specify we want a
 portable implementation. Consider exposing to user in header docs. */
 #ifdef CCC_HAS_X86_SIMD
@@ -170,12 +161,6 @@ enum : typeof((struct CCC_Flat_hash_map_tag){}.v) {
 
 /*=======================   Data Alignment Test   ===========================*/
 
-/** @internal A macro version of the runtime alignment operations we perform
-for calculating bytes. This way we can use in static asserts. We also need to
-ensure our runtime alignment calculations match compiler's `alignas` macro. */
-#define comptime_roundup(bytes_to_round)                                       \
-    (((bytes_to_round) + GROUP_COUNT - 1) & (size_t)~(GROUP_COUNT - 1))
-
 /** @internal The following test should ensure some safety in assumptions we
 make when the user defines a fixed size map type. This anonymous compound
 literal construction is the same technique used to construct fixed maps for
@@ -193,14 +178,16 @@ static __auto_type const data_tag_layout_test = (struct {
 static_assert(
     (char const *)&data_tag_layout_test.tag[2]
             - (char const *)&data_tag_layout_test.data[0]
-        == (comptime_roundup((sizeof(data_tag_layout_test.data)))
+        == (CCC_comptime_roundup(sizeof(data_tag_layout_test.data), GROUP_COUNT)
             + (sizeof(struct CCC_Flat_hash_map_tag) * 2)),
     "The manually computed offset of the tag array from the start of the data "
     "array must match the offset chosen by compiler alignment rules."
 );
 static_assert(
     (char const *)&data_tag_layout_test.data
-            + comptime_roundup((sizeof(data_tag_layout_test.data)))
+            + CCC_comptime_roundup(
+                sizeof(data_tag_layout_test.data), GROUP_COUNT
+            )
         == (char const *)&data_tag_layout_test.tag,
     "We calculate the correct position of the tag array considering it may get "
     "extra padding at start for alignment by group size."
@@ -357,7 +344,7 @@ static CCC_Tribool check_replica_group(struct CCC_Flat_hash_map const *);
 
 CCC_Tribool
 CCC_flat_hash_map_is_empty(CCC_Flat_hash_map const *const map) {
-    if (unlikely(!map)) {
+    if (CCC_unlikely(!map)) {
         return CCC_TRIBOOL_ERROR;
     }
     return !map->count;
@@ -383,10 +370,10 @@ CCC_Tribool
 CCC_flat_hash_map_contains(
     CCC_Flat_hash_map const *const map, void const *const key
 ) {
-    if (unlikely(!map || !key)) {
+    if (CCC_unlikely(!map || !key)) {
         return CCC_TRIBOOL_ERROR;
     }
-    if (unlikely(is_uninitialized(map) || !map->count)) {
+    if (CCC_unlikely(is_uninitialized(map) || !map->count)) {
         return CCC_FALSE;
     }
     return !find_key_or_fail(map, key, hasher(map, key)).error;
@@ -396,7 +383,7 @@ void *
 CCC_flat_hash_map_get_key_value(
     CCC_Flat_hash_map const *const map, void const *const key
 ) {
-    if (unlikely(!map || !key || is_uninitialized(map) || !map->count)) {
+    if (CCC_unlikely(!map || !key || is_uninitialized(map) || !map->count)) {
         return NULL;
     }
     CCC_Count const index = find_key_or_fail(map, key, hasher(map, key));
@@ -412,7 +399,7 @@ CCC_flat_hash_map_entry(
     void const *const key,
     CCC_Allocator const *const allocator
 ) {
-    if (unlikely(!map || !key || !allocator)) {
+    if (CCC_unlikely(!map || !key || !allocator)) {
         return (CCC_Flat_hash_map_entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     return maybe_rehash_find_entry(map, key, allocator);
@@ -422,7 +409,7 @@ void *
 CCC_flat_hash_map_or_insert(
     CCC_Flat_hash_map_entry const *const entry, void const *type
 ) {
-    if (unlikely(
+    if (CCC_unlikely(
             !entry || !type || (entry->status & CCC_ENTRY_ARGUMENT_ERROR)
         )) {
         return NULL;
@@ -441,7 +428,7 @@ void *
 CCC_flat_hash_map_insert_entry(
     CCC_Flat_hash_map_entry const *const entry, void const *type
 ) {
-    if (unlikely(
+    if (CCC_unlikely(
             !entry || !type || (entry->status & CCC_ENTRY_ARGUMENT_ERROR)
         )) {
         return NULL;
@@ -460,7 +447,7 @@ CCC_flat_hash_map_insert_entry(
 
 CCC_Entry
 CCC_flat_hash_map_remove_entry(CCC_Flat_hash_map_entry const *const entry) {
-    if (unlikely(!entry)) {
+    if (CCC_unlikely(!entry)) {
         return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     if (!(entry->status & CCC_ENTRY_OCCUPIED)) {
@@ -490,7 +477,7 @@ CCC_flat_hash_map_swap_entry(
     void *const type_output,
     CCC_Allocator const *const allocator
 ) {
-    if (unlikely(!map || !type_output || !allocator)) {
+    if (CCC_unlikely(!map || !type_output || !allocator)) {
         return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     void *const key = key_in_index(map, type_output);
@@ -524,7 +511,7 @@ CCC_flat_hash_map_try_insert(
     void const *const type,
     CCC_Allocator const *const allocator
 ) {
-    if (unlikely(!map || !type || !allocator)) {
+    if (CCC_unlikely(!map || !type || !allocator)) {
         return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     void *const key = key_in_index(map, type);
@@ -552,7 +539,7 @@ CCC_flat_hash_map_insert_or_assign(
     void const *const type,
     CCC_Allocator const *const allocator
 ) {
-    if (unlikely(!map || !type || !allocator)) {
+    if (CCC_unlikely(!map || !type || !allocator)) {
         return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     void *const key = key_in_index(map, type);
@@ -579,10 +566,10 @@ CCC_Entry
 CCC_flat_hash_map_remove_key_value(
     CCC_Flat_hash_map *const map, void *const type_output
 ) {
-    if (unlikely(!map || !type_output)) {
+    if (CCC_unlikely(!map || !type_output)) {
         return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
-    if (unlikely(is_uninitialized(map) || !map->count)) {
+    if (CCC_unlikely(is_uninitialized(map) || !map->count)) {
         return (CCC_Entry){.status = CCC_ENTRY_VACANT};
     }
     void *const key = key_in_index(map, type_output);
@@ -600,7 +587,9 @@ CCC_flat_hash_map_remove_key_value(
 
 void *
 CCC_flat_hash_map_begin(CCC_Flat_hash_map const *const map) {
-    if (unlikely(!map || !map->mask || is_uninitialized(map) || !map->count)) {
+    if (CCC_unlikely(
+            !map || !map->mask || is_uninitialized(map) || !map->count
+        )) {
         return NULL;
     }
     return find_first_full_index(map, 0);
@@ -610,7 +599,7 @@ void *
 CCC_flat_hash_map_next(
     CCC_Flat_hash_map const *const map, void const *const type_iterator
 ) {
-    if (unlikely(
+    if (CCC_unlikely(
             !map || !type_iterator || !map->mask || is_uninitialized(map)
             || !map->count
         )) {
@@ -640,7 +629,7 @@ CCC_flat_hash_map_end(CCC_Flat_hash_map const *const) {
 
 void *
 CCC_flat_hash_map_unwrap(CCC_Flat_hash_map_entry const *const entry) {
-    if (unlikely(!entry) || !(entry->status & CCC_ENTRY_OCCUPIED)) {
+    if (CCC_unlikely(!entry) || !(entry->status & CCC_ENTRY_OCCUPIED)) {
         return NULL;
     }
     return data_at(entry->map, entry->index);
@@ -650,10 +639,10 @@ CCC_Result
 CCC_flat_hash_map_clear(
     CCC_Flat_hash_map *const map, CCC_Destructor const *const destructor
 ) {
-    if (unlikely(!map || !destructor)) {
+    if (CCC_unlikely(!map || !destructor)) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    if (unlikely(is_uninitialized(map) || !map->mask || !map->tag)) {
+    if (CCC_unlikely(is_uninitialized(map) || !map->mask || !map->tag)) {
         return CCC_RESULT_OK;
     }
     if (destructor->destroy) {
@@ -671,7 +660,7 @@ CCC_flat_hash_map_clear_and_free(
     CCC_Destructor const *const destructor,
     CCC_Allocator const *const allocator
 ) {
-    if (unlikely(
+    if (CCC_unlikely(
             !map || !map->data || !destructor || !allocator
             || !allocator->allocate || !map->mask
         )) {
@@ -696,7 +685,7 @@ CCC_flat_hash_map_clear_and_free(
 
 CCC_Tribool
 CCC_flat_hash_map_occupied(CCC_Flat_hash_map_entry const *const entry) {
-    if (unlikely(!entry)) {
+    if (CCC_unlikely(!entry)) {
         return CCC_TRIBOOL_ERROR;
     }
     return (entry->status & CCC_ENTRY_OCCUPIED) != 0;
@@ -704,7 +693,7 @@ CCC_flat_hash_map_occupied(CCC_Flat_hash_map_entry const *const entry) {
 
 CCC_Tribool
 CCC_flat_hash_map_insert_error(CCC_Flat_hash_map_entry const *const entry) {
-    if (unlikely(!entry)) {
+    if (CCC_unlikely(!entry)) {
         return CCC_TRIBOOL_ERROR;
     }
     return (entry->status & CCC_ENTRY_INSERT_ERROR) != 0;
@@ -712,7 +701,7 @@ CCC_flat_hash_map_insert_error(CCC_Flat_hash_map_entry const *const entry) {
 
 CCC_Entry_status
 CCC_flat_hash_map_entry_status(CCC_Flat_hash_map_entry const *const entry) {
-    if (unlikely(!entry)) {
+    if (CCC_unlikely(!entry)) {
         return CCC_ENTRY_ARGUMENT_ERROR;
     }
     return entry->status;
@@ -794,7 +783,7 @@ CCC_flat_hash_map_reserve(
     size_t const to_add,
     CCC_Allocator const *const allocator
 ) {
-    if (unlikely(!map || !to_add || !allocator || !to_add)) {
+    if (CCC_unlikely(!map || !to_add || !allocator || !to_add)) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     return maybe_rehash(map, to_add, allocator);
@@ -1032,7 +1021,7 @@ find_key_or_index(
             struct Match_mask m = match_tag(group, tag);
             while ((tag_index = match_next_one(&m)) != GROUP_COUNT) {
                 tag_index = (probe.index + tag_index) & mask;
-                if (likely(is_equal(map, key, tag_index))) {
+                if (CCC_likely(is_equal(map, key, tag_index))) {
                     return (struct Query){
                         .index = tag_index,
                         .status = CCC_ENTRY_OCCUPIED,
@@ -1042,10 +1031,10 @@ find_key_or_index(
         }
         /* Taking the first available index once probing is done is important
            to preserve probing operation and efficiency. */
-        if (likely(empty_deleted.error)) {
+        if (CCC_likely(empty_deleted.error)) {
             size_t const i_take
                 = match_trailing_one(match_empty_or_deleted(group));
-            if (likely(i_take != GROUP_COUNT)) {
+            if (CCC_likely(i_take != GROUP_COUNT)) {
                 empty_deleted.count = (probe.index + i_take) & mask;
                 empty_deleted.error = CCC_RESULT_OK;
             }
@@ -1053,7 +1042,8 @@ find_key_or_index(
         /* We just did the work of checking for an empty or deleted index. If we
            didn't find one we should not force another pointless SIMD load and
            match check. */
-        if (!empty_deleted.error && likely(match_has_one(match_empty(group)))) {
+        if (!empty_deleted.error
+            && CCC_likely(match_has_one(match_empty(group)))) {
             return (struct Query){
                 .index = empty_deleted.count,
                 .status = CCC_ENTRY_VACANT,
@@ -1093,12 +1083,12 @@ find_key_or_fail(
             struct Match_mask match = match_tag(group, tag);
             while ((tag_index = match_next_one(&match)) != GROUP_COUNT) {
                 tag_index = (probe.index + tag_index) & mask;
-                if (likely(is_equal(map, key, tag_index))) {
+                if (CCC_likely(is_equal(map, key, tag_index))) {
                     return (CCC_Count){.count = tag_index};
                 }
             }
         }
-        if (likely(match_has_one(match_empty(group)))) {
+        if (CCC_likely(match_has_one(match_empty(group)))) {
             return (CCC_Count){.error = CCC_RESULT_FAIL};
         }
         probe.stride += GROUP_COUNT;
@@ -1123,7 +1113,7 @@ find_index_or_noreturn(
         size_t const available_index = match_trailing_one(
             match_empty_or_deleted(group_load_unaligned(&map->tag[p.index]))
         );
-        if (likely(available_index != GROUP_COUNT)) {
+        if (CCC_likely(available_index != GROUP_COUNT)) {
             return (p.index + available_index) & mask;
         }
         p.stride += GROUP_COUNT;
@@ -1210,7 +1200,7 @@ maybe_rehash(
     size_t const to_add,
     CCC_Allocator const *const allocator
 ) {
-    if (unlikely(!map->mask && !allocator->allocate)) {
+    if (CCC_unlikely(!map->mask && !allocator->allocate)) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
     size_t required_total_cap = 0;
@@ -1223,7 +1213,7 @@ maybe_rehash(
     if (init != CCC_RESULT_OK) {
         return init;
     }
-    if (likely(map->remain)) {
+    if (CCC_likely(map->remain)) {
         return CCC_RESULT_OK;
     }
     size_t const current_total_cap = map->mask + 1;
@@ -1288,7 +1278,9 @@ rehash_in_place(struct CCC_Flat_hash_map *const map) {
                            load. The tag is in the proper group for an unaligned
                            load based on where the hashed value will start its
                            loads and the match and does not need relocation. */
-                        if (likely(is_same_group(rehash, index, hash, mask))) {
+                        if (CCC_likely(
+                                is_same_group(rehash, index, hash, mask)
+                            )) {
                             tag_set(map, hash_tag, rehash);
                             break; /* continues outer loop */
                         }
@@ -1436,7 +1428,7 @@ lazy_initialize(
     size_t required_capacity,
     CCC_Allocator const *const allocator
 ) {
-    if (likely(!is_uninitialized(map))) {
+    if (CCC_likely(!is_uninitialized(map))) {
         return CCC_RESULT_OK;
     }
     if (map->mask) {
@@ -1526,7 +1518,7 @@ static inline CCC_Count
 data_index(
     struct CCC_Flat_hash_map const *const map, void const *const data_index
 ) {
-    if (unlikely(
+    if (CCC_unlikely(
             (char *)data_index
                 >= (char *)map->data + (map->sizeof_type * (map->mask + 1))
             || (char *)data_index < (char *)map->data
@@ -1546,7 +1538,7 @@ swap_index(struct CCC_Flat_hash_map const *map) {
 
 static inline void
 swap(void *const temp, size_t const ab_size, void *const a, void *const b) {
-    if (unlikely(!a || !b || a == b)) {
+    if (CCC_unlikely(!a || !b || a == b)) {
         return;
     }
     (void)memcpy(temp, a, ab_size);
@@ -1590,7 +1582,7 @@ bytes so we are only interested in contiguous bytes from start of user data to
 last byte of tag array. */
 static inline size_t
 mask_to_total_bytes(size_t const sizeof_type, size_t const mask) {
-    if (unlikely(!mask)) {
+    if (CCC_unlikely(!mask)) {
         return 0;
     }
     return mask_to_data_bytes(sizeof_type, mask) + mask_to_tag_bytes(mask);
@@ -1627,15 +1619,12 @@ checked_mask_to_total_bytes(
            "overflow"
     );
     *result = 0;
-    if (unlikely(!mask)) {
+    if (CCC_unlikely(!mask)) {
         return CCC_FALSE;
     }
     if (ckd_mul(result, sizeof_type, (mask + 2))
-        || ckd_add(result, *result, (GROUP_COUNT - 1))) {
-        return CCC_TRUE;
-    }
-    *result &= ~(GROUP_COUNT - 1U);
-    if (ckd_add(result, *result, (mask + 1U + GROUP_COUNT))) {
+        || CCC_checked_roundup(result, *result, GROUP_COUNT)
+        || ckd_add(result, *result, (mask + 1U + GROUP_COUNT))) {
         return CCC_TRUE;
     }
     return CCC_FALSE;
@@ -1655,8 +1644,7 @@ static inline size_t
 mask_to_data_bytes(size_t const sizeof_type, size_t const mask) {
     /* Add two because there is always a bonus user data type at the last index
        of the data array for swapping purposes. */
-    return ((sizeof_type * (mask + 2)) + GROUP_COUNT - 1U)
-         & ~(GROUP_COUNT - 1U);
+    return CCC_roundup(sizeof_type * (mask + 2), GROUP_COUNT);
 }
 
 /** Returns the bytes needed for the tag metadata array. This includes the

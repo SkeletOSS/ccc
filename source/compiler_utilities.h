@@ -3,6 +3,8 @@
 
 /* C23 provided headers. */
 #include <limits.h>
+#include <stdbool.h>
+#include <stdckdint.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -11,10 +13,60 @@
 #endif /* __has_builtin */
 
 #if defined(__GNUC__) || defined(__clang__)
-#    define CCC_inline [[gnu::always_inline]] static inline
+#    define CCC_INLINE [[gnu::always_inline]] static inline
 #else
-#    define CCC_inline static inline
+#    define CCC_INLINE static inline
 #endif /* defined(__GNUC__) || defined(__clang__) */
+
+/** Maybe the compiler can give us better performance in key paths. */
+#if __has_builtin(__builtin_expect)
+#    define CCC_unlikely(expr) __builtin_expect(!!(expr), 0)
+#    define CCC_likely(expr) __builtin_expect(!!(expr), 1)
+#else /* !__has_builtin(__builtin_expect) */
+#    define CCC_unlikely(expr) expr
+#    define CCC_likely(expr) expr
+#endif /* __has_builtin(__builtin_expect) */
+
+#define CCC_comptime_roundup(integer, alignment)                               \
+    ((typeof(integer))(((typeof(integer))(integer)                             \
+                        + ((typeof(integer))(alignment) - 1))                  \
+                       & ~((typeof(integer))(alignment) - 1)))
+
+#define CCC_roundup(integer, alignment)                                                \
+    (__extension__({                                                                   \
+        typedef typeof(sizeof(integer) >= sizeof(alignment) ? (integer) : (alignment)) \
+            ccc_private_max_width_type;                                                \
+        ccc_private_max_width_type ccc_private_integer = (integer);                    \
+        ccc_private_max_width_type ccc_private_alignment                               \
+            = (ccc_private_max_width_type)(alignment);                                 \
+        (ccc_private_max_width_type)(                                                  \
+            (ccc_private_integer + (ccc_private_alignment - 1))                        \
+            & ~(ccc_private_alignment - 1)                                             \
+        );                                                                             \
+    }))
+
+#define CCC_checked_roundup(result_pointer, integer, alignment)                        \
+    (__extension__({                                                                   \
+        /*NOLINTBEGIN(bugprone-assignment-in-if-condition)*/                           \
+        typedef typeof(sizeof(integer) >= sizeof(alignment) ? (integer) : (alignment)) \
+            ccc_private_max_width_type;                                                \
+        ccc_private_max_width_type ccc_private_integer = (integer);                    \
+        ccc_private_max_width_type ccc_private_alignment                               \
+            = (ccc_private_max_width_type)(alignment);                                 \
+        typeof(result_pointer) ccc_private_result_pointer = (result_pointer);          \
+        bool ccc_private_has_overflow = false;                                         \
+        if (ckd_add(                                                                   \
+                ccc_private_result_pointer,                                            \
+                ccc_private_integer,                                                   \
+                ccc_private_alignment - 1                                              \
+            )) {                                                                       \
+            ccc_private_has_overflow = true;                                           \
+        } else {                                                                       \
+            *ccc_private_result_pointer &= ~(ccc_private_alignment - 1);               \
+        }                                                                              \
+        ccc_private_has_overflow;                                                      \
+        /*NOLINTEND(bugprone-assignment-in-if-condition)*/                             \
+    }))
 
 #define CCC_min(a, b)                                                          \
     (__extension__({                                                           \
@@ -79,7 +131,7 @@
 
 #else /* PORTABLE FALLBACK COUNTING */
 
-CCC_inline int
+CCC_INLINE int
 CCC_count_leading_zeros_u32(uint32_t x) {
     if (x == 0) {
         return 32;
@@ -107,7 +159,7 @@ CCC_count_leading_zeros_u32(uint32_t x) {
     return n;
 }
 
-CCC_inline int
+CCC_INLINE int
 CCC_count_leading_zeros_u64(uint64_t x) {
     if (x == 0) {
         return 64;
@@ -148,10 +200,12 @@ CCC_count_leading_zeros_u64(uint64_t x) {
             unsigned short: CCC_count_leading_zeros_u32(x)                     \
                 - (int)((sizeof(uint32_t) - sizeof(unsigned short))            \
                         * CHAR_BIT),                                           \
-            unsigned int: sizeof(int) == 8 ? CCC_count_leading_zeros_u64(x)    \
-                                           : CCC_count_leading_zeros_u32(x),   \
-            unsigned long: sizeof(long) == 8 ? CCC_count_leading_zeros_u64(x)  \
-                                             : CCC_count_leading_zeros_u32(x), \
+            unsigned int: sizeof(int) == sizeof(uint64_t)                      \
+                ? CCC_count_leading_zeros_u64(x)                               \
+                : CCC_count_leading_zeros_u32(x),                              \
+            unsigned long: sizeof(long) == sizeof(uint64_t)                    \
+                ? CCC_count_leading_zeros_u64(x)                               \
+                : CCC_count_leading_zeros_u32(x),                              \
             unsigned long long: CCC_count_leading_zeros_u64(x)                 \
         )
 
@@ -191,7 +245,7 @@ CCC_count_leading_zeros_u64(uint64_t x) {
 
 #else /* PORTABLE FALLBACK COUNTING */
 
-CCC_inline int
+CCC_INLINE int
 CCC_count_trailing_zeros_u32(uint32_t x) {
     if (x == 0) {
         return 32;
@@ -219,7 +273,7 @@ CCC_count_trailing_zeros_u32(uint32_t x) {
     return n;
 }
 
-CCC_inline int
+CCC_INLINE int
 CCC_count_trailing_zeros_u64(uint64_t x) {
     if (x == 0) {
         return 64;
@@ -263,10 +317,10 @@ CCC_count_trailing_zeros_u64(uint64_t x) {
                     unsigned short: CCC_count_trailing_zeros_u32(              \
                                          ccc_private_x                         \
                     ),                                                         \
-                    unsigned int: sizeof(int) == 8                             \
+                    unsigned int: sizeof(int) == sizeof(uint64_t)              \
                         ? CCC_count_trailing_zeros_u64(ccc_private_x)          \
                         : CCC_count_trailing_zeros_u32(ccc_private_x),         \
-                    unsigned long: sizeof(long) == 8                           \
+                    unsigned long: sizeof(long) == sizeof(uint64_t)            \
                         ? CCC_count_trailing_zeros_u64(ccc_private_x)          \
                         : CCC_count_trailing_zeros_u32(ccc_private_x),         \
                     unsigned long long: CCC_count_trailing_zeros_u64(          \
@@ -300,7 +354,7 @@ CCC_count_trailing_zeros_u64(uint64_t x) {
 
 #else /* PORTABLE FALLBACK COUNTING */
 
-CCC_inline int
+CCC_INLINE int
 CCC_popcount_u32(uint32_t x) {
     x = x - ((x >> 1) & 0x55555555U);
     x = (x & 0x33333333U) + ((x >> 2) & 0x33333333U);
@@ -310,7 +364,7 @@ CCC_popcount_u32(uint32_t x) {
     return (int)(x & 0x0000003FU);
 }
 
-CCC_inline int
+CCC_INLINE int
 CCC_popcount_u64(uint64_t x) {
     x = x - ((x >> 1) & 0x5555555555555555ULL);
     x = (x & 0x3333333333333333ULL) + ((x >> 2) & 0x3333333333333333ULL);
@@ -328,10 +382,10 @@ CCC_popcount_u64(uint64_t x) {
                 (ccc_private_x),                                               \
                 unsigned char: CCC_popcount_u32(ccc_private_x),                \
                 unsigned short: CCC_popcount_u32(ccc_private_x),               \
-                unsigned int: sizeof(int) == 8                                 \
+                unsigned int: sizeof(int) == sizeof(uint64_t)                  \
                     ? CCC_popcount_u64(ccc_private_x)                          \
                     : CCC_popcount_u32(ccc_private_x),                         \
-                unsigned long: sizeof(long) == 8                               \
+                unsigned long: sizeof(long) == sizeof(uint64_t)                \
                     ? CCC_popcount_u64(ccc_private_x)                          \
                     : CCC_popcount_u32(ccc_private_x),                         \
                 unsigned long long: CCC_popcount_u64(ccc_private_x)            \

@@ -65,13 +65,6 @@ enum : uint8_t {
 
 /*========================   Data Alignment Test   ==========================*/
 
-/** @internal A macro version of the runtime alignment operations we perform
-for calculating bytes. This way we can use in static assert. The user data type
-may not be the same alignment as the nodes and therefore the nodes array must
-start at next aligned byte. */
-#define roundup(bytes_to_round, alignment)                                     \
-    (((bytes_to_round) + (alignment) - 1) & ~((alignment) - 1))
-
 enum : size_t {
     /** @internal Test capacity. */
     TCAP = 3,
@@ -108,7 +101,7 @@ and not a fixed type. */
 static_assert(
     (char const *)&static_data_nodes_layout_test.nodes[TCAP]
             - (char const *)&static_data_nodes_layout_test.data[0]
-        == roundup(
+        == CCC_comptime_roundup(
                (sizeof(*static_data_nodes_layout_test.data) * TCAP),
                ALIGNOF_NODE
            ) + (SIZEOF_NODE * TCAP),
@@ -118,7 +111,7 @@ static_assert(
 );
 static_assert(
     (char const *)&static_data_nodes_layout_test.data
-            + roundup(
+            + CCC_comptime_roundup(
                 (sizeof(*static_data_nodes_layout_test.data) * TCAP),
                 ALIGNOF_NODE
             )
@@ -1085,7 +1078,7 @@ means the value returned from this function may or may not be slightly larger
 then the raw size of just user elements if rounding up must occur. */
 static inline size_t
 data_bytes(size_t const sizeof_type, size_t const capacity) {
-    return ((sizeof_type * capacity) + ALIGNOF_NODE - 1) & ~(ALIGNOF_NODE - 1);
+    return CCC_roundup(sizeof_type * capacity, ALIGNOF_NODE);
 }
 
 /** Calculates the number of bytes needed for the nodes array without any
