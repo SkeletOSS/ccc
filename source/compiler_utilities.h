@@ -567,7 +567,7 @@ CCC_private_popcount_u64(uint64_t x) {
 
 #    define CCC_private_bit_ceiling(x)                                         \
         (__extension__({                                                       \
-            typeof(x) ccc_private_ceiling_x = (x);                             \
+            typeof(x) const ccc_private_ceiling_x = (x);                       \
             ccc_private_ceiling_x <= 1 ? (typeof(x))1 : (__extension__({       \
                 int const ccc_private_shifts                                   \
                     = CCC_private_count_leading_zeros(                         \
