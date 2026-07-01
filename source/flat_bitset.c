@@ -39,6 +39,7 @@ and bug doubling. */
 #include "ccc/flat_bitset.h"
 #include "ccc/private/private_flat_bitset.h"
 #include "ccc/types.h"
+#include "source/compiler_utilities.h"
 
 /*=========================   Type Declarations  ============================*/
 
@@ -93,7 +94,7 @@ enum : Bit_count {
     /** @internal Used for static assert clarity. */
     U8_BLOCK_MAX = UINT8_MAX,
     /** @internal Hand coded log2 of block bits to avoid division. */
-    BLOCK_BITS_LOG2 = 5,
+    BLOCK_BITS_LOG2 = CCC_log2(BLOCK_BITS),
 };
 static_assert(
     (BLOCK_BITS & (BLOCK_BITS - 1)) == 0,
@@ -135,7 +136,6 @@ static CCC_Count first_leading_bits_range(
 );
 static CCC_Result
 maybe_resize(struct CCC_Flat_bitset *, size_t, CCC_Allocator const *);
-static size_t size_t_min(size_t, size_t);
 static CCC_Tribool is_mask_match(Bit_block, Bit_block);
 static Bit_block trailing_ones_mask(Bit_count);
 static Bit_block leading_ones_mask(Bit_count);
@@ -186,7 +186,7 @@ CCC_flat_bitset_or(
         return CCC_RESULT_OK;
     }
     Block_count const end_block
-        = block_count(size_t_min(destination->count, source->count));
+        = block_count(CCC_min(destination->count, source->count));
     for (size_t b = 0; b < end_block; ++b) {
         destination->blocks[b] |= source->blocks[b];
     }
@@ -205,7 +205,7 @@ CCC_flat_bitset_xor(
         return CCC_RESULT_OK;
     }
     Block_count const end_block
-        = block_count(size_t_min(destination->count, source->count));
+        = block_count(CCC_min(destination->count, source->count));
     for (Block_count b = 0; b < end_block; ++b) {
         destination->blocks[b] ^= source->blocks[b];
     }
@@ -228,7 +228,7 @@ CCC_flat_bitset_and(
         return CCC_RESULT_OK;
     }
     Block_count const end_block
-        = block_count(size_t_min(destination->count, source->count));
+        = block_count(CCC_min(destination->count, source->count));
     for (Block_count b = 0; b < end_block; ++b) {
         destination->blocks[b] &= source->blocks[b];
     }
@@ -1057,8 +1057,7 @@ maybe_resize(
         (BLOCK_BITS & (BLOCK_BITS - 1)) == 0,
         "rounding trick only works for powers of 2"
     );
-    size_t const new_capacity
-        = (bits_needed + (BLOCK_BITS - 1)) & ~((size_t)BLOCK_BITS - 1);
+    size_t const new_capacity = CCC_roundup(bits_needed, BLOCK_BITS);
     if (new_capacity <= bitset->capacity) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
@@ -1597,12 +1596,6 @@ block_count(size_t const bit_count) {
     return (bit_count + (BLOCK_BITS - 1)) >> BLOCK_BITS_LOG2;
 }
 
-/** Returns min of size_t arguments. Beware of conversions. */
-static inline size_t
-size_t_min(size_t const a, size_t const b) {
-    return a < b ? a : b;
-}
-
 /** Returns true if the on bit mask is present in the block. All one bits in the
 mask must be found at the same positions in the block being queried. */
 static inline CCC_Tribool
@@ -1636,7 +1629,14 @@ leading_ones_mask(Bit_count const ones_count) {
 
 /** The following asserts assure that whether portable or built in bit
 operations are used in the coming section we are safe in our assumptions about
-widths and counts. */
+widths and counts.  Much of the code relies on the assumption that iterating
+over blocks at at a time is faster than using mathematical operations to
+conceptually iterate over bits. This assumptions mostly comes from the use of
+these built-ins to keep the processing time linear for range based queries,
+while avoiding division and modulo operations. I should test to see the
+performance implications when these built-ins are gone. However they are pretty
+ubiquitous these days. */
+
 static_assert(
     BLOCK_MSB < BLOCK_ON, "most significant bit is set for correct block width"
 );
@@ -1644,86 +1644,27 @@ static_assert(
     SIZEOF_BLOCK == sizeof(unsigned),
     "builtins remain in sync with bitset block width"
 );
-
-/** Much of the code relies on the assumption that iterating over blocks at
-at a time is faster than using mathematical operations to conceptually iterate
-over bits. This assumptions mostly comes from the use of these built-ins to
-keep the processing time linear for range based queries, while avoiding division
-and modulo operations. I should test to see the performance implications when
-these built-ins are gone. However they are pretty ubiquitous these days. */
-
-/** Built-ins are common on Clang and GCC but we have portable fallback. */
-#if defined(__has_builtin) && __has_builtin(__builtin_ctz)                     \
-    && __has_builtin(__builtin_clz) && __has_builtin(__builtin_popcount)
-
-/** Counts the on bits in a bit block. */
-static inline Bit_count
-popcount(Bit_block const b) {
-    /* There are different pop counts for different integer widths. Be sure
-       to catch the use of the wrong one by mistake here at compile time. */
-    static_assert(
-        __builtin_popcount((Bit_block)~0) <= U8_BLOCK_MAX,
-        "builtins return counts that are valid for smaller width types we use"
-    );
-    return (Bit_count)__builtin_popcount(b);
-}
+static_assert(
+    sizeof(Bit_block) * CHAR_BIT <= U8_BLOCK_MAX,
+    "bit counts are valid for smaller width types a bit set uses"
+);
 
 /** Counts the number of trailing zeros in a bit block starting from least
 significant bit. */
 static inline Bit_count
 count_trailing_zeros(Bit_block const b) {
-    static_assert(
-        __builtin_ctz(BLOCK_MSB) <= U8_BLOCK_MAX,
-        "builtins return counts that are valid for smaller width types we use"
-    );
-    return b ? (Bit_count)__builtin_ctz(b) : BLOCK_BITS;
+    return (Bit_count)CCC_count_trailing_zeros(b);
 }
 
 /** Counts the leading zeros in a bit block starting from the most significant
 bit. */
 static inline Bit_count
 count_leading_zeros(Bit_block const b) {
-    static_assert(
-        __builtin_clz((Bit_block)1) <= U8_BLOCK_MAX,
-        "builtins return counts that are valid for smaller width types we use"
-    );
-    return b ? (Bit_count)__builtin_clz(b) : BLOCK_BITS;
+    return (Bit_count)CCC_count_leading_zeros(b);
 }
-
-#else /* !defined(__has_builtin) || !__has_builtin(__builtin_ctz)              \
-    || !__has_builtin(__builtin_clz) || !__has_builtin(__builtin_popcount) */
 
 /** Counts the on bits in a bit block. */
 static inline Bit_count
-popcount(Bit_block b) {
-    Bit_count cnt = 0;
-    for (; b; cnt += ((b & 1U) != 0), b >>= 1U) {}
-    return cnt;
+popcount(Bit_block const b) {
+    return (Bit_count)CCC_popcount(b);
 }
-
-/** Counts the number of trailing zeros in a bit block starting from least
-significant bit. */
-static inline Bit_count
-count_trailing_zeros(Bit_block b) {
-    if (!b) {
-        return BIT_BLOCK_BITS;
-    }
-    Bit_count cnt = 0;
-    for (; (b & 1U) == 0; ++cnt, b >>= 1U) {}
-    return cnt;
-}
-
-/** Counts the leading zeros in a bit block starting from the most significant
-bit. */
-static inline Bit_count
-count_leading_zeros(Bit_block b) {
-    if (!b) {
-        return BIT_BLOCK_BITS;
-    }
-    Bit_count cnt = 0;
-    for (; (b & BIT_BLOCK_MSB) == 0; ++cnt, b <<= 1U) {}
-    return cnt;
-}
-
-#endif /* defined(__has_builtin) && __has_builtin(__builtin_ctz)               \
-    && __has_builtin(__builtin_clz) && __has_builtin(__builtin_popcount) */

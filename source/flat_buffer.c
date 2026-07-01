@@ -19,6 +19,7 @@ limitations under the License. */
 #include "ccc/flat_buffer.h"
 #include "ccc/private/private_flat_buffer.h"
 #include "ccc/types.h"
+#include "source/compiler_utilities.h"
 
 enum : size_t {
     START_CAPACITY = 8,
@@ -27,7 +28,6 @@ enum : size_t {
 /*==========================   Prototypes    ================================*/
 
 static void *at(CCC_Flat_buffer const *, size_t);
-static size_t max(size_t, size_t);
 
 /*==========================    Interface    ================================*/
 
@@ -168,7 +168,7 @@ CCC_flat_buffer_allocate_back(
     }
     if (buffer->count == buffer->capacity) {
         CCC_Result const resize_res = CCC_flat_buffer_allocate(
-            buffer, max(buffer->capacity * 2, START_CAPACITY), allocator
+            buffer, CCC_max(buffer->capacity * 2, START_CAPACITY), allocator
         );
         if (resize_res != CCC_RESULT_OK) {
             return NULL;
@@ -285,7 +285,7 @@ CCC_flat_buffer_insert(
     }
     if (buffer->count == buffer->capacity) {
         CCC_Result const r = CCC_flat_buffer_allocate(
-            buffer, max(buffer->count * 2, START_CAPACITY), allocator
+            buffer, CCC_max(buffer->count * 2, START_CAPACITY), allocator
         );
         if (r != CCC_RESULT_OK) {
             return NULL;
@@ -540,9 +540,4 @@ CCC_flat_buffer_data(CCC_Flat_buffer const *const buffer) {
 static inline void *
 at(struct CCC_Flat_buffer const *const buffer, size_t const i) {
     return ((char *)buffer->data + (i * buffer->sizeof_type));
-}
-
-static inline size_t
-max(size_t const a, size_t const b) {
-    return a > b ? a : b;
 }

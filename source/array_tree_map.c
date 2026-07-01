@@ -61,6 +61,7 @@ to that section, in my opinion. */
 #include "ccc/configuration.h" /* IWYU pragma: keep */
 #include "ccc/private/private_array_tree_map.h"
 #include "ccc/types.h"
+#include "source/compiler_utilities.h"
 
 /*==========================  Type Declarations   ===========================*/
 
@@ -120,16 +121,6 @@ static_assert(
 
 /*========================   Data Alignment Test   ==========================*/
 
-/** @internal A macro version of the runtime alignment operations we perform
-for calculating bytes. This way we can use in static assert. The user data type
-may not be the same alignment as the nodes and therefore the nodes array must
-start at next aligned byte. Similarly the parity array may not be on an aligned
-byte after the nodes array, though in the current implementation it is.
-Regardless, we always ensure the position is correct with respect to power of
-two alignments in C. */
-#define roundup(bytes_to_round, alignment)                                     \
-    (((bytes_to_round) + (alignment) - 1) & ~((alignment) - 1))
-
 /** @internal This is a static fixed size map exclusive to this translation unit
 used to ensure assumptions about data layout are correct. The following static
 asserts must be true in order to support the Struct of Array style layout we
@@ -172,10 +163,10 @@ static_assert(
     (char const *)&static_data_nodes_parity_layout_test
                 .parity[CCC_private_array_tree_map_blocks(TCAP)]
             - (char const *)&static_data_nodes_parity_layout_test.data[0]
-        == roundup(
+        == CCC_roundup(
                (sizeof(*static_data_nodes_parity_layout_test.data) * TCAP),
                ALIGNOF_NODE
-           ) + roundup((SIZEOF_NODE * TCAP), ALIGNOF_PARITY)
+           ) + CCC_roundup((SIZEOF_NODE * TCAP), ALIGNOF_PARITY)
                + (SIZEOF_PARITY * CCC_private_array_tree_map_blocks(TCAP)),
     "The pointer difference in bytes between end of parity bit array and start "
     "of user data array must be the same as the total bytes we assume to be "
@@ -183,7 +174,7 @@ static_assert(
 );
 static_assert(
     (char const *)&static_data_nodes_parity_layout_test.data
-            + roundup(
+            + CCC_roundup(
                 (sizeof(*static_data_nodes_parity_layout_test.data) * TCAP),
                 ALIGNOF_NODE
             )
@@ -194,11 +185,11 @@ static_assert(
 static_assert(
     (char const *)&static_data_nodes_parity_layout_test.parity
         == ((char const *)&static_data_nodes_parity_layout_test.data
-            + roundup(
+            + CCC_roundup(
                 (sizeof(*static_data_nodes_parity_layout_test.data) * TCAP),
                 ALIGNOF_NODE
             )
-            + roundup((SIZEOF_NODE * TCAP), ALIGNOF_PARITY)),
+            + CCC_roundup((SIZEOF_NODE * TCAP), ALIGNOF_PARITY)),
     "The start of the parity array must begin at the next aligned byte given "
     "alignment of both the data and nodes array."
 );
@@ -290,7 +281,6 @@ rotate(struct CCC_Array_tree_map *, size_t, size_t, size_t, enum Link);
 static void
 double_rotate(struct CCC_Array_tree_map *, size_t, size_t, size_t, enum Link);
 static void swap(void *, size_t, void *, void *);
-static size_t max_size_t(size_t, size_t);
 
 /*==============================  Interface    ==============================*/
 
@@ -785,7 +775,7 @@ CCC_array_tree_map_clear_and_free(
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .alignment = max_size_t(ALIGNOF_NODE, map->alignof_type),
+        .alignment = CCC_max(ALIGNOF_NODE, map->alignof_type),
         .context = allocator->context,
     });
     map->data = NULL;
@@ -872,9 +862,7 @@ allocate_slot(
     if (!old_count || old_count == old_cap) {
         assert(!map->free_list);
         if (old_count == old_cap) {
-            if (resize(
-                    map, max_size_t(old_cap * 2, PARITY_BLOCK_BITS), allocator
-                )
+            if (resize(map, CCC_max(old_cap * 2, PARITY_BLOCK_BITS), allocator)
                 != CCC_RESULT_OK) {
                 return 0;
             }
@@ -893,7 +881,7 @@ allocate_slot(
             node_at(map, i)->next_free = prev;
         }
         map->free_list = prev;
-        map->count = max_size_t(old_count, 1);
+        map->count = CCC_max(old_count, 1U);
         set_parity(map, 0, CCC_TRUE);
     }
     assert(map->free_list);
@@ -915,7 +903,7 @@ resize(
     void *const new_data = allocator->allocate((CCC_Allocator_arguments){
         .input = NULL,
         .bytes = total_bytes(map->sizeof_type, new_capacity),
-        .alignment = max_size_t(ALIGNOF_NODE, map->alignof_type),
+        .alignment = CCC_max(ALIGNOF_NODE, map->alignof_type),
         .context = allocator->context,
     });
     if (!new_data) {
@@ -928,7 +916,7 @@ resize(
     allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .alignment = max_size_t(ALIGNOF_NODE, map->alignof_type),
+        .alignment = CCC_max(ALIGNOF_NODE, map->alignof_type),
         .context = allocator->context,
     });
     map->data = new_data;
@@ -1115,7 +1103,7 @@ means the value returned from this function may or may not be slightly larger
 then the raw size of just user elements if rounding up must occur. */
 static inline size_t
 data_bytes(size_t const sizeof_type, size_t const capacity) {
-    return ((sizeof_type * capacity) + ALIGNOF_NODE - 1) & ~(ALIGNOF_NODE - 1);
+    return CCC_roundup((sizeof_type * capacity), ALIGNOF_NODE);
 }
 
 /** Calculates the number of bytes needed for the nodes array INCLUDING any
@@ -1126,8 +1114,7 @@ be slightly larger then the raw size of just the nodes array if rounding up must
 occur. */
 static inline size_t
 nodes_bytes(size_t const capacity) {
-    return ((SIZEOF_NODE * capacity) + ALIGNOF_PARITY - 1)
-         & ~(ALIGNOF_PARITY - 1);
+    return CCC_roundup((SIZEOF_NODE * capacity), ALIGNOF_PARITY);
 }
 
 /** Calculates the number of bytes needed for the parity block bit array. No
@@ -1750,11 +1737,6 @@ sibling_of(struct CCC_Array_tree_map const *const map, size_t const x) {
     assert(p);
     /* We want the sibling so we need the truthy value to be opposite of x. */
     return node_at(map, p)->branch[branch_index(map, p, L) == x];
-}
-
-static inline size_t
-max_size_t(size_t const a, size_t const b) {
-    return a > b ? a : b;
 }
 
 /*===========================   Validation   ===============================*/
