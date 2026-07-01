@@ -94,7 +94,7 @@ enum : Bit_count {
     /** @internal Used for static assert clarity. */
     U8_BLOCK_MAX = UINT8_MAX,
     /** @internal Hand coded log2 of block bits to avoid division. */
-    BLOCK_BITS_LOG2 = 5,
+    BLOCK_BITS_LOG2 = CCC_log2(BLOCK_BITS),
 };
 static_assert(
     (BLOCK_BITS & (BLOCK_BITS - 1)) == 0,

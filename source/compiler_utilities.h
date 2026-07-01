@@ -90,6 +90,15 @@ fit into the type pointed to by result_pointer; false otherwise.
 #define CCC_checked_roundup(result_pointer, integer, alignment)                \
     CCC_private_checked_roundup(result_pointer, integer, alignment)
 
+/** @internal
+@brief Returns the log base 2 of the provided integer at compile or runtime.
+@param[in] integer the integer, up to 64 bits in width, of which to find the
+log.
+@return the int count of the log base 2 of the provided integer.
+@warning This macro accepts a maximum integer width of 64, otherwise bit
+truncation will occur. */
+#define CCC_log2(integer) CCC_private_log2(integer)
+
 /**@}*/
 
 /** @name Bit Manipulation
@@ -204,6 +213,44 @@ match in signedness. Each argument is evaluated once to avoid side-effects.
         ccc_private_has_overflow;                                              \
         /*NOLINTEND(bugprone-assignment-in-if-condition)*/                     \
     }))
+
+#if __has_builtin(__builtin_stdc_leading_zeros)
+
+#    define CCC_private_log2(x)                                                \
+        ((x) == 0                                                              \
+             ? 0                                                               \
+             : (int)((sizeof(unsigned long long) * CHAR_BIT) - 1               \
+                     - __builtin_stdc_leading_zeros((unsigned long long)(x))))
+
+#elif __has_builtin(__builtin_clzll)
+
+#    define CCC_private_log2(x)                                                \
+        ((x) == 0 ? 0                                                          \
+                  : (int)((sizeof(unsigned long long) * CHAR_BIT) - 1          \
+                          - __builtin_clzll((unsigned long long)(x))))
+
+#else
+
+#    define CCC_private_log2_1(x) ((x) >= 0x2ULL ? 1 : 0)
+#    define CCC_private_log2_2(x)                                              \
+        ((x) >= 0x4ULL ? 2 + CCC_private_log2_1((x) >> 2)                      \
+                       : CCC_private_log2_1(x))
+#    define CCC_private_log2_4(x)                                              \
+        ((x) >= 0x10ULL ? 4 + CCC_private_log2_2((x) >> 4)                     \
+                        : CCC_private_log2_2(x))
+#    define CCC_private_log2_8(x)                                              \
+        ((x) >= 0x100ULL ? 8 + CCC_private_log2_4((x) >> 8)                    \
+                         : CCC_private_log2_4(x))
+#    define CCC_private_log2_16(x)                                             \
+        ((x) >= 0x10000ULL ? 16 + CCC_private_log2_8((x) >> 16)                \
+                           : CCC_private_log2_8(x))
+#    define CCC_private_log2_32(x)                                             \
+        ((x) >= 0x100000000ULL ? 32 + CCC_private_log2_16((x) >> 32)           \
+                               : CCC_private_log2_16(x))
+#    define CCC_private_log2(x)                                                \
+        ((x) == 0 ? 0 : CCC_private_log2_32((unsigned long long)(x)))
+
+#endif /* __has_builtin(__builtin_stdc_leading_zeros) */
 
 #define CCC_private_min(a, b)                                                  \
     (__extension__({                                                           \
