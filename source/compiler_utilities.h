@@ -21,10 +21,10 @@ This file is an internal private header that allows containers to use low level
 compiler built-in functionality or extremely common helper functions. It is not
 user facing and will not be exported as an interface. This file includes
 detection of compiler built-ins such as bit utilities. It attempts to use bit
-utilities from the new __builtin_stdc_* family when available as these are at
-the cutting edge of c23's new stdbit.h standard. However, sane fallbacks are
-always implemented as well. See the documented interface for all available
-macros and functions. */
+utilities from the new `__builtin_stdc_*` family when available as these are at
+the cutting edge of C23's new `stdbit.h` standard. However, sane fallback
+implementations are always provided. See the documented interface for all
+available macros and functions. */
 #ifndef CCC_COMPILER_UTILITIES_H
 #define CCC_COMPILER_UTILITIES_H
 
@@ -176,7 +176,6 @@ match in signedness. Each argument is evaluated once to avoid side-effects.
 #    define CCC_PRIVATE_INLINE static inline
 #endif /* defined(__GNUC__) || defined(__clang__) */
 
-/** Maybe the compiler can give us better performance in key paths. */
 #if __has_builtin(__builtin_expect)
 #    define CCC_private_unlikely(expr) __builtin_expect(!!(expr), 0)
 #    define CCC_private_likely(expr) __builtin_expect(!!(expr), 1)
