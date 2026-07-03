@@ -42,6 +42,7 @@ add_library(${namespace}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_sources(${PROJECT_NAME}
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/source/compiler_utilities.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/source/private/private_compiler_utilities.h
         ${CMAKE_CURRENT_SOURCE_DIR}/source/types.c
         ${CMAKE_CURRENT_SOURCE_DIR}/source/flat_bitset.c
         ${CMAKE_CURRENT_SOURCE_DIR}/source/flat_buffer.c
