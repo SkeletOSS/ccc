@@ -96,7 +96,13 @@ new C23 specifications are finalized by compiler maintainers. */
         ((int)((sizeof(x) * CHAR_BIT) - 1)                                     \
          - __builtin_clzg((x), (int)((sizeof(x) * CHAR_BIT) - 1)))
 
-#else
+#elif __has_builtin(__builtin_clzll)
+
+#    define CCC_private_log2(x)                                                \
+        ((int)((sizeof(unsigned long long) * CHAR_BIT) - 1)                    \
+         - __builtin_clzll((unsigned long long)((x) | (typeof(x))1)))
+
+#else /* PORTABLE FALLBACK */
 
 #    define CCC_private_log2_1(x) ((x) >= 0x2ULL ? 1 : 0)
 #    define CCC_private_log2_2(x)                                              \
@@ -188,7 +194,7 @@ new C23 specifications are finalized by compiler maintainers. */
                                  );                                            \
         }))
 
-#else /* PORTABLE FALLBACK COUNTING */
+#else /* PORTABLE FALLBACK */
 
 CCC_PRIVATE_INLINE int
 CCC_private_count_leading_zeros_u32(uint32_t x) {
@@ -310,7 +316,7 @@ CCC_private_count_leading_zeros_u64(uint64_t x) {
                                  );                                            \
         }))
 
-#else /* PORTABLE FALLBACK COUNTING */
+#else /* PORTABLE FALLBACK */
 
 CCC_PRIVATE_INLINE int
 CCC_private_count_trailing_zeros_u32(uint32_t x) {
@@ -421,7 +427,7 @@ CCC_private_count_trailing_zeros_u64(uint64_t x) {
             unsigned long long: __builtin_popcountll(x)                        \
         )
 
-#else /* PORTABLE FALLBACK COUNTING */
+#else /* PORTABLE FALLBACK */
 
 CCC_PRIVATE_INLINE int
 CCC_private_popcount_u32(uint32_t x) {
@@ -493,6 +499,6 @@ CCC_private_popcount_u64(uint64_t x) {
             }));                                                               \
         }))
 
-#endif
+#endif /* __has_builtin(__builtin_stdc_bit_ceil) */
 
 #endif /* CCC_PRIVATE_COMPILER_UTILITIES */
