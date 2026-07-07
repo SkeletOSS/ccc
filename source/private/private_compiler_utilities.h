@@ -105,7 +105,7 @@ new C23 specifications are finalized by compiler maintainers. */
 /* @internal */
 #    define CCC_private_log2(x)                                                \
         ((int)((sizeof(x) * CHAR_BIT) - 1)                                     \
-         - __builtin_clzg((x), (int)((sizeof(x) * CHAR_BIT) - 1)))
+         - __builtin_clzg((typeof(x))((x) | (typeof(x))1)))
 
 #elif __has_builtin(__builtin_clzll)
 
