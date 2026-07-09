@@ -96,23 +96,23 @@ new C23 specifications are finalized by compiler maintainers. */
 
 /* @internal */
 #    define CCC_private_log2(x)                                                \
-        ((int)(((sizeof(x) * CHAR_BIT) - 1)                                    \
-               - __builtin_stdc_leading_zeros((typeof(x))((x)                  \
-                                                          | (typeof(x))1))))
+        ((unsigned)((sizeof(x) * CHAR_BIT) - 1)                                \
+         - __builtin_stdc_leading_zeros((typeof(x))((x) | (typeof(x))1)))
 
 #elif __has_builtin(__builtin_clzg)
 
 /* @internal */
 #    define CCC_private_log2(x)                                                \
-        ((int)((sizeof(x) * CHAR_BIT) - 1)                                     \
-         - __builtin_clzg((typeof(x))((x) | (typeof(x))1)))
+        ((unsigned)((int)((sizeof(x) * CHAR_BIT) - 1)                          \
+                    - __builtin_clzg((typeof(x))((x) | (typeof(x))1))))
 
 #elif __has_builtin(__builtin_clzll)
 
 /* @internal */
 #    define CCC_private_log2(x)                                                \
-        ((int)((sizeof(unsigned long long) * CHAR_BIT) - 1)                    \
-         - __builtin_clzll((unsigned long long)((x) | (typeof(x))1)))
+        ((unsigned)((int)((sizeof(unsigned long long) * CHAR_BIT) - 1)         \
+                    - __builtin_clzll((unsigned long long)((x)                 \
+                                                           | (typeof(x))1))))
 
 #else /* PORTABLE FALLBACK */
 
@@ -140,7 +140,8 @@ new C23 specifications are finalized by compiler maintainers. */
                                : CCC_private_log2_16(x))
 /* @internal */
 #    define CCC_private_log2(x)                                                \
-        ((x) == 0 ? 0 : CCC_private_log2_32((unsigned long long)(x)))
+        ((unsigned)((x) == 0 ? 0                                               \
+                             : CCC_private_log2_32((unsigned long long)(x))))
 
 #endif /* __has_builtin(__builtin_stdc_leading_zeros) */
 
@@ -178,18 +179,13 @@ new C23 specifications are finalized by compiler maintainers. */
 
 /* @internal */
 #    define CCC_private_count_leading_zeros(x)                                 \
-        (__extension__({                                                       \
-            typeof(x) ccc_private_x = (x);                                     \
-            ccc_private_x == 0                                                 \
-                ? (int)(sizeof(ccc_private_x) * CHAR_BIT)                      \
-                : (int)__builtin_stdc_leading_zeros(ccc_private_x);            \
-        }))
+        __builtin_stdc_leading_zeros(ccc_private_x)
 
 #elif __has_builtin(__builtin_clzg)
 
 /* @internal */
 #    define CCC_private_count_leading_zeros(x)                                 \
-        __builtin_clzg(x, (int)(sizeof(x) * CHAR_BIT))
+        ((unsigned)__builtin_clzg(x, (int)(sizeof(x) * CHAR_BIT)))
 
 #elif __has_builtin(__builtin_clz) && __has_builtin(__builtin_clzl)            \
     && __has_builtin(__builtin_clzll)
@@ -198,8 +194,8 @@ new C23 specifications are finalized by compiler maintainers. */
 #    define CCC_private_count_leading_zeros(x)                                 \
         (__extension__({                                                       \
             typeof(x) ccc_private_x = (x);                                     \
-            ccc_private_x == 0 ? (int)(sizeof(ccc_private_x) * CHAR_BIT)       \
-                               : (int)_Generic(                                \
+            ccc_private_x == 0 ? (unsigned)(sizeof(ccc_private_x) * CHAR_BIT)  \
+                               : (unsigned)_Generic(                           \
                                      (ccc_private_x),                          \
                     unsigned char: __builtin_clz((unsigned int)ccc_private_x)  \
                         - (int)((sizeof(unsigned int) - sizeof(unsigned char)) \
@@ -221,7 +217,7 @@ new C23 specifications are finalized by compiler maintainers. */
 #else /* PORTABLE FALLBACK */
 
 /* @internal */
-CCC_PRIVATE_INLINE int
+CCC_PRIVATE_INLINE unsigned
 CCC_private_count_leading_zeros_u32(uint32_t x) {
     if (x == 0) {
         return 32;
@@ -250,7 +246,7 @@ CCC_private_count_leading_zeros_u32(uint32_t x) {
 }
 
 /* @internal */
-CCC_PRIVATE_INLINE int
+CCC_PRIVATE_INLINE unsigned
 CCC_private_count_leading_zeros_u64(uint64_t x) {
     if (x == 0) {
         return 64;
@@ -309,18 +305,13 @@ CCC_private_count_leading_zeros_u64(uint64_t x) {
 
 /* @internal */
 #    define CCC_private_count_trailing_zeros(x)                                \
-        (__extension__({                                                       \
-            typeof(x) ccc_private_x = (x);                                     \
-            ccc_private_x == 0                                                 \
-                ? (int)(sizeof(ccc_private_x) * CHAR_BIT)                      \
-                : (int)__builtin_stdc_trailing_zeros(ccc_private_x);           \
-        }))
+        __builtin_stdc_trailing_zeros(ccc_private_x)
 
 #elif __has_builtin(__builtin_ctzg)
 
 /* @internal */
 #    define CCC_private_count_trailing_zeros(x)                                \
-        __builtin_ctzg(x, (int)(sizeof(x) * CHAR_BIT))
+        ((unsigned)__builtin_ctzg(x, (int)(sizeof(x) * CHAR_BIT)))
 
 #elif __has_builtin(__builtin_ctz) && __has_builtin(__builtin_ctzl)            \
     && __has_builtin(__builtin_ctzll)
@@ -329,8 +320,8 @@ CCC_private_count_leading_zeros_u64(uint64_t x) {
 #    define CCC_private_count_trailing_zeros(x)                                \
         (__extension__({                                                       \
             typeof(x) ccc_private_x = (x);                                     \
-            ccc_private_x == 0 ? (int)(sizeof(ccc_private_x) * CHAR_BIT)       \
-                               : (int)_Generic(                                \
+            ccc_private_x == 0 ? (unsigned)(sizeof(ccc_private_x) * CHAR_BIT)  \
+                               : (unsigned)_Generic(                           \
                                      (ccc_private_x),                          \
                     unsigned char: __builtin_ctz((unsigned int)ccc_private_x), \
                     unsigned short: __builtin_ctz(                             \
@@ -349,7 +340,7 @@ CCC_private_count_leading_zeros_u64(uint64_t x) {
 #else /* PORTABLE FALLBACK */
 
 /* @internal */
-CCC_PRIVATE_INLINE int
+CCC_PRIVATE_INLINE unsigned
 CCC_private_count_trailing_zeros_u32(uint32_t x) {
     if (x == 0) {
         return 32;
@@ -378,7 +369,7 @@ CCC_private_count_trailing_zeros_u32(uint32_t x) {
 }
 
 /* @internal */
-CCC_PRIVATE_INLINE int
+CCC_PRIVATE_INLINE unsigned
 CCC_private_count_trailing_zeros_u64(uint64_t x) {
     if (x == 0) {
         return 64;
@@ -414,8 +405,8 @@ CCC_private_count_trailing_zeros_u64(uint64_t x) {
 #    define CCC_private_count_trailing_zeros(x)                                \
         (__extension__({                                                       \
             typeof(x) ccc_private_x = (x);                                     \
-            ccc_private_x == 0 ? (int)(sizeof(ccc_private_x) * CHAR_BIT)       \
-                               : (int)_Generic(                                \
+            ccc_private_x == 0 ? (unsigned)(sizeof(ccc_private_x) * CHAR_BIT)  \
+                               : _Generic(                                     \
                                      (ccc_private_x),                          \
                     unsigned char: CCC_private_count_trailing_zeros_u32(       \
                                          ccc_private_x                         \
@@ -442,31 +433,31 @@ CCC_private_count_trailing_zeros_u64(uint64_t x) {
 #if __has_builtin(__builtin_stdc_count_ones)
 
 /* @internal */
-#    define CCC_private_popcount(x) ((int)__builtin_stdc_count_ones(x))
+#    define CCC_private_popcount(x) ((unsigned)__builtin_stdc_count_ones(x))
 
 #elif __has_builtin(__builtin_popcountg)
 
 /* @internal */
-#    define CCC_private_popcount(x) ((int)__builtin_popcountg(x))
+#    define CCC_private_popcount(x) ((unsigned)__builtin_popcountg(x))
 
 #elif __has_builtin(__builtin_popcount) && __has_builtin(__builtin_popcountl)  \
     && __has_builtin(__builtin_popcountll)
 
 /* @internal */
 #    define CCC_private_popcount(x)                                            \
-        _Generic(                                                              \
+        ((unsigned)_Generic(                                                   \
             (x),                                                               \
-            unsigned char: __builtin_popcount(x),                              \
-            unsigned short: __builtin_popcount(x),                             \
-            unsigned int: __builtin_popcount(x),                               \
-            unsigned long: __builtin_popcountl(x),                             \
-            unsigned long long: __builtin_popcountll(x)                        \
-        )
+             unsigned char: __builtin_popcount(x),                             \
+             unsigned short: __builtin_popcount(x),                            \
+             unsigned int: __builtin_popcount(x),                              \
+             unsigned long: __builtin_popcountl(x),                            \
+             unsigned long long: __builtin_popcountll(x)                       \
+        ))
 
 #else /* PORTABLE FALLBACK */
 
 /* @internal */
-CCC_PRIVATE_INLINE int
+CCC_PRIVATE_INLINE unsigned
 CCC_private_popcount_u32(uint32_t x) {
     x = x - ((x >> 1) & 0x55555555U);
     x = (x & 0x33333333U) + ((x >> 2) & 0x33333333U);
@@ -477,7 +468,7 @@ CCC_private_popcount_u32(uint32_t x) {
 }
 
 /* @internal */
-CCC_PRIVATE_INLINE int
+CCC_PRIVATE_INLINE unsigned
 CCC_private_popcount_u64(uint64_t x) {
     x = x - ((x >> 1) & 0x5555555555555555ULL);
     x = (x & 0x3333333333333333ULL) + ((x >> 2) & 0x3333333333333333ULL);
@@ -513,13 +504,7 @@ CCC_private_popcount_u64(uint64_t x) {
 
 /* @internal */
 #    define CCC_private_bit_ceiling(x)                                         \
-        (__extension__({                                                       \
-            typeof(x) const ccc_private_ceiling_x = (x);                       \
-            ccc_private_ceiling_x                                              \
-                    > ((typeof(x))1 << ((sizeof(x) * CHAR_BIT) - 1))           \
-                ? (typeof(x))0                                                 \
-                : (typeof(x))__builtin_stdc_bit_ceil(ccc_private_ceiling_x);   \
-        }))
+        ((typeof(x))__builtin_stdc_bit_ceil(ccc_private_ceiling_x))
 
 #else
 
@@ -528,7 +513,7 @@ CCC_private_popcount_u64(uint64_t x) {
         (__extension__({                                                       \
             typeof(x) const ccc_private_ceiling_x = (x);                       \
             ccc_private_ceiling_x <= 1 ? (typeof(x))1 : (__extension__({       \
-                int const ccc_private_shifts                                   \
+                unsigned const ccc_private_shifts                              \
                     = CCC_private_count_leading_zeros(                         \
                         (typeof(x))(ccc_private_ceiling_x - 1)                 \
                     );                                                         \

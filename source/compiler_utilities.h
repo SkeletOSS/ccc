@@ -137,7 +137,7 @@ count of the input type is returned.
 @return The smallest power of two greater than or equal to the given value, of
 the same type as the input argument. If the next power of two overflows the
 maximum representable value of the input type, 0 is returned to indicate
-failure.
+overflow failure.
 @note Inputting 0 returns 1, as 1 (2^0) is the first power of two. Because 0
 is not a valid power of two, it safely serves as an overflow sentinel. */
 #define CCC_bit_ceiling(integer) CCC_private_bit_ceiling(integer)
@@ -150,7 +150,7 @@ Type safe comparison functions. */
 
 /** @internal
 @brief Evaluate the minimum of two values, safely ensuring that both types
-match in signedness. Each argument is evaluated once to avoid side-effects.
+match in sign. Each argument is evaluated once to avoid side-effects.
 @param[in] left the first value to compare.
 @param[in] right the second value to compare.
 @return The minimum between left and right. */
@@ -158,7 +158,7 @@ match in signedness. Each argument is evaluated once to avoid side-effects.
 
 /** @internal
 @brief Evaluate the maximum of two values, safely ensuring that both types
-match in signedness. Each argument is evaluated once to avoid side-effects.
+match in sign. Each argument is evaluated once to avoid side-effects.
 @param[in] left the first value to compare.
 @param[in] right the second value to compare.
 @return The maximum between left and right. */
