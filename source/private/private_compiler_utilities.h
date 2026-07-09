@@ -178,8 +178,7 @@ new C23 specifications are finalized by compiler maintainers. */
 #if __has_builtin(__builtin_stdc_leading_zeros)
 
 /* @internal */
-#    define CCC_private_count_leading_zeros(x)                                 \
-        __builtin_stdc_leading_zeros(ccc_private_x)
+#    define CCC_private_count_leading_zeros(x) __builtin_stdc_leading_zeros(x)
 
 #elif __has_builtin(__builtin_clzg)
 
@@ -304,8 +303,7 @@ CCC_private_count_leading_zeros_u64(uint64_t x) {
 #if __has_builtin(__builtin_stdc_trailing_zeros)
 
 /* @internal */
-#    define CCC_private_count_trailing_zeros(x)                                \
-        __builtin_stdc_trailing_zeros(ccc_private_x)
+#    define CCC_private_count_trailing_zeros(x) __builtin_stdc_trailing_zeros(x)
 
 #elif __has_builtin(__builtin_ctzg)
 
@@ -503,8 +501,7 @@ CCC_private_popcount_u64(uint64_t x) {
 #if __has_builtin(__builtin_stdc_bit_ceil)
 
 /* @internal */
-#    define CCC_private_bit_ceiling(x)                                         \
-        ((typeof(x))__builtin_stdc_bit_ceil(ccc_private_ceiling_x))
+#    define CCC_private_bit_ceiling(x) ((typeof(x))__builtin_stdc_bit_ceil(x))
 
 #else
 
