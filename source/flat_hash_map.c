@@ -333,7 +333,6 @@ static struct Group
 static unsigned count_trailing_zeros(struct Match_mask);
 static unsigned count_leading_zeros(struct Match_mask);
 static CCC_Tribool is_power_of_two(size_t);
-static size_t to_power_of_two(size_t);
 static CCC_Tribool is_uninitialized(struct CCC_Flat_hash_map const *);
 static void destory_each(struct CCC_Flat_hash_map *, CCC_Destructor const *);
 static CCC_Tribool check_replica_group(struct CCC_Flat_hash_map const *);
@@ -1206,7 +1205,7 @@ maybe_rehash(
         || ckd_mul(&required_total_cap, required_total_cap, 8)) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
-    required_total_cap = to_power_of_two(required_total_cap / 7);
+    required_total_cap = CCC_bit_ceiling(required_total_cap / 7);
     CCC_Result const init = lazy_initialize(map, required_total_cap, allocator);
     if (init != CCC_RESULT_OK) {
         return init;
@@ -1348,8 +1347,8 @@ rehash_resize(
         || ckd_mul(&new_pow2_cap, new_pow2_cap, 2)) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
-    new_pow2_cap = to_power_of_two(new_pow2_cap);
-    if (new_pow2_cap < (map->mask + 1)) {
+    new_pow2_cap = CCC_bit_ceiling(new_pow2_cap);
+    if (!new_pow2_cap) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
     size_t total_bytes = 0;
@@ -1551,13 +1550,6 @@ key_in_index(
     return (char *)index + map->key_offset;
 }
 
-/** Return n if a power of 2, otherwise returns next greater power of 2. 0 is
-returned if overflow will occur. */
-static inline size_t
-to_power_of_two(size_t const n) {
-    return CCC_bit_ceiling(n);
-}
-
 /** Returns true if n is a power of two. 0 is not considered a power of 2. */
 static inline CCC_Tribool
 is_power_of_two(size_t const n) {
@@ -1590,7 +1582,7 @@ mask_to_total_bytes(size_t const sizeof_type, size_t const mask) {
 total bytes. This means that `size_t` can no longer index the needed bytes for
 the provided mask capacity. If no overflow occurs the function returns false
 and the result of the arithmetic is stored in result. Use this version when
-requesting a new allocation from un-trusted user input. Use the unchecked
+requesting a new allocation from external user input. Use the unchecked
 version when a valid allocation has already been established on a valid hash
 map.
 
