@@ -604,8 +604,8 @@ bottom_up_reheap(
            height` to `height + 2` which is significant for data sizes that can
            vary significantly in this type of generic container. */
         (void)memcpy(temp, at(buffer, root), buffer->sizeof_type);
-        size_t tree_levels = (size_t)CCC_count_leading_zeros(root + 1)
-                           - (size_t)CCC_count_leading_zeros(leaf + 1);
+        size_t tree_levels = CCC_count_leading_zeros(root + 1)
+                           - CCC_count_leading_zeros(leaf + 1);
         while (tree_levels--) {
             size_t const vacant_ancestor_index
                 = ((leaf + 1) >> (tree_levels + 1)) - 1;
@@ -627,7 +627,7 @@ order. This element may move closer to the root index of 0. */
 static inline size_t
 bubble_up(
     CCC_Flat_buffer const *const buffer,
-    size_t index,
+    size_t const index,
     void *const temp,
     CCC_Order const order,
     CCC_Comparator const *const comparator
