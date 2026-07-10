@@ -431,7 +431,7 @@ CCC_private_count_trailing_zeros_u64(uint64_t x) {
 #if __has_builtin(__builtin_stdc_count_ones)
 
 /* @internal */
-#    define CCC_private_popcount(x) ((unsigned)__builtin_stdc_count_ones(x))
+#    define CCC_private_popcount(x) __builtin_stdc_count_ones(x)
 
 #elif __has_builtin(__builtin_popcountg)
 
@@ -501,7 +501,7 @@ CCC_private_popcount_u64(uint64_t x) {
 #if __has_builtin(__builtin_stdc_bit_ceil)
 
 /* @internal */
-#    define CCC_private_bit_ceiling(x) ((typeof(x))__builtin_stdc_bit_ceil(x))
+#    define CCC_private_bit_ceiling(x) __builtin_stdc_bit_ceil(x)
 
 #else
 
