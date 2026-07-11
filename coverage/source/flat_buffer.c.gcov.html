@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-07-11 16:48:49</td>
+            <td class="headerValue">2026-07-11 16:50:24</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -401,12 +401,12 @@
 <span id="L339"><span class="lineNum">     339</span> <span class="tlaGNC">         140 : }</span></span>
 <span id="L340"><span class="lineNum">     340</span>              : </span>
 <span id="L341"><span class="lineNum">     341</span>              : CCC_Tribool</span>
-<span id="L342"><span class="lineNum">     342</span> <span class="tlaGNC">        2048 : CCC_flat_buffer_is_empty(CCC_Flat_buffer const *const buffer) {</span></span>
-<span id="L343"><span class="lineNum">     343</span> <span class="tlaGNC">        2048 :     if (!buffer) {</span></span>
+<span id="L342"><span class="lineNum">     342</span> <span class="tlaGNC">        2043 : CCC_flat_buffer_is_empty(CCC_Flat_buffer const *const buffer) {</span></span>
+<span id="L343"><span class="lineNum">     343</span> <span class="tlaGNC">        2043 :     if (!buffer) {</span></span>
 <span id="L344"><span class="lineNum">     344</span> <span class="tlaGNC">           1 :         return CCC_TRIBOOL_ERROR;</span></span>
 <span id="L345"><span class="lineNum">     345</span>              :     }</span>
-<span id="L346"><span class="lineNum">     346</span> <span class="tlaGNC">        2047 :     return !buffer-&gt;count;</span></span>
-<span id="L347"><span class="lineNum">     347</span> <span class="tlaGNC">        2048 : }</span></span>
+<span id="L346"><span class="lineNum">     346</span> <span class="tlaGNC">        2042 :     return !buffer-&gt;count;</span></span>
+<span id="L347"><span class="lineNum">     347</span> <span class="tlaGNC">        2043 : }</span></span>
 <span id="L348"><span class="lineNum">     348</span>              : </span>
 <span id="L349"><span class="lineNum">     349</span>              : CCC_Tribool</span>
 <span id="L350"><span class="lineNum">     350</span> <span class="tlaGNC">          29 : CCC_flat_buffer_is_full(CCC_Flat_buffer const *const buffer) {</span></span>
@@ -435,31 +435,31 @@
 <span id="L373"><span class="lineNum">     373</span> <span class="tlaGNC">          64 : }</span></span>
 <span id="L374"><span class="lineNum">     374</span>              : </span>
 <span id="L375"><span class="lineNum">     375</span>              : void *</span>
-<span id="L376"><span class="lineNum">     376</span> <span class="tlaGNC">        1486 : CCC_flat_buffer_next(</span></span>
+<span id="L376"><span class="lineNum">     376</span> <span class="tlaGNC">        1478 : CCC_flat_buffer_next(</span></span>
 <span id="L377"><span class="lineNum">     377</span>              :     CCC_Flat_buffer const *const buffer, void const *const iterator</span>
 <span id="L378"><span class="lineNum">     378</span>              : ) {</span>
-<span id="L379"><span class="lineNum">     379</span> <span class="tlaGNC">        1486 :     if (!buffer || !buffer-&gt;capacity || !iterator) {</span></span>
+<span id="L379"><span class="lineNum">     379</span> <span class="tlaGNC">        1478 :     if (!buffer || !buffer-&gt;capacity || !iterator) {</span></span>
 <span id="L380"><span class="lineNum">     380</span> <span class="tlaGNC">           1 :         return NULL;</span></span>
 <span id="L381"><span class="lineNum">     381</span>              :     }</span>
-<span id="L382"><span class="lineNum">     382</span> <span class="tlaGNC">        1485 :     if ((char *)iterator</span></span>
-<span id="L383"><span class="lineNum">     383</span> <span class="tlaGNC">        1485 :         &gt;= (char *)buffer-&gt;data + ((buffer-&gt;count - 1) * buffer-&gt;sizeof_type)) {</span></span>
+<span id="L382"><span class="lineNum">     382</span> <span class="tlaGNC">        1477 :     if ((char *)iterator</span></span>
+<span id="L383"><span class="lineNum">     383</span> <span class="tlaGNC">        1477 :         &gt;= (char *)buffer-&gt;data + ((buffer-&gt;count - 1) * buffer-&gt;sizeof_type)) {</span></span>
 <span id="L384"><span class="lineNum">     384</span> <span class="tlaGNC">          85 :         return CCC_flat_buffer_end(buffer);</span></span>
 <span id="L385"><span class="lineNum">     385</span>              :     }</span>
-<span id="L386"><span class="lineNum">     386</span> <span class="tlaGNC">        1400 :     return (unsigned char *)iterator + buffer-&gt;sizeof_type;</span></span>
-<span id="L387"><span class="lineNum">     387</span> <span class="tlaGNC">        1486 : }</span></span>
+<span id="L386"><span class="lineNum">     386</span> <span class="tlaGNC">        1392 :     return (unsigned char *)iterator + buffer-&gt;sizeof_type;</span></span>
+<span id="L387"><span class="lineNum">     387</span> <span class="tlaGNC">        1478 : }</span></span>
 <span id="L388"><span class="lineNum">     388</span>              : </span>
 <span id="L389"><span class="lineNum">     389</span>              : void *</span>
-<span id="L390"><span class="lineNum">     390</span> <span class="tlaGNC">         387 : CCC_flat_buffer_reverse_next(</span></span>
+<span id="L390"><span class="lineNum">     390</span> <span class="tlaGNC">         384 : CCC_flat_buffer_reverse_next(</span></span>
 <span id="L391"><span class="lineNum">     391</span>              :     CCC_Flat_buffer const *const buffer, void const *const iterator</span>
 <span id="L392"><span class="lineNum">     392</span>              : ) {</span>
-<span id="L393"><span class="lineNum">     393</span> <span class="tlaGNC">         387 :     if (!buffer || !buffer-&gt;data || !iterator) {</span></span>
+<span id="L393"><span class="lineNum">     393</span> <span class="tlaGNC">         384 :     if (!buffer || !buffer-&gt;data || !iterator) {</span></span>
 <span id="L394"><span class="lineNum">     394</span> <span class="tlaGNC">           1 :         return NULL;</span></span>
 <span id="L395"><span class="lineNum">     395</span>              :     }</span>
-<span id="L396"><span class="lineNum">     396</span> <span class="tlaGNC">         386 :     if (iterator &lt;= CCC_flat_buffer_reverse_end(buffer)) {</span></span>
+<span id="L396"><span class="lineNum">     396</span> <span class="tlaGNC">         383 :     if (iterator &lt;= CCC_flat_buffer_reverse_end(buffer)) {</span></span>
 <span id="L397"><span class="lineNum">     397</span> <span class="tlaGNC">           1 :         return CCC_flat_buffer_reverse_end(buffer);</span></span>
 <span id="L398"><span class="lineNum">     398</span>              :     }</span>
-<span id="L399"><span class="lineNum">     399</span> <span class="tlaGNC">         385 :     return (char *)iterator - buffer-&gt;sizeof_type;</span></span>
-<span id="L400"><span class="lineNum">     400</span> <span class="tlaGNC">         387 : }</span></span>
+<span id="L399"><span class="lineNum">     399</span> <span class="tlaGNC">         382 :     return (char *)iterator - buffer-&gt;sizeof_type;</span></span>
+<span id="L400"><span class="lineNum">     400</span> <span class="tlaGNC">         384 : }</span></span>
 <span id="L401"><span class="lineNum">     401</span>              : </span>
 <span id="L402"><span class="lineNum">     402</span>              : void *</span>
 <span id="L403"><span class="lineNum">     403</span> <span class="tlaGNC">        1327 : CCC_flat_buffer_end(CCC_Flat_buffer const *const buffer) {</span></span>
@@ -475,12 +475,12 @@
 <span id="L413"><span class="lineNum">     413</span>              : iterator would eventually reach this same address through reverse_next and be</span>
 <span id="L414"><span class="lineNum">     414</span>              : compared to it in the main user loop. */</span>
 <span id="L415"><span class="lineNum">     415</span>              : void *</span>
-<span id="L416"><span class="lineNum">     416</span> <span class="tlaGNC">         741 : CCC_flat_buffer_reverse_end(CCC_Flat_buffer const *const buffer) {</span></span>
-<span id="L417"><span class="lineNum">     417</span> <span class="tlaGNC">         741 :     if (!buffer || !buffer-&gt;data) {</span></span>
+<span id="L416"><span class="lineNum">     416</span> <span class="tlaGNC">         738 : CCC_flat_buffer_reverse_end(CCC_Flat_buffer const *const buffer) {</span></span>
+<span id="L417"><span class="lineNum">     417</span> <span class="tlaGNC">         738 :     if (!buffer || !buffer-&gt;data) {</span></span>
 <span id="L418"><span class="lineNum">     418</span> <span class="tlaGNC">           1 :         return NULL;</span></span>
 <span id="L419"><span class="lineNum">     419</span>              :     }</span>
-<span id="L420"><span class="lineNum">     420</span> <span class="tlaGNC">         740 :     return (unsigned char *)buffer-&gt;data - buffer-&gt;sizeof_type;</span></span>
-<span id="L421"><span class="lineNum">     421</span> <span class="tlaGNC">         741 : }</span></span>
+<span id="L420"><span class="lineNum">     420</span> <span class="tlaGNC">         737 :     return (unsigned char *)buffer-&gt;data - buffer-&gt;sizeof_type;</span></span>
+<span id="L421"><span class="lineNum">     421</span> <span class="tlaGNC">         738 : }</span></span>
 <span id="L422"><span class="lineNum">     422</span>              : </span>
 <span id="L423"><span class="lineNum">     423</span>              : CCC_Count</span>
 <span id="L424"><span class="lineNum">     424</span> <span class="tlaGNC">          91 : CCC_flat_buffer_index(</span></span>
