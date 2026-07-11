@@ -22,6 +22,7 @@ limitations under the License. */
 #include "ccc/flat_double_ended_queue.h"
 #include "ccc/private/private_flat_double_ended_queue.h"
 #include "ccc/types.h"
+#include "source/compiler_utilities.h"
 
 enum : size_t {
     START_CAPACITY = 8,
@@ -65,7 +66,6 @@ static void *
 allocate_front(struct CCC_Flat_double_ended_queue *, CCC_Allocator const *);
 static void *
 allocate_back(struct CCC_Flat_double_ended_queue *, CCC_Allocator const *);
-static size_t min(size_t, size_t);
 static void
 destroy_all(struct CCC_Flat_double_ended_queue const *, CCC_Destructor const *);
 
@@ -81,10 +81,10 @@ CCC_flat_double_ended_queue_push_back(
         return NULL;
     }
     void *const slot = allocate_back(queue, allocator);
-    if (slot && slot != type) {
-        (void)memcpy(slot, type, queue->buffer.sizeof_type);
+    if (!slot || slot == type) {
+        return NULL;
     }
-    return slot;
+    return memcpy(slot, type, queue->buffer.sizeof_type);
 }
 
 void *
@@ -341,7 +341,7 @@ CCC_flat_double_ended_queue_copy(
     }
     destination->buffer.count = source->buffer.count;
     if (destination->buffer.capacity > source->buffer.capacity) {
-        size_t const first_chunk = min(
+        size_t const first_chunk = CCC_min(
             source->buffer.count, source->buffer.capacity - source->front
         );
         (void)memcpy(
@@ -541,7 +541,7 @@ push_back_range(
     }
     size_t const new_size = queue->buffer.count + range->count;
     size_t const back_slot = back_free_slot(queue);
-    size_t const chunk = min(range->count, cap - back_slot);
+    size_t const chunk = CCC_min(range->count, cap - back_slot);
     size_t const remainder_back_slot = (back_slot + chunk) % cap;
     size_t const remainder = (range->count - chunk);
     void *const return_this = memcpy(
@@ -557,7 +557,7 @@ push_back_range(
     if (new_size > cap) {
         queue->front = (queue->front + (new_size - cap)) % cap;
     }
-    queue->buffer.count = min(cap, new_size);
+    queue->buffer.count = CCC_min(cap, new_size);
     return return_this;
 }
 
@@ -587,7 +587,7 @@ push_front_range(
     size_t const space_ahead = front_free_slot(queue->front, cap) + 1;
     size_t const i
         = range->count > space_ahead ? 0 : space_ahead - range->count;
-    size_t const chunk = min(range->count, space_ahead);
+    size_t const chunk = CCC_min(range->count, space_ahead);
     size_t const remainder = (range->count - chunk);
     void *const return_this = memcpy(
         raw_at(&queue->buffer, i),
@@ -601,7 +601,7 @@ push_front_range(
             remainder * sizeof_type
         );
     }
-    queue->buffer.count = min(cap, queue->buffer.count + range->count);
+    queue->buffer.count = CCC_min(cap, queue->buffer.count + range->count);
     queue->front = remainder ? cap - remainder : i;
     return return_this;
 }
@@ -636,8 +636,8 @@ push_range(
     size_t const to_move = back > pos_i ? back - pos_i : cap - pos_i + back;
     size_t const move_i = (pos_i + range->count) % cap;
     size_t move_chunk = move_i + to_move > cap ? cap - move_i : to_move;
-    move_chunk = back < pos_i ? min(cap - pos_i, move_chunk)
-                              : min(back - pos_i, move_chunk);
+    move_chunk = back < pos_i ? CCC_min(cap - pos_i, move_chunk)
+                              : CCC_min(back - pos_i, move_chunk);
     size_t const move_remain = to_move - move_chunk;
     (void)memmove(
         raw_at(&queue->buffer, move_i),
@@ -653,7 +653,7 @@ push_range(
             move_remain * sizeof_type
         );
     }
-    size_t const elements_chunk = min(range->count, cap - pos_i);
+    size_t const elements_chunk = CCC_min(range->count, cap - pos_i);
     size_t const elements_remain = range->count - elements_chunk;
     void *const return_this = memcpy(
         raw_at(&queue->buffer, pos_i), range->data, elements_chunk * sizeof_type
@@ -673,9 +673,10 @@ push_range(
            front. */
         size_t const excess = (new_size - cap);
         size_t const front_to_pos_dist = (pos_i + cap - queue->front) % cap;
-        queue->front = (queue->front + min(excess, front_to_pos_dist)) % cap;
+        queue->front
+            = (queue->front + CCC_min(excess, front_to_pos_dist)) % cap;
     }
-    queue->buffer.count = min(cap, new_size);
+    queue->buffer.count = CCC_min(cap, new_size);
     return return_this;
 }
 
@@ -711,8 +712,9 @@ maybe_resize(
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
     if (queue->buffer.count) {
-        size_t const first_chunk
-            = min(queue->buffer.count, queue->buffer.capacity - queue->front);
+        size_t const first_chunk = CCC_min(
+            queue->buffer.count, queue->buffer.capacity - queue->front
+        );
         (void)memcpy(
             new_data,
             raw_at(&queue->buffer, queue->front),
@@ -853,9 +855,4 @@ last_index(struct CCC_Flat_double_ended_queue const *const queue) {
     return queue->buffer.count
              ? (queue->front + queue->buffer.count - 1) % queue->buffer.capacity
              : queue->front;
-}
-
-static inline size_t
-min(size_t const left, size_t const right) {
-    return left < right ? left : right;
 }

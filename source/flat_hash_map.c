@@ -43,6 +43,7 @@ better capabilities for 128 bit group operations. */
 #include "ccc/flat_hash_map.h"
 #include "ccc/private/private_flat_hash_map.h"
 #include "ccc/types.h"
+#include "source/compiler_utilities.h"
 
 /*=========================   Platform Selection  ===========================*/
 
@@ -54,15 +55,6 @@ vector instructions we can try. */
 #elifdef CCC_HAS_ARM_SIMD
 #    include <arm_neon.h>
 #endif /* defined(CCC_HAS_X86_SIMD) */
-
-/** Maybe the compiler can give us better performance in key paths. */
-#if defined(__has_builtin) && __has_builtin(__builtin_expect)
-#    define unlikely(expr) __builtin_expect(!!(expr), 0)
-#    define likely(expr) __builtin_expect(!!(expr), 1)
-#else /* !defined(__has_builtin) || !__has_builtin(__builtin_expect) */
-#    define unlikely(expr) expr
-#    define likely(expr) expr
-#endif /* defined(__has_builtin) && __has_builtin(__builtin_expect) */
 
 /* Can we vectorize instructions? Also it is possible to specify we want a
 portable implementation. Consider exposing to user in header docs. */
@@ -169,12 +161,6 @@ enum : typeof((struct CCC_Flat_hash_map_tag){}.v) {
 
 /*=======================   Data Alignment Test   ===========================*/
 
-/** @internal A macro version of the runtime alignment operations we perform
-for calculating bytes. This way we can use in static asserts. We also need to
-ensure our runtime alignment calculations match compiler's `alignas` macro. */
-#define comptime_roundup(bytes_to_round)                                       \
-    (((bytes_to_round) + GROUP_COUNT - 1) & (size_t)~(GROUP_COUNT - 1))
-
 /** @internal The following test should ensure some safety in assumptions we
 make when the user defines a fixed size map type. This anonymous compound
 literal construction is the same technique used to construct fixed maps for
@@ -192,14 +178,14 @@ static __auto_type const data_tag_layout_test = (struct {
 static_assert(
     (char const *)&data_tag_layout_test.tag[2]
             - (char const *)&data_tag_layout_test.data[0]
-        == (comptime_roundup((sizeof(data_tag_layout_test.data)))
+        == (CCC_roundup(sizeof(data_tag_layout_test.data), GROUP_COUNT)
             + (sizeof(struct CCC_Flat_hash_map_tag) * 2)),
     "The manually computed offset of the tag array from the start of the data "
     "array must match the offset chosen by compiler alignment rules."
 );
 static_assert(
     (char const *)&data_tag_layout_test.data
-            + comptime_roundup((sizeof(data_tag_layout_test.data)))
+            + CCC_roundup(sizeof(data_tag_layout_test.data), GROUP_COUNT)
         == (char const *)&data_tag_layout_test.tag,
     "We calculate the correct position of the tag array considering it may get "
     "extra padding at start for alignment by group size."
@@ -323,7 +309,6 @@ static void set_insert_tag(
     struct CCC_Flat_hash_map *, struct CCC_Flat_hash_map_tag, size_t
 );
 static size_t mask_to_capacity_with_load_factor(size_t);
-static size_t max_size_t(size_t, size_t);
 static void
 tag_set(struct CCC_Flat_hash_map *, struct CCC_Flat_hash_map_tag, size_t);
 static CCC_Tribool match_has_one(struct Match_mask);
@@ -347,10 +332,7 @@ static struct Group
     group_convert_constant_to_empty_and_full_to_deleted(struct Group);
 static unsigned count_trailing_zeros(struct Match_mask);
 static unsigned count_leading_zeros(struct Match_mask);
-static unsigned count_leading_zeros_size_t(size_t);
-static size_t next_power_of_two(size_t);
 static CCC_Tribool is_power_of_two(size_t);
-static size_t to_power_of_two(size_t);
 static CCC_Tribool is_uninitialized(struct CCC_Flat_hash_map const *);
 static void destory_each(struct CCC_Flat_hash_map *, CCC_Destructor const *);
 static CCC_Tribool check_replica_group(struct CCC_Flat_hash_map const *);
@@ -359,7 +341,7 @@ static CCC_Tribool check_replica_group(struct CCC_Flat_hash_map const *);
 
 CCC_Tribool
 CCC_flat_hash_map_is_empty(CCC_Flat_hash_map const *const map) {
-    if (unlikely(!map)) {
+    if (CCC_unlikely(!map)) {
         return CCC_TRIBOOL_ERROR;
     }
     return !map->count;
@@ -385,10 +367,10 @@ CCC_Tribool
 CCC_flat_hash_map_contains(
     CCC_Flat_hash_map const *const map, void const *const key
 ) {
-    if (unlikely(!map || !key)) {
+    if (CCC_unlikely(!map || !key)) {
         return CCC_TRIBOOL_ERROR;
     }
-    if (unlikely(is_uninitialized(map) || !map->count)) {
+    if (CCC_unlikely(is_uninitialized(map) || !map->count)) {
         return CCC_FALSE;
     }
     return !find_key_or_fail(map, key, hasher(map, key)).error;
@@ -398,7 +380,7 @@ void *
 CCC_flat_hash_map_get_key_value(
     CCC_Flat_hash_map const *const map, void const *const key
 ) {
-    if (unlikely(!map || !key || is_uninitialized(map) || !map->count)) {
+    if (CCC_unlikely(!map || !key || is_uninitialized(map) || !map->count)) {
         return NULL;
     }
     CCC_Count const index = find_key_or_fail(map, key, hasher(map, key));
@@ -414,7 +396,7 @@ CCC_flat_hash_map_entry(
     void const *const key,
     CCC_Allocator const *const allocator
 ) {
-    if (unlikely(!map || !key || !allocator)) {
+    if (CCC_unlikely(!map || !key || !allocator)) {
         return (CCC_Flat_hash_map_entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     return maybe_rehash_find_entry(map, key, allocator);
@@ -424,7 +406,7 @@ void *
 CCC_flat_hash_map_or_insert(
     CCC_Flat_hash_map_entry const *const entry, void const *type
 ) {
-    if (unlikely(
+    if (CCC_unlikely(
             !entry || !type || (entry->status & CCC_ENTRY_ARGUMENT_ERROR)
         )) {
         return NULL;
@@ -443,7 +425,7 @@ void *
 CCC_flat_hash_map_insert_entry(
     CCC_Flat_hash_map_entry const *const entry, void const *type
 ) {
-    if (unlikely(
+    if (CCC_unlikely(
             !entry || !type || (entry->status & CCC_ENTRY_ARGUMENT_ERROR)
         )) {
         return NULL;
@@ -462,7 +444,7 @@ CCC_flat_hash_map_insert_entry(
 
 CCC_Entry
 CCC_flat_hash_map_remove_entry(CCC_Flat_hash_map_entry const *const entry) {
-    if (unlikely(!entry)) {
+    if (CCC_unlikely(!entry)) {
         return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     if (!(entry->status & CCC_ENTRY_OCCUPIED)) {
@@ -492,7 +474,7 @@ CCC_flat_hash_map_swap_entry(
     void *const type_output,
     CCC_Allocator const *const allocator
 ) {
-    if (unlikely(!map || !type_output || !allocator)) {
+    if (CCC_unlikely(!map || !type_output || !allocator)) {
         return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     void *const key = key_in_index(map, type_output);
@@ -526,7 +508,7 @@ CCC_flat_hash_map_try_insert(
     void const *const type,
     CCC_Allocator const *const allocator
 ) {
-    if (unlikely(!map || !type || !allocator)) {
+    if (CCC_unlikely(!map || !type || !allocator)) {
         return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     void *const key = key_in_index(map, type);
@@ -554,7 +536,7 @@ CCC_flat_hash_map_insert_or_assign(
     void const *const type,
     CCC_Allocator const *const allocator
 ) {
-    if (unlikely(!map || !type || !allocator)) {
+    if (CCC_unlikely(!map || !type || !allocator)) {
         return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
     void *const key = key_in_index(map, type);
@@ -581,10 +563,10 @@ CCC_Entry
 CCC_flat_hash_map_remove_key_value(
     CCC_Flat_hash_map *const map, void *const type_output
 ) {
-    if (unlikely(!map || !type_output)) {
+    if (CCC_unlikely(!map || !type_output)) {
         return (CCC_Entry){.status = CCC_ENTRY_ARGUMENT_ERROR};
     }
-    if (unlikely(is_uninitialized(map) || !map->count)) {
+    if (CCC_unlikely(is_uninitialized(map) || !map->count)) {
         return (CCC_Entry){.status = CCC_ENTRY_VACANT};
     }
     void *const key = key_in_index(map, type_output);
@@ -602,7 +584,9 @@ CCC_flat_hash_map_remove_key_value(
 
 void *
 CCC_flat_hash_map_begin(CCC_Flat_hash_map const *const map) {
-    if (unlikely(!map || !map->mask || is_uninitialized(map) || !map->count)) {
+    if (CCC_unlikely(
+            !map || !map->mask || is_uninitialized(map) || !map->count
+        )) {
         return NULL;
     }
     return find_first_full_index(map, 0);
@@ -612,7 +596,7 @@ void *
 CCC_flat_hash_map_next(
     CCC_Flat_hash_map const *const map, void const *const type_iterator
 ) {
-    if (unlikely(
+    if (CCC_unlikely(
             !map || !type_iterator || !map->mask || is_uninitialized(map)
             || !map->count
         )) {
@@ -642,7 +626,7 @@ CCC_flat_hash_map_end(CCC_Flat_hash_map const *const) {
 
 void *
 CCC_flat_hash_map_unwrap(CCC_Flat_hash_map_entry const *const entry) {
-    if (unlikely(!entry) || !(entry->status & CCC_ENTRY_OCCUPIED)) {
+    if (CCC_unlikely(!entry) || !(entry->status & CCC_ENTRY_OCCUPIED)) {
         return NULL;
     }
     return data_at(entry->map, entry->index);
@@ -652,10 +636,10 @@ CCC_Result
 CCC_flat_hash_map_clear(
     CCC_Flat_hash_map *const map, CCC_Destructor const *const destructor
 ) {
-    if (unlikely(!map || !destructor)) {
+    if (CCC_unlikely(!map || !destructor)) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    if (unlikely(is_uninitialized(map) || !map->mask || !map->tag)) {
+    if (CCC_unlikely(is_uninitialized(map) || !map->mask || !map->tag)) {
         return CCC_RESULT_OK;
     }
     if (destructor->destroy) {
@@ -673,7 +657,7 @@ CCC_flat_hash_map_clear_and_free(
     CCC_Destructor const *const destructor,
     CCC_Allocator const *const allocator
 ) {
-    if (unlikely(
+    if (CCC_unlikely(
             !map || !map->data || !destructor || !allocator
             || !allocator->allocate || !map->mask
         )) {
@@ -688,7 +672,7 @@ CCC_flat_hash_map_clear_and_free(
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .alignment = max_size_t(GROUP_COUNT, map->alignof_type),
+        .alignment = CCC_max(GROUP_COUNT, map->alignof_type),
         .context = allocator->context,
     });
     map->data = NULL;
@@ -698,7 +682,7 @@ CCC_flat_hash_map_clear_and_free(
 
 CCC_Tribool
 CCC_flat_hash_map_occupied(CCC_Flat_hash_map_entry const *const entry) {
-    if (unlikely(!entry)) {
+    if (CCC_unlikely(!entry)) {
         return CCC_TRIBOOL_ERROR;
     }
     return (entry->status & CCC_ENTRY_OCCUPIED) != 0;
@@ -706,7 +690,7 @@ CCC_flat_hash_map_occupied(CCC_Flat_hash_map_entry const *const entry) {
 
 CCC_Tribool
 CCC_flat_hash_map_insert_error(CCC_Flat_hash_map_entry const *const entry) {
-    if (unlikely(!entry)) {
+    if (CCC_unlikely(!entry)) {
         return CCC_TRIBOOL_ERROR;
     }
     return (entry->status & CCC_ENTRY_INSERT_ERROR) != 0;
@@ -714,7 +698,7 @@ CCC_flat_hash_map_insert_error(CCC_Flat_hash_map_entry const *const entry) {
 
 CCC_Entry_status
 CCC_flat_hash_map_entry_status(CCC_Flat_hash_map_entry const *const entry) {
-    if (unlikely(!entry)) {
+    if (CCC_unlikely(!entry)) {
         return CCC_ENTRY_ARGUMENT_ERROR;
     }
     return entry->status;
@@ -745,7 +729,7 @@ CCC_flat_hash_map_copy(
         void *const new_data = allocator->allocate((CCC_Allocator_arguments){
             .input = destination->data,
             .bytes = source_bytes,
-            .alignment = max_size_t(GROUP_COUNT, destination->alignof_type),
+            .alignment = CCC_max(GROUP_COUNT, destination->alignof_type),
             .context = allocator->context,
         });
         if (!new_data) {
@@ -796,7 +780,7 @@ CCC_flat_hash_map_reserve(
     size_t const to_add,
     CCC_Allocator const *const allocator
 ) {
-    if (unlikely(!map || !to_add || !allocator || !to_add)) {
+    if (CCC_unlikely(!map || !to_add || !allocator || !to_add)) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     return maybe_rehash(map, to_add, allocator);
@@ -1034,7 +1018,7 @@ find_key_or_index(
             struct Match_mask m = match_tag(group, tag);
             while ((tag_index = match_next_one(&m)) != GROUP_COUNT) {
                 tag_index = (probe.index + tag_index) & mask;
-                if (likely(is_equal(map, key, tag_index))) {
+                if (CCC_likely(is_equal(map, key, tag_index))) {
                     return (struct Query){
                         .index = tag_index,
                         .status = CCC_ENTRY_OCCUPIED,
@@ -1044,10 +1028,10 @@ find_key_or_index(
         }
         /* Taking the first available index once probing is done is important
            to preserve probing operation and efficiency. */
-        if (likely(empty_deleted.error)) {
+        if (CCC_likely(empty_deleted.error)) {
             size_t const i_take
                 = match_trailing_one(match_empty_or_deleted(group));
-            if (likely(i_take != GROUP_COUNT)) {
+            if (CCC_likely(i_take != GROUP_COUNT)) {
                 empty_deleted.count = (probe.index + i_take) & mask;
                 empty_deleted.error = CCC_RESULT_OK;
             }
@@ -1055,7 +1039,8 @@ find_key_or_index(
         /* We just did the work of checking for an empty or deleted index. If we
            didn't find one we should not force another pointless SIMD load and
            match check. */
-        if (!empty_deleted.error && likely(match_has_one(match_empty(group)))) {
+        if (!empty_deleted.error
+            && CCC_likely(match_has_one(match_empty(group)))) {
             return (struct Query){
                 .index = empty_deleted.count,
                 .status = CCC_ENTRY_VACANT,
@@ -1095,12 +1080,12 @@ find_key_or_fail(
             struct Match_mask match = match_tag(group, tag);
             while ((tag_index = match_next_one(&match)) != GROUP_COUNT) {
                 tag_index = (probe.index + tag_index) & mask;
-                if (likely(is_equal(map, key, tag_index))) {
+                if (CCC_likely(is_equal(map, key, tag_index))) {
                     return (CCC_Count){.count = tag_index};
                 }
             }
         }
-        if (likely(match_has_one(match_empty(group)))) {
+        if (CCC_likely(match_has_one(match_empty(group)))) {
             return (CCC_Count){.error = CCC_RESULT_FAIL};
         }
         probe.stride += GROUP_COUNT;
@@ -1125,7 +1110,7 @@ find_index_or_noreturn(
         size_t const available_index = match_trailing_one(
             match_empty_or_deleted(group_load_unaligned(&map->tag[p.index]))
         );
-        if (likely(available_index != GROUP_COUNT)) {
+        if (CCC_likely(available_index != GROUP_COUNT)) {
             return (p.index + available_index) & mask;
         }
         p.stride += GROUP_COUNT;
@@ -1212,7 +1197,7 @@ maybe_rehash(
     size_t const to_add,
     CCC_Allocator const *const allocator
 ) {
-    if (unlikely(!map->mask && !allocator->allocate)) {
+    if (CCC_unlikely(!map->mask && !allocator->allocate)) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
     size_t required_total_cap = 0;
@@ -1220,12 +1205,12 @@ maybe_rehash(
         || ckd_mul(&required_total_cap, required_total_cap, 8)) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
-    required_total_cap = to_power_of_two(required_total_cap / 7);
+    required_total_cap = CCC_bit_ceiling(required_total_cap / 7);
     CCC_Result const init = lazy_initialize(map, required_total_cap, allocator);
     if (init != CCC_RESULT_OK) {
         return init;
     }
-    if (likely(map->remain)) {
+    if (CCC_likely(map->remain)) {
         return CCC_RESULT_OK;
     }
     size_t const current_total_cap = map->mask + 1;
@@ -1290,7 +1275,9 @@ rehash_in_place(struct CCC_Flat_hash_map *const map) {
                            load. The tag is in the proper group for an unaligned
                            load based on where the hashed value will start its
                            loads and the match and does not need relocation. */
-                        if (likely(is_same_group(rehash, index, hash, mask))) {
+                        if (CCC_likely(
+                                is_same_group(rehash, index, hash, mask)
+                            )) {
                             tag_set(map, hash_tag, rehash);
                             break; /* continues outer loop */
                         }
@@ -1360,8 +1347,8 @@ rehash_resize(
         || ckd_mul(&new_pow2_cap, new_pow2_cap, 2)) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
-    new_pow2_cap = next_power_of_two(new_pow2_cap);
-    if (new_pow2_cap < (map->mask + 1)) {
+    new_pow2_cap = CCC_bit_ceiling(new_pow2_cap);
+    if (!new_pow2_cap) {
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
     size_t total_bytes = 0;
@@ -1373,7 +1360,7 @@ rehash_resize(
     void *const new_buf = allocator->allocate((CCC_Allocator_arguments){
         .input = NULL,
         .bytes = total_bytes,
-        .alignment = max_size_t(GROUP_COUNT, map->alignof_type),
+        .alignment = CCC_max(GROUP_COUNT, map->alignof_type),
         .context = allocator->context,
     });
     if (!new_buf) {
@@ -1420,7 +1407,7 @@ rehash_resize(
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .alignment = max_size_t(GROUP_COUNT, map->alignof_type),
+        .alignment = CCC_max(GROUP_COUNT, map->alignof_type),
         .context = allocator->context,
     });
     map->data = new_map.data;
@@ -1438,7 +1425,7 @@ lazy_initialize(
     size_t required_capacity,
     CCC_Allocator const *const allocator
 ) {
-    if (likely(!is_uninitialized(map))) {
+    if (CCC_likely(!is_uninitialized(map))) {
         return CCC_RESULT_OK;
     }
     if (map->mask) {
@@ -1453,7 +1440,7 @@ lazy_initialize(
         (void)memset(map->tag, TAG_EMPTY, mask_to_tag_bytes(map->mask));
     } else {
         /* A dynamic map we can re-size as needed. */
-        required_capacity = max_size_t(required_capacity, GROUP_COUNT);
+        required_capacity = CCC_max(required_capacity, GROUP_COUNT);
         size_t total_bytes = 0;
         if (checked_mask_to_total_bytes(
                 &total_bytes, map->sizeof_type, required_capacity - 1
@@ -1463,7 +1450,7 @@ lazy_initialize(
         map->data = allocator->allocate((CCC_Allocator_arguments){
             .input = NULL,
             .bytes = total_bytes,
-            .alignment = max_size_t(GROUP_COUNT, map->alignof_type),
+            .alignment = CCC_max(GROUP_COUNT, map->alignof_type),
             .context = allocator->context,
         });
         if (!map->data) {
@@ -1528,7 +1515,7 @@ static inline CCC_Count
 data_index(
     struct CCC_Flat_hash_map const *const map, void const *const data_index
 ) {
-    if (unlikely(
+    if (CCC_unlikely(
             (char *)data_index
                 >= (char *)map->data + (map->sizeof_type * (map->mask + 1))
             || (char *)data_index < (char *)map->data
@@ -1548,7 +1535,7 @@ swap_index(struct CCC_Flat_hash_map const *map) {
 
 static inline void
 swap(void *const temp, size_t const ab_size, void *const a, void *const b) {
-    if (unlikely(!a || !b || a == b)) {
+    if (CCC_unlikely(!a || !b || a == b)) {
         return;
     }
     (void)memcpy(temp, a, ab_size);
@@ -1561,23 +1548,6 @@ key_in_index(
     struct CCC_Flat_hash_map const *const map, void const *const index
 ) {
     return (char *)index + map->key_offset;
-}
-
-/** Return n if a power of 2, otherwise returns next greater power of 2. 0 is
-returned if overflow will occur. */
-static inline size_t
-to_power_of_two(size_t const n) {
-    if (is_power_of_two(n)) {
-        return n;
-    }
-    return next_power_of_two(n);
-}
-
-/** Returns next power of 2 greater than n or 0 if no greater can be found. */
-static inline size_t
-next_power_of_two(size_t const n) {
-    unsigned const shifts = count_leading_zeros_size_t(n - 1);
-    return shifts >= sizeof(size_t) * CHAR_BIT ? 0 : (SIZE_MAX >> shifts) + 1;
 }
 
 /** Returns true if n is a power of two. 0 is not considered a power of 2. */
@@ -1602,7 +1572,7 @@ bytes so we are only interested in contiguous bytes from start of user data to
 last byte of tag array. */
 static inline size_t
 mask_to_total_bytes(size_t const sizeof_type, size_t const mask) {
-    if (unlikely(!mask)) {
+    if (CCC_unlikely(!mask)) {
         return 0;
     }
     return mask_to_data_bytes(sizeof_type, mask) + mask_to_tag_bytes(mask);
@@ -1612,7 +1582,7 @@ mask_to_total_bytes(size_t const sizeof_type, size_t const mask) {
 total bytes. This means that `size_t` can no longer index the needed bytes for
 the provided mask capacity. If no overflow occurs the function returns false
 and the result of the arithmetic is stored in result. Use this version when
-requesting a new allocation from un-trusted user input. Use the unchecked
+requesting a new allocation from external user input. Use the unchecked
 version when a valid allocation has already been established on a valid hash
 map.
 
@@ -1639,15 +1609,12 @@ checked_mask_to_total_bytes(
            "overflow"
     );
     *result = 0;
-    if (unlikely(!mask)) {
+    if (CCC_unlikely(!mask)) {
         return CCC_FALSE;
     }
     if (ckd_mul(result, sizeof_type, (mask + 2))
-        || ckd_add(result, *result, (GROUP_COUNT - 1))) {
-        return CCC_TRUE;
-    }
-    *result &= ~(GROUP_COUNT - 1U);
-    if (ckd_add(result, *result, (mask + 1U + GROUP_COUNT))) {
+        || CCC_checked_roundup(result, *result, GROUP_COUNT)
+        || ckd_add(result, *result, (mask + 1U + GROUP_COUNT))) {
         return CCC_TRUE;
     }
     return CCC_FALSE;
@@ -1667,8 +1634,7 @@ static inline size_t
 mask_to_data_bytes(size_t const sizeof_type, size_t const mask) {
     /* Add two because there is always a bonus user data type at the last index
        of the data array for swapping purposes. */
-    return ((sizeof_type * (mask + 2)) + GROUP_COUNT - 1U)
-         & ~(GROUP_COUNT - 1U);
+    return CCC_roundup(sizeof_type * (mask + 2), GROUP_COUNT);
 }
 
 /** Returns the bytes needed for the tag metadata array. This includes the
@@ -1706,11 +1672,6 @@ tags_base_address(
                                             + mask_to_data_bytes(
                                                 sizeof_type, mask
                                             ));
-}
-
-static inline size_t
-max_size_t(size_t const a, size_t const b) {
-    return a > b ? a : b;
 }
 
 static inline CCC_Tribool
@@ -2340,174 +2301,48 @@ group_convert_constant_to_empty_and_full_to_deleted(struct Group group) {
 /** How we count bits can vary depending on the implementation, group size,
 and struct Match_mask width. Keep the bit counting logic separate here so the
 above implementations can simply rely on counting zeros that yields correct
-results for their implementation. Each implementation attempts to use the
-built-ins first and then falls back to manual bit counting. */
+results for their implementation. */
 
 #ifdef CCC_HAS_X86_SIMD
-
-#    if defined(__has_builtin) && __has_builtin(__builtin_ctz)                 \
-        && __has_builtin(__builtin_clz) && __has_builtin(__builtin_clzl)
 
 static_assert(
     sizeof((struct Match_mask){}.v) <= sizeof(unsigned),
     "a struct Match_mask is expected to be smaller than an unsigned due to "
     "available builtins on the given platform."
 );
-
-static inline unsigned
-count_trailing_zeros(struct Match_mask const mask) {
-    static_assert(
-        __builtin_ctz(0x8000) == GROUP_COUNT - 1,
-        "Counting trailing zeros will always result in a valid mask "
-        "based on struct Match_mask width if the mask is not 0, even though "
-        "m is implicitly widened to an int."
-    );
-    return mask.v ? (unsigned)__builtin_ctz(mask.v) : GROUP_COUNT;
-}
-
-static inline unsigned
-count_leading_zeros(struct Match_mask const mask) {
-    static_assert(
-        sizeof((struct Match_mask){}.v) * 2UL == sizeof(unsigned),
-        "a struct Match_mask will be implicitly widened to exactly twice "
-        "its width if non-zero due to builtin functions available."
-    );
-    return mask.v ? (unsigned)__builtin_clz(((unsigned)mask.v) << GROUP_COUNT)
-                  : GROUP_COUNT;
-}
-
-static inline unsigned
-count_leading_zeros_size_t(size_t const n) {
-    static_assert(
-        sizeof(size_t) == sizeof(unsigned long),
-        "Ensure the available builtin works for the platform defined "
-        "size of a size_t."
-    );
-    return n ? (unsigned)__builtin_clzl(n) : sizeof(size_t) * CHAR_BIT;
-}
-
-#    else /* !defined(__has_builtin) || !__has_builtin(__builtin_ctz)          \
-        || !__has_builtin(__builtin_clz) || !__has_builtin(__builtin_clzl) */
-
-enum : size_t {
-    /** @internal Most significant bit of size_t for bit counting. */
-    SIZE_T_MSB = (size_t)1 << ((sizeof(size_t) * CHAR_BIT) - 1),
-};
-
-static inline unsigned
-count_trailing_zeros(struct Match_mask m) {
-    if (!m.v) {
-        return GROUP_COUNT;
-    }
-    unsigned cnt = 0;
-    for (; m.v; cnt += ((m.v & 1U) == 0), m.v >>= 1U) {}
-    return cnt;
-}
-
-static inline unsigned
-count_leading_zeros(struct Match_mask m) {
-    if (!m.v) {
-        return GROUP_COUNT;
-    }
-    unsigned mv = (unsigned)m.v << GROUP_COUNT;
-    unsigned cnt = 0;
-    for (; (mv & (MATCH_MASK_MSB << GROUP_COUNT)) == 0; ++cnt, mv <<= 1U) {}
-    return cnt;
-}
-
-static inline unsigned
-count_leading_zeros_size_t(size_t n) {
-    if (!n) {
-        return sizeof(size_t) * CHAR_BIT;
-    }
-    unsigned cnt = 0;
-    for (; !(n & SIZE_T_MSB); ++cnt, n <<= 1U) {}
-    return cnt;
-}
-
-#    endif /* defined(__has_builtin) && __has_builtin(__builtin_ctz)           \
-        && __has_builtin(__builtin_clz) && __has_builtin(__builtin_clzl) */
-
-#else /* NEON and PORTABLE implementation count bits the same way. */
-
-#    if defined(__has_builtin) && __has_builtin(__builtin_ctzl)                \
-        && __has_builtin(__builtin_clzl)
-
 static_assert(
-    sizeof((struct Match_mask){}.v) == sizeof(long),
-    "builtin assumes an integer width that must be compatible with "
-    "struct Match_mask"
+    ((sizeof(typeof((struct Match_mask){}.v)) * CHAR_BIT) - 1)
+        == GROUP_COUNT - 1,
+    "trailing and leading zeros produces number of bits we expect for mask"
 );
 
 static inline unsigned
 count_trailing_zeros(struct Match_mask const mask) {
-    static_assert(
-        __builtin_ctzl(MATCH_MASK_MSB) / GROUP_COUNT == GROUP_COUNT - 1,
-        "builtin trailing zeros must produce number of bits we "
-        "expect for mask"
-    );
-    return mask.v ? ((unsigned)__builtin_ctzl(mask.v)) / GROUP_COUNT
-                  : GROUP_COUNT;
+    return (unsigned)CCC_count_trailing_zeros(mask.v);
 }
 
 static inline unsigned
 count_leading_zeros(struct Match_mask const mask) {
-    static_assert(
-        __builtin_clzl((typeof((struct Match_mask){}.v))0x1) / GROUP_COUNT
-            == GROUP_COUNT - 1,
-        "builtin trailing zeros must produce number of bits we "
-        "expect for mask"
-    );
-    return mask.v ? ((unsigned)__builtin_clzl(mask.v)) / GROUP_COUNT
-                  : GROUP_COUNT;
+    return (unsigned)CCC_count_leading_zeros(mask.v);
+}
+
+#else /* NEON and PORTABLE implementation count bits the same way. */
+
+static_assert(
+    ((sizeof(typeof((struct Match_mask){}.v)) * CHAR_BIT) - 1) / GROUP_COUNT
+        == GROUP_COUNT - 1,
+    "trailing and leading zeros produces number of bits we expect for mask"
+);
+
+static inline unsigned
+count_trailing_zeros(struct Match_mask const mask) {
+    return (unsigned)CCC_count_trailing_zeros(mask.v) / GROUP_COUNT;
 }
 
 static inline unsigned
-count_leading_zeros_size_t(size_t const n) {
-    static_assert(sizeof(size_t) == sizeof(unsigned long));
-    return n ? ((unsigned)__builtin_clzl(n)) : sizeof(size_t) * CHAR_BIT;
+count_leading_zeros(struct Match_mask const mask) {
+    return (unsigned)CCC_count_leading_zeros(mask.v) / GROUP_COUNT;
 }
-
-#    else /* defined(__has_builtin) && __has_builtin(__builtin_ctzl) &&        \
-             __has_builtin(__builtin_clzl) */
-
-enum : size_t {
-    /** @internal Most significant bit of size_t for bit counting. */
-    SIZE_T_MSB = (size_t)1 << ((sizeof(size_t) * CHAR_BIT) - 1),
-};
-
-static inline unsigned
-count_trailing_zeros(struct Match_mask m) {
-    if (!m.v) {
-        return GROUP_COUNT;
-    }
-    unsigned cnt = 0;
-    for (; m.v; cnt += ((m.v & 1U) == 0), m.v >>= 1U) {}
-    return cnt / GROUP_COUNT;
-}
-
-static inline unsigned
-count_leading_zeros(struct Match_mask m) {
-    if (!m.v) {
-        return GROUP_COUNT;
-    }
-    unsigned cnt = 0;
-    for (; (m.v & MATCH_MASK_MSB) == 0; ++cnt, m.v <<= 1U) {}
-    return cnt / GROUP_COUNT;
-}
-
-static inline unsigned
-count_leading_zeros_size_t(size_t n) {
-    if (!n) {
-        return sizeof(size_t) * CHAR_BIT;
-    }
-    unsigned cnt = 0;
-    for (; (n & SIZE_T_MSB) == 0; ++cnt, n <<= 1U) {}
-    return cnt;
-}
-
-#    endif /* !defined(__has_builtin) || !__has_builtin(__builtin_ctzl) ||     \
-              !__has_builtin(__builtin_clzl) */
 
 #endif /* defined(CCC_HAS_X86_SIMD) */
 

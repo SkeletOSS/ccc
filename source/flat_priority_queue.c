@@ -33,6 +33,7 @@ heapsort implementations when possible.
 #include "ccc/private/private_flat_priority_queue.h"
 #include "ccc/sort.h"
 #include "ccc/types.h"
+#include "source/compiler_utilities.h"
 
 enum : size_t {
     START_CAP = 8,
@@ -62,7 +63,6 @@ static void
 destroy_each(struct CCC_Flat_priority_queue *, CCC_Destructor const *);
 static void swap(void *, size_t, void *, void *);
 static void *at(CCC_Flat_buffer const *buffer, size_t i);
-static unsigned count_leading_zeros_size_t(size_t n);
 
 /*=====================       Interface      ================================*/
 
@@ -604,8 +604,8 @@ bottom_up_reheap(
            height` to `height + 2` which is significant for data sizes that can
            vary significantly in this type of generic container. */
         (void)memcpy(temp, at(buffer, root), buffer->sizeof_type);
-        size_t tree_levels = count_leading_zeros_size_t(root + 1)
-                           - count_leading_zeros_size_t(leaf + 1);
+        size_t tree_levels = CCC_count_leading_zeros(root + 1)
+                           - CCC_count_leading_zeros(leaf + 1);
         while (tree_levels--) {
             size_t const vacant_ancestor_index
                 = ((leaf + 1) >> (tree_levels + 1)) - 1;
@@ -627,7 +627,7 @@ order. This element may move closer to the root index of 0. */
 static inline size_t
 bubble_up(
     CCC_Flat_buffer const *const buffer,
-    size_t index,
+    size_t const index,
     void *const temp,
     CCC_Order const order,
     CCC_Comparator const *const comparator
@@ -779,33 +779,3 @@ destroy_each(
         });
     }
 }
-
-#if defined(__has_builtin) && __has_builtin(__builtin_clzl)
-
-static inline unsigned
-count_leading_zeros_size_t(size_t const n) {
-    static_assert(
-        sizeof(size_t) == sizeof(unsigned long),
-        "Ensure the available builtin works for the platform defined "
-        "size of a size_t."
-    );
-    return n ? (unsigned)__builtin_clzl(n) : sizeof(size_t) * CHAR_BIT;
-}
-
-#else /* !defined(__has_builtin) || !__has_builtin(__builtin_clzl) */
-
-static inline unsigned
-count_leading_zeros_size_t(size_t n) {
-    enum : size_t {
-        /** @internal Most significant bit of size_t for bit counting. */
-        SIZE_T_MSB = (size_t)1 << ((sizeof(size_t) * CHAR_BIT) - 1),
-    };
-    if (!n) {
-        return sizeof(size_t) * CHAR_BIT;
-    }
-    unsigned cnt = 0;
-    for (; !(n & SIZE_T_MSB); ++cnt, n <<= 1U) {}
-    return cnt;
-}
-
-#endif /* defined(__has_builtin) && __has_builtin(__builtin_clzl) */

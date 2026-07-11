@@ -40,6 +40,7 @@ the dynamic resizing case. */
 #include "ccc/specialized/array_adaptive_map.h"
 #include "ccc/specialized/private/private_array_adaptive_map.h"
 #include "ccc/types.h"
+#include "source/compiler_utilities.h"
 
 /*==========================  Type Declarations   ===========================*/
 
@@ -63,13 +64,6 @@ enum : uint8_t {
 };
 
 /*========================   Data Alignment Test   ==========================*/
-
-/** @internal A macro version of the runtime alignment operations we perform
-for calculating bytes. This way we can use in static assert. The user data type
-may not be the same alignment as the nodes and therefore the nodes array must
-start at next aligned byte. */
-#define roundup(bytes_to_round, alignment)                                     \
-    (((bytes_to_round) + (alignment) - 1) & ~((alignment) - 1))
 
 enum : size_t {
     /** @internal Test capacity. */
@@ -107,7 +101,7 @@ and not a fixed type. */
 static_assert(
     (char const *)&static_data_nodes_layout_test.nodes[TCAP]
             - (char const *)&static_data_nodes_layout_test.data[0]
-        == roundup(
+        == CCC_roundup(
                (sizeof(*static_data_nodes_layout_test.data) * TCAP),
                ALIGNOF_NODE
            ) + (SIZEOF_NODE * TCAP),
@@ -117,7 +111,7 @@ static_assert(
 );
 static_assert(
     (char const *)&static_data_nodes_layout_test.data
-            + roundup(
+            + CCC_roundup(
                 (sizeof(*static_data_nodes_layout_test.data) * TCAP),
                 ALIGNOF_NODE
             )
@@ -174,7 +168,6 @@ static CCC_Tribool validate(struct CCC_Array_adaptive_map const *);
 static void init_node(struct CCC_Array_adaptive_map const *, size_t);
 static void swap(void *, size_t, void *, void *);
 static void link(struct CCC_Array_adaptive_map *, size_t, enum Branch, size_t);
-static size_t max_size_t(size_t, size_t);
 static void
 delete_nodes(struct CCC_Array_adaptive_map const *, CCC_Destructor const *);
 
@@ -671,7 +664,7 @@ CCC_array_adaptive_map_clear_and_free(
     (void)allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .alignment = max_size_t(ALIGNOF_NODE, map->alignof_type),
+        .alignment = CCC_max(ALIGNOF_NODE, map->alignof_type),
         .context = allocator->context,
     });
     map->data = NULL;
@@ -801,7 +794,7 @@ allocate_slot(
     if (!old_count || old_count == old_cap) {
         assert(!map->free_list);
         if (old_count == old_cap) {
-            if (resize(map, max_size_t(old_cap * 2, 8), allocator)
+            if (resize(map, CCC_max(old_cap * 2, 8U), allocator)
                 != CCC_RESULT_OK) {
                 return 0;
             }
@@ -817,7 +810,7 @@ allocate_slot(
             node_at(map, i)->next_free = prev;
         }
         map->free_list = prev;
-        map->count = max_size_t(old_count, 1);
+        map->count = CCC_max(old_count, 1U);
     }
     assert(map->free_list);
     ++map->count;
@@ -838,7 +831,7 @@ resize(
     void *const new_data = allocator->allocate((CCC_Allocator_arguments){
         .input = NULL,
         .bytes = total_bytes(map->sizeof_type, new_capacity),
-        .alignment = max_size_t(ALIGNOF_NODE, map->alignof_type),
+        .alignment = CCC_max(ALIGNOF_NODE, map->alignof_type),
         .context = allocator->context,
     });
     if (!new_data) {
@@ -849,7 +842,7 @@ resize(
     allocator->allocate((CCC_Allocator_arguments){
         .input = map->data,
         .bytes = 0,
-        .alignment = max_size_t(ALIGNOF_NODE, map->alignof_type),
+        .alignment = CCC_max(ALIGNOF_NODE, map->alignof_type),
         .context = allocator->context,
     });
     map->data = new_data;
@@ -1085,7 +1078,7 @@ means the value returned from this function may or may not be slightly larger
 then the raw size of just user elements if rounding up must occur. */
 static inline size_t
 data_bytes(size_t const sizeof_type, size_t const capacity) {
-    return ((sizeof_type * capacity) + ALIGNOF_NODE - 1) & ~(ALIGNOF_NODE - 1);
+    return CCC_roundup(sizeof_type * capacity, ALIGNOF_NODE);
 }
 
 /** Calculates the number of bytes needed for the nodes array without any
@@ -1217,11 +1210,6 @@ key_in_slot(
     struct CCC_Array_adaptive_map const *map, void const *const user_struct
 ) {
     return (char *)user_struct + map->key_offset;
-}
-
-static inline size_t
-max_size_t(size_t const a, size_t const b) {
-    return a > b ? a : b;
 }
 
 /*===========================   Validation   ===============================*/

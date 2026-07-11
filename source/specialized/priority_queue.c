@@ -562,7 +562,7 @@ pointer is to support faster deletes and decrease key operations.
 ┌─<B>─┐  ┌─<C>──<B>─┐ ┌─<D>──<C>──<B>─┐
 └─────┘  └──────────┘ └───────────────┘
 
-Pairing in the delete min phase would then start at B in this example and work
+Pairing in the delete root phase would then start at B in this example and work
 towards D. That is the oldest to youngest order mentioned in the paper and
 helps set up the one-pass back-to-front variant mentioned in the paper allowing
 the same runtime guarantees as the two pass standard pairing heap. */
