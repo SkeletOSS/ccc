@@ -74,9 +74,10 @@ compile time or runtime.
 arguments.
 @note Argument promotion to the wider type ensures that smaller integer types
 are not accidentally truncated during alignment arithmetic.
-@warning The alignment argument is evaluated twice. Ensure the alignment
-expression does not have side-effects. This should be easy as it is uncommon to
-determine alignment from an expression with side-effects. */
+@warning The alignment argument is evaluated twice to support compile time use
+of this macro. Ensure the alignment expression does not have side-effects. This
+should be easy as it is uncommon to determine alignment from an expression with
+side-effects. */
 #define CCC_roundup(integer, alignment) CCC_private_roundup(integer, alignment)
 
 /** @internal
@@ -96,7 +97,7 @@ fit into the type pointed to by result_pointer; false otherwise.
 @brief Returns the log base 2 of the provided integer at compile or runtime.
 @param[in] integer the integer, up to 64 bits in width, of which to find the
 log.
-@return the int count of the log base 2 of the provided integer.
+@return the unsigned count of the log base 2 of the provided integer.
 @warning This macro accepts a maximum integer width of 64, otherwise bit
 truncation will occur. */
 #define CCC_log2(integer) CCC_private_log2(integer)
@@ -110,7 +111,7 @@ Type safe bit manipulation functions. */
 /** @internal
 @brief Count the number of leading zero bits in an unsigned integer.
 @param[in] integer the unsigned integer value to inspect.
-@return The int count of leading zeros. If the input is zero, the bit width
+@return The unsigned count of leading zeros. If the input is zero, the bit width
 count of the input type is returned.
 @note Behavior is well-defined for input 0. */
 #define CCC_count_leading_zeros(integer)                                       \
@@ -119,8 +120,8 @@ count of the input type is returned.
 /** @internal
 @brief Count the number of trailing zero bits in an unsigned integer.
 @param[in] integer the unsigned integer value to inspect.
-@return The int count of trailing zeros. If the input is zero, the bit width
-count of the input type is returned.
+@return The unsigned count of trailing zeros. If the input is zero, the bit
+width count of the input type is returned.
 @note Behavior is well-defined for input 0. */
 #define CCC_count_trailing_zeros(integer)                                      \
     CCC_private_count_trailing_zeros(integer)
@@ -128,7 +129,7 @@ count of the input type is returned.
 /** @internal
 @brief Count the total number of set 1 bits in an unsigned integer.
 @param[in] integer the unsigned integer value to inspect.
-@return The int count of bits set to the value 1. */
+@return The unsigned count of bits set to the value 1. */
 #define CCC_popcount(integer) CCC_private_popcount(integer)
 
 /** @internal
