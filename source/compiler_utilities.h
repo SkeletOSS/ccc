@@ -23,8 +23,10 @@ user facing and will not be exported as an interface. This file includes
 detection of compiler built-ins such as bit utilities. It attempts to use bit
 utilities from the new `__builtin_stdc_*` family when available as these are at
 the cutting edge of C23's new `stdbit.h` standard. However, sane fallback
-implementations are always provided. See the documented interface for all
-available macros and functions. */
+implementations are always provided. Keep in mind that the portable fallback
+implementations may not be usable at compile time. However, because this library
+primarily targets GCC and Clang compilers, the builtins used are almost always
+available. */
 #ifndef CCC_COMPILER_UTILITIES_H
 #define CCC_COMPILER_UTILITIES_H
 
