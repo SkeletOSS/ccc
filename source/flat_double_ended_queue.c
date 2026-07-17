@@ -13,6 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License. */
 /** C23 provided headers. */
 #include <limits.h>
+#include <stdckdint.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -686,11 +687,11 @@ maybe_resize(
     size_t const to_add,
     CCC_Allocator const *const allocator
 ) {
-    size_t required = queue->buffer.count + to_add;
-    if (required < queue->buffer.count) {
-        return CCC_RESULT_ARGUMENT_ERROR;
+    size_t required_capacity = 0;
+    if (ckd_add(&required_capacity, queue->buffer.count, to_add)) {
+        return CCC_RESULT_ALLOCATOR_ERROR;
     }
-    if (required <= queue->buffer.capacity) {
+    if (required_capacity <= queue->buffer.capacity) {
         return CCC_RESULT_OK;
     }
     if (!allocator->allocate) {
@@ -698,13 +699,18 @@ maybe_resize(
     }
     size_t const sizeof_type = queue->buffer.sizeof_type;
     if (!queue->buffer.capacity && to_add == 1) {
-        required = START_CAPACITY;
-    } else if (to_add == 1) {
-        required = queue->buffer.capacity * 2;
+        required_capacity = START_CAPACITY;
+    } else if (to_add == 1
+               && ckd_mul(&required_capacity, queue->buffer.capacity, 2)) {
+        return CCC_RESULT_ALLOCATOR_ERROR;
+    }
+    size_t total_bytes = 0;
+    if (ckd_mul(&total_bytes, required_capacity, sizeof_type)) {
+        return CCC_RESULT_ALLOCATOR_ERROR;
     }
     void *const new_data = allocator->allocate((CCC_Allocator_arguments){
         .input = NULL,
-        .bytes = sizeof_type * required,
+        .bytes = total_bytes,
         .alignment = queue->buffer.alignof_type,
         .context = allocator->context,
     });
@@ -731,7 +737,7 @@ maybe_resize(
     (void)CCC_flat_buffer_allocate(&queue->buffer, 0, allocator);
     queue->buffer.data = new_data;
     queue->front = 0;
-    queue->buffer.capacity = required;
+    queue->buffer.capacity = required_capacity;
     return CCC_RESULT_OK;
 }
 

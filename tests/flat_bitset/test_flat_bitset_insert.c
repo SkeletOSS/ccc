@@ -123,7 +123,7 @@ check_static_begin(flat_bitset_test_reserve_fail) {
     );
     check(
         CCC_flat_bitset_reserve(&bs, SIZE_MAX, &allocator),
-        CCC_RESULT_ARGUMENT_ERROR
+        CCC_RESULT_ALLOCATOR_ERROR
     );
     check_end((void)clear_and_free(&bs, &std_allocator););
 }

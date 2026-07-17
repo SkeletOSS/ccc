@@ -147,7 +147,7 @@ static void insert(struct CCC_Array_adaptive_map *, size_t n);
 static void *key_in_slot(struct CCC_Array_adaptive_map const *, void const *);
 static size_t
 allocate_slot(struct CCC_Array_adaptive_map *, CCC_Allocator const *);
-static size_t total_bytes(size_t, size_t);
+static CCC_Tribool checked_total_bytes(size_t *, size_t, size_t);
 static CCC_Handle_range equal_range(
     struct CCC_Array_adaptive_map *, void const *, void const *, enum Branch
 );
@@ -794,8 +794,11 @@ allocate_slot(
     if (!old_count || old_count == old_cap) {
         assert(!map->free_list);
         if (old_count == old_cap) {
-            if (resize(map, CCC_max(old_cap * 2, 8U), allocator)
-                != CCC_RESULT_OK) {
+            size_t new_cap = 0;
+            if (ckd_mul(&new_cap, old_cap, 2)) {
+                return 0;
+            }
+            if (resize(map, CCC_max(new_cap, 8U), allocator) != CCC_RESULT_OK) {
                 return 0;
             }
         } else {
@@ -828,9 +831,13 @@ resize(
     if (!allocator->allocate) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
+    size_t new_bytes = 0;
+    if (checked_total_bytes(&new_bytes, map->sizeof_type, new_capacity)) {
+        return CCC_RESULT_ALLOCATOR_ERROR;
+    }
     void *const new_data = allocator->allocate((CCC_Allocator_arguments){
         .input = NULL,
-        .bytes = total_bytes(map->sizeof_type, new_capacity),
+        .bytes = new_bytes,
         .alignment = CCC_max(ALIGNOF_NODE, map->alignof_type),
         .context = allocator->context,
     });
@@ -1096,10 +1103,31 @@ different from the preceding array. In that case it is the preceding array's
 responsibility to add padding bytes to its end such that the next array begins
 on an aligned byte boundary for its own type. This means that the bytes returned
 by this function may be greater than summing the (sizeof(type) * capacity) for
-each array in the conceptual struct. */
-static inline size_t
-total_bytes(size_t sizeof_type, size_t const capacity) {
-    return data_bytes(sizeof_type, capacity) + nodes_bytes(capacity);
+each array in the conceptual struct.
+
+This functions checks for overflow at every step of calculating the size of
+this contiguous allocation and returns CCC_TRUE if overflow occured, otherwise
+CCC_FALSE. This function should be used when capacity is accepted from an
+external source such as user input. */
+static inline CCC_Tribool
+checked_total_bytes(
+    size_t *const result, size_t const sizeof_type, size_t const capacity
+) {
+    size_t node_byte_count = 0;
+    if (ckd_mul(&node_byte_count, capacity, (size_t)SIZEOF_NODE)) {
+        return CCC_TRUE;
+    }
+    *result = 0;
+    if (ckd_mul(result, sizeof_type, capacity)) {
+        return CCC_TRUE;
+    }
+    if (CCC_checked_roundup(result, *result, ALIGNOF_NODE)) {
+        return CCC_TRUE;
+    }
+    if (ckd_add(result, *result, node_byte_count)) {
+        return CCC_TRUE;
+    }
+    return CCC_FALSE;
 }
 
 /** Returns the base of the node array relative to the data base pointer. This

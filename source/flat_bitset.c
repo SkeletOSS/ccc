@@ -31,6 +31,7 @@ and bug doubling. */
 /** C23 provided headers. */
 #include <assert.h>
 #include <limits.h>
+#include <stdckdint.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -119,6 +120,8 @@ static Bit_block on(size_t);
 static void fix_end(struct CCC_Flat_bitset *);
 static CCC_Tribool status(Bit_block const *, size_t);
 static size_t block_count(size_t);
+static inline CCC_Tribool
+checked_block_count(Block_count *result, size_t bit_count);
 static CCC_Tribool
 any_or_none_range(struct CCC_Flat_bitset const *, size_t, size_t, CCC_Tribool);
 static CCC_Tribool all_range(struct CCC_Flat_bitset const *, size_t, size_t);
@@ -1043,31 +1046,48 @@ maybe_resize(
     size_t const to_add,
     CCC_Allocator const *const allocator
 ) {
-    size_t bits_needed = bitset->count + to_add;
+    size_t bits_needed = 0;
+    if (ckd_add(&bits_needed, bitset->count, to_add)) {
+        return CCC_RESULT_ALLOCATOR_ERROR;
+    }
     if (bits_needed <= bitset->capacity) {
         return CCC_RESULT_OK;
     }
     if (!allocator->allocate) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
-    if (to_add == 1) {
-        bits_needed <<= 1;
+    if (to_add == 1 && ckd_mul(&bits_needed, bits_needed, 2)) {
+        return CCC_RESULT_ALLOCATOR_ERROR;
     }
     static_assert(
         (BLOCK_BITS & (BLOCK_BITS - 1)) == 0,
         "rounding trick only works for powers of 2"
     );
-    size_t const new_capacity = CCC_roundup(bits_needed, BLOCK_BITS);
-    if (new_capacity <= bitset->capacity) {
-        return CCC_RESULT_ARGUMENT_ERROR;
+    size_t new_capacity = 0;
+    if (CCC_checked_roundup(&new_capacity, bits_needed, BLOCK_BITS)) {
+        return CCC_RESULT_ALLOCATOR_ERROR;
     }
-    size_t const new_bytes
-        = block_count(new_capacity - bitset->count) * SIZEOF_BLOCK;
+    size_t new_bytes = 0;
+    if (checked_block_count(&new_bytes, new_capacity - bitset->count)
+        || ckd_mul(&new_bytes, new_bytes, (size_t)SIZEOF_BLOCK)) {
+        return CCC_RESULT_ALLOCATOR_ERROR;
+    }
+    /* Don't need to check old allocation for overflow because it has already
+       been successfully allocated. */
     size_t const old_bytes
         = bitset->count ? block_count(bitset->count) * SIZEOF_BLOCK : 0;
+    size_t total_allocation_bytes = 0;
+    if (checked_block_count(&total_allocation_bytes, new_capacity)
+        || ckd_mul(
+            &total_allocation_bytes,
+            total_allocation_bytes,
+            (size_t)SIZEOF_BLOCK
+        )) {
+        return CCC_RESULT_ALLOCATOR_ERROR;
+    }
     Bit_block *const new_data = allocator->allocate((CCC_Allocator_arguments){
         .input = bitset->blocks,
-        .bytes = block_count(new_capacity) * SIZEOF_BLOCK,
+        .bytes = total_allocation_bytes,
         .alignment = alignof(*bitset->blocks),
         .context = allocator->context,
     });
@@ -1584,7 +1604,7 @@ bit_count_index(size_t const flat_bitset_index) {
 }
 
 /** Returns the number of blocks required to store the given bits. Assumes bits
-is non-zero. For any bits > 1 the block count is always less than bits.*/
+is non-zero. For any bits > 1 the block count is always less than bits. */
 static inline Block_count
 block_count(size_t const bit_count) {
     static_assert(
@@ -1594,6 +1614,21 @@ block_count(size_t const bit_count) {
     );
     assert(bit_count && "calculating block count for non-empty bitset");
     return (bit_count + (BLOCK_BITS - 1)) >> BLOCK_BITS_LOG2;
+}
+
+/** Returns the number of blocks required to store the given bits. Assumes bits
+is non-zero. For any bits > 1 the block count is always less than bits.
+
+This function checks for overflow when obtaining the count and returns CCC_TRUE
+if overflow occured otherwise CCC_FALSE. */
+static inline CCC_Tribool
+checked_block_count(Block_count *const result, size_t const bit_count) {
+    assert(bit_count && "calculating block count for non-empty bitset");
+    if (ckd_add(result, bit_count, (BLOCK_BITS - 1))) {
+        return CCC_TRUE;
+    }
+    *result >>= BLOCK_BITS_LOG2;
+    return CCC_FALSE;
 }
 
 /** Returns true if the on bit mask is present in the block. All one bits in the

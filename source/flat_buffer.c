@@ -12,6 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License. */
 /** C23 provided headers. */
+#include <stdckdint.h>
 #include <stddef.h>
 
 /** CCC provided headers. */
@@ -43,9 +44,13 @@ CCC_flat_buffer_allocate(
     if (!allocator->allocate) {
         return CCC_RESULT_NO_ALLOCATION_FUNCTION;
     }
+    size_t total_bytes = 0;
+    if (ckd_mul(&total_bytes, capacity, buffer->sizeof_type)) {
+        return CCC_RESULT_ALLOCATOR_ERROR;
+    }
     void *const new_data = allocator->allocate((CCC_Allocator_arguments){
         .input = buffer->data,
-        .bytes = buffer->sizeof_type * capacity,
+        .bytes = total_bytes,
         .alignment = buffer->alignof_type,
         .context = allocator->context,
     });
@@ -66,16 +71,23 @@ CCC_flat_buffer_reserve(
     if (!buffer || !allocator || !allocator->allocate || !to_add) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    size_t needed = buffer->count + to_add;
-    if (needed <= buffer->capacity) {
+    size_t new_capacity = 0;
+    if (ckd_add(&new_capacity, buffer->count, to_add)) {
+        return CCC_RESULT_ALLOCATOR_ERROR;
+    }
+    if (new_capacity <= buffer->capacity) {
         return CCC_RESULT_OK;
     }
-    if (needed < START_CAPACITY) {
-        needed = START_CAPACITY;
+    if (new_capacity < START_CAPACITY) {
+        new_capacity = START_CAPACITY;
+    }
+    size_t total_bytes = 0;
+    if (ckd_mul(&total_bytes, new_capacity, buffer->sizeof_type)) {
+        return CCC_RESULT_ALLOCATOR_ERROR;
     }
     void *const new_data = allocator->allocate((CCC_Allocator_arguments){
         .input = buffer->data,
-        .bytes = buffer->sizeof_type * needed,
+        .bytes = total_bytes,
         .alignment = buffer->alignof_type,
         .context = allocator->context,
     });
@@ -83,7 +95,7 @@ CCC_flat_buffer_reserve(
         return CCC_RESULT_ALLOCATOR_ERROR;
     }
     buffer->data = new_data;
-    buffer->capacity = needed;
+    buffer->capacity = new_capacity;
     return CCC_RESULT_OK;
 }
 
@@ -167,8 +179,12 @@ CCC_flat_buffer_allocate_back(
         return NULL;
     }
     if (buffer->count == buffer->capacity) {
+        size_t new_capacity = 0;
+        if (ckd_mul(&new_capacity, buffer->capacity, 2)) {
+            return NULL;
+        }
         CCC_Result const resize_res = CCC_flat_buffer_allocate(
-            buffer, CCC_max(buffer->capacity * 2, START_CAPACITY), allocator
+            buffer, CCC_max(new_capacity, START_CAPACITY), allocator
         );
         if (resize_res != CCC_RESULT_OK) {
             return NULL;
@@ -284,8 +300,12 @@ CCC_flat_buffer_insert(
         return CCC_flat_buffer_push_back(buffer, data, allocator);
     }
     if (buffer->count == buffer->capacity) {
+        size_t new_capacity = 0;
+        if (ckd_mul(&new_capacity, buffer->count, 2)) {
+            return NULL;
+        }
         CCC_Result const r = CCC_flat_buffer_allocate(
-            buffer, CCC_max(buffer->count * 2, START_CAPACITY), allocator
+            buffer, CCC_max(new_capacity, START_CAPACITY), allocator
         );
         if (r != CCC_RESULT_OK) {
             return NULL;
@@ -445,7 +465,10 @@ CCC_flat_buffer_count_plus(CCC_Flat_buffer *const buffer, size_t const count) {
     if (!buffer) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
-    size_t const new_count = buffer->count + count;
+    size_t new_count = 0;
+    if (ckd_add(&new_count, buffer->count, count)) {
+        return CCC_RESULT_ALLOCATOR_ERROR;
+    }
     if (new_count > buffer->capacity) {
         buffer->count = buffer->capacity;
         return CCC_RESULT_ARGUMENT_ERROR;
@@ -485,6 +508,7 @@ CCC_flat_buffer_count_bytes(CCC_Flat_buffer const *buffer) {
     if (!buffer) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
+    /* No overflow check needed if buffer already exists. */
     return (CCC_Count){.count = buffer->count * buffer->sizeof_type};
 }
 
@@ -493,6 +517,7 @@ CCC_flat_buffer_capacity_bytes(CCC_Flat_buffer const *buffer) {
     if (!buffer) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
+    /* No overflow check needed if buffer already exists. */
     return (CCC_Count){
         .count = buffer->capacity * buffer->sizeof_type,
     };
