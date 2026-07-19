@@ -1,7 +1,7 @@
 # This version ensures we have access to file sets.
 cmake_minimum_required(VERSION 3.23)
 project("ccc" 
-    VERSION 0.81.2
+    VERSION 0.81.3
     LANGUAGES C
     DESCRIPTION "The C Container Collection offers allocator agnostic data structures for C programmers."
     HOMEPAGE_URL "https://github.com/SkeletOSS/ccc"
