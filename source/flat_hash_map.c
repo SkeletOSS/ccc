@@ -2111,9 +2111,12 @@ to_little_endian(struct Match_mask mask) {
 #    if defined(__has_builtin) && __has_builtin(__builtin_bswap64)
     mask.v = __builtin_bswap64(mask.v);
 #    else
-    m.v = (m.v & 0x00000000FFFFFFFF) << 32 | (m.v & 0xFFFFFFFF00000000) >> 32;
-    m.v = (m.v & 0x0000FFFF0000FFFF) << 16 | (m.v & 0xFFFF0000FFFF0000) >> 16;
-    m.v = (m.v & 0x00FF00FF00FF00FF) << 8 | (m.v & 0xFF00FF00FF00FF00) >> 8;
+    mask.v = (mask.v & 0x00000000FFFFFFFF) << 32
+           | (mask.v & 0xFFFFFFFF00000000) >> 32;
+    mask.v = (mask.v & 0x0000FFFF0000FFFF) << 16
+           | (mask.v & 0xFFFF0000FFFF0000) >> 16;
+    mask.v = (mask.v & 0x00FF00FF00FF00FF) << 8
+           | (mask.v & 0xFF00FF00FF00FF00) >> 8;
 #    endif
     return mask;
 }
