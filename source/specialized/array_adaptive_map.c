@@ -83,13 +83,13 @@ correct regardless of backing storage as a fixed map or heap allocation.
 Use an int because that will force the nodes array to be wary of
 where to start. The nodes are 8 byte aligned but an int is 4. This means the
 nodes need to start after a 4 byte buffer of padding at end of data array. */
-static __auto_type const static_data_nodes_layout_test
+[[maybe_unused]] static __auto_type const static_data_nodes_layout_test
     = CCC_array_adaptive_map_storage_for((int const[TCAP]){});
 /** Some assumptions in the code assume that nodes array is last so ensure that
 is the case here. Also good to assume user data comes first. */
 static_assert(
-    (char const *)static_data_nodes_layout_test.data
-        < (char const *)static_data_nodes_layout_test.nodes,
+    offsetof(typeof(static_data_nodes_layout_test), data)
+        < offsetof(typeof(static_data_nodes_layout_test), nodes),
     "The order of the arrays in a Struct of Arrays map is data, then "
     "nodes."
 );
@@ -99,8 +99,8 @@ important for the nodes pointer to be set to the correct aligned position and
 so that we allocate enough bytes for our single allocation if the map is dynamic
 and not a fixed type. */
 static_assert(
-    (char const *)&static_data_nodes_layout_test.nodes[TCAP]
-            - (char const *)&static_data_nodes_layout_test.data[0]
+    offsetof(typeof(static_data_nodes_layout_test), nodes[TCAP])
+            - offsetof(typeof(static_data_nodes_layout_test), data[0])
         == CCC_roundup(
                (sizeof(*static_data_nodes_layout_test.data) * TCAP),
                ALIGNOF_NODE
@@ -110,12 +110,12 @@ static_assert(
     "stored in that range. Alignment of user data must be considered."
 );
 static_assert(
-    (char const *)&static_data_nodes_layout_test.data
+    offsetof(typeof(static_data_nodes_layout_test), data)
             + CCC_roundup(
                 (sizeof(*static_data_nodes_layout_test.data) * TCAP),
                 ALIGNOF_NODE
             )
-        == (char const *)&static_data_nodes_layout_test.nodes,
+        == offsetof(typeof(static_data_nodes_layout_test), nodes),
     "The start of the nodes array must begin at the next aligned "
     "byte given alignment of a node."
 );

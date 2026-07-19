@@ -133,25 +133,25 @@ a fixed map or heap allocation.
 Use an int because that will force the nodes array to be wary of
 where to start. The nodes are 8 byte aligned but an int is 4. This means the
 nodes need to start after 4 byte buffer of padding at end of data array. */
-static __auto_type const static_data_nodes_parity_layout_test
+[[maybe_unused]] static __auto_type const static_data_nodes_parity_layout_test
     = CCC_private_array_tree_map_storage_for((int const[TCAP]){});
 /** Some assumptions in the code assume that parity array is last so ensure that
 is the case here. Also good to assume user data comes first. */
 static_assert(
-    ((char const *)static_data_nodes_parity_layout_test.data
-     < (char const *)static_data_nodes_parity_layout_test.nodes),
+    (offsetof(typeof(static_data_nodes_parity_layout_test), data)
+     < offsetof(typeof(static_data_nodes_parity_layout_test), nodes)),
     "The order of the arrays in a Struct of Arrays map is user data "
     "first, nodes second."
 );
 static_assert(
-    ((char const *)static_data_nodes_parity_layout_test.nodes
-     < (char const *)static_data_nodes_parity_layout_test.parity),
+    (offsetof(typeof(static_data_nodes_parity_layout_test), nodes)
+     < offsetof(typeof(static_data_nodes_parity_layout_test), parity)),
     "The order of the arrays in a Struct of Arrays map is internal "
     "nodes second, parity third."
 );
 static_assert(
-    (char const *)static_data_nodes_parity_layout_test.data
-        < (char const *)static_data_nodes_parity_layout_test.parity,
+    offsetof(typeof(static_data_nodes_parity_layout_test), data)
+        < offsetof(typeof(static_data_nodes_parity_layout_test), parity),
     "The order of the arrays in a Struct of Arrays map is data, then "
     "nodes, then parity."
 );
@@ -161,9 +161,10 @@ important for the nodes and parity pointer to be set to the correct aligned
 positions and so that we allocate enough bytes for our single allocation if
 the map is dynamic and not a fixed type. */
 static_assert(
-    (char const *)&static_data_nodes_parity_layout_test
-                .parity[CCC_private_array_tree_map_blocks(TCAP)]
-            - (char const *)&static_data_nodes_parity_layout_test.data[0]
+    offsetof(
+        typeof(static_data_nodes_parity_layout_test),
+        parity[CCC_private_array_tree_map_blocks(TCAP)]
+    ) - offsetof(typeof(static_data_nodes_parity_layout_test), data[0])
         == CCC_roundup(
                (sizeof(*static_data_nodes_parity_layout_test.data) * TCAP),
                ALIGNOF_NODE
@@ -174,23 +175,23 @@ static_assert(
     "stored in that range. Alignment of user data must be considered."
 );
 static_assert(
-    (char const *)&static_data_nodes_parity_layout_test.data
+    offsetof(typeof(static_data_nodes_parity_layout_test), data)
             + CCC_roundup(
                 (sizeof(*static_data_nodes_parity_layout_test.data) * TCAP),
                 ALIGNOF_NODE
             )
-        == (char const *)&static_data_nodes_parity_layout_test.nodes,
+        == offsetof(typeof(static_data_nodes_parity_layout_test), nodes),
     "The start of the nodes array must begin at the next aligned "
     "byte given alignment of a node."
 );
 static_assert(
-    (char const *)&static_data_nodes_parity_layout_test.parity
-        == ((char const *)&static_data_nodes_parity_layout_test.data
-            + CCC_roundup(
-                (sizeof(*static_data_nodes_parity_layout_test.data) * TCAP),
-                ALIGNOF_NODE
-            )
-            + CCC_roundup((SIZEOF_NODE * TCAP), ALIGNOF_PARITY)),
+    offsetof(typeof(static_data_nodes_parity_layout_test), parity)
+        == offsetof(typeof(static_data_nodes_parity_layout_test), data)
+               + CCC_roundup(
+                   (sizeof(*static_data_nodes_parity_layout_test.data) * TCAP),
+                   ALIGNOF_NODE
+               )
+               + CCC_roundup((SIZEOF_NODE * TCAP), ALIGNOF_PARITY),
     "The start of the parity array must begin at the next aligned byte given "
     "alignment of both the data and nodes array."
 );
