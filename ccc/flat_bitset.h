@@ -458,8 +458,9 @@ to CCC_FALSE.
 @return the result of the operation. OK if successful, or an input error if
 bitset is NULL or the range is invalid by position, count, or both.
 
-Note that a range is defined from `[index, index + count)`. This is equivalent
-to moving from Least to Most Significant bit in an integer. */
+Note that a range is defined from
+`[range_start_index, range_start_index + )`. This is equivalent to moving from
+Least to Most Significant bit in an integer. */
 CCC_Result CCC_flat_bitset_reset_range(
     CCC_Flat_bitset *bitset, size_t range_start_index, size_t range_bit_count
 );
@@ -505,7 +506,8 @@ Find bits with a specific status. */
 CCC_TRIBOOL_ERROR if bitset is NULL. */
 CCC_Tribool CCC_flat_bitset_any(CCC_Flat_bitset const *bitset);
 
-/** @brief Return true if any bits are 1 in the range `[index, index + count)`.
+/** @brief Return true if any bits are 1 in the range
+`[range_start_index, range_start_index + range_bit_count)`.
 @param[in] bitset a pointer to the bit set.
 @param[in] range_start_index the starting position.
 @param[in] range_bit_count the size of the range to check.
@@ -524,7 +526,8 @@ CCC_Tribool CCC_flat_bitset_any_range(
 CCC_TRIBOOL_ERROR if bitset is NULL. */
 CCC_Tribool CCC_flat_bitset_none(CCC_Flat_bitset const *bitset);
 
-/** @brief Return true if all bits are 0 in the range `[index, index + count)`.
+/** @brief Return true if all bits are 0 in the range
+`[range_start_index, range_start_index + range_bit_count)`.
 @param[in] bitset a pointer to the bit set.
 @param[in] range_start_index the starting position.
 @param[in] range_bit_count the size of the range to check.
@@ -544,7 +547,7 @@ CCC_TRIBOOL_ERROR if bitset is NULL. */
 CCC_Tribool CCC_flat_bitset_all(CCC_Flat_bitset const *bitset);
 
 /** @brief Return true if all bits are set to 1 in the range
-`[index, index + count)`.
+`[range_start_index, range_start_index + range_bit_count)`.
 @param[in] bitset a pointer to the bit set.
 @param[in] range_start_index the starting position.
 @param[in] range_bit_count the size of the range to check.
@@ -565,7 +568,7 @@ NULL. */
 CCC_Count CCC_flat_bitset_first_trailing_one(CCC_Flat_bitset const *bitset);
 
 /** @brief Return the index of the first trailing bit set to 1 in the range
-`[i, index + count)`.
+`[range_start_index, range_start_index + range_bit_count)`.
 @param[in] bitset a pointer to the bit set.
 @param[in] range_start_index the starting index to search.
 @param[in] range_bit_count the size of the range to check.
@@ -591,7 +594,8 @@ CCC_Count CCC_flat_bitset_first_trailing_ones(
 );
 
 /** @brief Returns the index of the start of the first trailing number of
-contiguous 1 bits in the range `[index, index + count)`.
+contiguous 1 bits in the range
+`[range_start_index, range_start_index + range_bit_count)`.
 @param[in] bitset a pointer to the bit set.
 @param[in] range_start_index the starting index to search.
 @param[in] range_bit_count the size of the range to check.
@@ -614,7 +618,7 @@ set. */
 CCC_Count CCC_flat_bitset_first_trailing_zero(CCC_Flat_bitset const *bitset);
 
 /** @brief Return the index of the first bit set to 0 in the range
-`[i, index + count)`.
+`[range_start_index, range_start_index + range_bit_count)`.
 @param[in] bitset a pointer to the bit set.
 @param[in] range_start_index the starting index to search.
 @param[in] range_bit_count the size of the range to check.
@@ -640,7 +644,8 @@ CCC_Count CCC_flat_bitset_first_trailing_zeros(
 );
 
 /** @brief Returns the index of the start of the first trailing zeros_count
-contiguous 0 bits in the range `[i, index + count)`.
+contiguous 0 bits in the range
+`[range_start_index, range_start_index + range_bit_count)`.
 @param[in] bitset a pointer to the bit set.
 @param[in] range_start_index the starting index to search.
 @param[in] range_bit_count the size of the range to check.
@@ -663,7 +668,7 @@ bit is found or bitset in NULL. */
 CCC_Count CCC_flat_bitset_first_leading_one(CCC_Flat_bitset const *bitset);
 
 /** @brief Return the index of the first leading bit set to 1 in the range
-`[i, index + count)`.
+`[range_start_index, range_start_index + range_bit_count)`.
 @param[in] bitset a pointer to the bit set.
 @param[in] index the starting index to search.
 @param[in] count the size of the range to check from index towards index 0.
@@ -687,7 +692,8 @@ CCC_Count CCC_flat_bitset_first_leading_ones(
 );
 
 /** @brief Returns the index of the start of the first leading bit_count
-contiguous 1 bits in the range `[i, index + count)`.
+contiguous 1 bits in the range
+`[range_start_index, range_start_index + range_bit_count)`.
 @param[in] bitset a pointer to the bit set.
 @param[in] range_start_index the starting index to search.
 @param[in] range_bit_count the size of the range to check.
@@ -713,7 +719,7 @@ set. */
 CCC_Count CCC_flat_bitset_first_leading_zero(CCC_Flat_bitset const *bitset);
 
 /** @brief Return the index of the first leading bit set to 0 in the range
-`[i, index + count)`.
+`[range_start_index, range_start_index + range_bit_count)`.
 @param[in] bitset a pointer to the bit set.
 @param[in] range_start_index the starting index to search for a 0 bit.
 @param[in] range_bit_count size to search from Most Significant Bit to Least in
@@ -741,7 +747,8 @@ CCC_Count CCC_flat_bitset_first_leading_zeros(
 );
 
 /** @brief Returns the index of the start of the first leading number of
-contiguous 0 bits in the range `[i, index + count)`.
+contiguous 0 bits in the range
+`[range_start_index, range_start_index + range_bit_count)`.
 @param[in] bitset a pointer to the bit set.
 @param[in] range_start_index the starting index to search.
 @param[in] range_bit_count the size of the range to check.
