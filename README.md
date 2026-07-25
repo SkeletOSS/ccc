@@ -1288,7 +1288,7 @@ make test
 
 ## Quality Control
 
-The C Container Collection is extensively tested and analyzed both statically and at runtime. See the `tests/` repository which is always seeking valuable additions. Also, visit `CONTRIBUTING.md` to see the extensive tooling that is constantly run locally and over CI via actions in the `.github/workflows` folder. Tools include `clang-format`, `clang-tidy`, `pre-commit`, `GCC's -fanalyzer`, and GCC's extensive address and undefined behavior sanitizers. Builds for both Linux `x86` and MacOS `ARM` run on every commit in pull requests, with additional portable implementation variants built. I aim to deliver a high quality library and welcome any suggestions for tools to further improve code quality.
+The C Container Collection is extensively tested and analyzed both statically and at runtime. See the `tests/` repository which is always seeking valuable additions. Also, visit `CONTRIBUTING.md` to see the extensive tooling that is constantly run locally and over CI via actions in the `.github/workflows` folder. Tools include `clang-format`, `clang-tidy`, `pre-commit`, `GCC's -fanalyzer`, Fil-C builds, and GCC's extensive address and undefined behavior sanitizers. Builds for both Linux `x86` and MacOS `ARM` run on every commit in pull requests, with additional portable implementation variants built. I aim to deliver a high quality library and welcome any suggestions for tools to further improve code quality.
 
 If you are interested in contributing, tests that increase code coverage are a good way to start. View the [coverage report here](https://skeletoss.github.io/ccc/coverage).
 

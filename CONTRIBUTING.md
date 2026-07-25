@@ -150,6 +150,8 @@ Now that tooling is set up, the workflow is roughly as follows.
     - Run `make clean && cmake --preset=my-sanitize-release && cmake --build build -j8 --target ccc tests samples`. Replace the `-j8` flag with the number of cores on your system. This is the same as the previous step just in release mode. Sometimes the compiler can optimize in such a way to create different issues the sanitizer can catch. Run `make test`. Tests will run the PR remotely in case you forget, but feedback is faster locally.
 - Mark the pr as ready for review when all CI checks pass and tools show no errors locally.
 
+When the pull request is a draft or ready for review, be sure to check if the [Fil-C](https://fil-c.org/) build variants are passing. Fil-C is an excellent compiler intended to guarantee memory safety. Therefore, it can catch even more memory related bugs in the containers than traditional sanitizer builds.
+
 ## Targets
 
 - `ccc` - The core C Container Collection library.
