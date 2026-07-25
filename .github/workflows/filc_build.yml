@@ -47,17 +47,20 @@ jobs:
 
     - name: Download & Install Fil-C
       run: |
-        # Download the latest standalone Fil-C release asset via GitHub CLI
+        # Download Fil-C archive
         gh release download --repo pizlonator/fil-c --pattern 'filc-*-linux-x86_64.tar.xz' --clobber
         
-        # Extract and run Fil-C setup script
-        mkdir -p ~/filc
-        tar -xf filc-*-linux-x86_64.tar.xz -C ~/filc --strip-components=1
-        cd ~/filc && ./setup.sh
+        # Extract archive into $HOME/filc
+        mkdir -p $HOME/filc
+        tar -xf filc-*-linux-x86_64.tar.xz -C $HOME/filc --strip-components=1
         
-        # Add filcc binaries to GITHUB_PATH
+        # Run setup script
+        cd $HOME/filc
+        ./setup.sh
+        
+        # Add BOTH bin directories to GITHUB_PATH for subsequent steps
+        echo "$HOME/filc/build/bin" >> $GITHUB_PATH
         echo "$HOME/filc/bin" >> $GITHUB_PATH
-        echo "$HOME/filc/pizfix/bin" >> $GITHUB_PATH
       env:
         GH_TOKEN: ${{ github.token }}
 
@@ -67,6 +70,7 @@ jobs:
       run: |
         make clean || true
         cmake --preset=filc-${{ matrix.build }} \
+          -DCMAKE_C_COMPILER=$HOME/filc/build/bin/clang
           -DCCC_BUILD_SPECIALIZED=ON \
           -DCCC_FLAT_HASH_MAP_PORTABLE=${{ matrix.portable }} && \
         cmake --build build -j$(nproc) --target ccc tests

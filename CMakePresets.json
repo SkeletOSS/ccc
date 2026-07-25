@@ -128,7 +128,7 @@
             "name": "filc-debug",
             "inherits": "default-debug",
             "cacheVariables": {
-                "CMAKE_C_COMPILER": "filcc",
+                "CMAKE_C_COMPILER": "clang",
                 "CMAKE_C_FLAGS": "-g3 -O0 $env{CCC_WARNING_C_FLAGS}"
             }
         },
@@ -136,7 +136,7 @@
             "name": "filc-release",
             "inherits": "default-release",
             "cacheVariables": {
-                "CMAKE_C_COMPILER": "filcc",
+                "CMAKE_C_COMPILER": "clang",
                 "CMAKE_C_FLAGS": "-O2 $env{CCC_WARNING_C_FLAGS}"
             }
         },
