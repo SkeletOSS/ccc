@@ -57,6 +57,7 @@ jobs:
         
         # Add filcc binaries to GITHUB_PATH
         echo "$HOME/filc/bin" >> $GITHUB_PATH
+        echo "$HOME/filc/pizfix/bin" >> $GITHUB_PATH
       env:
         GH_TOKEN: ${{ github.token }}
 
