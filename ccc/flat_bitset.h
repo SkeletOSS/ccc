@@ -18,7 +18,7 @@ limitations under the License.
 
 A bit set offers efficient set membership operations when the range of values
 can be tracked via an index. Both a fixed size and dynamic variant are possible
-depending on initialization options.
+depending on desired behavior when passing an allocator.
 
 Conceptually, the bit set can be thought of as an arbitrary length integer with
 index `0` being the Least Significant Bit and index `N - 1` being the Most

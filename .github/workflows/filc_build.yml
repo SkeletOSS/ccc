@@ -1,0 +1,78 @@
+name: fil-c-build
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check-diff:
+    runs-on: ubuntu-latest
+    outputs: 
+      handle: ${{ steps.check.outputs.run }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          fetch-depth: 2
+
+      - name: Check the diff
+        id: check
+        run: |
+          echo "Here are the changed build/C files:"
+          echo "$(git --no-pager diff --name-only HEAD HEAD~1 | grep -E '\.(c|h)$|\.cmake|CMakeLists|Config\.cmake\.in')"
+          if git diff --name-only HEAD HEAD~1 | grep -qE '\.(c|h)$|\.cmake|CMakeLists|Config\.cmake\.in'; then
+            echo "run=true" >> $GITHUB_OUTPUT
+            echo "Implementation and/or build files have changed, rebuilding..."
+          else
+            echo "run=false" >> $GITHUB_OUTPUT
+            echo "Implementation and/or build files have NOT changed, skipping build..."
+          fi
+
+  build:
+    runs-on: ubuntu-latest
+    name: Fil-C Build ${{ matrix.build == 'debug' && 'Debug' || 'Release' }} - ${{ matrix.portable == 'ON' && 'Portable SIMD Flat Hash Map' || 'Platform SIMD Flat Hash Map' }}
+    needs: check-diff
+    if: ${{ needs.check-diff.outputs.handle == 'true' }}
+
+    strategy:
+      matrix:
+        build: [debug, release]
+        portable: [OFF, ON]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Download & Install Fil-C
+      run: |
+        # Download Fil-C archive
+        gh release download --repo pizlonator/fil-c --pattern 'filc-*-linux-x86_64.tar.xz' --clobber
+        
+        # Extract archive into $HOME/filc
+        mkdir -p $HOME/filc
+        tar -xf filc-*-linux-x86_64.tar.xz -C $HOME/filc --strip-components=1
+        
+        # Run setup script
+        cd $HOME/filc
+        ./setup.sh
+        
+        # Add BOTH bin directories to GITHUB_PATH for subsequent steps
+        echo "$HOME/filc/build/bin" >> $GITHUB_PATH
+        echo "$HOME/filc/bin" >> $GITHUB_PATH
+      env:
+        GH_TOKEN: ${{ github.token }}
+
+    - uses: lukka/get-cmake@latest
+
+    - name: Build and Run Tests with Fil-C
+      run: |
+        make clean || true
+        cmake --preset=filc-${{ matrix.build }} \
+          -DCMAKE_C_COMPILER=$HOME/filc/build/bin/clang
+          -DCCC_BUILD_SPECIALIZED=ON \
+          -DCCC_FLAT_HASH_MAP_PORTABLE=${{ matrix.portable }} && \
+        cmake --build build -j$(nproc) --target ccc tests
+        
+        make test

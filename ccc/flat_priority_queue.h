@@ -18,7 +18,7 @@ limitations under the License.
 
 A flat priority queue is a contiguous container storing elements in heap order.
 This offers tightly packed data for efficient push, pop, min/max operations in
-`O(lg N)` time.
+`O(lg N)` time. See the sort.h interface for heap related sorting.
 
 A flat priority queue can use memory sources from the stack, heap, or data
 segment and can be initialized at compile or runtime. The container offers
