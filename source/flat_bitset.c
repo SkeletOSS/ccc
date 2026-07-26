@@ -94,7 +94,7 @@ enum : Bit_count {
     BLOCK_BITS = SIZEOF_BLOCK * CHAR_BIT,
     /** @internal Used for static assert clarity. */
     U8_BLOCK_MAX = UINT8_MAX,
-    /** @internal Hand coded log2 of block bits to avoid division. */
+    /** @internal log2 of block bits to avoid division. */
     BLOCK_BITS_LOG2 = CCC_log2((Bit_count)BLOCK_BITS),
 };
 static_assert(
@@ -385,9 +385,10 @@ CCC_flat_bitset_set_range(
     size_t const range_bit_count,
     CCC_Tribool const b
 ) {
-    size_t const range_end = range_start_index + range_bit_count;
-    if (!bitset || !range_bit_count || range_start_index >= bitset->count
-        || range_end < range_start_index || range_end > bitset->count) {
+    size_t range_end = 0;
+    if (ckd_add(&range_end, range_start_index, range_bit_count) || !bitset
+        || !range_bit_count || range_start_index >= bitset->count
+        || range_end > bitset->count) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     Block_count start_block = block_count_index(range_start_index);
@@ -463,9 +464,10 @@ CCC_flat_bitset_reset_range(
     size_t const range_start_index,
     size_t const range_bit_count
 ) {
-    size_t const range_end = range_start_index + range_bit_count;
-    if (!bitset || !range_bit_count || range_start_index >= bitset->count
-        || range_end < range_start_index || range_end > bitset->count) {
+    size_t range_end = 0;
+    if (ckd_add(&range_end, range_start_index, range_bit_count) || !bitset
+        || !range_bit_count || range_start_index >= bitset->count
+        || range_end > bitset->count) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     Block_count start_block = block_count_index(range_start_index);
@@ -533,9 +535,10 @@ CCC_flat_bitset_flip_range(
     size_t const range_start_index,
     size_t const range_bit_count
 ) {
-    size_t const range_end = range_start_index + range_bit_count;
-    if (!bitset || !range_bit_count || range_start_index >= bitset->count
-        || range_end < range_start_index || range_end > bitset->count) {
+    size_t range_end = 0;
+    if (ckd_add(&range_end, range_start_index, range_bit_count) || !bitset
+        || !range_bit_count || range_start_index >= bitset->count
+        || range_end > bitset->count) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     Block_count start_block = block_count_index(range_start_index);
@@ -627,9 +630,10 @@ CCC_flat_bitset_popcount_range(
     size_t const range_start_index,
     size_t const range_bit_count
 ) {
-    size_t const range_end = range_start_index + range_bit_count;
-    if (!bitset || !range_bit_count || range_start_index >= bitset->count
-        || range_end < range_start_index || range_end > bitset->count) {
+    size_t range_end = 0;
+    if (ckd_add(&range_end, range_start_index, range_bit_count) || !bitset
+        || !range_bit_count || range_start_index >= bitset->count
+        || range_end > bitset->count) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
     size_t popped = 0;
@@ -1114,9 +1118,9 @@ first_trailing_bit_range(
     size_t const count,
     CCC_Tribool const is_one
 ) {
-    size_t const exclusive_end = i + count;
-    if (!bitset || !count || i >= bitset->count || exclusive_end < i
-        || exclusive_end > bitset->count) {
+    size_t exclusive_end = 0;
+    if (ckd_add(&exclusive_end, i, count) || !bitset || !count
+        || i >= bitset->count || exclusive_end > bitset->count) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
     Block_count start_block = block_count_index(i);
@@ -1174,9 +1178,10 @@ first_trailing_bits_range( /* NOLINT (*cognitive-complexity) */
     size_t const num_bits,
     CCC_Tribool const ones
 ) {
-    size_t const exclusive_end = i + count;
-    if (!bitset || !count || !num_bits || i >= bitset->count || num_bits > count
-        || exclusive_end < i || exclusive_end > bitset->count) {
+    size_t exclusive_end = 0;
+    if (ckd_add(&exclusive_end, i, count) || !bitset || !count || !num_bits
+        || i >= bitset->count || num_bits > count
+        || exclusive_end > bitset->count) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
     size_t bit_count = 0;
@@ -1283,12 +1288,12 @@ first_leading_bit_range(
     size_t const count,
     CCC_Tribool const is_one
 ) {
-    if (!bitset || !count || start_index >= bitset->count
-        || start_index + count <= start_index
-        || start_index + count > bitset->count) {
+    size_t window_start = 0;
+    if (ckd_add(&window_start, start_index, count) || !bitset || !count
+        || start_index >= bitset->count || window_start > bitset->count) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
-    size_t const window_start = start_index + count - 1;
+    window_start -= 1;
     Bit_count const start_bit = bit_count_index(window_start);
     Bit_count const end_bit = bit_count_index(start_index);
     Block_count start_block = block_count_index(window_start);
@@ -1349,12 +1354,14 @@ first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
     size_t const bits_required,
     CCC_Tribool const ones
 ) {
-    if (!bitset || !range_count || !bits_required || index >= bitset->count
+    size_t window_start = 0;
+    if (ckd_add(&window_start, index, range_count) || !bitset || !range_count
+        || !bits_required || index >= bitset->count
         || bits_required > range_count) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
+    window_start -= 1;
     size_t bit_count = 0;
-    size_t window_start = (index + range_count - 1);
     Block_count block_index = block_count_index(window_start);
     Block_count window_inclusive_end = ((block_index * BLOCK_BITS));
     Bit_count bit_index = bit_count_index(window_start);
@@ -1446,8 +1453,8 @@ any_or_none_range(
     size_t const count,
     CCC_Tribool const any_or_none
 ) {
-    size_t const range_end = i + count;
-    if (!bitset || !count || i >= bitset->count || range_end < i
+    size_t range_end = 0;
+    if (ckd_add(&range_end, i, count) || !bitset || !count || i >= bitset->count
         || range_end > bitset->count || any_or_none < CCC_FALSE
         || any_or_none > CCC_TRUE) {
         return CCC_TRIBOOL_ERROR;
@@ -1488,8 +1495,8 @@ all_range(
     size_t const i,
     size_t const count
 ) {
-    size_t const range_end = i + count;
-    if (!bitset || !count || i >= bitset->count || range_end < i
+    size_t range_end = 0;
+    if (ckd_add(&range_end, i, count) || !bitset || !count || i >= bitset->count
         || range_end > bitset->count) {
         return CCC_TRIBOOL_ERROR;
     }
@@ -1551,8 +1558,8 @@ set(Bit_block *const block,
     }
 }
 
-/** Given the bit set and the set index--set index is allowed to be greater than
-the size of one block--returns the status of the bit at that index. */
+/** Given the bit set and the set index, set index is allowed to be greater than
+the size of one block, returns the status of the bit at that index. */
 static inline CCC_Tribool
 status(Bit_block const *const bitset, size_t const flat_bitset_index) {
     /* Be careful. The & op does not promise to evaluate to 1 or 0. We often
