@@ -23,7 +23,20 @@ upon initialization because sorting is not the most common use case. Therefore
 comparators are adaptors we can pass while performing an algorithm. They
 then implement this algorithm internally with the passed ordering and
 comparator. A container such as a linked list may also be able to report back
-if it is sorted or insert an element in a sorted position. */
+if it is sorted or insert an element in a sorted position.
+
+For namespace consistency, all sorting algorithms are prefixed with
+`CCC_sort_*`. So `CCC_sort_heap` is heapsort, `CCC_sort_merge` is mergesort,
+etc.
+
+To shorten names in the interface, define the following preprocessor directive
+at the top of your file.
+
+```
+#define SORT_USING_NAMESPACE_CCC
+```
+
+All functions can then be written without the `CCC_` prefix. */
 #ifndef CCC_SORT_H
 #define CCC_SORT_H
 
@@ -61,7 +74,7 @@ as `&(My_type){}`, passed directly as an argument.
 
 The sort is not inherently stable and uses the provided comparison function to
 order the elements. */
-CCC_Result CCC_sort_heapsort(
+CCC_Result CCC_sort_heap(
     CCC_Flat_buffer const *buffer,
     void *temp,
     CCC_Order order,
@@ -82,7 +95,7 @@ because 0 is the first node in the list.
 @param[in] comparator the comparator context for comparing list elements.
 @return the result of the sort, usually OK. An argument error if
 doubly_linked_list is null. */
-CCC_Result CCC_sort_doubly_linked_list_mergesort(
+CCC_Result CCC_sort_merge_doubly_linked_list(
     CCC_Doubly_linked_list *list,
     CCC_Order order,
     CCC_Comparator const *comparator
@@ -102,7 +115,7 @@ because 0 is the first node in the list.
 @param[in] comparator the comparator context for comparing list elements.
 @return the result of the sort, usually OK. An argument error if
 singly_linked_list is null. */
-CCC_Result CCC_sort_singly_linked_list_mergesort(
+CCC_Result CCC_sort_merge_singly_linked_list(
     CCC_Singly_linked_list *list,
     CCC_Order order,
     CCC_Comparator const *comparator
@@ -121,9 +134,9 @@ because 0 is the first node in the list.
 @param[in] comparator_pointer the pointer to the comparator context for
 comparing list elements.
 @return the result of the sort, usually OK. An argument error for bad input. */
-#define CCC_sort_mergesort(list_pointer, order, comparator_pointer)                                                                                             \
-    _Generic((list_pointer), CCC_Singly_linked_list *: CCC_sort_singly_linked_list_mergesort, CCC_Doubly_linked_list *: CCC_sort_doubly_linked_list_mergesort)( \
-        list_pointer, order, comparator_pointer                                                                                                                 \
+#define CCC_sort_merge(list_pointer, order, comparator_pointer)                                                                                         \
+    _Generic((list_pointer), CCC_Singly_linked_list *: CCC_sort_merge_singly_linked_list, CCC_Doubly_linked_list *: CCC_sort_merge_doubly_linked_list)( \
+        list_pointer, order, comparator_pointer                                                                                                         \
     )
 
 /**@}*/
@@ -132,12 +145,12 @@ comparing list elements.
  no namespace clashes occur before shortening. */
 #ifdef SORT_USING_NAMESPACE_CCC
 /* NOLINTBEGIN(readability-identifier-naming) */
-#    define sort_heapsort(args...) CCC_sort_heapsort(args)
-#    define sort_singly_linked_list_mergesort(args...)                         \
-        CCC_sort_singly_linked_list_mergesort(args)
-#    define sort_doubly_linked_list_mergesort(args...)                         \
-        CCC_sort_doubly_linked_list_mergesort(args)
-#    define sort_mergesort(args...) CCC_sort_mergesort(args)
+#    define sort_heap(args...) CCC_sort_heap(args)
+#    define sort_merge_singly_linked_list(args...)                             \
+        CCC_sort_merge_singly_linked_list(args)
+#    define sort_merge_doubly_linked_list(args...)                             \
+        CCC_sort_merge_doubly_linked_list(args)
+#    define sort_merge(args...) CCC_sort_merge(args)
 /* NOLINTEND(readability-identifier-naming) */
 #endif /* SORT_USING_NAMESPACE_CCC */
 

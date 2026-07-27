@@ -88,7 +88,7 @@ check_begin(
     CCC_Result r
         = flat_buffer_copy(&copy, &flat_priority_queue->buffer, &std_allocator);
     check(r, CCC_RESULT_OK);
-    r = CCC_sort_heapsort(
+    r = CCC_sort_heap(
         &copy,
         &(struct Val){},
         flat_priority_queue->order,

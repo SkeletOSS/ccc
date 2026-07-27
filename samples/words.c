@@ -546,7 +546,7 @@ word_buffer_sort(
     CCC_Order const order,
     struct String_arena *const arena
 ) {
-    return CCC_sort_heapsort(
+    return CCC_sort_heap(
         &words->buffer,
         &(Word){},
         order,
