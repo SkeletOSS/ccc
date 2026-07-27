@@ -500,10 +500,10 @@ CCC_sort_singly_linked_list_mergesort(
     CCC_Tribool merging = CCC_FALSE;
     do {
         merging = CCC_FALSE;
-        /* 0th index of the A list. The start of one list to merge. */
+        /* 0th index of the left list. The start of one list to merge. */
         struct Link left_start = {.previous = NULL, .current = list->head};
         while (left_start.current != NULL) {
-            /* The Nth index of list A (its size) aka 0th index of B list. */
+            /* The Nth index of left list aka 0th index of right list. */
             struct Link left_end_right_start
                 = first_out_of_order(list, left_start, order, comparator);
             if (left_end_right_start.current == NULL) {
@@ -511,8 +511,8 @@ CCC_sort_singly_linked_list_mergesort(
             }
             /* A picks up the exclusive end of this merge, B, in order
                to progress the sorting algorithm with the next run that needs
-               fixing. Merge returns the final B element to indicate it is the
-               final sentinel that has not yet been examined. */
+               fixing. Merge returns the final right element to indicate it is
+               the final sentinel that has not yet been examined. */
             left_start = merge(
                 list,
                 left_start,
@@ -549,10 +549,10 @@ merge(
     while (left.current && left.current != right.current && right.current
            && right.current != right_end.current) {
         if (get_order(list, right.current, left.current, comparator) == order) {
-            /* The current element is the lesser element that must be spliced
-               out. However, right.previous is not updated because only current
-               is spliced out. Algorithm will continue with new current, but
-               same previous. */
+            /* The current element is the winning ordered element that must be
+               spliced out. However, right.previous is not updated because only
+               current is spliced out. Algorithm will continue with new current,
+               but same previous. */
             struct CCC_Singly_linked_list_node *const to_merge = right.current;
             right.current = to_merge->next;
             assert(
@@ -582,11 +582,10 @@ merge(
     return right_end;
 }
 
-/** Returns a pair of elements marking the first list elem that is smaller than
-its previous `CCC_ORDER_LESSER` according to the user comparison callback. The
-list_link returned will have the out of order element as cur and the last
-remaining in order element as prev. The cur element may be the sentinel if the
-run is sorted. */
+/** Returns a pair of elements marking the first list elem that is out of order
+according to the user comparison callback. The list_link returned will have the
+out of order element as cur and the last remaining in order element as prev. The
+cur element may be the sentinel if the run is sorted. */
 static inline struct Link
 first_out_of_order(
     CCC_Singly_linked_list const *const list,

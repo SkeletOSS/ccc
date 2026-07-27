@@ -661,10 +661,10 @@ CCC_sort_doubly_linked_list_mergesort(
     CCC_Tribool merging = CCC_FALSE;
     do {
         merging = CCC_FALSE;
-        /* 0th index of the A list. The start of one list to merge. */
+        /* 0th index of the left list. The start of one list to merge. */
         struct CCC_Doubly_linked_list_node *left_start = list->head;
         while (left_start != NULL) {
-            /* The Nth index of list A (its size) aka 0th index of B list. */
+            /* The Nth index of left list aka 0th index of right list. */
             struct CCC_Doubly_linked_list_node *const left_end_right_start
                 = first_out_of_order(list, left_start, order, comparator);
             if (left_end_right_start == NULL) {
@@ -737,22 +737,22 @@ merge(
     return right_end;
 }
 
-/** Finds the first element lesser than it's previous element as defined by
-the user comparison callback function. If no out of order element can be
-found the list sentinel is returned. */
+/** Finds the first element out of sorted order as defined by the user
+comparison callback function. If no out of order element can be found the list
+sentinel is returned. */
 static inline struct CCC_Doubly_linked_list_node *
 first_out_of_order(
     struct CCC_Doubly_linked_list const *const list,
-    struct CCC_Doubly_linked_list_node *start,
+    struct CCC_Doubly_linked_list_node *node,
     CCC_Order const order,
     CCC_Comparator const *const comparator
 ) {
-    assert(list && start);
+    assert(list && node);
     do {
-        start = start->next;
-    } while (start != NULL
-             && get_order(list, start, start->previous, comparator) != order);
-    return start;
+        node = node->next;
+    } while (node != NULL
+             && get_order(list, node, node->previous, comparator) != order);
+    return node;
 }
 
 /*=======================     Private Interface   ===========================*/
