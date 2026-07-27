@@ -1,7 +1,7 @@
 var sort_8h =
 [
-    [ "CCC_sort_mergesort", "sort_8h.html#ab796817a7a3ff555d2a94085aebd4561", null ],
-    [ "CCC_sort_doubly_linked_list_mergesort", "sort_8h.html#a531a13a9a3949fdc112c17bf0bd201a9", null ],
-    [ "CCC_sort_heapsort", "sort_8h.html#a67b9176ceac4ff044a98f35d788feac3", null ],
-    [ "CCC_sort_singly_linked_list_mergesort", "sort_8h.html#ab4c55dcdb8f30798b8daf175529fb2d7", null ]
+    [ "CCC_sort_merge", "sort_8h.html#aeb35a48fa7c3f654906e63349e39d1a7", null ],
+    [ "CCC_sort_heap", "sort_8h.html#a62a1d24cd330d1676ea480c72979b9ba", null ],
+    [ "CCC_sort_merge_doubly_linked_list", "sort_8h.html#a12368ca7589e4f3c8e6e5f111c02f2d8", null ],
+    [ "CCC_sort_merge_singly_linked_list", "sort_8h.html#a4f6ab752ef9e47d4ab54959c4e7c337a", null ]
 ];

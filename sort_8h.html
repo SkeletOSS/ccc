@@ -119,33 +119,37 @@ Include dependency graph for sort.h:</div>
 <p><a href="sort_8h_source.html">Go to the source code of this file.</a></p>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The C Container Collection Sorting Interface. </p>
-<p>These functions sort various containers with different algorithms depending on the container. Many more sorting algorithms will likely be added here in the future. Containers such as the buffer and linked lists do not own comparators upon initialization because sorting is not the most common use case. Therefore comparators are adaptors we can pass while performing an algorithm. They then implement this algorithm internally with the passed ordering and comparator. A container such as a linked list may also be able to report back if it is sorted or insert an element in a sorted position. </p>
+<p>These functions sort various containers with different algorithms depending on the container. Many more sorting algorithms will likely be added here in the future. Containers such as the buffer and linked lists do not own comparators upon initialization because sorting is not the most common use case. Therefore comparators are adaptors we can pass while performing an algorithm. They then implement this algorithm internally with the passed ordering and comparator. A container such as a linked list may also be able to report back if it is sorted or insert an element in a sorted position.</p>
+<p>For namespace consistency, all sorting algorithms are prefixed with <code>CCC_sort_*</code>. So <code>CCC_sort_heap</code> is heapsort, <code>CCC_sort_merge</code> is mergesort, etc.</p>
+<p>To shorten names in the interface, define the following preprocessor directive at the top of your file.</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#define SORT_USING_NAMESPACE_CCC</span></div>
+</div><!-- fragment --><p>All functions can then be written without the <code>CCC_</code> prefix. </p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Sorting Algorithms</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Various sorting algorithms for different containers in the collection. </p>
 </td></tr>
-<tr class="memitem:ab796817a7a3ff555d2a94085aebd4561"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sort_8h.html#ab796817a7a3ff555d2a94085aebd4561">CCC_sort_mergesort</a>(list_pointer,  order,  comparator_pointer)</td></tr>
-<tr class="memdesc:ab796817a7a3ff555d2a94085aebd4561"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sorts the list in user specified order as defined by the provided order and comparator. <code>O(N * log(N))</code> time, <code>O(1)</code> space. This sort is stable.  <br /></td></tr>
-<tr class="separator:ab796817a7a3ff555d2a94085aebd4561"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67b9176ceac4ff044a98f35d788feac3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sort_8h.html#a67b9176ceac4ff044a98f35d788feac3">CCC_sort_heapsort</a> (<a class="el" href="structCCC__Flat__buffer.html">CCC_Flat_buffer</a> const *buffer, void *temp, <a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a> order, <a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> const *comparator)</td></tr>
-<tr class="memdesc:a67b9176ceac4ff044a98f35d788feac3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sorts the input buffer in <code>O(N * log(N))</code> time and <code>O(1)</code> space according to the desired input order.  <br /></td></tr>
-<tr class="separator:a67b9176ceac4ff044a98f35d788feac3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a531a13a9a3949fdc112c17bf0bd201a9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sort_8h.html#a531a13a9a3949fdc112c17bf0bd201a9">CCC_sort_doubly_linked_list_mergesort</a> (<a class="el" href="structCCC__Doubly__linked__list.html">CCC_Doubly_linked_list</a> *list, <a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a> order, <a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> const *comparator)</td></tr>
-<tr class="memdesc:a531a13a9a3949fdc112c17bf0bd201a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sorts the doubly linked list in user specified order as defined by the provided order and comparator. <code>O(N * log(N))</code> time, <code>O(1)</code> space. This sort is stable.  <br /></td></tr>
-<tr class="separator:a531a13a9a3949fdc112c17bf0bd201a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4c55dcdb8f30798b8daf175529fb2d7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sort_8h.html#ab4c55dcdb8f30798b8daf175529fb2d7">CCC_sort_singly_linked_list_mergesort</a> (<a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *list, <a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a> order, <a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> const *comparator)</td></tr>
-<tr class="memdesc:ab4c55dcdb8f30798b8daf175529fb2d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sorts the singly linked list in user specified order as defined by the provided order and comparator. <code>O(N * log(N))</code> time, <code>O(1)</code> space. This sort is stable.  <br /></td></tr>
-<tr class="separator:ab4c55dcdb8f30798b8daf175529fb2d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb35a48fa7c3f654906e63349e39d1a7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sort_8h.html#aeb35a48fa7c3f654906e63349e39d1a7">CCC_sort_merge</a>(list_pointer,  order,  comparator_pointer)</td></tr>
+<tr class="memdesc:aeb35a48fa7c3f654906e63349e39d1a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sorts the list in user specified order as defined by the provided order and comparator. <code>O(N * log(N))</code> time, <code>O(1)</code> space. This sort is stable.  <br /></td></tr>
+<tr class="separator:aeb35a48fa7c3f654906e63349e39d1a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62a1d24cd330d1676ea480c72979b9ba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sort_8h.html#a62a1d24cd330d1676ea480c72979b9ba">CCC_sort_heap</a> (<a class="el" href="structCCC__Flat__buffer.html">CCC_Flat_buffer</a> const *buffer, void *temp, <a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a> order, <a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> const *comparator)</td></tr>
+<tr class="memdesc:a62a1d24cd330d1676ea480c72979b9ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sorts the input buffer in <code>O(N * log(N))</code> time and <code>O(1)</code> space according to the desired input order.  <br /></td></tr>
+<tr class="separator:a62a1d24cd330d1676ea480c72979b9ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12368ca7589e4f3c8e6e5f111c02f2d8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sort_8h.html#a12368ca7589e4f3c8e6e5f111c02f2d8">CCC_sort_merge_doubly_linked_list</a> (<a class="el" href="structCCC__Doubly__linked__list.html">CCC_Doubly_linked_list</a> *list, <a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a> order, <a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> const *comparator)</td></tr>
+<tr class="memdesc:a12368ca7589e4f3c8e6e5f111c02f2d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sorts the doubly linked list in user specified order as defined by the provided order and comparator. <code>O(N * log(N))</code> time, <code>O(1)</code> space. This sort is stable.  <br /></td></tr>
+<tr class="separator:a12368ca7589e4f3c8e6e5f111c02f2d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f6ab752ef9e47d4ab54959c4e7c337a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sort_8h.html#a4f6ab752ef9e47d4ab54959c4e7c337a">CCC_sort_merge_singly_linked_list</a> (<a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *list, <a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a> order, <a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> const *comparator)</td></tr>
+<tr class="memdesc:a4f6ab752ef9e47d4ab54959c4e7c337a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sorts the singly linked list in user specified order as defined by the provided order and comparator. <code>O(N * log(N))</code> time, <code>O(1)</code> space. This sort is stable.  <br /></td></tr>
+<tr class="separator:a4f6ab752ef9e47d4ab54959c4e7c337a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="ab796817a7a3ff555d2a94085aebd4561" name="ab796817a7a3ff555d2a94085aebd4561"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab796817a7a3ff555d2a94085aebd4561">&#9670;&#160;</a></span>CCC_sort_mergesort</h2>
+<a id="aeb35a48fa7c3f654906e63349e39d1a7" name="aeb35a48fa7c3f654906e63349e39d1a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb35a48fa7c3f654906e63349e39d1a7">&#9670;&#160;</a></span>CCC_sort_merge</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define CCC_sort_mergesort</td>
+          <td class="memname">#define CCC_sort_merge</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">list_pointer, </td>
@@ -169,11 +173,11 @@ Include dependency graph for sort.h:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    _Generic((list_pointer), <a class="code hl_struct" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *: <a class="code hl_function" href="sort_8h.html#ab4c55dcdb8f30798b8daf175529fb2d7">CCC_sort_singly_linked_list_mergesort</a>, <a class="code hl_struct" href="structCCC__Doubly__linked__list.html">CCC_Doubly_linked_list</a> *: <a class="code hl_function" href="sort_8h.html#a531a13a9a3949fdc112c17bf0bd201a9">CCC_sort_doubly_linked_list_mergesort</a>)( \</div>
-<div class="line">        list_pointer, order, comparator_pointer                                                                                                                 \</div>
+<b>Value:</b><div class="fragment"><div class="line">    _Generic((list_pointer), <a class="code hl_struct" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *: <a class="code hl_function" href="sort_8h.html#a4f6ab752ef9e47d4ab54959c4e7c337a">CCC_sort_merge_singly_linked_list</a>, <a class="code hl_struct" href="structCCC__Doubly__linked__list.html">CCC_Doubly_linked_list</a> *: <a class="code hl_function" href="sort_8h.html#a12368ca7589e4f3c8e6e5f111c02f2d8">CCC_sort_merge_doubly_linked_list</a>)( \</div>
+<div class="line">        list_pointer, order, comparator_pointer                                                                                                         \</div>
 <div class="line">    )</div>
-<div class="ttc" id="asort_8h_html_a531a13a9a3949fdc112c17bf0bd201a9"><div class="ttname"><a href="sort_8h.html#a531a13a9a3949fdc112c17bf0bd201a9">CCC_sort_doubly_linked_list_mergesort</a></div><div class="ttdeci">CCC_Result CCC_sort_doubly_linked_list_mergesort(CCC_Doubly_linked_list *list, CCC_Order order, CCC_Comparator const *comparator)</div><div class="ttdoc">Sorts the doubly linked list in user specified order as defined by the provided order and comparator....</div></div>
-<div class="ttc" id="asort_8h_html_ab4c55dcdb8f30798b8daf175529fb2d7"><div class="ttname"><a href="sort_8h.html#ab4c55dcdb8f30798b8daf175529fb2d7">CCC_sort_singly_linked_list_mergesort</a></div><div class="ttdeci">CCC_Result CCC_sort_singly_linked_list_mergesort(CCC_Singly_linked_list *list, CCC_Order order, CCC_Comparator const *comparator)</div><div class="ttdoc">Sorts the singly linked list in user specified order as defined by the provided order and comparator....</div></div>
+<div class="ttc" id="asort_8h_html_a12368ca7589e4f3c8e6e5f111c02f2d8"><div class="ttname"><a href="sort_8h.html#a12368ca7589e4f3c8e6e5f111c02f2d8">CCC_sort_merge_doubly_linked_list</a></div><div class="ttdeci">CCC_Result CCC_sort_merge_doubly_linked_list(CCC_Doubly_linked_list *list, CCC_Order order, CCC_Comparator const *comparator)</div><div class="ttdoc">Sorts the doubly linked list in user specified order as defined by the provided order and comparator....</div></div>
+<div class="ttc" id="asort_8h_html_a4f6ab752ef9e47d4ab54959c4e7c337a"><div class="ttname"><a href="sort_8h.html#a4f6ab752ef9e47d4ab54959c4e7c337a">CCC_sort_merge_singly_linked_list</a></div><div class="ttdeci">CCC_Result CCC_sort_merge_singly_linked_list(CCC_Singly_linked_list *list, CCC_Order order, CCC_Comparator const *comparator)</div><div class="ttdoc">Sorts the singly linked list in user specified order as defined by the provided order and comparator....</div></div>
 <div class="ttc" id="astructCCC__Doubly__linked__list_html"><div class="ttname"><a href="structCCC__Doubly__linked__list.html">CCC_Doubly_linked_list</a></div><div class="ttdef"><b>Definition:</b> private_doubly_linked_list.h:73</div></div>
 <div class="ttc" id="astructCCC__Singly__linked__list_html"><div class="ttname"><a href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a></div><div class="ttdef"><b>Definition:</b> private_singly_linked_list.h:72</div></div>
 </div><!-- fragment -->
@@ -191,59 +195,14 @@ Include dependency graph for sort.h:</div>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a531a13a9a3949fdc112c17bf0bd201a9" name="a531a13a9a3949fdc112c17bf0bd201a9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a531a13a9a3949fdc112c17bf0bd201a9">&#9670;&#160;</a></span>CCC_sort_doubly_linked_list_mergesort()</h2>
+<a id="a62a1d24cd330d1676ea480c72979b9ba" name="a62a1d24cd330d1676ea480c72979b9ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62a1d24cd330d1676ea480c72979b9ba">&#9670;&#160;</a></span>CCC_sort_heap()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> CCC_sort_doubly_linked_list_mergesort </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structCCC__Doubly__linked__list.html">CCC_Doubly_linked_list</a> *&#160;</td>
-          <td class="paramname"><em>list</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a>&#160;</td>
-          <td class="paramname"><em>order</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> const *&#160;</td>
-          <td class="paramname"><em>comparator</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Sorts the doubly linked list in user specified order as defined by the provided order and comparator. <code>O(N * log(N))</code> time, <code>O(1)</code> space. This sort is stable. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">list</td><td>a pointer to the doubly linked list to sort. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">order</td><td>the desired order of the sorted list. CCC_ORDER_LESSER places elements in non-decreasing order starting from index <code>[0, N)</code>, where N is the count of the list. CCC_ORDER_GREATER places elements in non-increasing order starting from index <code>[0, N)</code>, where N is the count of the list. This is done to remain consistent with heap order, where CCC_ORDER_LESSER places the minimum element at index 0 and CCC_ORDER_GREATER places the maximum element at index 0 because 0 is the first node in the list. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">comparator</td><td>the comparator context for comparing list elements. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the result of the sort, usually OK. An argument error if doubly_linked_list is null. </dd></dl>
-
-</div>
-</div>
-<a id="a67b9176ceac4ff044a98f35d788feac3" name="a67b9176ceac4ff044a98f35d788feac3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a67b9176ceac4ff044a98f35d788feac3">&#9670;&#160;</a></span>CCC_sort_heapsort()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> CCC_sort_heapsort </td>
+          <td class="memname"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> CCC_sort_heap </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structCCC__Flat__buffer.html">CCC_Flat_buffer</a> const *&#160;</td>
           <td class="paramname"><em>buffer</em>, </td>
@@ -291,14 +250,59 @@ Include dependency graph for sort.h:</div>
 
 </div>
 </div>
-<a id="ab4c55dcdb8f30798b8daf175529fb2d7" name="ab4c55dcdb8f30798b8daf175529fb2d7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab4c55dcdb8f30798b8daf175529fb2d7">&#9670;&#160;</a></span>CCC_sort_singly_linked_list_mergesort()</h2>
+<a id="a12368ca7589e4f3c8e6e5f111c02f2d8" name="a12368ca7589e4f3c8e6e5f111c02f2d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12368ca7589e4f3c8e6e5f111c02f2d8">&#9670;&#160;</a></span>CCC_sort_merge_doubly_linked_list()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> CCC_sort_singly_linked_list_mergesort </td>
+          <td class="memname"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> CCC_sort_merge_doubly_linked_list </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structCCC__Doubly__linked__list.html">CCC_Doubly_linked_list</a> *&#160;</td>
+          <td class="paramname"><em>list</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="types_8h.html#a5e471ae63519e1044855e361826fc355">CCC_Order</a>&#160;</td>
+          <td class="paramname"><em>order</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structCCC__Comparator.html">CCC_Comparator</a> const *&#160;</td>
+          <td class="paramname"><em>comparator</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sorts the doubly linked list in user specified order as defined by the provided order and comparator. <code>O(N * log(N))</code> time, <code>O(1)</code> space. This sort is stable. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">list</td><td>a pointer to the doubly linked list to sort. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">order</td><td>the desired order of the sorted list. CCC_ORDER_LESSER places elements in non-decreasing order starting from index <code>[0, N)</code>, where N is the count of the list. CCC_ORDER_GREATER places elements in non-increasing order starting from index <code>[0, N)</code>, where N is the count of the list. This is done to remain consistent with heap order, where CCC_ORDER_LESSER places the minimum element at index 0 and CCC_ORDER_GREATER places the maximum element at index 0 because 0 is the first node in the list. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">comparator</td><td>the comparator context for comparing list elements. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the result of the sort, usually OK. An argument error if doubly_linked_list is null. </dd></dl>
+
+</div>
+</div>
+<a id="a4f6ab752ef9e47d4ab54959c4e7c337a" name="a4f6ab752ef9e47d4ab54959c4e7c337a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f6ab752ef9e47d4ab54959c4e7c337a">&#9670;&#160;</a></span>CCC_sort_merge_singly_linked_list()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> CCC_sort_merge_singly_linked_list </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structCCC__Singly__linked__list.html">CCC_Singly_linked_list</a> *&#160;</td>
           <td class="paramname"><em>list</em>, </td>
