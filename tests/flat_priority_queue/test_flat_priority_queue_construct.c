@@ -325,7 +325,7 @@ check_static_begin(flat_priority_queue_test_heapify_copy_fail) {
 
 check_static_begin(flat_priority_queue_test_heapsort_empty) {
     check(
-        CCC_sort_heapsort(
+        CCC_sort_heap(
             &flat_buffer_default(int),
             NULL,
             CCC_ORDER_GREATER,
@@ -334,13 +334,13 @@ check_static_begin(flat_priority_queue_test_heapsort_empty) {
         CCC_RESULT_ARGUMENT_ERROR
     );
     check(
-        CCC_sort_heapsort(
+        CCC_sort_heap(
             &flat_buffer_default(int), &(int){}, CCC_ORDER_GREATER, NULL
         ),
         CCC_RESULT_ARGUMENT_ERROR
     );
     check(
-        CCC_sort_heapsort(
+        CCC_sort_heap(
             &flat_buffer_default(int),
             &(int){},
             CCC_ORDER_EQUAL,
@@ -349,7 +349,7 @@ check_static_begin(flat_priority_queue_test_heapsort_empty) {
         CCC_RESULT_ARGUMENT_ERROR
     );
     check(
-        CCC_sort_heapsort(
+        CCC_sort_heap(
             &flat_buffer_default(int),
             &(int){},
             CCC_ORDER_GREATER,
@@ -362,7 +362,7 @@ check_static_begin(flat_priority_queue_test_heapsort_empty) {
 
 check_static_begin(flat_priority_queue_test_heapsort_one) {
     check(
-        CCC_sort_heapsort(
+        CCC_sort_heap(
             &flat_buffer_with_storage(1, (int[1]){1}),
             &(int){},
             CCC_ORDER_GREATER,
@@ -376,7 +376,7 @@ check_static_begin(flat_priority_queue_test_heapsort_one) {
 check_static_begin(flat_priority_queue_test_heapsort_two) {
     Flat_buffer storage = flat_buffer_with_storage(2, (int[2]){1, 2});
     check(
-        CCC_sort_heapsort(
+        CCC_sort_heap(
             &storage,
             &(int){},
             CCC_ORDER_GREATER,
@@ -400,7 +400,7 @@ check_static_begin(flat_priority_queue_test_heapsort_reversed_lesser) {
     Flat_buffer storage = flat_buffer_with_storage(
         CAP, (int[CAP]){9, 8, 7, 6, 5, 4, 3, 2, 1, 0}
     );
-    CCC_Result const result = CCC_sort_heapsort(
+    CCC_Result const result = CCC_sort_heap(
         &storage,
         &(int){},
         CCC_ORDER_LESSER,
@@ -426,7 +426,7 @@ check_static_begin(flat_priority_queue_test_heapsort_reversed_greater) {
     Flat_buffer storage = flat_buffer_with_storage(
         CAP, (int[CAP]){9, 8, 7, 6, 5, 4, 3, 2, 1, 0}
     );
-    CCC_Result const result = CCC_sort_heapsort(
+    CCC_Result const result = CCC_sort_heap(
         &storage,
         &(int){},
         CCC_ORDER_GREATER,
@@ -452,7 +452,7 @@ check_static_begin(flat_priority_queue_test_heapsort_merge) {
     Flat_buffer storage = flat_buffer_with_storage(
         CAP, (int[CAP]){1, 3, 5, 7, 9, 0, 2, 4, 6, 8}
     );
-    CCC_Result const result = CCC_sort_heapsort(
+    CCC_Result const result = CCC_sort_heap(
         &storage,
         &(int){},
         CCC_ORDER_LESSER,
@@ -480,7 +480,7 @@ check_static_begin(flat_priority_queue_test_heapsort) {
          i = flat_buffer_next(&storage, i)) {
         *i = (int)rand_range(0, CAP);
     }
-    CCC_Result const result = CCC_sort_heapsort(
+    CCC_Result const result = CCC_sort_heap(
         &storage,
         &(int){},
         CCC_ORDER_GREATER,

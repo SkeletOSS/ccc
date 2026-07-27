@@ -487,7 +487,7 @@ each merge step. Therefore the number of times we must perform the merge step is
 `O(log(N))`. The most elements we would have to merge in the merge step is all
 `N` elements so together that gives us the runtime of `O(N * log(N))`. */
 CCC_Result
-CCC_sort_singly_linked_list_mergesort(
+CCC_sort_merge_singly_linked_list(
     CCC_Singly_linked_list *const list,
     CCC_Order const order,
     CCC_Comparator const *const comparator

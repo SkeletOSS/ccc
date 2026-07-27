@@ -460,7 +460,7 @@ a heap are leaves, or near leaves, the likelihood of finding a heap ordered
 position near the bottom is extremely likely. This means we only require a few
 comparisons on average. */
 CCC_Result
-CCC_sort_heapsort(
+CCC_sort_heap(
     CCC_Flat_buffer const *const buffer,
     void *const temp,
     CCC_Order order,

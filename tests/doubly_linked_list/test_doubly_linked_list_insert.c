@@ -343,7 +343,7 @@ check_static_begin(doubly_linked_list_test_sort_even) {
         ),
         false
     );
-    CCC_Result const r = CCC_sort_mergesort(
+    CCC_Result const r = CCC_sort_merge(
         &doubly_linked_list,
         CCC_ORDER_LESSER,
         &(CCC_Comparator){.compare = val_order}
@@ -403,7 +403,7 @@ check_static_begin(doubly_linked_list_test_sort_odd) {
         ),
         false
     );
-    CCC_Result const r = CCC_sort_mergesort(
+    CCC_Result const r = CCC_sort_merge(
         &doubly_linked_list,
         CCC_ORDER_LESSER,
         &(CCC_Comparator){.compare = val_order}
@@ -460,7 +460,7 @@ check_static_begin(doubly_linked_list_test_sort_reverse) {
         ),
         false
     );
-    CCC_Result const r = CCC_sort_mergesort(
+    CCC_Result const r = CCC_sort_merge(
         &doubly_linked_list,
         CCC_ORDER_LESSER,
         &(CCC_Comparator){.compare = val_order}
@@ -521,7 +521,7 @@ check_static_begin(doubly_linked_list_test_sort_runs) {
         ),
         false
     );
-    CCC_Result const r = CCC_sort_mergesort(
+    CCC_Result const r = CCC_sort_merge(
         &doubly_linked_list,
         CCC_ORDER_LESSER,
         &(CCC_Comparator){.compare = val_order}
@@ -584,7 +584,7 @@ check_static_begin(doubly_linked_list_test_sort_halves) {
         ),
         false
     );
-    CCC_Result const r = CCC_sort_mergesort(
+    CCC_Result const r = CCC_sort_merge(
         &doubly_linked_list,
         CCC_ORDER_LESSER,
         &(CCC_Comparator){.compare = val_order}
@@ -641,7 +641,7 @@ check_static_begin(doubly_linked_list_test_sort_insert) {
         ),
         false
     );
-    CCC_Result const r = CCC_sort_mergesort(
+    CCC_Result const r = CCC_sort_merge(
         &doubly_linked_list,
         CCC_ORDER_LESSER,
         &(CCC_Comparator){.compare = val_order}
@@ -788,7 +788,7 @@ check_static_begin(doubly_linked_list_test_insert_sorted_allocation) {
     check(
         doubly_linked_list_is_sorted(&list, CCC_ORDER_LESSER, comparator), false
     );
-    CCC_Result r = CCC_sort_mergesort(&list, CCC_ORDER_LESSER, comparator);
+    CCC_Result r = CCC_sort_merge(&list, CCC_ORDER_LESSER, comparator);
     check(
         doubly_linked_list_is_sorted(&list, CCC_ORDER_LESSER, comparator), true
     );
@@ -868,19 +868,19 @@ check_static_begin(doubly_linked_list_test_insert_sorted_allocation) {
 check_static_begin(doubly_linked_list_test_mergesort_errors) {
     Doubly_linked_list list = doubly_linked_list_default(struct Val, e);
     check(
-        CCC_sort_doubly_linked_list_mergesort(
+        CCC_sort_merge_doubly_linked_list(
             NULL, CCC_ORDER_LESSER, &(CCC_Comparator){}
         ),
         CCC_RESULT_ARGUMENT_ERROR
     );
     check(
-        CCC_sort_doubly_linked_list_mergesort(
+        CCC_sort_merge_doubly_linked_list(
             &list, CCC_ORDER_EQUAL, &(CCC_Comparator){}
         ),
         CCC_RESULT_ARGUMENT_ERROR
     );
     check(
-        CCC_sort_doubly_linked_list_mergesort(&list, CCC_ORDER_LESSER, NULL),
+        CCC_sort_merge_doubly_linked_list(&list, CCC_ORDER_LESSER, NULL),
         CCC_RESULT_ARGUMENT_ERROR
     );
     check_end();
