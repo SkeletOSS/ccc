@@ -186,8 +186,8 @@ if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
         include(FetchContent)
         FetchContent_Declare(
           str_view
-          URL https://github.com/skeletoss/str_view/releases/download/v0.7.6/str_view-v0.7.6.zip
-          URL_HASH SHA256=4ab4e21f1deb16b15f83542489ffc3b136a8e6cbe37d61686abc4dc1d103f3f0
+          URL https://github.com/skeletoss/str_view/releases/download/v0.8.1/str_view-v0.8.1.zip
+          URL_HASH SHA256=0db1bd7cbac2f4d1eeb7a854193bdea7eb194ac4574c444fb4a7688a5cdedd32
           DOWNLOAD_EXTRACT_TIMESTAMP FALSE
         )
         FetchContent_MakeAvailable(str_view)
