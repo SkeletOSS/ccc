@@ -246,19 +246,11 @@ https://fgiesen.wordpress.com/2015/02/22/triangular-numbers-mod-2n/
 
 See also Donald Knuth's The Art of Computer Programming Volume 3, Chapter 6.4,
 Answers to Exercises, problem 20, page 731 for another proof. */
-struct Probe_sequence {
+struct Probe {
     /** @internal The index this probe step has placed us on. */
     size_t index;
     /** @internal Stride increases by group size on each iteration. */
     size_t stride;
-};
-
-/** @internal Helper type for obtaining a search result on the map. */
-struct Query {
-    /** The index in the table. */
-    size_t index;
-    /** Status indicating occupied, vacant, or possible error. */
-    CCC_Entry_status status;
 };
 
 /*===========================   Prototypes   ================================*/
@@ -267,7 +259,7 @@ static void swap(void *, size_t, void *, void *);
 static struct CCC_Flat_hash_map_entry maybe_rehash_find_entry(
     struct CCC_Flat_hash_map *, void const *, CCC_Allocator const *
 );
-static struct Query
+static CCC_Handle
 find_key_or_index(struct CCC_Flat_hash_map const *, void const *, uint64_t);
 static CCC_Count
 find_key_or_fail(struct CCC_Flat_hash_map const *, void const *, uint64_t);
@@ -905,7 +897,7 @@ maybe_rehash_find_entry(
     }
     uint64_t const hash = hasher(map, key);
     struct CCC_Flat_hash_map_tag const tag = tag_from(hash);
-    struct Query const q = find_key_or_index(map, key, hash);
+    CCC_Handle const q = find_key_or_index(map, key, hash);
     if (q.status == CCC_ENTRY_VACANT && index_result != CCC_RESULT_OK) {
         /* We need to warn the user that we did not find the key and they cannot
            insert new element due to fixed size, permissions, or exhaustion. */
@@ -998,7 +990,7 @@ erase(struct CCC_Flat_hash_map *const map, size_t const index) {
 inserted. If the element does not exist and a non-occupied index is returned
 that index will have been the first empty or deleted index encountered in the
 probe sequence. This function assumes an empty index exists in the table. */
-static struct Query
+static CCC_Handle
 find_key_or_index(
     struct CCC_Flat_hash_map const *const map,
     void const *const key,
@@ -1006,7 +998,7 @@ find_key_or_index(
 ) {
     struct CCC_Flat_hash_map_tag const tag = tag_from(hash);
     size_t const mask = map->mask;
-    struct Probe_sequence probe = {
+    struct Probe probe = {
         .index = hash & mask,
         .stride = 0,
     };
@@ -1019,7 +1011,7 @@ find_key_or_index(
             while ((tag_index = match_next_one(&m)) != GROUP_COUNT) {
                 tag_index = (probe.index + tag_index) & mask;
                 if (CCC_likely(is_equal(map, key, tag_index))) {
-                    return (struct Query){
+                    return (CCC_Handle){
                         .index = tag_index,
                         .status = CCC_ENTRY_OCCUPIED,
                     };
@@ -1041,7 +1033,7 @@ find_key_or_index(
            match check. */
         if (!empty_deleted.error
             && CCC_likely(match_has_one(match_empty(group)))) {
-            return (struct Query){
+            return (CCC_Handle){
                 .index = empty_deleted.count,
                 .status = CCC_ENTRY_VACANT,
             };
@@ -1069,7 +1061,7 @@ find_key_or_fail(
 ) {
     struct CCC_Flat_hash_map_tag const tag = tag_from(hash);
     size_t const mask = map->mask;
-    struct Probe_sequence probe = {
+    struct Probe probe = {
         .index = hash & mask,
         .stride = 0,
     };
@@ -1102,7 +1094,7 @@ find_index_or_noreturn(
     struct CCC_Flat_hash_map const *const map, uint64_t const hash
 ) {
     size_t const mask = map->mask;
-    struct Probe_sequence p = {
+    struct Probe p = {
         .index = hash & mask,
         .stride = 0,
     };
