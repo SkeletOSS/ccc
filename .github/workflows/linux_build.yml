@@ -13,7 +13,7 @@ jobs:
     steps:
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
@@ -54,7 +54,7 @@ jobs:
         echo "${{ needs.check-diff.outputs.handle }}"
   
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
 
     - uses: lukka/get-cmake@latest
     
