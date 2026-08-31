@@ -588,7 +588,7 @@ metadata. */
                             private_array_adaptive_map_allocator                    \
                         ),                                                          \
                         .status = CCC_ENTRY_INSERT_ERROR,                           \
-                    };                                                              \
+                };                                                                  \
                 if (private_array_adaptive_map_ins_or_assign_hndl_ret.index) {      \
                     *((typeof(type_compound_literal) *)                             \
                           CCC_private_array_adaptive_map_data_at(                   \
@@ -625,7 +625,7 @@ metadata. */
                         .status                                                     \
                         = private_array_adaptive_map_ins_or_assign_hndl             \
                               .status,                                              \
-                    };                                                              \
+                };                                                                  \
                 *((typeof(private_array_adaptive_map_key) *)                        \
                       CCC_private_array_adaptive_map_key_at(                        \
                           private_array_adaptive_map_ins_or_assign_hndl.map,        \
