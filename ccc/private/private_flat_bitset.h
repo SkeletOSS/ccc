@@ -49,8 +49,9 @@ struct CCC_Flat_bitset {
 
 enum : size_t {
     /** @internal The number of bits in a bit block. In sync with set type. */
-    CCC_PRIVATE_FLAT_BITSET_BLOCK_BITS
-        = (sizeof(*(struct CCC_Flat_bitset){}.blocks) * CHAR_BIT),
+    CCC_PRIVATE_FLAT_BITSET_BLOCK_BITS = (
+        sizeof(*(struct CCC_Flat_bitset){}.blocks) * CHAR_BIT
+    ),
 };
 
 /*=========================     Private Interface   =========================*/
