@@ -166,7 +166,7 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:afb1a7e6a97601643011caabb58edadec"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">: size_t { <a class="el" href="private__flat__bitset_8h.html#afb1a7e6a97601643011caabb58edadecac38a80203ab25adc421dae4acbdf5f64">CCC_PRIVATE_FLAT_BITSET_BLOCK_BITS</a> = (sizeof(*(struct CCC_Flat_bitset){}.blocks) * CHAR_BIT)
+<tr class="memitem:afb1a7e6a97601643011caabb58edadec"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">: size_t { <a class="el" href="private__flat__bitset_8h.html#afb1a7e6a97601643011caabb58edadecac38a80203ab25adc421dae4acbdf5f64">CCC_PRIVATE_FLAT_BITSET_BLOCK_BITS</a>
  }</td></tr>
 <tr class="separator:afb1a7e6a97601643011caabb58edadec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -195,7 +195,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    (<span class="keyword">sizeof</span>(*(<span class="keyword">struct </span><a class="code hl_struct" href="structCCC__Flat__bitset.html">CCC_Flat_bitset</a>){}.blocks)                                \</div>
 <div class="line">     * <a class="code hl_define" href="private__flat__bitset_8h.html#a702fbd2599fbfbc7b2d06d013730fb7d">CCC_private_flat_bitset_block_count</a>(private_bit_capacity))</div>
-<div class="ttc" id="aprivate__flat__bitset_8h_html_a702fbd2599fbfbc7b2d06d013730fb7d"><div class="ttname"><a href="private__flat__bitset_8h.html#a702fbd2599fbfbc7b2d06d013730fb7d">CCC_private_flat_bitset_block_count</a></div><div class="ttdeci">#define CCC_private_flat_bitset_block_count(private_bit_capacity)</div><div class="ttdef"><b>Definition:</b> private_flat_bitset.h:70</div></div>
+<div class="ttc" id="aprivate__flat__bitset_8h_html_a702fbd2599fbfbc7b2d06d013730fb7d"><div class="ttname"><a href="private__flat__bitset_8h.html#a702fbd2599fbfbc7b2d06d013730fb7d">CCC_private_flat_bitset_block_count</a></div><div class="ttdeci">#define CCC_private_flat_bitset_block_count(private_bit_capacity)</div><div class="ttdef"><b>Definition:</b> private_flat_bitset.h:71</div></div>
 <div class="ttc" id="astructCCC__Flat__bitset_html"><div class="ttname"><a href="structCCC__Flat__bitset.html">CCC_Flat_bitset</a></div><div class="ttdef"><b>Definition:</b> private_flat_bitset.h:41</div></div>
 </div><!-- fragment --><p>Returns the number of bytes needed for the required blocks. </p>
 
@@ -350,7 +350,7 @@ Functions</h2></td></tr>
 <div class="line">        ),                                                                     \</div>
 <div class="line">        .count = (private_count), .<a class="code hl_variable" href="structCCC__Flat__bitset.html#a1fbae2fb73874a97c86f243d634e4d37">capacity</a> = (private_cap),                   \</div>
 <div class="line">    }</div>
-<div class="ttc" id="aprivate__flat__bitset_8h_html_a38c84c89e3948437a53536858535ae49"><div class="ttname"><a href="private__flat__bitset_8h.html#a38c84c89e3948437a53536858535ae49">CCC_private_flat_bitset_block_bytes</a></div><div class="ttdeci">#define CCC_private_flat_bitset_block_bytes(private_bit_capacity)</div><div class="ttdef"><b>Definition:</b> private_flat_bitset.h:75</div></div>
+<div class="ttc" id="aprivate__flat__bitset_8h_html_a38c84c89e3948437a53536858535ae49"><div class="ttname"><a href="private__flat__bitset_8h.html#a38c84c89e3948437a53536858535ae49">CCC_private_flat_bitset_block_bytes</a></div><div class="ttdeci">#define CCC_private_flat_bitset_block_bytes(private_bit_capacity)</div><div class="ttdef"><b>Definition:</b> private_flat_bitset.h:76</div></div>
 <div class="ttc" id="astructCCC__Flat__bitset_html_a1fbae2fb73874a97c86f243d634e4d37"><div class="ttname"><a href="structCCC__Flat__bitset.html#a1fbae2fb73874a97c86f243d634e4d37">CCC_Flat_bitset::capacity</a></div><div class="ttdeci">size_t capacity</div><div class="ttdef"><b>Definition:</b> private_flat_bitset.h:47</div></div>
 </div><!-- fragment --><p>This initializer must be runtime only because the possibility the bitset comes from an uninitialized heap. </p>
 
@@ -433,8 +433,8 @@ Functions</h2></td></tr>
 <div class="line">        }                                                                      \</div>
 <div class="line">        private_bitset;                                                        \</div>
 <div class="line">    }))}.private</div>
-<div class="ttc" id="aprivate__flat__bitset_8h_html_a1af5d2f751612358971f5c2f2652c27d"><div class="ttname"><a href="private__flat__bitset_8h.html#a1af5d2f751612358971f5c2f2652c27d">CCC_private_flat_bitset_optional_size</a></div><div class="ttdeci">#define CCC_private_flat_bitset_optional_size(private_cap,...)</div><div class="ttdef"><b>Definition:</b> private_flat_bitset.h:92</div></div>
-<div class="ttc" id="aprivate__flat__bitset_8h_html_a1e7ad141e7873995d8c2572938ff6258"><div class="ttname"><a href="private__flat__bitset_8h.html#a1e7ad141e7873995d8c2572938ff6258">CCC_private_flat_bitset_default</a></div><div class="ttdeci">#define CCC_private_flat_bitset_default()</div><div class="ttdef"><b>Definition:</b> private_flat_bitset.h:80</div></div>
+<div class="ttc" id="aprivate__flat__bitset_8h_html_a1af5d2f751612358971f5c2f2652c27d"><div class="ttname"><a href="private__flat__bitset_8h.html#a1af5d2f751612358971f5c2f2652c27d">CCC_private_flat_bitset_optional_size</a></div><div class="ttdeci">#define CCC_private_flat_bitset_optional_size(private_cap,...)</div><div class="ttdef"><b>Definition:</b> private_flat_bitset.h:93</div></div>
+<div class="ttc" id="aprivate__flat__bitset_8h_html_a1e7ad141e7873995d8c2572938ff6258"><div class="ttname"><a href="private__flat__bitset_8h.html#a1e7ad141e7873995d8c2572938ff6258">CCC_private_flat_bitset_default</a></div><div class="ttdeci">#define CCC_private_flat_bitset_default()</div><div class="ttdef"><b>Definition:</b> private_flat_bitset.h:81</div></div>
 <div class="ttc" id="aprivate__flat__bitset_8h_html_a23163f62989f1fc6b8bf92a570a42076"><div class="ttname"><a href="private__flat__bitset_8h.html#a23163f62989f1fc6b8bf92a570a42076">CCC_private_flat_bitset_reserve</a></div><div class="ttdeci">CCC_Result CCC_private_flat_bitset_reserve(struct CCC_Flat_bitset *, size_t, CCC_Allocator const *)</div></div>
 <div class="ttc" id="aprivate__flat__bitset_8h_html_a90932aa5dd8e0fce9758929c0af3cce0"><div class="ttname"><a href="private__flat__bitset_8h.html#a90932aa5dd8e0fce9758929c0af3cce0">CCC_private_flat_bitset_set</a></div><div class="ttdeci">CCC_Tribool CCC_private_flat_bitset_set(struct CCC_Flat_bitset *, size_t, CCC_Tribool)</div></div>
 <div class="ttc" id="astructCCC__Flat__bitset_html_ab7531a2e95c2ff5bdceb200ee3d18b9c"><div class="ttname"><a href="structCCC__Flat__bitset.html#ab7531a2e95c2ff5bdceb200ee3d18b9c">CCC_Flat_bitset::count</a></div><div class="ttdeci">size_t count</div><div class="ttdef"><b>Definition:</b> private_flat_bitset.h:45</div></div>
@@ -533,7 +533,7 @@ Functions</h2></td></tr>
 <div class="line">            private_bit_compound_literal,                                      \</div>
 <div class="line">            private_optional_storage_specifier                                 \</div>
 <div class="line">        )</div>
-<div class="ttc" id="aprivate__flat__bitset_8h_html_a81df7619d18eec78b74c0631db9f0766"><div class="ttname"><a href="private__flat__bitset_8h.html#a81df7619d18eec78b74c0631db9f0766">CCC_private_flat_bitset_count_check_storage_for</a></div><div class="ttdeci">#define CCC_private_flat_bitset_count_check_storage_for( private_count, private_bit_compound_literal, private_optional_storage_specifier...)</div><div class="ttdef"><b>Definition:</b> private_flat_bitset.h:219</div></div>
+<div class="ttc" id="aprivate__flat__bitset_8h_html_a81df7619d18eec78b74c0631db9f0766"><div class="ttname"><a href="private__flat__bitset_8h.html#a81df7619d18eec78b74c0631db9f0766">CCC_private_flat_bitset_count_check_storage_for</a></div><div class="ttdeci">#define CCC_private_flat_bitset_count_check_storage_for( private_count, private_bit_compound_literal, private_optional_storage_specifier...)</div><div class="ttdef"><b>Definition:</b> private_flat_bitset.h:220</div></div>
 </div><!-- fragment -->
 </div>
 </div>
