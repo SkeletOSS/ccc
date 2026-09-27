@@ -71,23 +71,19 @@ user provided variadic test function list when we place them within parentheses
 (test0(), test1()). So we will set the failure state globally, sadly. */
 extern enum Check_result check_process_result;
 
+/** Returns the bool flag needed to correctly print the test result in the
+printing function. */
+#define check_is_address(x) (__builtin_classify_type(x) == 5 ? 1 : 0)
+
 /** Provides the correct type to the union for a check expression while
 silencing compiler warnings for non-compiled generic branches. Substitution
 failure is an error in C, unlike C++. The casting of an integer to uintptr_t
 in the non-compiled void branch could cut off bytes according to the standard
 but that generic case would never get compiled anyway. */
 #define check_to_bytes(x)                                                      \
-    _Generic(                                                                  \
-        (x),                                                                   \
-        void *: (union Check_bytes){.as_address = (uintptr_t)(x)},             \
-        void const *: (union Check_bytes){.as_address = (uintptr_t)(x)},       \
-        default: (union Check_bytes){.as_bytes = (uintmax_t)(x)}               \
-    )
-
-/** Returns the bool flag needed to correctly print the test result in the
-printing function. */
-#define check_is_address(x)                                                    \
-    _Generic((x), void *: 1, void const *: 1, default: 0)
+    (__builtin_classify_type(x) == 5,                                          \
+     (union Check_bytes){.as_address = (uintptr_t)(x)},                        \
+     (union Check_bytes){.as_bytes = (uintmax_t)(x)})
 
 #define check_non_check_default_params(...) __VA_ARGS__
 #define check_default_params(...) void
