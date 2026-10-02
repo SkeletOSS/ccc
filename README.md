@@ -190,7 +190,7 @@ validate_sudoku_box(int const board[9][9], Flat_bitset *const row_check,
                     Flat_bitset *const col_check, size_t const row_start,
                     size_t const col_start) {
     Flat_bitset box_check
-        = flat_bitset_with_storage(DIGITS, flat_bitset_storage_for(DIGITS));
+        = flat_bitset_with_storage(DIGITS, (Bit[DIGITS]){});
     CCC_Tribool was_on = CCC_FALSE;
     for (size_t r = row_start; r < row_start + BOX_SIZE; ++r) {
         for (size_t c = col_start; c < col_start + BOX_SIZE; ++c) {
@@ -223,9 +223,9 @@ validate_sudoku_box(int const board[9][9], Flat_bitset *const row_check,
 static CCC_Tribool
 is_valid_sudoku(int const board[9][9]) {
     Flat_bitset row_check = flat_bitset_with_storage(
-        ROWS * DIGITS, flat_bitset_storage_for(ROWS * DIGITS));
+        ROWS * DIGITS, (Bit[ROWS * DIGITS]){});
     Flat_bitset col_check = flat_bitset_with_storage(
-        COLS * DIGITS, flat_bitset_storage_for(COLS * DIGITS));
+        COLS * DIGITS, (Bit[COLS * DIGITS]){});
     for (size_t row = 0; row < ROWS; row += BOX_SIZE) {
         for (size_t col = 0; col < COLS; col += BOX_SIZE) {
             if (!validate_sudoku_box(board, &row_check, &col_check, row, col)) {
