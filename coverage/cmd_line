@@ -1,1 +1,0 @@
-genhtml /home/runner/work/ccc/ccc/docs/coverage.info --output-directory /home/runner/work/ccc/ccc/docs/coverage --prefix /home/runner/work/ccc/ccc --flat --title 'CCC Test Suite Coverage Report'
