@@ -3,10 +3,12 @@ This file implements data compression algorithms over simple files, primarily
 text files for demonstration purposes. The compression algorithm used now is
 Huffman Encoding and Decoding but more methods could be added later. Such
 algorithms use a wide range of data structures. */
+#include "ccc/private/private_flat_bitset.h"
 #include <assert.h>
 #include <errno.h>
 #include <inttypes.h>
 #include <limits.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -56,6 +58,8 @@ struct Bit_queue {
     size_t front;
     size_t count;
 };
+
+/*=======================   Huffman Encoding Types   ========================*/
 
 /** Simple entry in the flat hash map while counting character occurrences. */
 struct Character_frequency {
@@ -186,10 +190,56 @@ struct Huffman_encoding {
     struct Bit_queue file_bits;
 };
 
+/*===========================   LZW Encoding Types   ========================*/
+
+typedef uint16_t Lzw_code;
+
+enum : Lzw_code {
+    STARTING_PREFIX_COUNT = CHAR_MAX,
+    CODE_LIMIT = 4096,
+    CLEAR_CODE = 256,
+    STOP_CODE = CLEAR_CODE + 1,
+    NEW_CODE_START = STOP_CODE + 1,
+    FILE_CODE_BIT_PACK_SIZE = 12,
+    FILE_CODE_BIT_PACK_BYTES = (FILE_CODE_BIT_PACK_SIZE + (CHAR_BIT - 1))
+        / CHAR_BIT,
+};
+static_assert(
+    (sizeof(Lzw_code) * CHAR_BIT) >= FILE_CODE_BIT_PACK_SIZE,
+    "Bit packing size for file compression is smaller than type used to store "
+    "codes."
+);
+
+struct Lzw_prefix {
+    uint16_t prefix;
+    unsigned char next_char;
+};
+
+struct Lzw_key_value {
+    struct Lzw_prefix key;
+    uint16_t code_value;
+};
+
+struct Lzw_map {
+    CCC_Flat_hash_map map;
+};
+
+/*=============================   File Types   ==============================*/
+
 /** Files the user wants zipped or unzipped. */
 struct Zip_actions {
     SV_Str_view zip;
     SV_Str_view unzip;
+};
+
+struct File_char {
+    unsigned char c;
+    bool error;
+};
+
+struct New_file {
+    SV_Str_view path;
+    FILE *file;
 };
 
 static SV_Str_view const output_dir = SV_from("samples/output/");
@@ -252,7 +302,7 @@ static void write_bitq(FILE *, struct Bit_queue *);
 static struct Huffman_encoding
 read_from_file(SV_Str_view, CCC_Allocator const *);
 static size_t readbytes(FILE *, void *, size_t);
-static size_t writebytes(FILE *, void const *, size_t);
+static size_t write_bytes(FILE *, void const *, size_t);
 static void
 fill_bitq(FILE *, struct Bit_queue *, size_t, CCC_Allocator const *);
 static size_t file_size(FILE *);
@@ -269,6 +319,8 @@ static CCC_Result
 pair_node_priority_queue_pop(struct Pair_node_priority_queue *);
 static struct Pair_node *
 pair_node_priority_queue_front(struct Pair_node_priority_queue const *);
+static struct File_char peek_first_char(FILE *file);
+static struct New_file open_compressed_file(SV_Str_view);
 
 /** Asserts even in release mode. Run code in the second argument if needed. */
 #define check(cond, ...)                                                       \
@@ -290,9 +342,11 @@ pair_node_priority_queue_front(struct Pair_node_priority_queue const *);
 setting up iteration of each character in the file. Name the iterator and then
 use it in the code block. Wrapping the code block in brackets is recommended for
 formatting, though not required. */
-#define foreach_filechar(file_pointer, char_iterator_name, codeblock...)       \
+#define foreach_filechar(                                                      \
+    file_pointer, start_index, char_iterator_name, codeblock...                \
+)                                                                              \
     do {                                                                       \
-        check(fseek(file_pointer, 0L, SEEK_SET) >= 0);                         \
+        check(fseek(file_pointer, start_index, SEEK_SET) >= 0);                \
         char *linepointer = NULL;                                              \
         defer {                                                                \
             free(linepointer);                                                 \
@@ -413,6 +467,16 @@ formatting, though not required. */
         pair_node_emplaced;                                                    \
     }))
 
+/*=============================== LZW Prototypes   ==========================*/
+
+static void lzw_encode(SV_Str_view to_compress, FILE *f);
+static uint64_t lzw_hash(CCC_Key_arguments);
+static CCC_Order lzw_compare(CCC_Key_comparator_arguments);
+static CCC_Entry lzw_try_insert(
+    struct Lzw_map *, struct Lzw_key_value const *, CCC_Allocator const *
+);
+static bool lzw_push_code(FILE *, Flat_bitset *, Lzw_code);
+
 /*===========================   Argument Handling  ==========================*/
 
 int
@@ -449,6 +513,8 @@ main(int argc, char **argv) {
     }
     return 0;
 }
+
+/*=========================    Huffman Compression  =========================*/
 
 /*=========================     Huffman Encoding    =========================*/
 
@@ -561,7 +627,7 @@ build_encoding_priority_queue(
     defer {
         (void)clear_and_free(&frequencies.map, &(CCC_Destructor){}, allocator);
     }
-    foreach_filechar(f, c, {
+    foreach_filechar(f, 0, c, {
         struct Character_frequency *const ins
             = character_frequency_map_increment_entry_or_insert_with(
                 &frequencies,
@@ -658,7 +724,7 @@ build_encoding_bitq(
         (void)clear_and_free(&path_memos.map, &(CCC_Destructor){}, allocator);
     }
     check(capacity(&path_memos.map).count >= tree->num_leaves);
-    foreach_filechar(f, c, {
+    foreach_filechar(f, 0, c, {
         /* The entry interface allows us to express the complete memoization
            technique with a single query into our hash map. We either find the
            element and re-record the path in the path bit queue or we insert a
@@ -802,61 +868,35 @@ write_to_file(
     size_t const original_filesize,
     struct Huffman_encoding *const header
 ) {
-    /* We write all new files to output directory so create the new path. */
-    char path_to_cccz[FILESYS_MAX_PATH];
-    size_t const dir_delim = SV_reverse_find(
-        original_filepath, SV_len(original_filepath), SV_from("/")
-    );
-    SV_Str_view const raw_file
-        = dir_delim == SV_npos(original_filepath)
-            ? original_filepath
-            : SV_substr(
-                  original_filepath, dir_delim + 1, SV_len(original_filepath)
-              );
-    size_t const total_bytes
-        = SV_bytes(output_dir) + SV_bytes(raw_file) + SV_bytes(cccz_suffix);
-    check(total_bytes < FILESYS_MAX_PATH);
-    size_t const path_bytes
-        = SV_fill(SV_bytes(output_dir), path_to_cccz, output_dir);
-    size_t const file_bytes = SV_fill(
-        SV_bytes(raw_file), path_to_cccz + (path_bytes - 1), raw_file
-    );
-    (void)SV_fill(
-        SV_bytes(cccz_suffix),
-        path_to_cccz + (path_bytes - 1) + (file_bytes - 1),
-        cccz_suffix
-    );
-
-    /* Path is now correct and verified try to create file. */
-    FILE *const cccz = fopen(path_to_cccz, "w");
-    check(cccz, (void)fprintf(stderr, "%s", strerror(errno)););
+    struct New_file cccz = open_compressed_file(original_filepath);
+    check(cccz.file, (void)fprintf(stderr, "%s", strerror(errno)););
     defer {
-        (void)fclose(cccz);
+        (void)fclose(cccz.file);
     }
 
     /* When writing bytes we need every bit to make it so use many checks. */
-    size_t writ = writebytes(cccz, &header->magic, sizeof(header->magic));
+    size_t writ = write_bytes(cccz.file, &header->magic, sizeof(header->magic));
     check(writ == sizeof(header->magic));
-    writ = writebytes(
-        cccz, &header->leaves_minus_one, sizeof(header->leaves_minus_one)
+    writ = write_bytes(
+        cccz.file, &header->leaves_minus_one, sizeof(header->leaves_minus_one)
     );
     check(writ == sizeof(header->leaves_minus_one));
     char const *leaf_string = string_arena_at(
         &header->blueprint.arena, &header->blueprint.leaf_string
     );
-    writ = writebytes(cccz, leaf_string, header->leaves_minus_one + 1);
+    writ = write_bytes(cccz.file, leaf_string, header->leaves_minus_one + 1);
     check(writ == (size_t)(header->leaves_minus_one + 1));
-    writ = writebytes(
-        cccz, &header->file_bits_count, sizeof(header->file_bits_count)
+    writ = write_bytes(
+        cccz.file, &header->file_bits_count, sizeof(header->file_bits_count)
     );
     check(writ == sizeof(header->file_bits_count));
-    write_bitq(cccz, &header->blueprint.tree_paths);
-    write_bitq(cccz, &header->file_bits);
+    write_bitq(cccz.file, &header->blueprint.tree_paths);
+    write_bitq(cccz.file, &header->file_bits);
 
-    size_t const cccz_size = file_size(cccz);
+    size_t const cccz_size = file_size(cccz.file);
     printf(
         "Zipped file %s has compression ratio of %.2lf%% (%zu bytes).\n",
-        path_to_cccz,
+        cccz.path.str,
         (100.0 * (double)cccz_size) / (double)(original_filesize),
         cccz_size
     );
@@ -876,37 +916,16 @@ write_bitq(FILE *const cccz, struct Bit_queue *const bq) {
         buf |= (uint8_t)(bitq_pop_front(bq) << i);
         ++i;
         if (i >= CHAR_BIT) {
-            size_t const byte = writebytes(cccz, &buf, sizeof(buf));
+            size_t const byte = write_bytes(cccz, &buf, sizeof(buf));
             check(byte);
             buf = 0;
             i = 0;
         }
     }
     if (i) {
-        size_t const byte = writebytes(cccz, &buf, sizeof(buf));
+        size_t const byte = write_bytes(cccz, &buf, sizeof(buf));
         check(byte);
     }
-}
-
-/** Write the specified bytes to the file or exit the program if an error
-occurs. Returns the number of bytes written. */
-static size_t
-writebytes(FILE *const f, void const *const source, size_t const to_write) {
-    size_t count = 0;
-    unsigned char const *source_pointer = source;
-    while (count < to_write) {
-        /* Avoiding a strict aliasing violation. */
-        uint8_t byte = 0;
-        memcpy(&byte, source_pointer, sizeof(unsigned char));
-        int const writ = fputc(byte, f);
-        check(!ferror(f));
-        if (writ == EOF) {
-            return count;
-        }
-        ++source_pointer;
-        ++count;
-    }
-    return count;
 }
 
 /*=========================     Huffman Decoding    =========================*/
@@ -1083,6 +1102,94 @@ reconstruct_tree(
     return tree;
 }
 
+/*=========================     LZW Compression     =========================*/
+
+static void
+lzw_encode(SV_Str_view const to_compress, FILE *const f) {
+    struct Lzw_map prefix_map = {CCC_flat_hash_map_with_capacity(
+        struct Lzw_key_value,
+        key,
+        ((CCC_Hasher){.hash = lzw_hash, .compare = lzw_compare}),
+        std_allocator,
+        STARTING_PREFIX_COUNT
+    )};
+    struct New_file const compression_location
+        = open_compressed_file(to_compress);
+    check(compression_location.file);
+    defer {
+        CCC_flat_hash_map_clear_and_free(
+            &prefix_map.map, &(CCC_Destructor){}, &std_allocator
+        );
+        (void)fclose(compression_location.file);
+    }
+    {
+        uint16_t code = NEW_CODE_START;
+        struct File_char const first_char = peek_first_char(f);
+        check(!first_char.error);
+        uint16_t prefix = first_char.c;
+        CCC_Flat_bitset fixed_bs = flat_bitset_with_storage(
+            0, (CCC_Bit[sizeof(Lzw_code) * CHAR_BIT]){}
+        );
+        foreach_filechar(f, 1, c, {
+            CCC_Entry const e = lzw_try_insert(
+                &prefix_map,
+                &(struct Lzw_key_value){
+                    .key = {
+                        .prefix = prefix,
+                        .next_char = (unsigned char)*c,
+                    },
+                    .code_value = code,
+                },
+                &std_allocator
+            );
+            if (occupied(&e)) {
+                struct Lzw_key_value const *const seen = unwrap(&e);
+                prefix = seen->code_value;
+            } else {
+                lzw_push_code(compression_location.file, &fixed_bs, prefix);
+                ++code;
+                if (code >= CODE_LIMIT) {
+                    lzw_push_code(
+                        compression_location.file, &fixed_bs, CLEAR_CODE
+                    );
+                    CCC_flat_hash_map_clear(
+                        &prefix_map.map, &(CCC_Destructor){}
+                    );
+                    code = NEW_CODE_START;
+                }
+                prefix = (unsigned char)*c;
+            }
+        });
+        lzw_push_code(compression_location.file, &fixed_bs, prefix);
+        lzw_push_code(compression_location.file, &fixed_bs, STOP_CODE);
+        while (!lzw_push_code(compression_location.file, &fixed_bs, 0)) {}
+    }
+}
+
+/** Pushes the specified code into the fixed size bit set. If the fixed size
+bit set reaches capacity, its contents are written out to to a file. */
+static bool
+lzw_push_code(
+    FILE *const file, Flat_bitset *const fixed_bs, Lzw_code const code
+) {
+    assert(sizeof(code) <= flat_bitset_capacity(fixed_bs));
+    bool wrote_to_file = false;
+    for (Lzw_code b = 0; b < FILE_CODE_BIT_PACK_SIZE; ++b) {
+        CCC_Result const push_result
+            = flat_bitset_push_back(fixed_bs, (code >> b) & 1, &std_allocator);
+        check(push_result == CCC_RESULT_OK);
+        if (flat_bitset_count(fixed_bs).count
+            == (sizeof(Lzw_code) * CHAR_BIT)) {
+            write_bytes(file, fixed_bs->blocks, sizeof(Lzw_code));
+            wrote_to_file = true;
+            flat_bitset_clear(fixed_bs);
+        }
+    }
+    return wrote_to_file;
+}
+
+/*=========================    File Read and Write  =========================*/
+
 /** Reconstructs the text by following the bit paths specified in the file text
 bit queue. Bits are written on a per byte basis to the file and each bit of
 the byte corresponds to a bit in the bit queue. */
@@ -1101,7 +1208,7 @@ reconstruct_text(
         cur = branch_index(tree, cur, (uint8_t)bit);
         if (!branch_index(tree, cur, 1)) {
             char const c = char_index(tree, cur);
-            size_t const byte = writebytes(f, &c, sizeof(c));
+            size_t const byte = write_bytes(f, &c, sizeof(c));
             check(byte);
             cur = tree->root;
         }
@@ -1131,27 +1238,6 @@ fill_bitq(
         bitq_push_back(bq, bit, allocator);
         ++i;
     }
-}
-
-/** Reads the specified number of bytes from the file or exits if an error
-occurs. The bytes read are returned and may be less than requested if the file
-ends. */
-static size_t
-readbytes(FILE *const f, void *const destination, size_t const to_read) {
-    size_t count = 0;
-    unsigned char *destination_pointer = destination;
-    while (count < to_read) {
-        int const read = fgetc(f);
-        check(!ferror(f));
-        if (read == EOF) {
-            return count;
-        }
-        /* Avoid strict aliasing violation. */
-        memcpy(destination_pointer, &read, sizeof(unsigned char));
-        ++destination_pointer;
-        ++count;
-    }
-    return count;
 }
 
 /*=========================      Huffman Helpers    =========================*/
@@ -1229,14 +1315,6 @@ free_encode_tree(
     );
     check(r == CCC_RESULT_OK);
     *tree = (struct Huffman_tree){};
-}
-
-static size_t
-file_size(FILE *f) {
-    check(fseek(f, 0L, SEEK_END) >= 0);
-    size_t const ret = (size_t)ftell(f);
-    check(fseek(f, 0L, SEEK_SET) >= 0);
-    return ret;
 }
 
 /* NOLINTBEGIN(*misc-no-recursion) */
@@ -1356,6 +1434,38 @@ print_bitq(struct Bit_queue const *const bq) {
 }
 
 /* NOLINTEND(*misc-no-recursion) */
+
+/*========================       LZW Helper Code     ========================*/
+
+static uint64_t
+lzw_hash(CCC_Key_arguments const key) {
+    struct Lzw_prefix const *const prefix = key.key;
+    uint64_t code = (uint64_t)((prefix->prefix << 8) | prefix->next_char);
+    code = (code ^ (code >> 30)) * UINT64_C(0xbf58476d1ce4e5b9);
+    code = (code ^ (code >> 27)) * UINT64_C(0x94d049bb133111eb);
+    code = code ^ (code >> 31);
+    return code;
+}
+
+static CCC_Order
+lzw_compare(CCC_Key_comparator_arguments const key) {
+    struct Lzw_prefix const *const known_prefix = key.key_left;
+    struct Lzw_prefix const *const sequence = key.type_right;
+    uint32_t const left
+        = (uint32_t)((known_prefix->prefix << 8) | known_prefix->next_char);
+    uint32_t const right
+        = (uint32_t)((sequence->prefix << 8) | sequence->next_char);
+    return (left > right) - (left < right);
+}
+
+static inline CCC_Entry
+lzw_try_insert(
+    struct Lzw_map *const map,
+    struct Lzw_key_value const *const prefix,
+    CCC_Allocator const *allocator
+) {
+    return CCC_flat_hash_map_try_insert(&map->map, prefix, allocator);
+}
 
 /*=====================       Bit Queue Helper Code     =====================*/
 
@@ -1505,6 +1615,104 @@ bitq_clear_and_free(
 static inline size_t
 min(size_t const a, size_t const b) {
     return a < b ? a : b;
+}
+
+/*=====================       File Helper Code     ==+++++===================*/
+
+static inline size_t
+file_size(FILE *const f) {
+    check(fseek(f, 0L, SEEK_END) >= 0);
+    size_t const ret = (size_t)ftell(f);
+    check(fseek(f, 0L, SEEK_SET) >= 0);
+    return ret;
+}
+
+static inline struct File_char
+peek_first_char(FILE *const file) {
+    int const first_byte = fgetc(file);
+    check(first_byte != EOF);
+    check(ungetc(first_byte, file) != EOF);
+    return first_byte == EOF
+             ? (struct File_char){.error = true}
+             : (struct File_char){.c = (unsigned char)first_byte};
+}
+
+static struct New_file
+open_compressed_file(SV_Str_view const original_filepath) {
+    /* We write all new files to output directory so create the new path. */
+    static char path_to_cccz[FILESYS_MAX_PATH];
+    size_t const dir_delim = SV_reverse_find(
+        original_filepath, SV_len(original_filepath), SV_from("/")
+    );
+    SV_Str_view const raw_file
+        = dir_delim == SV_npos(original_filepath)
+            ? original_filepath
+            : SV_substr(
+                  original_filepath, dir_delim + 1, SV_len(original_filepath)
+              );
+    size_t const total_bytes
+        = SV_bytes(output_dir) + SV_bytes(raw_file) + SV_bytes(cccz_suffix);
+    check(total_bytes < FILESYS_MAX_PATH);
+    size_t const path_bytes
+        = SV_fill(SV_bytes(output_dir), path_to_cccz, output_dir);
+    size_t const file_bytes = SV_fill(
+        SV_bytes(raw_file), path_to_cccz + (path_bytes - 1), raw_file
+    );
+    (void)SV_fill(
+        SV_bytes(cccz_suffix),
+        path_to_cccz + (path_bytes - 1) + (file_bytes - 1),
+        cccz_suffix
+    );
+
+    /* Path is now correct and verified try to create file. */
+    FILE *const cccz = fopen(path_to_cccz, "w");
+    check(cccz, (void)fprintf(stderr, "%s", strerror(errno)););
+    return (struct New_file){
+        .path = SV_from_terminated(path_to_cccz),
+        .file = cccz,
+    };
+}
+
+/** Write the specified bytes to the file or exit the program if an error
+occurs. Returns the number of bytes written. */
+static size_t
+write_bytes(FILE *const f, void const *const source, size_t const to_write) {
+    size_t count = 0;
+    unsigned char const *source_pointer = source;
+    while (count < to_write) {
+        /* Avoiding a strict aliasing violation. */
+        uint8_t byte = 0;
+        memcpy(&byte, source_pointer, sizeof(unsigned char));
+        int const writ = fputc(byte, f);
+        check(!ferror(f));
+        if (writ == EOF) {
+            return count;
+        }
+        ++source_pointer;
+        ++count;
+    }
+    return count;
+}
+
+/** Reads the specified number of bytes from the file or exits if an error
+occurs. The bytes read are returned and may be less than requested if the file
+ends. */
+static size_t
+readbytes(FILE *const f, void *const destination, size_t const to_read) {
+    size_t count = 0;
+    unsigned char *destination_pointer = destination;
+    while (count < to_read) {
+        int const read = fgetc(f);
+        check(!ferror(f));
+        if (read == EOF) {
+            return count;
+        }
+        /* Avoid strict aliasing violation. */
+        memcpy(destination_pointer, &read, sizeof(unsigned char));
+        ++destination_pointer;
+        ++count;
+    }
+    return count;
 }
 
 /*=====================       Container Helper Code     =====================*/
