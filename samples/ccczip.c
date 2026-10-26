@@ -195,7 +195,7 @@ struct Huffman_encoding {
 typedef uint16_t Lzw_code;
 
 enum : Lzw_code {
-    STARTING_PREFIX_COUNT = CHAR_MAX,
+    STARTING_PREFIX_COUNT = UCHAR_MAX + 1,
     CODE_LIMIT = 4096,
     CLEAR_CODE = 256,
     STOP_CODE = CLEAR_CODE + 1,
@@ -469,7 +469,7 @@ formatting, though not required. */
 
 /*=============================== LZW Prototypes   ==========================*/
 
-static void lzw_encode(SV_Str_view to_compress, FILE *f);
+static void lzw_encode(SV_Str_view to_compress, FILE *f, CCC_Allocator const *);
 static uint64_t lzw_hash(CCC_Key_arguments);
 static CCC_Order lzw_compare(CCC_Key_comparator_arguments);
 static CCC_Entry lzw_try_insert(
@@ -1105,12 +1105,16 @@ reconstruct_tree(
 /*=========================     LZW Compression     =========================*/
 
 static void
-lzw_encode(SV_Str_view const to_compress, FILE *const f) {
+lzw_encode(
+    SV_Str_view const to_compress,
+    FILE *const f,
+    CCC_Allocator const *const allocator
+) {
     struct Lzw_map prefix_map = {CCC_flat_hash_map_with_capacity(
         struct Lzw_key_value,
         key,
         ((CCC_Hasher){.hash = lzw_hash, .compare = lzw_compare}),
-        std_allocator,
+        *allocator,
         STARTING_PREFIX_COUNT
     )};
     struct New_file const compression_location
@@ -1118,7 +1122,7 @@ lzw_encode(SV_Str_view const to_compress, FILE *const f) {
     check(compression_location.file);
     defer {
         CCC_flat_hash_map_clear_and_free(
-            &prefix_map.map, &(CCC_Destructor){}, &std_allocator
+            &prefix_map.map, &(CCC_Destructor){}, allocator
         );
         (void)fclose(compression_location.file);
     }
@@ -1127,7 +1131,7 @@ lzw_encode(SV_Str_view const to_compress, FILE *const f) {
         struct File_char const first_char = peek_first_char(f);
         check(!first_char.error);
         uint16_t prefix = first_char.c;
-        CCC_Flat_bitset fixed_bs = flat_bitset_with_storage(
+        CCC_Flat_bitset sliding_code_window = flat_bitset_with_storage(
             0, (CCC_Bit[sizeof(Lzw_code) * CHAR_BIT]){}
         );
         foreach_filechar(f, 1, c, {
@@ -1140,17 +1144,23 @@ lzw_encode(SV_Str_view const to_compress, FILE *const f) {
                     },
                     .code_value = code,
                 },
-                &std_allocator
+                allocator
             );
             if (occupied(&e)) {
+                // Make the prefix longer so we don't push to file yet.
                 struct Lzw_key_value const *const seen = unwrap(&e);
                 prefix = seen->code_value;
             } else {
-                lzw_push_code(compression_location.file, &fixed_bs, prefix);
+                // Prefix has reached max unique length so we push to file.
+                lzw_push_code(
+                    compression_location.file, &sliding_code_window, prefix
+                );
                 ++code;
                 if (code >= CODE_LIMIT) {
                     lzw_push_code(
-                        compression_location.file, &fixed_bs, CLEAR_CODE
+                        compression_location.file,
+                        &sliding_code_window,
+                        CLEAR_CODE
                     );
                     CCC_flat_hash_map_clear(
                         &prefix_map.map, &(CCC_Destructor){}
@@ -1160,9 +1170,13 @@ lzw_encode(SV_Str_view const to_compress, FILE *const f) {
                 prefix = (unsigned char)*c;
             }
         });
-        lzw_push_code(compression_location.file, &fixed_bs, prefix);
-        lzw_push_code(compression_location.file, &fixed_bs, STOP_CODE);
-        while (!lzw_push_code(compression_location.file, &fixed_bs, 0)) {}
+        lzw_push_code(compression_location.file, &sliding_code_window, prefix);
+        lzw_push_code(
+            compression_location.file, &sliding_code_window, STOP_CODE
+        );
+        while (!lzw_push_code(
+            compression_location.file, &sliding_code_window, 0
+        )) {}
     }
 }
 
@@ -1171,29 +1185,52 @@ bit set reaches the size of the Lzw_code's bit width it's contents are written
 to the file within that types number of bytes and the bit set is cleared. */
 static bool
 lzw_push_code(
-    FILE *const file, Flat_bitset *const fixed_bs, Lzw_code const code
+    FILE *const file,
+    Flat_bitset *const sliding_code_window,
+    Lzw_code const code
 ) {
-    assert(sizeof(code) <= flat_bitset_capacity(fixed_bs).count);
     bool wrote_to_file = false;
     for (Lzw_code b = 0; b < FILE_CODE_BIT_PACK_SIZE; ++b) {
-        CCC_Result const push_result
-            = flat_bitset_push_back(fixed_bs, (code >> b) & 1, &std_allocator);
+        CCC_Result const push_result = flat_bitset_push_back(
+            sliding_code_window,
+            (CCC_Tribool){(code >> b) & 1},
+            &(CCC_Allocator){}
+        );
         check(push_result == CCC_RESULT_OK);
-        if (flat_bitset_count(fixed_bs).count
+        if (flat_bitset_count(sliding_code_window).count
             == (sizeof(Lzw_code) * CHAR_BIT)) {
-            write_bytes(file, fixed_bs->blocks, sizeof(Lzw_code));
+            write_bytes(file, sliding_code_window->blocks, sizeof(Lzw_code));
+            flat_bitset_clear(sliding_code_window);
             wrote_to_file = true;
-            flat_bitset_clear(fixed_bs);
         }
     }
     return wrote_to_file;
 }
 
+static void
+lzw_decode(SV_Str_view decode, CCC_Allocator const *const allocator) {
+    CCC_Tribool has_suffix = SV_ends_with(decode, SV_from(".cccz"));
+    check(has_suffix);
+    FILE *const cccz = fopen(SV_begin(decode), "r");
+    defer {
+        if (cccz) {
+            (void)fclose(cccz);
+        }
+    }
+    check(cccz, (void)fprintf(stderr, "%s\n", strerror(errno)););
+    check(file_size(cccz) % sizeof(Lzw_code) == 0);
+    printf("Unzip %s (%zu bytes).\n", SV_begin(decode), file_size(cccz));
+    static struct Lzw_prefix code_table[CODE_LIMIT];
+    for (Lzw_code i = 0; i < STARTING_PREFIX_COUNT; ++i) {
+        code_table[i] = (struct Lzw_prefix){.next_char = (unsigned char)i};
+    }
+}
+
 /*=========================    File Read and Write  =========================*/
 
-/** Reconstructs the text by following the bit paths specified in the file text
-bit queue. Bits are written on a per byte basis to the file and each bit of
-the byte corresponds to a bit in the bit queue. */
+/** Reconstructs the text by following the bit paths specified in the file
+text bit queue. Bits are written on a per byte basis to the file and each
+bit of the byte corresponds to a bit in the bit queue. */
 void
 reconstruct_text(
     FILE *const f,
