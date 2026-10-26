@@ -1172,7 +1172,7 @@ static bool
 lzw_push_code(
     FILE *const file, Flat_bitset *const fixed_bs, Lzw_code const code
 ) {
-    assert(sizeof(code) <= flat_bitset_capacity(fixed_bs));
+    assert(sizeof(code) <= flat_bitset_capacity(fixed_bs).count);
     bool wrote_to_file = false;
     for (Lzw_code b = 0; b < FILE_CODE_BIT_PACK_SIZE; ++b) {
         CCC_Result const push_result
