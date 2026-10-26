@@ -1167,7 +1167,8 @@ lzw_encode(SV_Str_view const to_compress, FILE *const f) {
 }
 
 /** Pushes the specified code into the fixed size bit set. If the fixed size
-bit set reaches capacity, its contents are written out to to a file. */
+bit set reaches the size of the Lzw_code's bit width it's contents are written
+to the file within that types number of bytes and the bit set is cleared. */
 static bool
 lzw_push_code(
     FILE *const file, Flat_bitset *const fixed_bs, Lzw_code const code
