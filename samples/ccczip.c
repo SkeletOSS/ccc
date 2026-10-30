@@ -200,12 +200,13 @@ enum : Lzw_code {
     CLEAR_CODE = 256,
     STOP_CODE = CLEAR_CODE + 1,
     NEW_CODE_START = STOP_CODE + 1,
-    FILE_CODE_BIT_PACK_SIZE = 12,
-    FILE_CODE_BIT_PACK_BYTES = (FILE_CODE_BIT_PACK_SIZE + (CHAR_BIT - 1))
+    FILE_CODE_BIT_COUNT = 12,
+    FILE_CODE_BIT_PACK_BYTES = (FILE_CODE_BIT_COUNT + (CHAR_BIT - 1))
         / CHAR_BIT,
+    CODE_WIDTH_MASK = CODE_LIMIT - 1,
 };
 static_assert(
-    (sizeof(Lzw_code) * CHAR_BIT) >= FILE_CODE_BIT_PACK_SIZE,
+    (sizeof(Lzw_code) * CHAR_BIT) >= FILE_CODE_BIT_COUNT,
     "Bit packing size for file compression is smaller than type used to store "
     "codes."
 );
@@ -222,6 +223,14 @@ struct Lzw_key_value {
 
 struct Lzw_map {
     CCC_Flat_hash_map map;
+};
+
+/* Used to help put 12 bit codes back together into a uint16_t while
+decompressing a file. */
+struct Lzw_code_accumulator {
+    uint32_t accumulator;
+    uint8_t bit_count;
+    Lzw_code current_code;
 };
 
 /*=============================   File Types   ==============================*/
@@ -1190,7 +1199,7 @@ lzw_push_code(
     Lzw_code const code
 ) {
     bool wrote_to_file = false;
-    for (Lzw_code b = 0; b < FILE_CODE_BIT_PACK_SIZE; ++b) {
+    for (Lzw_code b = 0; b < FILE_CODE_BIT_COUNT; ++b) {
         CCC_Result const push_result = flat_bitset_push_back(
             sliding_code_window,
             (CCC_Tribool){(code >> b) & 1},
@@ -1199,12 +1208,48 @@ lzw_push_code(
         check(push_result == CCC_RESULT_OK);
         if (flat_bitset_count(sliding_code_window).count
             == (sizeof(Lzw_code) * CHAR_BIT)) {
-            write_bytes(file, sliding_code_window->blocks, sizeof(Lzw_code));
+            write_bytes(
+                file, flat_bitset_data(sliding_code_window), sizeof(Lzw_code)
+            );
             flat_bitset_clear(sliding_code_window);
             wrote_to_file = true;
         }
     }
     return wrote_to_file;
+}
+
+static bool
+lzw_read_first_code(FILE *const file, Lzw_code *const output) {
+    *output = 0;
+    int const first_byte = (Lzw_code)fgetc(file);
+    if (first_byte == EOF) {
+        return false;
+    }
+    int const second_byte = fgetc(file);
+    *output = (Lzw_code)((first_byte
+                          | (second_byte << (sizeof(unsigned char) * CHAR_BIT)))
+                         & CODE_WIDTH_MASK);
+    return true;
+}
+
+static struct Lzw_code_accumulator *
+lzw_read_code(
+    FILE *const file, struct Lzw_code_accumulator *const accumulator
+) {
+    if (accumulator->bit_count < FILE_CODE_BIT_COUNT) {
+        uint16_t block = 0;
+        size_t const read_count = fread(&block, sizeof(Lzw_code), 1, file);
+        if (read_count == 0) {
+            return NULL;
+        }
+        accumulator->accumulator |= ((uint32_t)block << accumulator->bit_count);
+        accumulator->bit_count += sizeof(Lzw_code);
+    }
+    accumulator->current_code
+        = (uint16_t)(accumulator->accumulator & CODE_WIDTH_MASK);
+    accumulator->accumulator >>= FILE_CODE_BIT_COUNT;
+    accumulator->bit_count -= FILE_CODE_BIT_COUNT;
+    return accumulator;
 }
 
 static void
@@ -1221,9 +1266,19 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const allocator) {
     check(file_size(cccz) % sizeof(Lzw_code) == 0);
     printf("Unzip %s (%zu bytes).\n", SV_begin(decode), file_size(cccz));
     static struct Lzw_prefix code_table[CODE_LIMIT];
+    static unsigned char current_string[CODE_LIMIT];
     for (Lzw_code i = 0; i < STARTING_PREFIX_COUNT; ++i) {
         code_table[i] = (struct Lzw_prefix){.next_char = (unsigned char)i};
     }
+    Lzw_code next_code = NEW_CODE_START;
+    CCC_Flat_bitset sliding_code_window
+        = flat_bitset_with_storage(0, (CCC_Bit[sizeof(Lzw_code) * CHAR_BIT]){});
+    Lzw_code old_code = 0;
+    check(lzw_read_first_code(cccz, &old_code));
+    current_string[0] = (unsigned char)old_code;
+    write_bytes(cccz, &current_string[0], 1);
+    struct Lzw_code_accumulator current_code = {};
+    while (lzw_read_code(cccz, &current_code)) {}
 }
 
 /*=========================    File Read and Write  =========================*/
