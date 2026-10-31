@@ -1,9 +1,7 @@
 /** Author: Alexander G. Lopez
 This file implements data compression algorithms over simple files, primarily
-text files for demonstration purposes. The compression algorithm used now is
-Huffman Encoding and Decoding but more methods could be added later. Such
-algorithms use a wide range of data structures. */
-#include "ccc/private/private_flat_bitset.h"
+text files for demonstration purposes. Various compression algorithms such as
+Huffman and LZW are implemented using CCC containers. */
 #include <assert.h>
 #include <errno.h>
 #include <inttypes.h>
@@ -14,6 +12,7 @@ algorithms use a wide range of data structures. */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #ifdef __linux__
 #    include <linux/limits.h>
 #    define FILESYS_MAX_PATH PATH_MAX
@@ -197,6 +196,7 @@ typedef uint16_t Lzw_code;
 enum : Lzw_code {
     STARTING_PREFIX_COUNT = UCHAR_MAX + 1,
     CODE_LIMIT = 4096,
+    NULL_PARENT_CODE = 4097,
     CLEAR_CODE = 256,
     STOP_CODE = CLEAR_CODE + 1,
     NEW_CODE_START = STOP_CODE + 1,
@@ -212,13 +212,18 @@ static_assert(
 );
 
 struct Lzw_prefix {
-    uint16_t prefix;
+    Lzw_code prefix;
+    unsigned char next_char;
+};
+
+struct Lzw_tree {
+    Lzw_code parent;
     unsigned char next_char;
 };
 
 struct Lzw_key_value {
     struct Lzw_prefix key;
-    uint16_t code_value;
+    Lzw_code code_value;
 };
 
 struct Lzw_map {
@@ -235,8 +240,15 @@ struct Lzw_code_accumulator {
 
 /*=============================   File Types   ==============================*/
 
+enum Compression_algorithm : uint8_t {
+    HUFFMAN = 0,
+    LZW,
+    ALGORITHM_COUNT,
+};
+
 /** Files the user wants zipped or unzipped. */
 struct Zip_actions {
+    enum Compression_algorithm algorithm;
     SV_Str_view zip;
     SV_Str_view unzip;
 };
@@ -251,13 +263,15 @@ struct New_file {
     FILE *file;
 };
 
+typedef void Algorithm(SV_Str_view, CCC_Allocator const *);
+
 static SV_Str_view const output_dir = SV_from("samples/output/");
 static SV_Str_view const cccz_suffix = SV_from(".cccz");
 
 /*===========================      Prototypes      ==========================*/
 
-static void zip_file(SV_Str_view, CCC_Allocator const *);
-static struct Pair_node_priority_queue build_encoding_priority_queue(
+static void huffman_encode(SV_Str_view, CCC_Allocator const *);
+static struct Pair_node_priority_queue huffman_build_encoding_priority_queue(
     FILE *, struct Huffman_tree *, CCC_Allocator const *
 );
 static CCC_Tribool bitq_is_empty(struct Bit_queue const *);
@@ -275,14 +289,16 @@ static uint64_t hash_char(CCC_Key_arguments);
 static CCC_Order char_order(CCC_Key_comparator_arguments);
 static CCC_Order order_freqs(CCC_Comparator_arguments);
 static CCC_Order path_memo_order(CCC_Key_comparator_arguments);
-static struct Path_memo append_tree_path_to_bitq(
+static struct Path_memo huffman_append_tree_path_to_bitq(
     struct Huffman_tree *, struct Bit_queue *, char, CCC_Allocator const *
 );
-static struct Bit_queue
-build_encoding_bitq(FILE *, struct Huffman_tree *, CCC_Allocator const *);
-static struct Huffman_tree build_encoding_tree(FILE *, CCC_Allocator const *);
+static struct Bit_queue huffman_build_encoding_bitq(
+    FILE *, struct Huffman_tree *, CCC_Allocator const *
+);
+static struct Huffman_tree
+huffman_build_encoding_tree(FILE *, CCC_Allocator const *);
 static struct Compressed_huffman_tree
-compress_tree(struct Huffman_tree *, CCC_Allocator const *);
+huffman_compress_tree(struct Huffman_tree *, CCC_Allocator const *);
 static void free_encode_tree(struct Huffman_tree *, CCC_Allocator const *);
 static void
 print_tree(struct Huffman_tree const *, size_t, CCC_Allocator const *);
@@ -296,9 +312,10 @@ static void print_inner_tree(
 static void print_node(struct Huffman_tree const *, size_t);
 static bool is_leaf(struct Huffman_tree const *, size_t);
 static void print_bitq(struct Bit_queue const *);
-static void unzip_file(SV_Str_view, CCC_Allocator const *);
-static struct Huffman_tree
-reconstruct_tree(struct Compressed_huffman_tree *, CCC_Allocator const *);
+static void huffman_decode(SV_Str_view, CCC_Allocator const *);
+static struct Huffman_tree huffman_reconstruct_tree(
+    struct Compressed_huffman_tree *, CCC_Allocator const *
+);
 static void
 reconstruct_text(FILE *, struct Huffman_tree const *, struct Bit_queue *);
 static void print_help(void);
@@ -306,10 +323,11 @@ static size_t branch_index(struct Huffman_tree const *, size_t, uint8_t);
 static size_t parent_index(struct Huffman_tree const *, size_t);
 static char char_index(struct Huffman_tree const *, size_t);
 static struct Huffman_node *node_at(struct Huffman_tree const *, size_t);
-static void write_to_file(SV_Str_view, size_t, struct Huffman_encoding *);
-static void write_bitq(FILE *, struct Bit_queue *);
+static void
+huffman_write_to_file(SV_Str_view, size_t, struct Huffman_encoding *);
+static void huffman_write_bitq(FILE *, struct Bit_queue *);
 static struct Huffman_encoding
-read_from_file(SV_Str_view, CCC_Allocator const *);
+huffman_read_from_file(SV_Str_view, CCC_Allocator const *);
 static size_t readbytes(FILE *, void *, size_t);
 static size_t write_bytes(FILE *, void const *, size_t);
 static void
@@ -328,8 +346,11 @@ static CCC_Result
 pair_node_priority_queue_pop(struct Pair_node_priority_queue *);
 static struct Pair_node *
 pair_node_priority_queue_front(struct Pair_node_priority_queue const *);
-static struct File_char peek_first_char(FILE *file);
+static struct File_char peek_first_char(FILE *);
 static struct New_file open_compressed_file(SV_Str_view);
+static FILE *open_file_copy_in_output(SV_Str_view);
+static struct Lzw_code_accumulator *
+lzw_read_code(FILE *, struct Lzw_code_accumulator *);
 
 /** Asserts even in release mode. Run code in the second argument if needed. */
 #define check(cond, ...)                                                       \
@@ -478,15 +499,26 @@ formatting, though not required. */
 
 /*=============================== LZW Prototypes   ==========================*/
 
-static void lzw_encode(SV_Str_view to_compress, FILE *f, CCC_Allocator const *);
+static void lzw_encode(SV_Str_view, CCC_Allocator const *);
 static uint64_t lzw_hash(CCC_Key_arguments);
 static CCC_Order lzw_compare(CCC_Key_comparator_arguments);
 static CCC_Entry lzw_try_insert(
     struct Lzw_map *, struct Lzw_key_value const *, CCC_Allocator const *
 );
 static bool lzw_push_code(FILE *, Flat_bitset *, Lzw_code);
+static void lzw_decode(SV_Str_view, CCC_Allocator const *);
 
 /*===========================   Argument Handling  ==========================*/
+
+static Algorithm(*encoders[ALGORITHM_COUNT]) = {
+    huffman_encode,
+    lzw_encode,
+};
+
+static Algorithm(*decoders[ALGORITHM_COUNT]) = {
+    huffman_decode,
+    lzw_decode,
+};
 
 int
 main(int argc, char **argv) {
@@ -512,13 +544,17 @@ main(int argc, char **argv) {
             );
             check(!SV_is_empty(raw_file));
             todo.unzip = raw_file;
+        } else if (SV_starts_with(sv_arg, SV_from("-a=huffman"))) {
+            todo.algorithm = HUFFMAN;
+        } else if (SV_starts_with(sv_arg, SV_from("-a=lzw"))) {
+            todo.algorithm = LZW;
         }
     }
     if (!SV_is_empty(todo.zip)) {
-        zip_file(todo.zip, &std_allocator);
+        encoders[todo.algorithm](todo.zip, &std_allocator);
     }
     if (!SV_is_empty(todo.unzip)) {
-        unzip_file(todo.unzip, &std_allocator);
+        decoders[todo.algorithm](todo.unzip, &std_allocator);
     }
     return 0;
 }
@@ -530,7 +566,9 @@ main(int argc, char **argv) {
 /** Zips the requested file via Huffman Encoding into the output directory. The
 compressed file has a header that can be used to reconstruct the data. */
 static void
-zip_file(SV_Str_view const to_compress, CCC_Allocator const *const allocator) {
+huffman_encode(
+    SV_Str_view const to_compress, CCC_Allocator const *const allocator
+) {
     FILE *const f = fopen(SV_begin(to_compress), "r");
     if (!f) {
         (void)fprintf(stderr, "%s\n", strerror(errno));
@@ -541,7 +579,7 @@ zip_file(SV_Str_view const to_compress, CCC_Allocator const *const allocator) {
     }
     size_t const fsize = file_size(f);
     printf("Zip %s (%zu bytes).\n", SV_begin(to_compress), fsize);
-    struct Huffman_tree tree = build_encoding_tree(f, allocator);
+    struct Huffman_tree tree = huffman_build_encoding_tree(f, allocator);
     defer {
         free_encode_tree(&tree, allocator);
     }
@@ -551,8 +589,8 @@ zip_file(SV_Str_view const to_compress, CCC_Allocator const *const allocator) {
     }
     struct Huffman_encoding encoding = {
         .magic = CCCZ_MAGIC,
-        .file_bits = build_encoding_bitq(f, &tree, allocator),
-        .blueprint = compress_tree(&tree, allocator),
+        .file_bits = huffman_build_encoding_bitq(f, &tree, allocator),
+        .blueprint = huffman_compress_tree(&tree, allocator),
     };
     defer {
         bitq_clear_and_free(&encoding.file_bits, allocator);
@@ -561,7 +599,7 @@ zip_file(SV_Str_view const to_compress, CCC_Allocator const *const allocator) {
     }
     encoding.leaves_minus_one = (uint8_t)encoding.blueprint.leaf_string.len - 1,
     encoding.file_bits_count = bitq_count(&encoding.file_bits),
-    write_to_file(to_compress, fsize, &encoding);
+    huffman_write_to_file(to_compress, fsize, &encoding);
 }
 
 /** Builds the Huffman Encoding tree that will allow us to encode file bytes
@@ -574,10 +612,12 @@ Because the priority queue is a min queue this means that high frequency
 elements will be paired later in the algorithm and thus be closer to the root of
 the encoding tree. */
 static struct Huffman_tree
-build_encoding_tree(FILE *const f, CCC_Allocator const *const allocator) {
+huffman_build_encoding_tree(
+    FILE *const f, CCC_Allocator const *const allocator
+) {
     struct Huffman_tree ret = {};
     struct Pair_node_priority_queue pairings
-        = build_encoding_priority_queue(f, &ret, allocator);
+        = huffman_build_encoding_priority_queue(f, &ret, allocator);
     defer {
         (void)clear_and_free(
             &pairings.priority_queue, &(CCC_Destructor){}, allocator
@@ -623,7 +663,7 @@ build_encoding_tree(FILE *const f, CCC_Allocator const *const allocator) {
 character will be the root. The priority queue is built in O(N) time. It is
 the caller's responsibility to free the priority queue memory when ready. */
 static struct Pair_node_priority_queue
-build_encoding_priority_queue(
+huffman_build_encoding_priority_queue(
     FILE *const f,
     struct Huffman_tree *const tree,
     CCC_Allocator const *const allocator
@@ -706,7 +746,7 @@ build_encoding_priority_queue(
 file. This queue represents each byte of the file in order; the first path in
 at the front of the queue represents the first character. */
 static struct Bit_queue
-build_encoding_bitq(
+huffman_build_encoding_bitq(
     FILE *const f,
     struct Huffman_tree *const tree,
     CCC_Allocator const *const allocator
@@ -761,7 +801,9 @@ build_encoding_bitq(
                     }
                 }
             ),
-            append_tree_path_to_bitq(tree, &character_paths, *c, allocator)
+            huffman_append_tree_path_to_bitq(
+                tree, &character_paths, *c, allocator
+            )
         );
         check(p);
     });
@@ -775,7 +817,7 @@ to their original state before returning. The path memo representing this new
 path's start position and length in the bit queue is returned. Assumes the
 character can be found, otherwise exits the program. */
 static struct Path_memo
-append_tree_path_to_bitq(
+huffman_append_tree_path_to_bitq(
     struct Huffman_tree *const tree,
     struct Bit_queue *const bq,
     char const c,
@@ -826,7 +868,7 @@ end of the operation, we have a bit queue of our traversal where every internal
 node encountered on the way down is a 1 and every leaf is a 0. We also have a
 string of leaf characters that we encountered in order. */
 static struct Compressed_huffman_tree
-compress_tree(
+huffman_compress_tree(
     struct Huffman_tree *const tree, CCC_Allocator const *const allocator
 ) {
     struct Compressed_huffman_tree ret = {
@@ -872,7 +914,7 @@ compress_tree(
 /** Writes all encoded information to a file with the help of a header for
 later file reconstruction. */
 static void
-write_to_file(
+huffman_write_to_file(
     SV_Str_view const original_filepath,
     size_t const original_filesize,
     struct Huffman_encoding *const header
@@ -899,8 +941,8 @@ write_to_file(
         cccz.file, &header->file_bits_count, sizeof(header->file_bits_count)
     );
     check(writ == sizeof(header->file_bits_count));
-    write_bitq(cccz.file, &header->blueprint.tree_paths);
-    write_bitq(cccz.file, &header->file_bits);
+    huffman_write_bitq(cccz.file, &header->blueprint.tree_paths);
+    huffman_write_bitq(cccz.file, &header->file_bits);
 
     size_t const cccz_size = file_size(cccz.file);
     printf(
@@ -917,7 +959,7 @@ tell us the number of tree bits and file text bits we write to the file. The
 information written to file is on a per byte basis where every bit of the byte
 represents a bit in the bit queue. */
 static void
-write_bitq(FILE *const cccz, struct Bit_queue *const bq) {
+huffman_write_bitq(FILE *const cccz, struct Bit_queue *const bq) {
     static_assert(sizeof(uint8_t) == sizeof(CCC_Tribool));
     uint8_t buf = 0;
     uint8_t i = 0;
@@ -943,9 +985,9 @@ write_bitq(FILE *const cccz, struct Bit_queue *const bq) {
 is reconstructed and a copy of the original text is written to the output
 directory as a new file with the same name. */
 static void
-unzip_file(SV_Str_view unzip, CCC_Allocator const *const allocator) {
+huffman_decode(SV_Str_view unzip, CCC_Allocator const *const allocator) {
     /* First we verify the compressed file is correct before creating new. */
-    struct Huffman_encoding he = read_from_file(unzip, allocator);
+    struct Huffman_encoding he = huffman_read_from_file(unzip, allocator);
     defer {
         bitq_clear_and_free(&he.file_bits, allocator);
         bitq_clear_and_free(&he.blueprint.tree_paths, allocator);
@@ -954,48 +996,33 @@ unzip_file(SV_Str_view unzip, CCC_Allocator const *const allocator) {
     if (!he.file_bits_count) {
         return;
     }
-    struct Huffman_tree tree = reconstruct_tree(&he.blueprint, allocator);
+    struct Huffman_tree tree
+        = huffman_reconstruct_tree(&he.blueprint, allocator);
     defer {
         free_encode_tree(&tree, allocator);
     }
     if (!tree.root) {
         return;
     }
-
-    /* This means the compressed file was valid so write a new one to output. */
-    char path[FILESYS_MAX_PATH];
-    CCC_Tribool has_suf = SV_ends_with(unzip, cccz_suffix);
-    check(has_suf);
-    unzip = SV_remove_suffix(unzip, SV_len(cccz_suffix));
-    size_t const dir_delim
-        = SV_reverse_find(unzip, SV_len(unzip), SV_from("/"));
-    SV_Str_view const raw_file
-        = dir_delim == SV_npos(unzip)
-            ? unzip
-            : SV_substr(unzip, dir_delim + 1, SV_len(unzip));
-    size_t const total_bytes = SV_bytes(output_dir) + SV_bytes(raw_file);
-    check(total_bytes < FILESYS_MAX_PATH);
-    size_t const prefix = SV_fill(SV_bytes(output_dir), path, output_dir);
-    (void)SV_fill(SV_bytes(raw_file), path + (prefix - 1), raw_file);
-
-    /* Checks are good and path is set this will be a fresh copy. */
-    FILE *const copy_of_original = fopen(path, "w");
-    if (!copy_of_original) {
-        (void)fprintf(stderr, "%s\n", strerror(errno));
-        return;
-    }
+    FILE *const copy_of_original = open_file_copy_in_output(unzip);
     defer {
         (void)fclose(copy_of_original);
     }
     reconstruct_text(copy_of_original, &tree, &he.file_bits);
-    printf("Unzipped %s (%zu bytes).\n", path, file_size(copy_of_original));
+    printf(
+        "Unzipped %s (%zu bytes) to output/.\n",
+        SV_begin(unzip),
+        file_size(copy_of_original)
+    );
 }
 
 /** Reconstructs the Huffman encoding queues from the header of the specified
 file. Once complete this function returns all information needed to reconstruct
 the tree and write out a copy of the original file to the output directory. */
 static struct Huffman_encoding
-read_from_file(SV_Str_view const unzip, CCC_Allocator const *const allocator) {
+huffman_read_from_file(
+    SV_Str_view const unzip, CCC_Allocator const *const allocator
+) {
     CCC_Tribool has_suffix = SV_ends_with(unzip, SV_from(".cccz"));
     check(has_suffix);
     FILE *const cccz = fopen(SV_begin(unzip), "r");
@@ -1049,7 +1076,7 @@ read_from_file(SV_Str_view const unzip, CCC_Allocator const *const allocator) {
 tree is constructed in linear time and constant space additional to the nodes
 being allocated. */
 static struct Huffman_tree
-reconstruct_tree(
+huffman_reconstruct_tree(
     struct Compressed_huffman_tree *const blueprint,
     CCC_Allocator const *const allocator
 ) {
@@ -1115,10 +1142,17 @@ reconstruct_tree(
 
 static void
 lzw_encode(
-    SV_Str_view const to_compress,
-    FILE *const f,
-    CCC_Allocator const *const allocator
+    SV_Str_view const to_compress, CCC_Allocator const *const allocator
 ) {
+    FILE *const f = fopen(SV_begin(to_compress), "r");
+    if (!f) {
+        (void)fprintf(stderr, "%s\n", strerror(errno));
+        return;
+    }
+    defer {
+        (void)fclose(f);
+    }
+    size_t const fsize = file_size(f);
     struct Lzw_map prefix_map = {CCC_flat_hash_map_with_capacity(
         struct Lzw_key_value,
         key,
@@ -1129,6 +1163,7 @@ lzw_encode(
     struct New_file const compression_location
         = open_compressed_file(to_compress);
     check(compression_location.file);
+    printf("Zip %s (%zu bytes).\n", SV_begin(to_compress), fsize);
     defer {
         CCC_flat_hash_map_clear_and_free(
             &prefix_map.map, &(CCC_Destructor){}, allocator
@@ -1142,6 +1177,9 @@ lzw_encode(
         uint16_t prefix = first_char.c;
         CCC_Flat_bitset sliding_code_window = flat_bitset_with_storage(
             0, (CCC_Bit[sizeof(Lzw_code) * CHAR_BIT]){}
+        );
+        lzw_push_code(
+            compression_location.file, &sliding_code_window, first_char.c
         );
         foreach_filechar(f, 1, c, {
             CCC_Entry const e = lzw_try_insert(
@@ -1187,6 +1225,13 @@ lzw_encode(
             compression_location.file, &sliding_code_window, 0
         )) {}
     }
+    size_t const cccz_size = file_size(compression_location.file);
+    printf(
+        "Zipped file %s has compression ratio of %.2lf%% (%zu bytes).\n",
+        SV_begin(compression_location.path),
+        (100.0 * (double)cccz_size) / (double)(fsize),
+        cccz_size
+    );
 }
 
 /** Pushes the specified code into the fixed size bit set. If the fixed size
@@ -1218,42 +1263,10 @@ lzw_push_code(
     return wrote_to_file;
 }
 
-static bool
-lzw_read_first_code(FILE *const file, Lzw_code *const output) {
-    *output = 0;
-    int const first_byte = (Lzw_code)fgetc(file);
-    if (first_byte == EOF) {
-        return false;
-    }
-    int const second_byte = fgetc(file);
-    *output = (Lzw_code)((first_byte
-                          | (second_byte << (sizeof(unsigned char) * CHAR_BIT)))
-                         & CODE_WIDTH_MASK);
-    return true;
-}
-
-static struct Lzw_code_accumulator *
-lzw_read_code(
-    FILE *const file, struct Lzw_code_accumulator *const accumulator
-) {
-    if (accumulator->bit_count < FILE_CODE_BIT_COUNT) {
-        uint16_t block = 0;
-        size_t const read_count = fread(&block, sizeof(Lzw_code), 1, file);
-        if (read_count == 0) {
-            return NULL;
-        }
-        accumulator->accumulator |= ((uint32_t)block << accumulator->bit_count);
-        accumulator->bit_count += sizeof(Lzw_code);
-    }
-    accumulator->current_code
-        = (uint16_t)(accumulator->accumulator & CODE_WIDTH_MASK);
-    accumulator->accumulator >>= FILE_CODE_BIT_COUNT;
-    accumulator->bit_count -= FILE_CODE_BIT_COUNT;
-    return accumulator;
-}
+/*=========================     LZW Decompression   =========================*/
 
 static void
-lzw_decode(SV_Str_view decode, CCC_Allocator const *const allocator) {
+lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
     CCC_Tribool has_suffix = SV_ends_with(decode, SV_from(".cccz"));
     check(has_suffix);
     FILE *const cccz = fopen(SV_begin(decode), "r");
@@ -1265,20 +1278,102 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const allocator) {
     check(cccz, (void)fprintf(stderr, "%s\n", strerror(errno)););
     check(file_size(cccz) % sizeof(Lzw_code) == 0);
     printf("Unzip %s (%zu bytes).\n", SV_begin(decode), file_size(cccz));
-    static struct Lzw_prefix code_table[CODE_LIMIT];
-    static unsigned char current_string[CODE_LIMIT];
+    FILE *const copy_of_original = open_file_copy_in_output(decode);
+    static struct Lzw_tree code_table[CODE_LIMIT];
     for (Lzw_code i = 0; i < STARTING_PREFIX_COUNT; ++i) {
-        code_table[i] = (struct Lzw_prefix){.next_char = (unsigned char)i};
+        code_table[i] = (struct Lzw_tree){
+            .parent = NULL_PARENT_CODE,
+            .next_char = (unsigned char)i,
+        };
     }
     Lzw_code next_code = NEW_CODE_START;
-    CCC_Flat_bitset sliding_code_window
-        = flat_bitset_with_storage(0, (CCC_Bit[sizeof(Lzw_code) * CHAR_BIT]){});
     Lzw_code old_code = 0;
-    check(lzw_read_first_code(cccz, &old_code));
-    current_string[0] = (unsigned char)old_code;
-    write_bytes(cccz, &current_string[0], 1);
-    struct Lzw_code_accumulator current_code = {};
-    while (lzw_read_code(cccz, &current_code)) {}
+    static unsigned char current_string[CODE_LIMIT];
+    size_t current_string_index = CODE_LIMIT;
+    struct Lzw_code_accumulator *current_code
+        = &(struct Lzw_code_accumulator){};
+    if (lzw_read_code(cccz, current_code)) {
+        old_code = current_code->current_code;
+        current_string[--current_string_index] = (unsigned char)old_code;
+        write_bytes(copy_of_original, &current_string[current_string_index], 1);
+    }
+    while ((current_code = lzw_read_code(cccz, current_code))) {
+        if (current_code->current_code == STOP_CODE) {
+            return;
+        }
+        if (current_code->current_code == CLEAR_CODE) {
+            next_code = NEW_CODE_START;
+            for (Lzw_code i = 0; i < STARTING_PREFIX_COUNT; ++i) {
+                code_table[i] = (struct Lzw_tree){
+                    .parent = NULL_PARENT_CODE,
+                    .next_char = (unsigned char)i,
+                };
+            }
+            if (!lzw_read_code(cccz, current_code)) {
+                return;
+            }
+            old_code = current_code->current_code;
+            current_string_index = CODE_LIMIT;
+            current_string[--current_string_index] = (unsigned char)old_code;
+            continue;
+        }
+        if (current_code->current_code >= next_code) {
+            Lzw_code walk = old_code;
+            current_string_index = CODE_LIMIT;
+            while (walk != NULL_PARENT_CODE) {
+                current_string[--current_string_index]
+                    = code_table[walk].next_char;
+                walk = code_table[walk].parent;
+            }
+            unsigned char const first_char
+                = current_string[current_string_index];
+            current_string[--current_string_index] = first_char;
+        } else {
+            current_string_index = CODE_LIMIT;
+            Lzw_code walk = current_code->current_code;
+            while (walk != NULL_PARENT_CODE) {
+                current_string[--current_string_index]
+                    = code_table[walk].next_char;
+                walk = code_table[walk].parent;
+            }
+        }
+        check(
+            fwrite(
+                &current_string[current_string_index],
+                1,
+                CODE_LIMIT - current_string_index,
+                copy_of_original
+            )
+            == CODE_LIMIT - current_string_index
+        );
+        if (next_code < CODE_LIMIT) {
+            code_table[next_code].parent = old_code;
+            code_table[next_code].next_char
+                = current_string[current_string_index];
+            ++next_code;
+        }
+        old_code = current_code->current_code;
+    }
+}
+
+static inline struct Lzw_code_accumulator *
+lzw_read_code(
+    FILE *const file, struct Lzw_code_accumulator *const accumulator
+) {
+    if (accumulator->bit_count < FILE_CODE_BIT_COUNT) {
+        uint16_t block = 0;
+        size_t const read_count = fread(&block, sizeof(Lzw_code), 1, file);
+        if (read_count == 0) {
+            return NULL;
+        }
+        accumulator->accumulator |= ((uint32_t)block << accumulator->bit_count);
+        accumulator->bit_count += (sizeof(Lzw_code) * CHAR_BIT);
+    }
+    accumulator->current_code
+        = (uint16_t)(accumulator->accumulator & CODE_WIDTH_MASK);
+    accumulator->accumulator >>= FILE_CODE_BIT_COUNT;
+    accumulator->bit_count -= FILE_CODE_BIT_COUNT;
+    return accumulator;
 }
 
 /*=========================    File Read and Write  =========================*/
@@ -1718,6 +1813,35 @@ file_size(FILE *const f) {
     size_t const ret = (size_t)ftell(f);
     check(fseek(f, 0L, SEEK_SET) >= 0);
     return ret;
+}
+
+static inline FILE *
+open_file_copy_in_output(SV_Str_view compressed_file) {
+    /* This means the compressed file was valid so write a new one to output. */
+    static char path[FILESYS_MAX_PATH];
+    CCC_Tribool has_suf = SV_ends_with(compressed_file, cccz_suffix);
+    check(has_suf);
+    compressed_file = SV_remove_suffix(compressed_file, SV_len(cccz_suffix));
+    size_t const dir_delim = SV_reverse_find(
+        compressed_file, SV_len(compressed_file), SV_from("/")
+    );
+    SV_Str_view const raw_file
+        = dir_delim == SV_npos(compressed_file)
+            ? compressed_file
+            : SV_substr(
+                  compressed_file, dir_delim + 1, SV_len(compressed_file)
+              );
+    size_t const total_bytes = SV_bytes(output_dir) + SV_bytes(raw_file);
+    check(total_bytes < FILESYS_MAX_PATH);
+    size_t const prefix = SV_fill(SV_bytes(output_dir), path, output_dir);
+    (void)SV_fill(SV_bytes(raw_file), path + (prefix - 1), raw_file);
+    /* Checks are good and path is set this will be a fresh copy. */
+    FILE *const copy_of_original = fopen(path, "w");
+    if (!copy_of_original) {
+        (void)fprintf(stderr, "%s\n", strerror(errno));
+        return NULL;
+    }
+    return copy_of_original;
 }
 
 static inline struct File_char
