@@ -1356,10 +1356,11 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
 
             // Shift W left by 1 to make room for first_char (K) at the end
             size_t const len = CODE_LIMIT - current_string_index;
-            for (size_t i = 0; i < len; ++i) {
-                current_string[current_string_index - 1 + i]
-                    = current_string[current_string_index + i];
-            }
+            (void)memmove(
+                &current_string[current_string_index - 1],
+                &current_string[current_string_index],
+                len
+            );
             --current_string_index;
             current_string[CODE_LIMIT - 1] = first_char;
         } else {
