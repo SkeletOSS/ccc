@@ -43,7 +43,7 @@ Huffman and LZW are implemented using CCC containers. */
 
 enum Print_branch {
     BRANCH = 0, /* ├── */
-    LEAF = 1    /* └── */
+    LEAF = 1,   /* └── */
 };
 
 /** A thin wrapper around a bit set to provide queue/deq like behavior. For
@@ -668,11 +668,13 @@ huffman_build_encoding_priority_queue(
     struct Huffman_tree *const tree,
     CCC_Allocator const *const allocator
 ) {
-    struct Character_frequency_map frequencies = {flat_hash_map_default(
-        struct Character_frequency,
-        ch,
-        (CCC_Hasher){.hash = hash_char, .compare = char_order}
-    )};
+    struct Character_frequency_map frequencies = {
+        flat_hash_map_default(
+            struct Character_frequency,
+            ch,
+            (CCC_Hasher){.hash = hash_char, .compare = char_order}
+        ),
+    };
     defer {
         (void)clear_and_free(&frequencies.map, &(CCC_Destructor){}, allocator);
     }
@@ -695,17 +697,20 @@ huffman_build_encoding_priority_queue(
     tree->num_nodes = (2 * leaves) - 1;
     /* For a Flat_buffer based tree 0 is the NULL node so we can't have actual
        data we want at that index in the tree. */
-    tree->tree_storage = (struct Huffman_node_buffer){flat_buffer_from(
-        *allocator, tree->num_nodes + 1, (struct Huffman_node[]){{}}
-    )};
+    tree->tree_storage = (struct Huffman_node_buffer){
+        flat_buffer_from(
+            *allocator, tree->num_nodes + 1, (struct Huffman_node[]){{}}
+        ),
+    };
     check(count(&tree->tree_storage.buffer).count == 1);
     /* Use a Flat_buffer to push back elements we will heapify at the end. */
-    struct Pair_node_buffer flat_priority_queue_storage
-        = {flat_buffer_with_capacity(
+    struct Pair_node_buffer flat_priority_queue_storage = {
+        flat_buffer_with_capacity(
             struct Pair_node,
             *allocator,
             flat_hash_map_count(&frequencies.map).count
-        )};
+        ),
+    };
     check(flat_buffer_capacity(&flat_priority_queue_storage.buffer).count);
     foreach_character_frequency(
         &frequencies, struct Character_frequency const *const i, {
@@ -732,14 +737,16 @@ huffman_build_encoding_priority_queue(
     );
     /* Now we steal the buffer's memory and heapify the data in O(N) time rather
        than pushing each element. */
-    return (struct Pair_node_priority_queue){flat_priority_queue_heapify(
-        struct Pair_node,
-        CCC_ORDER_LESSER,
-        (CCC_Comparator){.compare = order_freqs},
-        capacity(&flat_priority_queue_storage.buffer).count,
-        count(&flat_priority_queue_storage.buffer).count,
-        begin(&flat_priority_queue_storage.buffer)
-    )};
+    return (struct Pair_node_priority_queue){
+        flat_priority_queue_heapify(
+            struct Pair_node,
+            CCC_ORDER_LESSER,
+            (CCC_Comparator){.compare = order_freqs},
+            capacity(&flat_priority_queue_storage.buffer).count,
+            count(&flat_priority_queue_storage.buffer).count,
+            begin(&flat_priority_queue_storage.buffer)
+        ),
+    };
 }
 
 /** Returns the bit queue representing the bit path to every character in the
@@ -759,16 +766,18 @@ huffman_build_encoding_bitq(
        alphabets aka trees with many leaves. An array of 0-256 elements as a map
        could achieve the same result faster but it would waste much more space.
        It is rare to have a file use all 256 possible character values. */
-    struct Path_memo_map path_memos = {CCC_flat_hash_map_with_capacity(
-        struct Path_memo,
-        ch,
-        ((CCC_Hasher){
-            .hash = hash_char,
-            .compare = path_memo_order,
-        }),
-        *allocator,
-        tree->num_leaves
-    )};
+    struct Path_memo_map path_memos = {
+        CCC_flat_hash_map_with_capacity(
+            struct Path_memo,
+            ch,
+            ((CCC_Hasher){
+                .hash = hash_char,
+                .compare = path_memo_order,
+            }),
+            *allocator,
+            tree->num_leaves
+        ),
+    };
     defer {
         (void)clear_and_free(&path_memos.map, &(CCC_Destructor){}, allocator);
     }
@@ -1090,7 +1099,7 @@ huffman_reconstruct_tree(
                 {}, /* nil */
                 {}, /* root */
             }
-        )},
+        ),},
         /* By creating the root outside of the main loop we can be sure we
            always have valid prev node. Don't need to check on every loop
            iteration. */
@@ -1153,13 +1162,15 @@ lzw_encode(
         (void)fclose(f);
     }
     size_t const fsize = file_size(f);
-    struct Lzw_map prefix_map = {CCC_flat_hash_map_with_capacity(
-        struct Lzw_key_value,
-        key,
-        ((CCC_Hasher){.hash = lzw_hash, .compare = lzw_compare}),
-        *allocator,
-        STARTING_PREFIX_COUNT
-    )};
+    struct Lzw_map prefix_map = {
+        CCC_flat_hash_map_with_capacity(
+            struct Lzw_key_value,
+            key,
+            ((CCC_Hasher){.hash = lzw_hash, .compare = lzw_compare}),
+            *allocator,
+            STARTING_PREFIX_COUNT
+        ),
+    };
     struct New_file const compression_location
         = open_compressed_file(to_compress);
     check(compression_location.file);
@@ -1177,9 +1188,6 @@ lzw_encode(
         uint16_t prefix = first_char.c;
         CCC_Flat_bitset sliding_code_window = flat_bitset_with_storage(
             0, (CCC_Bit[sizeof(Lzw_code) * CHAR_BIT]){}
-        );
-        lzw_push_code(
-            compression_location.file, &sliding_code_window, first_char.c
         );
         foreach_filechar(f, 1, c, {
             CCC_Entry const e = lzw_try_insert(
@@ -1218,12 +1226,14 @@ lzw_encode(
             }
         });
         lzw_push_code(compression_location.file, &sliding_code_window, prefix);
-        lzw_push_code(
+        bool wrote = lzw_push_code(
             compression_location.file, &sliding_code_window, STOP_CODE
         );
-        while (!lzw_push_code(
-            compression_location.file, &sliding_code_window, 0
-        )) {}
+        while (!wrote) {
+            wrote = lzw_push_code(
+                compression_location.file, &sliding_code_window, 0
+            );
+        }
     }
     size_t const cccz_size = file_size(compression_location.file);
     printf(
@@ -1253,8 +1263,14 @@ lzw_push_code(
         check(push_result == CCC_RESULT_OK);
         if (flat_bitset_count(sliding_code_window).count
             == (sizeof(Lzw_code) * CHAR_BIT)) {
-            write_bytes(
-                file, flat_bitset_data(sliding_code_window), sizeof(Lzw_code)
+            check(
+                fwrite(
+                    flat_bitset_data(sliding_code_window),
+                    sizeof(Lzw_code),
+                    1,
+                    file
+                )
+                == 1
             );
             flat_bitset_clear(sliding_code_window);
             wrote_to_file = true;
@@ -1315,6 +1331,16 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
             old_code = current_code->current_code;
             current_string_index = CODE_LIMIT;
             current_string[--current_string_index] = (unsigned char)old_code;
+            // Write the literal character following CLEAR_CODE to output
+            check(
+                fwrite(
+                    &current_string[current_string_index],
+                    1,
+                    1,
+                    copy_of_original
+                )
+                == 1
+            );
             continue;
         }
         if (current_code->current_code >= next_code) {
@@ -1327,7 +1353,15 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
             }
             unsigned char const first_char
                 = current_string[current_string_index];
-            current_string[--current_string_index] = first_char;
+
+            // Shift W left by 1 to make room for first_char (K) at the end
+            size_t const len = CODE_LIMIT - current_string_index;
+            for (size_t i = 0; i < len; ++i) {
+                current_string[current_string_index - 1 + i]
+                    = current_string[current_string_index + i];
+            }
+            --current_string_index;
+            current_string[CODE_LIMIT - 1] = first_char;
         } else {
             current_string_index = CODE_LIMIT;
             Lzw_code walk = current_code->current_code;
