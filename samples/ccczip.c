@@ -191,18 +191,30 @@ struct Huffman_encoding {
 
 /*===========================   LZW Encoding Types   ========================*/
 
+/** The smallest byte compatible type available for LZW codes. */
 typedef uint16_t Lzw_code;
 
 enum : Lzw_code {
+    /** The default number of single characters we can encode as prefixes. */
     STARTING_PREFIX_COUNT = UCHAR_MAX + 1,
+    /** We limit the dictionary to the maximum number that 12 bits can count. */
     CODE_LIMIT = 4096,
+    /** No code can hold this value so we use it as the sentinel. */
     NULL_PARENT_CODE = 4097,
+    /** During encoding we cannot encounter this character so it signals we need
+    to clear and reset the dictionary. */
     CLEAR_CODE = 256,
+    /** This is a signal to stop encoding and decoding. The file is complete. */
     STOP_CODE = CLEAR_CODE + 1,
+    /** Prefix codes the grow towards 4096 start at this value. */
     NEW_CODE_START = STOP_CODE + 1,
+    /** This many bits is a reasonable balance between RAM usage and storage
+    efficiency. */
     FILE_CODE_BIT_COUNT = 12,
+    /** The rounded up bytes needed to store our bit packing size. */
     FILE_CODE_BIT_PACK_BYTES = (FILE_CODE_BIT_COUNT + (CHAR_BIT - 1))
         / CHAR_BIT,
+    /** A mask with all bits on covering the range possible for codes. */
     CODE_WIDTH_MASK = CODE_LIMIT - 1,
 };
 static_assert(
@@ -211,35 +223,48 @@ static_assert(
     "codes."
 );
 
+/** This prefix is used for encoding to hash unique code combinations and during
+decoding to walk back up the prefix tree to rebuild strings in reverse. The
+single next character field is critical for actually building the strings. */
 struct Lzw_prefix {
+    /** The prefix or parent code of this current character. This will always
+    lead back to our table of single characters at the root. */
     Lzw_code prefix;
+    /** The next character in the string. A real char we can write to a string
+    before continuing on the prefix parent path in reverse. */
     unsigned char next_char;
 };
 
-struct Lzw_tree {
-    Lzw_code parent;
-    unsigned char next_char;
-};
-
+/** The hash table uses this type during encoding to uniquely identify new
+strings that are generating new codes we have not seen. */
 struct Lzw_key_value {
+    /** The hash combination of prefix and character used to encode. */
     struct Lzw_prefix key;
+    /** The code we have given out to this uniquely hashed element in our
+    encoding hash map. */
     Lzw_code code_value;
 };
 
+/** The thin wrapper around the map for type safe usage. */
 struct Lzw_map {
+    /** The flat hash map type from the container collection. */
     CCC_Flat_hash_map map;
 };
 
 /* Used to help put 12 bit codes back together into a uint16_t while
 decompressing a file. */
 struct Lzw_code_accumulator {
+    /** The sliding window of bits we gain from a file. */
     uint32_t accumulator;
+    /** The current count of active bits in the accumulator sliding window. */
     uint8_t bit_count;
+    /** The current 12 bit code we just obtained from the sliding window. */
     Lzw_code current_code;
 };
 
 /*=============================   File Types   ==============================*/
 
+/** Type to help categorize command line arguments for algorithms. */
 enum Compression_algorithm : uint8_t {
     HUFFMAN = 0,
     LZW,
@@ -253,11 +278,13 @@ struct Zip_actions {
     SV_Str_view unzip;
 };
 
+/** A type to help indicate errors while obtaining file characters. */
 struct File_char {
     unsigned char c;
     bool error;
 };
 
+/** A type to open files and remember their paths. */
 struct New_file {
     SV_Str_view path;
     FILE *file;
@@ -1149,6 +1176,9 @@ huffman_reconstruct_tree(
 
 /*=========================     LZW Compression     =========================*/
 
+/** Implements LZW encoding using a flat hash map. This approach saves some
+RAM usage over a flat table and exercises the hash map. This algorithm also
+implements clear codes which flush and reset the hash map. */
 static void
 lzw_encode(
     SV_Str_view const to_compress, CCC_Allocator const *const allocator
@@ -1281,6 +1311,9 @@ lzw_push_code(
 
 /*=========================     LZW Decompression   =========================*/
 
+/** Implements LZW decoding using a flat table and bit accumulator. The approach
+expects clear and stop codes while it rebuilds strings by walking prefix trees
+for characters. */
 static void
 lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
     CCC_Tribool has_suffix = SV_ends_with(decode, SV_from(".cccz"));
@@ -1295,10 +1328,10 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
     check(file_size(cccz) % sizeof(Lzw_code) == 0);
     printf("Unzip %s (%zu bytes).\n", SV_begin(decode), file_size(cccz));
     FILE *const copy_of_original = open_file_copy_in_output(decode);
-    static struct Lzw_tree code_table[CODE_LIMIT];
+    static struct Lzw_prefix code_table[CODE_LIMIT];
     for (Lzw_code i = 0; i < STARTING_PREFIX_COUNT; ++i) {
-        code_table[i] = (struct Lzw_tree){
-            .parent = NULL_PARENT_CODE,
+        code_table[i] = (struct Lzw_prefix){
+            .prefix = NULL_PARENT_CODE,
             .next_char = (unsigned char)i,
         };
     }
@@ -1320,8 +1353,8 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
         if (current_code->current_code == CLEAR_CODE) {
             next_code = NEW_CODE_START;
             for (Lzw_code i = 0; i < STARTING_PREFIX_COUNT; ++i) {
-                code_table[i] = (struct Lzw_tree){
-                    .parent = NULL_PARENT_CODE,
+                code_table[i] = (struct Lzw_prefix){
+                    .prefix = NULL_PARENT_CODE,
                     .next_char = (unsigned char)i,
                 };
             }
@@ -1349,7 +1382,7 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
             while (walk != NULL_PARENT_CODE) {
                 current_string[--current_string_index]
                     = code_table[walk].next_char;
-                walk = code_table[walk].parent;
+                walk = code_table[walk].prefix;
             }
             unsigned char const first_char
                 = current_string[current_string_index];
@@ -1369,7 +1402,7 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
             while (walk != NULL_PARENT_CODE) {
                 current_string[--current_string_index]
                     = code_table[walk].next_char;
-                walk = code_table[walk].parent;
+                walk = code_table[walk].prefix;
             }
         }
         check(
@@ -1382,7 +1415,7 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
             == CODE_LIMIT - current_string_index
         );
         if (next_code < CODE_LIMIT) {
-            code_table[next_code].parent = old_code;
+            code_table[next_code].prefix = old_code;
             code_table[next_code].next_char
                 = current_string[current_string_index];
             ++next_code;
@@ -1391,6 +1424,9 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
     }
 }
 
+/** Reads 12 bit codes into an accumulator and provides the currently obtained
+next code from the file bytes. Every file is expected to have a number of bytes
+divisible by the Lzw_code type. */
 static inline struct Lzw_code_accumulator *
 lzw_read_code(
     FILE *const file, struct Lzw_code_accumulator *const accumulator
