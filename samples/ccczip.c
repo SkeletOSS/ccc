@@ -1372,6 +1372,7 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
             check(written == 1);
             continue;
         }
+        /* Encountering the KwKwK case of LZW decompression. */
         if (current_code->current_code >= next_code) {
             Lzw_code walk = old_code;
             /* We know we will be adding the first character of K to the final
