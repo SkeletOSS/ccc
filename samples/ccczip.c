@@ -1382,9 +1382,8 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
                     = code_table[walk].next_char;
                 walk = code_table[walk].prefix;
             }
-            unsigned char const first_char
+            current_string[LZW_CODE_LIMIT - 1]
                 = current_string[current_string_index];
-            current_string[LZW_CODE_LIMIT - 1] = first_char;
         } else {
             current_string_index = LZW_CODE_LIMIT;
             Lzw_code walk = current_code->current_code;
