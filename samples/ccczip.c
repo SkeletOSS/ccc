@@ -1365,7 +1365,7 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
             old_code = current_code->current_code;
             current_string_index = LZW_CODE_LIMIT;
             current_string[--current_string_index] = (unsigned char)old_code;
-            // Write the literal character following CLEAR_CODE to output
+            // Write the literal character following clear to output
             [[maybe_unused]] size_t const written = fwrite(
                 &current_string[current_string_index], 1, 1, copy_of_original
             );
