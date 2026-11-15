@@ -483,6 +483,12 @@ static CCC_Entry lzw_try_insert(
 static bool lzw_push_code(FILE *, Flat_bitset *, Lzw_code);
 static void lzw_decode(SV_Str_view, CCC_Allocator const *);
 static void lzw_reset_table(struct Lzw_prefix[const]);
+static void lzw_write_string(
+    Lzw_code start_code,
+    size_t *current_string_index,
+    unsigned char *current_string,
+    struct Lzw_prefix code_table[]
+);
 static struct Lzw_code_accumulator *
 lzw_read_code(FILE *, struct Lzw_code_accumulator *);
 
@@ -1374,25 +1380,22 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
         }
         /* Encountering the KwKwK case of LZW decompression. */
         if (current_code->current_code >= next_code) {
-            Lzw_code walk = old_code;
             /* We know we will be adding the first character of K to the final
                position of the buffer so leave room for it now. */
             current_string_index = LZW_CODE_LIMIT - 1;
-            while (walk != LZW_NULL_PARENT_CODE) {
-                current_string[--current_string_index]
-                    = code_table[walk].next_char;
-                walk = code_table[walk].prefix;
-            }
+            lzw_write_string(
+                old_code, &current_string_index, current_string, code_table
+            );
             current_string[LZW_CODE_LIMIT - 1]
                 = current_string[current_string_index];
         } else {
             current_string_index = LZW_CODE_LIMIT;
-            Lzw_code walk = current_code->current_code;
-            while (walk != LZW_NULL_PARENT_CODE) {
-                current_string[--current_string_index]
-                    = code_table[walk].next_char;
-                walk = code_table[walk].prefix;
-            }
+            lzw_write_string(
+                current_code->current_code,
+                &current_string_index,
+                current_string,
+                code_table
+            );
         }
         [[maybe_unused]] size_t const written = fwrite(
             &current_string[current_string_index],
@@ -1432,6 +1435,20 @@ lzw_read_code(
     accumulator->accumulator >>= LZW_FILE_CODE_BIT_COUNT;
     accumulator->bit_count -= LZW_FILE_CODE_BIT_COUNT;
     return accumulator;
+}
+
+static inline void
+lzw_write_string(
+    Lzw_code const start_code,
+    size_t *current_string_index,
+    unsigned char *const current_string,
+    struct Lzw_prefix code_table[const]
+) {
+    Lzw_code walk = start_code;
+    while (walk != LZW_NULL_PARENT_CODE) {
+        current_string[--(*current_string_index)] = code_table[walk].next_char;
+        walk = code_table[walk].prefix;
+    }
 }
 
 static inline void
