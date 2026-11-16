@@ -1362,7 +1362,7 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
         );
         check(written == 1);
     }
-    while ((current_code = lzw_read_code(cccz, current_code))) {
+    while (lzw_read_code(cccz, current_code)) {
         if (current_code->current_code == LZW_STOP_CODE) {
             return;
         }
