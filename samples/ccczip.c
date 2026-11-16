@@ -499,6 +499,7 @@ static FILE *open_file_copy_in_output(SV_Str_view);
 static size_t file_size(FILE *);
 static size_t min(size_t, size_t);
 static void print_help(void);
+static FILE *open_cccz_file(SV_Str_view);
 
 /** Asserts even in release mode. Run code in the second argument if needed. */
 #define check(cond, ...)                                                       \
@@ -1069,16 +1070,12 @@ static struct Huff_encoding
 huff_read_from_file(
     SV_Str_view const unzip, CCC_Allocator const *const allocator
 ) {
-    CCC_Tribool has_suffix = SV_ends_with(unzip, SV_from(".cccz"));
-    check(has_suffix);
-    FILE *const cccz = fopen(SV_begin(unzip), "r");
+    FILE *const cccz = open_cccz_file(unzip);
     defer {
         if (cccz) {
             (void)fclose(cccz);
         }
     }
-    check(cccz, (void)fprintf(stderr, "%s\n", strerror(errno)););
-    printf("Unzip %s (%zu bytes).\n", SV_begin(unzip), file_size(cccz));
     struct Huff_encoding encoding = {
         .file_bits = {
             .bs = flat_bitset_default(),
@@ -1329,17 +1326,12 @@ expects clear and stop codes while it rebuilds strings by walking prefix trees
 for characters. */
 static void
 lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
-    CCC_Tribool has_suffix = SV_ends_with(decode, SV_from(".cccz"));
-    check(has_suffix);
-    FILE *const cccz = fopen(SV_begin(decode), "r");
+    FILE *const cccz = open_cccz_file(decode);
     defer {
         if (cccz) {
             (void)fclose(cccz);
         }
     }
-    check(cccz, (void)fprintf(stderr, "%s\n", strerror(errno)););
-    check(file_size(cccz) % sizeof(Lzw_code) == 0);
-    printf("Unzip %s (%zu bytes).\n", SV_begin(decode), file_size(cccz));
     FILE *const copy_of_original = open_file_copy_in_output(decode);
     static struct Lzw_prefix code_table[LZW_CODE_LIMIT];
     for (Lzw_code i = 0; i < LZW_STARTING_PREFIX_COUNT; ++i) {
@@ -1897,6 +1889,20 @@ min(size_t const a, size_t const b) {
 }
 
 /*=====================       File Helper Code     ==+++++===================*/
+
+static FILE *
+open_cccz_file(SV_Str_view const decode) {
+    CCC_Tribool has_suffix = SV_ends_with(decode, SV_from(".cccz"));
+    check(has_suffix);
+    FILE *const cccz = fopen(SV_begin(decode), "r");
+    if (!cccz) {
+        return NULL;
+    }
+    check(cccz, (void)fprintf(stderr, "%s\n", strerror(errno)););
+    check(file_size(cccz) % sizeof(Lzw_code) == 0);
+    printf("Unzip %s (%zu bytes).\n", SV_begin(decode), file_size(cccz));
+    return cccz;
+}
 
 static inline size_t
 file_size(FILE *const f) {
