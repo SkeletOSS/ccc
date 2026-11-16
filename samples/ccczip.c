@@ -482,7 +482,6 @@ static CCC_Entry lzw_try_insert(
 );
 static bool lzw_push_code(FILE *, Flat_bitset *, Lzw_code);
 static void lzw_decode(SV_Str_view, CCC_Allocator const *);
-static void lzw_reset_table(struct Lzw_prefix[const]);
 static size_t lzw_reverse_write_string(
     Lzw_code start_code,
     size_t current_string_index,
@@ -1343,7 +1342,12 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
     printf("Unzip %s (%zu bytes).\n", SV_begin(decode), file_size(cccz));
     FILE *const copy_of_original = open_file_copy_in_output(decode);
     static struct Lzw_prefix code_table[LZW_CODE_LIMIT];
-    lzw_reset_table(code_table);
+    for (Lzw_code i = 0; i < LZW_STARTING_PREFIX_COUNT; ++i) {
+        code_table[i] = (struct Lzw_prefix){
+            .prefix = LZW_NULL_PARENT_CODE,
+            .next_char = (unsigned char)i,
+        };
+    }
     Lzw_code next_code = LZW_NEW_CODE_START;
     Lzw_code old_code = 0;
     static unsigned char current_string[LZW_CODE_LIMIT];
@@ -1364,7 +1368,6 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
         }
         if (current_code->current_code == LZW_CLEAR_CODE) {
             next_code = LZW_NEW_CODE_START;
-            lzw_reset_table(code_table);
             if (!lzw_read_code(cccz, current_code)) {
                 return;
             }
@@ -1454,16 +1457,6 @@ lzw_reverse_write_string(
         walk = code_table[walk].prefix;
     }
     return current_string_index;
-}
-
-static inline void
-lzw_reset_table(struct Lzw_prefix prefix_table[const]) {
-    for (Lzw_code i = 0; i < LZW_STARTING_PREFIX_COUNT; ++i) {
-        prefix_table[i] = (struct Lzw_prefix){
-            .prefix = LZW_NULL_PARENT_CODE,
-            .next_char = (unsigned char)i,
-        };
-    }
 }
 
 /*=========================    File Read and Write  =========================*/
