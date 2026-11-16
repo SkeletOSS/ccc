@@ -1374,7 +1374,7 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
             old_code = current_code->current_code;
             current_string_index = LZW_CODE_LIMIT;
             current_string[--current_string_index] = (unsigned char)old_code;
-            // Write the literal character following clear to output
+            /* Write the literal character following clear to output */
             [[maybe_unused]] size_t const written = fwrite(
                 &current_string[current_string_index], 1, 1, copy_of_original
             );
@@ -1417,7 +1417,8 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
 
 /** Reads 12 bit codes into an accumulator and provides the currently obtained
 next code from the file bytes. Every file is expected to have a number of bytes
-divisible by the Lzw_code type. */
+divisible by the Lzw_code type. Modifies the input accumulator parameter and
+returns its reference. */
 static inline struct Lzw_code_accumulator *
 lzw_read_code(
     FILE *const file, struct Lzw_code_accumulator *const accumulator
