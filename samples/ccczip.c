@@ -1424,7 +1424,7 @@ lzw_read_code(
     FILE *const file, struct Lzw_code_accumulator *const accumulator
 ) {
     if (accumulator->bit_count < LZW_FILE_CODE_BIT_COUNT) {
-        uint16_t block = 0;
+        Lzw_code block = 0;
         size_t const read_count = fread(&block, sizeof(Lzw_code), 1, file);
         if (read_count == 0) {
             return NULL;
@@ -1433,7 +1433,7 @@ lzw_read_code(
         accumulator->bit_count += (sizeof(Lzw_code) * CHAR_BIT);
     }
     accumulator->current_code
-        = (uint16_t)(accumulator->accumulator & LZW_CODE_WIDTH_MASK);
+        = (Lzw_code)(accumulator->accumulator & LZW_CODE_WIDTH_MASK);
     accumulator->accumulator >>= LZW_FILE_CODE_BIT_COUNT;
     accumulator->bit_count -= LZW_FILE_CODE_BIT_COUNT;
     return accumulator;
