@@ -483,9 +483,9 @@ static CCC_Entry lzw_try_insert(
 static bool lzw_push_code(FILE *, Flat_bitset *, Lzw_code);
 static void lzw_decode(SV_Str_view, CCC_Allocator const *);
 static void lzw_reset_table(struct Lzw_prefix[const]);
-static void lzw_write_string(
+static size_t lzw_write_string(
     Lzw_code start_code,
-    size_t *current_string_index,
+    size_t current_string_index,
     unsigned char *current_string,
     struct Lzw_prefix code_table[]
 );
@@ -1382,17 +1382,15 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
         if (current_code->current_code >= next_code) {
             /* We know we will be adding the first character of K to the final
                position of the buffer so leave room for it now. */
-            current_string_index = LZW_CODE_LIMIT - 1;
-            lzw_write_string(
-                old_code, &current_string_index, current_string, code_table
+            current_string_index = lzw_write_string(
+                old_code, LZW_CODE_LIMIT - 1, current_string, code_table
             );
             current_string[LZW_CODE_LIMIT - 1]
                 = current_string[current_string_index];
         } else {
-            current_string_index = LZW_CODE_LIMIT;
-            lzw_write_string(
+            current_string_index = lzw_write_string(
                 current_code->current_code,
-                &current_string_index,
+                LZW_CODE_LIMIT,
                 current_string,
                 code_table
             );
@@ -1437,18 +1435,19 @@ lzw_read_code(
     return accumulator;
 }
 
-static inline void
+static inline size_t
 lzw_write_string(
     Lzw_code const start_code,
-    size_t *current_string_index,
+    size_t current_string_index,
     unsigned char *const current_string,
     struct Lzw_prefix code_table[const]
 ) {
     Lzw_code walk = start_code;
     while (walk != LZW_NULL_PARENT_CODE) {
-        current_string[--(*current_string_index)] = code_table[walk].next_char;
+        current_string[--current_string_index] = code_table[walk].next_char;
         walk = code_table[walk].prefix;
     }
+    return current_string_index;
 }
 
 static inline void
