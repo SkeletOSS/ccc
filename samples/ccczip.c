@@ -483,7 +483,7 @@ static CCC_Entry lzw_try_insert(
 static bool lzw_push_code(FILE *, Flat_bitset *, Lzw_code);
 static void lzw_decode(SV_Str_view, CCC_Allocator const *);
 static void lzw_reset_table(struct Lzw_prefix[const]);
-static size_t lzw_write_string(
+static size_t lzw_reverse_write_string(
     Lzw_code start_code,
     size_t current_string_index,
     unsigned char *current_string,
@@ -1382,13 +1382,13 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
         if (current_code->current_code >= next_code) {
             /* We know we will be adding the first character of K to the final
                position of the buffer so leave room for it now. */
-            current_string_index = lzw_write_string(
+            current_string_index = lzw_reverse_write_string(
                 old_code, LZW_CODE_LIMIT - 1, current_string, code_table
             );
             current_string[LZW_CODE_LIMIT - 1]
                 = current_string[current_string_index];
         } else {
-            current_string_index = lzw_write_string(
+            current_string_index = lzw_reverse_write_string(
                 current_code->current_code,
                 LZW_CODE_LIMIT,
                 current_string,
@@ -1442,7 +1442,7 @@ reverse starting at the current string index provided so that the buffer can
 be written to a file in forward order as a slice. The index of the first
 character of the written string in the buffer is returned. */
 static inline size_t
-lzw_write_string(
+lzw_reverse_write_string(
     Lzw_code const start_code,
     size_t current_string_index,
     unsigned char *const current_string,
