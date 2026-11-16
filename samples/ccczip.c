@@ -1435,6 +1435,12 @@ lzw_read_code(
     return accumulator;
 }
 
+/** Writes the current string obtained from the code given in the file being
+decompressed. This is obtained by walking the prefix tree toward the root that
+is contained in the flat code table. The string is written into the buffer in
+reverse starting at the current string index provided so that the buffer can
+be written to a file in forward order as a slice. The index of the first
+character of the written string in the buffer is returned. */
 static inline size_t
 lzw_write_string(
     Lzw_code const start_code,
