@@ -418,9 +418,9 @@ print_n(
 static Word_buffer
 map_to_buffer(Word_map const *const map, CCC_Allocator const *const allocator) {
     check(!is_empty(&map->map));
-    Word_buffer freqs = {CCC_flat_buffer_with_capacity(
-        Word, *allocator, count(&map->map).count
-    )};
+    Word_buffer freqs = {
+        CCC_flat_buffer_with_capacity(Word, *allocator, count(&map->map).count),
+    };
     size_t cap = capacity(&freqs.buffer).count;
     foreach_map_word(map, Word const *const w, {
         Word const *const pushed = flat_buffer_emplace_back(
@@ -450,14 +450,16 @@ create_frequency_map(
     }
     size_t len = 0;
     ptrdiff_t read = 0;
-    Word_map map = {array_adaptive_map_default(
-        Word,
-        ofs,
-        (CCC_Key_comparator){
-            .compare = order_string_keys,
-            .context = arena,
-        }
-    )};
+    Word_map map = {
+        array_adaptive_map_default(
+            Word,
+            ofs,
+            (CCC_Key_comparator){
+                .compare = order_string_keys,
+                .context = arena,
+            }
+        ),
+    };
     while ((read = getline(&linepointer, &len, f)) > 0) {
         SV_Str_view const line = {.str = linepointer, .len = (size_t)read - 1};
         for (SV_Str_view word_view = SV_token_begin(line, space);
@@ -529,7 +531,8 @@ word_try_insert(
     CCC_Allocator const *const allocator
 ) {
     return (Word_handle){
-        array_adaptive_map_try_insert(&map->map, word, allocator)};
+        array_adaptive_map_try_insert(&map->map, word, allocator),
+    };
 }
 
 static inline Word *
