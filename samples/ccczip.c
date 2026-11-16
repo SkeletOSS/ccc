@@ -1327,12 +1327,18 @@ for characters. */
 static void
 lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
     FILE *const cccz = open_cccz_file(decode);
+    FILE *const copy_of_original = open_file_copy_in_output(decode);
     defer {
         if (cccz) {
             (void)fclose(cccz);
         }
+        if (copy_of_original) {
+            (void)fclose(copy_of_original);
+        }
     }
-    FILE *const copy_of_original = open_file_copy_in_output(decode);
+    if (!cccz || !copy_of_original) {
+        return;
+    }
     static struct Lzw_prefix code_table[LZW_CODE_LIMIT];
     for (Lzw_code i = 0; i < LZW_STARTING_PREFIX_COUNT; ++i) {
         code_table[i] = (struct Lzw_prefix){
