@@ -1403,12 +1403,9 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
             copy_of_original
         );
         check(written == LZW_CODE_LIMIT - current_string_index);
-        if (next_code < LZW_CODE_LIMIT) {
-            code_table[next_code].prefix = old_code;
-            code_table[next_code].next_char
-                = current_string[current_string_index];
-            ++next_code;
-        }
+        code_table[next_code].prefix = old_code;
+        code_table[next_code].next_char = current_string[current_string_index];
+        ++next_code;
         old_code = current_code->current_code;
     }
 }
