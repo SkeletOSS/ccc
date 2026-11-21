@@ -519,21 +519,25 @@ found_destination(
     struct Vertex *const source,
     CCC_Allocator const *const allocator
 ) {
-    struct Path_backtrack_cell_map parent_map = {flat_hash_map_from(
-        current,
-        ((CCC_Hasher){
-            .hash = hash_parent_cells,
-            .compare = order_parent_cells,
-        }),
-        *allocator,
-        0,
-        (struct Path_backtrack_cell[]){
-            {.current = source->pos, .parent = (struct Point){-1, -1}},
-        }
-    )};
-    struct Point_double_ended_queue bfs = {flat_double_ended_queue_from(
-        *allocator, 0, (struct Point[]){source->pos}
-    )};
+    struct Path_backtrack_cell_map parent_map = {
+        flat_hash_map_from(
+            current,
+            ((CCC_Hasher){
+                .hash = hash_parent_cells,
+                .compare = order_parent_cells,
+            }),
+            *allocator,
+            0,
+            (struct Path_backtrack_cell[]){
+                {.current = source->pos, .parent = (struct Point){-1, -1}},
+            }
+        ),
+    };
+    struct Point_double_ended_queue bfs = {
+        flat_double_ended_queue_from(
+            *allocator, 0, (struct Point[]){source->pos}
+        ),
+    };
     defer {
         (void)clear_and_free(
             &bfs.flat_double_ended_queue, &(CCC_Destructor){}, allocator
@@ -690,7 +694,7 @@ encode_digits(struct Graph const *const g, struct Digit_encoding *const e) {
         for (Cell digits = (Cell)e->cost; digits; digits /= 10, --e->start.r) {
             *grid_at_mut(g, e->start.r, e->start.c) |= DIGIT_BIT;
             *grid_at_mut(g, e->start.r, e->start.c)
-                |= (Cell)((digits % 10) << DIGIT_SHIFT);
+                |= ((digits % 10) << DIGIT_SHIFT);
         }
     } else {
         e->start.c = e->orientation == WEST
@@ -699,7 +703,7 @@ encode_digits(struct Graph const *const g, struct Digit_encoding *const e) {
         for (Cell digits = (Cell)e->cost; digits; digits /= 10, --e->start.c) {
             *grid_at_mut(g, e->start.r, e->start.c) |= DIGIT_BIT;
             *grid_at_mut(g, e->start.r, e->start.c)
-                |= (Cell)((digits % 10) << DIGIT_SHIFT);
+                |= ((digits % 10) << DIGIT_SHIFT);
         }
     }
 }
@@ -844,12 +848,14 @@ dijkstra_shortest_path(
        of all, maximum priority_queue/map size is known to be small [A-Z] so
        provide memory on the stack for speed and safety. */
     struct Cost priority_map[MAX_VERTICES] = {};
-    struct Cost_priority_queue costs = {priority_queue_default(
-        struct Cost,
-        node,
-        CCC_ORDER_LESSER,
-        (CCC_Comparator){.compare = order_priority_queue_costs}
-    )};
+    struct Cost_priority_queue costs = {
+        priority_queue_default(
+            struct Cost,
+            node,
+            CCC_ORDER_LESSER,
+            (CCC_Comparator){.compare = order_priority_queue_costs}
+        ),
+    };
     for (int i = 0, vx = BEGIN_VERTICES; i < graph->vertices; ++i, ++vx) {
         struct Cost *const v = priority_map_at(priority_map, (char)vx);
         *v = (struct Cost){
@@ -1170,7 +1176,8 @@ path_backtrack_cell_map_insert_or_assign(
     CCC_Allocator const *const allocator
 ) {
     return (struct Path_backtrack_cell_entry){
-        CCC_flat_hash_map_insert_or_assign(&map->map, cell, allocator)};
+        CCC_flat_hash_map_insert_or_assign(&map->map, cell, allocator),
+    };
 }
 
 static inline struct Path_backtrack_cell_entry
@@ -1180,7 +1187,8 @@ path_backtrack_cell_map_try_insert(
     CCC_Allocator const *const allocator
 ) {
     return (struct Path_backtrack_cell_entry){
-        CCC_flat_hash_map_try_insert(&map->map, cell, allocator)};
+        CCC_flat_hash_map_try_insert(&map->map, cell, allocator),
+    };
 }
 
 static inline struct Path_backtrack_cell *
