@@ -1431,6 +1431,10 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
                 = current_string[current_string_index];
             ++next_code;
         }
+        /* The decoder is one step behind the encoder so we need to ensure that
+        our code bit width reading keeps up with the transition of bit widths
+        that our encoder performed. We subtract one to ensure we are ready for
+        correct read width on next iteration.  */
         if (bit_width < LZW_FILE_CODE_MAX_BIT_COUNT
             && next_code >= ((1U << bit_width) - 1)) {
             ++bit_width;
