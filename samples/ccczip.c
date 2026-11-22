@@ -542,6 +542,17 @@ formatting, though not required. */
         }                                                                      \
     } while (0)
 
+/** Returns a fixed size bit queue. The source of storage is the enclosing
+scope, such as the stack or data segment. However, an optional storage specifier
+may be provided to determine the exact storage location of the fixed size bit
+set blocks. The queue is initialized as empty with the specified capacity. */
+#define bitq_from_storage(capacity, optional_storage_specifier...)             \
+    (struct Bit_queue) {                                                       \
+        .bs = CCC_flat_bitset_with_storage(                                    \
+            capacity, (CCC_Bit[capacity]){}, optional_storage_specifier        \
+        )                                                                      \
+    }
+
 /*===========================   Argument Handling  ==========================*/
 
 static Algorithm(*encoders[ALGORITHM_COUNT]) = {
@@ -1365,12 +1376,8 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
     Lzw_code old_code = 0;
     Lzw_code current_code = 0;
     uint8_t bit_width = LZW_FILE_CODE_START_BIT_COUNT;
-    struct Bit_queue sliding_code_window = {
-        .bs = flat_bitset_with_storage(
-            sizeof(Lzw_code) * CHAR_BIT * 2U,
-            (CCC_Bit[sizeof(Lzw_code) * CHAR_BIT * 2U]){}
-        ),
-    };
+    struct Bit_queue sliding_code_window
+        = bitq_from_storage(sizeof(Lzw_code) * CHAR_BIT * 2U);
     static unsigned char current_string[LZW_CODE_LIMIT];
     size_t current_string_index = LZW_CODE_LIMIT;
     current_code = lzw_read_code(cccz, &sliding_code_window, bit_width);
