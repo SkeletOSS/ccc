@@ -200,7 +200,7 @@ enum : Lzw_code {
     /** We limit the dictionary to the maximum number that 12 bits can count. */
     LZW_CODE_LIMIT = 4096,
     /** No code can hold this value so we use it as the sentinel. */
-    LZW_NULL_PARENT_CODE = 4097,
+    LZW_NULL_CODE = 4097,
     /** During encoding we cannot encounter this character so it signals we need
     to clear and reset the dictionary. */
     LZW_CLEAR_CODE = 256,
@@ -208,17 +208,21 @@ enum : Lzw_code {
     LZW_STOP_CODE = LZW_CLEAR_CODE + 1,
     /** Prefix codes the grow towards 4096 start at this value. */
     LZW_NEW_CODE_START = LZW_STOP_CODE + 1,
-    /** This many bits is a reasonable balance between RAM usage and storage
+    /** For variable width bit encoding/decoding 9 covers the starting range of
+    base characters and instructional codes. We increment toward 12. */
+    LZW_FILE_CODE_START_BIT_COUNT = 9,
+    /** This many bits is a reasonable max balance between RAM usage and storage
     efficiency. */
-    LZW_FILE_CODE_BIT_COUNT = 12,
+    LZW_FILE_CODE_MAX_BIT_COUNT = 12,
     /** The rounded up bytes needed to store our bit packing size. */
-    LZW_FILE_CODE_BIT_PACK_BYTES = (LZW_FILE_CODE_BIT_COUNT + (CHAR_BIT - 1))
-        / CHAR_BIT,
+    LZW_FILE_CODE_BIT_PACK_BYTES = (
+        LZW_FILE_CODE_MAX_BIT_COUNT + (CHAR_BIT - 1)
+    ) / CHAR_BIT,
     /** A mask with all bits on covering the range possible for codes. */
     LZW_CODE_WIDTH_MASK = LZW_CODE_LIMIT - 1,
 };
 static_assert(
-    (sizeof(Lzw_code) * CHAR_BIT) >= LZW_FILE_CODE_BIT_COUNT,
+    (sizeof(Lzw_code) * CHAR_BIT) >= LZW_FILE_CODE_MAX_BIT_COUNT,
     "Bit packing size for file compression is smaller than type used to store "
     "codes."
 );
@@ -251,18 +255,14 @@ struct Lzw_map {
     CCC_Flat_hash_map map;
 };
 
+/*=============================   File Types   ==============================*/
+
 /* Used to help put 12 bit codes back together into a uint16_t while
 decompressing a file. */
 struct Lzw_code_accumulator {
     /** The sliding window of bits we gain from a file. */
-    uint32_t accumulator;
-    /** The current count of active bits in the accumulator sliding window. */
-    uint8_t bit_count;
-    /** The current 12 bit code we just obtained from the sliding window. */
-    Lzw_code current_code;
+    struct Bit_queue accumulator;
 };
-
-/*=============================   File Types   ==============================*/
 
 /** Type to help categorize command line arguments for algorithms. */
 enum Compression_algorithm : uint8_t {
@@ -301,17 +301,17 @@ static void huff_encode(SV_Str_view, CCC_Allocator const *);
 static struct Huff_pair_node_priority_queue huff_build_encoding_priority_queue(
     FILE *, struct Huff_tree *, CCC_Allocator const *
 );
-static CCC_Tribool huff_bitq_is_empty(struct Bit_queue const *);
+static CCC_Tribool bitq_is_empty(struct Bit_queue const *);
 static CCC_Result
-huff_bitq_push_back(struct Bit_queue *, CCC_Tribool, CCC_Allocator const *);
-static CCC_Tribool huff_bitq_pop_back(struct Bit_queue *);
-static CCC_Tribool huff_bitq_pop_front(struct Bit_queue *);
-static CCC_Tribool huff_bitq_test(struct Bit_queue const *, size_t);
-static CCC_Result huff_bitq_maybe_resize(
+bitq_push_back(struct Bit_queue *, CCC_Tribool, CCC_Allocator const *);
+static CCC_Tribool bitq_pop_back(struct Bit_queue *);
+static CCC_Tribool bitq_pop_front(struct Bit_queue *);
+static CCC_Tribool bitq_test(struct Bit_queue const *, size_t);
+static CCC_Result bitq_maybe_resize(
     struct Bit_queue *bq, size_t bits_to_add, CCC_Allocator const *allocator
 );
-static size_t huff_bitq_count(struct Bit_queue const *);
-static void huff_bitq_clear_and_free(struct Bit_queue *, CCC_Allocator const *);
+static size_t bitq_count(struct Bit_queue const *);
+static void bitq_clear_and_free(struct Bit_queue *, CCC_Allocator const *);
 static uint64_t hash_char(CCC_Key_arguments);
 static CCC_Order char_order(CCC_Key_comparator_arguments);
 static CCC_Order order_freqs(CCC_Comparator_arguments);
@@ -480,7 +480,7 @@ static CCC_Order lzw_compare(CCC_Key_comparator_arguments);
 static CCC_Entry lzw_try_insert(
     struct Lzw_map *, struct Lzw_key_value const *, CCC_Allocator const *
 );
-static bool lzw_push_code(FILE *, Flat_bitset *, Lzw_code);
+static bool lzw_push_code(FILE *, Flat_bitset *, Lzw_code, uint8_t);
 static void lzw_decode(SV_Str_view, CCC_Allocator const *);
 static size_t lzw_reverse_write_string(
     Lzw_code start_code,
@@ -488,8 +488,7 @@ static size_t lzw_reverse_write_string(
     unsigned char *current_string,
     struct Lzw_prefix code_table[]
 );
-static struct Lzw_code_accumulator *
-lzw_read_code(FILE *, struct Lzw_code_accumulator *);
+static Lzw_code lzw_read_code(FILE *, struct Bit_queue *, uint8_t);
 
 /*===========================   Misc Prototypes  ============================*/
 
@@ -628,12 +627,12 @@ huff_encode(
         .blueprint = huff_compress_tree(&tree, allocator),
     };
     defer {
-        huff_bitq_clear_and_free(&encoding.file_bits, allocator);
-        huff_bitq_clear_and_free(&encoding.blueprint.tree_paths, allocator);
+        bitq_clear_and_free(&encoding.file_bits, allocator);
+        bitq_clear_and_free(&encoding.blueprint.tree_paths, allocator);
         string_arena_free(&encoding.blueprint.arena, allocator);
     }
     encoding.leaves_minus_one = (uint8_t)encoding.blueprint.leaf_string.len - 1,
-    encoding.file_bits_count = huff_bitq_count(&encoding.file_bits),
+    encoding.file_bits_count = bitq_count(&encoding.file_bits),
     huff_write_to_file(to_compress, fsize, &encoding);
 }
 
@@ -838,9 +837,9 @@ huff_build_encoding_bitq(
                         size_t const end
                             = memo->bitq_start_index + memo->path_len;
                         for (size_t i = memo->bitq_start_index; i < end; ++i) {
-                            (void)huff_bitq_push_back(
+                            (void)bitq_push_back(
                                 &character_paths,
-                                huff_bitq_test(&character_paths, i),
+                                bitq_test(&character_paths, i),
                                 allocator
                             );
                         }
@@ -870,7 +869,7 @@ huff_append_tree_path_to_bitq(
 ) {
     struct Huff_path_memo path = {
         .ch = c,
-        .bitq_start_index = huff_bitq_count(bq),
+        .bitq_start_index = bitq_count(bq),
     };
     size_t cur = tree->root;
     /* An iterative depth first search is convenient because the bit path in
@@ -886,12 +885,12 @@ huff_append_tree_path_to_bitq(
         if (!node->link[1] || node->child_index >= HUFF_MAX_CHILD_COUNT) {
             node->child_index = 0;
             cur = node->parent;
-            huff_bitq_pop_back(bq);
+            bitq_pop_back(bq);
             continue;
         }
         /* Depth progression of depth first search. */
         check(node->child_index <= CCC_TRUE);
-        huff_bitq_push_back(bq, (CCC_Tribool)node->child_index, allocator);
+        bitq_push_back(bq, (CCC_Tribool)node->child_index, allocator);
         /* During backtracking this helps us know which child subtree needs to
            be explored or if we are done and can continue backtracking. */
         cur = node->link[node->child_index++];
@@ -901,7 +900,7 @@ huff_append_tree_path_to_bitq(
         huff_node_at(tree, cur)->child_index = 0;
         cur = huff_parent_index(tree, cur);
     }
-    path.path_len = huff_bitq_count(bq) - path.bitq_start_index;
+    path.path_len = bitq_count(bq) - path.bitq_start_index;
     check(path.path_len);
     return path;
 }
@@ -933,7 +932,7 @@ huff_compress_tree(
         struct Huff_node *const node = huff_node_at(tree, cur);
         if (!node->link[1]) {
             /* A leaf is always pushed because it is only seen once. */
-            huff_bitq_push_back(&ret.tree_paths, CCC_FALSE, allocator);
+            bitq_push_back(&ret.tree_paths, CCC_FALSE, allocator);
             enum String_arena_result const ch_push = string_arena_push_back(
                 &ret.arena, &ret.leaf_string, node->ch, allocator
             );
@@ -944,7 +943,7 @@ huff_compress_tree(
                still need to access the second child so don't push a bit when we
                are simply progressing to the next child subtree. */
             if (node->child_index == 0) {
-                huff_bitq_push_back(&ret.tree_paths, CCC_TRUE, allocator);
+                bitq_push_back(&ret.tree_paths, CCC_TRUE, allocator);
             }
             cur = node->link[node->child_index++];
         } else {
@@ -1011,8 +1010,8 @@ huff_write_bitq(FILE *const cccz, struct Bit_queue *const bq) {
     static_assert(sizeof(uint8_t) == sizeof(CCC_Tribool));
     uint8_t buf = 0;
     uint8_t i = 0;
-    while (!huff_bitq_is_empty(bq)) {
-        buf |= (uint8_t)(huff_bitq_pop_front(bq) << i);
+    while (!bitq_is_empty(bq)) {
+        buf |= (uint8_t)(bitq_pop_front(bq) << i);
         ++i;
         if (i >= CHAR_BIT) {
             size_t const byte = huff_write_bytes(cccz, &buf, sizeof(buf));
@@ -1037,8 +1036,8 @@ huff_decode(SV_Str_view unzip, CCC_Allocator const *const allocator) {
     /* First we verify the compressed file is correct before creating new. */
     struct Huff_encoding he = huff_read_from_file(unzip, allocator);
     defer {
-        huff_bitq_clear_and_free(&he.file_bits, allocator);
-        huff_bitq_clear_and_free(&he.blueprint.tree_paths, allocator);
+        bitq_clear_and_free(&he.file_bits, allocator);
+        bitq_clear_and_free(&he.blueprint.tree_paths, allocator);
         string_arena_free(&he.blueprint.arena, allocator);
     }
     if (!he.file_bits_count) {
@@ -1127,7 +1126,7 @@ huff_reconstruct_tree(
     struct Huff_compressed_tree *const blueprint,
     CCC_Allocator const *const allocator
 ) {
-    size_t const bq_count = huff_bitq_count(&blueprint->tree_paths);
+    size_t const bq_count = bitq_count(&blueprint->tree_paths);
     struct Huff_tree tree = {
         /* 0 index is NULL so real data can't be there. */
         .tree_storage = {CCC_flat_buffer_from(
@@ -1145,15 +1144,15 @@ huff_reconstruct_tree(
         .num_nodes = bq_count,
     };
     check(!flat_buffer_is_empty(&tree.tree_storage.buffer));
-    (void)huff_bitq_pop_front(&blueprint->tree_paths);
+    (void)bitq_pop_front(&blueprint->tree_paths);
     size_t parent = tree.root;
     size_t current = 0;
     char const *leaves
         = string_arena_at(&blueprint->arena, &blueprint->leaf_string);
-    while (!huff_bitq_is_empty(&blueprint->tree_paths)) {
+    while (!bitq_is_empty(&blueprint->tree_paths)) {
         CCC_Tribool is_internal_node = CCC_TRUE;
         if (!current) {
-            is_internal_node = huff_bitq_pop_front(&blueprint->tree_paths);
+            is_internal_node = bitq_pop_front(&blueprint->tree_paths);
             struct Huff_node *const pushed = huff_node_buffer_emplace_back(
                 &tree.tree_storage,
                 allocator,
@@ -1222,10 +1221,11 @@ lzw_encode(
         (void)fclose(compression_location.file);
     }
     {
-        uint16_t code = LZW_NEW_CODE_START;
+        Lzw_code code = LZW_NEW_CODE_START;
+        uint8_t bit_width = LZW_FILE_CODE_START_BIT_COUNT;
         struct File_char const first_char = peek_first_char(f);
         check(!first_char.error);
-        uint16_t prefix = first_char.c;
+        Lzw_code prefix = first_char.c;
         CCC_Flat_bitset sliding_code_window = flat_bitset_with_storage(
             0, (CCC_Bit[sizeof(Lzw_code) * CHAR_BIT]){}
         );
@@ -1242,36 +1242,50 @@ lzw_encode(
                 allocator
             );
             if (occupied(&e)) {
-                // Make the prefix longer so we don't push to file yet.
+                /* Make the prefix longer so we don't push to file yet. */
                 struct Lzw_key_value const *const seen = unwrap(&e);
                 prefix = seen->code_value;
             } else {
-                // Prefix has reached max unique length so we push to file.
+                /* Prefix has reached max unique length so we push to file. */
                 lzw_push_code(
-                    compression_location.file, &sliding_code_window, prefix
+                    compression_location.file,
+                    &sliding_code_window,
+                    prefix,
+                    bit_width
                 );
                 ++code;
+                if (bit_width < LZW_FILE_CODE_MAX_BIT_COUNT
+                    && code >= (1U << bit_width)) {
+                    ++bit_width;
+                }
                 if (code >= LZW_CODE_LIMIT) {
                     lzw_push_code(
                         compression_location.file,
                         &sliding_code_window,
-                        LZW_CLEAR_CODE
+                        LZW_CLEAR_CODE,
+                        bit_width
                     );
                     CCC_flat_hash_map_clear(
                         &prefix_map.map, &(CCC_Destructor){}
                     );
                     code = LZW_NEW_CODE_START;
+                    bit_width = LZW_FILE_CODE_START_BIT_COUNT;
                 }
                 prefix = (unsigned char)*c;
             }
         });
-        lzw_push_code(compression_location.file, &sliding_code_window, prefix);
+        lzw_push_code(
+            compression_location.file, &sliding_code_window, prefix, bit_width
+        );
         bool wrote = lzw_push_code(
-            compression_location.file, &sliding_code_window, LZW_STOP_CODE
+            compression_location.file,
+            &sliding_code_window,
+            LZW_STOP_CODE,
+            bit_width
         );
         while (!wrote) {
             wrote = lzw_push_code(
-                compression_location.file, &sliding_code_window, 0
+                compression_location.file, &sliding_code_window, 0, bit_width
             );
         }
     }
@@ -1291,10 +1305,11 @@ static bool
 lzw_push_code(
     FILE *const file,
     Flat_bitset *const sliding_code_window,
-    Lzw_code const code
+    Lzw_code const code,
+    uint8_t const bit_width
 ) {
     bool wrote_to_file = false;
-    for (Lzw_code b = 0; b < LZW_FILE_CODE_BIT_COUNT; ++b) {
+    for (Lzw_code b = 0; b < bit_width; ++b) {
         CCC_Result const push_result = flat_bitset_push_back(
             sliding_code_window,
             (CCC_Tribool){(code >> b) & 1},
@@ -1342,34 +1357,44 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
     static struct Lzw_prefix code_table[LZW_CODE_LIMIT];
     for (Lzw_code i = 0; i < LZW_STARTING_PREFIX_COUNT; ++i) {
         code_table[i] = (struct Lzw_prefix){
-            .prefix = LZW_NULL_PARENT_CODE,
+            .prefix = LZW_NULL_CODE,
             .next_char = (unsigned char)i,
         };
     }
     Lzw_code next_code = LZW_NEW_CODE_START;
     Lzw_code old_code = 0;
+    Lzw_code current_code = 0;
+    uint8_t bit_width = LZW_FILE_CODE_START_BIT_COUNT;
+    struct Bit_queue sliding_code_window = {
+        .bs = flat_bitset_with_storage(
+            sizeof(Lzw_code) * CHAR_BIT * 2U,
+            (CCC_Bit[sizeof(Lzw_code) * CHAR_BIT * 2U]){}
+        ),
+    };
     static unsigned char current_string[LZW_CODE_LIMIT];
     size_t current_string_index = LZW_CODE_LIMIT;
-    struct Lzw_code_accumulator *current_code
-        = &(struct Lzw_code_accumulator){};
-    if (lzw_read_code(cccz, current_code)) {
-        old_code = current_code->current_code;
+    current_code = lzw_read_code(cccz, &sliding_code_window, bit_width);
+    if (current_code != LZW_NULL_CODE) {
+        old_code = current_code;
         current_string[--current_string_index] = (unsigned char)old_code;
         [[maybe_unused]] size_t const written = fwrite(
             &current_string[current_string_index], 1, 1, copy_of_original
         );
         check(written == 1);
     }
-    while (lzw_read_code(cccz, current_code)) {
-        if (current_code->current_code == LZW_STOP_CODE) {
+    while ((current_code = lzw_read_code(cccz, &sliding_code_window, bit_width))
+           != LZW_NULL_CODE) {
+        if (current_code == LZW_STOP_CODE) {
             return;
         }
-        if (current_code->current_code == LZW_CLEAR_CODE) {
+        if (current_code == LZW_CLEAR_CODE) {
             next_code = LZW_NEW_CODE_START;
-            if (!lzw_read_code(cccz, current_code)) {
+            bit_width = LZW_FILE_CODE_START_BIT_COUNT;
+            current_code = lzw_read_code(cccz, &sliding_code_window, bit_width);
+            if (current_code == LZW_NULL_CODE) {
                 return;
             }
-            old_code = current_code->current_code;
+            old_code = current_code;
             current_string_index = LZW_CODE_LIMIT;
             current_string[--current_string_index] = (unsigned char)old_code;
             /* Write the literal character following clear to output */
@@ -1380,7 +1405,7 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
             continue;
         }
         /* Encountering the KwKwK case of LZW decompression. */
-        if (current_code->current_code >= next_code) {
+        if (current_code >= next_code) {
             /* We know we will be adding the first character of K to the final
                position of the buffer so leave room for it now. */
             current_string_index = lzw_reverse_write_string(
@@ -1390,10 +1415,7 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
                 = current_string[current_string_index];
         } else {
             current_string_index = lzw_reverse_write_string(
-                current_code->current_code,
-                LZW_CODE_LIMIT,
-                current_string,
-                code_table
+                current_code, LZW_CODE_LIMIT, current_string, code_table
             );
         }
         [[maybe_unused]] size_t const written = fwrite(
@@ -1403,10 +1425,17 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
             copy_of_original
         );
         check(written == LZW_CODE_LIMIT - current_string_index);
-        code_table[next_code].prefix = old_code;
-        code_table[next_code].next_char = current_string[current_string_index];
-        ++next_code;
-        old_code = current_code->current_code;
+        if (next_code < LZW_CODE_LIMIT) {
+            code_table[next_code].prefix = old_code;
+            code_table[next_code].next_char
+                = current_string[current_string_index];
+            ++next_code;
+        }
+        if (bit_width < LZW_FILE_CODE_MAX_BIT_COUNT
+            && next_code >= ((1U << bit_width) - 1)) {
+            ++bit_width;
+        }
+        old_code = current_code;
     }
 }
 
@@ -1414,24 +1443,34 @@ lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
 next code from the file bytes. Every file is expected to have a number of bytes
 divisible by the Lzw_code type. Modifies the input accumulator parameter and
 returns its reference. */
-static inline struct Lzw_code_accumulator *
+static inline Lzw_code
 lzw_read_code(
-    FILE *const file, struct Lzw_code_accumulator *const accumulator
+    FILE *const file,
+    struct Bit_queue *const sliding_code_window,
+    uint8_t const bit_width
 ) {
-    if (accumulator->bit_count < LZW_FILE_CODE_BIT_COUNT) {
-        Lzw_code block = 0;
+    while (bitq_count(sliding_code_window) < bit_width) {
+        Lzw_code block;
         size_t const read_count = fread(&block, sizeof(Lzw_code), 1, file);
         if (read_count == 0) {
-            return NULL;
+            return LZW_NULL_CODE;
         }
-        accumulator->accumulator |= ((uint32_t)block << accumulator->bit_count);
-        accumulator->bit_count += (sizeof(Lzw_code) * CHAR_BIT);
+        for (size_t bit = 0; bit < sizeof(Lzw_code) * CHAR_BIT; ++bit) {
+            CCC_Result const r = bitq_push_back(
+                sliding_code_window,
+                (CCC_Tribool){(block >> bit) & 1U},
+                &(CCC_Allocator){}
+            );
+            check(r == CCC_RESULT_OK);
+        }
     }
-    accumulator->current_code
-        = (Lzw_code)(accumulator->accumulator & LZW_CODE_WIDTH_MASK);
-    accumulator->accumulator >>= LZW_FILE_CODE_BIT_COUNT;
-    accumulator->bit_count -= LZW_FILE_CODE_BIT_COUNT;
-    return accumulator;
+    Lzw_code code = 0;
+    for (size_t bit = 0; bit < bit_width; ++bit) {
+        CCC_Tribool pop = bitq_pop_front(sliding_code_window);
+        check(pop != CCC_TRIBOOL_ERROR);
+        code |= ((Lzw_code)pop << bit);
+    }
+    return code;
 }
 
 /** Writes the current string obtained from the code given in the file being
@@ -1448,7 +1487,7 @@ lzw_reverse_write_string(
     struct Lzw_prefix code_table[const]
 ) {
     Lzw_code walk = start_code;
-    while (walk != LZW_NULL_PARENT_CODE) {
+    while (walk != LZW_NULL_CODE) {
         current_string[--current_string_index] = code_table[walk].next_char;
         walk = code_table[walk].prefix;
     }
@@ -1467,10 +1506,10 @@ huff_reconstruct_text(
     struct Bit_queue *const bq
 ) {
     size_t cur = tree->root;
-    while (!huff_bitq_is_empty(bq)) {
+    while (!bitq_is_empty(bq)) {
         /* All paths started from the root during encoding and chose a direction
            first so popping is OK here. Root 1 node never was pushed to q. */
-        CCC_Tribool const bit = huff_bitq_pop_front(bq);
+        CCC_Tribool const bit = bitq_pop_front(bq);
         check(bit != CCC_TRIBOOL_ERROR);
         cur = huff_branch_index(tree, cur, (uint8_t)bit);
         if (!huff_branch_index(tree, cur, 1)) {
@@ -1502,7 +1541,7 @@ huff_fill_bitq(
         }
         static_assert(sizeof(CCC_Tribool) == sizeof(uint8_t));
         CCC_Tribool const bit = (buf & ((uint8_t)1 << i)) != 0;
-        huff_bitq_push_back(bq, bit, allocator);
+        bitq_push_back(bq, bit, allocator);
         ++i;
     }
 }
@@ -1697,9 +1736,8 @@ huff_is_leaf(struct Huff_tree const *const tree, size_t const node) {
 
 [[maybe_unused]] static void
 huff_print_bitq(struct Bit_queue const *const bq) {
-    for (size_t i = 0, col = 1, end = huff_bitq_count(bq); i < end;
-         ++i, ++col) {
-        huff_bitq_test(bq, i) ? printf("1") : printf("0");
+    for (size_t i = 0, col = 1, end = bitq_count(bq); i < end; ++i, ++col) {
+        bitq_test(bq, i) ? printf("1") : printf("0");
         if (col % 50 == 0) {
             printf("\n");
         }
@@ -1744,12 +1782,12 @@ lzw_try_insert(
 /*=====================       Bit Queue Helper Code     =====================*/
 
 static CCC_Result
-huff_bitq_push_back(
+bitq_push_back(
     struct Bit_queue *const bq,
     CCC_Tribool const bit,
     CCC_Allocator const *const allocator
 ) {
-    CCC_Result result = huff_bitq_maybe_resize(bq, 1, allocator);
+    CCC_Result result = bitq_maybe_resize(bq, 1, allocator);
     if (result != CCC_RESULT_OK) {
         return result;
     }
@@ -1771,7 +1809,7 @@ huff_bitq_push_back(
 }
 
 static CCC_Tribool
-huff_bitq_pop_back(struct Bit_queue *const bq) {
+bitq_pop_back(struct Bit_queue *const bq) {
     if (!bq->count) {
         return CCC_TRIBOOL_ERROR;
     }
@@ -1783,7 +1821,7 @@ huff_bitq_pop_back(struct Bit_queue *const bq) {
 }
 
 static CCC_Tribool
-huff_bitq_pop_front(struct Bit_queue *const bq) {
+bitq_pop_front(struct Bit_queue *const bq) {
     if (!bq->count) {
         return CCC_TRIBOOL_ERROR;
     }
@@ -1795,7 +1833,7 @@ huff_bitq_pop_front(struct Bit_queue *const bq) {
 }
 
 static CCC_Tribool
-huff_bitq_test(struct Bit_queue const *const bq, size_t const i) {
+bitq_test(struct Bit_queue const *const bq, size_t const i) {
     if (!bq->count) {
         return CCC_TRIBOOL_ERROR;
     }
@@ -1809,7 +1847,7 @@ to compact elements from [0, count) whenever you resize, otherwise modulo
 by capacity will break. Elements would wrap before the end of the bit set
 capacity otherwise, and the double ended queue invariants don't hold. */
 static CCC_Result
-huff_bitq_maybe_resize(
+bitq_maybe_resize(
     struct Bit_queue *const bq,
     size_t bits_to_add,
     CCC_Allocator const *const allocator
@@ -1868,17 +1906,17 @@ huff_bitq_maybe_resize(
 }
 
 static CCC_Tribool
-huff_bitq_is_empty(struct Bit_queue const *const bq) {
+bitq_is_empty(struct Bit_queue const *const bq) {
     return !bq->count;
 }
 
 static size_t
-huff_bitq_count(struct Bit_queue const *const bq) {
+bitq_count(struct Bit_queue const *const bq) {
     return bq->count;
 }
 
 static void
-huff_bitq_clear_and_free(
+bitq_clear_and_free(
     struct Bit_queue *const bq, CCC_Allocator const *const allocator
 ) {
     check(bq);
