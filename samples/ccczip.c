@@ -312,10 +312,10 @@ static CCC_Result bitq_maybe_resize(
 );
 static size_t bitq_count(struct Bit_queue const *);
 static void bitq_clear_and_free(struct Bit_queue *, CCC_Allocator const *);
-static uint64_t hash_char(CCC_Key_arguments);
-static CCC_Order char_order(CCC_Key_comparator_arguments);
-static CCC_Order order_freqs(CCC_Comparator_arguments);
-static CCC_Order path_memo_order(CCC_Key_comparator_arguments);
+static uint64_t huff_hash_char(CCC_Key_arguments);
+static CCC_Order huff_char_order(CCC_Key_comparator_arguments);
+static CCC_Order huff_order_freqs(CCC_Comparator_arguments);
+static CCC_Order huff_path_memo_order(CCC_Key_comparator_arguments);
 static struct Huff_path_memo huff_append_tree_path_to_bitq(
     struct Huff_tree *, struct Bit_queue *, char, CCC_Allocator const *
 );
@@ -717,7 +717,7 @@ huff_build_encoding_priority_queue(
         flat_hash_map_default(
             struct Huff_character_frequency,
             ch,
-            (CCC_Hasher){.hash = hash_char, .compare = char_order}
+            (CCC_Hasher){.hash = huff_hash_char, .compare = huff_char_order}
         ),
     };
     defer {
@@ -785,7 +785,7 @@ huff_build_encoding_priority_queue(
         flat_priority_queue_heapify(
             struct Huff_pair_node,
             CCC_ORDER_LESSER,
-            (CCC_Comparator){.compare = order_freqs},
+            (CCC_Comparator){.compare = huff_order_freqs},
             capacity(&flat_priority_queue_storage.buffer).count,
             count(&flat_priority_queue_storage.buffer).count,
             begin(&flat_priority_queue_storage.buffer)
@@ -815,8 +815,8 @@ huff_build_encoding_bitq(
             struct Huff_path_memo,
             ch,
             ((CCC_Hasher){
-                .hash = hash_char,
-                .compare = path_memo_order,
+                .hash = huff_hash_char,
+                .compare = huff_path_memo_order,
             }),
             *allocator,
             tree->num_leaves
@@ -1004,9 +1004,9 @@ huff_write_to_file(
 
     size_t const cccz_size = file_size(cccz.file);
     printf(
-        "Zipped file %s has compression ratio of %.2lf%% (%zu bytes).\n",
+        "Zipped file %s has compression ratio of %.2lf (%zu bytes).\n",
         cccz.path.str,
-        (100.0 * (double)cccz_size) / (double)(original_filesize),
+        (double)cccz_size / (double)(original_filesize),
         cccz_size
     );
 }
@@ -1194,318 +1194,7 @@ huff_reconstruct_tree(
     return tree;
 }
 
-/*=========================     LZW Compression     =========================*/
-
-/** Implements LZW encoding using a flat hash map. This approach saves some
-RAM usage over a flat table and exercises the hash map. This algorithm also
-implements clear codes which flush and reset the hash map. */
-static void
-lzw_encode(
-    SV_Str_view const to_compress, CCC_Allocator const *const allocator
-) {
-    FILE *const f = fopen(SV_begin(to_compress), "r");
-    if (!f) {
-        (void)fprintf(stderr, "%s\n", strerror(errno));
-        return;
-    }
-    defer {
-        (void)fclose(f);
-    }
-    size_t const fsize = file_size(f);
-    struct Lzw_map prefix_map = {
-        CCC_flat_hash_map_with_capacity(
-            struct Lzw_key_value,
-            key,
-            ((CCC_Hasher){.hash = lzw_hash, .compare = lzw_compare}),
-            *allocator,
-            LZW_STARTING_PREFIX_COUNT
-        ),
-    };
-    struct New_file const compression_location
-        = open_compressed_file(to_compress);
-    check(compression_location.file);
-    printf("Zip %s (%zu bytes).\n", SV_begin(to_compress), fsize);
-    defer {
-        CCC_flat_hash_map_clear_and_free(
-            &prefix_map.map, &(CCC_Destructor){}, allocator
-        );
-        (void)fclose(compression_location.file);
-    }
-    {
-        Lzw_code code = LZW_NEW_CODE_START;
-        uint8_t bit_width = LZW_FILE_CODE_START_BIT_COUNT;
-        struct File_char const first_char = peek_first_char(f);
-        check(!first_char.error);
-        Lzw_code prefix = first_char.c;
-        CCC_Flat_bitset sliding_code_window = flat_bitset_with_storage(
-            0, (CCC_Bit[sizeof(Lzw_code) * CHAR_BIT]){}
-        );
-        foreach_filechar(f, 1, c, {
-            CCC_Entry const e = lzw_try_insert(
-                &prefix_map,
-                &(struct Lzw_key_value){
-                    .key = {
-                        .prefix = prefix,
-                        .next_char = (unsigned char)*c,
-                    },
-                    .code_value = code,
-                },
-                allocator
-            );
-            if (occupied(&e)) {
-                /* Make the prefix longer so we don't push to file yet. */
-                struct Lzw_key_value const *const seen = unwrap(&e);
-                prefix = seen->code_value;
-            } else {
-                /* Prefix has reached max unique length so we push to file. */
-                lzw_push_code(
-                    compression_location.file,
-                    &sliding_code_window,
-                    prefix,
-                    bit_width
-                );
-                ++code;
-                if (bit_width < LZW_FILE_CODE_MAX_BIT_COUNT
-                    && code >= (1U << bit_width)) {
-                    ++bit_width;
-                }
-                if (code >= LZW_CODE_LIMIT) {
-                    lzw_push_code(
-                        compression_location.file,
-                        &sliding_code_window,
-                        LZW_CLEAR_CODE,
-                        bit_width
-                    );
-                    CCC_flat_hash_map_clear(
-                        &prefix_map.map, &(CCC_Destructor){}
-                    );
-                    code = LZW_NEW_CODE_START;
-                    bit_width = LZW_FILE_CODE_START_BIT_COUNT;
-                }
-                prefix = (unsigned char)*c;
-            }
-        });
-        lzw_push_code(
-            compression_location.file, &sliding_code_window, prefix, bit_width
-        );
-        bool wrote = lzw_push_code(
-            compression_location.file,
-            &sliding_code_window,
-            LZW_STOP_CODE,
-            bit_width
-        );
-        while (!wrote) {
-            wrote = lzw_push_code(
-                compression_location.file, &sliding_code_window, 0, bit_width
-            );
-        }
-    }
-    size_t const cccz_size = file_size(compression_location.file);
-    printf(
-        "Zipped file %s has compression ratio of %.2lf%% (%zu bytes).\n",
-        SV_begin(compression_location.path),
-        (100.0 * (double)cccz_size) / (double)(fsize),
-        cccz_size
-    );
-}
-
-/** Pushes the specified code into the fixed size bit set. If the fixed size
-bit set reaches the size of the Lzw_code's bit width it's contents are written
-to the file within that types number of bytes and the bit set is cleared. */
-static bool
-lzw_push_code(
-    FILE *const file,
-    Flat_bitset *const sliding_code_window,
-    Lzw_code const code,
-    uint8_t const bit_width
-) {
-    bool wrote_to_file = false;
-    for (Lzw_code b = 0; b < bit_width; ++b) {
-        CCC_Result const push_result = flat_bitset_push_back(
-            sliding_code_window,
-            (CCC_Tribool){(code >> b) & 1},
-            &(CCC_Allocator){}
-        );
-        check(push_result == CCC_RESULT_OK);
-        if (flat_bitset_count(sliding_code_window).count
-            == (sizeof(Lzw_code) * CHAR_BIT)) {
-            check(
-                fwrite(
-                    flat_bitset_data(sliding_code_window),
-                    sizeof(Lzw_code),
-                    1,
-                    file
-                )
-                == 1
-            );
-            flat_bitset_clear(sliding_code_window);
-            wrote_to_file = true;
-        }
-    }
-    return wrote_to_file;
-}
-
-/*=========================     LZW Decompression   =========================*/
-
-/** Implements LZW decoding using a flat table and bit accumulator. The approach
-expects clear and stop codes while it rebuilds strings by walking prefix trees
-for characters. */
-static void
-lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
-    FILE *const cccz = open_cccz_file(decode);
-    FILE *const copy_of_original = open_file_copy_in_output(decode);
-    defer {
-        if (cccz) {
-            (void)fclose(cccz);
-        }
-        if (copy_of_original) {
-            (void)fclose(copy_of_original);
-        }
-    }
-    if (!cccz || !copy_of_original) {
-        return;
-    }
-    static struct Lzw_prefix code_table[LZW_CODE_LIMIT];
-    for (Lzw_code i = 0; i < LZW_STARTING_PREFIX_COUNT; ++i) {
-        code_table[i] = (struct Lzw_prefix){
-            .prefix = LZW_NULL_CODE,
-            .next_char = (unsigned char)i,
-        };
-    }
-    Lzw_code next_code = LZW_NEW_CODE_START;
-    Lzw_code old_code = 0;
-    Lzw_code current_code = 0;
-    uint8_t bit_width = LZW_FILE_CODE_START_BIT_COUNT;
-    struct Bit_queue sliding_code_window
-        = bitq_from_storage(sizeof(Lzw_code) * CHAR_BIT * 2U);
-    static unsigned char current_string[LZW_CODE_LIMIT];
-    size_t current_string_index = LZW_CODE_LIMIT;
-    current_code = lzw_read_code(cccz, &sliding_code_window, bit_width);
-    if (current_code != LZW_NULL_CODE) {
-        old_code = current_code;
-        current_string[--current_string_index] = (unsigned char)old_code;
-        [[maybe_unused]] size_t const written = fwrite(
-            &current_string[current_string_index], 1, 1, copy_of_original
-        );
-        check(written == 1);
-    }
-    while ((current_code = lzw_read_code(cccz, &sliding_code_window, bit_width))
-           != LZW_NULL_CODE) {
-        if (current_code == LZW_STOP_CODE) {
-            return;
-        }
-        if (current_code == LZW_CLEAR_CODE) {
-            next_code = LZW_NEW_CODE_START;
-            bit_width = LZW_FILE_CODE_START_BIT_COUNT;
-            current_code = lzw_read_code(cccz, &sliding_code_window, bit_width);
-            if (current_code == LZW_NULL_CODE) {
-                return;
-            }
-            old_code = current_code;
-            current_string_index = LZW_CODE_LIMIT;
-            current_string[--current_string_index] = (unsigned char)old_code;
-            /* Write the literal character following clear to output */
-            [[maybe_unused]] size_t const written = fwrite(
-                &current_string[current_string_index], 1, 1, copy_of_original
-            );
-            check(written == 1);
-            continue;
-        }
-        /* Encountering the KwKwK case of LZW decompression. */
-        if (current_code >= next_code) {
-            /* We know we will be adding the first character of K to the final
-               position of the buffer so leave room for it now. */
-            current_string_index = lzw_reverse_write_string(
-                old_code, LZW_CODE_LIMIT - 1, current_string, code_table
-            );
-            current_string[LZW_CODE_LIMIT - 1]
-                = current_string[current_string_index];
-        } else {
-            current_string_index = lzw_reverse_write_string(
-                current_code, LZW_CODE_LIMIT, current_string, code_table
-            );
-        }
-        [[maybe_unused]] size_t const written = fwrite(
-            &current_string[current_string_index],
-            1,
-            LZW_CODE_LIMIT - current_string_index,
-            copy_of_original
-        );
-        check(written == LZW_CODE_LIMIT - current_string_index);
-        if (next_code < LZW_CODE_LIMIT) {
-            code_table[next_code].prefix = old_code;
-            code_table[next_code].next_char
-                = current_string[current_string_index];
-            ++next_code;
-        }
-        /* The decoder is one step behind the encoder so we need to ensure that
-        our code bit width reading keeps up with the transition of bit widths
-        that our encoder performed. We subtract one to ensure we are ready for
-        correct read width on next iteration. */
-        if (bit_width < LZW_FILE_CODE_MAX_BIT_COUNT
-            && next_code >= ((1U << bit_width) - 1)) {
-            ++bit_width;
-        }
-        old_code = current_code;
-    }
-}
-
-/** Reads 12 bit codes into an accumulator and provides the currently obtained
-next code from the file bytes. Every file is expected to have a number of bytes
-divisible by the Lzw_code type. Modifies the input accumulator parameter and
-returns its reference. */
-static inline Lzw_code
-lzw_read_code(
-    FILE *const file,
-    struct Bit_queue *const sliding_code_window,
-    uint8_t const bit_width
-) {
-    while (bitq_count(sliding_code_window) < bit_width) {
-        Lzw_code block;
-        size_t const read_count = fread(&block, sizeof(Lzw_code), 1, file);
-        if (read_count == 0) {
-            return LZW_NULL_CODE;
-        }
-        for (size_t bit = 0; bit < sizeof(Lzw_code) * CHAR_BIT; ++bit) {
-            CCC_Result const r = bitq_push_back(
-                sliding_code_window,
-                (CCC_Tribool){(block >> bit) & 1U},
-                &(CCC_Allocator){}
-            );
-            check(r == CCC_RESULT_OK);
-        }
-    }
-    Lzw_code code = 0;
-    for (size_t bit = 0; bit < bit_width; ++bit) {
-        CCC_Tribool pop = bitq_pop_front(sliding_code_window);
-        check(pop != CCC_TRIBOOL_ERROR);
-        code |= ((Lzw_code)pop << bit);
-    }
-    return code;
-}
-
-/** Writes the current string obtained from the code given in the file being
-decompressed. This is obtained by walking the prefix tree toward the root that
-is contained in the flat code table. The string is written into the buffer in
-reverse starting at the current string index provided so that the buffer can
-be written to a file in forward order as a slice. The index of the first
-character of the written string in the buffer is returned. */
-static inline size_t
-lzw_reverse_write_string(
-    Lzw_code const start_code,
-    size_t current_string_index,
-    unsigned char *const current_string,
-    struct Lzw_prefix code_table[const]
-) {
-    Lzw_code walk = start_code;
-    while (walk != LZW_NULL_CODE) {
-        current_string[--current_string_index] = code_table[walk].next_char;
-        walk = code_table[walk].prefix;
-    }
-    return current_string_index;
-}
-
-/*=========================    File Read and Write  =========================*/
+/*====================    Huffman File Read and Write  ======================*/
 
 /** Reconstructs the text by following the bit paths specified in the file
 text bit queue. Bits are written on a per byte basis to the file and each
@@ -1555,6 +1244,50 @@ huff_fill_bitq(
         bitq_push_back(bq, bit, allocator);
         ++i;
     }
+}
+
+/** Write the specified bytes to the file or exit the program if an error
+occurs. Returns the number of bytes written. */
+static size_t
+huff_write_bytes(
+    FILE *const f, void const *const source, size_t const to_write
+) {
+    size_t count = 0;
+    unsigned char const *source_pointer = source;
+    while (count < to_write) {
+        /* Avoiding a strict aliasing violation. */
+        uint8_t byte = 0;
+        memcpy(&byte, source_pointer, sizeof(unsigned char));
+        int const writ = fputc(byte, f);
+        check(!ferror(f));
+        if (writ == EOF) {
+            return count;
+        }
+        ++source_pointer;
+        ++count;
+    }
+    return count;
+}
+
+/** Reads the specified number of bytes from the file or exits if an error
+occurs. The bytes read are returned and may be less than requested if the file
+ends. */
+static size_t
+huff_readbytes(FILE *const f, void *const destination, size_t const to_read) {
+    size_t count = 0;
+    unsigned char *destination_pointer = destination;
+    while (count < to_read) {
+        int const read = fgetc(f);
+        check(!ferror(f));
+        if (read == EOF) {
+            return count;
+        }
+        /* Avoid strict aliasing violation. */
+        memcpy(destination_pointer, &read, sizeof(unsigned char));
+        ++destination_pointer;
+        ++count;
+    }
+    return count;
 }
 
 /*=========================      Huffman Helpers    =========================*/
@@ -1756,7 +1489,360 @@ huff_print_bitq(struct Bit_queue const *const bq) {
     printf("\n");
 }
 
+/*================       Huffman Container Helper Code     ==================*/
+
+/** The flat hash map documentation mentions we should have good bit diversity
+in the high and low byte of our hash but we are only hashing characters which
+are their own unique value across all characters we will encounter. So the
+hashed value will just be the character repeated at the high and low byte. */
+static uint64_t
+huff_hash_char(CCC_Key_arguments const to_hash) {
+    char const key = *(char const *)to_hash.key;
+    return ((uint64_t)key << 55) | (uint64_t)key;
+}
+
+static CCC_Order
+huff_char_order(CCC_Key_comparator_arguments const order) {
+    struct Huff_character_frequency const *const right
+        = (struct Huff_character_frequency *)order.type_right;
+    char const left = *(char *)order.key_left;
+    return (left > right->ch) - (left < right->ch);
+}
+
+static CCC_Order
+huff_order_freqs(CCC_Comparator_arguments const order) {
+    struct Huff_pair_node const *const left
+        = (struct Huff_pair_node *)order.type_left;
+    struct Huff_pair_node const *const right
+        = (struct Huff_pair_node *)order.type_right;
+    return (left->frequency > right->frequency)
+         - (left->frequency < right->frequency);
+}
+
+static CCC_Order
+huff_path_memo_order(CCC_Key_comparator_arguments const order) {
+    struct Huff_path_memo const *const right
+        = (struct Huff_path_memo *)order.type_right;
+    char const left = *(char *)order.key_left;
+    return (left > right->ch) - (left < right->ch);
+}
+
 /* NOLINTEND(*misc-no-recursion) */
+
+/*=========================     LZW Compression     =========================*/
+
+/** Implements LZW encoding using a flat hash map. This approach saves some
+RAM usage over a flat table and exercises the hash map. This algorithm also
+implements clear codes which flush and reset the hash map. The encoder and
+decoder progressively expand the bit width needed to write and read codes to a
+file starting at 9 and ending at 12. */
+static void
+lzw_encode(
+    SV_Str_view const to_compress, CCC_Allocator const *const allocator
+) {
+    FILE *const f = fopen(SV_begin(to_compress), "r");
+    if (!f) {
+        (void)fprintf(stderr, "%s\n", strerror(errno));
+        return;
+    }
+    defer {
+        (void)fclose(f);
+    }
+    size_t const fsize = file_size(f);
+    struct Lzw_map prefix_map = {
+        CCC_flat_hash_map_with_capacity(
+            struct Lzw_key_value,
+            key,
+            ((CCC_Hasher){.hash = lzw_hash, .compare = lzw_compare}),
+            *allocator,
+            LZW_STARTING_PREFIX_COUNT
+        ),
+    };
+    struct New_file const compression_location
+        = open_compressed_file(to_compress);
+    check(compression_location.file);
+    printf("Zip %s (%zu bytes).\n", SV_begin(to_compress), fsize);
+    defer {
+        CCC_flat_hash_map_clear_and_free(
+            &prefix_map.map, &(CCC_Destructor){}, allocator
+        );
+        (void)fclose(compression_location.file);
+    }
+    {
+        Lzw_code code = LZW_NEW_CODE_START;
+        uint8_t bit_width = LZW_FILE_CODE_START_BIT_COUNT;
+        struct File_char const first_char = peek_first_char(f);
+        check(!first_char.error);
+        Lzw_code prefix = first_char.c;
+        CCC_Flat_bitset sliding_code_window = flat_bitset_with_storage(
+            0, (CCC_Bit[sizeof(Lzw_code) * CHAR_BIT]){}
+        );
+        foreach_filechar(f, 1, c, {
+            CCC_Entry const e = lzw_try_insert(
+                &prefix_map,
+                &(struct Lzw_key_value){
+                    .key = {
+                        .prefix = prefix,
+                        .next_char = (unsigned char)*c,
+                    },
+                    .code_value = code,
+                },
+                allocator
+            );
+            if (occupied(&e)) {
+                /* Make the prefix longer so we don't push to file yet. */
+                struct Lzw_key_value const *const seen = unwrap(&e);
+                prefix = seen->code_value;
+            } else {
+                /* Prefix has reached max unique length so we push to file. */
+                lzw_push_code(
+                    compression_location.file,
+                    &sliding_code_window,
+                    prefix,
+                    bit_width
+                );
+                ++code;
+                if (bit_width < LZW_FILE_CODE_MAX_BIT_COUNT
+                    && code >= (1U << bit_width)) {
+                    ++bit_width;
+                }
+                if (code >= LZW_CODE_LIMIT) {
+                    lzw_push_code(
+                        compression_location.file,
+                        &sliding_code_window,
+                        LZW_CLEAR_CODE,
+                        bit_width
+                    );
+                    CCC_flat_hash_map_clear(
+                        &prefix_map.map, &(CCC_Destructor){}
+                    );
+                    code = LZW_NEW_CODE_START;
+                    bit_width = LZW_FILE_CODE_START_BIT_COUNT;
+                }
+                prefix = (unsigned char)*c;
+            }
+        });
+        lzw_push_code(
+            compression_location.file, &sliding_code_window, prefix, bit_width
+        );
+        bool wrote = lzw_push_code(
+            compression_location.file,
+            &sliding_code_window,
+            LZW_STOP_CODE,
+            bit_width
+        );
+        while (!wrote) {
+            wrote = lzw_push_code(
+                compression_location.file, &sliding_code_window, 0, bit_width
+            );
+        }
+    }
+    size_t const cccz_size = file_size(compression_location.file);
+    printf(
+        "Zipped file %s has compression ratio of %.2lf (%zu bytes).\n",
+        SV_begin(compression_location.path),
+        (double)cccz_size / (double)(fsize),
+        cccz_size
+    );
+}
+
+/** Pushes the specified code into the fixed size bit set. If the fixed size
+bit set reaches the size of the Lzw_code's bit width it's contents are written
+to the file within that types number of bytes and the bit set is cleared. */
+static bool
+lzw_push_code(
+    FILE *const file,
+    Flat_bitset *const sliding_code_window,
+    Lzw_code const code,
+    uint8_t const bit_width
+) {
+    bool wrote_to_file = false;
+    for (Lzw_code b = 0; b < bit_width; ++b) {
+        CCC_Result const push_result = flat_bitset_push_back(
+            sliding_code_window,
+            (CCC_Tribool){(code >> b) & 1},
+            &(CCC_Allocator){}
+        );
+        check(push_result == CCC_RESULT_OK);
+        if (flat_bitset_count(sliding_code_window).count
+            == (sizeof(Lzw_code) * CHAR_BIT)) {
+            check(
+                fwrite(
+                    flat_bitset_data(sliding_code_window),
+                    sizeof(Lzw_code),
+                    1,
+                    file
+                )
+                == 1
+            );
+            flat_bitset_clear(sliding_code_window);
+            wrote_to_file = true;
+        }
+    }
+    return wrote_to_file;
+}
+
+/*=========================     LZW Decompression   =========================*/
+
+/** Implements LZW decoding using a flat table and bit accumulator bit set. The
+approach expects clear and stop codes while it rebuilds strings by walking
+prefix trees for characters. It also expects dynamically expanding bit widths
+starting at 9 and ending at 12. The decoder is always one step behind the
+encoder when reconstructing the data from codes. */
+static void
+lzw_decode(SV_Str_view decode, CCC_Allocator const *const) {
+    FILE *const cccz = open_cccz_file(decode);
+    FILE *const copy_of_original = open_file_copy_in_output(decode);
+    defer {
+        if (cccz) {
+            (void)fclose(cccz);
+        }
+        if (copy_of_original) {
+            (void)fclose(copy_of_original);
+        }
+    }
+    if (!cccz || !copy_of_original) {
+        return;
+    }
+    static struct Lzw_prefix code_table[LZW_CODE_LIMIT];
+    for (Lzw_code i = 0; i < LZW_STARTING_PREFIX_COUNT; ++i) {
+        code_table[i] = (struct Lzw_prefix){
+            .prefix = LZW_NULL_CODE,
+            .next_char = (unsigned char)i,
+        };
+    }
+    Lzw_code next_code = LZW_NEW_CODE_START;
+    Lzw_code old_code = 0;
+    Lzw_code current_code = 0;
+    uint8_t bit_width = LZW_FILE_CODE_START_BIT_COUNT;
+    struct Bit_queue sliding_code_window
+        = bitq_from_storage(sizeof(Lzw_code) * CHAR_BIT * 2U);
+    static unsigned char current_string[LZW_CODE_LIMIT];
+    size_t current_string_index = LZW_CODE_LIMIT;
+    current_code = lzw_read_code(cccz, &sliding_code_window, bit_width);
+    if (current_code != LZW_NULL_CODE) {
+        old_code = current_code;
+        current_string[--current_string_index] = (unsigned char)old_code;
+        [[maybe_unused]] size_t const written = fwrite(
+            &current_string[current_string_index], 1, 1, copy_of_original
+        );
+        check(written == 1);
+    }
+    while ((current_code = lzw_read_code(cccz, &sliding_code_window, bit_width))
+           != LZW_NULL_CODE) {
+        if (current_code == LZW_STOP_CODE) {
+            return;
+        }
+        if (current_code == LZW_CLEAR_CODE) {
+            next_code = LZW_NEW_CODE_START;
+            bit_width = LZW_FILE_CODE_START_BIT_COUNT;
+            current_code = lzw_read_code(cccz, &sliding_code_window, bit_width);
+            if (current_code == LZW_NULL_CODE) {
+                return;
+            }
+            old_code = current_code;
+            current_string_index = LZW_CODE_LIMIT;
+            current_string[--current_string_index] = (unsigned char)old_code;
+            /* Write the literal character following clear to output */
+            [[maybe_unused]] size_t const written = fwrite(
+                &current_string[current_string_index], 1, 1, copy_of_original
+            );
+            check(written == 1);
+            continue;
+        }
+        /* Encountering the KwKwK case of LZW decompression. */
+        if (current_code >= next_code) {
+            /* We know we will be adding the first character of K to the final
+               position of the buffer so leave room for it now. */
+            current_string_index = lzw_reverse_write_string(
+                old_code, LZW_CODE_LIMIT - 1, current_string, code_table
+            );
+            current_string[LZW_CODE_LIMIT - 1]
+                = current_string[current_string_index];
+        } else {
+            current_string_index = lzw_reverse_write_string(
+                current_code, LZW_CODE_LIMIT, current_string, code_table
+            );
+        }
+        [[maybe_unused]] size_t const written = fwrite(
+            &current_string[current_string_index],
+            1,
+            LZW_CODE_LIMIT - current_string_index,
+            copy_of_original
+        );
+        check(written == LZW_CODE_LIMIT - current_string_index);
+        if (next_code < LZW_CODE_LIMIT) {
+            code_table[next_code].prefix = old_code;
+            code_table[next_code].next_char
+                = current_string[current_string_index];
+            ++next_code;
+        }
+        /* The decoder is one step behind the encoder so we need to ensure that
+        our code bit width reading keeps up with the transition of bit widths
+        that our encoder performed. We subtract one to ensure we are ready for
+        correct read width on next iteration. */
+        if (bit_width < LZW_FILE_CODE_MAX_BIT_COUNT
+            && next_code >= ((1U << bit_width) - 1)) {
+            ++bit_width;
+        }
+        old_code = current_code;
+    }
+}
+
+/** Reads 12 bit codes into an accumulator and provides the currently obtained
+next code from the file bytes. Every file is expected to have a number of bytes
+divisible by the Lzw_code type. Modifies the input accumulator parameter and
+returns its reference. */
+static inline Lzw_code
+lzw_read_code(
+    FILE *const file,
+    struct Bit_queue *const sliding_code_window,
+    uint8_t const bit_width
+) {
+    while (bitq_count(sliding_code_window) < bit_width) {
+        Lzw_code block;
+        size_t const read_count = fread(&block, sizeof(Lzw_code), 1, file);
+        if (read_count == 0) {
+            return LZW_NULL_CODE;
+        }
+        for (size_t bit = 0; bit < sizeof(Lzw_code) * CHAR_BIT; ++bit) {
+            CCC_Result const r = bitq_push_back(
+                sliding_code_window,
+                (CCC_Tribool){(block >> bit) & 1U},
+                &(CCC_Allocator){}
+            );
+            check(r == CCC_RESULT_OK);
+        }
+    }
+    Lzw_code code = 0;
+    for (size_t bit = 0; bit < bit_width; ++bit) {
+        CCC_Tribool pop = bitq_pop_front(sliding_code_window);
+        check(pop != CCC_TRIBOOL_ERROR);
+        code |= ((Lzw_code)pop << bit);
+    }
+    return code;
+}
+
+/** Writes the current string obtained from the code given in the file being
+decompressed. This is obtained by walking the prefix tree toward the root that
+is contained in the flat code table. The string is written into the buffer in
+reverse starting at the current string index provided so that the buffer can
+be written to a file in forward order as a slice. The index of the first
+character of the written string in the buffer is returned. */
+static inline size_t
+lzw_reverse_write_string(
+    Lzw_code const start_code,
+    size_t current_string_index,
+    unsigned char *const current_string,
+    struct Lzw_prefix code_table[const]
+) {
+    Lzw_code walk = start_code;
+    while (walk != LZW_NULL_CODE) {
+        current_string[--current_string_index] = code_table[walk].next_char;
+        walk = code_table[walk].prefix;
+    }
+    return current_string_index;
+}
 
 /*========================       LZW Helper Code     ========================*/
 
@@ -2037,88 +2123,6 @@ open_compressed_file(SV_Str_view const original_filepath) {
         .path = SV_from_terminated(path_to_cccz),
         .file = cccz,
     };
-}
-
-/** Write the specified bytes to the file or exit the program if an error
-occurs. Returns the number of bytes written. */
-static size_t
-huff_write_bytes(
-    FILE *const f, void const *const source, size_t const to_write
-) {
-    size_t count = 0;
-    unsigned char const *source_pointer = source;
-    while (count < to_write) {
-        /* Avoiding a strict aliasing violation. */
-        uint8_t byte = 0;
-        memcpy(&byte, source_pointer, sizeof(unsigned char));
-        int const writ = fputc(byte, f);
-        check(!ferror(f));
-        if (writ == EOF) {
-            return count;
-        }
-        ++source_pointer;
-        ++count;
-    }
-    return count;
-}
-
-/** Reads the specified number of bytes from the file or exits if an error
-occurs. The bytes read are returned and may be less than requested if the file
-ends. */
-static size_t
-huff_readbytes(FILE *const f, void *const destination, size_t const to_read) {
-    size_t count = 0;
-    unsigned char *destination_pointer = destination;
-    while (count < to_read) {
-        int const read = fgetc(f);
-        check(!ferror(f));
-        if (read == EOF) {
-            return count;
-        }
-        /* Avoid strict aliasing violation. */
-        memcpy(destination_pointer, &read, sizeof(unsigned char));
-        ++destination_pointer;
-        ++count;
-    }
-    return count;
-}
-
-/*=====================       Container Helper Code     =====================*/
-
-/** The flat hash map documentation mentions we should have good bit diversity
-in the high and low byte of our hash but we are only hashing characters which
-are their own unique value across all characters we will encounter. So the
-hashed value will just be the character repeated at the high and low byte. */
-static uint64_t
-hash_char(CCC_Key_arguments const to_hash) {
-    char const key = *(char const *)to_hash.key;
-    return ((uint64_t)key << 55) | (uint64_t)key;
-}
-
-static CCC_Order
-char_order(CCC_Key_comparator_arguments const order) {
-    struct Huff_character_frequency const *const right
-        = (struct Huff_character_frequency *)order.type_right;
-    char const left = *(char *)order.key_left;
-    return (left > right->ch) - (left < right->ch);
-}
-
-static CCC_Order
-order_freqs(CCC_Comparator_arguments const order) {
-    struct Huff_pair_node const *const left
-        = (struct Huff_pair_node *)order.type_left;
-    struct Huff_pair_node const *const right
-        = (struct Huff_pair_node *)order.type_right;
-    return (left->frequency > right->frequency)
-         - (left->frequency < right->frequency);
-}
-
-static CCC_Order
-path_memo_order(CCC_Key_comparator_arguments const order) {
-    struct Huff_path_memo const *const right
-        = (struct Huff_path_memo *)order.type_right;
-    char const left = *(char *)order.key_left;
-    return (left > right->ch) - (left < right->ch);
 }
 
 /*=========================     Help Message      ===========================*/
