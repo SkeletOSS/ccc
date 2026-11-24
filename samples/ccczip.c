@@ -295,7 +295,7 @@ typedef void Algorithm(SV_Str_view, CCC_Allocator const *);
 static SV_Str_view const output_dir = SV_from("samples/output/");
 static SV_Str_view const cccz_suffix = SV_from(".cccz");
 
-/*===========================      Prototypes      ==========================*/
+/*=======================      Huffman Prototypes      ======================*/
 
 static void huff_encode(SV_Str_view, CCC_Allocator const *);
 static struct Huff_pair_node_priority_queue huff_build_encoding_priority_queue(
@@ -603,8 +603,6 @@ main(int argc, char **argv) {
     }
     return 0;
 }
-
-/*=========================    Huffman Compression  =========================*/
 
 /*=========================     Huffman Encoding    =========================*/
 
@@ -1799,7 +1797,7 @@ lzw_read_code(
     struct Bit_queue *const sliding_code_window,
     uint8_t const bit_width
 ) {
-    while (bitq_count(sliding_code_window) < bit_width) {
+    if (bitq_count(sliding_code_window) < bit_width) {
         Lzw_code block;
         size_t const read_count = fread(&block, sizeof(Lzw_code), 1, file);
         if (read_count == 0) {
