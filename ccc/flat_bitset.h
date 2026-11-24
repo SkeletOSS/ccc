@@ -71,13 +71,6 @@ All types and functions can then be written without the `CCC_` prefix. */
 Types available in the container interface. */
 /**@{*/
 
-/** @brief A type to represent a single bit in the bit set.
-
-This is used to pass a compound literal of desired bits to various initializers
-and macros. The bit set is then custom built to accommodate this bit count with
-platform specific blocks of fixed width integers. */
-typedef uint8_t CCC_Bit;
-
 /** @brief The bit set type that may be stored and initialized on the stack,
 heap, or data segment at compile or run time.
 
@@ -120,7 +113,7 @@ number of bytes occupied by the number of bit blocks that must be allocated. */
 or compile time with no allocation permissions or context from a compound
 literal of bitset blocks.
 @param[in] count the count of bits <= capacity of this bit set.
-@param[in] compound_literal_array the compound literal of CCC_Bit specifying
+@param[in] compound_literal_array the compound literal of CCC_Tribool specifying
 the desired bit count for the bit set. A platform specific array of fixed width
 integers is constructed to accommodate this bit count.
 @param[in] optional_storage_specifier a storage specifier for the backing block
@@ -135,7 +128,7 @@ A fixed size bit set.
 #define FLAT_BITSET_USING_NAMESPACE_CCC
 static Flat_bitset bitset = flat_bitset_with_storage(
     4096,
-    (Bit[4096]){}
+    (CCC_Tribool[4096]){}
 );
 ```
 
@@ -237,7 +230,7 @@ static and stack based initialization options. */
 
 /** @brief Create the underlying fixed size storage for a bit set given a
 compound literal array of bits the user wishes to store.
-@param[in] bit_compound_literal_array a compound literal array of `CCC_Bit`
+@param[in] bit_compound_literal_array a compound literal array of `CCC_Tribool`
 representing the number of bits the user wishes to store in the bit set.
 @param[in] optional_storage_specifier a storage specifier for the backing block
 storage may be added on newer compilers.
@@ -255,7 +248,7 @@ int
 main(void)
 {
     void *const storage = malloc(
-        sizeof(CCC_flat_bitset_storage_for((CCC_Bit[4096]){}))
+        sizeof(CCC_flat_bitset_storage_for((CCC_Tribool[4096]){}))
     );
     defer free(storage);
     CCC_Flat_bitset bitset = CCC_flat_bitset_for(
@@ -301,7 +294,7 @@ int
 main(void)
 {
     void *const storage = malloc(
-        sizeof(CCC_flat_bitset_storage_for((CCC_Bit[4096]){}))
+        sizeof(CCC_flat_bitset_storage_for((CCC_Tribool[4096]){}))
     );
     defer free(storage);
     CCC_Flat_bitset bitset = CCC_flat_bitset_for(
@@ -340,12 +333,12 @@ Manual memory management with no allocation function provided.
 #define FLAT_BITSET_USING_NAMESPACE_CCC
 static Flat_bitset source = flat_bitset_with_storage(
     11,
-    (Bit[11]){}
+    (Tribool[11]){}
 );
 set_rand_bits(&source);
 static Flat_bitset source = flat_bitset_with_storage(
     13
-    (Bit[13]){}
+    (CCC_Tribool[13]){}
 );
 CCC_Result res = flat_bitset_copy(&destination, &source, &(CCC_Allocator){});
 ```
@@ -1011,7 +1004,6 @@ CCC_Tribool CCC_flat_bitset_pop_back(CCC_Flat_bitset *bitset);
 container. Check for namespace clashes before name shortening. */
 #ifdef FLAT_BITSET_USING_NAMESPACE_CCC
 /* NOLINTBEGIN(readability-identifier-naming) */
-typedef CCC_Bit Bit;
 typedef CCC_Flat_bitset Flat_bitset;
 #    define FLAT_BITSET_BLOCK_BITS CCC_FLAT_BITSET_BLOCK_BITS
 #    define flat_bitset_block_count(arguments...)                              \

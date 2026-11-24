@@ -8,7 +8,7 @@
 
 check_static_begin(flat_bitset_test_push_pop_back_no_reallocate) {
     CCC_Flat_bitset bs = CCC_flat_bitset_for(
-        16, 0, CCC_flat_bitset_storage_for((CCC_Bit[16]){})
+        16, 0, CCC_flat_bitset_storage_for((CCC_Tribool[16]){})
     );
     check(CCC_flat_bitset_capacity(&bs).count, 16);
     check(CCC_flat_bitset_count(&bs).count, 0);

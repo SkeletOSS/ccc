@@ -114,7 +114,7 @@ destroy_element(CCC_Arguments const arguments) {
 
 check_static_begin(flat_buffer_test_clear_with_destructor) {
     Flat_buffer b = flat_buffer_with_storage(0, (int[8]){});
-    Flat_bitset is_destroyed = flat_bitset_with_storage(0, (Bit[8]){});
+    Flat_bitset is_destroyed = flat_bitset_with_storage(0, (CCC_Tribool[8]){});
     int i = 0;
     while (!flat_buffer_is_full(&b)) {
         CCC_Result const bit_push = flat_bitset_push_back(
@@ -153,7 +153,7 @@ check_static_begin(flat_buffer_test_clear_and_free_with_destructor) {
         .context = &stack_allocator_for((int[8]){}),
     };
     Flat_buffer b = flat_buffer_with_capacity(int, allocator, 8);
-    Flat_bitset is_destroyed = flat_bitset_with_storage(0, (Bit[8]){});
+    Flat_bitset is_destroyed = flat_bitset_with_storage(0, (CCC_Tribool[8]){});
     int i = 0;
     while (!flat_buffer_is_full(&b)) {
         CCC_Result const bit_push = flat_bitset_push_back(

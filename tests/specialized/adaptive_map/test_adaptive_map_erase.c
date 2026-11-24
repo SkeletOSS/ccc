@@ -31,7 +31,7 @@ check_static_begin(adaptive_map_test_prime_shuffle) {
        reduce the shuffle range so it will repeat some values. */
     size_t shuffled_index = prime % (size - less);
 
-    Flat_bitset repeats = flat_bitset_with_storage(50, (CCC_Bit[50]){});
+    Flat_bitset repeats = flat_bitset_with_storage(50, (CCC_Tribool[50]){});
     for (size_t i = 0; i < size; ++i) {
         if (occupied(adaptive_map_insert_or_assign_wrap(
                 &s,
@@ -167,7 +167,7 @@ check_static_begin(adaptive_map_test_weak_srand) {
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
     Flat_bitset repeats
-        = flat_bitset_with_storage(SRAND_CAP, (CCC_Bit[SRAND_CAP]){});
+        = flat_bitset_with_storage(SRAND_CAP, (CCC_Tribool[SRAND_CAP]){});
     for (int i = 0; i < SRAND_CAP; ++i) {
         if (occupied(adaptive_map_insert_or_assign_wrap(
                 &s,
@@ -211,7 +211,7 @@ check_static_begin(adaptive_map_test_insert_erase_cycles) {
     };
     int keys[CYCLES_TEST_CAP] = {};
     Flat_bitset repeats = flat_bitset_with_storage(
-        CYCLES_TEST_CAP, (CCC_Bit[CYCLES_TEST_CAP]){}
+        CYCLES_TEST_CAP, (CCC_Tribool[CYCLES_TEST_CAP]){}
     );
     for (int i = 0; i < CYCLES_TEST_CAP; ++i) {
         keys[i] = (int)rand(); /* NOLINT */

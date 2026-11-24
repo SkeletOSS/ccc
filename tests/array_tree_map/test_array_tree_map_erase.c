@@ -71,7 +71,7 @@ check_static_begin(array_tree_map_test_prime_shuffle) {
        reduce the shuffle range so it will repeat some values. */
     size_t shuffled_index = PRIME % (SHUFFLE_CAP - LESS);
     Flat_bitset repeats
-        = flat_bitset_with_storage(SHUFFLE_CAP, (CCC_Bit[SHUFFLE_CAP]){});
+        = flat_bitset_with_storage(SHUFFLE_CAP, (CCC_Tribool[SHUFFLE_CAP]){});
     for (size_t i = 0; i < SHUFFLE_CAP; ++i) {
         if (occupied(array_tree_map_try_insert_wrap(
                 &s,
@@ -111,7 +111,7 @@ check_static_begin(array_tree_map_test_weak_srand) {
     };
     int id_keys[SRAND_CAP];
     Flat_bitset repeats
-        = flat_bitset_with_storage(SRAND_CAP, (CCC_Bit[SRAND_CAP]){});
+        = flat_bitset_with_storage(SRAND_CAP, (CCC_Tribool[SRAND_CAP]){});
     for (int i = 0; i < SRAND_CAP; ++i) {
         int const rand_i = (int)rand(); /* NOLINT */
         if (occupied(array_tree_map_try_insert_wrap(
@@ -156,7 +156,7 @@ check_static_begin(array_tree_map_test_insert_erase_cycles_no_allocate) {
     );
     int id_keys[CYCLES_TEST_CAP];
     Flat_bitset repeats = flat_bitset_with_storage(
-        CYCLES_TEST_CAP, (CCC_Bit[CYCLES_TEST_CAP]){}
+        CYCLES_TEST_CAP, (CCC_Tribool[CYCLES_TEST_CAP]){}
     );
     for (int i = 0; i < CYCLES_TEST_CAP; ++i) {
         int const rand_i = (int)rand(); /* NOLINT */
@@ -210,7 +210,7 @@ check_static_begin(array_tree_map_test_insert_erase_cycles_allocate) {
     );
     int id_keys[CYCLES_TEST_CAP];
     CCC_Flat_bitset repeats = CCC_flat_bitset_with_storage(
-        CYCLES_TEST_CAP, (CCC_Bit[CYCLES_TEST_CAP]){}
+        CYCLES_TEST_CAP, (CCC_Tribool[CYCLES_TEST_CAP]){}
     );
     for (int i = 0; i < CYCLES_TEST_CAP; ++i) {
         int const rand_i = (int)rand(); /* NOLINT */

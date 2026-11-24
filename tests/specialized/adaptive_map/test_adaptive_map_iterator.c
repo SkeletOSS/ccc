@@ -523,7 +523,8 @@ check_static_begin(adaptive_map_test_clear_with_destructor) {
     CCC_Adaptive_map map = adaptive_map_default(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
-    Flat_bitset is_destroyed = flat_bitset_with_storage(0, (Bit[MIN_CAP]){});
+    Flat_bitset is_destroyed
+        = flat_bitset_with_storage(0, (CCC_Tribool[MIN_CAP]){});
     int i = 0;
     for (;;) {
         CCC_Entry const *const e = adaptive_map_try_insert_with(

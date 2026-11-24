@@ -19,7 +19,7 @@ check_static_begin(flat_bitset_test_push_back_no_reallocate) {
         CCC_RESULT_ARGUMENT_ERROR
     );
     CCC_Flat_bitset bs = CCC_flat_bitset_for(
-        16, 0, CCC_flat_bitset_storage_for((CCC_Bit[16]){})
+        16, 0, CCC_flat_bitset_storage_for((CCC_Tribool[16]){})
     );
     check(
         CCC_flat_bitset_push_back(&bs, CCC_TRIBOOL_ERROR, &(CCC_Allocator){}),
@@ -114,8 +114,9 @@ check_static_begin(flat_bitset_test_push_back_reserve) {
 check_static_begin(flat_bitset_test_reserve_fail) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
-        .context
-        = &stack_allocator_for(CCC_flat_bitset_storage_for((CCC_Bit[32]){})),
+        .context = &stack_allocator_for(
+            CCC_flat_bitset_storage_for((CCC_Tribool[32]){})
+        ),
     };
     CCC_Flat_bitset bs = CCC_flat_bitset_default();
     check(

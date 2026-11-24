@@ -549,7 +549,7 @@ set blocks. The queue is initialized as empty with the specified capacity. */
 #define bitq_from_storage(capacity, optional_storage_specifier...)             \
     (struct Bit_queue) {                                                       \
         .bs = CCC_flat_bitset_with_storage(                                    \
-            capacity, (CCC_Bit[capacity]){}, optional_storage_specifier        \
+            capacity, (CCC_Tribool[capacity]){}, optional_storage_specifier    \
         )                                                                      \
     }
 
@@ -1573,7 +1573,7 @@ lzw_encode(
         check(!first_char.error);
         Lzw_code prefix = first_char.c;
         CCC_Flat_bitset sliding_code_window = flat_bitset_with_storage(
-            0, (CCC_Bit[sizeof(Lzw_code) * CHAR_BIT]){}
+            0, (CCC_Tribool[sizeof(Lzw_code) * CHAR_BIT]){}
         );
         foreach_filechar(f, 1, c, {
             CCC_Entry const e = lzw_try_insert(

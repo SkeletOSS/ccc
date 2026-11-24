@@ -236,7 +236,8 @@ check_static_begin(flat_hash_map_test_clear_with_destructor) {
         }),
         (struct Val[MIN_CAP]){}
     );
-    Flat_bitset is_destroyed = flat_bitset_with_storage(0, (Bit[MIN_CAP]){});
+    Flat_bitset is_destroyed
+        = flat_bitset_with_storage(0, (CCC_Tribool[MIN_CAP]){});
     int i = 0;
     for (;;) {
         CCC_Entry const *const e = flat_hash_map_try_insert_with(
@@ -293,7 +294,8 @@ check_static_begin(flat_hash_map_test_clear_and_free_with_destructor) {
         allocator,
         MIN_CAP
     );
-    Flat_bitset is_destroyed = flat_bitset_with_storage(0, (Bit[MIN_CAP]){});
+    Flat_bitset is_destroyed
+        = flat_bitset_with_storage(0, (CCC_Tribool[MIN_CAP]){});
     int i = 0;
     for (;;) {
         struct Val const *const v = unwrap(flat_hash_map_insert_or_assign_with(

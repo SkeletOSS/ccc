@@ -9,7 +9,7 @@
 typedef typeof(*(CCC_Flat_bitset){}.blocks) Bitblocks;
 
 static CCC_Flat_bitset static_bitset
-    = CCC_flat_bitset_with_storage(32, (CCC_Bit[32]){});
+    = CCC_flat_bitset_with_storage(32, (CCC_Tribool[32]){});
 
 check_static_begin(flat_bitset_test_static) {
     check(CCC_flat_bitset_data(NULL), NULL);
@@ -37,7 +37,7 @@ check_static_begin(flat_bitset_test_static) {
 
 check_static_begin(flat_bitset_test_construct) {
     CCC_Flat_bitset bs = CCC_flat_bitset_for(
-        10, 10, CCC_flat_bitset_storage_for((CCC_Bit[10]){})
+        10, 10, CCC_flat_bitset_storage_for((CCC_Tribool[10]){})
     );
     check(CCC_flat_bitset_popcount(&bs).count, 0);
     size_t i = 0;
@@ -50,7 +50,7 @@ check_static_begin(flat_bitset_test_construct) {
 }
 
 check_static_begin(flat_bitset_test_construct_with_literal) {
-    CCC_Flat_bitset bs = CCC_flat_bitset_with_storage(10, (CCC_Bit[10]){});
+    CCC_Flat_bitset bs = CCC_flat_bitset_with_storage(10, (CCC_Tribool[10]){});
     check(CCC_flat_bitset_popcount(&bs).count, 0);
     size_t i = 0;
     for (; i < CCC_flat_bitset_count(&bs).count; ++i) {
@@ -63,7 +63,7 @@ check_static_begin(flat_bitset_test_construct_with_literal) {
 
 check_static_begin(flat_bitset_test_construct_with_literal_full_block) {
     CCC_Flat_bitset bs = CCC_flat_bitset_with_storage(
-        CCC_FLAT_BITSET_BLOCK_BITS, (CCC_Bit[CCC_FLAT_BITSET_BLOCK_BITS]){}
+        CCC_FLAT_BITSET_BLOCK_BITS, (CCC_Tribool[CCC_FLAT_BITSET_BLOCK_BITS]){}
     );
     check(CCC_flat_bitset_popcount(&bs).count, 0);
     size_t i = 0;
@@ -76,7 +76,8 @@ check_static_begin(flat_bitset_test_construct_with_literal_full_block) {
 }
 
 check_static_begin(flat_bitset_test_copy_no_allocate) {
-    CCC_Flat_bitset source = CCC_flat_bitset_with_storage(0, (CCC_Bit[512]){});
+    CCC_Flat_bitset source
+        = CCC_flat_bitset_with_storage(0, (CCC_Tribool[512]){});
     check(CCC_flat_bitset_capacity(&source).count, 512);
     check(CCC_flat_bitset_count(&source).count, 0);
     CCC_Result push_status = CCC_RESULT_OK;
@@ -93,7 +94,7 @@ check_static_begin(flat_bitset_test_copy_no_allocate) {
     }
     check(push_status, CCC_RESULT_NO_ALLOCATION_FUNCTION);
     CCC_Flat_bitset destination
-        = CCC_flat_bitset_with_storage(0, (CCC_Bit[513]){});
+        = CCC_flat_bitset_with_storage(0, (CCC_Tribool[513]){});
     check(
         CCC_flat_bitset_copy(NULL, &source, &(CCC_Allocator){}),
         CCC_RESULT_ARGUMENT_ERROR
@@ -146,8 +147,9 @@ check_static_begin(flat_bitset_test_copy_no_allocate) {
 check_static_begin(flat_bitset_test_copy_allocate) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
-        .context
-        = &stack_allocator_for(CCC_flat_bitset_storage_for((CCC_Bit[1024]){})),
+        .context = &stack_allocator_for(
+            CCC_flat_bitset_storage_for((CCC_Tribool[1024]){})
+        ),
     };
     CCC_Flat_bitset source = CCC_flat_bitset_with_capacity(allocator, 512, 0);
     for (size_t i = 0; i < 512; ++i) {
@@ -197,8 +199,9 @@ check_static_begin(flat_bitset_test_copy_allocate) {
 check_static_begin(flat_bitset_test_copy_exhaustion) {
     CCC_Allocator allocator = {
         .allocate = stack_allocator_allocate,
-        .context
-        = &stack_allocator_for(CCC_flat_bitset_storage_for((CCC_Bit[512]){})),
+        .context = &stack_allocator_for(
+            CCC_flat_bitset_storage_for((CCC_Tribool[512]){})
+        ),
     };
     CCC_Flat_bitset source = CCC_flat_bitset_with_capacity(allocator, 512, 0);
     CCC_Flat_bitset destination = CCC_flat_bitset_default();
@@ -206,8 +209,9 @@ check_static_begin(flat_bitset_test_copy_exhaustion) {
         CCC_flat_bitset_copy(&destination, &source, &allocator),
         CCC_RESULT_ALLOCATOR_ERROR
     );
-    allocator.context
-        = &stack_allocator_for(CCC_flat_bitset_storage_for((CCC_Bit[1024]){}));
+    allocator.context = &stack_allocator_for(
+        CCC_flat_bitset_storage_for((CCC_Tribool[1024]){})
+    );
     source.blocks = NULL;
     check(
         CCC_flat_bitset_copy(&destination, &source, &allocator),
@@ -220,8 +224,9 @@ check_static_begin(flat_bitset_test_init_from) {
     SV_Str_view const input = SV_from("110110");
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
-        .context
-        = &stack_allocator_for(CCC_flat_bitset_storage_for((CCC_Bit[256]){})),
+        .context = &stack_allocator_for(
+            CCC_flat_bitset_storage_for((CCC_Tribool[256]){})
+        ),
     };
     CCC_Flat_bitset b = CCC_flat_bitset_from(
         allocator, 0, SV_len(input), '1', SV_begin(input)
@@ -238,8 +243,9 @@ check_static_begin(flat_bitset_test_init_from_cap) {
     SV_Str_view input = SV_from("110110");
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
-        .context
-        = &stack_allocator_for(CCC_flat_bitset_storage_for((CCC_Bit[256]){})),
+        .context = &stack_allocator_for(
+            CCC_flat_bitset_storage_for((CCC_Tribool[256]){})
+        ),
     };
     CCC_Flat_bitset b = CCC_flat_bitset_from(
         allocator, 0, SV_len(input), '1', SV_begin(input), SV_len(input) * 2
@@ -287,8 +293,9 @@ check_static_begin(flat_bitset_test_init_from_cap_fail) {
 check_static_begin(flat_bitset_test_init_with_capacity) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
-        .context
-        = &stack_allocator_for(CCC_flat_bitset_storage_for((CCC_Bit[10]){})),
+        .context = &stack_allocator_for(
+            CCC_flat_bitset_storage_for((CCC_Tribool[10]){})
+        ),
     };
     CCC_Flat_bitset b = CCC_flat_bitset_with_capacity(allocator, 10);
     check(CCC_flat_bitset_popcount(&b).count, 0);

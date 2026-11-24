@@ -499,12 +499,13 @@ destroy_element(CCC_Arguments const arguments) {
 
 check_static_begin(array_adaptive_map_test_clear_with_destructor) {
     enum : size_t {
-        MIN_CAP = 16
+        MIN_CAP = 16,
     };
     CCC_Array_adaptive_map map = array_adaptive_map_with_storage(
         id, (CCC_Key_comparator){.compare = id_order}, (struct Val[MIN_CAP]){}
     );
-    Flat_bitset is_destroyed = flat_bitset_with_storage(0, (Bit[MIN_CAP]){});
+    Flat_bitset is_destroyed
+        = flat_bitset_with_storage(0, (CCC_Tribool[MIN_CAP]){});
     int i = 0;
     for (;;) {
         CCC_Handle const *const e = array_adaptive_map_try_insert_with(
@@ -544,7 +545,7 @@ check_static_begin(array_adaptive_map_test_clear_with_destructor) {
 
 check_static_begin(array_adaptive_map_test_clear_and_free_with_destructor) {
     enum : size_t {
-        MIN_CAP = 16
+        MIN_CAP = 16,
     };
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
@@ -559,7 +560,8 @@ check_static_begin(array_adaptive_map_test_clear_and_free_with_destructor) {
         allocator,
         MIN_CAP
     );
-    Flat_bitset is_destroyed = flat_bitset_with_storage(0, (Bit[MIN_CAP]){});
+    Flat_bitset is_destroyed
+        = flat_bitset_with_storage(0, (CCC_Tribool[MIN_CAP]){});
     int i = 0;
     for (;;) {
         CCC_Handle const *const e = array_adaptive_map_try_insert_with(

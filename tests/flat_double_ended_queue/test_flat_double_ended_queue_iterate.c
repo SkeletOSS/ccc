@@ -66,7 +66,8 @@ check_static_begin(flat_double_ended_queue_test_clear_destructor) {
             3,
         }
     );
-    Flat_bitset is_destroyed = flat_bitset_with_storage(COUNT, (Bit[COUNT]){});
+    Flat_bitset is_destroyed
+        = flat_bitset_with_storage(COUNT, (CCC_Tribool[COUNT]){});
     check(CCC_flat_double_ended_queue_capacity(&q).count >= COUNT, CCC_TRUE);
     check(CCC_flat_double_ended_queue_count(&q).count, COUNT);
     check(
@@ -145,7 +146,8 @@ check_static_begin(flat_double_ended_queue_test_clear_and_free_destructor) {
             3,
         }
     );
-    Flat_bitset is_destroyed = flat_bitset_with_storage(COUNT, (Bit[COUNT]){});
+    Flat_bitset is_destroyed
+        = flat_bitset_with_storage(COUNT, (CCC_Tribool[COUNT]){});
     check(CCC_flat_double_ended_queue_capacity(&q).count >= COUNT, CCC_TRUE);
     check(CCC_flat_double_ended_queue_count(&q).count, COUNT);
     check(

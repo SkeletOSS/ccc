@@ -10,7 +10,7 @@
 
 check_static_begin(flat_bitset_test_set_one) {
     check(flat_bitset_set(NULL, 5, CCC_TRUE), CCC_TRIBOOL_ERROR);
-    Flat_bitset bs = flat_bitset_with_storage(10, (Bit[10]){});
+    Flat_bitset bs = flat_bitset_with_storage(10, (CCC_Tribool[10]){});
     check(flat_bitset_capacity(&bs).count >= 10, CCC_TRUE);
     /* Was false before. */
     check(flat_bitset_set(&bs, 5, CCC_TRUE), CCC_FALSE);
@@ -26,7 +26,7 @@ check_static_begin(flat_bitset_test_set_one) {
 
 check_static_begin(flat_bitset_test_set_shuffled) {
     check(flat_bitset_test(NULL, 0), CCC_TRIBOOL_ERROR);
-    Flat_bitset bs = flat_bitset_with_storage(10, (Bit[10]){});
+    Flat_bitset bs = flat_bitset_with_storage(10, (CCC_Tribool[10]){});
     size_t const larger_prime = 11;
     for (size_t i = 0, shuf_i = larger_prime % 10; i < 10;
          ++i, shuf_i = (shuf_i + larger_prime) % 10) {
@@ -43,7 +43,7 @@ check_static_begin(flat_bitset_test_set_shuffled) {
 }
 
 check_static_begin(flat_bitset_test_set_all) {
-    Flat_bitset bs = flat_bitset_with_storage(10, (Bit[10]){});
+    Flat_bitset bs = flat_bitset_with_storage(10, (CCC_Tribool[10]){});
     check(flat_bitset_set_all(NULL, CCC_TRUE), CCC_RESULT_ARGUMENT_ERROR);
     check(flat_bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(flat_bitset_popcount(&bs).count, 10);
@@ -56,7 +56,7 @@ check_static_begin(flat_bitset_test_set_all) {
 }
 
 check_static_begin(flat_bitset_test_set_range) {
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     check(
         flat_bitset_set_range(&bs, 0, 513, CCC_TRUE), CCC_RESULT_ARGUMENT_ERROR
     );
@@ -95,7 +95,7 @@ check_static_begin(flat_bitset_test_set_range) {
 
 check_static_begin(flat_bitset_test_reset) {
     check(flat_bitset_reset(NULL, 11), CCC_TRIBOOL_ERROR);
-    Flat_bitset bs = flat_bitset_with_storage(10, (Bit[10]){});
+    Flat_bitset bs = flat_bitset_with_storage(10, (CCC_Tribool[10]){});
     check(flat_bitset_reset(&bs, 11), CCC_TRIBOOL_ERROR);
     check(flat_bitset_set(&bs, 0, CCC_TRUE), CCC_FALSE);
     check(flat_bitset_reset_range(&bs, 0, 1), CCC_RESULT_OK);
@@ -115,7 +115,7 @@ check_static_begin(flat_bitset_test_reset) {
 
 check_static_begin(flat_bitset_test_reset_all) {
     check(flat_bitset_reset_all(NULL), CCC_RESULT_ARGUMENT_ERROR);
-    Flat_bitset bs = flat_bitset_with_storage(10, (Bit[10]){});
+    Flat_bitset bs = flat_bitset_with_storage(10, (CCC_Tribool[10]){});
     check(flat_bitset_capacity(&bs).count >= 10, CCC_TRUE);
     check(flat_bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(flat_bitset_popcount(&bs).count, 10);
@@ -132,7 +132,7 @@ check_static_begin(flat_bitset_test_reset_all) {
 
 check_static_begin(flat_bitset_test_reset_range) {
     check(flat_bitset_reset_range(NULL, 0, 1), CCC_RESULT_ARGUMENT_ERROR);
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     /* Start with a full range and reduce from the end. */
     for (size_t i = 0; i < 512; ++i) {
         size_t const count = 512 - i;
@@ -168,7 +168,7 @@ check_static_begin(flat_bitset_test_reset_range) {
 
 check_static_begin(flat_bitset_test_flip) {
     check(flat_bitset_flip(NULL, 9), CCC_TRIBOOL_ERROR);
-    Flat_bitset bs = flat_bitset_with_storage(10, (Bit[10]){});
+    Flat_bitset bs = flat_bitset_with_storage(10, (CCC_Tribool[10]){});
     check(flat_bitset_flip(&bs, 11), CCC_TRIBOOL_ERROR);
     check(flat_bitset_capacity(&bs).count >= 10, CCC_TRUE);
     check(flat_bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
@@ -183,7 +183,7 @@ check_static_begin(flat_bitset_test_flip) {
 check_static_begin(flat_bitset_test_flip_all) {
     check(flat_bitset_flip_all(&flat_bitset_default()), CCC_RESULT_OK);
     check(flat_bitset_flip_all(NULL), CCC_RESULT_ARGUMENT_ERROR);
-    Flat_bitset bs = flat_bitset_with_storage(10, (Bit[10]){});
+    Flat_bitset bs = flat_bitset_with_storage(10, (CCC_Tribool[10]){});
     check(flat_bitset_capacity(&bs).count >= 10, CCC_TRUE);
     for (size_t i = 0; i < 10; i += 2) {
         check(flat_bitset_set(&bs, i, CCC_TRUE), CCC_FALSE);
@@ -208,7 +208,7 @@ check_static_begin(flat_bitset_test_flip_range) {
     check(
         flat_bitset_popcount_range(NULL, 0, 0).error, CCC_RESULT_ARGUMENT_ERROR
     );
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     check(
         flat_bitset_popcount_range(&bs, 0, 0).error, CCC_RESULT_ARGUMENT_ERROR
     );
@@ -256,7 +256,7 @@ check_static_begin(flat_bitset_test_any_range_in_one_block) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -282,7 +282,7 @@ check_static_begin(flat_bitset_test_any_range_in_multiple_blocks) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -314,7 +314,7 @@ check_static_begin(flat_bitset_test_all_range_in_one_block) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -338,7 +338,7 @@ check_static_begin(flat_bitset_test_all_range_in_multiple_blocks) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -362,7 +362,7 @@ check_static_begin(flat_bitset_test_all_range_in_multiple_blocks) {
 }
 
 check_static_begin(flat_bitset_test_any) {
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     check(flat_bitset_any_range(&bs, 0, 0), CCC_TRIBOOL_ERROR);
     check(flat_bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     size_t const cap = flat_bitset_capacity(&bs).count;
@@ -386,7 +386,7 @@ check_static_begin(flat_bitset_test_any) {
 }
 
 check_static_begin(flat_bitset_test_none) {
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     check(flat_bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     size_t const cap = flat_bitset_capacity(&bs).count;
     /* Start with a full range and reduce by moving start forward. */
@@ -407,7 +407,7 @@ check_static_begin(flat_bitset_test_none) {
 }
 
 check_static_begin(flat_bitset_test_all_three_blocks) {
-    Flat_bitset bs = flat_bitset_with_storage(128, (Bit[128]){});
+    Flat_bitset bs = flat_bitset_with_storage(128, (CCC_Tribool[128]){});
     check(flat_bitset_all_range(&bs, 0, 0), CCC_TRIBOOL_ERROR);
     check(flat_bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(flat_bitset_set(&bs, 64, CCC_FALSE), CCC_TRUE);
@@ -419,7 +419,7 @@ check_static_begin(flat_bitset_test_all_three_blocks) {
 }
 
 check_static_begin(flat_bitset_test_all) {
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     size_t const cap = flat_bitset_capacity(&bs).count;
     check(flat_bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(flat_bitset_all(&bs), CCC_TRUE);
@@ -443,7 +443,7 @@ check_static_begin(flat_bitset_test_all) {
 }
 
 check_static_begin(flat_bitset_test_first_trailing_one) {
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     check(
         flat_bitset_first_trailing_one_range(&bs, 0, 0).error,
         CCC_RESULT_ARGUMENT_ERROR
@@ -472,7 +472,7 @@ check_static_begin(flat_bitset_test_first_trailing_one_range_within_block) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -498,7 +498,7 @@ check_static_begin(flat_bitset_test_first_trailing_one_range_within_blocks) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -525,7 +525,7 @@ check_static_begin(flat_bitset_test_first_trailing_ones_range_within_blocks) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -556,7 +556,7 @@ check_static_begin(flat_bitset_test_first_trailing_zeros_range_within_blocks) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -587,7 +587,7 @@ check_static_begin(flat_bitset_test_first_trailing_ones_off_by_one) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -609,7 +609,7 @@ check_static_begin(flat_bitset_test_first_trailing_ones_match_at_capacity) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -632,7 +632,7 @@ check_static_begin(
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -653,7 +653,7 @@ check_static_begin(flat_bitset_test_first_trailing_zeros_match_at_capacity) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -675,7 +675,7 @@ check_static_begin(flat_bitset_test_first_trailing_ones_straddle_blocks) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -695,7 +695,7 @@ check_static_begin(flat_bitset_test_first_trailing_ones_broken_runs) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -716,7 +716,7 @@ check_static_begin(flat_bitset_test_first_trailing_ones_multiblock_prefix) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -749,7 +749,7 @@ check_static_begin(
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -785,7 +785,7 @@ check_static_begin(flat_bitset_test_first_trailing_zeros_off_by_one) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -807,7 +807,7 @@ check_static_begin(flat_bitset_test_first_trailing_zeros_straddle_blocks) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -828,7 +828,7 @@ check_static_begin(flat_bitset_test_first_trailing_zeros_broken_runs) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -850,7 +850,7 @@ check_static_begin(flat_bitset_test_first_trailing_zeros_multiblock_prefix) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -883,7 +883,7 @@ check_static_begin(
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -913,7 +913,7 @@ check_static_begin(
 }
 
 check_static_begin(flat_bitset_test_first_trailing_ones) {
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     size_t window = FLAT_BITSET_BLOCK_BITS;
     /* Slide a group of int size as a window across the set. */
     for (size_t i = 0; i < (512 - window - 1); ++i) {
@@ -1007,7 +1007,7 @@ check_static_begin(flat_bitset_test_first_trailing_ones) {
 }
 
 check_static_begin(flat_bitset_test_first_trailing_ones_fail) {
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     check(
         flat_bitset_first_trailing_ones_range(&bs, 0, 0, 0).error,
         CCC_RESULT_ARGUMENT_ERROR
@@ -1073,7 +1073,7 @@ check_static_begin(flat_bitset_test_first_trailing_ones_fail) {
 }
 
 check_static_begin(flat_bitset_test_first_trailing_zero) {
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     /* Start with an almost full range and reduce by moving start forward. */
     for (size_t i = 0, end = 512; i < end - 1; ++i) {
         check(flat_bitset_set(&bs, i, CCC_TRUE), CCC_FALSE);
@@ -1091,7 +1091,7 @@ check_static_begin(flat_bitset_test_first_trailing_zero) {
 }
 
 check_static_begin(flat_bitset_test_first_trailing_zeros) {
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     check(flat_bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     size_t window = FLAT_BITSET_BLOCK_BITS;
     /* Slide a group of int size as a window across the set. */
@@ -1189,7 +1189,7 @@ check_static_begin(flat_bitset_test_first_trailing_zeros) {
 }
 
 check_static_begin(flat_bitset_test_first_trailing_zeros_fail) {
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     check(flat_bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     size_t const end = flat_bitset_block_count(512);
     size_t const first_half = FLAT_BITSET_BLOCK_BITS / 2;
@@ -1252,7 +1252,7 @@ check_static_begin(flat_bitset_test_first_trailing_zeros_fail) {
 }
 
 check_static_begin(flat_bitset_test_first_leading_one) {
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     check(flat_bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     /* Start with an almost full range and reduce by moving start backwards. */
     for (size_t i = 512; i-- > 1;) {
@@ -1277,7 +1277,7 @@ check_static_begin(flat_bitset_test_first_leading_one_range_within_block) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -1303,7 +1303,7 @@ check_static_begin(flat_bitset_test_first_leading_one_range_within_blocks) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -1330,7 +1330,7 @@ check_static_begin(flat_bitset_test_first_leading_ones_range_within_blocks) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -1360,7 +1360,7 @@ check_static_begin(flat_bitset_test_first_leading_zeros_range_within_blocks) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -1391,7 +1391,7 @@ check_static_begin(flat_bitset_test_first_leading_ones_off_by_one) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -1414,7 +1414,7 @@ check_static_begin(
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -1435,7 +1435,7 @@ check_static_begin(flat_bitset_test_first_leading_ones_match_at_capacity) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -1456,7 +1456,7 @@ check_static_begin(flat_bitset_test_first_leading_zeros_match_at_capacity) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -1477,7 +1477,7 @@ check_static_begin(flat_bitset_test_first_leading_ones_straddle_blocks) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -1496,7 +1496,7 @@ check_static_begin(flat_bitset_test_first_leading_ones_broken_runs) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -1517,7 +1517,7 @@ check_static_begin(flat_bitset_test_first_leading_zeros_off_by_one) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -1539,7 +1539,7 @@ check_static_begin(flat_bitset_test_first_leading_zeros_straddle_blocks) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -1558,7 +1558,7 @@ check_static_begin(flat_bitset_test_first_leading_zeros_broken_runs) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -1579,7 +1579,7 @@ check_static_begin(flat_bitset_test_first_leading_ones_multiblock_prefix) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -1612,7 +1612,7 @@ check_static_begin(
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -1649,7 +1649,7 @@ check_static_begin(flat_bitset_test_first_leading_zeros_multiblock_prefix) {
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -1682,7 +1682,7 @@ check_static_begin(
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
         .context = &stack_allocator_for(
-            (typeof(flat_bitset_storage_for((Bit[CAP]){}))[1]){}
+            (typeof(flat_bitset_storage_for((CCC_Tribool[CAP]){}))[1]){}
         ),
     };
     Flat_bitset bs = CCC_flat_bitset_from(
@@ -1713,7 +1713,7 @@ check_static_begin(
 }
 
 check_static_begin(flat_bitset_test_first_leading_one_range) {
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     size_t const bit_of_interest = 4;
     check(flat_bitset_set(&bs, bit_of_interest, CCC_TRUE), CCC_FALSE);
     for (size_t i = 0; i < bit_of_interest; ++i) {
@@ -1750,7 +1750,7 @@ check_static_begin(flat_bitset_test_first_leading_one_range) {
 }
 
 check_static_begin(flat_bitset_test_first_leading_ones) {
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     check(
         flat_bitset_first_leading_ones_range(&bs, 0, 0, 0).error,
         CCC_RESULT_ARGUMENT_ERROR
@@ -1872,7 +1872,7 @@ check_static_begin(flat_bitset_test_first_leading_ones) {
 }
 
 check_static_begin(flat_bitset_test_first_leading_ones_fail) {
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     size_t const first_half = FLAT_BITSET_BLOCK_BITS / 2;
     size_t const second_half = first_half - 1;
     /* We are going to search for a group of 17 which we will be very close
@@ -1944,7 +1944,7 @@ check_static_begin(flat_bitset_test_first_leading_ones_fail) {
 }
 
 check_static_begin(flat_bitset_test_first_leading_zero) {
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     /* Start with an almost full range and reduce by moving start backwards. */
     for (size_t i = 512; i-- > 1;) {
         check(flat_bitset_set(&bs, i, CCC_TRUE), CCC_FALSE);
@@ -1962,7 +1962,7 @@ check_static_begin(flat_bitset_test_first_leading_zero) {
 }
 
 check_static_begin(flat_bitset_test_first_leading_zero_range) {
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     (void)flat_bitset_set_all(&bs, CCC_TRUE);
     size_t const bit_of_interest = 4;
     check(flat_bitset_set(&bs, bit_of_interest, CCC_FALSE), CCC_TRUE);
@@ -2000,7 +2000,7 @@ check_static_begin(flat_bitset_test_first_leading_zero_range) {
 }
 
 check_static_begin(flat_bitset_test_first_leading_zeros) {
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     check(flat_bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     size_t window = FLAT_BITSET_BLOCK_BITS;
     /* Slide a group of int size as a window across the set. */
@@ -2119,7 +2119,7 @@ check_static_begin(flat_bitset_test_first_leading_zeros) {
 }
 
 check_static_begin(flat_bitset_test_first_leading_zeros_fail) {
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     check(flat_bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     size_t const first_half = FLAT_BITSET_BLOCK_BITS / 2;
     size_t const second_half = first_half - 1;
@@ -2196,8 +2196,9 @@ check_static_begin(flat_bitset_test_or_same_size) {
         flat_bitset_or(&flat_bitset_default(), &flat_bitset_default()),
         CCC_RESULT_OK
     );
-    Flat_bitset source = flat_bitset_with_storage(512, (Bit[512]){});
-    Flat_bitset destination = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset source = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
+    Flat_bitset destination
+        = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     check(flat_bitset_or(&destination, &flat_bitset_default()), CCC_RESULT_OK);
     check(flat_bitset_or(&source, &flat_bitset_default()), CCC_RESULT_OK);
     check(flat_bitset_or(NULL, &source), CCC_RESULT_ARGUMENT_ERROR);
@@ -2217,9 +2218,10 @@ check_static_begin(flat_bitset_test_or_same_size) {
 }
 
 check_static_begin(flat_bitset_test_or_diff_size) {
-    Flat_bitset destination = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset destination
+        = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     /* Make it slightly harder by not ending on a perfect block boundary. */
-    Flat_bitset source = flat_bitset_with_storage(244, (Bit[244]){});
+    Flat_bitset source = flat_bitset_with_storage(244, (CCC_Tribool[244]){});
     check(flat_bitset_set_all(&source, CCC_TRUE), CCC_RESULT_OK);
     check(flat_bitset_popcount(&source).count, 244);
     check(flat_bitset_popcount(&destination).count, 0);
@@ -2230,13 +2232,14 @@ check_static_begin(flat_bitset_test_or_diff_size) {
 
 check_static_begin(flat_bitset_test_and_same_size) {
     Flat_bitset zero = flat_bitset_default();
-    Flat_bitset to_zero = flat_bitset_with_storage(32, (Bit[32]){});
+    Flat_bitset to_zero = flat_bitset_with_storage(32, (CCC_Tribool[32]){});
     check(flat_bitset_and(&zero, &to_zero), CCC_RESULT_OK);
     check(flat_bitset_popcount(&zero).count, 0);
     check(flat_bitset_and(&to_zero, &zero), CCC_RESULT_OK);
     check(flat_bitset_popcount(&to_zero).count, 0);
-    Flat_bitset source = flat_bitset_with_storage(512, (Bit[512]){});
-    Flat_bitset destination = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset source = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
+    Flat_bitset destination
+        = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     check(flat_bitset_and(NULL, &source), CCC_RESULT_ARGUMENT_ERROR);
     check(flat_bitset_and(&destination, NULL), CCC_RESULT_ARGUMENT_ERROR);
     size_t const size = 512;
@@ -2254,9 +2257,10 @@ check_static_begin(flat_bitset_test_and_same_size) {
 }
 
 check_static_begin(flat_bitset_test_and_diff_size) {
-    Flat_bitset destination = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset destination
+        = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     /* Make it slightly harder by not ending on a perfect block boundary. */
-    Flat_bitset source = flat_bitset_with_storage(244, (Bit[244]){});
+    Flat_bitset source = flat_bitset_with_storage(244, (CCC_Tribool[244]){});
     check(flat_bitset_set_all(&destination, CCC_TRUE), CCC_RESULT_OK);
     check(flat_bitset_set_all(&source, CCC_TRUE), CCC_RESULT_OK);
     check(flat_bitset_popcount(&destination).count, 512);
@@ -2272,8 +2276,9 @@ check_static_begin(flat_bitset_test_xor_same_size) {
         flat_bitset_or(&flat_bitset_default(), &flat_bitset_default()),
         CCC_RESULT_OK
     );
-    Flat_bitset source = flat_bitset_with_storage(512, (Bit[512]){});
-    Flat_bitset destination = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset source = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
+    Flat_bitset destination
+        = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     check(flat_bitset_xor(NULL, &destination), CCC_RESULT_ARGUMENT_ERROR);
     check(flat_bitset_xor(&destination, NULL), CCC_RESULT_ARGUMENT_ERROR);
     check(flat_bitset_xor(&destination, &flat_bitset_default()), CCC_RESULT_OK);
@@ -2293,9 +2298,10 @@ check_static_begin(flat_bitset_test_xor_same_size) {
 }
 
 check_static_begin(flat_bitset_test_xor_diff_size) {
-    Flat_bitset destination = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset destination
+        = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     /* Make it slightly harder by not ending on a perfect block boundary. */
-    Flat_bitset source = flat_bitset_with_storage(244, (Bit[244]){});
+    Flat_bitset source = flat_bitset_with_storage(244, (CCC_Tribool[244]){});
     check(flat_bitset_set_all(&destination, CCC_TRUE), CCC_RESULT_OK);
     check(flat_bitset_set_all(&source, CCC_TRUE), CCC_RESULT_OK);
     check(flat_bitset_popcount(&destination).count, 512);
@@ -2308,7 +2314,7 @@ check_static_begin(flat_bitset_test_xor_diff_size) {
 
 check_static_begin(flat_bitset_test_shift_left) {
     check(flat_bitset_shift_left(NULL, 0), CCC_RESULT_ARGUMENT_ERROR);
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     check(flat_bitset_shift_left(&bs, 0), CCC_RESULT_OK);
     check(flat_bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(flat_bitset_popcount(&bs).count, 512);
@@ -2340,7 +2346,7 @@ check_static_begin(flat_bitset_test_shift_left) {
 }
 
 check_static_begin(flat_bitset_test_shift_left_edgecase) {
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     check(flat_bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(flat_bitset_popcount(&bs).count, 512);
     check(flat_bitset_shift_left(&bs, 510), CCC_RESULT_OK);
@@ -2349,7 +2355,7 @@ check_static_begin(flat_bitset_test_shift_left_edgecase) {
 }
 
 check_static_begin(flat_bitset_test_shift_left_edgecase_small) {
-    Flat_bitset bs = flat_bitset_with_storage(8, (Bit[8]){});
+    Flat_bitset bs = flat_bitset_with_storage(8, (CCC_Tribool[8]){});
     check(flat_bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(flat_bitset_popcount(&bs).count, 8);
     check(flat_bitset_shift_left(&bs, 7), CCC_RESULT_OK);
@@ -2359,7 +2365,7 @@ check_static_begin(flat_bitset_test_shift_left_edgecase_small) {
 
 check_static_begin(flat_bitset_test_shift_right) {
     check(flat_bitset_shift_right(NULL, 0), CCC_RESULT_ARGUMENT_ERROR);
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     check(flat_bitset_shift_right(&bs, 0), CCC_RESULT_OK);
     check(flat_bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(flat_bitset_popcount(&bs).count, 512);
@@ -2397,7 +2403,7 @@ check_static_begin(flat_bitset_test_shift_right) {
 }
 
 check_static_begin(flat_bitset_test_shift_right_edgecase) {
-    Flat_bitset bs = flat_bitset_with_storage(512, (Bit[512]){});
+    Flat_bitset bs = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
     check(flat_bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(flat_bitset_popcount(&bs).count, 512);
     check(flat_bitset_shift_right(&bs, 510), CCC_RESULT_OK);
@@ -2406,7 +2412,7 @@ check_static_begin(flat_bitset_test_shift_right_edgecase) {
 }
 
 check_static_begin(flat_bitset_test_shift_right_edgecase_small) {
-    Flat_bitset bs = flat_bitset_with_storage(8, (Bit[8]){});
+    Flat_bitset bs = flat_bitset_with_storage(8, (CCC_Tribool[8]){});
     check(flat_bitset_set_all(&bs, CCC_TRUE), CCC_RESULT_OK);
     check(flat_bitset_popcount(&bs).count, 8);
     check(flat_bitset_shift_right(&bs, 7), CCC_RESULT_OK);
@@ -2415,9 +2421,9 @@ check_static_begin(flat_bitset_test_shift_right_edgecase_small) {
 }
 
 check_static_begin(flat_bitset_test_subset) {
-    Flat_bitset set = flat_bitset_with_storage(512, (Bit[512]){});
-    Flat_bitset subset1 = flat_bitset_with_storage(512, (Bit[512]){});
-    Flat_bitset subset2 = flat_bitset_with_storage(244, (Bit[244]){});
+    Flat_bitset set = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
+    Flat_bitset subset1 = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
+    Flat_bitset subset2 = flat_bitset_with_storage(244, (CCC_Tribool[244]){});
     for (size_t i = 0; i < 512; i += 2) {
         check(flat_bitset_set(&set, i, CCC_TRUE), CCC_FALSE);
         check(flat_bitset_set(&subset1, i, CCC_TRUE), CCC_FALSE);
@@ -2436,9 +2442,9 @@ check_static_begin(flat_bitset_test_subset) {
 }
 
 check_static_begin(flat_bitset_test_proper_subset) {
-    Flat_bitset set = flat_bitset_with_storage(512, (Bit[512]){});
-    Flat_bitset subset1 = flat_bitset_with_storage(512, (Bit[512]){});
-    Flat_bitset subset2 = flat_bitset_with_storage(244, (Bit[244]){});
+    Flat_bitset set = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
+    Flat_bitset subset1 = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
+    Flat_bitset subset2 = flat_bitset_with_storage(244, (CCC_Tribool[244]){});
     check(flat_bitset_is_proper_subset(NULL, &set), CCC_TRIBOOL_ERROR);
     check(flat_bitset_is_proper_subset(&subset1, NULL), CCC_TRIBOOL_ERROR);
     check(flat_bitset_is_subset(NULL, &set), CCC_TRIBOOL_ERROR);
@@ -2464,9 +2470,9 @@ check_static_begin(flat_bitset_test_proper_subset) {
 }
 
 check_static_begin(flat_bitset_test_is_equal) {
-    Flat_bitset a = flat_bitset_with_storage(512, (Bit[512]){});
-    Flat_bitset b = flat_bitset_with_storage(512, (Bit[512]){});
-    Flat_bitset c = flat_bitset_with_storage(244, (Bit[244]){});
+    Flat_bitset a = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
+    Flat_bitset b = flat_bitset_with_storage(512, (CCC_Tribool[512]){});
+    Flat_bitset c = flat_bitset_with_storage(244, (CCC_Tribool[244]){});
     check(flat_bitset_is_equal(NULL, &b), CCC_TRIBOOL_ERROR);
     check(flat_bitset_is_equal(&a, NULL), CCC_TRIBOOL_ERROR);
     check(flat_bitset_is_equal(&a, &b), CCC_TRUE);
@@ -2491,7 +2497,7 @@ validate_sudoku_box(
     size_t const row_start,
     size_t const col_start
 ) {
-    Flat_bitset box_check = flat_bitset_with_storage(9, (Bit[9]){});
+    Flat_bitset box_check = flat_bitset_with_storage(9, (CCC_Tribool[9]){});
     CCC_Tribool was_on = CCC_FALSE;
     for (size_t r = row_start; r < row_start + 3; ++r) {
         for (size_t c = col_start; c < col_start + 3; ++c) {
@@ -2547,10 +2553,12 @@ check_static_begin(flat_bitset_test_valid_sudoku) {
 
     ,{0,6,0, 0,0,0, 2,8,0}
     ,{0,0,0, 4,1,9, 0,0,5}
-    ,{0,0,0, 0,8,0, 0,7,9}};
+    ,{0,0,0, 0,8,0, 0,7,9},};
     /* clang-format on */
-    Flat_bitset row_check = flat_bitset_with_storage(9L * 9L, (Bit[9L * 9L]){});
-    Flat_bitset col_check = flat_bitset_with_storage(9L * 9L, (Bit[9L * 9L]){});
+    Flat_bitset row_check
+        = flat_bitset_with_storage(9L * 9L, (CCC_Tribool[9L * 9L]){});
+    Flat_bitset col_check
+        = flat_bitset_with_storage(9L * 9L, (CCC_Tribool[9L * 9L]){});
     size_t const box_step = 3;
     for (size_t row = 0; row < 9; row += box_step) {
         for (size_t col = 0; col < 9; col += box_step) {
@@ -2576,10 +2584,12 @@ check_static_begin(flat_bitset_test_invalid_sudoku) {
 
     ,{0,6,0, 0,0,0, 2,8,0}
     ,{0,0,0, 4,1,9, 0,0,5}
-    ,{0,0,0, 0,8,0, 0,7,9}};
+    ,{0,0,0, 0,8,0, 0,7,9},};
     /* clang-format on */
-    Flat_bitset row_check = flat_bitset_with_storage(9L * 9L, (Bit[9L * 9L]){});
-    Flat_bitset col_check = flat_bitset_with_storage(9L * 9L, (Bit[9L * 9L]){});
+    Flat_bitset row_check
+        = flat_bitset_with_storage(9L * 9L, (CCC_Tribool[9L * 9L]){});
+    Flat_bitset col_check
+        = flat_bitset_with_storage(9L * 9L, (CCC_Tribool[9L * 9L]){});
     size_t const box_step = 3;
     CCC_Tribool pass = CCC_TRUE;
     for (size_t row = 0; row < 9; row += box_step) {
