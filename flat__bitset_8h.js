@@ -8,7 +8,6 @@ var flat__bitset_8h =
     [ "CCC_flat_bitset_storage_for", "flat__bitset_8h.html#a650762b7666d47809c9f12e5633af250", null ],
     [ "CCC_flat_bitset_with_capacity", "flat__bitset_8h.html#abf84e738f359e57db93f1a641345a28c", null ],
     [ "CCC_flat_bitset_with_storage", "flat__bitset_8h.html#a3fe87cb02141be61aca819509beed19d", null ],
-    [ "CCC_Bit", "flat__bitset_8h.html#abf6fcc3da3c3e472c3a65ac541ad5be2", null ],
     [ "CCC_Flat_bitset", "flat__bitset_8h.html#aa48d982db3623c767416c846830cf6c9", null ],
     [ "CCC_flat_bitset_all", "flat__bitset_8h.html#ad28c277ba78f410b63bb88e872c04233", null ],
     [ "CCC_flat_bitset_all_range", "flat__bitset_8h.html#a9ee34edc8e51cf240d36cfa24004065a", null ],

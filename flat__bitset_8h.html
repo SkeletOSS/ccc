@@ -174,9 +174,6 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Container Types</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Types available in the container interface. </p>
 </td></tr>
-<tr class="memitem:abf6fcc3da3c3e472c3a65ac541ad5be2"><td class="memItemLeft" align="right" valign="top">typedef uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__bitset_8h.html#abf6fcc3da3c3e472c3a65ac541ad5be2">CCC_Bit</a></td></tr>
-<tr class="memdesc:abf6fcc3da3c3e472c3a65ac541ad5be2"><td class="mdescLeft">&#160;</td><td class="mdescRight">A type to represent a single bit in the bit set.  <br /></td></tr>
-<tr class="separator:abf6fcc3da3c3e472c3a65ac541ad5be2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa48d982db3623c767416c846830cf6c9"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structCCC__Flat__bitset.html">CCC_Flat_bitset</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flat__bitset_8h.html#aa48d982db3623c767416c846830cf6c9">CCC_Flat_bitset</a></td></tr>
 <tr class="memdesc:aa48d982db3623c767416c846830cf6c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The bit set type that may be stored and initialized on the stack, heap, or data segment at compile or run time.  <br /></td></tr>
 <tr class="separator:aa48d982db3623c767416c846830cf6c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -495,7 +492,7 @@ In most cases this is the wrong initializer to use. For dynamic bitsets, using t
 <div class="line">main(<span class="keywordtype">void</span>)</div>
 <div class="line">{</div>
 <div class="line">    <span class="keywordtype">void</span> *<span class="keyword">const</span> storage = malloc(</div>
-<div class="line">        <span class="keyword">sizeof</span>(<a class="code hl_define" href="flat__bitset_8h.html#a650762b7666d47809c9f12e5633af250">CCC_flat_bitset_storage_for</a>((<a class="code hl_typedef" href="flat__bitset_8h.html#abf6fcc3da3c3e472c3a65ac541ad5be2">CCC_Bit</a>[4096]){}))</div>
+<div class="line">        <span class="keyword">sizeof</span>(<a class="code hl_define" href="flat__bitset_8h.html#a650762b7666d47809c9f12e5633af250">CCC_flat_bitset_storage_for</a>((<a class="code hl_enumeration" href="types_8h.html#a8dbb03cfc2070934832841f50f146bcd">CCC_Tribool</a>[4096]){}))</div>
 <div class="line">    );</div>
 <div class="line">    defer free(storage);</div>
 <div class="line">    <a class="code hl_struct" href="structCCC__Flat__bitset.html">CCC_Flat_bitset</a> bitset = <a class="code hl_define" href="flat__bitset_8h.html#a7726e99d17bc9e180ffed768966bcc9f">CCC_flat_bitset_for</a>(</div>
@@ -505,10 +502,10 @@ In most cases this is the wrong initializer to use. For dynamic bitsets, using t
 <div class="line">    );</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="aflat__bitset_8h_html_a650762b7666d47809c9f12e5633af250"><div class="ttname"><a href="flat__bitset_8h.html#a650762b7666d47809c9f12e5633af250">CCC_flat_bitset_storage_for</a></div><div class="ttdeci">#define CCC_flat_bitset_storage_for( bit_compound_literal_array, optional_storage_specifier...)</div><div class="ttdoc">Create the underlying fixed size storage for a bit set given a compound literal array of bits the use...</div><div class="ttdef"><b>Definition:</b> flat_bitset.h:276</div></div>
-<div class="ttc" id="aflat__bitset_8h_html_a7726e99d17bc9e180ffed768966bcc9f"><div class="ttname"><a href="flat__bitset_8h.html#a7726e99d17bc9e180ffed768966bcc9f">CCC_flat_bitset_for</a></div><div class="ttdeci">#define CCC_flat_bitset_for(cap, count, bitblock_pointer...)</div><div class="ttdoc">Initialize a bit set from any memory source at runtime.</div><div class="ttdef"><b>Definition:</b> flat_bitset.h:317</div></div>
-<div class="ttc" id="aflat__bitset_8h_html_abf6fcc3da3c3e472c3a65ac541ad5be2"><div class="ttname"><a href="flat__bitset_8h.html#abf6fcc3da3c3e472c3a65ac541ad5be2">CCC_Bit</a></div><div class="ttdeci">uint8_t CCC_Bit</div><div class="ttdoc">A type to represent a single bit in the bit set.</div><div class="ttdef"><b>Definition:</b> flat_bitset.h:79</div></div>
+<div class="ttc" id="aflat__bitset_8h_html_a650762b7666d47809c9f12e5633af250"><div class="ttname"><a href="flat__bitset_8h.html#a650762b7666d47809c9f12e5633af250">CCC_flat_bitset_storage_for</a></div><div class="ttdeci">#define CCC_flat_bitset_storage_for( bit_compound_literal_array, optional_storage_specifier...)</div><div class="ttdoc">Create the underlying fixed size storage for a bit set given a compound literal array of bits the use...</div><div class="ttdef"><b>Definition:</b> flat_bitset.h:269</div></div>
+<div class="ttc" id="aflat__bitset_8h_html_a7726e99d17bc9e180ffed768966bcc9f"><div class="ttname"><a href="flat__bitset_8h.html#a7726e99d17bc9e180ffed768966bcc9f">CCC_flat_bitset_for</a></div><div class="ttdeci">#define CCC_flat_bitset_for(cap, count, bitblock_pointer...)</div><div class="ttdoc">Initialize a bit set from any memory source at runtime.</div><div class="ttdef"><b>Definition:</b> flat_bitset.h:310</div></div>
 <div class="ttc" id="astructCCC__Flat__bitset_html"><div class="ttname"><a href="structCCC__Flat__bitset.html">CCC_Flat_bitset</a></div><div class="ttdef"><b>Definition:</b> private_flat_bitset.h:41</div></div>
+<div class="ttc" id="atypes_8h_html_a8dbb03cfc2070934832841f50f146bcd"><div class="ttname"><a href="types_8h.html#a8dbb03cfc2070934832841f50f146bcd">CCC_Tribool</a></div><div class="ttdeci">CCC_Tribool</div><div class="ttdoc">A three state boolean to allow for an error state. Error is -1, False is 0, and True is 1.</div><div class="ttdef"><b>Definition:</b> types.h:178</div></div>
 </div><!-- fragment --><p>See the more specific initializers for standard usage. </p>
 
 </div>
@@ -624,12 +621,12 @@ In most cases this is the wrong initializer to use. For dynamic bitsets, using t
 <b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__bitset_8h.html#a9327c12ab0dda323d5c8fca81aa3e400">CCC_private_flat_bitset_storage_for</a>(                                       \</div>
 <div class="line">        bit_compound_literal_array, optional_storage_specifier                 \</div>
 <div class="line">    )</div>
-<div class="ttc" id="aprivate__flat__bitset_8h_html_a9327c12ab0dda323d5c8fca81aa3e400"><div class="ttname"><a href="private__flat__bitset_8h.html#a9327c12ab0dda323d5c8fca81aa3e400">CCC_private_flat_bitset_storage_for</a></div><div class="ttdeci">#define CCC_private_flat_bitset_storage_for( private_bit_compound_literal, private_optional_storage_specifier...)</div><div class="ttdef"><b>Definition:</b> private_flat_bitset.h:233</div></div>
+<div class="ttc" id="aprivate__flat__bitset_8h_html_a9327c12ab0dda323d5c8fca81aa3e400"><div class="ttname"><a href="private__flat__bitset_8h.html#a9327c12ab0dda323d5c8fca81aa3e400">CCC_private_flat_bitset_storage_for</a></div><div class="ttdeci">#define CCC_private_flat_bitset_storage_for( private_bit_compound_literal, private_optional_storage_specifier...)</div><div class="ttdef"><b>Definition:</b> private_flat_bitset.h:235</div></div>
 </div><!-- fragment -->
 <p>Create the underlying fixed size storage for a bit set given a compound literal array of bits the user wishes to store. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">bit_compound_literal_array</td><td>a compound literal array of <code>CCC_Bit</code> representing the number of bits the user wishes to store in the bit set. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">bit_compound_literal_array</td><td>a compound literal array of <code>CCC_Tribool</code> representing the number of bits the user wishes to store in the bit set. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">optional_storage_specifier</td><td>a storage specifier for the backing block storage may be added on newer compilers. </td></tr>
   </table>
   </dd>
@@ -640,7 +637,7 @@ In most cases this is the wrong initializer to use. For dynamic bitsets, using t
 <div class="line">main(<span class="keywordtype">void</span>)</div>
 <div class="line">{</div>
 <div class="line">    <span class="keywordtype">void</span> *<span class="keyword">const</span> storage = malloc(</div>
-<div class="line">        <span class="keyword">sizeof</span>(<a class="code hl_define" href="flat__bitset_8h.html#a650762b7666d47809c9f12e5633af250">CCC_flat_bitset_storage_for</a>((<a class="code hl_typedef" href="flat__bitset_8h.html#abf6fcc3da3c3e472c3a65ac541ad5be2">CCC_Bit</a>[4096]){}))</div>
+<div class="line">        <span class="keyword">sizeof</span>(<a class="code hl_define" href="flat__bitset_8h.html#a650762b7666d47809c9f12e5633af250">CCC_flat_bitset_storage_for</a>((<a class="code hl_enumeration" href="types_8h.html#a8dbb03cfc2070934832841f50f146bcd">CCC_Tribool</a>[4096]){}))</div>
 <div class="line">    );</div>
 <div class="line">    defer free(storage);</div>
 <div class="line">    <a class="code hl_struct" href="structCCC__Flat__bitset.html">CCC_Flat_bitset</a> bitset = <a class="code hl_define" href="flat__bitset_8h.html#a7726e99d17bc9e180ffed768966bcc9f">CCC_flat_bitset_for</a>(</div>
@@ -749,13 +746,13 @@ In most cases this is the wrong initializer to use. For dynamic bitsets, using t
 <b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="private__flat__bitset_8h.html#a2162decf3d3a33d7bc5ba1dfe6d6635e">CCC_private_flat_bitset_with_storage</a>(                                      \</div>
 <div class="line">        count, compound_literal_array, optional_storage_specifier              \</div>
 <div class="line">    )</div>
-<div class="ttc" id="aprivate__flat__bitset_8h_html_a2162decf3d3a33d7bc5ba1dfe6d6635e"><div class="ttname"><a href="private__flat__bitset_8h.html#a2162decf3d3a33d7bc5ba1dfe6d6635e">CCC_private_flat_bitset_with_storage</a></div><div class="ttdeci">#define CCC_private_flat_bitset_with_storage( private_count, private_compound_literal_array, private_optional_storage_specifier...)</div><div class="ttdef"><b>Definition:</b> private_flat_bitset.h:244</div></div>
+<div class="ttc" id="aprivate__flat__bitset_8h_html_a2162decf3d3a33d7bc5ba1dfe6d6635e"><div class="ttname"><a href="private__flat__bitset_8h.html#a2162decf3d3a33d7bc5ba1dfe6d6635e">CCC_private_flat_bitset_with_storage</a></div><div class="ttdeci">#define CCC_private_flat_bitset_with_storage( private_count, private_compound_literal_array, private_optional_storage_specifier...)</div><div class="ttdef"><b>Definition:</b> private_flat_bitset.h:246</div></div>
 </div><!-- fragment -->
 <p>Initialize the bit set with a starting capacity and size at runtime or compile time with no allocation permissions or context from a compound literal of bitset blocks. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>the count of bits &lt;= capacity of this bit set. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal_array</td><td>the compound literal of CCC_Bit specifying the desired bit count for the bit set. A platform specific array of fixed width integers is constructed to accommodate this bit count. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">compound_literal_array</td><td>the compound literal of CCC_Tribool specifying the desired bit count for the bit set. A platform specific array of fixed width integers is constructed to accommodate this bit count. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">optional_storage_specifier</td><td>a storage specifier for the backing block storage may be added on newer compilers. </td></tr>
   </table>
   </dd>
@@ -765,30 +762,13 @@ In most cases this is the wrong initializer to use. For dynamic bitsets, using t
 <div class="fragment"><div class="line"><span class="preprocessor">#define FLAT_BITSET_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="keyword">static</span> Flat_bitset bitset = flat_bitset_with_storage(</div>
 <div class="line">    4096,</div>
-<div class="line">    (Bit[4096]){}</div>
+<div class="line">    (<a class="code hl_enumeration" href="types_8h.html#a8dbb03cfc2070934832841f50f146bcd">CCC_Tribool</a>[4096]){}</div>
 <div class="line">);</div>
 </div><!-- fragment --><p>This saves some initialization boilerplate. </p>
 
 </div>
 </div>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a id="abf6fcc3da3c3e472c3a65ac541ad5be2" name="abf6fcc3da3c3e472c3a65ac541ad5be2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abf6fcc3da3c3e472c3a65ac541ad5be2">&#9670;&#160;</a></span>CCC_Bit</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef uint8_t <a class="el" href="flat__bitset_8h.html#abf6fcc3da3c3e472c3a65ac541ad5be2">CCC_Bit</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>A type to represent a single bit in the bit set. </p>
-<p>This is used to pass a compound literal of desired bits to various initializers and macros. The bit set is then custom built to accommodate this bit count with platform specific blocks of fixed width integers. </p>
-
-</div>
-</div>
 <a id="aa48d982db3623c767416c846830cf6c9" name="aa48d982db3623c767416c846830cf6c9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa48d982db3623c767416c846830cf6c9">&#9670;&#160;</a></span>CCC_Flat_bitset</h2>
 
@@ -1206,12 +1186,12 @@ In most cases this is the wrong initializer to use. For dynamic bitsets, using t
 <div class="fragment"><div class="line"><span class="preprocessor">#define FLAT_BITSET_USING_NAMESPACE_CCC</span></div>
 <div class="line"><span class="keyword">static</span> Flat_bitset source = flat_bitset_with_storage(</div>
 <div class="line">    11,</div>
-<div class="line">    (Bit[11]){}</div>
+<div class="line">    (Tribool[11]){}</div>
 <div class="line">);</div>
 <div class="line">set_rand_bits(&amp;source);</div>
 <div class="line"><span class="keyword">static</span> Flat_bitset source = flat_bitset_with_storage(</div>
 <div class="line">    13</div>
-<div class="line">    (Bit[13]){}</div>
+<div class="line">    (<a class="code hl_enumeration" href="types_8h.html#a8dbb03cfc2070934832841f50f146bcd">CCC_Tribool</a>[13]){}</div>
 <div class="line">);</div>
 <div class="line"><a class="code hl_enumeration" href="types_8h.html#aa1ded61d294b114942f11e711b331dcf">CCC_Result</a> res = flat_bitset_copy(&amp;destination, &amp;source, &amp;(<a class="code hl_struct" href="structCCC__Allocator.html">CCC_Allocator</a>){});</div>
 <div class="ttc" id="astructCCC__Allocator_html"><div class="ttname"><a href="structCCC__Allocator.html">CCC_Allocator</a></div><div class="ttdoc">The type passed by reference to any container function that may need to allocate memory....</div><div class="ttdef"><b>Definition:</b> types.h:384</div></div>
