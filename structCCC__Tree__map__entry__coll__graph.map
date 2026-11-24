@@ -1,7 +1,7 @@
 <map id="CCC_Tree_map_entry" name="CCC_Tree_map_entry">
-<area shape="rect" id="node1" title=" " alt="" coords="199,185,359,211"/>
-<area shape="rect" id="node2" href="$structCCC__Tree__map.html" title=" " alt="" coords="155,97,273,123"/>
-<area shape="rect" id="node3" href="$structCCC__Tree__map__node.html" title=" " alt="" coords="5,7,164,33"/>
-<area shape="rect" id="node4" href="$structCCC__Key__comparator.html" title="The type passed by reference to any container function that may need to compare keys...." alt="" coords="262,7,425,33"/>
-<area shape="rect" id="node5" href="$structCCC__Entry.html" title="An Occupied or Vacant position in a searchable container." alt="" coords="298,97,389,123"/>
+<area shape="rect" id="node1" title=" " alt="" coords="196,197,356,225"/>
+<area shape="rect" id="node2" href="$structCCC__Tree__map.html" title=" " alt="" coords="153,104,271,132"/>
+<area shape="rect" id="node3" href="$structCCC__Tree__map__node.html" title=" " alt="" coords="5,8,163,36"/>
+<area shape="rect" id="node4" href="$structCCC__Key__comparator.html" title="The type passed by reference to any container function that may need to compare keys...." alt="" coords="259,8,421,36"/>
+<area shape="rect" id="node5" href="$structCCC__Entry.html" title="An Occupied or Vacant position in a searchable container." alt="" coords="295,104,385,132"/>
 </map>
