@@ -343,7 +343,7 @@ check_static_begin(priority_queue_test_clear_destructor) {
     );
     int i = 0;
     Flat_bitset is_destroyed
-        = flat_bitset_with_storage(STANDARD_CAP, (Bit[STANDARD_CAP]){});
+        = flat_bitset_with_storage(STANDARD_CAP, (CCC_Tribool[STANDARD_CAP]){});
     while (i < STANDARD_CAP) {
         struct Val const *const v = CCC_priority_queue_push(
             &queue, &(struct Val){.id = i, .val = i}.elem, &allocator

@@ -235,7 +235,7 @@ static CCC_Flat_buffer buffer
 static CCC_Flat_bitset bitset
     = CCC_flat_bitset_with_storage(
         1024,
-        (CCC_Bit[1024]){}
+        (CCC_Tribool[1024]){}
     );
 ```
 

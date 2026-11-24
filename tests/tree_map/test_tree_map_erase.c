@@ -117,7 +117,7 @@ check_static_begin(tree_map_test_prime_shuffle) {
     size_t shuffled_index = PRIME % (SHUFFLE_CAP - LESS);
     struct Val vals[SHUFFLE_CAP];
     Flat_bitset repeats
-        = flat_bitset_with_storage(SHUFFLE_CAP, (CCC_Bit[SHUFFLE_CAP]){});
+        = flat_bitset_with_storage(SHUFFLE_CAP, (CCC_Tribool[SHUFFLE_CAP]){});
     for (size_t i = 0; i < SHUFFLE_CAP; ++i) {
         vals[i].val = (int)shuffled_index;
         vals[i].key = (int)shuffled_index;
@@ -154,7 +154,7 @@ check_static_begin(tree_map_test_weak_srand) {
     };
     struct Val vals[SRAND_CAP];
     Flat_bitset repeats
-        = flat_bitset_with_storage(SRAND_CAP, (CCC_Bit[SRAND_CAP]){});
+        = flat_bitset_with_storage(SRAND_CAP, (CCC_Tribool[SRAND_CAP]){});
     for (int i = 0; i < SRAND_CAP; ++i) {
         vals[i].key = (int)rand(); // NOLINT
         vals[i].val = i;
@@ -193,7 +193,7 @@ check_static_begin(tree_map_test_insert_erase_cycles) {
     };
     int keys[CYCLES_TEST_CAP] = {};
     CCC_Flat_bitset repeats = CCC_flat_bitset_with_storage(
-        CYCLES_TEST_CAP, (CCC_Bit[CYCLES_TEST_CAP]){}
+        CYCLES_TEST_CAP, (CCC_Tribool[CYCLES_TEST_CAP]){}
     );
     for (int i = 0; i < CYCLES_TEST_CAP; ++i) {
         keys[i] = (int)rand(); /* NOLINT */

@@ -524,7 +524,7 @@ destroy_element(CCC_Arguments const arguments) {
 
 check_static_begin(tree_map_test_clear_with_destructor) {
     enum : size_t {
-        MIN_CAP = 16
+        MIN_CAP = 16,
     };
     CCC_Allocator const allocator = {
         .allocate = stack_allocator_allocate,
@@ -533,7 +533,8 @@ check_static_begin(tree_map_test_clear_with_destructor) {
     CCC_Tree_map map = tree_map_default(
         struct Val, elem, key, (CCC_Key_comparator){.compare = id_order}
     );
-    Flat_bitset is_destroyed = flat_bitset_with_storage(0, (Bit[MIN_CAP]){});
+    Flat_bitset is_destroyed
+        = flat_bitset_with_storage(0, (CCC_Tribool[MIN_CAP]){});
     int i = 0;
     for (;;) {
         CCC_Entry const *const e = tree_map_try_insert_with(

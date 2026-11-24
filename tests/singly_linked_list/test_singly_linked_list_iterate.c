@@ -158,7 +158,8 @@ check_static_begin(singly_linked_list_test_clear_with_destructor) {
         CCC_singly_linked_list_clear(&list, &(CCC_Destructor){}, NULL),
         CCC_RESULT_ARGUMENT_ERROR
     );
-    Flat_bitset is_destroyed = flat_bitset_with_storage(CAP, (Bit[CAP]){});
+    Flat_bitset is_destroyed
+        = flat_bitset_with_storage(CAP, (CCC_Tribool[CAP]){});
     check(
         CCC_singly_linked_list_clear(
             &list,

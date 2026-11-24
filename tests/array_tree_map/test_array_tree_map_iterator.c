@@ -491,7 +491,8 @@ check_static_begin(array_tree_map_test_clear_with_destructor) {
     CCC_Array_tree_map map = array_tree_map_with_storage(
         id, (CCC_Key_comparator){.compare = id_order}, (struct Val[MIN_CAP]){}
     );
-    Flat_bitset is_destroyed = flat_bitset_with_storage(0, (Bit[MIN_CAP]){});
+    Flat_bitset is_destroyed
+        = flat_bitset_with_storage(0, (CCC_Tribool[MIN_CAP]){});
     int i = 0;
     for (;;) {
         CCC_Handle const *const e = array_tree_map_try_insert_with(
@@ -546,7 +547,8 @@ check_static_begin(array_tree_map_test_clear_and_free_with_destructor) {
         allocator,
         MIN_CAP
     );
-    Flat_bitset is_destroyed = flat_bitset_with_storage(0, (Bit[MIN_CAP]){});
+    Flat_bitset is_destroyed
+        = flat_bitset_with_storage(0, (CCC_Tribool[MIN_CAP]){});
     int i = 0;
     for (;;) {
         CCC_Handle const *const e = array_tree_map_try_insert_with(
