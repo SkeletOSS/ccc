@@ -210,10 +210,13 @@ static CCC_Result prim_priority_queue_pop(struct Prim_priority_queue *);
 
 int
 main(int argc, char **argv) {
+    /* NOLINTBEGIN(cert-msc32-c, cert-msc51-cpp, bugprone-random-generator-seed)
+     */
     /* Randomness will be used throughout the program but it need not be
-       perfect. It only helps build the maze.
-       NOLINTNEXTLINE(cert-msc32-c, cert-msc51-cpp) */
+       perfect. It only helps build the maze. */
     srand((unsigned)time(NULL));
+    /* NOLINTEND(cert-msc32-c, cert-msc51-cpp, bugprone-random-generator-seed)
+     */
     struct Maze maze = {
         .rows = DEFAULT_ROWS,
         .cols = DEFAULT_COLS,
@@ -221,6 +224,9 @@ main(int argc, char **argv) {
         .maze = NULL,
     };
     for (int i = 1; i < argc; ++i) {
+        /* NOLINTEND(cert-msc32-c, cert-msc51-cpp,
+         * bugprone-random-generator-seed)
+         */
         SV_Str_view const arg = SV_from_terminated(argv[i]);
         if (SV_starts_with(arg, row_flag)) {
             struct Int_conversion const row_arg = parse_digits(arg);
@@ -302,23 +308,27 @@ animate_maze(struct Maze *maze, CCC_Allocator const *const allocator) {
         .cell = rand_point(maze),
         .cost = rand_range(0, 100),
     };
-    struct Prim_map cost_map = {flat_hash_map_from(
-        cell,
-        ((CCC_Hasher){
-            .hash = prim_cell_hash_fn,
-            .compare = prim_cell_key_order,
-        }),
-        *allocator,
-        capacity,
-        (struct Prim_cell[]){start}
-    )};
-    struct Prim_priority_queue cell_priority_queue = {flat_priority_queue_from(
-        CCC_ORDER_LESSER,
-        (CCC_Comparator){.compare = prim_cell_element_order},
-        *allocator,
-        capacity,
-        (struct Prim_cell[]){start}
-    )};
+    struct Prim_map cost_map = {
+        flat_hash_map_from(
+            cell,
+            ((CCC_Hasher){
+                .hash = prim_cell_hash_fn,
+                .compare = prim_cell_key_order,
+            }),
+            *allocator,
+            capacity,
+            (struct Prim_cell[]){start}
+        ),
+    };
+    struct Prim_priority_queue cell_priority_queue = {
+        flat_priority_queue_from(
+            CCC_ORDER_LESSER,
+            (CCC_Comparator){.compare = prim_cell_element_order},
+            *allocator,
+            capacity,
+            (struct Prim_cell[]){start}
+        ),
+    };
     defer {
         (void)clear_and_free(&cost_map.map, &(CCC_Destructor){}, allocator);
         (void)clear_and_free(
