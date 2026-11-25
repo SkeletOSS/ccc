@@ -1129,9 +1129,9 @@ first_trailing_bit_range(
     if (start_bit + count < BLOCK_BITS) {
         first_block_mask &= trailing_ones_mask((Bit_count)(start_bit + count));
     }
+    Bit_block const flip_zeros = is_one ? (Bit_block)0 : ~(Bit_block)0;
     Bit_count trailing_zeros = count_trailing_zeros(
-        first_block_mask
-        & (is_one ? bitset->blocks[start_block] : ~bitset->blocks[start_block])
+        first_block_mask & (bitset->blocks[start_block] ^ flip_zeros)
     );
     if (trailing_zeros != BLOCK_BITS) {
         return (CCC_Count){
@@ -1143,9 +1143,8 @@ first_trailing_bit_range(
         return (CCC_Count){.error = CCC_RESULT_FAIL};
     }
     while (++start_block < end_block) {
-        trailing_zeros = count_trailing_zeros(
-            is_one ? bitset->blocks[start_block] : ~bitset->blocks[start_block]
-        );
+        trailing_zeros
+            = count_trailing_zeros(bitset->blocks[start_block] ^ flip_zeros);
         if (trailing_zeros != BLOCK_BITS) {
             return (CCC_Count){
                 .count = (start_block * BLOCK_BITS) + trailing_zeros,
@@ -1155,8 +1154,7 @@ first_trailing_bit_range(
     Bit_block const last_block_mask
         = trailing_ones_mask(bit_count_index(exclusive_end - 1) + 1);
     trailing_zeros = count_trailing_zeros(
-        last_block_mask
-        & (is_one ? bitset->blocks[end_block] : ~bitset->blocks[end_block])
+        last_block_mask & (bitset->blocks[end_block] ^ flip_zeros)
     );
     if (trailing_zeros != BLOCK_BITS) {
         return (CCC_Count){
@@ -1184,13 +1182,13 @@ first_trailing_bits_range( /* NOLINT (*cognitive-complexity) */
         || exclusive_end > bitset->count) {
         return (CCC_Count){.error = CCC_RESULT_ARGUMENT_ERROR};
     }
+    Bit_block const flip_zeros = ones ? (Bit_block)0 : ~(Bit_block)0;
     size_t bit_count = 0;
     size_t window_start = i;
     Block_count block_index = block_count_index(i);
     size_t window_end = (block_index * BLOCK_BITS) + BLOCK_BITS;
     Bit_count bit_index = bit_count_index(i);
-    Bit_block bits
-        = ones ? bitset->blocks[block_index] : ~bitset->blocks[block_index];
+    Bit_block bits = bitset->blocks[block_index] ^ flip_zeros;
     bits &= leading_ones_mask(BLOCK_BITS - bit_index);
     for (;;) {
         if (window_end > exclusive_end) {
@@ -1270,8 +1268,7 @@ first_trailing_bits_range( /* NOLINT (*cognitive-complexity) */
             block_index < block_count_index(bitset->capacity)
             && "only load bits within block array capacity"
         );
-        bits
-            = ones ? bitset->blocks[block_index] : ~bitset->blocks[block_index];
+        bits = bitset->blocks[block_index] ^ flip_zeros;
     }
 }
 
@@ -1301,9 +1298,9 @@ first_leading_bit_range(
     if (start_index + count < BLOCK_BITS) {
         first_block_mask &= leading_ones_mask(BLOCK_BITS - end_bit);
     }
+    Bit_block const flip_zeros = is_one ? (Bit_block)0 : ~(Bit_block)0;
     Bit_count leading_zeros = count_leading_zeros(
-        first_block_mask
-        & (is_one ? bitset->blocks[start_block] : ~bitset->blocks[start_block])
+        first_block_mask & (bitset->blocks[start_block] ^ flip_zeros)
     );
     if (leading_zeros != BLOCK_BITS) {
         return (CCC_Count){
@@ -1316,9 +1313,8 @@ first_leading_bit_range(
         return (CCC_Count){.error = CCC_RESULT_FAIL};
     }
     while (--start_block > end_block) {
-        leading_zeros = count_leading_zeros(
-            is_one ? bitset->blocks[start_block] : ~bitset->blocks[start_block]
-        );
+        leading_zeros
+            = count_leading_zeros(bitset->blocks[start_block] ^ flip_zeros);
         if (leading_zeros != BLOCK_BITS) {
             return (CCC_Count){
                 .count = (start_block * BLOCK_BITS)
@@ -1328,8 +1324,7 @@ first_leading_bit_range(
     }
     Bit_block const last_block_on = leading_ones_mask(BLOCK_BITS - end_bit);
     leading_zeros = count_leading_zeros(
-        last_block_on
-        & (is_one ? bitset->blocks[end_block] : ~bitset->blocks[end_block])
+        last_block_on & (bitset->blocks[end_block] ^ flip_zeros)
     );
     if (leading_zeros != BLOCK_BITS) {
         return (CCC_Count){
@@ -1365,8 +1360,8 @@ first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
     Block_count block_index = block_count_index(window_start);
     Block_count window_inclusive_end = ((block_index * BLOCK_BITS));
     Bit_count bit_index = bit_count_index(window_start);
-    Bit_block bits
-        = ones ? bitset->blocks[block_index] : ~bitset->blocks[block_index];
+    Bit_block const flip_zeros = ones ? (Bit_block)0 : ~(Bit_block)0;
+    Bit_block bits = bitset->blocks[block_index] ^ flip_zeros;
     bits &= trailing_ones_mask(bit_index + 1);
     for (;;) {
         if (window_inclusive_end < index) {
@@ -1437,8 +1432,7 @@ first_leading_bits_range( /* NOLINT (*cognitive-complexity) */
             block_index < block_count_index(bitset->capacity)
             && "current block within range while iterating toward LSB"
         );
-        bits
-            = ones ? bitset->blocks[block_index] : ~bitset->blocks[block_index];
+        bits = bitset->blocks[block_index] ^ flip_zeros;
     }
 }
 
