@@ -772,7 +772,7 @@ CCC_flat_hash_map_reserve(
     size_t const to_add,
     CCC_Allocator const *const allocator
 ) {
-    if (CCC_unlikely(!map || !to_add || !allocator || !to_add)) {
+    if (CCC_unlikely(!map || !allocator || !to_add)) {
         return CCC_RESULT_ARGUMENT_ERROR;
     }
     return maybe_rehash(map, to_add, allocator);
